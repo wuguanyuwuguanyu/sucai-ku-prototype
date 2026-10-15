@@ -836,25 +836,214 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .hva-head{flex:none;padding:0 18px}
 .hva-pane{flex:1;min-height:0;padding:0 18px 24px} /* 底距 24：原先那 148px 是给右下悬浮球让位的（球底距 80＋球高 52＋余量），球 2026-10-16 撤了（ADR-0065），留着就是日志尾部凭空空一大截 */
 
-/* AI托管 · 升级提示页（标准版点底栏那枚 Tab 进的屏，§2.2）：一列居中，四件——
-   标记圆、标题、一句「这是什么」、三行清单，末尾一枚 filled 主按钮与一句「不是死胡同」的脚注。
-   它是从 AI托管 这枚 Tab 进来的，所以沿用那一屏的背景渐变与光晕（.hva-glow），换一身皮会读成另一个模块。
-   标记圆走 --primary-container **实底**：SKILL 第 5 节禁止清除清单第 2 条不许按钮／FAB 渐变填充，
-   这一颗是整屏的主视觉，给它渐变等于把这一屏的调子交给一条渐变——同族的抬起 Tab 圆是参考原型带来的既有豁免，
-   不往外扩。 */
-#host-ai-up{background:linear-gradient(180deg,#EAECFC 0%,#F3F5FE 40%,#FFFFFF 100%)}
-.hv-up{position:relative;z-index:1;flex:1;min-height:0;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;padding:0 30px 16px;text-align:center}
-.hv-up-ic{flex:none;width:76px;height:76px;border-radius:50%;background:var(--primary-container);
-  color:var(--primary);display:flex;align-items:center;justify-content:center}
-.hv-up-t{font-size:22px;font-weight:500;color:var(--on-surface);padding-top:18px}
-.hv-up-p{font-size:13.5px;line-height:1.7;color:var(--on-surface-variant);padding-top:10px}
-.hv-up-l{list-style:none;width:100%;display:flex;flex-direction:column;gap:9px;padding-top:16px;text-align:left}
-.hv-up-l li{position:relative;padding-left:20px;font-size:13px;line-height:1.6;color:var(--on-surface)}
-.hv-up-l li::before{content:"";position:absolute;left:3px;top:7px;width:6px;height:6px;border-radius:50%;background:var(--primary)}
-.hv-up-btn{margin-top:24px}
-.hv-up-note{font-size:11.5px;line-height:1.65;color:var(--on-surface-variant);padding-top:12px}
-.hv-up-note b{color:var(--primary);font-weight:600}
+/* ---------------- 宿主 App AI托管 · 升级提示页（标准版点底栏那枚「AI托管」进的屏） ----------------
+   2026-10-16 照 Figma 节点 543:140（750×1800）**整屏重画**：上一版是按二期 PRD §2.2 手搓的
+   「圆标＋标题＋清单＋脚注」四件，这一版换成稿子那一屏（大标题／胶囊／主图／两枚标签／两张能力卡／
+   一张开通卡／一枚渐变 CTA），落 ADR-0068。
+   口径与工具页／任务页两版同：视觉照抄稿子，长度按 412/750 折算（×0.5493）；字体栈仍走 --f
+   （稿子通篇 PingFang＋钉钉进步体，都打在 M3 禁止清单上）。
+   底色不再沿用 .hva-glow（那是 AI托管主页那一身）：稿子自带一层浅紫底，顶端偏蓝紫、到 ~1500 设计px 化白，
+   照它铺一条竖直渐变＋两团径向斑。
+   稿子上那台机器人、翻开的日历、任务卡、两枚金色徽章都是 3D 位图，原型不带外部位图（ADR-0042），
+   照既有画法用「同色系光晕＋渐变圆角块＋白色线性图标」还原，只求远看是那几件东西。
+   版式：**一整段定高的定位容器 .hvu-top**（标题＋主图）。这一段的件是散着浮的——胶囊、两枚标签、
+   机器人、日历、任务卡各在一处、互相叠着——按流排摆不出那种浮着的感觉，所以件一律按折算后的坐标绝对摆。
+   坐标一律是「设计px × 0.5493 − 34」：减 34 是因为 .screen::before 已经占了状态栏那 34px，
+   而稿子那 1800px 是从状态栏顶上量的。 */
+#host-ai-up{background:linear-gradient(180deg,#E3E1FE 0%,#DCD8FE 11%,#E2DDFE 26%,#E7E4FE 40%,
+  #ECE9FE 52%,#F1EFFF 64%,#F5F2FF 78%,#F8F4FF 90%,#F8F4FF 100%)}
+.hvu-glow{position:absolute;left:0;right:0;top:0;height:989px;pointer-events:none;
+  background:radial-gradient(58% 26% at 48% -4%,rgba(120,120,255,.42),transparent 72%),
+             radial-gradient(46% 22% at 104% 5%,rgba(255,255,255,.55),transparent 74%)}
+.hvu-scroll{position:relative;z-index:1;padding:0 0 28px}
+.hvu-top{position:relative;height:272.5px;z-index:0}
+
+/* 大标题：稿子左边压一枚 ✦，「AI托管」吃蓝→紫、「旗舰版专属」吃中蓝→藏青，各一支渐变字。
+   78px × 0.5493 ＝ 43px，字距照折（-4/-6 → -2.2/-3.3）。
+   ※ 渐变的都是**文字**，不是按钮——SKILL 第 5 节禁止清除清单第 2 条管的是按钮／FAB 的填充，文字不在其中。 */
+.hvu-title{position:absolute;left:0;right:0;top:30px;height:46px;margin:0;
+  display:flex;align-items:flex-start;justify-content:center;font-weight:700}
+.hvu-title .sp{flex:none;width:15.5px;height:15.5px;margin:-3px -3px 0 0}
+.hvu-title .sp svg{display:block}
+.hvu-t{font-size:43px;line-height:46px;white-space:nowrap;
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.hvu-t.b{background-image:linear-gradient(90deg,#1677FF 20%,#873DFF 100%);letter-spacing:-2.2px}
+.hvu-t.n{background-image:linear-gradient(90deg,#245BB9 20%,#102953 100%);letter-spacing:-3.3px}
+
+/* 主图周围那团柔白：稿子上机器人背后有一片晕开的白光。
+   别给太重——它一沉下去，机器人的头就化进这团白里、整台只剩「一块白上一枚深面罩」（第一版就是这么翻的） */
+.hvu-halo{position:absolute;left:118px;top:78px;width:186px;height:196px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(50% 50% at 50% 50%,rgba(255,255,255,.24),rgba(255,255,255,0) 66%);filter:blur(22px)}
+
+/* 胶囊与两枚标签：稿子上都是「半透明白底＋更白的描边」的椭圆，字吃渐变 */
+.hvu-pill,.hvu-tag{position:absolute;display:flex;align-items:center;border-radius:999px;
+  background:rgba(255,255,255,.30);box-shadow:inset 0 0 0 1px rgba(255,255,255,.5)}
+.hvu-pill{left:67px;top:84.7px;width:278px;height:36.3px;padding:0 10.4px}
+.hvu-pill .ic{flex:none;width:17.7px;display:flex;align-items:center;justify-content:center;transform:rotate(-5deg)}
+.hvu-pill .t{margin-left:.5px;font-size:16.5px;font-weight:700;line-height:1;letter-spacing:-1.1px;white-space:nowrap;
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.hvu-pill .t.b{background-image:linear-gradient(90deg,#1677FF,#9452FF)}
+.hvu-pill .t.n{background-image:linear-gradient(90deg,#245BB9 20%,#102953 100%)}
+.hvu-tag{width:93.4px;height:30.8px;padding-left:6.6px}
+.hvu-tag.l{left:25.3px;top:192.3px}
+.hvu-tag.r{left:282.9px;top:167.6px}
+.hvu-tag .ic{flex:none;width:16.5px;display:flex;align-items:center;justify-content:center;transform:rotate(-5deg)}
+.hvu-tag .t{margin-left:1.6px;font-size:15.4px;font-weight:700;line-height:1;letter-spacing:-.55px;white-space:nowrap;
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  background-image:linear-gradient(90deg,#1677FF,#9452FF)}
+
+/* ---- 主图：机器人（头／面罩／耳／身／手）＋ 翻开的日历 ＋ 任务卡 ----
+   几何全部是从 543:140 的导图实测反推的：Figma 导图 625×1500（＝稿子 750 的 0.8333），
+   换成手机坐标 = 导图 px × 0.6592。下面的 top／left 都相对 .hvu-robot（＝phone 120.3,139）。
+   这一版把每件都拿两张图按同一个 layout 坐标扫过一遍（面罩实测 160→228／176→226、耳环亮圈
+   254→268、颈圈紫带 180→245、日历 111→177、任务卡 247→310），坐标都对得上，
+   剩下的差在**光**上：稿子上那台机器人整体偏冷蓝，越靠近面罩越蓝（面罩右侧 #BACEFF、
+   下巴 #C8DBFF、耳朵 #7D9DFC），我们原来是通身淡紫，所以显得比稿子「闷」。
+   下面几处渐变按实测调冷。 */
+/* 整台机器人往右下投一层柔影：稿子上机器人右侧（x 250→340 那一竖条）比别处暗 12 上下，
+   是它自己挡出来的。少了这层，机器人看着是「贴」在底上而不是「坐」在底上。 */
+.hvu-robot{position:absolute;left:120.3px;top:105px;width:156px;height:175.8px;pointer-events:none;
+  filter:drop-shadow(30px 8px 38px rgba(122,110,205,.30))}
+/* 头：稿子那头是**四分之三视角**——头顶那圈最亮处偏右（实测 y154 一行，白的在 x185→238，
+   而头的中心才 198），左边一路斜下去。CSS 摆不出透视，就用「高光右偏 ＋ 整颗头顺时针转 6°」
+   近似：不转的话头是个正蛋，转完头顶才往右压、跟稿子的斜度对得上。
+   颜色上**越往下越冷**：头顶正中 (195,155) 是纯白 #FEFEFD，贴着面罩那圈（左 (150,200)
+   #D2E5FF、右 (238,196) #BACEFF、下巴 (195,238) #C8DBFF）全落到浅蓝，再往下接到脖子。
+   第一版整颗吃的是淡紫→深紫，看着就比稿子「闷」且紫。 */
+.hvu-head{position:absolute;left:28.7px;top:9px;width:99px;height:96px;transform:rotate(6deg);
+  border-radius:52% 52% 46% 46%/56% 56% 44% 44%;
+  background:linear-gradient(160deg,#FFFFFF 0%,#FBFDFF 22%,#DCEAFF 46%,#C2D6FF 70%,#ADCAFF 100%);
+  box-shadow:0 18px 26px -20px rgba(78,66,180,.9),inset 0 0 0 1px rgba(255,255,255,.75)}
+/* 面罩：一块从左下亮蓝斜着沉到右上近黑蓝的屏（实测最暗 #03064E、最亮 #6E63FF），
+   四枚白点间距 12.4、点径约 8；点比面罩中线低约 3.8，用 padding-top 顶下去。
+   外面那圈冷蓝是屏打到脸上的光——稿子面罩四周一大片是 #D2E5FF 那个调，少了它脸就是块死白 */
+.hvu-visor{position:absolute;left:32.7px;top:39.6px;width:69.9px;height:48.8px;border-radius:18px;
+  display:flex;align-items:center;justify-content:center;gap:4.4px;padding-top:7.6px;
+  background:linear-gradient(105deg,#6E63FF 0%,#2A48EC 30%,#12229E 62%,#050940 100%);
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.32),0 8px 16px -10px rgba(20,20,90,.95),
+    0 0 16px 1px rgba(150,200,255,.6)}
+.hvu-visor i{width:8px;height:8px;border-radius:50%;background:#FFFFFF;flex:none;
+  box-shadow:0 0 9px 2px rgba(150,205,255,.95)}
+/* 耳：稿子上是枚耳机罩样的**蓝**环（外径 28×40，实测外圈 #A7AFFF、内圈 #7D9DFC），
+   环里那圈亮青是内壁高光、中心再留一个小孔。它压在头的右缘上、还往外探出 11px，
+   所以画在 head 之前（被头压住半边）。 */
+.hvu-ear{position:absolute;left:126.7px;top:49px;width:28.2px;height:39.5px;border-radius:50%;
+  background:linear-gradient(150deg,#C3CAFF 0%,#9AA5FB 36%,#7B8CF6 70%,#A8B2FD 100%);
+  box-shadow:0 8px 16px -10px rgba(60,80,190,.85),inset 0 0 0 1px rgba(255,255,255,.45)}
+/* 环里那圈不是整环，是只留着右边一段的「C」——稿子上耳机罩是斜看的，开口朝里 */
+.hvu-ear::before{content:"";position:absolute;left:26%;top:22%;width:46%;height:56%;border-radius:50%;
+  border:3.1px solid #DFEEFF;border-left-color:rgba(223,238,255,.25);
+  box-shadow:0 0 0 1.1px rgba(255,255,255,.5)}
+/* 身：稿子胸口到肚子是**纯白**（实测 (195,275) #FEFDFE），只有最下沿才收进淡紫 */
+.hvu-body{position:absolute;left:24.7px;top:111px;width:108px;height:62px;border-radius:44px 44px 30px 30px;
+  background:linear-gradient(180deg,#FFFFFF 0%,#FEFDFF 56%,#F1ECFF 82%,#DFD7FE 100%);
+  box-shadow:0 14px 22px -18px rgba(78,66,180,.9),inset 0 0 0 1px rgba(255,255,255,.7)}
+/* 颈圈：稿子是条饱满的紫带（顶上一线冷白高光，往下 #7A3CEC→#9E58FF→#B96FFF），不是淡紫 */
+.hvu-collar{position:absolute;left:59.7px;top:103px;width:70px;height:22px;border-radius:999px;
+  background:linear-gradient(180deg,#8FC8FF 0%,#7A3CEC 18%,#9E58FF 48%,#B96FFF 78%,#D3A9FF 100%);
+  box-shadow:inset 0 1.5px 0 rgba(206,232,255,.95),0 8px 14px -10px rgba(96,52,200,.95)}
+/* 手：稿子那两只手也是纯白（实测 (195,295) #FEFDFB），只有边缘收一点冷紫 */
+.hvu-hand{position:absolute;border-radius:50%;
+  background:radial-gradient(circle at 40% 32%,#FFFFFF,#FEFCFF 56%,#EFE9FF 84%,#DFD7FE);
+  box-shadow:0 10px 16px -12px rgba(78,66,180,.9)}
+.hvu-hand.l{left:18px;top:122px;width:34px;height:34px}
+.hvu-hand.r{left:104px;top:120px;width:36px;height:36px}
+
+/* 翻开的日历：白卡＋顶上两枚环＋一格打了勾。稿子上它压在机器人的左臂前、整体略向左倾。
+   尺寸按实测收到 66×57（稿子上那枚蓝头是实打实的 #5A69FF，不是淡蓝） */
+.hvu-cal{position:absolute;left:111px;top:210px;width:66px;height:57px;border-radius:11px;
+  background:linear-gradient(172deg,#FFFFFF 0%,#F3F0FF 100%);
+  box-shadow:0 14px 24px -16px rgba(70,70,170,.95),inset 0 0 0 1px rgba(255,255,255,.85)}
+.hvu-cal-b{position:absolute;left:8px;top:-5px;width:10px;height:15px;border-radius:5px;background:#7BA2FF}
+.hvu-cal-b+.hvu-cal-b{left:41px}
+.hvu-cal-h{position:absolute;left:0;right:0;top:0;height:9px;border-radius:11px 11px 0 0;
+  background:linear-gradient(90deg,#6E7CFF,#4E5DFF)}
+.hvu-cal-g{position:absolute;left:5px;top:12px;right:5px;bottom:9px;
+  display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:3.5px}
+.hvu-cal-g i{border-radius:3px;background:#E4E9FF}
+.hvu-cal-g i.on{background:#7BA2FF;display:flex;align-items:center;justify-content:center;color:#fff}
+
+/* 任务卡：白卡＋右上角翻卷＋当中一块蓝紫渐变牌（牌里是列表线）＋右下角柱状图。稿子上它转着 -8° */
+.hvu-task{position:absolute;left:234px;top:211px;width:75.4px;height:62px;border-radius:10px;
+  transform:rotate(-8deg);overflow:hidden;
+  background:linear-gradient(168deg,#FFFFFF 0%,#F2EFFF 100%);
+  box-shadow:0 14px 24px -16px rgba(70,70,170,.95),inset 0 0 0 1px rgba(255,255,255,.85)}
+.hvu-task::after{content:"";position:absolute;right:-1px;top:-1px;width:24px;height:24px;
+  border-radius:0 10px 0 24px;background:linear-gradient(215deg,#DCD5FE,#FFFFFF)}
+.hvu-tk-i{position:absolute;left:11px;top:13px;width:30px;height:30px;border-radius:9px;
+  display:flex;align-items:center;justify-content:center;color:#fff;
+  background:linear-gradient(158deg,#6E9BFF,#5B6BFF);box-shadow:0 6px 12px -8px rgba(70,60,180,.95)}
+.hvu-tk-c{position:absolute;right:10px;bottom:9px;width:26px;height:22px;display:flex;align-items:flex-end;gap:3px}
+.hvu-tk-c i{flex:1;border-radius:2px 2px 1px 1px;background:linear-gradient(180deg,#7BA2FF,#4B7BFF)}
+.hvu-tk-c i:nth-child(1){height:42%}
+.hvu-tk-c i:nth-child(2){height:72%;background:linear-gradient(180deg,#A48BFF,#8B5BFF)}
+.hvu-tk-c i:nth-child(3){height:100%}
+
+/* 铃铛：稿子上它探在日历右下方、机器人的左臂前，钟盘挂在铃的右上角 */
+.hvu-bell{position:absolute;left:142.8px;top:237.4px;width:28.6px;height:31.8px;color:#5B7BFF;
+  display:flex;align-items:center;justify-content:center}
+.hvu-bell .c{position:absolute;right:-6px;top:-2px;width:16.5px;height:16.5px;border-radius:50%;background:#fff;
+  display:flex;align-items:center;justify-content:center;color:#5B7BFF;
+  box-shadow:0 4px 8px -6px rgba(70,70,170,.95),inset 0 0 0 1.4px #B9CDFF}
+
+/* ---- 两个模块卡：稿子上就是「一圈更白的描边 ＋ 一层几乎看不见的淡紫底」的粗圆角块 ----
+   原先这里铺的是 rgba(255,255,255,.34)，比稿子亮了 5～13：拿同一列量（x=20，落在模块卡里、
+   内层卡外，避开所有元素）稿子 315→600 是 225→244、610→780 是 233→243，
+   而我们 238→245、246→248——**稿子那张卡比它背后的底色还暗 1～5**，
+   我们却是亮 4～9（到了页面底部渐变泛白，白底一叠就成一块奶白板）。
+   去掉这层白，只留一点点冷紫压暗，差值就落回 −2 上下，跟稿子一个观感了。 */
+.hvu-mod{position:relative;margin:0 16px;padding:16px 14px;border-radius:16px;
+  background:rgba(146,140,200,.025);box-shadow:inset 0 0 0 1px rgba(255,255,255,.85)}
+.hvu-mod+.hvu-mod{margin-top:13px}
+.hvu-mh{display:flex;align-items:center;gap:7px;padding-left:2px}
+.hvu-mh h4{margin:0;font-size:17.6px;font-weight:600;line-height:19px;letter-spacing:.01em;
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  background-image:linear-gradient(90deg,#245BB9 20%,#102953 100%)}
+/* 模块标题左边那枚徽章：稿子上是两枚金色 3D 徽章（一枚皇冠、一枚卡牌），这里收成一枚金渐变圆角块＋
+   白线图标＋暖色光晕（同 .ht-sq 那套画法）。负 margin 让它不撑高表头那一行——表头高按标题行算。 */
+.hvu-badge{position:relative;flex:none;width:34px;height:34px;margin:-8px 0;border-radius:11px;
+  display:flex;align-items:center;justify-content:center;color:#fff;
+  background:linear-gradient(152deg,#FFF4D2 0%,#FFDE93 48%,#F4B765 100%);
+  box-shadow:0 8px 14px -10px rgba(214,150,60,.8)}
+.hvu-badge::before{content:"";position:absolute;left:-6px;top:-5px;right:-6px;bottom:-5px;border-radius:50%;
+  background:radial-gradient(50% 50% at 50% 50%,rgba(255,208,124,.42),transparent 70%);filter:blur(3px);z-index:-1}
+
+/* 能力卡：白卡（近白，顶浅底更浅）＋行首一枚渐变描边图标＋渐变标题＋一行说明 */
+.hvu-card{margin-top:9.5px;padding:13px 13px 10px;border-radius:14px;
+  background:linear-gradient(180deg,#FAF9FF 0%,#FDFCFF 100%);
+  box-shadow:0 8px 18px -14px rgba(60,80,170,.85)}
+.hvu-ch{display:flex;align-items:center;gap:7px;height:19px}
+.hvu-ch .ic{flex:none;width:19px;height:19px;display:flex;align-items:center;justify-content:center}
+.hvu-ch h5{margin:0;font-size:17.6px;font-weight:600;line-height:19px;letter-spacing:-.5px;white-space:nowrap;
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  background-image:linear-gradient(90deg,#1677FF,#9452FF)}
+/* 说明行缩进到跟标题同一条起跑线（图标 19 ＋ 间距 7 = 26，稿子量出来 39.6−13 = 26.6）。
+   换行照稿子——稿子那三段是**各自独立的 <p>**（配 whitespace-nowrap），不是让它自己折：
+   随浏览器折会折在「…条件后自动开／始」这种地方，跟稿子对不上。 */
+.hvu-cd{margin:6px 0 0 26px;font-size:13.2px;line-height:17.6px;color:#2D528E}
+
+/* 开通卡：一张白卡里横排三步（渐变块图标＋两行渐变字），步与步之间一枚点线箭头 */
+.hvu-how{position:relative;margin-top:9.5px;padding:12px 14px 10px;border-radius:14px;
+  background:linear-gradient(180deg,#FAF9FF 0%,#FDFCFF 100%);
+  box-shadow:0 8px 18px -14px rgba(60,80,170,.85);display:flex}
+.hvu-step{flex:1;display:flex;flex-direction:column;align-items:center}
+.hvu-sq{width:33px;height:33px;border-radius:11px;display:flex;align-items:center;justify-content:center;color:#fff;
+  background:linear-gradient(158deg,#7EA8FF 0%,#4B7BFF 46%,#8B5BFF 100%);
+  box-shadow:0 8px 14px -10px rgba(70,60,180,.95)}
+.hvu-sl{margin-top:4.5px;font-size:13.2px;line-height:19.8px;text-align:center;letter-spacing:-.2px;
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  background-image:linear-gradient(90deg,#245BB9 20%,#102953 100%)}
+.hvu-arrow{position:absolute;top:22.5px;width:20px;height:7px;color:#93A0FF;transform:translateX(-50%)}
+.hvu-arrow.a{left:33.333%}
+.hvu-arrow.b{left:66.667%}
+
+/* 底上那枚 CTA 整段已去掉（2026-10-16，产品定）：稿子 543:140 底上是一条蓝→紫渐变胶囊
+   （`.hvu-cta` ＋ ::after 高光 ＋ 右端那枚白 ✦／hvuSpkW），这里连样式一并删干净——
+   员工端没有可执行的动作，理由写在 #host-ai-up 标记里那段注释。
+   ※ 这一删顺带把「渐变胶囊按钮」那条例外带走了：本屏现在只在**图标**上吃渐变（✦／标签图标／
+     能力卡行首／三步方块），而 SKILL §5 第 2 条管的是按钮／FAB 的**填充**——所以那条例外不用开了，
+     `#aiPanel` 仍是唯一豁免。 */
+
 /* 三颗圆形动作：托管总开关／AI配置／设置。形态照用户给的那张截图（白圆、圆内描边图标、圆下小字），
    配色仍走本 App 这套 token，不搬截图那身车机的皮。
    位置：托管状态卡的右上角空白处（用户指定）。那块的柔光是装饰，圆钮压在上面正合适——
@@ -2212,6 +2401,12 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
           <linearGradient id="aiSwapGrad" x1="0" y1="0" x2="1" y2="0">
             <stop offset="0" stop-color="#1677FF"/><stop offset="1" stop-color="#9452FF"/>
           </linearGradient>
+          <!-- AI托管升级提示页专用（hvuSpk／hvuIc 两个助手引用它）。与上面那支同色（#1677FF→#9452FF，
+               稿子 543:140 整屏的 ✦、标签图标、胶囊里的纸飞机、能力卡的行首图标都是这一支），
+               单独一份是为了让这一屏的颜色只在一个地方改，不去动「实时辅助」那条。 -->
+          <linearGradient id="hvuGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#1677FF"/><stop offset="1" stop-color="#9452FF"/>
+          </linearGradient>
         </defs></svg>
 
         <!-- 宿主App首页（素材推荐）· 照 Figma 节点 778:169 复刻 -->
@@ -2385,25 +2580,92 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 
         <!-- 宿主App AI托管 · 升级提示页（标准版点底栏那枚「AI托管」进的屏）
              《云小助（二期）· 产品需求文档》§2.2：标准版的底栏**也是五枚**（不许因为版本增减 Tab），
-             点那一枚进这一屏；这一屏讲三件事——这是什么／这是旗舰版能力／一枚落点，
-             底栏仍在，所以它不是死胡同（有人把它当成"进不去的门"，那是另一回事）。
+             点那一枚进这一屏。底栏仍在，所以它不是死胡同（有人把它当成"进不去的门"，那是另一回事）。
              正文写死在标记里：它没有状态、没有数据，一个字都不跟着别的屏变；
-             底栏由 REND['host-ai-up'] 填——Tab 是同一套（见 HVA_UP_TABS）。
-             背景沿用 AI托管 那一身渐变（.hva-glow ＋ #host-ai 的那条）：
-             它是从 AI托管 这枚 Tab 进来的，换一身皮会让人以为跳到了别的模块。 -->
+             **只有图标那几处走 JS**（REND['host-ai-up']）、底栏那五枚也由它填（见 HVA_UP_TABS）——
+             图标一律从 ICONS 表里取，不在这儿手抄一遍 path。
+             2026-10-16：整屏照 Figma 节点 543:140 重画（原先是按 §2.2 手搓的「圆标＋标题＋清单＋脚注」四件），
+             版式、折算与那几件 3D 位图的还原办法见 CSS 段头与 ADR-0068。
+             **同日再换一次正文**（稿子那一版的字是「系统怎么跑」，这一版是「替你干了什么」，见模块一那段注释）：
+             版式、坐标、主图一字未动，只换了胶囊／两枚标签／两张能力卡的字，外加把第三张卡收起——
+             所以 CSS 段头那套折算与实测结论**照旧有效**，改文案不必重跑那套实测。 -->
         <section class="screen" id="host-ai-up">
-          <div class="hva-glow"></div>
-          <div class="hv-up">
-            <div class="hv-up-ic" id="hvaUpIc" aria-hidden="true"></div>
-            <h2 class="hv-up-t">AI托管</h2>
-            <p class="hv-up-p">把一部分活交给数智员工。你在忙别的、手机闲着的时候，它按你配好的知识与工作时段，自己把活做掉。</p>
-            <ul class="hv-up-l">
-              <li>管理员下发的营销任务</li>
-              <li>你自己挂上的能力：朋友圈互动 / 画像分析 / 自动打招呼</li>
-              <li>做过的活记在工作日志里，随时回看</li>
-            </ul>
-            <button class="btn btn-primary btn-block hv-up-btn" onclick="upGrade()">了解旗舰版</button>
-            <p class="hv-up-note">这是<b>旗舰版能力</b>。开通后这一枚直接进主页；其余功能现在就能用。</p>
+          <div class="hvu-glow"></div>
+          <div class="scroll hvu-scroll">
+            <!-- 标题＋主图这一整段：件全是绝对定位的（见 CSS 段头说明），高度把它兜住 -->
+            <div class="hvu-top">
+              <div class="hvu-halo"></div>
+              <h2 class="hvu-title"><span class="sp" id="hvuSpk"></span><span class="hvu-t b">AI托管</span><span class="hvu-t n">旗舰版专属</span></h2>
+
+              <!-- 「自动对话 ＋ 自动化执行 无人值守」那枚胶囊＝旗舰版核心能力那一对（2026-10-16 换稿）。
+                  收尾那个词是**无人值守**、不是「全天候」：托管条件（[CONTEXT-托管] 词表）＝开关 ＋ 工作时段
+                  （默认 09:00—18:00）＋ 手机闲置，它**不是 24 小时**的——「全天候」是这一屏唯一一处
+                  能被人拿产品去核的说法，宁可用「无人值守」这句员工能自己验的（§2.2 ① 也是这么写的）。 -->
+              <div class="hvu-pill"><span class="ic" id="hvuPillIc"></span><span class="t b">自动对话 ＋ 自动化执行 </span><span class="t n">无人值守</span></div>
+
+              <!-- 两枚浮着的标签：一枚说接待侧（微信 ＋ 企业微信，词表「多开托管」那道范围），
+                   一枚说托管侧（同一台手机上的多个工作账号）——两枚都别写成「多平台」的同义词。 -->
+              <div class="hvu-tag l"><span class="ic" id="hvuTagL"></span><span class="t">多平台</span></div>
+              <div class="hvu-tag r"><span class="ic" id="hvuTagR"></span><span class="t">多账号</span></div>
+
+              <!-- 主图：机器人、翻开的日历、任务卡、铃铛。稿子上是 3D 位图，这里是纯 CSS 的形（ADR-0042） -->
+              <!-- 叠放次序就是这一串的先后：身／手在最里，耳被头顶掉半边，颈圈最后落、压在头下沿上 -->
+              <div class="hvu-robot">
+                <div class="hvu-body"></div>
+                <div class="hvu-hand l"></div><div class="hvu-hand r"></div>
+                <div class="hvu-ear"></div>
+                <div class="hvu-head"></div>
+                <div class="hvu-visor"><i></i><i></i><i></i><i></i></div>
+                <div class="hvu-collar"></div>
+              </div>
+              <div class="hvu-cal">
+                <span class="hvu-cal-b"></span><span class="hvu-cal-b"></span>
+                <div class="hvu-cal-h"></div>
+                <div class="hvu-cal-g"><i></i><i></i><i></i><i></i><i></i><i class="on"></i><i></i><i></i><i></i></div>
+              </div>
+              <div class="hvu-task">
+                <div class="hvu-tk-i" id="hvuTkIc"></div>
+                <div class="hvu-tk-c"><i></i><i></i><i></i></div>
+              </div>
+              <div class="hvu-bell" id="hvuBell"></div>
+            </div>
+
+            <!-- 模块一：升级旗舰版能获得什么
+                 **两张卡＝旗舰版的两大核心能力**（自动对话／自动化执行），2026-10-16 换稿：
+                 原先那三张（自动执行后台待办／统一托管我的动作／任务集中查看）讲的是**系统怎么跑**，
+                 而进这一屏的人只关心**它替我把什么活干了**——「后台待办」「托管队列」是本产品的内部词，
+                 对还没买的人等于没说；「无人值守」那一层改由顶上那枚胶囊承担，不另开一张卡。
+                 口径来源＝旗舰版的产品定位（多平台智能接待 ＋ 全流程自动化运营）。 -->
+            <div class="hvu-mod">
+              <div class="hvu-mh"><span class="hvu-badge" id="hvuBadge1"></span><h4>升级旗舰版能获得什么</h4></div>
+              <div class="hvu-card">
+                <div class="hvu-ch"><span class="ic" id="hvuMi1"></span><h5>自动对话 · 多平台智能接待</h5></div>
+                <p class="hvu-cd">一个人手里多个微信号，客户消息再多也接得住<br>按设定角色与对话上下文回复，私聊、群聊都接</p>
+              </div>
+              <div class="hvu-card">
+                <div class="hvu-ch"><span class="ic" id="hvuMi2"></span><h5>自动化执行 · 全流程自动化运营</h5></div>
+                <p class="hvu-cd">边和客户对话，边把对话外的活做掉：<br>SOP营销、加客户微信并首次打招呼、<br>朋友圈维护、活动宣发等按优先级自动执行</p>
+              </div>
+            </div>
+
+            <!-- 模块二：如何开通。三步横排，步与步之间一枚点线箭头 -->
+            <div class="hvu-mod">
+              <div class="hvu-mh"><span class="hvu-badge" id="hvuBadge2"></span><h4>如何开通</h4></div>
+              <div class="hvu-how">
+                <div class="hvu-step"><span class="hvu-sq" id="hvuSq1"></span><span class="hvu-sl">联系销售<br>购买旗舰版</span></div>
+                <div class="hvu-step"><span class="hvu-sq" id="hvuSq2"></span><span class="hvu-sl">由企业管理员<br>统一开通</span></div>
+                <div class="hvu-step"><span class="hvu-sq" id="hvuSq3"></span><span class="hvu-sl">员工无需单独<br>操作</span></div>
+                <svg class="hvu-arrow a" viewBox="0 0 40 14" aria-hidden="true"><g fill="none" stroke="currentColor"
+                  stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h.01M13 7h.01M22 7h.01"/><path d="M29 3.6L32.4 7 29 10.4"/></g></svg>
+                <svg class="hvu-arrow b" viewBox="0 0 40 14" aria-hidden="true"><g fill="none" stroke="currentColor"
+                  stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h.01M13 7h.01M22 7h.01"/><path d="M29 3.6L32.4 7 29 10.4"/></g></svg>
+              </div>
+            </div>
+
+            <!-- 这里**不摆落点按钮**（2026-10-16 产品定）：稿子 543:140 底上原有一枚「立即升级旗舰版」
+                 渐变胶囊，这一笔去掉了——开通这件事根本不在员工端发生（第一步是联系销售购买、第二步由企业管理
+                 员统一开通），员工这一侧没有任何可执行的动作，摆一枚按钮也只是落一句「演示范围外」。
+                 **别照稿把它加回来**：这一屏只有底栏那枚 Tab 一个入口，口径见二期 PRD §2.2。 -->
           </div>
           <div class="hv-tab" id="hvaUpTab"></div>
         </section>
@@ -4339,9 +4601,29 @@ REND['host-ai']=function(){
 /* ---------- 标准版点底栏「AI托管」进的屏 · 升级提示页（《云小助（二期）· 产品需求文档》§2.2） ----------
    底栏**仍是五枚、首页／任务／工具／我的 都能走**（§2.2：两个版本的导航栏长得一模一样，
    员工不该靠数导航栏认自己买的哪一档），所以这一屏不是死胡同——它只把「AI托管」那一枚点亮着。
-   内容三件（§2.2 的表）：这是什么／这是旗舰版能力／一枚落点，正文写死在静态段里（见 #host-ai-up 的注释），
-   这里只补两处要 JS 的：圆标那枚图标、底栏那五枚。
-   底部那枚落点「了解旗舰版」现在走 upGrade()（演示范围外）——落点本身在 §5 待确认里，还没定。 */
+   正文写死在静态段里（见 #host-ai-up 的注释：这一屏没有状态、没有数据），这里只补两类东西——
+   那十几处图标，和底栏那五枚。
+   ※ 2026-10-16 产品又定：稿子底上那枚「立即升级旗舰版」渐变胶囊**去掉**，这一屏不再有落点按钮——
+     开通不在员工端发生（联系销售购买／企业管理员统一开通），员工这一侧没有可执行的动作。
+     所以这里补的只有图标与底栏（原先还补那枚按钮右端的白 ✦，hvuSpkW 随按钮删了）。
+   ※ 2026-10-16 整屏照 Figma 节点 543:140 重画（ADR-0068）：图标槽位换了一批，正文也换成稿子那几句。
+   ※ 同日再换一次正文（同一天的第二次改动，版式不动）：稿子那几句讲的是系统怎么跑，换成旗舰版的
+     卖点那两句。图标槽位由三处收成两处（那张「任务集中查看」连同 hvuMi3 一并收掉）。 */
+
+/* 升级页那支渐变（#1677FF→#9452FF）的两位助手。稿子 543:140 整屏的 ✦、标签图标、胶囊里的纸飞机、
+   能力卡的行首图标都是这一支色，所以独立一份 defs（hvuGrad，见 .view 那份全局 defs），
+   不去动「实时辅助」那条同色的 aiSwapGrad——两处各改各的，谁也不牵谁。u＝升级页（up）。 */
+function hvuSpk(s){ s=s||19;   /* 吃渐变的 ✦：图形与 hvSpk 同源，只换色（那边是首屏的紫蓝） */
+  return '<svg width="'+s+'" height="'+s+'" viewBox="0 0 24 24" aria-hidden="true">'
+    +'<path d="M13.2 2.2l2.2 6.1 6.1 2.2-6.1 2.2-2.2 6.1-2.2-6.1-6.1-2.2 6.1-2.2z" fill="url(#hvuGrad)"/>'
+    +'<path d="M6.6 14.2l.85 2.35 2.35.85-2.35.85-.85 2.35-.85-2.35-2.35-.85 2.35-.85z" fill="url(#hvuGrad)" opacity=".9"/></svg>';
+}
+/*（hvuSpkW——底上那枚 CTA 右端的白 ✦——随按钮一并删了，见 CSS 段头。）*/
+/* 渐变描边的线性图标：与 I() 取同一份 ICONS 表，只把描边那处的取色从 currentColor 换成那支渐变。
+   replace 不带 /g ——I() 出来的串里只有最外层那个 <svg> 上有一处 stroke="currentColor"，
+   图形表内部另有几处 stroke="none"（实心那块），带 /g 会误伤。 */
+function hvuIc(n,s,sw){ return I(n,s,sw).replace('stroke="currentColor"','stroke="url(#hvuGrad)"'); }
+
 var HVA_UP_TABS=[
   {n:'首页',ic:'homefill',fn:"go('host-home')"},
   {n:'任务',ic:'tasksq',  fn:"go('host-task')"},
@@ -4350,7 +4632,24 @@ var HVA_UP_TABS=[
   {n:'我的',ic:'smile',   fn:"go('host-me')"}
 ];
 REND['host-ai-up']=function(){
-  $('hvaUpIc').innerHTML=I('sparkle',34,1.8);
+  $('hvuSpk').innerHTML=hvuSpk(15.5);                       /* 大标题左边那枚 ✦ */
+  $('hvuPillIc').innerHTML=hvuIc('send',17,1.9);            /* 胶囊里那枚纸飞机 */
+  $('hvuTagL').innerHTML=hvuSpk(16.5);                      /* 智能排队 */
+  $('hvuTagR').innerHTML=hvuSpk(16.5);                      /* 集中管理 */
+  $('hvuTkIc').innerHTML=I('bars',17,2.2);                  /* 任务卡里那块蓝紫牌 */
+  /* 铃铛：稿子上铃铛右下一枚小时钟叠着，两个凑一件 */
+  $('hvuBell').innerHTML=I('bell',25,2)+'<span class="c">'+I('clock',11,2.2)+'</span>';
+  $('hvuBadge1').innerHTML=I('sparkle',19,2);               /* 模块一那枚徽章（稿：皇冠） */
+  $('hvuBadge2').innerHTML=I('idcard',19,2);                /* 模块二那枚徽章（稿：卡牌） */
+  /* 两张能力卡的行首图标（一律渐变描边）。稿上那三张是灯泡＋✦／环形箭头／灯泡＋时钟——
+     换稿后剩两张：「自动对话」那枚本来在稿上就是对话框，取 ICONS 里同一族的 chatdot；
+     「自动化执行」沿用原第二张那枚 sync（环形箭头＝一遍遍自己跑）。 */
+  $('hvuMi1').innerHTML=hvuIc('chatdot',19,1.9);
+  $('hvuMi2').innerHTML=hvuIc('sync',19,1.9);
+  /* 开通卡三步的方块图标。稿：文稿＋✦／钥匙＋✦／人＋✦ */
+  $('hvuSq1').innerHTML=I('doc',18,2);
+  $('hvuSq2').innerHTML=I('lock',18,2);
+  $('hvuSq3').innerHTML=I('user',18,2);
   $('hvaUpTab').innerHTML=hvTabsHtml(HVA_UP_TABS);
 };
 
