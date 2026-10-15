@@ -189,6 +189,24 @@ mark{background:var(--primary-container);color:var(--on-primary-container);borde
 .nav-i.on{background:rgba(90,84,249,.28);color:#fff;box-shadow:inset 0 0 0 1px rgba(195,192,255,.35)}
 .nav-i .dot{width:5px;height:5px;border-radius:50%;background:#565A6E;flex:none}
 .nav-i.on .dot{background:#C3C0FF;box-shadow:0 0 8px #C3C0FF}
+
+/* ---- 演示版本开关（标准版 / 旗舰版）——**原型外壳的展品件，不是 App 的一屏** ----
+   真实系统里"这台企业是标准版还是旗舰版"由服务端下发，客户端没有这枚开关
+   （《云小助（二期）· 产品需求文档》§1.4／§2.2）。放在手机外的侧栏顶部，正是为了让它读起来就是演示件。
+   因此这身皮跟着**侧栏那套深色玻璃**走，不吃 App 的 M3 token——它与手机外框同属「展品」那一层。 */
+#verBox{padding:0 2px 2px}
+.ver-seg{display:flex;flex-direction:column;gap:6px}
+.ver-b{display:flex;align-items:baseline;gap:7px;width:100%;text-align:left;padding:9px 11px;
+  border-radius:11px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);
+  color:#C6C8D6;font-family:var(--f);transition:all .18s var(--emph)}
+.ver-b:hover{background:rgba(255,255,255,.09);color:#fff}
+.ver-b.on{background:rgba(90,84,249,.28);color:#fff;box-shadow:inset 0 0 0 1px rgba(195,192,255,.35)}
+.ver-b .vn{font-size:12.5px;font-weight:700;flex:none}
+.ver-b .vd{font-size:10.5px;color:#8F92A6;min-width:0}
+.ver-b.on .vd{color:#C3C0FF}
+.ver-note{margin:9px 4px 0;font-size:10.5px;line-height:1.55;color:#6E7182}
+.nav-vip{margin-left:6px;padding:1px 6px 1px 5px;border-radius:6px;font-size:9.5px;font-style:normal;
+  font-weight:700;letter-spacing:.06em;color:#C3C0FF;background:rgba(90,84,249,.30)}
 #sideBtn{display:none;position:fixed;left:16px;bottom:18px;z-index:40;width:44px;height:44px;border-radius:14px;
   background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(10px);
   align-items:center;justify-content:center;color:#D9DAE8}
@@ -771,6 +789,26 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .hva-scroll{position:relative;z-index:1;flex:1;min-height:0;display:flex;flex-direction:column}
 .hva-head{flex:none;padding:0 18px}
 .hva-pane{flex:1;min-height:0;padding:0 18px 24px} /* 底距 24：原先那 148px 是给右下悬浮球让位的（球底距 80＋球高 52＋余量），球 2026-10-16 撤了（ADR-0065），留着就是日志尾部凭空空一大截 */
+
+/* AI托管 · 升级提示页（标准版点底栏那枚 Tab 进的屏，§2.2）：一列居中，四件——
+   标记圆、标题、一句「这是什么」、三行清单，末尾一枚 filled 主按钮与一句「不是死胡同」的脚注。
+   它是从 AI托管 这枚 Tab 进来的，所以沿用那一屏的背景渐变与光晕（.hva-glow），换一身皮会读成另一个模块。
+   标记圆走 --primary-container **实底**：SKILL 第 5 节禁止清除清单第 2 条不许按钮／FAB 渐变填充，
+   这一颗是整屏的主视觉，给它渐变等于把这一屏的调子交给一条渐变——同族的抬起 Tab 圆是参考原型带来的既有豁免，
+   不往外扩。 */
+#host-ai-up{background:linear-gradient(180deg,#EAECFC 0%,#F3F5FE 40%,#FFFFFF 100%)}
+.hv-up{position:relative;z-index:1;flex:1;min-height:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:0 30px 16px;text-align:center}
+.hv-up-ic{flex:none;width:76px;height:76px;border-radius:50%;background:var(--primary-container);
+  color:var(--primary);display:flex;align-items:center;justify-content:center}
+.hv-up-t{font-size:22px;font-weight:500;color:var(--on-surface);padding-top:18px}
+.hv-up-p{font-size:13.5px;line-height:1.7;color:var(--on-surface-variant);padding-top:10px}
+.hv-up-l{list-style:none;width:100%;display:flex;flex-direction:column;gap:9px;padding-top:16px;text-align:left}
+.hv-up-l li{position:relative;padding-left:20px;font-size:13px;line-height:1.6;color:var(--on-surface)}
+.hv-up-l li::before{content:"";position:absolute;left:3px;top:7px;width:6px;height:6px;border-radius:50%;background:var(--primary)}
+.hv-up-btn{margin-top:24px}
+.hv-up-note{font-size:11.5px;line-height:1.65;color:var(--on-surface-variant);padding-top:12px}
+.hv-up-note b{color:var(--primary);font-weight:600}
 /* 三颗圆形动作：托管总开关／AI配置／设置。形态照用户给的那张截图（白圆、圆内描边图标、圆下小字），
    配色仍走本 App 这套 token，不搬截图那身车机的皮。
    位置：托管状态卡的右上角空白处（用户指定）。那块的柔光是装饰，圆钮压在上面正合适——
@@ -1981,7 +2019,14 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
     <p>Android · 卡片即操作面（预览＋复制/发送，无详情页）· 内容视图 Tab / 横向分组 chips / 消息附件 / 个人素材分组 · 微信场景含关键词触发引擎与一键发圈</p>
   </div>
 
-  <aside id="sidebar"><h2>屏幕目录</h2><div id="navList"></div></aside>
+  <!-- 侧栏＝原型外壳（展品），两段：上面「演示版本」（标准版／旗舰版，见 setVer／buildVer），
+       下面「屏幕目录」。版本开关特意放在**手机外**——它是演示件，不该被读成 App 里的一屏。 -->
+  <aside id="sidebar">
+    <h2>演示版本</h2>
+    <div id="verBox"></div>
+    <h2>屏幕目录</h2>
+    <div id="navList"></div>
+  </aside>
   <button id="sideBtn" onclick="document.body.classList.toggle('side-open')">☰</button>
 
   <div class="phone-wrap"><div class="phone">
@@ -2161,6 +2206,31 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
             <div class="scroll hva-pane" id="hvaPane"></div>
           </div>
           <div class="hv-tab" id="hvaTab"></div>
+        </section>
+
+        <!-- 宿主App AI托管 · 升级提示页（标准版点底栏那枚「AI托管」进的屏）
+             《云小助（二期）· 产品需求文档》§2.2：标准版的底栏**也是五枚**（不许因为版本增减 Tab），
+             点那一枚进这一屏；这一屏讲三件事——这是什么／这是旗舰版能力／一枚落点，
+             底栏仍在，所以它不是死胡同（有人把它当成"进不去的门"，那是另一回事）。
+             正文写死在标记里：它没有状态、没有数据，一个字都不跟着别的屏变；
+             底栏由 REND['host-ai-up'] 填——Tab 是同一套（见 HVA_UP_TABS）。
+             背景沿用 AI托管 那一身渐变（.hva-glow ＋ #host-ai 的那条）：
+             它是从 AI托管 这枚 Tab 进来的，换一身皮会让人以为跳到了别的模块。 -->
+        <section class="screen" id="host-ai-up">
+          <div class="hva-glow"></div>
+          <div class="hv-up">
+            <div class="hv-up-ic" id="hvaUpIc" aria-hidden="true"></div>
+            <h2 class="hv-up-t">AI托管</h2>
+            <p class="hv-up-p">把一部分活交给数智员工。你在忙别的、手机闲着的时候，它按你配好的知识与工作时段，自己把活做掉。</p>
+            <ul class="hv-up-l">
+              <li>管理员下发的营销任务</li>
+              <li>你自己挂上的能力：朋友圈互动 / 画像分析 / 自动打招呼</li>
+              <li>做过的活记在工作日志里，随时回看</li>
+            </ul>
+            <button class="btn btn-primary btn-block hv-up-btn" onclick="upGrade()">了解旗舰版</button>
+            <p class="hv-up-note">这是<b>旗舰版能力</b>。开通后这一枚直接进主页；其余功能现在就能用。</p>
+          </div>
+          <div class="hv-tab" id="hvaUpTab"></div>
         </section>
 
         <!-- 宿主App AI配置 · 员工列表（二级页）· 逻辑照参考原型 APP-AI-002
@@ -2895,10 +2965,23 @@ function dlgClose(el){ /* 关对话框＝整个 overlay 子节点一起走（只
   if(w)w.remove();
 }
 
+/* ---------- 演示版本：标准版 / 旗舰版（**原型外壳的演示开关，不是 App 的一屏**） ----------
+   真实系统里「这台企业是标准版还是旗舰版」由服务端下发，客户端没有这枚开关
+   （《云小助（二期）· 产品需求文档》§1.4／§2.2）；这里它长在**手机外**的侧栏顶部（#verBox），
+   正是为了让它读起来就是展品件。默认**旗舰版**：本仓库按最终形态设计（AGENTS.md「设计不分期」），
+   标准版只是少了 AI托管 的那一档——切过去是为了对稿看门禁，不是产品的默认状态。 */
+var VER='pro';                                       /* 'pro' 旗舰版 | 'std' 标准版 */
+function isPro(){ return VER==='pro' }
+/* 旗舰版才能进的屏：标准版下点它们一律落到升级提示页（host-ai-up）。
+   **只在 go() 里拦一处**：切屏的唯一出口就是它——底栏五枚 Tab、侧栏目录、各屏内部的跳转
+   （含侧栏那枚 fn 直调的「新建数智员工」，它最后也是 go('host-ai-agent')）全都经过它。
+   另在 hvaNew 里再判一次是白判：两处写同一件事，改口径时必漏一处。 */
+var VIP_ONLY={'host-ai':1,'host-ai-cfg':1,'host-ai-agent':1,'host-ai-set':1,'host-ai-act':1};
 /* ---------- 路由（M3 fade-through 转场） ---------- */
 var stack=[]; var cur=null;
 function render(id,params){ if(REND[id]) REND[id](params||{}); }
 function go(id,params){
+  if(!isPro()&&VIP_ONLY[id]) id='host-ai-up';   /* 标准版：旗舰版的屏一律落到升级提示页 */
   closeBallMenu(); /* 切屏即收：两选一菜单只活在微信屏，别跟着切到别的页 */
   var to=$(id); if(!to) return;
   var from=cur?$(cur):null;
@@ -2956,16 +3039,23 @@ function ripInit(){
 /* ---------- 侧栏目录 ---------- */
 var NAV=[
   {g:'概览',items:[{id:'host-home',n:'宿主 App 首页'},{id:'host-task',n:'宿主 App 任务页'},{id:'host-tools',n:'宿主 App 工具页'},{id:'host-me',n:'宿主 App 我的页'},{id:'host-fwset',n:'宿主 App 设置'},{id:'host-fwset-assist',n:'设置 · 辅助回复'}]},
-  /* AI托管四屏（主页＋二级）：主页面由底栏中间那枚抬起 Tab 进，二级页由主页页头／卡片／悬浮球进。
-     侧栏里仍各列一条——侧栏是演示目录，能直达才方便对稿，不必照着真实路径点三下 */
-  {g:'AI托管',items:[{id:'host-ai',n:'AI托管主页'},{id:'host-ai-cfg',n:'AI配置 · 员工列表'},{id:'host-ai-agent',n:'数智员工详情'},{id:'host-ai-set',n:'AI托管全局设置'},{n:'新建数智员工',fn:'hvaNew()'}]},
+  /* AI托管各屏（主页＋二级）：主页面由底栏中间那枚抬起 Tab 进，二级页由主页页头／卡片／设置页进。
+     侧栏里仍各列一条——侧栏是演示目录，能直达才方便对稿，不必照着真实路径点三下。
+     末二条列的是**只在标准版看得见**的那一屏（§2.2 的升级提示页）：它不挂在任何真实路径上
+     （标准版点那枚 Tab 才到），不在这儿列一条就没法直接对稿。
+     vip:1＝这一组是旗舰版能力，标准版下组名带一枚「旗舰版」角标，且组内各条点下去都落到升级提示页
+     （拦在 go() 里，见 VIP_ONLY）——角标与行为说的是同一件事，别只做一件。 */
+  {g:'AI托管',vip:1,items:[{id:'host-ai',n:'AI托管主页'},{id:'host-ai-cfg',n:'AI配置 · 员工列表'},{id:'host-ai-agent',n:'数智员工详情'},{id:'host-ai-set',n:'AI托管全局设置'},{n:'托管动作配置',fn:"go('host-ai-act')"},{id:'host-ai-up',n:'升级提示页（标准版）'},{n:'新建数智员工',fn:'hvaNew()'}]},
   {g:'素材库',items:[{id:'library',n:'库首页'},{fn:'navPs()',n:'库首页 · 个人素材'},{fn:'navPyq()',n:'库首页 · 朋友圈'},{fn:'navSearch()',n:'库首页 · 搜索态'}]},
   {g:'微信场景',items:[{id:'wechat',n:'聊天 · 悬浮窗 · 触发引擎'}]}
 ];
 function buildNav(){
   var h='';
   for(var i=0;i<NAV.length;i++){
-    h+='<div class="nav-g">'+NAV[i].g+'</div>';
+    /* 标准版下 AI托管 那一组的组名挂一枚「旗舰版」角标：这一组在标准版里整组进不去
+       （点哪条都落升级提示页，见 VIP_ONLY），角标就是这件事的由来——
+       它和「屏幕目录」同属演示件，所以跟着侧栏长，不进手机。 */
+    h+='<div class="nav-g">'+NAV[i].g+(NAV[i].vip&&!isPro()?'<i class="nav-vip">旗舰版</i>':'')+'</div>';
     for(var j=0;j<NAV[i].items.length;j++){
       var it=NAV[i].items[j];
       if(it.fn){h+='<button class="nav-i" onclick="document.body.classList.remove(\'side-open\');'+it.fn+'"><span class="dot"></span>'+it.n+'</button>';continue}
@@ -2992,6 +3082,42 @@ function navGo(btn){
   document.body.classList.remove('side-open');
   go(btn.getAttribute('data-vid'));
 }
+/* ---------- 演示版本开关（构建／切换）——见 VER 那段的注释 ---------- */
+function buildVer(){
+  var b=$('verBox'); if(!b)return;
+  var V=[{k:'pro',n:'旗舰版',d:'最终形态 · 默认'},{k:'std',n:'标准版',d:'已交付基线'}];
+  var h='<div class="ver-seg">';
+  for(var i=0;i<V.length;i++){
+    h+='<button class="ver-b'+(VER===V[i].k?' on':'')+'" onclick="setVer(\''+V[i].k+'\')">'
+      +'<span class="vn">'+V[i].n+'</span><span class="vd">'+V[i].d+'</span></button>';
+  }
+  h+='</div>';
+  h+='<p class="ver-note">两版的差别集中在「AI托管」：标准版的底栏同样有五枚，点那一枚进升级提示页。'
+    +'真实系统里版本由服务端下发，客户端没有这枚开关——把它放在手机外，就是为了让它读起来是演示件。</p>';
+  b.innerHTML=h;
+}
+function setVer(v){
+  if(v===VER)return;
+  VER=v;
+  /* 换版本＝换一套页面，先把**这一版里不存在的屏**从历史里摘掉再动当前屏。
+     不能只改状态不收拾历史：back() 不走 go()，拦不住 VIP_ONLY——
+     标准版下按一次返回，就能退到切版本前停留的旗舰版屏，那才是真的自相矛盾。 */
+  var keep=[];
+  for(var i=0;i<stack.length;i++){
+    var it=stack[i];
+    if(isPro()?(it.id==='host-ai-up'):!!VIP_ONLY[it.id]) continue;
+    keep.push(it);
+  }
+  stack=keep;
+  /* 当前屏也归到这一版该有的那一屏上；它本来就属于这一版时只重画一遍底栏状态 */
+  var tgt=cur;
+  if(!isPro()&&VIP_ONLY[tgt]) tgt='host-ai-up';
+  else if(isPro()&&tgt==='host-ai-up') tgt='host-ai';
+  if(tgt&&tgt!==cur) go(tgt);                 /* go() 会把它压栈，正是要的 */
+  else if(cur){ render(cur,{}); syncNav(cur,{}); }
+  buildNav(); buildVer();
+}
+function upGrade(){ toast('旗舰版开通（演示范围外）') }
 function resetDemo(){
   S.srcTab='全部'; S.pg='全部'; S.grp='全部'; S.expOpen={}; S.momOnly=false; S.recent=false; S.searchKw=''; S.recentKw=[];
   RECENT=RECENT_INIT.map(function(r){return{id:r.id,t:Date.now()+r.h*36e5}});
@@ -3937,6 +4063,24 @@ REND['host-ai']=function(){
   $('hvaHead').innerHTML=hvaHeroHtml();
   $('hvaPane').innerHTML=hvaLogHtml();
   $('hvaTab').innerHTML=hvTabsHtml(HVA_TABS);
+};
+
+/* ---------- 标准版点底栏「AI托管」进的屏 · 升级提示页（《云小助（二期）· 产品需求文档》§2.2） ----------
+   底栏**仍是五枚、首页／任务／工具／我的 都能走**（§2.2：两个版本的导航栏长得一模一样，
+   员工不该靠数导航栏认自己买的哪一档），所以这一屏不是死胡同——它只把「AI托管」那一枚点亮着。
+   内容三件（§2.2 的表）：这是什么／这是旗舰版能力／一枚落点，正文写死在静态段里（见 #host-ai-up 的注释），
+   这里只补两处要 JS 的：圆标那枚图标、底栏那五枚。
+   底部那枚落点「了解旗舰版」现在走 upGrade()（演示范围外）——落点本身在 §5 待确认里，还没定。 */
+var HVA_UP_TABS=[
+  {n:'首页',ic:'homefill',fn:"go('host-home')"},
+  {n:'任务',ic:'tasksq',  fn:"go('host-task')"},
+  {n:'AI托管',ic:'sparkle',ai:1,on:1},
+  {n:'工具',ic:'toolbox', fn:"go('host-tools')"},
+  {n:'我的',ic:'smile',   fn:"go('host-me')"}
+];
+REND['host-ai-up']=function(){
+  $('hvaUpIc').innerHTML=I('sparkle',34,1.8);
+  $('hvaUpTab').innerHTML=hvTabsHtml(HVA_UP_TABS);
 };
 
 /* ---------- 宿主 App AI配置 · 员工列表（二级页）· 逻辑照参考原型 APP-AI-002 ----------
@@ -7175,6 +7319,7 @@ function momPost(){
 
 /* ---------- 初始化 ---------- */
 buildNav();
+buildVer();   /* 侧栏顶部那枚演示版本开关（标准版／旗舰版）：与目录同属演示件、同时建 */
 ripInit();
 ballInit();
 dkRefresh();
