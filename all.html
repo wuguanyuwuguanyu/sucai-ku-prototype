@@ -190,10 +190,11 @@ mark{background:var(--primary-container);color:var(--on-primary-container);borde
 .nav-i .dot{width:5px;height:5px;border-radius:50%;background:#565A6E;flex:none}
 .nav-i.on .dot{background:#C3C0FF;box-shadow:0 0 8px #C3C0FF}
 
-/* ---- 演示版本开关（标准版 / 旗舰版）——**原型外壳的展品件，不是 App 的一屏** ----
-   真实系统里"这台企业是标准版还是旗舰版"由服务端下发，客户端没有这枚开关
+/* ---- 演示版本开关（标准版 / 高级版 / 旗舰版）——**原型外壳的展品件，不是 App 的一屏** ----
+   真实系统里"这台企业是哪一档"由服务端下发，客户端没有这枚开关
    （《云小助（二期）· 产品需求文档》§1.4／§2.2）。放在手机外的侧栏顶部，正是为了让它读起来就是演示件。
-   因此这身皮跟着**侧栏那套深色玻璃**走，不吃 App 的 M3 token——它与手机外框同属「展品」那一层。 */
+   因此这身皮跟着**侧栏那套深色玻璃**走，不吃 App 的 M3 token——它与手机外框同属「展品」那一层。
+   三枚按钮竖排（`.ver-seg` 是 column），正好放下三档；`.vd` 那行小字各写各的档位差在哪。 */
 #verBox{padding:0 2px 2px}
 .ver-seg{display:flex;flex-direction:column;gap:6px}
 .ver-b{display:flex;align-items:baseline;gap:7px;width:100%;text-align:left;padding:9px 11px;
@@ -205,6 +206,7 @@ mark{background:var(--primary-container);color:var(--on-primary-container);borde
 .ver-b .vd{font-size:10.5px;color:#8F92A6;min-width:0}
 .ver-b.on .vd{color:#C3C0FF}
 .ver-note{margin:9px 4px 0;font-size:10.5px;line-height:1.55;color:#6E7182}
+.ver-note b{color:#C3C0FF;font-weight:700}   /* 那一句里「公域」「AI托管」两层要一眼分得开 */
 .nav-vip{margin-left:6px;padding:1px 6px 1px 5px;border-radius:6px;font-size:9.5px;font-style:normal;
   font-weight:700;letter-spacing:.06em;color:#C3C0FF;background:rgba(90,84,249,.30)}
 #sideBtn{display:none;position:fixed;left:16px;bottom:18px;z-index:40;width:44px;height:44px;border-radius:14px;
@@ -836,7 +838,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .hva-head{flex:none;padding:0 18px}
 .hva-pane{flex:1;min-height:0;padding:0 18px 24px} /* 底距 24：原先那 148px 是给右下悬浮球让位的（球底距 80＋球高 52＋余量），球 2026-10-16 撤了（ADR-0065），留着就是日志尾部凭空空一大截 */
 
-/* ---------------- 宿主 App AI托管 · 升级提示页（标准版点底栏那枚「AI托管」进的屏） ----------------
+/* ---------------- 宿主 App AI托管 · 升级提示页（**非旗舰版**点底栏那枚「AI托管」进的屏） ----------------
    2026-10-16 照 Figma 节点 543:140（750×1800）**整屏重画**：上一版是按二期 PRD §2.2 手搓的
    「圆标＋标题＋清单＋脚注」四件，这一版换成稿子那一屏（大标题／胶囊／主图／两枚标签／两张能力卡／
    一张开通卡／一枚渐变 CTA），落 ADR-0068。
@@ -1626,7 +1628,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
    ★ 「添加组件」在稿子上是真按钮（每卡一枚、共四枚），本屏一律走「演示范围外」——
      这一屏演示的是「小部件长什么样」，不是安装流程（与工具页那 45 枚同一口径）。
    ★ 第五枚「AI托管状态」是**二期 PRD §2.7 新增的那一枚**，稿子上没有它：旗舰版下与别的卡同长相；
-     标准版／安全模式下**整卡灰显**、右下那枚胶囊换成只说「旗舰版能力」的静态件。
+     非旗舰版（标准版／高级版）／安全模式下**整卡灰显**、右下那枚胶囊换成只说「旗舰版能力」的静态件。
      那句话与升级提示页那句是**同一句**（§2.2 ②／§2.7 规则 3）；它**不做成按钮**——§2.2 说
      「升级提示页只有这一处入口」，别在这一屏再开第二扇门，摆一个说不通的入口不如把状态说清楚。 */
 #host-widgets{background:linear-gradient(170deg,#F3F8FF 0%,#F5F8FE 34%,#F8F9FC 100%)}
@@ -1716,7 +1718,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .hw-aic{padding:0 12px;height:34px}
 .hw-aic .tm{display:flex;align-items:center;gap:5px;font-size:11.5px;color:#7890B8}
 .hw-go{padding:0 12px;height:36px;justify-content:space-between;font-size:12.5px;font-weight:600;color:#4B7BFF}
-/* 标准版／安全模式：整卡灰显 ＋ 那枚胶囊换成只说「旗舰版能力」的静态件（同一句，见 PRD §2.2 ②） */
+/* 非旗舰版／安全模式：整卡灰显 ＋ 那枚胶囊换成只说「旗舰版能力」的静态件（同一句，见 PRD §2.2 ②） */
 .hw-card.lock .hw-pv,.hw-card.lock .hw-cap .t{opacity:.45;filter:grayscale(1)}
 .hw-lock{flex:none;display:flex;align-items:center;height:33px;padding:0 14px;border-radius:999px;
   font-size:13.2px;font-weight:600;color:#8494B4;background:#E7EAF3}
@@ -2362,7 +2364,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
     <p>Android · 卡片即操作面（预览＋复制/发送，无详情页）· 内容视图 Tab / 横向分组 chips / 消息附件 / 个人素材分组 · 微信场景含关键词触发引擎与一键发圈</p>
   </div>
 
-  <!-- 侧栏＝原型外壳（展品），两段：上面「演示版本」（标准版／旗舰版，见 setVer／buildVer），
+  <!-- 侧栏＝原型外壳（展品），两段：上面「演示版本」（标准版／高级版／旗舰版三枚，见 setVer／buildVer），
        下面「屏幕目录」。版本开关特意放在**手机外**——它是演示件，不该被读成 App 里的一屏。 -->
   <aside id="sidebar">
     <h2>演示版本</h2>
@@ -2578,8 +2580,8 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
           <div class="hv-tab" id="hvaTab"></div>
         </section>
 
-        <!-- 宿主App AI托管 · 升级提示页（标准版点底栏那枚「AI托管」进的屏）
-             《云小助（二期）· 产品需求文档》§2.2：标准版的底栏**也是五枚**（不许因为版本增减 Tab），
+        <!-- 宿主App AI托管 · 升级提示页（**非旗舰版**点底栏那枚「AI托管」进的屏）
+             《云小助（二期）· 产品需求文档》§2.2：非旗舰版（标准版／高级版）的底栏**也是五枚**（不许因为版本增减 Tab），
              点那一枚进这一屏。底栏仍在，所以它不是死胡同（有人把它当成"进不去的门"，那是另一回事）。
              正文写死在标记里：它没有状态、没有数据，一个字都不跟着别的屏变；
              **只有图标那几处走 JS**（REND['host-ai-up']）、底栏那五枚也由它填（见 HVA_UP_TABS）——
@@ -3415,14 +3417,26 @@ function dlgClose(el){ /* 关对话框＝整个 overlay 子节点一起走（只
   if(w)w.remove();
 }
 
-/* ---------- 演示版本：标准版 / 旗舰版（**原型外壳的演示开关，不是 App 的一屏**） ----------
-   真实系统里「这台企业是标准版还是旗舰版」由服务端下发，客户端没有这枚开关
+/* ---------- 演示版本：标准版 / 高级版 / 旗舰版（**原型外壳的演示开关，不是 App 的一屏**） ----------
+   真实系统里「这台企业是哪一档」由服务端下发，客户端没有这枚开关
    （《云小助（二期）· 产品需求文档》§1.4／§2.2）；这里它长在**手机外**的侧栏顶部（#verBox），
    正是为了让它读起来就是展品件。默认**旗舰版**：本仓库按最终形态设计（AGENTS.md「设计不分期」），
-   标准版只是少了 AI托管 的那一档——切过去是为了对稿看门禁，不是产品的默认状态。 */
-var VER='pro';                                       /* 'pro' 旗舰版 | 'std' 标准版 */
+   另两档只是在这张终态表上**层层减去**——切过去是为了对稿看门禁，不是产品的默认状态。
+
+   三档是**两层门禁**叠出来的，不是三张各自独立的表：
+     旗舰版 pro ＝ 私域 ＋ **公域**（抖音／小红书／视频号那一族） ＋ **AI托管**
+     高级版 adv ＝ 私域 ＋ **公域**                       ← 2026-10-16 产品定档：**已不再售卖**，
+                                                            留着只为对线上已购高级版的老用户做迁移
+     标准版 std ＝ 私域                                    ← 线上交付基线
+   所以判定只用两个函数：isPro() 管 **AI托管** 那一层（VIP_ONLY 那五屏），
+   hasPub() 管 **公域** 那一层（HV_PUB 那几处）。**别把两层并成一个变量**——
+   高级版正是「有公域、没有托管」那一档，并起来就没有高级版了。 */
+var VER='pro';                                       /* 'pro' 旗舰版 | 'adv' 高级版 | 'std' 标准版 */
 function isPro(){ return VER==='pro' }
-/* 旗舰版才能进的屏：标准版下点它们一律落到升级提示页（host-ai-up）。
+/* 公域那一层（抖音／小红书／视频号）：**高级版起**才有，标准版整族不摆。
+   见下面 HV_PUB 与 hvTiles() 那一处过滤。 */
+function hasPub(){ return VER!=='std' }
+/* 旗舰版才能进的屏：**非旗舰版**（标准版 ＋ 高级版）下点它们一律落到升级提示页（host-ai-up）。
    **只在 go() 里拦一处**：切屏的唯一出口就是它——底栏五枚 Tab、侧栏目录、各屏内部的跳转
    （含侧栏那枚 fn 直调的「新建数智员工」，它最后也是 go('host-ai-agent')）全都经过它。
    另在 hvaNew 里再判一次是白判：两处写同一件事，改口径时必漏一处。 */
@@ -3431,7 +3445,7 @@ var VIP_ONLY={'host-ai':1,'host-ai-cfg':1,'host-ai-agent':1,'host-ai-set':1,'hos
 var stack=[]; var cur=null;
 function render(id,params){ if(REND[id]) REND[id](params||{}); }
 function go(id,params){
-  if(!isPro()&&VIP_ONLY[id]) id='host-ai-up';   /* 标准版：旗舰版的屏一律落到升级提示页 */
+  if(!isPro()&&VIP_ONLY[id]) id='host-ai-up';   /* 非旗舰版：旗舰版的屏一律落到升级提示页 */
   closeBallMenu(); /* 切屏即收：两选一菜单只活在微信屏，别跟着切到别的页 */
   var to=$(id); if(!to) return;
   var from=cur?$(cur):null;
@@ -3491,18 +3505,19 @@ var NAV=[
   {g:'概览',items:[{id:'host-home',n:'宿主 App 首页'},{id:'host-task',n:'宿主 App 任务页'},{id:'host-tools',n:'宿主 App 工具页'},{id:'host-me',n:'宿主 App 我的页'},{id:'host-fwset',n:'宿主 App 设置'},{id:'host-fwset-assist',n:'设置 · 辅助回复'},{id:'host-widgets',n:'设置 · 小组件'}]},
   /* AI托管各屏（主页＋二级）：主页面由底栏中间那枚抬起 Tab 进，二级页由主页页头／卡片／设置页进。
      侧栏里仍各列一条——侧栏是演示目录，能直达才方便对稿，不必照着真实路径点三下。
-     末二条列的是**只在标准版看得见**的那一屏（§2.2 的升级提示页）：它不挂在任何真实路径上
-     （标准版点那枚 Tab 才到），不在这儿列一条就没法直接对稿。
-     vip:1＝这一组是旗舰版能力，标准版下组名带一枚「旗舰版」角标，且组内各条点下去都落到升级提示页
-     （拦在 go() 里，见 VIP_ONLY）——角标与行为说的是同一件事，别只做一件。 */
-  {g:'AI托管',vip:1,items:[{id:'host-ai',n:'AI托管主页'},{id:'host-ai-cfg',n:'AI配置 · 员工列表'},{id:'host-ai-agent',n:'数智员工详情'},{id:'host-ai-set',n:'AI托管全局设置'},{n:'托管动作配置',fn:"go('host-ai-act')"},{id:'host-ai-up',n:'升级提示页（标准版）'},{n:'新建数智员工',fn:'hvaNew()'}]},
+     末二条列的是**只有非旗舰版到得了**的那一屏（§2.2 的升级提示页）：它不挂在任何真实路径上
+     （非旗舰版点那枚 Tab 才到），不在这儿列一条就没法直接对稿。
+     vip:1＝这一组是旗舰版能力，**非旗舰版**（标准版＋高级版）下组名带一枚「旗舰版」角标，
+     且组内各条点下去都落到升级提示页（拦在 go() 里，见 VIP_ONLY）——角标与行为说的是同一件事，别只做一件。
+     版本开关收成三档后**角标口径一字未改**：高级版有公域、没有托管，所以它和标准版一样整组进不去。 */
+  {g:'AI托管',vip:1,items:[{id:'host-ai',n:'AI托管主页'},{id:'host-ai-cfg',n:'AI配置 · 员工列表'},{id:'host-ai-agent',n:'数智员工详情'},{id:'host-ai-set',n:'AI托管全局设置'},{n:'托管动作配置',fn:"go('host-ai-act')"},{id:'host-ai-up',n:'升级提示页（非旗舰版）'},{n:'新建数智员工',fn:'hvaNew()'}]},
   {g:'素材库',items:[{id:'library',n:'库首页'},{fn:'navPs()',n:'库首页 · 个人素材'},{fn:'navPyq()',n:'库首页 · 朋友圈'},{fn:'navSearch()',n:'库首页 · 搜索态'}]},
   {g:'微信场景',items:[{id:'wechat',n:'聊天 · 悬浮窗 · 触发引擎'}]}
 ];
 function buildNav(){
   var h='';
   for(var i=0;i<NAV.length;i++){
-    /* 标准版下 AI托管 那一组的组名挂一枚「旗舰版」角标：这一组在标准版里整组进不去
+    /* 非旗舰版下 AI托管 那一组的组名挂一枚「旗舰版」角标：这一组在非旗舰版里整组进不去
        （点哪条都落升级提示页，见 VIP_ONLY），角标就是这件事的由来——
        它和「屏幕目录」同属演示件，所以跟着侧栏长，不进手机。 */
     h+='<div class="nav-g">'+NAV[i].g+(NAV[i].vip&&!isPro()?'<i class="nav-vip">旗舰版</i>':'')+'</div>';
@@ -3535,14 +3550,18 @@ function navGo(btn){
 /* ---------- 演示版本开关（构建／切换）——见 VER 那段的注释 ---------- */
 function buildVer(){
   var b=$('verBox'); if(!b)return;
-  var V=[{k:'pro',n:'旗舰版',d:'最终形态 · 默认'},{k:'std',n:'标准版',d:'已交付基线'}];
+  var V=[{k:'pro',n:'旗舰版',d:'最终形态 · 默认'},
+         {k:'adv',n:'高级版',d:'老用户迁移 · 有公域'},
+         {k:'std',n:'标准版',d:'已交付基线 · 无公域'}];
   var h='<div class="ver-seg">';
   for(var i=0;i<V.length;i++){
     h+='<button class="ver-b'+(VER===V[i].k?' on':'')+'" onclick="setVer(\''+V[i].k+'\')">'
       +'<span class="vn">'+V[i].n+'</span><span class="vd">'+V[i].d+'</span></button>';
   }
   h+='</div>';
-  h+='<p class="ver-note">两版的差别集中在「AI托管」：标准版的底栏同样有五枚，点那一枚进升级提示页。'
+  h+='<p class="ver-note">三档差两层：<b>公域</b>（抖音／小红书／视频号那一族）高级版起有，'
+    +'<b>AI托管</b>旗舰版起有，标准版两层都没有；三档底栏都是五枚。'
+    +'高级版已不再售卖，留在开关里是为了对线上已购高级版的老用户做迁移。'
     +'真实系统里版本由服务端下发，客户端没有这枚开关——把它放在手机外，就是为了让它读起来是演示件。</p>';
   b.innerHTML=h;
 }
@@ -3551,7 +3570,7 @@ function setVer(v){
   VER=v;
   /* 换版本＝换一套页面，先把**这一版里不存在的屏**从历史里摘掉再动当前屏。
      不能只改状态不收拾历史：back() 不走 go()，拦不住 VIP_ONLY——
-     标准版下按一次返回，就能退到切版本前停留的旗舰版屏，那才是真的自相矛盾。 */
+     非旗舰版下按一次返回，就能退到切版本前停留的旗舰版屏，那才是真的自相矛盾。 */
   var keep=[];
   for(var i=0;i<stack.length;i++){
     var it=stack[i];
@@ -3559,6 +3578,10 @@ function setVer(v){
     keep.push(it);
   }
   stack=keep;
+  /* 「创建任务」浮窗里的类型表也归版本管（标准版没有抖音任务／小红书任务两组，见 CT_TYPES）：
+     它是压在屏上的一层浮层、不在 stack 里，换版本不收拾就会**留在屏上多出两组**。
+     切版本时一律收掉，比按版本重画那张表省事，也不会把用户刚选的类型留在半路。 */
+  if(CT_W) ctClose();
   /* 当前屏也归到这一版该有的那一屏上；它本来就属于这一版时只重画一遍底栏状态 */
   var tgt=cur;
   if(!isPro()&&VIP_ONLY[tgt]) tgt='host-ai-up';
@@ -3738,7 +3761,10 @@ REND['host-home']=function(){
    回同一句话），口径同首屏那排「快捷工作」：这一屏演示的是「宿主还有哪些工具」，不是它们各自的流程。
    **页面外壳不动**：头部的「设置／新手指南」两枚胶囊、右上那张装饰插画、底部那条宿主全局 Tab 都沿用原样
    ——截图那一版是从别处推进来的二级页（头上有返回箭头、没有底栏），本原型这一屏是**底栏第 4 枚 Tab**，
-   这条壳的口径由二期 PRD §1.4（两版底栏都是五枚）钉着，只换内容、不换壳。
+   这条壳的口径由二期 PRD §1.4（三档底栏都是五枚）钉着，只换内容、不换壳。
+   **2026-10-16 三档版本**：这张表是**旗舰版的全表**（45 枚），标准版摆出来的只有 38 枚——
+   AI赋能 组里标了 pub 的那 7 枚（公域整族 6 枚 ＋ 意向客户）不摆，见 HOST_TOOLS 里那段与 hvTiles 的过滤。
+   **表不拆成三张**：这三档是同一张表上层层减出来的，拆成三张就是三份事实。
    pal 仍是原稿子那张插画的六色系，原型据此出同色系的光晕与渐变块（见 CSS 段的口径说明）。 */
 var HT_PAL={
   creature:['#FFA9D8','#9B8BFF','rgba(190,140,255,.18)'], /* 小怪兽（稿子用得最多的一枚） */
@@ -3795,13 +3821,21 @@ var HOST_TOOLS=[
     {n:'智能回复',ic:'replyT',pal:'keyboard',sm:'客户来消息时起草一条回复',k:'s'},
     /* 产品 2026-10-16 指定在新加的这条：放在「智能回复」之后（同是"替你看懂客户"这一族，
        也把这组排成整三行——线上那版末行只有两枚，加一枚正好补齐）。 */
-    {n:'意向客户',ic:'intent',pal:'hand',sm:'把有意向的客户挑出来排在前面',k:'s'},
-    {n:'抖音运营',ic:'music',pal:'creature',sm:'按抖音的节奏发内容、盯数据',k:'s'},
-    {n:'同城运营',ic:'pin',pal:'phone',sm:'在同城流量里找附近的客户',k:'s'},
-    {n:'小红书运营',ic:'redbook',pal:'bubble',sm:'按小红书的节奏发笔记',k:'s'},
-    {n:'视频号互动',ic:'play',pal:'phone',sm:'给视频号内容点赞＋评论',k:'o'},
-    {n:'抖音评论互动',ic:'music',pal:'creature',sm:'回抖音评论区的留言',k:'s'},
-    {n:'小红书评论互动',ic:'redbook',pal:'keyboard',sm:'回小红书评论区的留言',k:'s'}
+    /* ---- 下面这 7 枚（含本枚）标 pub:1＝**公域那一族，标准版不摆**（PRD §1.4 三档）----
+       2026-10-16 产品定三档版本时点名的口径：**公域整族 6 枚 —— 抖音运营／抖音评论互动／
+       小红书运营／小红书评论互动／同城运营／视频号互动 —— 外加「意向客户」一枚**，
+       共 7 枚，标准版里一个都不出现，**高级版起才有**。
+       「意向客户」为什么也算：它接的正是公域那几路来的线索，标准版里没有公域，也就没有它可挑的东西
+       （产品 2026-10-16 一并点名，不是按名字猜的）。
+       **只标不删**：表还是那张 45 枚的全表（PRD §2.6 以它为准），门禁在渲染那一步做
+       （见 hvTiles 里的过滤）。删了就没人知道线上还有这几格，而且 §2.6 的清单核对要按全表比。 */
+    {n:'意向客户',ic:'intent',pal:'hand',sm:'把有意向的客户挑出来排在前面',k:'s',pub:1},
+    {n:'抖音运营',ic:'music',pal:'creature',sm:'按抖音的节奏发内容、盯数据',k:'s',pub:1},
+    {n:'同城运营',ic:'pin',pal:'phone',sm:'在同城流量里找附近的客户',k:'s',pub:1},
+    {n:'小红书运营',ic:'redbook',pal:'bubble',sm:'按小红书的节奏发笔记',k:'s',pub:1},
+    {n:'视频号互动',ic:'play',pal:'phone',sm:'给视频号内容点赞＋评论',k:'o',pub:1},
+    {n:'抖音评论互动',ic:'music',pal:'creature',sm:'回抖音评论区的留言',k:'s',pub:1},
+    {n:'小红书评论互动',ic:'redbook',pal:'keyboard',sm:'回小红书评论区的留言',k:'s',pub:1}
   ]},
   {n:'企业功能',p:[
     {n:'海报广场',ic:'poster',pal:'creature',sm:'挑模板生成一张海报',k:'o'},
@@ -3857,14 +3891,25 @@ var HT_TABS=[
 /* 分组宫格（白卡＋四列彩色图标块）＝**一处渲染器供两处用**：工具页那一屏，与任务页的「创建任务」浮窗。
    两处照的是同一张线上截图上的同一种件，形态本来就该一样；抄两份＝改一处另一处不动。
    tap(t) 由调用方给：工具页用它那套（每条工具自己的 fn，缺省弹「演示范围外」），
-   浮窗用它那套（点任一类都弹「演示范围外」）。 */
+   浮窗用它那套（点任一类都弹「演示范围外」）。
+   另外它还得**按演示版本滤一层**（标了 pub 的条目在标准版不摆）——见函数里那段注释。 */
 function hvTiles(groups,tap){
   var h='',i,j;
   for(i=0;i<groups.length;i++){
     var M=groups[i];
+    /* 版本门禁**只在这一处**做，两个调用方（工具页／「创建任务」浮窗）自动都吃到：
+       标了 pub 的条目＝公域那一族，**标准版不摆**（PRD §1.4 三档，判定＝hasPub()）。
+       **条目级**（工具页那 7 枚逐枚标）与**组级**（浮窗里整组都是公域的，标在组上）两种都认。
+       见 HOST_TOOLS 与 CT_TYPES 里各自的注释。
+       **整组被滤空时连组头一起不摆**（浮窗里那两组整组都是公域）：留一个只有标题的空卡，
+       比少一组更糟——用户以为这组加载坏了。所以先滤干净、空组直接 continue。 */
+    if(M.pub&&!hasPub()) continue;
+    var ps=[];
+    for(j=0;j<M.p.length;j++) if(hasPub()||!M.p[j].pub) ps.push(M.p[j]);
+    if(!ps.length) continue;
     h+='<div class="ht-mod"><div class="ht-mh">'+hvSpk(20)+'<h4 class="hv-gn">'+M.n+'</h4></div><div class="ht-grid">';
-    for(j=0;j<M.p.length;j++){
-      var t=M.p[j],pa=HT_PAL[t.pal];
+    for(j=0;j<ps.length;j++){
+      var t=ps[j],pa=HT_PAL[t.pal];
       h+='<button class="ht-item" onclick="'+tap(t)+'">'
         +'<span class="ht-il">'
         +'<span class="ht-halo" style="background:'+pa[2]+'"></span>'
@@ -3989,7 +4034,14 @@ function tkTap(t){ toast('宿主App任务「'+t+'」（演示范围外）') }
      通知时间那一套）是**后台**新建页的（线上后台页面/线上新建页html/发圈.html），App 侧这一版本仓库没有抓存件
      ——二期 PRD §2.3 只写「新增创建任务入口」，字段级流程记在 §5 待确认。所以点任一类一律落同一句
      「演示范围外」，与工具页那 45 枚、设置页「修改」同一口径：**宁可不画，不编一屏假表单**。
-     日后拿到 App 侧抓存件，替换点就是 ctTap 这一处。 */
+     日后拿到 App 侧抓存件，替换点就是 ctTap 这一处。
+
+   ★ 版本门禁（2026-10-16 三档，二期 PRD §1.4）：**组级的 `pub:1`** 标在「抖音任务」「小红书任务」
+     两组上——它们是公域那一族，**标准版整组不摆**（高级版起才有），故标准版这屏只剩「微信任务」一组 5 类。
+     标在**组**上而不是逐条标：这两组**整组**都是公域，逐条标＝同一条口径写六遍，加一类就得回来补一次。
+     **「微信任务」那 5 类一个都不动**——它组里那枚「视频号互动」是**微信的任务类型**（视频号是微信自己的），
+     不是公域那族；工具页 AI赋能 组里另有一枚同名工具（那枚标了 pub），**同名不同物，别跟着一起滤**。
+     真正过滤在 hvTiles 里那一段。 */
 var CT_TYPES=[
   {n:'微信任务',p:[
     {n:'朋友圈任务',  ic:'photos',  pal:'hand'},
@@ -3998,12 +4050,12 @@ var CT_TYPES=[
     {n:'发视频号任务',ic:'play',    pal:'bubble'},
     {n:'视频号互动',  ic:'thumbsup',pal:'bubble'}
   ]},
-  {n:'抖音任务',p:[
+  {n:'抖音任务',pub:1,p:[
     {n:'发视频任务',  ic:'play',    pal:'creature'},
     {n:'运营任务',    ic:'music',   pal:'creature'},
     {n:'视频评论互动',ic:'chat2',   pal:'creature'}
   ]},
-  {n:'小红书任务',p:[
+  {n:'小红书任务',pub:1,p:[
     {n:'发笔记任务',  ic:'note',    pal:'phone'},
     {n:'运营任务',    ic:'redbook', pal:'phone'},
     {n:'视频评论互动',ic:'chat2',   pal:'phone'}
@@ -4380,6 +4432,8 @@ var HVA_BADTYPE=(function(){
      工具页那 45 项里只有 3 项放开，从前这里把 45 项全摊出来，等于对员工承诺"这 45 件都能交给托管"
      ——其余那些挂上去托管也不会做，是句空话。
      筛的是**能力**不是**界面**：跟着 HOST_TOOLS 上的标记走，这里一个字都不重抄。
+     （那 3 枚都不是 pub，所以**标准版下候选一样是这 3 条**，一个不少——版本门禁滤的是摆出来的宫格，
+     不是托管候选；HOST_TOOLS 全表仍是 45 枚，标准版只把它摆出 38 枚。）
    ★ **只有一个来源**（2026-10-15，ADR-0062）：原先还接了托管侧自有的那一条（HVA_SOLO_ACTS，
      只有 AI智能回复），它已整条撤掉——那条不是一项能力，是"托管由谁、在哪些平台、多久回一次"
      这件托管级的事，收进了 AI托管全局设置 →「AI智能回复」那一屏。
@@ -4598,7 +4652,7 @@ REND['host-ai']=function(){
   $('hvaTab').innerHTML=hvTabsHtml(HVA_TABS);
 };
 
-/* ---------- 标准版点底栏「AI托管」进的屏 · 升级提示页（《云小助（二期）· 产品需求文档》§2.2） ----------
+/* ---------- 非旗舰版点底栏「AI托管」进的屏 · 升级提示页（《云小助（二期）· 产品需求文档》§2.2） ----------
    底栏**仍是五枚、首页／任务／工具／我的 都能走**（§2.2：两个版本的导航栏长得一模一样，
    员工不该靠数导航栏认自己买的哪一档），所以这一屏不是死胡同——它只把「AI托管」那一枚点亮着。
    正文写死在静态段里（见 #host-ai-up 的注释：这一屏没有状态、没有数据），这里只补两类东西——
@@ -5578,7 +5632,7 @@ REND['host-widgets']=function(){
   var h='',i;
   $('hwBack').innerHTML=I('back',24,2);
   for(i=0;i<HW_CARDS.length;i++){ var c=HW_CARDS[i];
-    /* 第五张卡（AI托管状态）在标准版／安全模式下整卡灰显，右下那枚换成「旗舰版能力」的**静态件**：
+    /* 第五张卡（AI托管状态）在非旗舰版／安全模式下整卡灰显，右下那枚换成「旗舰版能力」的**静态件**：
        不做成按钮——§2.2 说「升级提示页只有这一处入口」，这一屏不再开第二扇门（ADR-0070）。 */
     var lock=(c.k==='ai'&&!isPro());
     h+='<div class="hw-card'+(lock?' lock':'')+'">'
@@ -7986,7 +8040,7 @@ function momPost(){
 
 /* ---------- 初始化 ---------- */
 buildNav();
-buildVer();   /* 侧栏顶部那枚演示版本开关（标准版／旗舰版）：与目录同属演示件、同时建 */
+buildVer();   /* 侧栏顶部那枚演示版本开关（标准版／高级版／旗舰版三枚）：与目录同属演示件、同时建 */
 ripInit();
 ballInit();
 dkRefresh();
