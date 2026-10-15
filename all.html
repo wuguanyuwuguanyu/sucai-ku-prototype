@@ -2230,6 +2230,12 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
             <div class="tk-seg" id="tkSeg"></div>
             <div class="tk-list tk-tasks" id="tkTasks"></div>
           </div>
+          <!-- 「创建任务」小球（右下角）· 点开从底部升起「创建任务」浮窗（见 JS 的 ctOpen）。
+               线上截图那一版就是「一枚球＋一屏任务类型宫格」，本屏其余一字未动（二期 PRD §2.3 只加入口）。
+               图标是加号：它是"新建一条"的通用记号。球在底栏之上、不随 .tk-scroll 滚（挂在 .screen 上）。 -->
+          <button class="tk-fab" id="tkFab" type="button" onclick="ctOpen()" aria-label="创建任务">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5.6" x2="12" y2="18.4"/><line x1="5.6" y1="12" x2="18.4" y2="12"/></svg>
+          </button>
           <div class="hv-tab" id="tkTab"></div>
         </section>
 
@@ -2546,12 +2552,6 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
                    整块由 hpRender() 写进这里、占 .ai-sub 那一格。用户的原话："把素材库标签 命中素材 n 条
                    替换到面板的标题上"，并明确**不要**「未开启聊天辅助 · 正在按关键词推素材」那句——
                    这个浮层只有一种来源（命中才弹），横幅已经说过一遍，再写是重复；"命中了几条"才要紧。 -->
-          <!-- 「创建任务」小球（右下角）· 点开从底部升起「创建任务」浮窗（见 JS 的 ctOpen）。
-               线上截图那一版就是「一枚球＋一屏任务类型宫格」，本屏其余一字未动（二期 PRD §2.3 只加入口）。
-               图标是加号：它是"新建一条"的通用记号。球在底栏之上、不随 .tk-scroll 滚（挂在 .screen 上）。 -->
-          <button class="tk-fab" id="tkFab" type="button" onclick="ctOpen()" aria-label="创建任务">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5.6" x2="12" y2="18.4"/><line x1="5.6" y1="12" x2="18.4" y2="12"/></svg>
-          </button>
               <!-- #hpTitle 是个**空壳**，正文由 hpRender() 写进来——raHitsHead() 吐出来的就是整个
                    `<div class="ra-hit-sec">…</div>`（徽章 ＋ 文案 ＋ 条数），这里只是它落脚的地方。
                    这个 span 自己**不必带 .ra-hit-sec 类**（CSS 那条规则已收成 `#hpTitle>.ra-hit-sec`，
@@ -3597,6 +3597,45 @@ function tkNav(dir){ /* 翻月：不跟着跳任务，只是换个月看 */
 function tkPick(d){ TK_SEL={y:TK_VM.y,m:TK_VM.m,d:d}; REND['host-task'](); }
 function tkCalToggle(){ TK_CALMIN=!TK_CALMIN; REND['host-task'](); }
 function tkTap(t){ toast('宿主App任务「'+t+'」（演示范围外）') }
+/* ---------- 任务页 · 「创建任务」浮窗（二期 PRD §2.3） ----------
+   线上 App 任务页右下角一枚球，点开从底部升起一屏**按平台分组的任务类型宫格**（产品给的截图就是这一屏）。
+   本原型照它落：球（.tk-fab，挂在 #host-task 上、不随 .tk-scroll 滚）＋浮窗（沿用全站 openSheet 那套外壳）。
+   ★ 宫格**只列类型、点了不建任务**：建任务的字段与流程（任务名称／内容／执行人员／可见好友／自动发送／
+     通知时间那一套）是**后台**新建页的（线上后台页面/线上新建页html/发圈.html），App 侧这一版本仓库没有抓存件
+     ——二期 PRD §2.3 只写「新增创建任务入口」，字段级流程记在 §5 待确认。所以点任一类一律落同一句
+     「演示范围外」，与工具页那 45 枚、设置页「修改」同一口径：**宁可不画，不编一屏假表单**。
+     日后拿到 App 侧抓存件，替换点就是 ctTap 这一处。 */
+var CT_TYPES=[
+  {n:'微信任务',p:[
+    {n:'朋友圈任务',  ic:'photos',  pal:'hand'},
+    {n:'发消息任务',  ic:'message', pal:'keyboard'},
+    {n:'加好友任务',  ic:'userplus',pal:'phone'},
+    {n:'发视频号任务',ic:'play',    pal:'bubble'},
+    {n:'视频号互动',  ic:'thumbsup',pal:'bubble'}
+  ]},
+  {n:'抖音任务',p:[
+    {n:'发视频任务',  ic:'play',    pal:'creature'},
+    {n:'运营任务',    ic:'music',   pal:'creature'},
+    {n:'视频评论互动',ic:'chat2',   pal:'creature'}
+  ]},
+  {n:'小红书任务',p:[
+    {n:'发笔记任务',  ic:'note',    pal:'phone'},
+    {n:'运营任务',    ic:'redbook', pal:'phone'},
+    {n:'视频评论互动',ic:'chat2',   pal:'phone'}
+  ]}
+];
+var CT_W=null; /* 自己那层浮窗的壳。收起时**必须传它**，不能裸 closeSheet()——不带参是「关最上层」，
+   而 Snackbar 也住在 overlayRoot 里：点完某一类弹出 Snackbar 再点收起，最上层是那条 Snackbar，
+   裸调用会把 Snackbar 摘掉、浮窗留在屏上（同 grpPickPick 传 GRP_PICK.w 的理由）。 */
+function ctOpen(){
+  /* 顶上只有一枚 ∨、**没有标题**——照截图，不自造「创建任务」四个字。
+     ∨ 是 chev 转 90°（见 CSS .ct-col svg）：截图那枚是描边折角，不是实心三角（ICONS 里 'drop' 是实心的）。 */
+  CT_W=openSheet('<div class="ct-head"><button class="ct-col" type="button" onclick="ctClose()" aria-label="收起">'
+    +I('chev',26,2.2)+'</button></div>'
+    +'<div class="ct-body">'+hvTiles(CT_TYPES,function(t){return "ctTap('"+t.n+"')"})+'</div>');
+}
+function ctClose(){ closeSheet(CT_W); CT_W=null; }
+function ctTap(n){ toast('新建「'+n+'」 · 宿主App功能（演示范围外）') }
 /* 两组卡头上的「全部 →」：本屏只有一份任务清单，所以它就是「去看全部任务」——
    把分段器拨回「全部」并滚到清单。不另开一屏「全部任务」（那屏在宿主侧，原型里没建模），
    也不能照着稿子放一枚点下去没反应的钮 */
@@ -3970,45 +4009,6 @@ var HVA_BADTYPE=(function(){
      ——那三处全在托管清单那一侧，随它一起走。范围浮层第二段那 3 行**只要名字**（勾＋名＋「设置 ›」，
      行型与上面那 9 类一致），所以这里照本仓口径把失去读者的字段删掉，不再往下带——
      带着的话，下一个人会以为有谁在读它。工具页那份 HOST_TOOLS 一个字段不动：它是工具本身的数据。 */
-/* ---------- 任务页 · 「创建任务」浮窗（二期 PRD §2.3） ----------
-   线上 App 任务页右下角一枚球，点开从底部升起一屏**按平台分组的任务类型宫格**（产品给的截图就是这一屏）。
-   本原型照它落：球（.tk-fab，挂在 #host-task 上、不随 .tk-scroll 滚）＋浮窗（沿用全站 openSheet 那套外壳）。
-   ★ 宫格**只列类型、点了不建任务**：建任务的字段与流程（任务名称／内容／执行人员／可见好友／自动发送／
-     通知时间那一套）是**后台**新建页的（线上后台页面/线上新建页html/发圈.html），App 侧这一版本仓库没有抓存件
-     ——二期 PRD §2.3 只写「新增创建任务入口」，字段级流程记在 §5 待确认。所以点任一类一律落同一句
-     「演示范围外」，与工具页那 45 枚、设置页「修改」同一口径：**宁可不画，不编一屏假表单**。
-     日后拿到 App 侧抓存件，替换点就是 ctTap 这一处。 */
-var CT_TYPES=[
-  {n:'微信任务',p:[
-    {n:'朋友圈任务',  ic:'photos',  pal:'hand'},
-    {n:'发消息任务',  ic:'message', pal:'keyboard'},
-    {n:'加好友任务',  ic:'userplus',pal:'phone'},
-    {n:'发视频号任务',ic:'play',    pal:'bubble'},
-    {n:'视频号互动',  ic:'thumbsup',pal:'bubble'}
-  ]},
-  {n:'抖音任务',p:[
-    {n:'发视频任务',  ic:'play',    pal:'creature'},
-    {n:'运营任务',    ic:'music',   pal:'creature'},
-    {n:'视频评论互动',ic:'chat2',   pal:'creature'}
-  ]},
-  {n:'小红书任务',p:[
-    {n:'发笔记任务',  ic:'note',    pal:'phone'},
-    {n:'运营任务',    ic:'redbook', pal:'phone'},
-    {n:'视频评论互动',ic:'chat2',   pal:'phone'}
-  ]}
-];
-var CT_W=null; /* 自己那层浮窗的壳。收起时**必须传它**，不能裸 closeSheet()——不带参是「关最上层」，
-   而 Snackbar 也住在 overlayRoot 里：点完某一类弹出 Snackbar 再点收起，最上层是那条 Snackbar，
-   裸调用会把 Snackbar 摘掉、浮窗留在屏上（同 grpPickPick 传 GRP_PICK.w 的理由）。 */
-function ctOpen(){
-  /* 顶上只有一枚 ∨、**没有标题**——照截图，不自造「创建任务」四个字。
-     ∨ 是 chev 转 90°（见 CSS .ct-col svg）：截图那枚是描边折角，不是实心三角（ICONS 里 'drop' 是实心的）。 */
-  CT_W=openSheet('<div class="ct-head"><button class="ct-col" type="button" onclick="ctClose()" aria-label="收起">'
-    +I('chev',26,2.2)+'</button></div>'
-    +'<div class="ct-body">'+hvTiles(CT_TYPES,function(t){return "ctTap('"+t.n+"')"})+'</div>');
-}
-function ctClose(){ closeSheet(CT_W); CT_W=null; }
-function ctTap(n){ toast('新建「'+n+'」 · 宿主App功能（演示范围外）') }
 function hvaActList(){
   var out=[],i,j,g,a;
   for(i=0;i<HOST_TOOLS.length;i++){
