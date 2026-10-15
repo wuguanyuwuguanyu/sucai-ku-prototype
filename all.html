@@ -1398,8 +1398,10 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 /* ---------------- 宿主 App 我的页（底部 Tab「我的」）· 照 Figma 节点 461:945 复刻 ----------------
    口径与前三个宿主屏同：视觉照抄稿子（浅蓝雾顶、白模块卡、蓝紫渐变图标块、渐变字），
    长度按 412/750 折算（×0.5493）；字体栈仍走 --f（稿子通篇 PingFang，打在 SKILL.md 的禁止清单上）。
-   稿子上头像是位图、每枚功能图标是一张 3D 彩色玻璃块、会员卡右侧压一张钻石插画——原型不带外部位图，
+   稿子上头像是位图、每枚功能图标是一张 3D 彩色玻璃块——原型不带外部位图，
    一律用 CSS 拼同构的形（同首屏光泽球、工具页顶右插画、任务页猫耳机器人的画法：只求神似，不求逐像素）。
+   **例外：顶上那张会员卡已不照本节点**——2026-10-16 按 Figma **370:597**（「我的（会员身份）」三卡规格表）
+   重画成三档三张（见下方卡片段头与 ADR-0072）；本节点那张单卡（写着「聊天辅助版」）作废。
    ★ 三处**稿子管不着、由本项目规则定死**的，钉在这里免得日后被「对齐设计稿」改回去：
      ① 稿子底部那条 iOS home indicator 不画：本壳已有 Android 手势条（.sysnav），再叠一条就是两条。
      ② 「企业会员到期时间」稿子的文本节点写 2023-06-08，同一张卡渲染出来却是 2025-06-08（图与字打架）。
@@ -1434,47 +1436,116 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .hm-who{display:flex;flex-direction:column;gap:3px;min-width:0}
 .hm-name{font-size:21px;font-weight:600;color:#102953;letter-spacing:.01em;line-height:1.25}
 .hm-co{font-size:12px;color:#5A79AB;letter-spacing:.01em}
-/* 会员卡：蓝渐变，左上角一枚「企业」小牌（左上半角跟卡一样圆）；右侧钻石插画越出卡顶
-   （稿子上它比卡高 22px ⇒ 插画挂在卡外的定位壳上，不能放进 overflow:hidden 的卡里，否则顶被切平） */
+/* 会员卡：卡面写的是**当前演示版本**（旗舰版／高级版／标准版），由 REND['host-me'] 按 VER 现填——
+   侧栏一切版本这一屏就重渲染，卡跟着换，不需要另加联动。
+   视觉照 Figma 370:597 的三张卡（深蓝「智能托管版」／浅蓝「高级版」／米白「标准版」各一张）；
+   **卡上只借视觉，文案用本项目的版本名**：稿子顶档写「智能托管版会员」，本仓库那一档叫旗舰版
+   （二期 PRD §1.4），照抄会凭空多出一个不存在的档。
+   三张卡版式只有一份，差异全走 CSS 变量：--vtg 斜纹／--vgl 右上光晕／--vrim 冠边／--vglass 玻璃面／
+   --vgem 钻／--vring 轨道环／--vball 球／--vhalo 冠后辉光／--vtag* 小牌／--vtt 标题渐变字／--vsub 副标。 */
 .hm-vipwrap{position:relative;margin-top:11px}
-.hm-vip{position:relative;height:83px;border-radius:9px;overflow:hidden;
-  background:linear-gradient(100deg,#2C60D6 0%,#3E80E4 44%,#57ABEC 100%);
-  box-shadow:0 14px 28px -22px rgba(28,80,190,.95)}
-.hm-vip::after{content:"";position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(70% 122% at 86% 6%,rgba(255,255,255,.26),transparent 62%)}
-/* 「企业」小牌：默认 15 号字重太粗会顶满 19px 的牌，压到 11px／500。形状是「左上跟卡圆角对齐、
-   右下自成圆角」的斜角牌——稿子上就是这块牌把卡角包住的样子 */
-.hm-vtag{position:absolute;left:0;top:0;width:38px;height:19px;border-radius:8px 0 8px 0;
-  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:#DFF0FF;
-  letter-spacing:.02em;background:linear-gradient(100deg,rgba(21,72,178,.95),rgba(52,124,222,.72))}
-.hm-vrow{position:absolute;left:10px;top:29px;display:flex;align-items:center;gap:6px}
-.hm-vic{width:21px;height:21px;border-radius:6px;flex:none;display:flex;align-items:center;justify-content:center;
-  color:#0C3971;background:linear-gradient(150deg,rgba(230,242,255,.96),rgba(152,202,255,.78));
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.8)}
-.hm-vtt{font-size:19px;font-weight:600;letter-spacing:.01em;
-  background-image:linear-gradient(96deg,#1355A5,#0C3971);-webkit-background-clip:text;background-clip:text;
+/* 变量挂在**壳**上、不在卡上：卡右侧那顶冠是卡的**兄弟**（要越出 overflow:hidden 的卡，只能挂在卡外），
+   变量只沿 DOM 向下继承，挂卡上就传不到冠那一支——冠、环、球会静默变透明，只剩卡面。
+   所以变量一律定义在 .hm-vipwrap.v-*，卡和插画都从壳上继承 */
+.hm-vip{position:relative;height:83px;border-radius:9px;overflow:hidden;isolation:isolate;
+  background:var(--vcard);box-shadow:var(--vshadow)}
+/* 卡身那道斜纹三张都有，只是深浅不同（稿子是位图，这里用 -56° 的重复渐变近似） */
+.hm-vip::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(-56deg,var(--vtg) 0 1px,transparent 1px 5px)}
+.hm-vip::after{content:"";position:absolute;inset:0;pointer-events:none;background:var(--vgl)}
+.hm-vipwrap.v-pro{
+  --vtg:rgba(255,255,255,.05);
+  --vgl:radial-gradient(74% 132% at 90% 2%,rgba(158,118,255,.26),transparent 62%);
+  --vrim:linear-gradient(150deg,#FFFFFF 0%,#FCE6FF 26%,#EDA6FF 58%,#B44BFB 88%,#8E2BF2 100%);
+  --vglass:linear-gradient(158deg,rgba(255,255,255,.96) 0%,rgba(255,214,255,.72) 42%,rgba(206,120,255,.62) 100%);
+  --vgem:linear-gradient(158deg,#F6E2FF 0%,#C77BFD 30%,#9A3BF7 62%,#6A1CE6 100%);
+  --vring:rgba(255,234,255,.95);
+  --vball:radial-gradient(circle at 34% 28%,#FFFFFF,#F4CDFD 46%,#B93BF0);
+  --vhalo:radial-gradient(56% 56% at 50% 48%,rgba(196,140,255,.34),rgba(138,80,255,.10) 66%,transparent 88%);
+  --vtagfg:#A9ABCF;--vtagbg:#0C0E19;
+  --vtt:linear-gradient(96deg,#F3F1FF,#D9D3FF);
+  --vsub:rgba(255,255,255,.65);
+  --vcard:linear-gradient(112deg,#0C0E19 0%,#12182C 46%,#1D1F37 72%,#23384D 100%);
+  --vshadow:0 14px 28px -22px rgba(8,16,48,.95)}
+.hm-vipwrap.v-adv{
+  --vtg:rgba(255,255,255,.34);
+  --vgl:radial-gradient(74% 132% at 90% 2%,rgba(255,255,255,.5),transparent 62%),
+        radial-gradient(64% 96% at 2% 96%,rgba(255,252,244,.85),transparent 62%);
+  --vrim:linear-gradient(150deg,#FFFFFF 0%,#FFFCF6 30%,#FFEEDA 64%,#F8D6B8 88%,#EFC29C 100%);
+  --vglass:linear-gradient(158deg,rgba(255,255,255,.96) 0%,rgba(255,226,214,.78) 40%,rgba(255,150,160,.66) 100%);
+  --vgem:linear-gradient(158deg,#FFE1D6 0%,#FD8C84 30%,#F5433A 62%,#C81E22 100%);
+  --vring:rgba(255,244,232,.95);
+  --vball:radial-gradient(circle at 34% 28%,#FFFFFF,#FFE0C6 46%,#E2A87E);
+  --vhalo:radial-gradient(56% 56% at 50% 48%,rgba(255,190,160,.36),rgba(250,150,130,.10) 66%,transparent 88%);
+  --vtagfg:#A04000;--vtagbg:#FFE7D0;
+  --vtt:linear-gradient(96deg,#9D2700,#A04000);
+  --vsub:rgba(131,33,0,.7);
+  --vcard:linear-gradient(118deg,#FFE3CA 0%,#FFE9D4 34%,#FFF8EB 74%,#FFEAD4 100%);
+  --vshadow:0 14px 28px -22px rgba(196,120,70,.9)}
+.hm-vipwrap.v-std{
+  --vtg:rgba(255,255,255,.3);
+  --vgl:radial-gradient(74% 132% at 90% 2%,rgba(255,255,255,.55),transparent 62%),
+        radial-gradient(60% 92% at 2% 96%,rgba(226,240,255,.8),transparent 60%);
+  --vrim:linear-gradient(150deg,#FFFFFF 0%,#F4F7FF 30%,#DFE6FF 64%,#BACAFB 88%,#93AAFA 100%);
+  --vglass:linear-gradient(158deg,rgba(255,255,255,.96) 0%,rgba(214,238,255,.78) 44%,rgba(140,220,225,.70) 100%);
+  --vgem:linear-gradient(158deg,#EAF0FF 0%,#8FB4FF 30%,#3D6BEE 62%,#1839AE 100%);
+  --vring:rgba(240,244,255,.95);
+  --vball:radial-gradient(circle at 34% 28%,#FFFFFF,#D8DEFF 46%,#8FA4F5);
+  --vhalo:radial-gradient(56% 56% at 50% 48%,rgba(215,235,255,.42),rgba(150,190,255,.12) 66%,transparent 88%);
+  --vtagfg:#DFF0FF;--vtagbg:linear-gradient(150deg,#6FA6F1,#4A91E7);
+  --vtt:linear-gradient(96deg,#1355A5,#0C3971);
+  --vsub:rgba(0,62,139,.72);
+  --vcard:linear-gradient(112deg,#6AA3EF 0%,#9BCEFD 42%,#7FC2FE 72%,#59B0FE 100%);
+  --vshadow:0 14px 28px -22px rgba(30,90,190,.9)}
+/* 「企业」小牌：左上角跟卡同圆角、右下角一个大圆角（稿子逐行扫出来是 43×18.7，右下圆角半径 ~15）。
+   字压到 10.5px／500——按稿子量出的字宽反推的字号，写 11 会宽出一截、牌被顶满 */
+.hm-vtag{position:absolute;left:0;top:0;width:43px;height:19px;border-radius:9px 0 15px 0;z-index:2;
+  box-sizing:border-box;display:flex;align-items:center;justify-content:center;padding:2px 6px 0 0;
+  font-size:10.5px;font-weight:500;letter-spacing:.02em;color:var(--vtagfg);background:var(--vtagbg)}
+/* 标题行：小冠图标 22px ＋ 19px 渐变字。图标与标题的纵向中心在稿子上基本齐平，直接 align-items:center */
+.hm-vrow{position:absolute;left:15px;top:24px;display:flex;align-items:center;gap:9px;z-index:2}
+.hm-vic{width:22px;height:22px;flex:none;display:flex;align-items:center;justify-content:center}
+.hm-vtt{font-size:19px;font-weight:600;letter-spacing:.01em;line-height:26px;
+  background-image:var(--vtt);-webkit-background-clip:text;background-clip:text;
   color:transparent;-webkit-text-fill-color:transparent}
-.hm-vsub{position:absolute;left:10px;top:62px;font-size:11px;color:#003E8B;opacity:.78;letter-spacing:.01em}
-/* 钻石插画：玻璃方片 ＋ 白轨道环 ＋ 蓝钻，纯 CSS（同工具页顶右插画口径：远看是那个意思即可）。
+.hm-vsub{position:absolute;left:15px;top:57px;font-size:11px;line-height:15px;letter-spacing:.01em;color:var(--vsub)}
+/* 插画：一顶玻璃冠 ＋ 一颗钻 ＋ 一圈斜轨道环，纯 CSS（同工具页顶右插画口径：远看是那个意思即可）。
+   冠比卡高 22px ⇒ 得挂在卡外的定位壳上，放进 overflow:hidden 的卡里顶会被切平。
+   轨道环切两半：后弧从冠左上绕过去、前弧横压冠身——一条完整椭圆做不出「一半在冠后一半在冠前」。
+   冠那串 27 点轮廓是照稿子逐行扫出来的，不是随手画的；要改先看一眼 Figma 370:597 那张三卡规格表。
    子元素一律挂在 .hm-vip-art 下，不裸用 .pane／.orb 这类泛名去撞壳里别处的同名类 */
-.hm-vip-art{position:absolute;right:1px;top:-22px;width:122px;height:96px;pointer-events:none;z-index:2}
-.hm-vip-art .halo{position:absolute;left:8px;top:2px;width:106px;height:88px;border-radius:50%;filter:blur(8px);
-  background:radial-gradient(56% 56% at 50% 50%,rgba(240,249,255,.85),rgba(126,192,255,.26) 66%,transparent 86%)}
-/* 玻璃方片：只当底衬，压淡一档，主角是那颗钻 */
-.hm-vip-art .pane{position:absolute;left:11px;top:4px;width:96px;height:89px;border-radius:24px;transform:rotate(8deg);
-  background:linear-gradient(150deg,rgba(255,255,255,.46),rgba(186,220,255,.28) 58%,rgba(140,192,255,.20));
-  box-shadow:inset 0 0 0 1.8px rgba(255,255,255,.78)}
-.hm-vip-art .orb{position:absolute;left:0;top:26px;width:119px;height:63px;border-radius:50%;transform:rotate(-15deg);
-  border:1.7px solid rgba(255,255,255,.55)}
-.hm-vip-art .gem{position:absolute;left:31px;top:12px;width:58px;height:68px;
-  clip-path:polygon(0% 30%,30% 0%,70% 0%,100% 30%,50% 100%);
-  background:linear-gradient(158deg,#FFFFFF 0%,#BEDFFF 26%,#5E9BF2 60%,#2A55C4 100%);
-  filter:drop-shadow(0 6px 11px rgba(28,72,180,.6))}
-.hm-vip-art .gem::after{content:"";position:absolute;left:0;top:30%;width:100%;height:1.6px;background:rgba(255,255,255,.7)}
-.hm-vip-art .sp{position:absolute;width:13px;height:13px;background:linear-gradient(140deg,#FFFFFF,#B6DBFF);
-  clip-path:polygon(50% 0,60% 40%,100% 50%,60% 60%,50% 100%,40% 60%,0 50%,40% 40%)}
-.hm-vip-art .sp.s1{left:8px;top:2px}
-.hm-vip-art .sp.s2{right:6px;top:58px;transform:scale(.72)}
+.hm-vip-art{position:absolute;right:17px;top:-12px;width:120px;height:83px;pointer-events:none;z-index:2}
+.hm-vip-art .halo{position:absolute;left:14px;top:2px;width:88px;height:80px;border-radius:50%;
+  filter:blur(9px);background:var(--vhalo)}
+.hm-vip-art .ring{position:absolute;left:1.5px;top:37px;width:117px;height:36px;border-radius:50%;
+  border:2.6px solid var(--vring);transform:rotate(-16deg)}
+.hm-vip-art .ring.back{z-index:1;clip-path:inset(0 0 50% 0)}
+.hm-vip-art .ring.front{z-index:5;clip-path:inset(50% 0 0 0)}
+.hm-vip-art .crown{position:absolute;left:17px;top:0;width:82.5px;height:82.5px;z-index:3}
+.hm-vip-art .crown>*{position:absolute;left:0;top:0;width:100%;height:100%;
+  clip-path:polygon(42.7% 0,32% 10.7%,25.3% 19.3%,22% 23.3%,4.7% 25.3%,2.7% 27.3%,0 34%,0 40.7%,6.7% 70.7%,
+    11.3% 94%,17.3% 99.3%,26.7% 100%,50.7% 100%,72% 99.3%,79.3% 98.7%,85.3% 95.3%,88% 91.3%,94.7% 60.7%,
+    99.3% 34%,100% 30.7%,99.3% 25.3%,95.3% 21.3%,91.3% 19.3%,72% 17.3%,62% 14%,56% 7.3%,48% 0)}
+.hm-vip-art .rim{background:var(--vrim);filter:drop-shadow(0 5px 10px rgba(14,8,48,.6))}
+/* 内嵌的「玻璃」＝同形缩一档：外圈留下的那道边就是稿子上那圈厚边 */
+.hm-vip-art .glass{background:var(--vglass);transform:scale(.82)}
+/* 钻：经典圆钻的侧俯视——顶面一条平边、腰围左右各一个尖、底下收成一点。
+   刻面靠三层背景叠出来：亭部从底尖发散的楔形、台面一片亮、底下是本变体的主色 */
+.hm-vip-art .gem{clip-path:polygon(28% 36%,72% 36%,86% 55%,48% 84%,14% 55%);
+  background:
+    repeating-conic-gradient(from 186deg at 50% 100%,rgba(255,255,255,.26) 0 5deg,rgba(255,255,255,0) 5deg 11.5deg),
+    linear-gradient(180deg,rgba(255,255,255,.95) 0%,rgba(255,255,255,.5) 20%,rgba(255,255,255,0) 42%),
+    var(--vgem)}
+/* 冠部两条棱线：从台面两角斜到腰围 */
+.hm-vip-art .gem::before{content:"";position:absolute;inset:0;
+  background:
+    linear-gradient(63deg,transparent 27%,rgba(255,255,255,.6) 27.4%,rgba(255,255,255,.6) 28%,transparent 28.4%),
+    linear-gradient(-63deg,transparent 27%,rgba(255,255,255,.6) 27.4%,rgba(255,255,255,.6) 28%,transparent 28.4%)}
+.hm-vip-art .gem::after{content:"";position:absolute;left:6%;top:55%;width:88%;height:1.2px;
+  background:rgba(255,255,255,.7)}
+.hm-vip-art .ball{position:absolute;width:7.4px;height:7.4px;border-radius:50%;z-index:6;background:var(--vball)}
+.hm-vip-art .ball.b1{left:0;top:67.5px}
+.hm-vip-art .ball.b2{left:112.3px;top:35.2px}
 /* 功能模块卡：白卡 ＋ 四列宫格（稿子两段都是四列；「常用功能」第二行只有一枚，网格自然落在首列）。
    图标＝同色系光晕 ＋ 渐变圆角块 ＋ 白色线性图标，与工具页 45 枚工具同一套画法 */
 .hm-mod{position:relative;margin-top:14px;border-radius:16px;background:#fff;padding:15px 15px 14px;
@@ -2765,21 +2836,10 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
                 <div class="hm-co">测试公司-yunkecn</div>
               </div>
             </div>
-            <div class="hm-vipwrap">
-              <div class="hm-vip">
-                <span class="hm-vtag">企业</span>
-                <span class="hm-vrow">
-                  <span class="hm-vic" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M11.2 3.4l1.7 4.6 4.6 1.7-4.6 1.7-1.7 4.6-1.7-4.6-4.6-1.7 4.6-1.7z"/><path d="M18 14.6l.75 2 2 .75-2 .75-.75 2-.75-2-2-.75 2-.75z"/></svg></span>
-                  <span class="hm-vtt">聊天辅助版</span>
-                </span>
-                <span class="hm-vsub">企业会员到期时间 2025-06-08</span>
-              </div>
-              <!-- 钻石插画：挂在卡外的定位壳上（负 top），才能越出卡顶而不被 .hm-vip 的 overflow:hidden 切平 -->
-              <span class="hm-vip-art" aria-hidden="true">
-                <span class="halo"></span><span class="orb"></span><span class="pane"></span>
-                <span class="gem"></span><span class="sp s1"></span><span class="sp s2"></span>
-              </span>
-            </div>
+            <!-- 会员卡：卡面按当前演示版本现填（hmVipHtml()，见 REND['host-me']）——侧栏切版本时
+                 这一屏整体重渲染，卡自动跟着换。插画挂在卡外的定位壳上（负 top），
+                 才能越出卡顶而不被 .hm-vip 的 overflow:hidden 切平 -->
+            <div class="hm-vipwrap" id="hmVip"></div>
             <div class="hm-mod">
               <div class="hm-mh"><h4>常用功能</h4></div>
               <div class="hm-grid" id="hmFun"></div>
@@ -5310,8 +5370,43 @@ var HM_TABS=[
   {n:'工具',ic:'toolbox', fn:"go('host-tools')"},
   {n:'我的',ic:'smile',   on:1}
 ];
+/* 会员卡：卡面写「当前演示版本」，三档各一张。视觉照 Figma 370:597 那三张卡（深／浅蓝／米白），
+   文案用本项目的版本名——稿子顶档写「智能托管版会员」，本仓库那一档叫旗舰版（二期 PRD §1.4），
+   照抄会凭空多出一个不存在的档。卡按 VER 取表，所以侧栏 setVer → render 这一屏重渲染，卡自动跟着换 */
+var HM_VIP={
+  pro:{cls:'v-pro',title:'旗舰版会员',ic:['#F0DEFF','#8B3BF5']},
+  adv:{cls:'v-adv',title:'高级版会员',ic:['#FFE3D2','#F4502F']},
+  std:{cls:'v-std',title:'标准版会员',ic:['#EAF2FF','#2F6BE8']}
+};
+var HM_VIP_SUB='企业会员到期时间 2025-06-08'; /* 到期日沿用本屏 CSS 注释 ② 钉的那个，不跟稿子里的 2023 走 */
+function hmCrownSvg(v){
+  var c=HM_VIP[v].ic, id='hmcg-'+v;
+  return '<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><defs>'
+    +'<linearGradient id="'+id+'" x1="0" y1="0" x2=".7" y2="1">'
+    +'<stop offset="0" stop-color="'+c[0]+'"/><stop offset="1" stop-color="'+c[1]+'"/></linearGradient></defs>'
+    +'<path d="M4.6 17.4 3 7.4 9.2 14 15.8 8.4 20.6 12.8 19.2 17.4Z" fill="url(#'+id+')"/>'
+    +'<rect x="4.6" y="17.4" width="14.6" height="3.2" rx=".8" fill="url(#'+id+')"/>'
+    +'<path d="M9.2 14 12.4 17.4M15.8 8.4 14.4 17.4M12 20.6v-3.2" fill="none" '
+    +'stroke="rgba(255,255,255,.6)" stroke-width=".7" stroke-linecap="round"/></svg>';
+}
+function hmVipHtml(){
+  var v=HM_VIP[VER]?VER:'pro', d=HM_VIP[v];
+  /* 变体类挂在**壳**上，不在卡上：冠是卡的兄弟，挂在卡上的 CSS 变量传不到它（见 CSS 段那条注释） */
+  $('hmVip').className='hm-vipwrap '+d.cls;
+  return '<div class="hm-vip">'
+      +'<span class="hm-vtag">企业</span>'
+      +'<span class="hm-vrow"><span class="hm-vic" aria-hidden="true">'+hmCrownSvg(v)+'</span>'
+      +'<span class="hm-vtt">'+d.title+'</span></span>'
+      +'<span class="hm-vsub">'+HM_VIP_SUB+'</span></div>'
+      /* 冠＋钻在 .crown 里，轨道环切两半夹住它：back 在冠后（z1）、front 压冠身（z5），球在最后面(z6) */
+    +'<span class="hm-vip-art" aria-hidden="true">'
+      +'<span class="halo"></span><span class="ring back"></span>'
+      +'<span class="crown"><span class="rim"></span><span class="glass"></span><span class="gem"></span></span>'
+      +'<span class="ring front"></span><span class="ball b1"></span><span class="ball b2"></span></span>';
+}
 REND['host-me']=function(){
   var h='',i;
+  $('hmVip').innerHTML=hmVipHtml();
   for(i=0;i<HM_FUN.length;i++)h+=hmItem(HM_FUN[i]);
   $('hmFun').innerHTML=h;
   h='';
