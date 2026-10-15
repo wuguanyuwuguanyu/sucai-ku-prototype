@@ -769,6 +769,48 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 #host-task .hv-tab button.on .ic{color:#7B5BFF}
 #host-task .hv-tab button.ai .ic{color:#fff} /* 同工具页：id 规则比 .ai 那几条重，压回来 */
 
+/* 「创建任务」小球＋浮窗 · 2026-10-16 照产品给的**线上 App 任务页截图**加（二期 PRD §2.3）。
+   截图那一屏：右下角一枚球，点开从底部升起一层浮窗，里面是**按平台分组的任务类型宫格**
+   （微信任务／抖音任务／小红书任务）。本屏只加这两件——稿子那八段骨架（需处理／待办／日历／
+   分段器／清单）一字未动，PRD §2.3 明文「现有分档与记录模块一概不动」。
+   ★ 三处**截图管不着、由本项目规则定死**的，钉在这里免得日后被「对齐截图」改回去：
+     ① 球的形状走 M3（SKILL.md §3 的 FAB 行：56dp、圆角 16dp、primary 纯色＋on-primary 图标、
+        右 16、位于底导航之上）。**线上那枚是圆形白底彩图标**，不照抄——本壳一切 FAB／按钮一律
+        纯色主色、禁渐变（SKILL.md §5 第 2 条）。要正圆得先改 SKILL，别只改这一处。
+     ② 截图里那枚**白底蓝公文包**的球不是这一枚：那是宿主系统级浮层（同设置页那条注「本壳的悬浮球
+        另有其屏」）。本球是任务页自己的「创建任务」入口，两者同屏时同时存在、互不相干。
+     ③ 图标块沿用工具页那套「同色系光晕＋渐变圆角块」（.ht-* 一组直接复用，不另起一套）——
+        线上那版是彩色品牌图标，本仓库照旧出白色线性图标（同工具页口径）。
+   位置：右 16、底 16。底栏之上再留 16，得 bottom:98px——这个是量出来的，不是估的：
+   .hv-tab 实测高 60（不是按 padding 算的 54），**底栏底下还有 .screen::after 那 22px 手势条占位块**
+   （见 .screen 那段注释），栏顶实际距屏底 82；82＋16＝98。无头里逐点量过：球的底边距栏顶 16.0、
+   距屏右边 16.0。
+   z-index 7 要高过底栏那 6——球与 .hv-tab 是 .screen 的兄弟，不靠写在后面就压得住。
+   ★ 球浮在**滚动区**（.tk-scroll 的视口底边就在栏顶 82 处）之上，所以清单滚到底时末条会钻到球底下
+     ——无头里量过：滚到底时末条（.tk-card.tk-task）与球横竖各重叠 54×56px，球心那点抠出来是卡上的图标。
+     即「最后一整条的右下角永远点不着」，这是加 FAB 必须一并给的**避让**（M3：滚动内容底边要让出 FAB 那一块），
+     与「页面不动」不冲突——骨架、分档、记录模块都没碰，只是给滚动区多留一段底。
+   ★ 避让只能管「滚到底」那一头。球是钉在屏上的，**屏中间任何东西滚过它都会被它压住**——首屏就有一处：
+     日历卡头那枚「下一月」（.tk-can，38×31）正好落在球下面，量出来重叠 38×31＝**整枚盖满**，
+     球心 hit-test 抠出来就是 .tk-fab。**这处不修**：线上截图那版球也在同一个角上、下面是同一张日历，
+     产品就是这么出的稿；要「不压住」只能把日历头整体左移或把球挪位，那才是改稿子、才是「页面动了」。
+     （滚一下日历就升走了，不是死路。）沿用现网版式，此条留档，别当 bug 修。 */
+#host-task .tk-scroll{padding-bottom:80px} /* 14 是原稿的分隔留白，这里加到 80＝球顶距视口底 72（16 缝＋56 球）＋8 呼吸；
+   id 选择器压得住 .tk-scroll 那条简写里的 padding，故不必回头改稿子 */
+.tk-fab{position:absolute;right:16px;bottom:98px;z-index:7;width:56px;height:56px;border:none;
+  border-radius:16px;background:var(--primary);color:var(--on-primary);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+  box-shadow:0 8px 18px -8px rgba(58,48,180,.75)}
+/* 浮窗那一层：外壳沿用全站那套底部弹层（openSheet 的 .sheet／.sheet-scrim／.sheet-body），
+   这里只补「收起」那枚与内容区的内衬。截图顶上那一行**只有一枚 ∨、没有标题**，照它、不自造标题。
+   （∨ 走 chev 转 90°——截图那枚是描边折角，不是实心三角。） */
+.ct-head{display:flex;padding:0 13px}
+.ct-col{width:44px;height:44px;margin-left:-7px;border:none;background:none;border-radius:50%;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;color:var(--on-surface-variant);
+  position:relative;overflow:hidden}
+.ct-col svg{transform:rotate(90deg)}
+.ct-body{padding:0 13px 18px}
+
 /* ---------------- 宿主 App AI托管页（底部 Tab「AI托管」，居中抬起）· 逻辑照参考原型 APP-AI-001 ----------------
    口径说明：
    · **信息结构**照参考原型 APP-AI-001（V3.2→V5.25 层层叠出来的最终态）：页头一行两颗圆
@@ -2504,6 +2546,12 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
                    整块由 hpRender() 写进这里、占 .ai-sub 那一格。用户的原话："把素材库标签 命中素材 n 条
                    替换到面板的标题上"，并明确**不要**「未开启聊天辅助 · 正在按关键词推素材」那句——
                    这个浮层只有一种来源（命中才弹），横幅已经说过一遍，再写是重复；"命中了几条"才要紧。 -->
+          <!-- 「创建任务」小球（右下角）· 点开从底部升起「创建任务」浮窗（见 JS 的 ctOpen）。
+               线上截图那一版就是「一枚球＋一屏任务类型宫格」，本屏其余一字未动（二期 PRD §2.3 只加入口）。
+               图标是加号：它是"新建一条"的通用记号。球在底栏之上、不随 .tk-scroll 滚（挂在 .screen 上）。 -->
+          <button class="tk-fab" id="tkFab" type="button" onclick="ctOpen()" aria-label="创建任务">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5.6" x2="12" y2="18.4"/><line x1="5.6" y1="12" x2="18.4" y2="12"/></svg>
+          </button>
               <!-- #hpTitle 是个**空壳**，正文由 hpRender() 写进来——raHitsHead() 吐出来的就是整个
                    `<div class="ra-hit-sec">…</div>`（徽章 ＋ 文案 ＋ 条数），这里只是它落脚的地方。
                    这个 span 自己**不必带 .ra-hit-sec 类**（CSS 那条规则已收成 `#hpTitle>.ra-hit-sec`，
@@ -3421,14 +3469,18 @@ var HT_TABS=[
   {n:'工具',ic:'toolbox', on:1},
   {n:'我的',ic:'smile',   fn:"go('host-me')"}
 ];
-REND['host-tools']=function(){
-  var h='';
-  for(var i=0;i<HOST_TOOLS.length;i++){
-    var M=HOST_TOOLS[i];
+/* 分组宫格（白卡＋四列彩色图标块）＝**一处渲染器供两处用**：工具页那一屏，与任务页的「创建任务」浮窗。
+   两处照的是同一张线上截图上的同一种件，形态本来就该一样；抄两份＝改一处另一处不动。
+   tap(t) 由调用方给：工具页用它那套（每条工具自己的 fn，缺省弹「演示范围外」），
+   浮窗用它那套（点任一类都弹「演示范围外」）。 */
+function hvTiles(groups,tap){
+  var h='',i,j;
+  for(i=0;i<groups.length;i++){
+    var M=groups[i];
     h+='<div class="ht-mod"><div class="ht-mh">'+hvSpk(20)+'<h4 class="hv-gn">'+M.n+'</h4></div><div class="ht-grid">';
-    for(var j=0;j<M.p.length;j++){
+    for(j=0;j<M.p.length;j++){
       var t=M.p[j],pa=HT_PAL[t.pal];
-      h+='<button class="ht-item" onclick="'+(t.fn||"htTap('"+t.n+"')")+'">'
+      h+='<button class="ht-item" onclick="'+tap(t)+'">'
         +'<span class="ht-il">'
         +'<span class="ht-halo" style="background:'+pa[2]+'"></span>'
         +'<span class="ht-sq" style="background:linear-gradient(142deg,'+pa[0]+','+pa[1]+');box-shadow:0 6px 12px -7px '+pa[1]+'">'
@@ -3439,7 +3491,10 @@ REND['host-tools']=function(){
     }
     h+='</div></div>';
   }
-  $('htBody').innerHTML=h;
+  return h;
+}
+REND['host-tools']=function(){
+  $('htBody').innerHTML=hvTiles(HOST_TOOLS,function(t){return t.fn||"htTap('"+t.n+"')"});
   $('htTab').innerHTML=hvTabsHtml(HT_TABS);
 };
 
@@ -3915,6 +3970,45 @@ var HVA_BADTYPE=(function(){
      ——那三处全在托管清单那一侧，随它一起走。范围浮层第二段那 3 行**只要名字**（勾＋名＋「设置 ›」，
      行型与上面那 9 类一致），所以这里照本仓口径把失去读者的字段删掉，不再往下带——
      带着的话，下一个人会以为有谁在读它。工具页那份 HOST_TOOLS 一个字段不动：它是工具本身的数据。 */
+/* ---------- 任务页 · 「创建任务」浮窗（二期 PRD §2.3） ----------
+   线上 App 任务页右下角一枚球，点开从底部升起一屏**按平台分组的任务类型宫格**（产品给的截图就是这一屏）。
+   本原型照它落：球（.tk-fab，挂在 #host-task 上、不随 .tk-scroll 滚）＋浮窗（沿用全站 openSheet 那套外壳）。
+   ★ 宫格**只列类型、点了不建任务**：建任务的字段与流程（任务名称／内容／执行人员／可见好友／自动发送／
+     通知时间那一套）是**后台**新建页的（线上后台页面/线上新建页html/发圈.html），App 侧这一版本仓库没有抓存件
+     ——二期 PRD §2.3 只写「新增创建任务入口」，字段级流程记在 §5 待确认。所以点任一类一律落同一句
+     「演示范围外」，与工具页那 45 枚、设置页「修改」同一口径：**宁可不画，不编一屏假表单**。
+     日后拿到 App 侧抓存件，替换点就是 ctTap 这一处。 */
+var CT_TYPES=[
+  {n:'微信任务',p:[
+    {n:'朋友圈任务',  ic:'photos',  pal:'hand'},
+    {n:'发消息任务',  ic:'message', pal:'keyboard'},
+    {n:'加好友任务',  ic:'userplus',pal:'phone'},
+    {n:'发视频号任务',ic:'play',    pal:'bubble'},
+    {n:'视频号互动',  ic:'thumbsup',pal:'bubble'}
+  ]},
+  {n:'抖音任务',p:[
+    {n:'发视频任务',  ic:'play',    pal:'creature'},
+    {n:'运营任务',    ic:'music',   pal:'creature'},
+    {n:'视频评论互动',ic:'chat2',   pal:'creature'}
+  ]},
+  {n:'小红书任务',p:[
+    {n:'发笔记任务',  ic:'note',    pal:'phone'},
+    {n:'运营任务',    ic:'redbook', pal:'phone'},
+    {n:'视频评论互动',ic:'chat2',   pal:'phone'}
+  ]}
+];
+var CT_W=null; /* 自己那层浮窗的壳。收起时**必须传它**，不能裸 closeSheet()——不带参是「关最上层」，
+   而 Snackbar 也住在 overlayRoot 里：点完某一类弹出 Snackbar 再点收起，最上层是那条 Snackbar，
+   裸调用会把 Snackbar 摘掉、浮窗留在屏上（同 grpPickPick 传 GRP_PICK.w 的理由）。 */
+function ctOpen(){
+  /* 顶上只有一枚 ∨、**没有标题**——照截图，不自造「创建任务」四个字。
+     ∨ 是 chev 转 90°（见 CSS .ct-col svg）：截图那枚是描边折角，不是实心三角（ICONS 里 'drop' 是实心的）。 */
+  CT_W=openSheet('<div class="ct-head"><button class="ct-col" type="button" onclick="ctClose()" aria-label="收起">'
+    +I('chev',26,2.2)+'</button></div>'
+    +'<div class="ct-body">'+hvTiles(CT_TYPES,function(t){return "ctTap('"+t.n+"')"})+'</div>');
+}
+function ctClose(){ closeSheet(CT_W); CT_W=null; }
+function ctTap(n){ toast('新建「'+n+'」 · 宿主App功能（演示范围外）') }
 function hvaActList(){
   var out=[],i,j,g,a;
   for(i=0;i<HOST_TOOLS.length;i++){
