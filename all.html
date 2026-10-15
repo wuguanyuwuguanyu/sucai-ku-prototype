@@ -59,8 +59,11 @@ body{font-family:var(--f);background:var(--surface);color:var(--on-surface);
 .seg-b.on .main{display:none}
 
 /* 这里曾有外壳顶栏那颗「演示 · AI托管页排法」分段器。删了：原型自己已经有了入口
-   （「我的」页那张「演示」卡），两处入口各亮各的选中态——外壳读不到 iframe 里的 HVA_SCHEME，
-   在 App 里切完，顶栏那颗还亮着旧的，同一屏两个答案。留原型里那一处，它在外壳与 APK 里都在。 */
+   （「我的」页那张「演示」卡），两处入口各亮各的选中态——外壳读不到 iframe 里的排法状态，
+   在 App 里切完，顶栏那颗还亮着旧的，同一屏两个答案。留原型里那一处，它在外壳与 APK 里都在。
+   （2026-10-16 追记：原型里那一处也随托管清单一屏删了——它比的两种排法都是清单的排法，
+   清单没了就没有可排的东西，见 ADR-0065。所以「AI托管页排法」这件事现在两边都没有入口，
+   是这个特性整个退役，不是搬了家。） */
 
 /* 不顶到最右——右上角留给历史版本切换器（_history/switcher.js）的悬浮钮 */
 .hint{margin-left:18px;display:flex;align-items:center;gap:6px;
@@ -746,31 +749,28 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 
 /* ---------------- 宿主 App AI托管页（底部 Tab「AI托管」，居中抬起）· 逻辑照参考原型 APP-AI-001 ----------------
    口径说明：
-   · **信息结构**照参考原型 APP-AI-001（V3.2→V5.25 层层叠出来的最终态）：页头一行三颗圆（托管总开关／
-     AI配置／全局设置）＋托管状态卡＋「托管清单｜工作日志」双视图（另一版排法把清单拆成
-     「管理员下发｜我加的｜工作日志」三栏，见 hvaViews）；
-     清单是**一份**，不分来源——来源只落在每张卡那枚来源标签上，因为按来源切开就看不出
-     「托管接下来总共会替我做哪些事」；
+   · **信息结构**照参考原型 APP-AI-001（V3.2→V5.25 层层叠出来的最终态）：页头一行两颗圆
+     （托管总开关／全局设置）＋托管状态卡＋工作日志。
+     **2026-10-16 撤掉一层**（见 ADR-0065）：原先状态卡下面还有一道「托管清单｜工作日志」分段器
+     （另一版排法把清单拆成「管理员下发｜我加的｜工作日志」三栏），托管清单那一屏整块删了——
+     它要回答的「托管接下来会替我做哪些事」，宿主任务页已经在回答，而清单只是那批活的一个子集视图。
+     于是这一屏剩**一栏**：头卡讲"托管现在开着没有、按什么条件跑"，日志讲"它过去做过什么"。
+     "我挂了哪几项能力"搬进了托管范围浮层（设置页那颗「管理托管范围」升起来的那层，两段里的下段）。
      工作日志按日倒序排时间线，每条挂「引用／动作／结果」三类子卡。
    · **视觉**一律归到本壳宿主三屏（首屏／工具／任务）那套语言：浅紫雾顶、粗圆角白卡、紫→蓝渐变字、
      「同色系光晕＋渐变圆角块」图标、渐变实心 ✦。参考原型那身蓝白皮不搬——两屏并排会立刻看出接缝。
-   · 队列卡直接借任务页那张 .tk-card 的骨架（左缘彩条＋主区＋右侧列）。两屏讲的是同一件事的两面：
-     任务页是「人要做的」，这屏是「托管会替人做的」；卡长得一样，用户才不用重新认第二遍。
    · 保存钮走本壳既有的 M3 filled 按钮（.btn-primary，纯色胶囊）——稿子那套渐变实心钮在
-     SKILL.md 的禁止清单上。视觉可以照抄设计稿，控件不照抄。
-   · **一处有意偏离参考原型**：参考原型切到「工作日志」时把「添加」悬浮球撤掉。本屏不撤——
-     同一枚钮在两个视图之间跳进跳出，用户每换一次视图就得重找一次它在不在（与 ADR-0022 同一条理由）。
-     悬浮球常驻，两个视图下点它都是同一件事。 */
+     SKILL.md 的禁止清单上。视觉可以照抄设计稿，控件不照抄。 */
 #host-ai{background:linear-gradient(180deg,#EAECFC 0%,#F3F5FE 40%,#FFFFFF 100%)}
 .hva-glow{position:absolute;left:0;right:0;top:0;height:340px;pointer-events:none;
   background:radial-gradient(120% 70% at 90% -6%,rgba(146,132,255,.32),transparent 64%),
              radial-gradient(112% 66% at 8% 0%,rgba(122,166,255,.20),transparent 62%)}
-/* AI托管那屏的两层（2026-10-14）：.hva-head＝托管状态卡 ＋ 视图分段器（不缩、不滚），
-   .hva-pane＝清单／工作日志（吃掉剩下的高，自己滚）。外层这一层**故意不带 .scroll 类**——
+/* AI托管那屏的两层（2026-10-14）：.hva-head＝托管状态卡（不缩、不滚），
+   .hva-pane＝工作日志（吃掉剩下的高，自己滚）。外层这一层**故意不带 .scroll 类**——
    带上就会有第二个滚动指示层（SB_RULES 挑 .scroll），而它自己一格都不滚。 */
 .hva-scroll{position:relative;z-index:1;flex:1;min-height:0;display:flex;flex-direction:column}
 .hva-head{flex:none;padding:0 18px}
-.hva-pane{flex:1;min-height:0;padding:0 18px 148px} /* 底下的 148px 是给悬浮球留的（球底距 80＋球高 52＋余量）：日志尾部别被它盖住 */
+.hva-pane{flex:1;min-height:0;padding:0 18px 24px} /* 底距 24：原先那 148px 是给右下悬浮球让位的（球底距 80＋球高 52＋余量），球 2026-10-16 撤了（ADR-0065），留着就是日志尾部凭空空一大截 */
 /* 三颗圆形动作：托管总开关／AI配置／设置。形态照用户给的那张截图（白圆、圆内描边图标、圆下小字），
    配色仍走本 App 这套 token，不搬截图那身车机的皮。
    位置：托管状态卡的右上角空白处（用户指定）。那块的柔光是装饰，圆钮压在上面正合适——
@@ -813,91 +813,17 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .hva-cond{display:flex;align-items:center;gap:7px;margin-top:10px;border-radius:12px;padding:9px 11px;
   background:rgba(255,255,255,.82);font-size:12.5px;font-weight:700;color:#355276}
 .hva-cond svg{flex:none;color:#6B7BE0}
-/* 栏头（**只有方案 b 的三分栏用得到**：管理员下发／我加的／工作日志）。
-   比页级段头（工具页 .ht-mh 那种 17px 带 ✦）小一档：它是**页内分组**，不是页的标题；
-   做大了会跟下面那个视图分段器抢层级——一屏只能有一个"这是哪一屏"的标题。
-   标题右侧留一句小字：管理员那栏「可以移出托管清单（任务不删）」、我这栏「随时可停可删」，
-   这两句正是右侧控制列为什么挂不同动作的解释——写在标题底下，用户不用自己猜。 */
-.hva-grp{display:flex;align-items:center;gap:8px;margin:22px 0 11px}
-.hva-grp b{flex:none;font-size:15px;font-weight:700;color:#2A4A7E;letter-spacing:.01em}
-.hva-grp small{flex:1;min-width:0;font-size:11.5px;font-weight:600;color:#9AA8C4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hva-grp .tk-all{margin-left:auto;flex:none}
-.hva-grp .tk-all svg{color:#3B6BE0}
-.hva-n{flex:none;font-size:12px;font-weight:700;color:#8C9BB8}
-.hva-view+.hva-grp{margin-top:6px} /* 紧跟视图分段器的第一个分段头：分段器自己已有下距，这里再给 22px 就空出一截 */
-.hva-sub{margin:2px 0 14px} /* 视图分段器与员工列表那两层筛选用的是同一个 .tk-seg，只在这里统一修上下距 */
-.hva-view{margin:18px 0 12px}
-.hva-list{display:flex;flex-direction:column;gap:12px}
-/* 清单卡：骨架照任务页 .tk-card。来源两族的右侧**不一样**：只有「我加的」那族有减号
-   （2026-10-15 起管理员那族清单里拿不掉，见 ADR-0064）——管理员那族的右列只有时间一行。
-   照的是参考原型 V5.9——它两族都用同一个 minus 组件，区别不在图标，在减号挂的动作
-   （管理员下发＝移出托管清单、我加的＝移除）。**2026-10-15 起管理员那族连减号都没有了**：
-   移出这件事整个撤掉（见 ADR-0064），分派也就此消失——右列的差别从"同一个图标挂两个动作"
-   变成"只一族有这颗图标"。 */
-.hva-card{position:relative;display:flex;align-items:stretch;gap:8px;width:100%;padding:13px 13px 13px 18px;
-  border-radius:16px;overflow:hidden;text-align:left;
-  background:linear-gradient(180deg,#FBFBFE,#FFFFFF);box-shadow:0 14px 30px -26px rgba(40,70,150,.95)}
-.hva-card::before{content:"";position:absolute;left:0;top:13px;bottom:13px;width:3.5px;border-radius:0 3px 3px 0;
-  background:linear-gradient(180deg,#9452FF,#1677FF)}
-/* 「最早」还没到的项：底色压到页面那一档（比卡低一级）＋一道描边免得糊进背景，左彩条同样淡下来。
-   **文字一律不降不灰**——置灰在 M3 里读作「不可用／坏了」，而这条只是「还没轮到」，
-   它照常可点（进配置页）、照常可移除。降的只是"这张卡现在不占你注意力"这一件事。 */
-.hva-card.soon{background:#F3F6FD;box-shadow:none;border:1px solid #E6ECF9}
-.hva-card.soon::before{opacity:.45}
-/* 卡主体只有一摞（名字行 ＋ 副标题），图标是**名字行里的一枚**，不再是它左边独立的一段——
-   所以这里没有 gap 了：那是给「图标｜文字摞」两段之间留的，现在两段并成了一段。
-   仍留 align-items:center：这一摞要在这只 56px 高的按钮里居中（下面的 .hva-ctl 比它高）。 */
-.hva-cbody{flex:1;min-width:0;display:flex;align-items:center;border-radius:14px;text-align:left;
-  position:relative;overflow:hidden;padding:0;min-height:56px}
-/* 那条 min-height:56px 兜的是**右列不够高**的那些卡。最高的右列是「截止…」一行 ＋ 9px 间隙
-   ＋ 30px 减号 ＝ 56px（＝我加的一次性项），56 就是从它量出来的、不是凑的整数；
-   够不到它的有两类：**常驻的我加的卡**（右列只有那颗 30px 减号）与**管理员那族整族**
-   （减号 2026-10-15 撤掉后，右列只剩「截止…」一行 ＝ 17px，见 ADR-0064）。
-   不给这条，管理员那些卡会比旁边的我加的卡矮 39px——一列卡高矮不齐，看着像清单断了。
-   改字号／改减号尺寸时要跟着重算（三个数：.hva-when 行高、.hva-ctl 的 gap、.hva-min 的高度）。
-   「最早」未到的那张本来就高过 56（右列摞了三样），不受这条影响。 */
-.hva-cic{flex:none;position:relative;width:42px;height:42px;display:flex;align-items:center;justify-content:center}
-.hva-cic .halo{position:absolute;inset:1px;border-radius:50%;filter:blur(2px)}
-.hva-cic .sq{position:relative;width:35px;height:35px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff}
-/* 清单卡里这枚图标**缩到跟名字同一行、同一高度**（2026-10-14）：它在这张卡上是名字行的一枚小标记，
-   不是自己撑起一段的方块。42 的方块立在每行左边，名字被顶到右边、副标题也只能跟着往右退，
-   一行里读到的字就窄了——清单是一列密集的行，左边不该逐行立着一块砖。
-   缩到 22（方 19）后：名字行＝图标＋名字（到 2026-10-14 只剩这两件，状态标签与设置都删了，
-   见 ADR-0056／0057），副标题从**图标左缘**起排，一张卡的左沿是一条直线。
-   浮窗那两张卡（.hva-ac）仍是 42/35：那是一张两行的「动作卡」，图标在那儿是整块的锚点，不是行内标记。
-   **尺寸随语境，形状系统共用**（圈＋渐变圆角块＋同色光晕）——一项能力在两处仍是同一张脸，只是站的位置不同。 */
-.hva-cbody .hva-cic{width:22px;height:22px}
-.hva-cbody .hva-cic .sq{width:19px;height:19px;border-radius:6px}
-.hva-cm{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
-.hva-cm .r1{display:flex;align-items:center;gap:7px;min-width:0} /* 名字行：图标＋名字两件——状态标签与「设置 ▸」两枚都于 2026-10-14 删掉（ADR-0056／0057） */
-.hva-cm b{min-width:0;font-size:15.5px;font-weight:700;letter-spacing:.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hva-cm .sub{font-size:13px;font-weight:600;color:#6E86B4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-/* 「这条是谁派的」不再用一行文字说，改用**卡片右上角那枚叶形角标**（.lc-src，与素材库个人／企业同款）：
-   管理员下发＝蓝双塔楼、我加的＝橙人像。文字标签在窄卡上要占掉一格宽（实测状态标签把
-   「AI朋友圈互动」挤成「AI朋友圈…」），角标贴的是卡角那片本来就空着的 padding，一分宽度都不抢。
-   原先它跟名字行尾那枚状态标签（.tk-tag）分工：那枚说「轮到没有」，这枚说「谁派的」。
-   那枚 2026-10-14 删掉之后（ADR-0057）名字行上就剩这枚角标一个标记了——但分工那句话
-   本来也不必收回：这枚一句话都没多说，而"轮到没有"这一问的答案在右列（最早／截止两条时间）。
-   原先角标下面还留着「👤 李经理」那行（管理员那族写人名、我加的那族空着但留高占位）。
-   2026-10-13 一并删掉：角标已经答了「谁派的」，人名是**同一个答案的第二种说法**，
-   一行说两遍；而且它只能填管理员那族，我加的那族恒空——留着一行空白比删掉更像坏了。
-   删了之后卡高没变——顶着它的从来是右列那摞（见上面 min-height:56px 那条），不是那行字。 */
-/* 减号一律贴右下：卡上那条「截止…」压在它上面；常驻那类没有截止行，减号单独落在同一高度——
-   一列卡看过去，减号是在同一条横线上（space-between 会把独苗减号顶到右上角，跟别条错开）。
-   管理员那族（无减号）右列只剩一行时间，同样贴底：一列卡看过去，各条的时间落在同一条横线上。 */
-.hva-ctl{flex:none;display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;gap:9px}
-.hva-when{font-size:12px;font-weight:600;color:#8C9BB8;white-space:nowrap}
-/* 右列上面那条「最早」：压在「截止…」上面，靠时钟图标与更浅的字色跟它分开——
-   一列两条时间，读的人得一眼看出哪条是「从什么时候起」、哪条是「到什么时候为止」。 */
-.hva-when.nb{display:inline-flex;align-items:center;gap:4px;font-weight:500;font-size:11.5px;color:#A6B3CA}
-.hva-when.nb svg{flex:none;margin-top:-1px}
-.hva-min{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-  color:#8C9BB8;background:#F2F4FA;position:relative;overflow:hidden}
-/* 底部浮窗：悬浮球那枚加号拉起来的「加入托管清单」面板——一段，工具能力里还能加的那几项
-   （原先是两段，管理员下发的任务 ＋ 工具能力；上段 2026-10-15 撤掉，见 ADR-0064）。
-   照参考原型 V5.9——它把「跳一个「添加托管动作」目录页」改成「壳内从底部升起一层」：
+.hva-sub{margin:2px 0 14px} /* 员工列表那两层筛选用的是同一个 .tk-seg，只在这里统一修上下距 */
+/* 托管清单那一整族的版式（栏头 .hva-grp／计数 .hva-n／视图分段器 .hva-view／清单 .hva-list／
+   清单卡 .hva-card…／来源角标 .hva-ctl .hva-when .hva-min／图标层 .hva-cic 及其 22px 缩版）
+   2026-10-16 整块删（见 ADR-0065）。这里不再留这些选择器的空规则：
+   同一批类名如果只活在样式表里、DOM 里一个都没有，下一个人读到的是一份"还在用"的假账。
+   留下的两条是别处在用的：.hva-sub（员工列表那两层筛选的分段器间距）、
+   以及下面那套浮窗外壳（.hva-sheetwrap／.hva-sheet／.hva-mask…，多开账号浮层与范围浮层共用）。 */
+/* 底部浮窗的**外壳**（多开账号浮层与托管范围浮层共用；「加入托管清单」那一层随清单一屏删了，ADR-0065）。
+   照参考原型 V5.9——它把「跳一个目录页」改成「壳内从底部升起一层」：
    遮罩点一下就关，浮层贴底、只圆上两个角，顶上一条把手，列表自己滚。
-   挂点选在 #host-ai 这层（不在 .hva-scroll 里）：前者是 position:absolute 的整屏容器，
+   挂点选在整屏那一层（不在 .hva-scroll 里）：前者是 position:absolute 的整屏容器，
    浮层贴的才是屏幕底边；塞进滚动容器里，遮罩会跟着内容一起滚走。 */
 .hva-sheetwrap{position:absolute;inset:0;z-index:9;display:none}
 .hva-sheetwrap.on{display:block}
@@ -912,42 +838,14 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .hva-sx{margin-left:auto;flex:none;width:32px;height:32px;border-radius:50%;background:#F1F4F9;color:#5C6B80;
   font-size:19px;line-height:1;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
 .hva-slist{flex:1;overflow-y:auto;padding:2px 12px calc(12px + env(safe-area-inset-bottom));scrollbar-width:none}
-/* 浮窗里的段头。浮窗只有一层，段头就是个安静的小标题，不做成分段器（这里没有「切换」这回事）。
-   2026-10-15 起浮窗只剩一段（工具能力），这一条仍按"可能多段"写——同一种标题样式，
-   不必因为眼下只有一段就并进卡片规则里（见 ADR-0064）。 */
+/* 浮窗里的段头。浮窗里那一摞是"分几段各讲一件事"，段头就是个安静的小标题，
+   不做成分段器（这里没有「切换」这回事）。**托管范围那层有两段**（类型／我挂的能力，见 ADR-0065），
+   多开账号那层只有一段；同一种标题样式，不必因为段数不同另立一条。 */
 .hva-sgrp{margin:6px 8px 4px;font-size:12px;font-weight:700;letter-spacing:.02em;color:#71809A}
-/* 浮窗里「还能加进去的一条」＝一张卡（2026-10-14 改，见 ADR-0049）。
-   原先两段共用这一套（上段管理员派下来的活＝卡主体点下去加入，下段工具能力＝卡主体点下去进配置页），
-   2026-10-15 上段撤掉，眼下只有工具能力这一族用（见 ADR-0064）。
-   形态照用户给的那张截图：左一枚圆角图标、名字＋灰字说明、右下「＋ 添加」。
-   原先下段铺的是工具页那套 32 枚宫格（.hva-tgrp/.hva-tgrid/.hva-ti/.hva-tick，一并删掉），
-   现在收成 3 张卡：宫格一枚只有名字，"它干什么用"那句话塞不进 96px 宽的格子，
-   而那句话正是决定要不要挂它的唯一依据。
-   图标层直接复用清单卡那套 .hva-cic（圈＋渐变圆角块＋同色光晕）：同一项能力在浮窗里、
-   在清单上都该长同一张脸，不再各画一遍。共用的是这套形状，不是这个尺寸——
-   2026-10-14 清单卡里那枚缩到了 22/19（见上面那条），浮窗这里仍是 42/35。 */
-.hva-ac{position:relative;display:flex;align-items:stretch;gap:8px;margin:0 2px 10px;
-  padding:12px 12px 12px 13px;border-radius:18px;background:#fff;
-  box-shadow:0 14px 30px -26px rgba(40,70,150,.95)}
-.hva-ac-b{flex:1;min-width:0;display:flex;align-items:center;gap:11px;text-align:left;padding:0;
-  border-radius:14px;position:relative;overflow:hidden}
-.hva-ac-t{flex:1;min-width:0}
-.hva-ac-t b{display:block;font-size:15px;font-weight:700;color:#17263F;letter-spacing:.01em}
-.hva-ac-t small{margin-top:4px;font-size:12.5px;font-weight:500;line-height:1.55;color:#71809A;
-  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
-/* 右列只剩一枚动作：蓝字的「＋ 添加」（把它加进清单），贴右缘、贴卡尾。
-   这里曾有第二枚——浅灰胶囊「设置 ▸」，两处都删了（2026-10-14，见 ADR-0056）：
-   它跟卡主体干的是**同一件事**（进这条能力的配置页；清单卡那儿的卡主体本来就是它），
-   同一张卡上摆两个入口，用户还得先学"哪个才是那个"。删完卡主体自己就是那个入口，
-   `.hva-set`／`.hva-ac.set` 两条规则随之全仓无引用，一并删掉。 */
-.hva-ac-act{flex:none;display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;gap:8px}
-.hva-add{flex:none;display:flex;align-items:center;gap:3px;height:26px;padding:0 5px;border-radius:13px;
-  color:#2E6BFF;font-size:13.5px;font-weight:700;position:relative;overflow:hidden}
-.hva-add svg{flex:none;margin-top:-1px}
 @keyframes hvaUp{from{transform:translateY(103%)}to{transform:none}}
 @keyframes hvaFade{from{opacity:0}to{opacity:1}}
 @media (prefers-reduced-motion:reduce){.hva-sheet,.hva-mask{animation:none}}
-/* 就地重画（挂完一条之后，见 hvaSheet 的 quiet）：只免掉动画（面板上滑＋遮罩淡入），其余一样。
+/* 就地重画（挂完一枚能力之后，见 hvaMine 的 quiet）：只免掉动画（面板上滑＋遮罩淡入），其余一样。
    遮罩也得免：它跟面板同一次 innerHTML 重建，只留面板不动的话，点一下遮罩会闪一下。 */
 .hva-sheet.quiet,.hva-mask.quiet{animation:none}
 /* 工作日志：按日倒序的时间线。日分隔＝两侧细线夹一个「日／月」；每条＝时间点＋竖线＋正文＋三类子卡 */
@@ -976,12 +874,9 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .hva-box{margin-top:9px;border-radius:12px;padding:10px 12px;font-size:12.5px;line-height:1.62;color:#3A4B66;
   background:linear-gradient(150deg,#F6F4FF,#F1F5FF);box-shadow:inset 0 0 0 1px rgba(200,208,245,.75)}
 .hva-box b{display:flex;align-items:center;gap:4px;margin-bottom:4px;font-size:12.5px;font-weight:700}
-/* 添加托管动作悬浮球：稿子是右下 52px 渐变圆＋底下小字。这里去掉那行小字——
-   它把按钮撑成「圆＋字」两截，涟漪就没有一个圆能裁（见下面 .hva-fab 的 overflow）。
-   悬浮球是快捷方式，不是唯一入口：队列段头与列表尾各有一枚写了字的「添加」，不缺这一处说明 */
-.hva-fab{position:absolute;right:18px;bottom:80px;z-index:7;width:52px;height:52px;border-radius:50%;
-  overflow:hidden;display:flex;align-items:center;justify-content:center;color:#fff;
-  background:linear-gradient(140deg,#9B6BFF,#2E7BFF);box-shadow:0 12px 24px -10px rgba(96,84,255,.95)}
+/* 这里曾是右下那颗「添加托管动作」悬浮球（52px 渐变圆，稿子上它底下还有一行小字）。
+   2026-10-16 随托管清单一屏一起删（ADR-0065）：它拉起来的浮窗就是"往清单里加一条"，
+   清单不在，它没有落点。挂／摘能力现在在托管范围浮层里（设置页那颗「管理托管范围」）。 */
 
 /* ---------------- 宿主 App AI配置 / 员工详情 / 全局设置（二级页）· 逻辑照参考原型 APP-AI-002/003/005 ----------------
    口径与主页面同：结构照参考原型，视觉归到本壳。三屏共用一套表单件（.hva-form／.hva-cell），
@@ -1063,11 +958,15 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .hva-mtval{margin-top:9px;font-size:12.5px;line-height:1.5;color:#2D528E}
 .hva-mtval.ph{color:#A9B6CD}
 /* 托管范围那一卡（照参考截图）：一行＝一类可托管的活，右边一颗减号把它交回「不托管」；
-   底下一条虚线框的「增加托管任务」开那张 12 类的勾选层。
+   底下一条虚线框的「管理托管范围」升起托管范围浮层，那层里是两段——
+   上段＝这 9 类后台任务的勾选表，下段＝「我挂的能力」（挂／摘 ＋ 进各项的配置页，见 .hva-crow）。
+   **这一卡只列类型那 9 行**，不在卡上再摆一份能力清单：同一个列表不摆两处（ADR-0056／0062／0063 的口径），
+   能力那半只住在浮层里（ADR-0065 把「我加的」那 3 项从撤掉的清单搬过来时定的）。
    行头那三横（≡）照截图摆着，但它是**静态引头**：这张表是一份集合，顺序不表达任何东西，
    真要能拖就是在承诺一件没意义的事（理由见 ICONS 里 grip 那条）。所以它不挂事件、不给按压反馈。
-   减号沿用清单卡上那枚 .hva-min 的皮（同一个 30px 圆、同一档浅灰）——全 App 的减号长一个样，
-   这里只把它的**点区**撑到 44（.hva-min 在卡里只有 30，靠整张卡兜着；这里行矮，得自己撑）。 */
+   减号是一枚 30px 圆、浅灰底（.hva-scope-x i 自带这套皮，2026-10-16 起不再借清单卡上那枚
+   .hva-min——它随托管清单一屏走了，见 ADR-0065）——全 App 的减号长一个样；
+   这里只把它的**点区**撑到 44（那颗圆只有 30，靠整行兜着；这里行矮，得自己撑）。 */
 .hva-scope-row{display:flex;align-items:center;gap:10px;padding:9px 8px 9px 15px;position:relative}
 .hva-scope-row+.hva-scope-row{box-shadow:inset 0 1px 0 #EFF2F9}
 .hva-scope-grip{flex:none;display:flex;color:#C6D1E2}
@@ -1082,10 +981,10 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
   border:1px dashed #BCC9E0;border-radius:12px;color:#2E6BFF;font-size:13.5px;font-weight:700;
   position:relative;overflow:hidden}
 .hva-scope-add svg{flex:none;margin-top:-1px}
-/* 范围那层里的一行：左边一枚圆勾（勾上＝这类交给托管），右边是类型名。
-   不做「已加入」绿标签、也不把已勾的禁掉——这一层是**勾选清单**，点一下就是个开关；
+/* 范围那层里的行：左边一枚圆勾（勾上＝这项交给托管），右边是名字。
+   不做「已加入」绿标签、也不把已勾的禁掉——这一层是**勾选表**，点一下就是个开关；
    摆成禁用态会让人以为「勾上了就再也取消不了」，而取消恰恰是这层要做的事之一。
-   状态的交代交给段头那句「已加入 N／12」。
+   状态的交代交给两段段头那两句「已加入 N／9」「已挂 N／3」。
 
    **这一组一律限定在 .scp-sheet 之内，且行／名的基规则必须写全。** 2026-10-14 那次把浮窗的行
    换成 .hva-ac 卡片时，连同删掉了约定共用的 .hva-srow／.hva-scp 基规则——那两条基规则是这一层
@@ -1101,9 +1000,20 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .scp-sheet .hva-scp b{display:block;font-size:14.5px;font-weight:700;color:#17263F}
 .scp-sheet .hva-srow.on .hva-sck i{background:#2E6BFF;border-color:#2E6BFF;color:#fff}
 .scp-sheet .hva-srow.on .hva-scp b{color:#12294F}
-/* 上段一条都列不出来时（范围被收窄到覆盖不到任何一条管理员下发的活）给的交代：
-   空着一段比写一句「没有」更糟——用户刚在设置里动过手，回来看到空白会以为是坏了。 */
-.hva-sempty{margin:2px 8px 6px;font-size:12.5px;line-height:1.6;color:#93A3BC}
+/* 第二段那几行＝「我挂的能力」（2026-10-16 加，见 ADR-0065）。与上面那 9 类**行型一致**
+   （同样的圆勾、同样的字号），差别只有一处：这一行里是**两个**按钮——
+   左＝勾选位（挂／摘）、右＝「设置 ›」（进这项能力自己的配置页）。
+   所以它不能复用 .hva-srow：那条规则自己就是一枚按钮，一行里塞不下第二枚。
+   左按钮吃满剩下的宽、右按钮贴右缘，两枚各自 overflow:hidden 吃自己的按压波纹
+   （波纹要贴着各自那一块裁，不然一片糊开）。未挂的那几行**也给**「设置 ›」——
+   它与挂没挂是两件事，先调好再挂上是正常用法。 */
+.scp-sheet .hva-crow{display:flex;align-items:center;gap:4px}
+.scp-sheet .hva-crow-b{flex:1;min-width:0;display:flex;align-items:center;gap:11px;padding:10px 4px 10px 8px;
+  border-radius:14px;text-align:left;position:relative;overflow:hidden}
+.scp-sheet .hva-crow.on .hva-sck i{background:#2E6BFF;border-color:#2E6BFF;color:#fff}
+.scp-sheet .hva-crow.on .hva-scp b{color:#12294F}
+.scp-sheet .hva-cfg{flex:none;height:34px;padding:0 12px;border-radius:17px;display:flex;align-items:center;
+  font-size:13px;font-weight:700;color:#2E6BFF;background:#F1F4FE;position:relative;overflow:hidden}
 /* 多开托管 · 选择账号（底部浮层）。外壳复用浮窗那套（.hva-sheet／.hva-grab／.hva-mask／.hva-slist），
    只换里面的内容。上段那条浅蓝头照线上那屏：它是这一层里唯一的「说明区」，
    往下全是可点的账号，颜色把「这里不用点」和「下面要点」分开。 */
@@ -1304,10 +1214,8 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .hm-nm{font-size:12.5px;font-weight:400;color:#333;line-height:17px;letter-spacing:.01em;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 .hm-nm.sm{font-size:11.5px} /* 稿子上六字（AI点数明细）自己降了一档，照办 */
-/* 「演示」卡里的排法分段器（**临时件**，见本屏静态段那条注释）：借任务页／AI托管页那枚 .tk-seg，
-   只改上下距——它俩一个在页顶、一个在卡里，页顶那 18px 的上距在卡里会空出一截。
-   不另造一枚件：切排法就是切视图，全站切视图都用这枚浅紫选中片的分段器。 */
-#host-me .tk-seg{margin:9px 0 2px;box-shadow:0 8px 18px -20px rgba(40,70,150,.9)}
+/* #host-me .tk-seg（「演示」卡里那枚排法分段器的卡内间距）2026-10-16 删：
+   那张卡比的是托管清单的排法，清单没了卡也就没了（见本屏静态段那条注释与 ADR-0065）。 */
 /* 这一屏的底部 Tab 与其余四屏同一条宿主全局导航（五枚、AI托管居中抬起），只有选中位不同：紫底紫标。
    :not(.ai) 与下面那条白图标，是把 id 规则从抬起的 AI 那枚身上让开——照工具页／任务页的处理 */
 #host-me .hv-tab button.on:not(.ai){background:#EFEBFF}
@@ -2028,10 +1936,12 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 /* 右上角贴角叶形角标（稿 39×34 贴角，量出来 21.7×19 本机 px）：左上直角（贴卡角），
    右上大圆 11px、右下近直角 1px、左下圆 8px——稿子上这四个角就是不对称的。
    个人＝橙、企业＝蓝，图标白、约 15px 居中。
-   **全站共用**：素材库那枚回答「这条素材是个人还是企业」（见 srcTagHtml），
-   托管清单那枚回答「这条托管是谁派的」（见 hvaSrcTag）——同一个「这东西从哪来」的问题，
-   两处用同一枚角标、同一套橙／蓝，用户不必学第二遍。
-   角标自身 absolute，宿主卡必须 position:relative（.cmp-card／.wk-card／.hva-card 都满足），
+   **现在只有素材库一处在用**：它回答「这条素材是个人还是企业」（见 srcTagHtml）。
+   2026-10-16 之前托管清单卡上也挂过一枚（回答「这条托管是谁派的」，hvaSrcTag），
+   随清单一屏一起走（ADR-0065）。这枚件留着是因为素材库还在用，且它本身就是一份通用的皮
+   （cornerTag(kind,label) 两个入参就够）：下一个「这东西从哪来」的问题直接调它，
+   橙／蓝那套语义不必再学第二遍。
+   角标自身 absolute，宿主卡必须 position:relative（.cmp-card／.wk-card 都满足），
    贴角那一侧由宿主的 overflow:hidden 裁出圆角。
    类名仍是 `lc-`（素材库那个时候起的）：它是全站唯一一枚角标，改名就得同改动 tools/smoke.js 里
    七处断言，而那份是别人手上的在改文件——为了一个名字不值当。名字的事留一条注释就够。 */
@@ -2233,26 +2143,23 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
         </section>
 
         <!-- 宿主App AI托管页（底部 Tab「AI托管」那一屏）· 逻辑照参考原型 APP-AI-001
-             骨架整段由 REND['host-ai'] 填：页头那行圆形动作／托管状态卡／视图分段器／清单或工作日志。
+             骨架整段由 REND['host-ai'] 填：页头那行圆形动作／托管状态卡／工作日志。
              页头不再写死在标记里——那行第一颗就是托管总开关，它得跟着 HVA_ON 换样子与文案，
              留在静态段里就得另找一处回写；整段一处生成，开关状态只有一个来源。
-             **两层**（2026-10-14，产品要求）：托管状态卡 ＋「托管清单／工作日志」分段器钉在上面不动，
-             滑的只有下面的清单／日志——滑两屏之后人得还看得见自己在哪一栏。
-             所以这一层不再自己滚（原先是它的 class="scroll" 在滚）：它只把竖向切成「不缩的头 ＋ 吃掉剩下的体」；
-             真正滚的是 #hvaPane，滚动指示层（SB_RULES 挑的 .scroll）也随之归它。
-             **#hvaBody 这个 id 留着当两层的共同祖先**：渲染器按 id 取件、冒烟按它当作用域找 .hva-hero／.hva-list，
-             拆成两个置顶元素时若把 id 挪给其中一层，另一层的东西就从那些查询里消失了。 -->
+             **两层**（2026-10-14，产品要求）：托管状态卡钉在上面不动，滑的只有下面的工作日志——
+             滑两屏之后人得还看得见托管开着没有。所以这一层不再自己滚（原先是它的 class="scroll" 在滚）：
+             它只把竖向切成「不缩的头 ＋ 吃掉剩下的体」；真正滚的是 #hvaPane，
+             滚动指示层（SB_RULES 挑的 .scroll）也随之归它。
+             **#hvaBody 这个 id 留着当两层的共同祖先**：渲染器按 id 取件、冒烟按它当作用域找 .hva-hero，
+             拆成两个置顶元素时若把 id 挪给其中一层，另一层的东西就从那些查询里消失了。
+             2026-10-16 撤掉两件（见 ADR-0065）：右下那颗悬浮球「＋」与「加入托管清单」底部浮窗的挂点
+             ——它们服务的托管清单一屏已经删了。挂/摘能力搬进托管范围浮层（#hvaScopeWrap，在设置页那一屏）。 -->
         <section class="screen" id="host-ai">
           <div class="hva-glow"></div>
           <div class="hva-scroll" id="hvaBody">
             <div class="hva-head" id="hvaHead"></div>
             <div class="scroll hva-pane" id="hvaPane"></div>
           </div>
-          <button class="hva-fab" onclick="hvaAdd()" title="添加托管动作">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-          <!-- 「添加托管动作」底部浮窗的挂点。空着＝关着；开合只填/清这一格，不走 REND['host-ai']
-               ——走渲染器的话，浮层一开一关会把整张托管清单重画一遍，滚到一半的位置也一起丢了 -->
-          <div class="hva-sheetwrap" id="hvaSheet"></div>
           <div class="hv-tab" id="hvaTab"></div>
         </section>
 
@@ -2293,7 +2200,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
              **这一屏上没有「统一托管」开关**（2026-10-13 删）：总开关归主页面那枚电源键，一处一个答案。
              多开托管那格点「设置」从底部升起一层选账号（照线上那屏），浮层挂在本屏里，
              所以 REND['host-ai-set'] 只重画 #hvaSetBody 时浮层不会跟着没（与主页那层同一个做法）。
-             托管范围那卡的「增加托管任务」同样从底部升起一层（#hvaScopeWrap，同一个挂法）。
+             托管范围那卡的「管理托管范围」同样从底部升起一层（#hvaScopeWrap，同一个挂法）。
              挂点用各自的 id、不复用一个容器：两层的开合互不相干，共用一个格就会互相抹掉内容。 -->
         <section class="screen" id="host-ai-set">
           <div class="appbar">
@@ -2310,7 +2217,8 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
              **一屏装四张页**，骨架是同一个（白卡 ＋ 底部常驻主按钮），差别只在字段，
              开哪一张由 HVA_ACT 决定、标题也由它拼（见 REND['host-ai-act']）。
              三张是**能力页**（朋友圈互动／画像分析／自动打招呼），落点是能力上那枚「设置」：
-             浮窗能力卡与清单卡上的都是同一个 hvaOpen(t)。
+             现在**只有一处**——托管范围浮层第二段那枚「设置 ›」（.hva-cfg，见 hvaScopeHtml）。
+             从前它挂在托管清单卡与「加入托管清单」浮窗的能力卡上，那两处随清单删了（ADR-0065）。
              ★ 第四张「AI智能回复」**出列了**（2026-10-15，ADR-0062）：它不是一项可挂能力，
                是托管级的一项设置（谁来做／在哪做／多久一次），状态另行存在 HVA_REPLY，
                入口是「全局设置」首卡那一行（hvaOpenReply）。两处的状态由 hvaCurCfg／hvaCurOpt 分流，
@@ -2371,16 +2279,13 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
               <div class="hm-mh"><h4>其他功能</h4></div>
               <div class="hm-grid" id="hmOther"></div>
             </div>
-            <!-- 临时件 · AI托管页排法切换（甲 一份铺到底／乙 三分栏）：只为把两种排法切着比。
-                 它原先挂在 APK 的构建期注入悬浮钮上（见 android/fullbleed.py），浮在页面上压着清单；
-                 收进「我的」——演示开关该待在设置里，不该压在业务内容上。桌面外壳顶栏那颗（.dseg）
-                 与它是同一件事，只能留一处，故那颗随本次一并删掉。
-                 定了留哪版就整块删：本块（含 CSS 里 #host-me .tk-seg 那条）＋ HVA_SCHEMES ＋ hvaSchemeFlip
-                 ＋ HVA_SCHEME ＋ hvaViews 的三栏分支。 -->
-            <div class="hm-mod">
-              <div class="hm-mh"><h4>演示</h4></div>
-              <div class="tk-seg" id="hmScheme" role="group" aria-label="AI托管页排法"></div>
-            </div>
+            <!-- 这里曾有一张「演示」卡（AI托管页排法切换：甲 一份铺到底／乙 三分栏）。
+                 2026-10-16 整块删（见 ADR-0065）：它比的是**托管清单**的两三种排法，
+                 清单一撤就没有可排的东西了——AI托管页只剩头卡＋工作日志一栏，
+                 一栏的分段器没有意义。随它一起走掉的：HVA_SCHEMES／HVA_SCHEME／hvaScheme
+                 /hvaViews 的三栏分支、CSS 里 #host-me .tk-seg 那条、以及 REND['host-me'] 里
+                 填 #hmScheme 的那几句（**成对删**：静态块没了而渲染侧还在，$('hmScheme') 返回 null，
+                 整屏 host-me 渲染就抛）。 -->
           </div>
           <div class="hv-tab" id="hmTab"></div>
         </section>
@@ -3031,7 +2936,7 @@ function syncNav(id,params){
 }
 
 /* ---------- Material ripple（统一按压反馈，替代缩放） ---------- */
-var RIP_SEL='.btn,.chip,.iconbtn,.cell,.wk-card,.p-row,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.rah-b,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-cbody,.hva-min,.hva-fab,.hva-agent,.hva-cell,.hva-srow,.hva-ac-b,.hva-add,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close';
+var RIP_SEL='.btn,.chip,.iconbtn,.cell,.wk-card,.p-row,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.rah-b,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close';
 function ripInit(){
   document.addEventListener('pointerdown',function(e){
     var t=e.target.closest ? e.target.closest(RIP_SEL) : null;
@@ -3548,16 +3453,10 @@ REND['host-task']=function(){
    一份状态管三屏：主页面那张托管状态卡、全局设置屏、员工详情屏改的都是下面这几个变量。
    分头各存一份，迟早出现「设置里开着、回主页还写着已关闭」——自相矛盾比少一个开关更伤。 */
 var HVA_ON=false;              /* 托管总开关。默认关：先让人看清「开着之后它会替我做什么」，再看怎么开 */
-var HVA_VIEW='queue';          /* 视图：queue 托管清单 / log 工作日志（方案 b 下是「管理员下发」「我加的」）*/
-var HVA_SCHEME='a';            /* 排法：a＝一份铺到底的「托管清单」／b＝三分栏。这一格连同入口都是**临时的**，
-                                  只为让两种排法能在同一台手机上切着比；定了留哪版，连同 hvaViews 的三栏分支一起删 */
-var HVA_SCHEMES=[              /* 切换器的两枚选项：入口在「我的」页那张「演示」卡（见 REND['host-me']）。
-                                  标签写「甲／乙」是因为这是给自己比的两版、还没有正式名字；
-                                  真定了哪版，这枚分段器就该消失，而不是留着让人选。 */
-  {s:'a',n:'甲 · 托管清单'},
-  {s:'b',n:'乙 · 三分栏'}
-];
-var HVA_SUBS=['管理员下发','我加的']; /* 清单的**两个来源**（不是两组卡）。清单只有一份，来源只落在每张卡右上角那枚角标上，见 hvaQueueHtml */
+/* HVA_VIEW／HVA_SCHEME／HVA_SCHEMES／HVA_SUBS 四格 2026-10-16 一并删（见 ADR-0065）：
+   前两格驱动的是「托管清单｜工作日志」的分栏与那套甲／乙排法演示，后两格是清单的两个来源与
+   「我的」页那张临时的「演示」卡。托管清单那一屏整块撤掉之后，这一屏只剩工作日志一栏——
+   一栏的分段器没有意义，排法更没有两种可比。 */
 var HVA_WORK='09:00—18:00';     /* 托管条件之一：工作时间 */
 var HVA_IDLE=10;               /* 托管条件之二：闲置门槛（分钟） */
 var HVA_IDLES=[5,10,15,30];
@@ -3682,91 +3581,38 @@ var HVA_SCOPE_TYPES=HVA_TYPES.filter(function(t){return !t.own;});
    它管的只有**管理员下发**那一族：我加的本来就是我一条条挂上去的，再来一道范围筛是同一个问题问两遍。 */
 var HVA_SCOPE=HVA_SCOPE_TYPES.map(function(t){return t.n;});
 
-/* 托管清单＝托管开着之后会被自动做掉的事。两个来源的差别不在画法，在**权限**：
-   管理员下发的活**清单里拿不掉**（2026-10-15，见 ADR-0064）：卡上没有减号，浮窗里也没有加回的段——
-   员工能决定的只有"我自己挂什么"，别人派下来的活什么时候做、算不算数，不归这一侧改。
-   我加的是自己攒的托管动作，减号＝整条移除（加回来就去浮窗里重新挂一次）。
-   **右列因此只有一族的**（我加的才有那颗减号，见 hvaQueueCard），分开靠右上角那枚来源角标。
-   管理员那几项刻意避开任务页已有的名字（七夕客户关怀／新客欢迎话术那几条在任务页是「已执行／执行异常」，
-   托管已经跑过了）；两屏同名却一个「待执行」一个「已完成」，翻来翻去会以为演示数据自相矛盾。
-   换上的这两个名字取自素材库真有的两条素材（「Q4 开幕 · 促销图文」「产品报价标准话术」），跨屏对得上。
-   管理员那族故意放满 5 条：条数是**别人决定的**，管理员一次活动就能派下十几条，
-   演示数据只放两三条，等于把「清单会被派下来的活淹掉」这个真问题藏起来不给人看。
-   字段口径：
-   · kind 形态（standing 常驻／once 一次性）。**由能力决定，不由单条任务决定**——AI智能回复一直挂着，
-     群发一条消息做一次就没。常驻项没有时间边界，因此卡上没有截止行、排序时钉顶（见 hvaTier）。
-   · tm 是卡上那行中文（只写截止，不写最早）；due 是**数值键，两个读者**：排序拿它比大小
-     （今日＝0、明日＝1、昨日及更早＝负数，h*100+m），hvaPastDue 拿它的符号判生死——**截止已过的项不进清单**。
-     卡面要人能读的中文、排序要能比大小的数，所以两个都在——不写 due 就得在渲染时解析中文。
-   · nb 最早。只有我加的一次性项可能有：管理员下发的活到最早时间才出现，没到它压根不在清单里（Q23）。
-   · **没有状态位**（2026-10-14）：原先那个 st（待执行／逾期）随名字行尾那枚标签一起删了（ADR-0057），
-     逾期那一档接着被「已截止的不进清单」取代（ADR-0058，见 hvaPastDue）——一条已截止的活按定义
-     就不会出现在页面上，所以数据里也**不留**已截止的示例。不留不是图省事：留着它读的人会以为
-     它还挂在清单上，而它一个像素也不会渲染出来。
-   · **没有 out**（2026-10-15 删）：原先用一个 out 标记"被减号移出过"，配浮窗上段当加回入口
-     （ADR-0037 的可逆）。管理员那族不能移出之后这个字段没有读者了，连同数据里那条 out=true 一并删净
-     （同 ADR-0057 的 tag、0058 的 st：渲染字段失去读者就删，留着读的人会以为它还挂在卡上）。
-   · **没有 sm**（产品 2026-10-15 删）：原先每条带半句计数（「126 位目标客户」「命中 12 条待回消息」），
-     渲染在卡的第二行「类型 · 那半句」。**现在第二行只写这条属于哪一类**（见 hvaQueueCard）——
-     那半句说的是"这批活眼下有多大"，而这张卡要回答的是"托管接下来会替我做哪些事"；它还是个
-     演示快照里的死数，过一天就对不上了。字段与那 8 句一并删净（同 ADR-0057 的 tag、0058 的 st：
-     渲染字段失去读者就删，留着读的人会以为它还挂在卡上）。见 ADR-0060。 */
-var HVA_QUEUE={
-  '管理员下发':[
-    {t:'Q4 开幕促销群发',ic:'megaphone',ty:'微信群发好友任务',
-     kind:'once',tm:'截止 今日 18:00',due:1800,pa:['#FFA9D8','#9B8BFF','rgba(190,140,255,.18)']},
-    {t:'报价标准话术推送',ic:'chat2',ty:'微信发客户群消息任务',
-     kind:'once',tm:'截止 今日 18:00',due:1800,pa:['#8CCBFF','#6B7BFF','rgba(110,150,255,.18)']},
-    /* 这一条原先带 out=true（2026-10-14 加）：那是为了给浮窗上段留一张"还能加进来的"卡——
-       上段只列移出去过的，全都还在清单里的话那段永远空着，ADR-0037 那条"移出可逆"就成了
-       文档里的一句话。2026-10-15 管理员那族不能移出、上段整个撤掉（ADR-0064），
-       这条也就回到它本来该在的地方：清单上正常的一张卡。 */
-    {t:'国庆活动话术推送',ic:'doc',ty:'企业微信群发客户群任务',
-     kind:'once',tm:'截止 今日 18:00',due:1800,pa:['#7FDCD6','#3FB8C9','rgba(90,210,205,.18)']},
-    {t:'新询价客户加好友',ic:'userplus',ty:'微信加好友任务',
-     kind:'once',tm:'截止 明日 12:00',due:11200,pa:['#FFBB86','#FF8A4C','rgba(255,170,120,.18)']},
-    /* 这条原先的类型是「AI客户画像分析」（2026-10-14 改）：那三类是**员工自建**的能力（见 HVA_TYPES
-       上 own 那段），后台不派它们，管理员下发这族里挂一条就是"后台派了一条我加的活"。
-       换上的类型（企业微信添加好友任务）在那族里还没用过，管理员那族的铺开度不受影响。 */
-    {t:'意向客户企业微信添加',ic:'userplus',ty:'企业微信添加好友任务',
-     kind:'once',tm:'截止 明日 12:00',due:11200,pa:['#A9C4FF','#5B7BFF','rgba(120,150,255,.18)']}
-  ],
-  /* 「我加的」＝自己挂进清单的托管动作（候选＝工具页标了 h1 的那 3 条，见 hvaActList），因此：
-     · t 必须是**候选名单上的那个名字**（朋友圈互动／画像分析／自动打招呼，不是「AI朋友圈互动」
-       那类后台任务类型名）——清单和浮窗同一件事得同一个叫法，否则用户在两屏对不上号，
-       会以为是两个不同的东西。**AI智能回复 2026-10-15 起不在这一族里**（ADR-0062）：
-       它是托管级的回复设置，不是一条能挂能摘的动作，挂在清单里会让「托管由谁做」这个问题
-       在头卡和清单里各有一个答案；
-     · ty 写的是**能力所属的组**（AI赋能／消息触达），不是任务类型：这一族是员工自己攒的能力，
-       没有「后台派的类型」那回事。这也正是 HVA_BADTYPE 只卡管理员那族 ty 的原因；
-       照写工具页的组名——往一个它并不属于的组里写，读的人会回工具页去找，然后找不到；
-     · **sm 已删**（2026-10-15，同上一条口径）：原先这里写「它现在在盯什么」（命中 12 条待回消息、
-       71 位客户…），渲染在卡的第二行；产品 2026-10-15 把那半句删了，第二行只写 ty。 */
-  '我加的':[
-    {t:'自动打招呼',ic:'hand',ty:'消息触达',
-     kind:'standing',pa:['#5AA6FF','#2E6BFF','rgba(70,140,255,.16)']},
-    {t:'朋友圈互动',ic:'thumbsup',ty:'AI赋能',
-     kind:'once',tm:'截止 明日 18:00',due:11800,nb:'明日 09:00',
-     pa:['#FF8E8E','#F2545B','rgba(255,110,110,.16)']}
-  ]
-};
+/* 我挂的能力＝员工在托管范围浮层里自己勾上的那几项（候选＝工具页标了 h1 的那 3 条，见 hvaActList）。
+   **只存名字**：图标、配色、组名全在 HOST_TOOLS 里现取——抄一份过来就是两份表，改了一处另一处
+   不会跟着动，而它们显示的又是同一件事。
+   顺序由 hvaMineOrder 归一成候选名单的顺序，不按点击先后：挂一次就跑到末尾的话，同一张表两次
+   看到的次序不一样，而人只会以为自己手抖了。
+
+   这里**原先是一张清单**（HVA_QUEUE：管理员下发 5 条 ＋ 我加的 2 条，各带 ty／ic／pa／tm／due／nb／kind）。
+   托管清单那一屏 2026-10-16 整块撤掉（见 ADR-0065）：它要回答的「托管接下来会替我做哪些事」，
+   宿主任务页已经在回答，而清单只是那批活的一个子集视图。随它一起走掉的字段和口径：
+   · 卡上的那一套（ty／ic／pa／tm／due／nb）——卡没了，字段没有读者就删（同 ADR-0057 的 tag、
+     0058 的 st、0060 的 sm：渲染字段失去读者就删，留着会被下一个人当活字段读）；
+   · kind（常驻／一次性）——原先决定卡上写不写截止行、排序钉不钉顶。**「我加的」不再有单条时间边界**
+     （产品 2026-10-16：退回成"挂了这项能力 ＋ 可配置"，托管在工作时段内自己挑时机），
+     于是形态这一栏在托管这一侧也没有读者了；
+   · due 与 hvaPastDue（「已截止的项不进清单」）——那条规则的主语是清单，清单不在，它没有对象。
+   管理员下发那批活**不在这一侧**：它们住在任务模块自己的池子里，托管只按**托管范围**（按类）
+   决定做不做哪一类，不按条。 */
+var HVA_MINE=['自动打招呼','朋友圈互动'];   /* 默认挂这两项；顺序由 hvaMineOrder 归一 */
 /* 类型自检。两屏的类型字样写错一个字（「微信发客户群消息任务」写成「微信群发客户消息任务」），
    后果是**「这条活能不能托管」答错了**——而页面照常渲染，错得没有任何症状。
    所以数据一写完就自查一遍，漏网的塞进 HVA_BADTYPE，空数组才算过；无头验证读的就是它。
-   摆在 HVA_QUEUE 之后：它要查的就是上面这份队列，摆前面等于对着 undefined 查。
-   只管管理员下发那族的 ty：只有它是**任务类型**。我加的那族 ty 写的是能力所属的组（如「AI赋能」），
-   是另一类词，别拿这份清单去卡它。 */
+   查的是**任务页**那些活挂在哪个类型下（下面 TK_DO／TK_PEND／TK_TASKS 三个循环）。
+   原先这里还并着一条 chkAdm（管理员下发那族不许挂 own 类型），卡的是托管自己那份队列——
+   队列 2026-10-16 随托管清单一起删（见 ADR-0065），那条闸没有主体，一并走。 */
 var HVA_BADTYPE=(function(){
   var bad=[],ok={},seen={},own={},ownN=0,i,j,d;
   for(i=0;i<HVA_TYPES.length;i++){ ok[HVA_TYPES[i].n]=1; if(HVA_TYPES[i].own){own[HVA_TYPES[i].n]=1;ownN++;} }
-  /* chk 查「这个类型字样在不在那份清单里」。第二句 chkAdm 只管**管理员下发**那族：
-     它多查一条——own 那三类是员工自建的，后台派下来的活不该是这几类
-     （写错了页面照常渲染，只是后台派的活挂着"我加的"的类型名）。 */
+  /* chk 查「这个类型字样在不在那份清单里」——查的是任务页那些活挂在哪个类型下。
+     写错一个字页面照常渲染，只是「这条活能不能托管」被答错了。
+     原先并在这里的 chkAdm（管理员下发那族不许挂 own 类型）随托管那份队列一起删（ADR-0065）：
+     托管侧不再有自己的任务数据，那条闸没有主体。 */
   function chk(s,who){ if(s&&!ok[s])bad.push(who+' · '+s); }
-  function chkAdm(s,who){
-    if(s&&own[s])bad.push(who+' · '+s+'（员工自建的类型，不该由管理员下发）');
-    else chk(s,who);
-  }
   /* 条数也查。这份清单是**长得像会漏项**的那种表（编号 1-15 里跳掉 6／7／13），
      少抄一行、或者手一抖把「12 类」写成「13 类」，页面照常渲染、没人会看出来。
      写这份自检时就已经栽过一回：嘴上说 13，表里其实是 12。 */
@@ -3792,23 +3638,22 @@ var HVA_BADTYPE=(function(){
   for(d in TK_TASKS)for(j=0;j<TK_TASKS[d].length;j++)chk(TK_TASKS[d][j].s,'任务页 '+d);
   /* 任务页那枚状态标只认三档（tkBadge 里那张表）。写错一个字母（latee）不会报错——
      它会静默走 tkBadge 的兜底、画成红「已失败」，于是"那天没做完"被画成"出错了"。
-     这正是这一档最难发现的那种坏法（同 hvaPastDue 那道闸：症状不在明处，所以拿数据本身钉）。 */
+     这正是这一档最难发现的那种坏法（症状不在明处，所以拿数据本身钉）。 */
   for(d in TK_TASKS)for(j=0;j<TK_TASKS[d].length;j++){var _s=TK_TASKS[d][j].st;
     if(!TK_BADGES[_s])bad.push('任务页 '+d+' · '+TK_TASKS[d][j].t+'（状态 '+_s+' 不在三档里）');}
-  for(i=0;i<HVA_QUEUE['管理员下发'].length;i++)chkAdm(HVA_QUEUE['管理员下发'][i].ty,'托管清单·管理员下发');
-  /* 候选能力（＝工具页标了 h1 的那几条）＝眼下允许自己挂进清单的全部。**只有一个来源**
+  /* 候选能力（＝工具页标了 h1 的那几条）＝眼下允许自己挂的全部。**只有一个来源**
      （2026-10-15 起，原先第二来源 HVA_SOLO_ACTS 已撤，见 ADR-0062），所以「两个来源分开查」
      那一层防法也不再需要——现在查两件事：
      ① 数量必须正好是一期那 3 项。这份名单是一次**产品决定**（阶段范围，见 docs/prd/AI托管-PRD.md），
-        多标一项＝把范围偷偷放宽了，而浮窗照常渲染、清单照常能挂上——只是挂上去托管不会做它。
+        多标一项＝把范围偷偷放宽了，而范围浮层照常渲染、照常能挂上——只是挂上去托管不会做它。
         数字写死在这里不是重复一份事实，是**给那份决定立一道闸**：真要改，改的是这个数＋PRD 那行。
         标了几条查一次、摊平后几条再查一次，两处都留着：摊平那段将来多接一个来源时，前一个数
         不会跟着变，两处不一起改成同一个值就是矛盾的。
-     ② 候选之间不许重名。名字是清单卡的键（hvaHas／hvaPick 都按名字找），重名＝浮窗里两张
-        分不清的卡、清单里也认不出挂的是哪一条（工具页若给「自动回复」也打上 h1，就会跟
-        别的条目撞）。
-     ③ 「我加的」每一条都必须在候选名单里。不在的话，浮窗那句「已加入 N／M」会把它算进分子，
-        而它自己永远不出现在下面的卡里——数目和卡对不上，且没有任何症状。 */
+     ② 候选之间不许重名。名字是挂／摘与取配置页的键（hvaHas／hvaMine／hvaOpen 都按名字找），
+        重名＝范围浮层里两行分不清、也认不出挂的是哪一条（工具页若给「自动回复」也打上 h1，
+        就会跟别的条目撞）。
+     ③ HVA_MINE 每一条都必须在候选名单里。不在的话，段头那句「已挂 N／3」会把它算进分子，
+        而它自己永远不出现在下面的行里——数目和行对不上，且没有任何症状。 */
   var can={},acts=hvaActList(),h1n=0;
   for(i=0;i<acts.length;i++){
     if(can[acts[i].t])bad.push('可托管能力 · '+acts[i].t+' 重名（候选名单里有两张同名的卡）');
@@ -3817,21 +3662,8 @@ var HVA_BADTYPE=(function(){
   for(i=0;i<HOST_TOOLS.length;i++)for(j=0;j<HOST_TOOLS[i].p.length;j++)if(HOST_TOOLS[i].p[j].h1)h1n++;
   if(h1n!==3)bad.push('工具页一期标记 '+h1n+' 项（应为 3）');
   if(acts.length!==3)bad.push('可托管能力 '+acts.length+' 项（应为 3）');
-  for(i=0;i<HVA_QUEUE['我加的'].length;i++)
-    if(!can[HVA_QUEUE['我加的'][i].t])bad.push('我加的 · '+HVA_QUEUE['我加的'][i].t+'（不在候选名单里）');
-  /* 已截止的项**不进清单**（hvaPastDue）——这条规则天生没什么症状：它要的就是"页面上看不见"。
-     所以两头各钉一道，缺一头都会静默失灵：
-     ① 演示数据里不许有已截止的（due 为负）。留一条的唯一效果是让读的人以为它还挂在清单上——
-        它按定义不渲染，页面上一个像素都不会变。
-     ② 判据本身对不对。数据里没有已截止的项时，**把 hvaQueueAll 里那道过滤删掉也照样"全绿"**，
-        所以直接喂三个样本给 hvaPastDue：昨日（负）＝已截止、今日（正）＝还没、常驻（无 due）＝不是。
-        常驻那条单拎出来查，是因为它最容易写歪成 !due（undefined 取反为真＝把每条常驻都判成已截止）。 */
-  for(d in HVA_QUEUE)for(j=0;j<HVA_QUEUE[d].length;j++)
-    if(hvaPastDue(HVA_QUEUE[d][j]))
-      bad.push('托管清单·'+d+' · '+HVA_QUEUE[d][j].t+'（已截止，按定义不进清单，数据里不该留）');
-  if(!hvaPastDue({due:-1800}))bad.push('hvaPastDue 没把「昨日 18:00」判成已截止');
-  if(hvaPastDue({due:1800})||hvaPastDue({due:0}))bad.push('hvaPastDue 把还没到截止的判成了已截止');
-  if(hvaPastDue({kind:'standing'}))bad.push('hvaPastDue 把常驻项（没有时间边界）判成了已截止');
+  for(i=0;i<HVA_MINE.length;i++)
+    if(!can[HVA_MINE[i]])bad.push('我挂的能力 · '+HVA_MINE[i]+'（不在候选名单里）');
   /* 托管动作配置（三张设置页，HVA_ACTCFG／HVA_ACTOPT 两张表是同一件事的两半）：
      ① 键必须是能力名，且**必须落在候选名单里**。写错一个字的后果是那一项能力的「设置」
         静默退回 toast（hvaOpen 找不到配置就走兜底），页面打不开、没有任何报错。
@@ -3895,9 +3727,14 @@ var HVA_BADTYPE=(function(){
      **这一段不再需要兜一份名单**，于是也不需要"两个来源的字段对齐成同一形状"那层防法：
      条目形状就是 HOST_TOOLS 摊下来的这一个。
    ★ **摊平里没有 sm**（2026-10-15）：HOST_TOOLS 上那份 sm 是**工具自己的说明**（写着这条工具
-     是干什么的），2026-10-15 之前被借来当浮窗下段与清单卡的副标题；产品删掉那半句之后，
-     托管这边不再借它（见 hvaQueueCard）。HVA_QUEUE 那族自带的 sm 字段则**彻底删了**
-     （那几句是专为托管卡片写的）；工具页那份留着——它写的是工具本身，不是某块版面的字段。 */
+     是干什么的），2026-10-15 之前被借来当台账卡片（托管清单卡与浮窗候选卡）的副标题；
+     产品删掉那半句之后，托管这边不再借它。工具页那份留着——它写的是工具本身，
+     不是某块版面的字段。
+   ★ **摊平里只剩 t 了**（2026-10-16，见 ADR-0065）：ic／pa（图标、配色）原先喂的是台账卡左边那枚
+     圆角图标，grp（组名）喂的是卡上的副标题，kind（常驻／一次性）喂的是 hvaPick 给新挂项补的截止
+     ——那三处全在托管清单那一侧，随它一起走。范围浮层第二段那 3 行**只要名字**（勾＋名＋「设置 ›」，
+     行型与上面那 9 类一致），所以这里照本仓口径把失去读者的字段删掉，不再往下带——
+     带着的话，下一个人会以为有谁在读它。工具页那份 HOST_TOOLS 一个字段不动：它是工具本身的数据。 */
 function hvaActList(){
   var out=[],i,j,g,a;
   for(i=0;i<HOST_TOOLS.length;i++){
@@ -3905,7 +3742,7 @@ function hvaActList(){
     for(j=0;j<g.p.length;j++){
       a=g.p[j];
       if(!a.h1)continue;
-      out.push({t:a.n,ic:a.ic,pa:HT_PAL[a.pal],grp:g.n,kind:a.k==='s'?'standing':'once'});
+      out.push({t:a.n});
     }
   }
   return out;
@@ -3941,126 +3778,43 @@ function hvaMark(s){return esc(s).split('[[').join('<em class="hv-gb">').split('
 /* 视图／档位／开关都落在同一份状态上，改完立刻重画这一屏：三处各存一份就会互相打架 */
 function hvaToggle(){ HVA_ON=!HVA_ON; REND['host-ai']();
   toast(HVA_ON?'托管已开启：工作时间＋闲置条件满足后自动执行':'托管已关闭：下方动作都不会自动执行'); }
-function hvaAdd(){ /* 悬浮球落的这里，把底部浮窗拉起来。从前这里是 go('host-ai-cfg')——跳去 AI配置（员工列表）那一屏。
-    那一跳是错的：这里加的是**清单里的一条**，不是去挑员工；挑员工另有入口（「设置 → AI智能回复 → 更换」，
-    页头那枚「AI配置」圆钮 2026-10-15 撤了）。
-    参考原型 V5.9 也是这么改的：它原来跳「添加托管动作」目录页（APP-AI-ACTION-001），
-    后来换成壳内从底部升起的一层浮层。 */
-  hvaSheet(true);
+/* 悬浮球那颗「＋」与「加入托管清单」浮窗 2026-10-16 一并撤掉（见 ADR-0065）。
+   它们整族（hvaAdd／hvaTask／hvaSheet／hvaSheetHtml／hvaOptCard／hvaPick／hvaRemove
+   ＋ 静态骨架里那两颗挂点）存在的前提是**托管清单这一屏**：
+     · hvaAdd 是他唯一的入口（悬浮球 → 底部升起浮窗）；
+     · hvaSheetHtml 候选卡上的「＋ 添加」直接往清单里 push，卡主体点下去＝ hvaOpen 进配置页；
+     · 点管理员那族的卡原本落到 hvaTask（一句"去任务详情"的兜底话，见 ADR-0064）——
+       卡都没有了，这句兜底没有落点。
+   挂／摘能力这件事没有跟着消失，它搬进了**托管范围浮层**（见 hvaMine／hvaScopeHtml）：
+   那里既有平台可派的类型（按类的一道筛），也有我自己挂的能力（一份集合）——
+   同一个浮层，两段。这一屏从此不再有自己的浮层。 */
+/* 这项能力挂了没有。读者是范围浮层那 3 行（勾／未勾）与 hvaMineOrder。 */
+function hvaHas(t){ return HVA_MINE.indexOf(t)>=0 }
+/* 挂上／摘下，**一枚开关**。从前是两条腿（hvaPick 挂、hvaRemove 摘），各自往
+   HVA_QUEUE['我加的'] 里读写一张带着 ty／ic／pa／tm／due／kind 的卡表——那张表随清单删了，
+   "挂"退成**一个名字**（其余全从 HOST_TOOLS 现取，见 HVA_MINE 上头那段）。
+   不再有"挂不上"的分支：候选只有那 3 条，名单里没有的名字压根不会递进来（自检盯着）。
+   面板**不关**：人的下一件事通常是再挂一枚，留着面板，那一行当场翻面；
+   连挂几枚再点遮罩收起来（同原来 hvaPick 那句口径）。 */
+function hvaMine(t){
+  var i=HVA_MINE.indexOf(t);
+  if(i<0)HVA_MINE.push(t); else HVA_MINE.splice(i,1);
+  hvaScopeSheet(true,true);      /* 就地重画：那一行当场翻面（quiet＝不重放上滑动画） */
+  toast(i<0?'已挂上「'+t+'」，托管会按它自己的条件执行':'已把「'+t+'」摘掉');
 }
-/* 管理员下发的活点开＝**任务详情**。那一屏照线上原样，本原型不画（演示范围外）——
-   线上那一屏由任务模块那边进来的，AI托管这一侧点进去**不展示状态**（见 ADR-0064 与 PRD §5.1）。
-   从前这里落到 hvaOpen 的兜底分支上，toast 说的是「托管动作配置（演示范围外）」：
-   管理员派下来的活没有可配的动作（它本来就只有任务详情），那句话是错的入口名。 */
-function hvaTask(t){ toast('任务「'+t+'」的任务详情（线上页面，演示范围外）') }
-/* 浮层开合只填/清 #hvaSheet 那一格，不重画 REND['host-ai']（理由见那格上的注释）。
-   状态不放变量里：开没开看 DOM 就够了，多存一份状态迟早和 DOM 对不上。
-   quiet＝就地重画、不放上滑动画。挂完一条之后面板**不关**（见 hvaPick），得把那一枚翻成「已挂」；
-   用同一个 hvaSheet(true) 会连入场动画一起重放，点一下弹一下——quiet 就是为这一步留的。 */
-function hvaSheet(open,quiet){
-  var box=$('hvaSheet');if(!box)return;
-  if(open){ box.innerHTML=hvaSheetHtml(quiet); box.classList.add('on'); }
-  else { box.classList.remove('on'); box.innerHTML=''; }
+/* 行序归一成候选名单的顺序（＝工具页那 3 条的次序），不按挂上的先后：
+   挂一次就窜到末尾的话，同一张表两次打开的次序不一样，而人只会以为自己手抖了。
+   同 hvaScopeOrder 那份（那边归一的是类型）。 */
+function hvaMineOrder(){
+  var a=hvaActList(),o=[],i;
+  for(i=0;i<a.length;i++)if(hvaHas(a[i].t))o.push(a[i].t);
+  return o;
 }
-/* 这条托管动作已经在「我加的」里了没有。浮窗据此把它从**还能加的**那张名单里去掉
-   （已加入的不再列出，见 hvaSheetHtml）——重复添加同一条，清单里会出现两张一模一样的卡，
-   用户会以为是 bug；而且那一屏回答的是"我还能加什么"，已经有了的不该再占一行。 */
-function hvaHas(t){
-  var a=HVA_QUEUE['我加的'],i;
-  for(i=0;i<a.length;i++)if(a[i].t===t)return true;
-  return false;
-}
-function hvaPick(t){
-  if(hvaHas(t))return;                       /* 按钮本来就是 disabled，这行是双保险 */
-  var i,a=hvaActList(),rec;
-  for(i=0;i<a.length;i++)if(a[i].t===t){
-    /* 新加的这条不落 on 字段：开关已经删了（见 hvaQueueCard 那条口径），加了字段没人读。
-       kind 从能力带过来（见 hvaActList）：形态是能力自己的属性，不由这一次挂的动作决定。 */
-    rec={t:a[i].t,ic:a[i].ic,ty:a[i].grp,kind:a[i].kind,pa:a[i].pa};
-    /* 一次性能力**必须有时间边界**：卡上没有截止行就是一张残缺的卡，排序也拿不到 due
-       （hvaTier 第 ② 层要按 due 比大小，undefined 相减得 NaN，排序直接乱掉）。
-       真实的截止在人点开的那张配置页里填（这一屏演示范围外），这里先给当天 18:00——
-       新挂上的那张卡当场就是完整的，不必等人去设；给的是**当天**（due 为正，还没过），
-       所以它当场就在清单里，不会被 hvaPastDue 挡在门外。常驻那条不给：常驻没有时间边界，
-       给了反而要多写一条「常驻不写截止」的例外规则。 */
-    if(rec.kind==='once'){ rec.tm='截止 今日 18:00'; rec.due=1800; }
-    HVA_QUEUE['我加的'].push(rec);
-    /* 面板**不关**（2026-10-13 改）：下段收成 3 张卡之后（2026-10-14），挂一条就关、再挂一条又得
-       重新把面板拉起来一遍——挂完这一枚，人的下一件事通常是再挂一枚。留着面板，
-       那一枚当场从"还能加"的名单里消失（已加入的不再列出），连挂几枚再点遮罩收起来。
-       挂完那一下的确认由"卡没了"＋toast 两处给，不必靠关面板。 */
-    hvaSheet(true,true); REND['host-ai']();
-    toast('已把「'+t+'」加进托管清单，托管会按它自己的条件执行');
-    return;
-  }
-}
-/* 浮窗里一枚「还能加进去」的卡。形态照用户给的那张截图：左边一枚圆角图标，
-   右边名字＋一行灰字说明，右下「＋ 添加」。
-   **只有工具能力这一族了**（2026-10-15，ADR-0064）：原先上段那几张"管理员派下来的活"也用这一张卡、
-   卡主体点下去＝加回清单；那一段连同 hvaBack 一并撤了，这里只剩能力卡一种形状。
-   能力卡**卡主体点下去做什么**（2026-10-14，见 ADR-0056）：进它自己的配置页（它下面挂着可配的东西）。
-   从前是**两个入口压在同一张卡上**：卡主体＝加入、右上另挂一枚「设置 ▸」＝配置页。
-   两枚都留着时，同一张卡上"点左边"和"点右上"去两处，用户得先学哪个是哪个；
-   而删掉的那一枚里，能力卡那半本来就跟卡主体重合。现在**一件事一处落点**：
-   卡主体＝去配置页、卡尾「＋ 添加」加入。
-   为什么不再做工具页那种宫格：宫格一枚只有名字，"它干什么用"那句话塞不进 96px 宽的格子——
-   而决定要不要加这一条的，恰恰就是那句话。 */
-function hvaOptCard(o){
-  return '<div class="hva-ac">'
-    +'<button class="hva-ac-b" onclick="hvaOpen(\''+o.n+'\')" title="配置「'+o.n+'」">'
-      +'<span class="hva-cic"><span class="halo" style="background:'+o.pa[2]+'"></span>'
-      +'<span class="sq" style="background:linear-gradient(142deg,'+o.pa[0]+','+o.pa[1]+')">'+I(o.ic,17,2.1)+'</span></span>'
-      +'<span class="hva-ac-t"><b>'+o.n+'</b><small>'+o.sub+'</small></span>'
-    +'</button>'
-    +'<span class="hva-ac-act">'
-      +'<button class="hva-add" onclick="hvaPick(\''+o.n+'\')" title="加入托管清单">'+I('plus',13,2.8)+'添加</button>'
-    +'</span></div>';
-}
-/* 浮层内容：遮罩＋贴底一层，**一段**——工具能力里眼下还能加的那几项（2026-10-14 改，见 ADR-0049）。
-   遮罩那格自己带 onclick（点它＝关）：这里就一处分寸——遮罩铺满整屏，能点的只有它自己，
-   再走事件委托多一层判断没换来什么。
-   **上段「管理员下发的任务」整个撤掉**（2026-10-15，产品：「加入托管清单的浮窗中把管理员下发的任务
-   这部分删掉」，见 ADR-0064）。它存在的前提是"移出可逆"（ADR-0037）——原来那是加回清单的**唯一入口**，
-   少了它减号就从一次可逆的取舍变成一次不可逆的删除。现在管理员那族压根不能移出（卡上没有减号），
-   加回的入口没有落点，这一段也就跟着没了：留着一整段"别人派的活"，点下去还只能是加入，
-   等于在这一屏摆一堆员工本来也动不了的条目。
-   这一段撤走之后浮窗只剩一件事：**我能自己挂什么**。所以副标题里的"管理员派下来的活"也一并去掉。
-   已加入的**不再列出来**（从前是排成禁用态＋绿标签）：这一层回答的是"我还能加什么"，
-   一张写着"你已经有了"的灰卡只是占地方——回答"我有什么"的是清单那一屏，那儿每一条都在。
-   一段空了就给一句话交代：留一段空白比写一句「没有」更糟，用户刚从别处动手回来，看到空白只会以为是坏了。
-   **副标题自 2026-10-15 起只写「这条属于哪一组」**：原先后面还跟半句说明或计数
-   （「AI赋能 · 给客户打标签、出一份画像」），产品 2026-10-15 把那半句删了
-   （同 hvaQueueCard 那张卡的口径，两屏一起改）。
-   不写「已加入，不能重复加」——那种卡现在压根不会出现，这句话没有落点。 */
-function hvaSheetHtml(quiet){
-  var rows='',i,a,left,cnt=0;
-  var acts=hvaActList();
-  for(i=0;i<acts.length;i++)if(hvaHas(acts[i].t))cnt++;
-  /* 段头那句「已加入 N／M」答的是"这一批里有多少在我清单上"，下面的卡答的是"还能加哪几条"——
-     同一批东西的两个面，并排放着不打架。 */
-  rows+='<div class="hva-sgrp">工具能力 · 已加入 '+cnt+'／'+acts.length+'</div>';
-  for(left=0,i=0;i<acts.length;i++){
-    a=acts[i]; if(hvaHas(a.t))continue;        /* 已在清单里的不列 */
-    rows+=hvaOptCard({n:a.t,ic:a.ic,pa:a.pa,sub:a.grp});
-    left++;
-  }
-  if(!left)rows+='<div class="hva-sempty">能交给托管的能力都已在托管清单里</div>';
-  return '<div class="hva-mask'+(quiet?' quiet':'')+'" onclick="hvaSheet(false)"></div>'
-    +'<div class="hva-sheet'+(quiet?' quiet':'')+'" role="dialog" aria-modal="true" aria-label="加入托管清单">'
-    +'<span class="hva-grab"></span>'
-    +'<div class="hva-shead"><div><b>加入托管清单</b><small>工具能力里能交给托管的；已经在清单里的不再列出</small></div>'
-    +'<button class="hva-sx" onclick="hvaSheet(false)" title="关闭">×</button></div>'
-    +'<div class="hva-slist">'+rows+'</div></div>';
-}
-/* 减号挂在「我加的」那族上＝整条移除（自己挂的，本来就不存在别的落点），
-   加回来就去浮窗里重新挂一次。**只有这一族有减号**（2026-10-15，ADR-0064）：
-   管理员那族清单里拿不掉，从前那颗减号（hvaDrop）已删。 */
-function hvaRemove(t){
-  var a=HVA_QUEUE['我加的'],i;
-  for(i=0;i<a.length;i++)if(a[i].t===t){a.splice(i,1);REND['host-ai']();
-    toast('已移除「'+t+'」，再次添加需要重新配置');return}
-}
-/* 能力卡上那枚「设置」的落点（浮窗里的能力卡与清单卡上的是同一个动作）。
+/* 能力那 3 项的挂/摘与配置入口现在都在托管范围浮层里（见 hvaScopeHtml 第二段）——
+   hvaPick／hvaRemove／hvaOptCard／hvaSheetHtml 四条随清单浮窗一起删（ADR-0065）。
+   注意 **hvaOpen 在 App 里只剩一个调用者**：浮层里那枚「设置 ›」（.hva-cfg）。
+   它接不上，3 项能力的配置页就彻底没有入口（同 ADR-0063 记下的那个洞），冒烟因此专门钉了一颗钉子。 */
+/* 能力那一行上那枚「设置 ›」的落点（＝托管范围浮层第二段）。
    有配置页的开二级页，没有的仍给一句 toast——**不为了凑齐而现编一张**：
    一期那 3 项眼下都有配置页，但这条兜底留着：候选名单将来多一项、那张页还没做时，
    它给的是「这一项配不了」而不是一片空白。
@@ -4068,7 +3822,7 @@ function hvaRemove(t){
      入口是全局设置页那一行（见 hvaOpenReply）。 */
 function hvaOpen(t){
   if(!HVA_ACTCFG[t]){ toast('「'+t+'」的托管动作配置（演示范围外）'); return; }
-  hvaSheet(false);   /* 从浮窗里点进来的：先把浮层收掉再切屏，否则退回来时它还盖在清单上 */
+  hvaScopeSheet(false);   /* 从浮层里点进来的：先把浮层收掉再切屏，否则退回来时它还盖着 */
   HVA_ACT=t; go('host-ai-act');
 }
 /* 页头那行两颗圆：托管总开关／设置。形态照用户给的那张截图（白圆＋圆内描边图标＋圆下小字），
@@ -4119,168 +3873,21 @@ function hvaHeroHtml(){
     +'<div class="hva-cond">'+I('clock',15,2.2)+'<span>工作时间 '+HVA_WORK+' · 闲置 '+HVA_IDLE+' 分钟</span></div>'
   +'</div>';
 }
-/* 清单卡：左侧彩条＋一摞字（名字行＝图标＋名称；下一行＝类型·摘要），
-   右上角贴一枚来源角标，右列**时间那一列**（最早／截止）与减号。
-   卡外面是 <div>、里面才是 <button>——卡里还嵌着减号，按钮里不能再套按钮。
-   **名字行尾那枚状态标签（常驻／逾期／待执行）2026-10-14 删掉**（见 ADR-0057）。原先那里三选一：
-   常驻＝「一直挂着」，逾期＝「没赶上截止」（红），其余＝「待执行」；「最早」未到的那类本来就不占这一格
-   （它跟截止一样是时间，两条一起待在右列，带时钟的那条是最早，"还没轮到"由整张卡降一档的底色说）。
-   删的理由是这三枚里**没有一枚在说这张卡自己的事**：
-   · 「待执行」是清单里每一条的默认态——一份清单上九成的卡都挂它，等于给"正常的卡"发一枚徽章；
-   · 「常驻」不是状态是**形态**，而形态已经在卡上写着了——常驻没有截止，右列就少一行（见 .hva-ctl 那段的
-     高度账），一眼就分得出来；
-   · 「逾期」当时是真信息，但它**不是一个新事实**：截止时间本来就写在右列，逾期的卡那条写的是一个
-     已经过去的时刻。删掉标签之后这一档就彻底没了着落，隔天产品把话说全了：**已截止的项压根不进清单**
-     （ADR-0058，见 hvaPastDue）——本来也没有一张卡需要说这件事。
-   名字行因此只剩**图标 ＋ 名字**两件——那行从此不再被截断（原先实测真机上这行只有 122px，
-   一枚 64px 的标签进来，58px 的名字就被压成「AI朋友圈…」）。 */
-function hvaQueueCard(c,src){
-  var mine=(src==='我加的');
-  var minus='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>';
-  /* **减号只长在「我加的」那族**（2026-10-15，ADR-0064）：管理员下发的活清单里拿不掉，那颗减号删了。
-     从前两族共用 .hva-min 与同一枚 svg，只在 onclick 上分派（我加的那族 hvaRemove＝整条移除，
-     管理员那族 hvaDrop＝移出托管清单、任务不删、浮窗里能加回来）——「移出」这件事连同可逆的加回入口
-     一起撤了，于是这里不再有分派：有减号就是整条移除，提示语也只剩一句。
-     右列因此只有这一族是「时间 ＋ 减号」两样；管理员那族只剩时间一行（卡高由 .hva-cbody 的
-     min-height 兜着，见上面那行高度账）。 */
-  var ctl=(c.nb?'<span class="hva-when nb">'+I('clock',11,2.6)+c.nb+' 起</span>':'')
-    +(c.tm?'<span class="hva-when">'+c.tm+'</span>':'')
-    +(mine?'<button class="hva-min" onclick="hvaRemove(\''+c.t+'\')" title="移除'+c.t+'">'+minus+'</button>':'');
-  /* 名字行末尾那枚「设置 ▸」小胶囊 2026-10-14 删掉（见 ADR-0056）：它跟整张卡干的是同一件事——
-     卡主体（.hva-cbody）点下去本来就是 hvaOpen，也就是这条能力的配置页。同一张卡上摆两个入口，
-     用户还得先学"哪个才是那个"；而它挤在名字行尾，名字先让位、截断，代价落在**任务名**上。
-     删完卡的入口只剩卡主体一处。空出来的那一格不用补东西：右端归右上那枚来源角标。
-     **卡主体点下去两族去两处**（2026-10-15，产品：「点击企业类型的卡片需要跳转到任务详情」，
-     见 ADR-0064）：我加的＝这条能力的配置页（hvaOpen），管理员下发的＝**任务详情**（hvaTask，
-     线上那一屏，本原型不画）。所以这里按来源分派，而不是让卡主体写死一个动作。 */
-  return '<div class="hva-card'+(c.nb?' soon':'')+'">'
-    +'<button class="hva-cbody" onclick="'+(mine?'hvaOpen(\''+c.t+'\')':'hvaTask(\''+c.t+'\')')+'"'
-      +(mine?'':' title="查看任务详情"')+'>'
-      +'<span class="hva-cm"><span class="r1">'
-        +'<span class="hva-cic"><span class="halo" style="background:'+c.pa[2]+'"></span>'
-        +'<span class="sq" style="background:linear-gradient(142deg,'+c.pa[0]+','+c.pa[1]+');box-shadow:0 3px 6px -4px '+c.pa[1]+'">'+I(c.ic,11,2.1)+'</span></span>'
-        +'<b class="hv-gn">'+c.t+'</b></span>'
-        /* 卡的第二行**只写这条属于哪一类**（2026-10-15，产品）：原先后面还跟半句计数/说明
-           （「微信群发好友任务 · 126 位目标客户」「AI托管 · 命中 12 条待回消息」），删掉了。
-           那半句说的是"这批活眼下有多大"，而这张卡要回答的是"托管接下来会替我做哪些事"；
-           它还是个写死的演示数，过一天就对不上。改了这里，浮窗那两张候选卡也要一起改
-           （见 hvaSheetHtml，同一句话在两屏长得一样）。 */
-        +'<span class="sub">'+c.ty+'</span></span>'
-    +'</button>'
-    +'<span class="hva-ctl">'+ctl+'</span>'+hvaSrcTag(src)+'</div>';
-}
-/* 「这条是谁派的」＝卡片右上角那枚叶形角标（画法见 cornerTag）：管理员下发＝蓝双塔楼、我加的＝橙人像。
-   原先是一行灰底小字（「管理员下发」／「我加的」），换成角标有两个理由：
-   ① 卡本来就窄，文字标签要抢一整格宽——实测名字行上（那时那儿还挂着一枚状态标签）再塞它，任务名就被截断；
-   ② 同一个问题（这东西从哪来）素材库已经用角标回答了，托管清单跟着用同一枚，用户不必学第二遍。 */
-function hvaSrcTag(src){ return cornerTag(src==='我加的'?'per':'ent', src) }
-/* 清单是一份，排序两层（口径见 docs/prd/CONTEXT-托管.md「清单排序」）：
-   ① 常驻钉顶——它不是在队列里排了第一，是**压根不在队列里**（AI智能回复这类一直挂着，托管每次运行重做一遍）；
-   ② 其余按截止升序（due），截止相同按**进入清单的先后**（先到先得）——这层拿 idx 兜底而不是靠
-     Array.sort 的稳定性：ES2019 起 sort 才是稳定排序，写明了就不必押在实现上。
-   原先 ① ② 之间还夹着一层「逾期的排最前」。2026-10-14 起不需要了：**已截止的项压根不进清单**
-   （见 hvaPastDue）——"得先看见它"那个问题，现在由"它不在队里"回答。
-   两层都不看来源：管理员下发与我加的混在一份里，这才是这一屏要回答的问题——
-   「托管接下来会替我做哪些事」；按来源切开等于每次只看半张答卷。 */
-function hvaTier(c){ return c.kind==='standing'?0:1; }
-/* 这条活**已经过了截止**没有。过了就不该再出现在托管这一侧：清单回答的是「托管接下来会替我做哪些事」，
-   而一条截止已经过去的活，托管替你做不了它了——窗口关上了，还挂在清单上只会让人以为它还算数。
-   **判据只有 due 的符号**（昨日及更早＝负数，见 HVA_QUEUE 那行口径）。常驻项没有 due，永远不算过：
-   它本来就没有时间边界，也就没有「太晚」这回事。
-   **取数口径的两处共用这一条**（hvaQueueAll 与 hvaAdminVisible）：只拦清单不拦浮窗，
-   浮窗就成了"加一条立刻看不见"的入口——点完 toast 说加上了、清单里却没有，那比不给这个入口更糟。
-   **不落记录**（同托管范围那道，见 hvaScopeSet）：截止是能改的（我加的那族在配置页里改），
-   把截止往后一改这条活就该自己回来，所以每次现算、不存一份"被截止挡掉的账"。 */
-function hvaPastDue(c){ return c.due!==undefined && c.due<0; }
-/* 托管范围那句话问的是「这一类的活交给托管吗」。它只在**管理员下发**那一族上问：
-   我加的那族 ty 写的是能力所属的组（AI赋能），不是任务类型，拿范围去筛它等于把整族筛空。 */
+/* 清单那一整族的渲染件（hvaQueueCard／hvaSrcTag／hvaTier／hvaPastDue／hvaAdminVisible／
+   hvaQueueAll／hvaQueueHtml／hvaAddBtn／hvaGrpHtml／hvaListHtml）随托管清单一起删，见 ADR-0065。
+   连带走掉的几条口径（都是"失去读者就删"，同 ADR-0057 的 tag、0058 的 st、0060 的 sm）：
+   · **排序**（常驻钉顶 / 按截止升序 / 先到先得）——排的是那张卡列表；
+   · **已截止的项不进清单**——那条规则的主语就是清单，它没有对象了（连 hvaPastDue 一并走）；
+   · **来源角标**（管理员下发／我加的）——原先它回答"这条是谁派的"，而两族在界面上不再同框：
+     类型在范围浮层里、能力也在范围浮层里，只是分两段住（那是**类**不是**条**，没有派给谁一说）。
+   取数口径那三道（hvaInScope 留下的这一道除外）也一并消失：托管这一侧不再有自己的任务数据，
+   它做不做一类活由 HVA_SCOPE 说了算，而那一份没有"每次现算"的需要——范围里就是全集。 */
+/* 托管范围那句话问的是「这一类的活交给托管吗」。清单一撤，它从**取数口径**退成了**勾选态**：
+   原先它筛的是管理员那族的活（范围外的压根不进清单，见已删的 hvaAdminVisible），
+   现在唯一的读者是范围浮层那 9 行——它们恒列 HVA_SCOPE_TYPES 全集，勾没勾由它算
+   （见 hvaScopeHtml）。所以它不再拦掉任何数据，只答"这一类交出去了没有"。
+   设置页那张范围卡走的是另一条路（直接列 HVA_SCOPE，见 REND['host-ai-set']），不经过它。 */
 function hvaInScope(ty){ return HVA_SCOPE.indexOf(ty)>=0; }
-/* 管理员下发那族里**能进托管这一侧的那些**。两道：
-   ① **在托管范围内**。范围之外的活不是「被藏起来」，是**托管这一侧压根不做它**：不进清单。
-   ② **还没截止**（hvaPastDue）。管理员这族的截止员工改不了，这条活要回来得靠后台把截止往后改
-      或重新派——但取数口径照旧，不为此存一份账。
-   2026-10-15 起它只服务**管理员那一族**：浮窗上段用过它（那一层要跟清单同口径，否则浮窗里能加
-   一条清单里永远不出现的活），上段撤掉之后（ADR-0064）剩两个读者——hvaQueueAll（清单）与
-   方案 b 那两栏（hvaGrpHtml／hvaListHtml）。 */
-function hvaAdminVisible(){
-  var a=HVA_QUEUE['管理员下发'],o=[],i;
-  for(i=0;i<a.length;i++){
-    if(!hvaInScope(a[i].ty))continue;
-    if(hvaPastDue(a[i]))continue;
-    o.push(a[i]);
-  }
-  return o;
-}
-/* 清单**唯一**的入口，两道取数口径（托管范围、**已截止**）都收在这儿拦：
-   管理员那族整族交给 hvaAdminVisible（两道都在里头），我加的那族只过截止一道——
-   范围那句话问的是「这一类的活交给托管吗」，我加的 ty 写的是能力所属的组，拿范围筛它等于把整族筛空
-   （见 hvaInScope），所以那一族本来就不在范围的管辖里。
-   清单是**每次现算的**、不落任何「被挡掉的记录」——这正是「把类型加回来，那些活就自己回来」
-   能成立的唯一原因（见 hvaScopeSet；截止被改到未来时同理）。 */
-function hvaQueueAll(){
-  var out=[],s,i,a,k;
-  for(s=0;s<HVA_SUBS.length;s++){ k=HVA_SUBS[s];
-    a=(k==='管理员下发')?hvaAdminVisible():(HVA_QUEUE[k]||[]);
-    for(i=0;i<a.length;i++){
-      if(hvaPastDue(a[i]))continue;                     /* 截止已过的——托管替你做不了它了 */
-      out.push({c:a[i],src:k,idx:out.length});
-    }
-  }
-  out.sort(function(x,y){
-    var tx=hvaTier(x.c), ty=hvaTier(y.c);
-    if(tx!==ty)return tx-ty;
-    if(tx===1&&x.c.due!==y.c.due)return x.c.due-y.c.due;
-    return x.idx-y.idx;
-  });
-  return out;
-}
-/* 方案 a 的托管清单首页＝**一份，铺到底**，不分段、不折叠。
-   为什么不分段：本屏已经有一个「托管清单｜工作日志」的视图分段器，再来一层来源分段器就是一屏两层 Tab，
-   用户分不清自己在切哪一层；更糟的是切到「我加的」就看不见「管理员下发」还剩几件没做，
-   而这一屏要回答的恰恰是「托管接下来会替我做掉哪些事」，切着看等于每次只看半张答卷。来源改写在每张卡上。
-   为什么不折叠：折叠本来的理由是「保证下一族的段头永远在第一屏」——管理员一次活动能派下十几条，
-   不设上限就把「我加的」那族的段头和「添加」顶出屏幕。清单并成一份、族头没了，那条理由就没了着落；
-   更关键是**最早未到的项按排序天然沉底**（最早 ≤ 截止，见 hvaTier），一折叠就永远看不见，
-   而它恰恰是最需要被看见的一类——用户刚挂上一条「明天做」，回头在首页翻不到它，只会以为没挂上。
-   所以这里不设上限，「还有 N 项 · 查看全部」那一行与它跳的「查看全部」屏一并删掉：
-   那份清单本来就是这一份，没有第二份可以看。
-   空态兼着两件事——「一条都没有」和「都被你移出去了」在用户眼里是同一件事：现在没人替你干活。 */
-function hvaQueueHtml(){
-  var q=hvaQueueAll(), lh='', i;
-  for(i=0;i<q.length;i++)lh+=hvaQueueCard(q[i].c,q[i].src);
-  return '<div class="hva-list">'+(lh||'<div class="hv-empty">托管清单还是空的 · 点右下角那颗加号加一条</div>')+'</div>';
-}
-/* 「添加」那颗（只长在「我加的」那一栏的栏头上）：添进来的本来就是这一类，
-   挂到页级栏头等于暗示能往「管理员下发」那一栏加东西——而那一栏的活只能由管理员派。 */
-function hvaAddBtn(){
-  return '<button class="tk-all" onclick="hvaAdd()">添加'
-    +'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>';
-}
-/* 栏头：栏名＋那句权限说明＋右侧的计数或「添加」。**只有方案 b（三分栏）用得到**——
-   方案 a 的清单已经是一份、不分组了，族名写在每张卡的来源标签上（见 hvaQueueCard）。
-   留着它是因为那条临时的排法切换条还在，b 那三栏的栏目头就是它；两案定下留 a 时，这一处跟着删。
-   named=false 的场合（方案 b 的栏）外面 appbar 上已经写着栏名了，再写一遍是重复；
-   而且那处都是「整屏就这一栏」，计数于是从「N 项」改成「共 N 项」——整屏只有一族时它才是总数，
-   写「N 项」会被读成「其中一部分」。两件事都挂在 named 上，不是偷懒：它们本来就是同一个判断
-   ——栏名在不在外面，等价于这一屏是不是只有这一栏。 */
-function hvaGrpHtml(k,named){
-  var mine=(k==='我加的'), a=HVA_QUEUE[k]||[], n, i;
-  a=mine?a:hvaAdminVisible();                /* 管理员的池子先过两道取数口径，才轮到来数「共 N 项」 */
-  n=a.length;
-  return '<div class="hva-grp">'
-    +(named?'<b>'+k+'</b>':'')
-    +'<small>'+(mine
-      ?(named?'我自己加的托管动作':'我自己加的托管动作，随时可停可删')
-      :'管理员派下来的，不能从清单里拿掉')+'</small>'
-    +(mine?hvaAddBtn():'<span class="hva-n">'+(named?'':'共 ')+n+' 项</span>')
-  +'</div>';
-}
-/* 一栏的全部卡：不限量、不折叠。**只有方案 b 的栏目用它**（方案 a 的首页见 hvaQueueHtml）。 */
-function hvaListHtml(k){
-  var list=(k==='我加的'?HVA_QUEUE[k]:hvaAdminVisible())||[], lh='', i;
-  for(i=0;i<list.length;i++)lh+=hvaQueueCard(list[i],k);
-  return '<div class="hva-list">'+(lh||'<div class="hv-empty">这一栏还没有托管动作</div>')+'</div>';
-}
 function hvaLogHtml(){
   var h='',i,j,k,m;
   for(i=0;i<HVA_LOG.length;i++){
@@ -4313,47 +3920,22 @@ var HVA_TABS=[
   {n:'工具',ic:'toolbox', fn:"go('host-tools')"},
   {n:'我的',ic:'smile',   fn:"go('host-me')"}
 ];
-/* 视图表按方案算：方案 a 两栏（**托管清单＝一份，不分来源** ＋工作日志），
-   方案 b 三栏（两个来源各占一栏，＋工作日志）。用户要的就是把这两种排法摆在一起比。
-   HVA_VIEW 的取值跟着换：a 用 'queue'，b 直接拿来源名当键（'管理员下发'/'我加的'），省一张映射表；
-   'log' 两案同名，所以切方案时正看着工作日志的人能留在工作日志上，不会被弹回第一栏。 */
-function hvaViews(){
-  return HVA_SCHEME==='a'
-    ? [{n:'托管清单',v:'queue'},{n:'工作日志',v:'log'}]
-    : [{n:'管理员下发',v:'管理员下发'},{n:'我加的',v:'我加的'},{n:'工作日志',v:'log'}];
-}
-function hvaView(v){ HVA_VIEW=v; REND['host-ai'](); }
-/* 切方案：只切排法，不切视图（理由见 hvaViews）。落回清单一侧的，两个方案各有自己的第一栏名字。
-   **入口只有一处**：「我的」页那张「演示」卡里的分段器。原先有两处、都不在原型自己身上
-   （桌面外壳顶栏那颗 .dseg、APK 构建期注入的悬浮钮），现在收进原型内——
-   演示开关该待在设置里，不该浮在业务内容上压着清单；两处入口还会各亮各的，同一屏看不出谁是真的。
-   **注意：方案 a 已经定案（清单是一份），b 的三分栏与它相斥**——入口标着「临时件、定了留哪版即删」。
-   真删的时候：这一格、HVA_SCHEMES、「演示」卡那一块、hvaViews 的三栏分支、
-   hvaGrpHtml／hvaListHtml／hvaAddBtn 三处一起走（它们只有 b 用得到）。 */
-function hvaScheme(s){
-  if(HVA_SCHEME===s)return;
-  HVA_SCHEME=s;
-  HVA_VIEW=(HVA_VIEW==='log')?'log':(s==='a'?'queue':'管理员下发');
-  REND['host-ai']();
-  /* 「我的」页那枚分段器也押在同一格上，所以在那边切的时候得让它追上——
-     REND 是「按 id 刷 DOM」、与当前在哪一屏无关，顺手刷掉比挂个 MutationObserver 省事得多。 */
-  REND['host-me']();
-}
+/* 三栏视图（hvaViews／hvaView）与那套甲／乙排法演示（hvaScheme ＋ HVA_SCHEME／HVA_SCHEMES）
+   2026-10-16 一并删（见 ADR-0065）：它比的是**托管清单**的两三种排法（a＝一份、
+   管理员下发／我加的／工作日志 三栏），清单一撤就没有可排的东西了——
+   这一屏只剩**头卡 ＋ 工作日志**一栏。一栏的分段器没有意义（没有第二栏可切），所以
+   分段器连带 #hvaHead 里的 h 串一起撤：头卡直接写进 #hvaHead。 */
 REND['host-ai']=function(){
   /* 2026-10-12 三次决策：托管关闭时那条琥珀提醒卡已删（用户要求）。
      它原先替总开关把「关着＝下面这些都不会自动执行」说出口，删了就得有人接这句话——
      接在状态卡标题上（见 hvaHeroHtml 的托管已开启/关闭），不另起一条卡：
      同一屏里「关着」这件事说两遍，第二遍只会让人以为两处说的不是一回事。 */
-  var h=hvaHeroHtml();
-  var vs=hvaViews(),i,vh='';
-  for(i=0;i<vs.length;i++)vh+='<button class="'+(HVA_VIEW===vs[i].v?'on':'')+'" onclick="hvaView(\''+vs[i].v+'\')">'+vs[i].n+'</button>';
-  h+='<div class="tk-seg hva-view">'+vh+'</div>';
-  /* 头与体分开写（2026-10-14）：状态卡与分段器进 #hvaHead（钉住不动），清单／日志进 #hvaPane（自己滚）。
-     切栏时 **#hvaPane 这个元素本身不动**、只换它的内容，所以滚动位置照旧（内容短了就由浏览器夹到能滚到的地方）。 */
-  $('hvaHead').innerHTML=h;
-  $('hvaPane').innerHTML=(HVA_VIEW==='log')?hvaLogHtml()
-    :(HVA_VIEW==='queue')?hvaQueueHtml()
-    :hvaGrpHtml(HVA_VIEW,false)+hvaListHtml(HVA_VIEW);
+  /* 头与体分开写（2026-10-14）：状态卡进 #hvaHead（钉住不动），工作日志进 #hvaPane（自己滚）。
+     从前这一屏还有「托管清单｜工作日志」那道分段器，切栏时 **#hvaPane 这个元素本身不动**、
+     只换它的内容，所以滚动位置照旧；现在没有可切的第二栏，那两格仍是分开的两个元素——
+     拆了就得让日志跟着头卡一起滚，「头卡钉住」这件事就没了落点。 */
+  $('hvaHead').innerHTML=hvaHeroHtml();
+  $('hvaPane').innerHTML=hvaLogHtml();
   $('hvaTab').innerHTML=hvTabsHtml(HVA_TABS);
 };
 
@@ -4521,12 +4103,14 @@ REND['host-ai-set']=function(){
      不是 12 类：另三类（AI朋友圈互动／AI客户画像分析／自动打招呼）是**员工自己在工具页就能创建的能力**，
      后台不派它们，范围里也就没有它们（口径见 HVA_TYPES 上 own 那段）。
      它跟平台那份清单是两层，别合一：那份是能力边界（手机端没权限放开），
-     这份是员工在边界以内的取舍。所以这里既没有「全托管」开关、也没有全选——它就是把清单，
-     行上的减号交回一类，底下那条虚线框负责加回来。
-     减号会**连带清出已在清单里的同类活**（见 hvaScopeSet），对症的正是用户那句话：
-     「有几类活我根本不能交给手机，每次都得去卡上点减号删掉，很麻烦」。 */
+     这份是员工在边界以内的取舍。所以这里既没有「全托管」开关、也没有全选——行上的减号交回一类，
+     底下那条虚线框拉起的浮层负责加回来。
+     **这张卡只列类型**（2026-10-16，见 ADR-0065）：我自己挂的那几项能力**不在卡上再列一份**——
+     它和类型住在同一个浮层里的第二段，那是唯一的挂／摘处；卡上再摆一份就是同一个东西两处入口，
+     照 ADR-0056／0062／0063 那几笔的口径只能留一处。所以按钮文案也从「增加托管任务」
+     改成「管理托管范围」（它现在两段都管）。 */
   h+='<div class="hva-form"><div class="hva-form-h">托管范围</div>'
-    +'<div class="hva-txt">后台派下来的任务里，允许托管自动执行的类型</div>';
+    +'<div class="hva-txt">后台派下来的任务里，允许托管自动执行的类型；以及你自己挂上的能力</div>';
   for(i=0;i<HVA_SCOPE.length;i++){
     h+='<div class="hva-scope-row">'
       +'<span class="hva-scope-grip" aria-hidden="true">'+I('grip',15,0)+'</span>'
@@ -4535,7 +4119,7 @@ REND['host-ai-set']=function(){
         +' title="不再托管这类任务" aria-label="不再托管「'+HVA_SCOPE[i]+'」"><i>'+I('minus',15,2.6)+'</i></button>'
     +'</div>';
   }
-  h+='<button class="hva-scope-add" onclick="hvaScopeSheet(true)">'+I('plus',15,2.4)+'增加托管任务</button></div>';
+  h+='<button class="hva-scope-add" onclick="hvaScopeSheet(true)">'+I('plus',15,2.4)+'管理托管范围</button></div>';
   h+='<div class="hva-foot"><button class="btn btn-primary btn-block" onclick="hvaSaveSet()">保存设置</button></div>';
   $('hvaSetBody').innerHTML=h;
 };
@@ -4819,20 +4403,31 @@ function hvaAcctSave(){
   toast('多开托管已按 '+pick.length+' 个账号执行：'+hvaAcctSummary(pick).replace(/^已选 \d+ 个账号 · /,''));
 }
 
-/* ---------- 托管范围 · 增加托管任务（底部浮层）----------
-   为什么是浮层不是二级页：这一步只是**勾**（就 12 类，看名字就知道要不要），不填字、不用键盘，
+/* ---------- 托管范围（底部浮层）----------
+   为什么是浮层不是二级页：这一步只是**勾**（看名字就知道要不要），不填字、不用键盘，
    勾完即生效——正是「点一下就完事的＝弹层」那一档。
-   为什么这层是勾选、而不像浮窗下段那样把已挂的禁掉：那儿禁掉是因为重复添加会让清单里出现
-   两条一模一样的活；这儿取消一类不产生任何新东西，只是把一类活交出去，点一下本来就该是个开关。
-   何况**默认 12 类全在**——禁掉的话这层一打开就是 12 行死按钮，而它偏偏是默认状态。
+   为什么这层是勾选、而不把已挂的禁掉：取消一类不产生任何新东西，只是把一类活交出去，
+   点一下本来就该是个开关；何况**类型默认 9 类全在**——禁掉的话这层一打开就是 9 行死按钮，
+   而它偏偏是默认状态。
    勾选即时生效、没有「保存」：它改的是托管做不做某类活，与上面那几格（工作时间／闲置时长）不是
-   一回事，攒着等「保存设置」只会让「我刚勾的到底生效没有」变成一个要猜的问题。层底那颗「完成」只是收起。 */
-function hvaScopeSheet(open){
+   一回事，攒着等「保存设置」只会让「我刚勾的到底生效没有」变成一个要猜的问题。层底那颗「完成」只是收起。
+
+   **2026-10-16 起这一层装两段**（见 ADR-0065），两段不并成一张勾选表：
+     · 上段＝平台可派的类型。问的是"后台派下来的活里，哪几类交给托管"——按类的一道**筛**，
+       取消不产生任何新东西；默认全在。
+     · 下段＝我自己挂的能力。是"我挂上了哪几项"——一份**集合**，挂上多一行、摘掉少一行；
+       默认只挂两项。
+   混成一张表会把两种语义压平，而它俩的默认值恰好相反（一个默认全选、一个默认几乎全空），
+   压平之后"全勾着"在这一段意味着什么就说不清了。
+   **下段同时接管了原先「加入托管清单」浮窗那件事**：那一层随托管清单一屏删了（ADR-0065），
+   挂／摘能力＋进配置页从此只有这一处（.hva-cfg 是 hvaOpen 在 App 里唯一的入口）。
+   quiet＝就地重画、不重放上滑动画（见 hvaMine：挂完一枚那一行当场翻面，面板不关）。 */
+function hvaScopeSheet(open,quiet){
   var box=$('hvaScopeWrap'); if(!box)return;
-  if(open){ box.innerHTML=hvaScopeHtml(); box.classList.add('on'); }
+  if(open){ box.innerHTML=hvaScopeHtml(quiet); box.classList.add('on'); }
   else{ box.classList.remove('on'); box.innerHTML=''; }
 }
-function hvaScopeHtml(){
+function hvaScopeHtml(quiet){
   var rows='',i,t,on;
   /* 列的是 HVA_SCOPE_TYPES（9 类），**不是** 12 类：那三类员工自建的能力不走"后台派活"这趟，
      列在这儿等于问一个不存在的问题（见 HVA_TYPES 上 own 那段）。分母跟着用同一份。 */
@@ -4847,29 +4442,45 @@ function hvaScopeHtml(){
       +'<span class="hva-scp"><b>'+t+'</b></span>'
     +'</button>';
   }
-  return '<div class="hva-mask" onclick="hvaScopeSheet(false)"></div>'
-    +'<div class="hva-sheet scp-sheet" role="dialog" aria-modal="true" aria-label="托管范围">'
+  /* 下段：我挂的能力。列**候选全集**（＝工具页标了 h1 那条，见 hvaActList），已挂的画成勾着——
+     不像原先那层浮窗把"已加入的"整条藏起来：这一层要在同一处同时答"我能挂什么"和"我挂了什么"，
+     两种问法对应同一个勾。行型因此和上面那 9 类一致（勾＋名），只是尾巴多一枚「设置 ›」。
+     **未挂的也给这枚入口**（与原浮窗候选卡一致）：它是能力的配置页，与挂没挂是两件事——
+     先调好再挂上，是正常用法。 */
+  var acts=hvaActList(),mined=hvaMineOrder();
+  rows+='<div class="hva-sgrp">我挂的能力 · 已挂 '+mined.length+'／'+acts.length+'</div>';
+  for(i=0;i<acts.length;i++){
+    t=acts[i].t; on=hvaHas(t);
+    rows+='<div class="hva-crow'+(on?' on':'')+'">'
+      +'<button class="hva-crow-b" onclick="hvaMine(\''+t+'\')" aria-pressed="'+(on?'true':'false')+'">'
+        +'<span class="hva-sck"><i>'+I('check',14,3.2)+'</i></span>'
+        +'<span class="hva-scp"><b>'+t+'</b></span>'
+      +'</button>'
+      +'<button class="hva-cfg" onclick="hvaOpen(\''+t+'\')" title="配置「'+t+'」">设置 ›</button>'
+    +'</div>';
+  }
+  return '<div class="hva-mask'+(quiet?' quiet':'')+'" onclick="hvaScopeSheet(false)"></div>'
+    +'<div class="hva-sheet scp-sheet'+(quiet?' quiet':'')+'" role="dialog" aria-modal="true" aria-label="托管范围">'
     +'<span class="hva-grab"></span>'
-    +'<div class="hva-shead"><div><b>增加托管任务</b>'
-      +'<small>勾上＝托管会替你自动做这类任务；取消＝这类任务不再进托管清单</small></div>'
+    +'<div class="hva-shead"><div><b>托管范围</b>'
+      +'<small>上段＝后台派来的任务里交给托管的那些；下段＝你自己挂上的能力</small></div>'
     +'<button class="hva-sx" onclick="hvaScopeSheet(false)" title="关闭">×</button></div>'
     +'<div class="hva-slist">'+rows+'</div>'
     +'<div class="acct-foot"><button class="btn btn-primary btn-block" onclick="hvaScopeSheet(false)">完成</button></div>'
     +'</div>';
 }
-/* 把一类活交给托管 / 收回。**只动 HVA_SCOPE 这一处**——清单是每次现算的（hvaQueueAll 按范围过滤），
-   所以放宽范围时那几条活自己就回来了，不必另存一份「被范围挡掉的记录」，
-   「把这类加回来，它们就回来」这句话才是真的，而不是靠一份可能对不上的账本。
-   收窄时必须报出**连带清出去几条**：用户此刻人站在设置页，看不见清单；不报数他会以为只是改了个配置，
-   回头在清单里找不到那几条，只会以为是丢了——而活其实还在任务页等人做。
-   这句"还在任务页"从前是管理员那族**唯一**能说出口的安慰（那时卡上还有减号，配 hvaDrop 的提示语）；
-   减号撤掉之后（ADR-0064）它仍是这一处的口径：范围是**托管这一侧做不做**，
-   不是把任务从任务页删掉。 */
+/* 把一类活交给托管 / 收回。它只动 HVA_SCOPE 这一处，而**范围之外还要发生什么，从前是要报出来的**：
+   原先收窄时得报"清单里 N 条同类任务已一并移出"——用户此刻人站在设置页、看不见清单，
+   不报数他会以为只是改了个配置，回头在清单里找不到那几条，只会以为是丢了。
+   **那句话随托管清单一屏一起删**（2026-10-16，见 ADR-0065）：清单不在，就没有"从清单里移出几条"
+   可报；而它替用户说的那半句安慰（"活还在任务页等人做"）也不必再说——现在没有任何一处看起来
+   像"任务被删掉了"。**这条取消只改一件事：托管做不做这类活。** */
 function hvaScopeOn(t){ hvaScopeSet(t,true); }
 function hvaScopeOff(t){ hvaScopeSet(t,false); }
 /* 把范围归一：只留候选全集里的，且顺序**恒等于 HVA_SCOPE_TYPES 的顺序**。
    不按点击先后排——重挂一次就跑到末尾的话，同一张表两次看到的次序不一样，
-   而它旁边还画着一枚三横引头（见 ICONS grip），人只会以为那是能自己拖的、自己被拖过。 */
+   而它旁边还画着一枚三横引头（见 ICONS grip），人只会以为那是能自己拖的、自己被拖过。
+   同 hvaMineOrder 那份（那边归一的是能力）。 */
 function hvaScopeOrder(list){
   var keep={},o=[],i;
   for(i=0;i<list.length;i++)keep[list[i]]=1;
@@ -4877,22 +4488,15 @@ function hvaScopeOrder(list){
   return o;
 }
 function hvaScopeSet(t,on){
-  var i=HVA_SCOPE.indexOf(t), a=HVA_QUEUE['管理员下发'], n=0, j;
+  var i=HVA_SCOPE.indexOf(t);
   if(on){ if(i<0)HVA_SCOPE.push(t); }
-  else{
-    if(i<0)return;
-    HVA_SCOPE.splice(i,1);
-    /* 已在清单里的同类活：一并清出去。**已截止的那几条不算**——它们本来就因为截止不在清单里，
-       报进这个数就是虚报（提示语里那句是"清单里 N 条同类任务已一并移出"）。 */
-    for(j=0;j<a.length;j++)if(a[j].ty===t&&!hvaPastDue(a[j]))n++;
-  }
+  else{ if(i<0)return; HVA_SCOPE.splice(i,1); }
   HVA_SCOPE=hvaScopeOrder(HVA_SCOPE);
-  REND['host-ai']();       /* 清单跟着变：范围一动，hvaQueueAll 下次取数就少一整类 */
-  REND['host-ai-set']();   /* 只重画 #hvaSetBody；浮层挂在 #hvaScopeWrap 上，不受影响 */
+  /* 只重画设置页这一屏：范围卡上那 9 行是现算的，浮层挂在 #hvaScopeWrap 上不受影响。
+     从前这里还要刷一次 REND['host-ai']（"清单跟着变"）——那一屏没有可变的了。 */
+  REND['host-ai-set']();
   if($('hvaScopeWrap')&&$('hvaScopeWrap').classList.contains('on'))hvaScopeSheet(true);
-  if(on)toast('已把「'+t+'」交回托管，落在这一类的活会重新进清单');
-  else toast(n?('「'+t+'」不再托管，清单里 '+n+' 条同类任务已一并移出 —— 把这类加回来，它们就回来')
-              :('「'+t+'」不再交给托管执行'));
+  toast(on?'已把「'+t+'」交给托管执行':'「'+t+'」不再交给托管执行');
 }
 
 /* ---------- 宿主 App 我的页（Figma 461:945）----------
@@ -4945,12 +4549,8 @@ REND['host-me']=function(){
   h='';
   for(i=0;i<HM_OTHER.length;i++)h+=hmItem(HM_OTHER[i]);
   $('hmOther').innerHTML=h;
-  /* 演示：排法分段器（临时件，见本屏静态段那条注释）。选中片押在 HVA_SCHEME 上——
-     它是与 AI托管页同一份真值，这里换了那边就换，反之亦然，不存在「这枚亮着那页却是另一版」。 */
-  h='';
-  for(i=0;i<HVA_SCHEMES.length;i++)h+='<button class="'+(HVA_SCHEME===HVA_SCHEMES[i].s?'on':'')
-    +'" onclick="hvaScheme(\''+HVA_SCHEMES[i].s+'\')">'+HVA_SCHEMES[i].n+'</button>';
-  $('hmScheme').innerHTML=h;
+  /* 这里曾填过那张「演示」卡里的排法分段器（临时件）。2026-10-16 随托管清单一起删（ADR-0065）：
+     它比的就是清单的两三种排法。静态块与本段是**成对**的——留一半就会让 $('hmScheme') 返回 null。 */
   $('hmTab').innerHTML=hvTabsHtml(HM_TABS);
   $('hmName').textContent=ME.name; /* 姓名跟登录态走，与宿主首屏那句问候同一份真值（见本屏 CSS 注释 ③） */
 };
