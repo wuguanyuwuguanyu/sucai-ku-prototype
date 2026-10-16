@@ -1609,6 +1609,10 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
    只有 M3 单选按钮是这一屏新起的（app 载体此前没有）。 */
 #host-fwset{background:linear-gradient(180deg,#F5F6FE 0%,#FAFAFE 34%,#FFFFFF 100%)}
 .fw-pg{padding:2px 14px 22px}
+/* 本屏屏底那枚「微信聊天演示」pill（演示件，ADR-0076）占 16(下缘)+34(身高)＝50px，滚动区底垫得给它让出来
+   ——不让就让最后一张卡的「修改」压在 pill 底下（库首页那枚 pill 一直是这个毛病，那边没人抱怨，这屏照办）。
+   **只加在本屏**：三级页 #host-fwset-assist 没有这枚 pill，别跟着多垫一截。 */
+#host-fwset .fw-pg{padding-bottom:58px}
 .fw-bar{padding-right:12px}
 .fw-save{height:34px;padding:0 18px;font-size:13.5px;font-weight:700}
 /* 卡片：整屏只有这一种卡（白底、圆角 16、无描边）。行与行靠留白＋一道 1px 线断开，不靠换卡 */
@@ -2653,6 +2657,18 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
             <button class="btn btn-primary fw-save" onclick="fwSave()">保存</button>
           </div>
           <div class="scroll fw-pg" id="fwBody"></div>
+          <!-- 屏底这枚演示 pill（**演示件，不是产品功能**，ADR-0076）＝微信场景屏在真机上的直达入口。
+               由来：聊天页（#wechat）在体验壳里原本只有一条路进得去——素材卡的「一键发送／一键发圈」，
+               而唯一直达的「屏幕目录」侧栏被 fullbleed.py 去壳删掉了，于是「想看看聊天页」得先假装发一条素材。
+               这枚补的就是这条直达路：go('wechat')，与产品路径落**同一屏、同一个栈**（硬件返回键退得回来）。
+               为什么不是设置卡里的一枚跳转行（用户 2026-10-16 先提的那种）：① 这一屏的 11 张卡、卡序
+               被冒烟逐条钉着（tools/smoke.js「设置·十一张卡按截图的顺序」），且卡区明文不许再出现「微信」
+               二字（ADR-0053）；② 更要紧的是，.fw-card 读起来是**宿主的产品能力**，而"打开微信聊天"
+               在真实产品里不成立——聊天页是微信里的悬浮窗场景，不从云小助的设置进。
+               故改走库首页那枚「当前销售」的同族做法（.demo-pill：深色浮层、不吃 M3 token），
+               一眼就读得出是演示件。样式与 id 都跟 .demo-pill 走，别在这儿另起一套。 -->
+          <button class="demo-pill" id="fwWxPill" onclick="go('wechat')"
+                  title="打开仿微信聊天页（原型演示件）：悬浮球、命中横幅、素材库面板、聊天辅助">▶ 微信聊天演示</button>
         </section>
 
         <!-- 宿主App「设置 · 辅助回复」（三级页）· 2026-10-14 新增（ADR-0044）
@@ -7116,16 +7132,22 @@ function ballInit(){
   });
 }
 function ballDrag(b){
-  var sx,sy,ox,oy,inner,moved,lastTap=0,lpTimer=null;
+  var sx,sy,ox,oy,inner,moved,down=false,lpFired=false,lastTap=0,lpTimer=null;
   b.addEventListener('pointerdown',function(e){
-    moved=false;sx=e.clientX;sy=e.clientY;
+    down=true;moved=false;lpFired=false;sx=e.clientX;sy=e.clientY;
     var r=b.getBoundingClientRect();ox=r.left;oy=r.top;
     inner=b.closest('.phone-inner').getBoundingClientRect();
     clearTimeout(lpTimer);
-    lpTimer=setTimeout(function(){if(!moved)toggleStop()},550); /* 长按：急停/恢复 */
+    lpTimer=setTimeout(function(){lpFired=true;toggleStop()},550); /* 长按：急停/恢复 */
     b.setPointerCapture(e.pointerId);
   });
   b.addEventListener('pointermove',function(e){
+    /* down 守卫（用户 2026-10-16 报的「球躲着鼠标跑」）：鼠标**没按下、光在球面上划过**也会派
+       pointermove（触屏不会，故只有桌面浏览器上发作）。少了这一句，moved 被上一次拖拽留在 true 之后，
+       光标一碰球，下面这几行就按**那一次**的 sx／sy 算出的 delta 把球整个挪走——而且新位置又让光标
+       落回球外，于是每碰一次跑一次，看起来就是球在躲鼠标。手势一律以「按下」为起点，
+       没有 down 就不该跟手（panelDrag 里是同一条，那边叫 down／captured）。 */
+    if(!down)return;
     if(Math.abs(e.clientX-sx)>5||Math.abs(e.clientY-sy)>5)moved=true;
     if(!moved)return;
     var k=inner.width/432;
@@ -7136,14 +7158,18 @@ function ballDrag(b){
     b.style.right='auto';b.style.bottom='auto';
   });
   b.addEventListener('pointerup',function(){
+    down=false;
     b.classList.remove('drag');
     clearTimeout(lpTimer);
-    if(moved){ballSnap(b);return}
+    if(moved){moved=false;ballSnap(b);return}
+    /* 长按已经触发过（lpFired）就不再落进点按分支：否则一次长按会「急停 ＋ 弹两选一菜单」各跑一次
+       ——aiBindCard 一直有这道守卫，这里补上，两处手势终于同一套判据 */
+    if(lpFired){lpFired=false;lastTap=0;return}
     var now=Date.now();
     if(now-lastTap<320){lastTap=0;ballDbl()} /* 双击：快取最近一条素材 */
     else{lastTap=now;ballTap()}
   });
-  b.addEventListener('pointercancel',function(){b.classList.remove('drag');clearTimeout(lpTimer)});
+  b.addEventListener('pointercancel',function(){down=false;moved=false;b.classList.remove('drag');clearTimeout(lpTimer)});
 }
 /* 松手自动贴边：球心在左半屏收左缘、右半屏收右缘，半隐藏；点按先复位 */
 function ballSnap(b){
@@ -8166,10 +8192,10 @@ function raFollow(el){
 /* 两个动作抽成具名函数：长按/双击的定时器回调只调它们，冒烟也就有真实的验点（不是只验常量） */
 function aiCardFill(el){ var t=el&&el._txt; if(!t)return; fillInput(t); toast('已填入输入框 · 长按可直接发送',null,null,1600) }
 function aiCardSend(el){ var t=el&&el._txt; if(!t)return; fillInput(t); wxSend(); toast('已按建议话术发送（演示）') }
-/* 手势绑定：与悬浮球同一套判据（ballDrag 2562）——pointerdown 起 AI_LP_MS 长按、按 moved 阈值 5px 取消，
+/* 手势绑定：与悬浮球同一套判据（ballDrag）——pointerdown 起 AI_LP_MS 长按、按 moved 阈值 5px 取消，
    pointerup 里 Date.now()-lastTap<320 判双击。单点＝无动作（脚注里恒有"双击填输入框 / 长按直发"那行提示，
-   所以单点不反馈也不至于"点了没反应"）。比 ballDrag 多一道 lpFired 守卫：长按触发后不再落进
-   点按分支（ballDrag 没有这道守卫，长按球会连带 toggleStop+ballTap 各跑一次）。 */
+   所以单点不反馈也不至于"点了没反应"）。这里的 lpFired 守卫（长按触发后不再落进点按分支）
+   原先只有本处有，2026-10-16 也补进了 ballDrag（那边长按曾连带 toggleStop+ballTap 各跑一次）。 */
 function aiBindCard(el){
   var sx=0,sy=0,moved=false,lpFired=false,lastTap=0,lpTimer=null,inFoot=false;
   /* 脚注在卡内部（aiRender 把 .ai-foot 放进了 .ra-card），而两个手势是绑在**卡元素**上的，
