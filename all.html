@@ -2278,6 +2278,13 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .pfp-acts{display:flex;flex-wrap:wrap;gap:2px;margin-top:8px;padding-top:6px;border-top:1px solid var(--outline-variant)}
 .pchip.act{color:var(--primary);border-color:transparent;padding:0 8px 0 4px}
 .pexp .pexp-acts{display:flex;gap:8px;flex-wrap:wrap}
+/* 展开区＝三档取用手势的操作面（单击／双击／长按，判据与口径见 pexTake 那段注释）。
+   这一条同时管 .ra-hit-exp（两处浮层的展开行）——它们与 .pexp 是**同一层手势面**，样式也共用一份，
+   免得将来只改了面板那半边、浮层那半边悄悄退回"长按弹选择手柄"。
+   touch-action 取 manipulation：真机视口允许缩放（viewport 没锁 user-scalable），双击会被引擎当成"放大一档"，
+   取了这个值双击才是两下点击；pan 仍在允许集里——展开区常比一屏长，竖着划照旧滚。
+   user-select:none：长按落在预览文字上会拉起选择手柄，选择态一起来这串指针事件就断了（pointerup 轮不到我们）。 */
+.pexp,.ra-hit-exp{touch-action:manipulation;user-select:none;-webkit-user-select:none}
 .comp{display:inline-flex;gap:2px;align-items:center;vertical-align:-3px;margin-left:6px} /* 组成条：接在摘要文字后的小icon丸序列 */
 /* 个人素材编排编辑器：消息步骤卡（拖拽调序） */
 .ps-step{border:1px solid var(--outline-variant);border-radius:14px;padding:9px 11px;margin-top:10px;background:var(--sc)}
@@ -5922,19 +5929,21 @@ function perMoreBtn(m){ /* 个人素材独有的「⋯ 更多」（稿子 816:40
   return isPerMat(m)?'<button type="button" class="btn btn-sm btn-ghost" style="flex:none" onclick="psMore(\''+m.id+'\',this)">'+I('dots',13,2.4)+' 更多</button>':'';
 }
 function matActs(id,mom){ /* 统一素材三动作（企业卡与个人卡同一份，docs/03 §3「同一张卡」逐项一致）：
-   保存素材（有媒体=存图/视频＋复制文案；纯文字=复制全文）｜一键发送（对话，mom 语境不出现）｜一键发圈（能力不足时禁用＋原因） */
+   保存素材（有附件=下载全部附件＋复制文案；纯文字=复制全文）｜一键发送（对话，mom 语境不出现）｜一键发圈（能力不足时禁用＋原因） */
   var m=anyById(id);
   if(!m)return '';
   if(m.type&&m.type!=='script')return ''; /* 企业侧非编排素材无三动作；个人素材没有 type 字段，恒有 */
   var b='btn btn-sm btn-primary',g='btn btn-sm btn-ghost';
-  var med=momMedia(m),mm=canMoments(m);
+  var mm=canMoments(m);
   /* 存量素材可能整条无文本（「新建时至少 1 条文本」是新建校验、不是数据不变式）：文字类动作 dim ＋解释、不藏入口（与「一键发圈」不可发时同一机制） */
   var hasAtt=msgsOf(m).some(function(x){return x.t!=='text'});
+  /* 有附件（任何类型：图/视频/文件/语音）＝下载全部附件（按类型分别落，见 attsDesc）＋复制文案；
+     纯文字＝只复制全文；既无文本也无附件的空素材才 dim。**不再按"有没有媒体"分岔**——
+     文件/语音也是附件，从前那版把含文件/语音的素材甩进"附件可直接发送"那句，等于这几类下不了 */
   var save;
-  if(med.imgs||med.video)save='<button class="'+g+'" onclick="momentsA(\''+id+'\')">'+I('download',13,2.2)+' 保存素材</button>'; /* 带媒体＝存图入相册，无文案可进剪贴板 */
+  if(hasAtt)save='<button class="'+g+'" onclick="momentsA(\''+id+'\')">'+I('download',13,2.2)+' 保存素材</button>';
   else if(hasText(m))save='<button class="'+g+'" onclick="copyScript(\''+id+'\')">'+I('copy',13,2.2)+' 保存素材</button>';
-  else if(hasAtt)save='<button class="'+g+'" onclick="copyBlocked()" title="这条素材没有文字内容，附件可直接发送">'+I('copy',13,2.2)+' 保存素材</button>';
-  else save='<button class="'+g+' dim" onclick="copyBlocked(1)">'+I('copy',13,2.2)+' 保存素材</button>'; /* 既无文本也无附件的空素材才 dim */
+  else save='<button class="'+g+' dim" onclick="copyBlocked(1)">'+I('copy',13,2.2)+' 保存素材</button>';
   return save
     +(mom?'':'<button class="'+b+'" style="flex:1" onclick="oneKeySend(\''+id+'\')">'+I('send',13,2.2)+' 一键发送</button>')
     +(mm
@@ -6385,16 +6394,33 @@ function copyScript(id){var m=anyById(id);if(!m)return;if(!hasText(m))return cop
 function copyBlocked(empty){toast(empty?'这条素材没有可保存的内容':'这条素材没有文字内容，附件可直接发送')} /* 存量素材无文本：动作 dim＋解释、不藏入口，点了给同一句口径 */
 function jsq(s){return esc(s).replace(/'/g,'&#39;').replace(/"/g,'&quot;')}
 function toast2(m){setTimeout(function(){toast(m)},900)}
-/* 保存素材（链路 A）：存图/存视频 + 复制全部文案，留在 App 内完成，不跳微信（企业/个人同一动作） */
+/* 「下载全部附件」＝把素材里的附件按**真实类型**分别落到位（产品 2026-10-16 点名）：
+   图/视频进相册，文件/语音进本地下载目录（真机上分别落相册与「文件／下载」；原型只出回执）。
+   回执明细由这一处现算，**别在调用处各拼一遍**——「保存素材」「单击」「长按」三条路报的是同一件事，
+   各写各的，将来加一种附件类型就会漏改其中一条。没附件返回空串，让调用方那句话里干脆不提附件这半。 */
+function attsDesc(m){
+  var ms=msgsOf(m),c={image:0,video:0,file:0,voice:0},i;
+  for(i=0;i<ms.length;i++)if(c[ms[i].t]!==undefined)c[ms[i].t]++;
+  var alb=[],loc=[];
+  if(c.image)alb.push(c.image+' 张图');
+  if(c.video)alb.push(c.video+' 个视频');
+  if(c.file)loc.push(c.file+' 个文件');
+  if(c.voice)loc.push(c.voice+' 段语音');
+  var out=[];
+  if(alb.length)out.push(alb.join('、')+'存相册');
+  if(loc.length)out.push(loc.join('、')+'存本地');
+  return out.join('，');
+}
+/* 保存素材（链路 A）：**下载全部附件**（按真实类型分别落，见 attsDesc）＋ 复制全部文案，留在 App 内完成，不跳微信（企业/个人同一动作）。
+   「保存素材」在本产品里只有一个语义：所有要"把这条带走"的入口（素材卡那枚钮、浮层展开区的保存、实时辅助的保存）
+   都调这一个函数——不另造第二套动作与第二套回执 */
 function momentsA(id){
   var m=anyById(id);
   if(!m)return;
   markUsed(id);
-  var med=momMedia(m),ht=hasText(m);
-  if(!ht)return toast(med.imgs||med.video?'已保存到相册／本地，这条素材没有文字内容，附件可直接发送':'这条素材没有文字内容，附件可直接发送'); /* 无文案可进剪贴板：回执不谎报「文案已复制」 */
-  copyText(allTexts(m),med.imgs
-    ?'已保存 '+med.imgs+' 张图片到相册，文案已复制，可去朋友圈粘贴发表'
-    :(med.video?'视频已保存到本地，文案已复制，可去朋友圈发表':'文案已复制，可去朋友圈粘贴发表'));
+  var dl=attsDesc(m),ht=hasText(m);
+  if(!ht)return toast((dl?'已下载全部附件（'+dl+'），':'')+'这条素材没有文字内容，附件可直接发送'); /* 无文案可进剪贴板：回执不谎报「文案已复制」 */
+  copyText(allTexts(m),(dl?'已下载全部附件（'+dl+'），':'')+'文案已复制，可去朋友圈粘贴发表');
 }
 /* 一键发送（手动路径）：素材文字＋附件按顺序整组发出；关键词自动路径只发文字，附件永不自动发（04 §3） */
 function oneKeySend(id){
@@ -7590,11 +7616,14 @@ function pRowHtml(m){
     :(mom
       ?I('photos',11,2.2)+' '+(ft?cut(ft,30):'无文字内容，附件可直接发送')
       :(ft?cut(ft,30):'这条素材只有附件、没有文字内容'));
-  /* 两枚取用钮（稿上就是这两枚圆底：#F0F4FF 底、蓝紫两色字形）：转发／发圈在内侧（重动作），复制守右缘（肌肉记忆零迁移）。
+  /* 两枚取用钮（稿上就是这两枚圆底：#F0F4FF 底、蓝紫两色字形）：重动作在内侧（对话＝发送／朋友圈＝发圈），收尾动作守右缘（肌肉记忆零迁移）。
+     右缘那枚按视图分岔：对话＝复制（复制并填入输入框），**朋友圈＝保存**（下载全部附件＋复制文案，2026-10-16 产品点名）。
+     朋友圈这边不再单给"复制文案"：保存里已经含了文案那一半，同一个动作不摆两个入口；
+     且朋友圈语境下「填入会话输入框」本就没有对象——右缘那枚换成"把这条带走的全部内容落到手边"，才是这个视图要的那一下。
      卡整块可点（点了摊开），故两枚钮都得 stopPropagation——不然按「发送」会连带把这条摊开（全站同一处写法见宿主待办那枚钮） */
   var acts=mom
     ?'<button class="pc-btn" onclick="event.stopPropagation();oneKeyPost(\''+m.id+'\')" title="一键发圈">'+I('zap',13,2.2)+'</button>'
-      +'<button class="pc-btn pur" onclick="event.stopPropagation();quickCopy(\''+m.id+'\')" title="'+(ft?'复制文案':'这条素材没有文字内容，附件可直接发送')+'">'+I('copy',13,2.2)+'</button>'
+      +'<button class="pc-btn pur" onclick="event.stopPropagation();momentsA(\''+m.id+'\')" title="保存素材（下载全部附件＋复制文案）">'+I('download',13,2.2)+'</button>'
     :'<button class="pc-btn" onclick="event.stopPropagation();oneKeySend(\''+m.id+'\')" title="一键发送（文字＋附件）">'+I('send',13,2.2)+'</button>'
       +'<button class="pc-btn pur" onclick="event.stopPropagation();quickCopy(\''+m.id+'\')" title="'+(ft?'复制并填入输入框':'这条素材没有文字内容，附件可直接发送')+'">'+I('copy',13,2.2)+'</button>';
   return '<div class="p-card" onclick="pRowTap(\''+m.id+'\')">'+tag
@@ -7617,7 +7646,10 @@ function pExpHtml(m){
     +'<button class="rp-btn pri" onclick="oneKeySend(\''+m.id+'\');pExpClose()">'+I('send',11,2.2)+' 一键发送</button>'
     +(mm?'<button class="rp-btn amber" onclick="oneKeyPost(\''+m.id+'\');pExpClose()">'+I('zap',11,2.2)+' 一键发圈</button>'
       :'<button class="rp-btn amber dim" title="'+esc(momReason(m))+'" onclick="momBlocked(\''+m.id+'\')">'+I('zap',11,2.2)+' 一键发圈</button>'));
-  return '<div class="pexp">'+(mom?momPrevBody(m):wxSendSim(m))
+  /* data-take/data-mat＝这块展开区接三档取用手势（单击／双击／长按，见 pexTake）。
+     **朋友圈视图那块不挂**：它是"看朋友圈排版"的预览面，且朋友圈没有会话输入框可填——
+     那边的操作落成卡上行尾那两枚 icon（保存／一键发圈），正是单击"下载附件"与双击"发送"在朋友圈语境下的对应物 */
+  return '<div class="pexp"'+(mom?'':' data-take="1" data-mat="'+m.id+'"')+'>'+(mom?momPrevBody(m):wxSendSim(m))
     +'<div class="pexp-acts">'+post+'</div></div>';
 }
 function pRowTap(id){ /* 手风琴：开新行收旧行，再点同一行收起 */
@@ -7626,6 +7658,107 @@ function pRowTap(id){ /* 手风琴：开新行收旧行，再点同一行收起 
   if(S.pExpId){var el=document.querySelector('.pexp');if(el&&el.scrollIntoView){try{el.scrollIntoView({behavior:'smooth',block:'nearest'})}catch(x){}}}
 }
 function pExpClose(){S.pExpId=null;if(panelOpen)pRowsDraw()}
+
+/* ---------- 展开卡的三档取用手势：单击／双击／长按（2026-10-16 产品点名） ----------
+   作用面＝**已经摊开的那一条**（收起态上那一下仍然是"摊开"）：面板的 `.pexp` 与两处浮层共用的 `.ra-hit-exp`，
+   两块都靠 `data-take` 声明"我接手势"，`data-mat` 带上这条是哪个素材。三档：
+     · 单击＝下载全部附件（按真实类型分别落，见 attsDesc）＋ 素材文字**填入微信输入框**。面板不关，
+       留着接着翻库——产品点名的原话就是"填完接着翻"；
+     · 双击＝一键发送（文字＋附件按编排整组发出，同一键发送那条路）；
+     · 长按＝下载全部附件 ＋ 素材文字**复制到剪贴板**。
+   为什么展开区要吃手势：它本来就是"看清了、就地取用"的那一屏，取用不该再逼人瞄着那排小钮点。
+   为什么朋友圈视图那块**不接**：它是"看朋友圈排版"的预览面（要能顺着读），且朋友圈没有会话输入框可填；
+   它的操作落成卡上行尾那两枚 icon（保存／一键发圈）——正是单击"下载附件"与双击"发送"在朋友圈语境下的对应物。
+   判别方式（三处都是既有做法，不新造）：长按＝pointerdown 起 AI_LP_MS 的定时器、位移超 8px 即取消（滚动不是长按）；
+   单击／双击在 **pointerup** 上分（同 aiBindCard；长按那一下引擎随后还会补一次 click，靠 lpFired 作废）。
+   **但补发的 click 还有第二发得单独挡**：它按**重绘之后**的版面重新命中，会落到别的行上去——
+   见下面 pexSwallow 那条注释（真机上试出来的，不是防患于未然）。
+   **单击必须等双击窗口（PTAP_MS）才落地**：不等的话，双击的头一下已经把"下载＋填字"办了，
+   第二下再发送——同一件素材被取用两次、还多存一遍附件。
+   为什么用委托而不是逐处绑定：展开区是每次重绘整个换掉的 innerHTML（pRowsDraw／hpPaint／raHitsDraw 各写一次），
+   绑在元素上就得在这三处都补一次挂载，漏一处就静默失效；委托挂一次，重绘多少遍都还在。
+   与区内那排动作钮的关系：指针落在钮上＝**整串不参与**手势（见 pexReg），两条路各走各的、不叠加。 */
+var PTAP_MS=320; /* 双击窗口：与 aiBindCard 的 320 同一档（同一只手上不该出现两套双击节奏） */
+var pexS={el:null,pid:null,sx:0,sy:0,moved:false,lpFired:false,lpTimer:null,dblTimer:null,dblEl:null};
+/* 手势办完事之后，浏览器还会照着**重绘后**的版面补发一发 click（真机 touchstart→touchend→click 必然有）。
+   那一发 click 我们不认：原来那条行已经收起来了，同一个点上现在站着的是**别的行**，
+   于是它会把不相干的一条摊开（真机上试：双击发送后，面板上另一条素材自己摊开了；长按后同样）。
+   故：**按在展开区里的那一次按压**就备好一面旗，这一串指针事件派生出来的 click 一律吞掉。
+   落在钮上的那一路不进这儿（pexReg 对 button/a 直接返 null），钮自己的 onclick 照走；
+   旗吞掉即落、下一次 pointerdown 重判，顺不走用户后来正经点的任何一下；900ms 只是兜底，免得拖久了误吞 */
+var pexSwallow=0;
+document.addEventListener('click',function(e){
+  if(!pexSwallow||performance.now()-pexSwallow>900)return;
+  pexSwallow=0;e.stopPropagation();e.preventDefault();
+},true);
+function pexReg(e){ /* 这一串指针事件算不算"在展开区上做手势" */
+  var t=e.target;
+  if(!t||!t.closest)return null;
+  if(t.closest('button')||t.closest('a'))return null; /* 区内动作钮自己那条路更明确（还带 stopPropagation），不叠手势 */
+  var r=t.closest('.pexp[data-take],.ra-hit-exp[data-take]');
+  return (r&&r.getAttribute('data-mat'))?r:null;
+}
+document.addEventListener('pointerdown',function(e){
+  var r=pexReg(e);
+  pexSwallow=r?performance.now():0; /* 见 pexSwallow：这一串指针事件派生出来的 click 我们不认 */
+  if(!r)return;
+  pexS.el=r;pexS.pid=e.pointerId;pexS.sx=e.clientX;pexS.sy=e.clientY;pexS.moved=false;pexS.lpFired=false;
+  clearTimeout(pexS.lpTimer);
+  if(AI_LP_MS<=0){pexS.lpFired=true;return pexTake(r,'long')} /* 冒烟同步探针（同 aiBindCard，见 tools/smoke.js） */
+  pexS.lpTimer=setTimeout(function(){pexS.lpFired=true;pexTake(r,'long')},AI_LP_MS);
+});
+document.addEventListener('pointermove',function(e){
+  if(!pexS.el||e.pointerId!==pexS.pid)return;
+  if(Math.abs(e.clientX-pexS.sx)>8||Math.abs(e.clientY-pexS.sy)>8){pexS.moved=true;clearTimeout(pexS.lpTimer)}
+});
+document.addEventListener('pointerup',function(e){
+  if(!pexS.el||e.pointerId!==pexS.pid)return;
+  var r=pexS.el;clearTimeout(pexS.lpTimer);pexS.el=null;
+  if(pexS.lpFired){pexS.lpFired=false;return}   /* 长按已经办过事：这一下不算点按（也别去凑双击） */
+  if(pexS.moved)return;                          /* 划过＝滚这一屏，不是点按 */
+  if(pexS.dblTimer&&pexS.dblEl===r){clearTimeout(pexS.dblTimer);pexS.dblTimer=null;pexS.dblEl=null;return pexTake(r,'dbl')}
+  /* 换了一条（上一次的单击还压在窗口里）：**先把上一条的那一下落地**，再给这一条开新窗口。
+     不这样做，跨行的两下快按会被读成"双击"，把上一条发出的动作换成发送 */
+  if(pexS.dblTimer){clearTimeout(pexS.dblTimer);var pend=pexS.dblEl;pexS.dblTimer=null;pexS.dblEl=null;pexTake(pend,'tap')}
+  pexS.dblEl=r;
+  pexS.dblTimer=setTimeout(function(){pexS.dblTimer=null;var q=pexS.dblEl;pexS.dblEl=null;pexTake(q,'tap')},PTAP_MS);
+});
+document.addEventListener('pointercancel',function(){if(pexS.el){clearTimeout(pexS.lpTimer);pexS.el=null}});
+/* 三档各自的落点。dbl 那条直接走一键发送（它自己记账、自己给回执、自己跳微信），不在这儿重复一遍 */
+function pexTake(reg,how){
+  if(!reg)return;
+  /* 单击要等 PTAP_MS 才落地，这一小段里那一行可能已经随重绘／关面板没了（元素脱离文档）——
+     脱了就不动手：手势落在的是"我指着的那一条"，那一条已经不在了就没有可办的事 */
+  if(reg.isConnected===false)return;
+  var id=reg.getAttribute('data-mat'),m=id?anyById(id):null;
+  if(!m)return;
+  if(how==='dbl'){oneKeySend(id);return pexClose(reg)}
+  markUsed(id); /* 下载附件＝取用（同存图/复制），与发送、发圈同记一份本机记录 */
+  var dl=attsDesc(m),ht=hasText(m),txt=ht?allTexts(m):'';
+  if(how==='tap'){
+    if(ht){var inp=$('wxInput');if(inp)inp.value=txt} /* 只填不发：发送是双击那一档（填完由人来判断发不发） */
+    toast(pexReceipt(dl,ht,'已填入输入框'));
+  }else{
+    if(ht)copyText(txt,pexReceipt(dl,ht,'已复制到剪贴板'));
+    else toast(pexReceipt(dl,ht,''));
+  }
+  pexClose(reg);
+}
+/* 回执两半各报各的：附件下载了什么、文字去了哪儿。哪半没东西就不提那半——
+   不谎报（"文案已复制"不能出现在无文字素材上），也不把"没有附件"当成一句错 */
+function pexReceipt(dl,ht,what){
+  if(!dl&&!ht)return '这条素材没有附件，也没有文字内容';
+  var t=dl?('已下载全部附件（'+dl+'）'):'';
+  t+=(t?'，':'')+(ht?('文案'+what+'（演示）'):'这条素材没有文字内容');
+  return t;
+}
+/* 取用完这一条，展开区怎么收：**面板不关**（产品点名"接着翻库"），只把这一条收回去；
+   两处浮层沿用它们自己那排钮的收法——命中浮层是自动冒出来的，取走一条＝它的事办完，自己让开（同 quickCopy 那句语义） */
+function pexClose(reg){
+  if(reg.classList.contains('pexp'))return pExpClose();
+  if(reg.closest&&reg.closest('#hpPanel'))closeHpPanel();
+  raHitClose();
+}
 /* ---------- 命中素材浮层 #hpPanel（**未开启聊天辅助**时的关键词推素材；2026-10-15 新增，ADR-0061） ----------
    它是原「命中推荐弹卡」#recPop 的继任者：那条 236px 的贴边小卡（一条一条 ‹ 1/N › 翻）整块退休，
    换成两件：屏顶横幅 **#hpTip**（先说一声"发现了关键词×××、点一下看"，3 秒自己收）＋ 与聊天辅助浮层
@@ -8081,21 +8214,22 @@ function raHitRow(m,fresh,i){
 function raHitExp(m){
   var real=anyById(m.id)||m,med=momMedia(real),noTxt=!hasText(real),noSave=noTxt&&!med.imgs&&!med.video;
   var tip=noSave?' title="这条素材没有可保存的内容"':(noTxt?' title="这条素材没有文字内容，附件可直接发送"':'');
-  return '<div class="ra-hit-exp">'+wxSendSim(real)
+  /* data-take/data-mat＝这块展开行接三档取用手势（单击／双击／长按，见 pexTake）。这份 HTML 两个浮层共用，
+     故两处一起获得手势——它们本来就是"同一条素材在哪儿都得能就地取用"的同一条流 */
+  return '<div class="ra-hit-exp" data-take="1" data-mat="'+m.id+'">'+wxSendSim(real)
     +'<div class="ra-hit-acts">'
       +'<button class="rp-btn ghost'+(noTxt?' dim':'')+'"'+(noTxt?' title="这条素材没有文字内容，附件可直接发送"':'')+' onclick="quickCopy(\''+m.id+'\');raHitClose()">'+I('copy',11,2.2)+' 复制填充</button>'
       +'<button class="rp-btn pri" onclick="oneKeySend(\''+m.id+'\');raHitClose()">'+I('send',11,2.2)+' 一键发送</button>'
       +'<button class="rp-btn ghost'+(noSave?' dim':'')+'"'+tip+' onclick="raSave(\''+m.id+'\');raHitClose()">'+I(med.imgs||med.video?'download':'copy',11,2.2)+' 保存素材</button>'
     +'</div></div>';
 }
-/* 保存素材＝链路 A，分支与文案跟素材卡的 matActs 逐项一致：有媒体→存图/视频＋复制文案；纯文字→复制全文；
-   只有附件/彻底空→同一句 dim 口径。不新造第二套动作函数（adr/PRD 里「保存素材」只有一个语义）。 */
+/* 保存素材＝链路 A，分支与文案跟素材卡的 matActs 逐项一致：有附件（任何类型）→下载全部附件＋复制文案；纯文字→复制全文；
+   彻底空→同一句 dim 口径。不新造第二套动作函数（adr/PRD 里「保存素材」只有一个语义）。 */
 function raSave(id){
   var m=anyById(id); if(!m)return;
-  var med=momMedia(m);
-  if(med.imgs||med.video)return momentsA(id);
+  if(msgsOf(m).some(function(x){return x.t!=='text'}))return momentsA(id);
   if(hasText(m))return copyScript(id);
-  return copyBlocked(!msgsOf(m).some(function(x){return x.t!=='text'}));
+  return copyBlocked(1);
 }
 function raHitTap(i,id){ /* 手风琴：开新行收旧行，再点同一行收起——与素材面板 pRowTap 同义，作用域是整个时间线 */
   /* 复合键 i:id：同一件素材可能同时命中两轮（客户连着问了两次同类问题），只按素材 id 记展开态会让两处一起张开 */
