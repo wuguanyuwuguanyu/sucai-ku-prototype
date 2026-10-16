@@ -439,9 +439,10 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
    · 动作区图标仍是 ADR 定的三动作（保存素材／一键发送／一键发圈），只换成稿子的画法
      （浅底圆片 + 蓝色标签），不采用稿子的「下载／转发／朋友圈／更多」——那四个词在本产品里
      有两个（下载、更多）没有对应的既有行为，照抄会凭空多出两条死入口。
-   · **顶栏那三件（页面标题「首页」／搜索框／消息入口）也不在稿子上**——产品 2026-10-16 口头追加的
-     （见 ADR-0074），是本屏第四处刻意的出入。画法与前三处同源：照本屏既有的那一套（渐变字、
-     白底圆角胶囊、白圆钮），不另起一套。 */
+   · **顶栏那两件（页面标题「首页」／消息入口）也不在稿子上**——它不是口头追加，是**二期需求**
+     （[二期 PRD](../docs/prd/云小助二期-PRD.md) §2.4；原题还带一枚搜索框，产品 2026-10-16 同日撤掉，
+     见 ADR-0074），是本屏第四处刻意的出入。画法与前三处同源：照本屏既有的那一套（渐变字、
+     白底圆钮），不另起一套。 */
 #host-home{background:linear-gradient(180deg,#F2F3FE 0%,#F7F8FE 44%,#FFFFFF 100%)}
 .hv-glow{position:absolute;left:0;right:0;top:0;height:260px;pointer-events:none;
   background:radial-gradient(122% 76% at 10% -4%,rgba(150,118,255,.22),transparent 62%),
@@ -2510,7 +2511,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
           <div class="hv-glow"></div>
           <div class="scroll hv-scroll">
             <!-- 顶栏两件：页面标题「首页」／消息入口。**不在 Figma 778:169 稿上**——
-                 产品 2026-10-16 口头追加（ADR-0074），是本屏第四处刻意的出入。
+                 来源是**二期需求**（二期 PRD §2.4，见 ADR-0074），是本屏第四处刻意的出入。
                  消息是**宿主侧**的能力、本模块不建模：点一下落一句「演示范围外」，
                  口径同下面那排「快捷工作」——这一屏演示的是「宿主还有别的模块」，不是那些模块自己的流程。
                  （同一笔里画过一版搜索框，产品同日定了不要，已整条撤掉——见 ADR-0074「追加」。） -->
