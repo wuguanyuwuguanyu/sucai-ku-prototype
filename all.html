@@ -2104,7 +2104,8 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
    **稿上这一排其实是排不下的**：六枚文字排到 x 574（522–626）、右端筛选 icon 从 561 起，文字与 icon 直接相撞
    （ADR-0075 待产品拍 ①：稿子截图里「最」后面就是漏斗）。本壳按「六枚横排」落、间距收到 8（不砍项、不换行），
    并给 .pnav 兜一条 overflow-x:auto：字宽真多出来（换字体／换语言）时整排横滑，不压 icon；pNavPaint 会把当前那枚滚进可视区。
-   （这条只作兜底：.panel-head 带着 touch-action:none 是拖拽把手，触屏上这一排没打算真滑。）
+   （这条只作兜底，滑法是滚轮／触控板：**触屏上这一排滑不动是有意的**——头部整条（含这一排 tab）是拖拽把手，
+   按住不撒手就是拖面板，见 .pnav 那条与 panelDrag 里的手势补记。）
    产品若给一版不撞的间距、或点名砍哪一枚，改的就是这一段。 */
 #panel{left:9.9px;top:434px;width:392.2px;height:461.4px;border-radius:25.3px;background:#EDEFFF}
 #panel .panel-head{height:51.1px;padding:4px 9.3px 0 13.2px;gap:0;background:none;border-bottom:none}
@@ -2113,7 +2114,13 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
    改前它是「叠在来源之上的一行 chips（最近使用／朋友圈）」——那两枚升成一级视图里的两项，那行整行退休：
    它俩本来就是互斥单选语义，摊成一级视图比叠成 chip 更直白（面板这排不叠：库首页那枚「朋友圈」是能与最近使用叠着亮的
    能力交集，面板这排里它俩是并列的两个视图，故面板里点「朋友圈」＝离开「最近使用」）。 */
-.pnav{flex:1;min-width:0;margin-right:8px;display:flex;align-items:center;gap:8px;overflow-x:auto;scrollbar-width:none}
+/* touch-action:none 必须显式写在 .pnav 这一层，不能只靠 .panel-head 那条：
+   触屏手势归谁，是按「按下那个元素 → 往上直到最近的可滚动祖先」这条链上的值取交集算的，
+   而 .pnav 自己就是那个滚动容器（overflow-x:auto）——链到它为止，祖先那条 touch-action:none 够不着。
+   少了这一句，横着拖这一排会被引擎判成「滚这一排」并顺手 pointercancel 掉拖拽，
+   于是「抓着 tab 那一行按住不撒手」拖不动面板（正是最想拖的那一处：那是头部最大的可抓面）。
+   写死在最里面这层，任何引擎都只剩一条路：拖面板。 */
+.pnav{flex:1;min-width:0;margin-right:8px;display:flex;align-items:center;gap:8px;overflow-x:auto;scrollbar-width:none;touch-action:none}
 .pnav::-webkit-scrollbar{display:none}
 /* 面板里的一级视图＝库首页 .lib-tab 的同一件（选中态同一套：主色文字 ＋ 底下一条渐变指示条，ADR-0075 ⑤），
    只是按稿瘦下来：稿 26 → 14.3px、字重 Regular／选中 Medium（库首页那排是 16px／SemiBold），
@@ -3050,7 +3057,10 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
                    .pnav 吃掉剩余宽度、六枚放不下就横滑，三枚 icon 钉在右端不动。
                    搜索态整排收起（搜索覆盖一切筛选、结果恒跨池，摆着六枚亮着的视图等于说结果受它约束）——
                    与退休的那行叠加 chips 同一条处置。
-                   面板内点条仍是原地摊开（不翻二级屏），故头部没有返回态、也不设返回箭头 -->
+                   面板内点条仍是原地摊开（不翻二级屏），故头部没有返回态、也不设返回箭头。
+                   **头部整条就是拖拽把手**（panelDrag 挂在 .panel-head 上，故这一排 tab 与右端三枚 icon 都算在里面）：
+                   按住不撒手即拖面板，移动过 4px 阈值那一下不再算点击（不切视图、不误开 popover／搜索／关面板）——
+                   拖拽要能被「抓住」，而头部最大的可抓面恰恰就是这一排 tab。详见 panelDrag -->
               <div class="pnav" id="pNav"></div>
               <!-- 头部右侧三枚常驻 icon：筛选 → 搜索 → ✕（筛选钉在搜索左边，两枚都是「常态只留 icon、点开才展开」的同一套路子）。
                    筛选是面板唯一的筛选入口，**只剩分组一段**：来源已搬进上面那排一级视图，那枚 icon 再管来源
@@ -7227,8 +7237,27 @@ function closePanel(){
 function placePanel(){}
 function panelDrag(el){
   var sx,sy,ox,oy,inner,down=false,captured=false;
+  el._swallowUntil=0; /* 时刻窗口的初值。别处只读不写，故在这里落一笔：
+                         undefined 与时刻比大小恒为 false，那会变成「每一次 click 都吞」。 */
+  /* 拖过阈值这一下不再算点击（用户 2026-10-16 点名的那条手势）：
+     把手是头部**整条**——含那一排一级视图与三枚 icon。松手时浏览器照样补一次 click，
+     落在哪个钮上就误触发哪个（换视图／开筛选 popover／进搜索／关面板）。
+     Chrome 里指针捕获会把这次 click 改派到把手本身（按规范取「按下与松手两处的最近公共祖先」），
+     按钮收不到，看起来正好没事；但那是引擎实现细节、不是契约，旧 WebView 会照原目标派发。
+     故显式吞一次：拖过的这一次手势补发的 click，在**捕获阶段**吃掉（挂捕获是为了拦住落在
+     子元素（tab／icon）上的那次——它冒泡必经把手）。
+     判据是**时刻窗口**而不是一个布尔旗标：同一次手势补发的 click 紧跟在 pointerup 之后（毫秒级），
+     而人是接着点不出这么快的；用旗标则会有个坑——有些引擎（触屏常见）拖完根本不补 click，
+     旗标就一直挂着，把用户下一次真心的点击也吃掉（本壳触屏无头实测就踩到了）。
+     窗口从**松手时刻**起算（不是从过阈值起算：拖得久一点，窗口早就过期了）、150ms 宽、吞一次即清零——
+     同一手势补发的 click 离 pointerup 只有一帧上下（≤30ms 量级），150 给足余量，
+     又不至于把「拖完马上点一下」这种真心操作也吃进去。 */
+  el.addEventListener('click',function(e){
+    if(Date.now()>el._swallowUntil)return;
+    el._swallowUntil=0;e.stopPropagation();e.preventDefault();
+  },true);
   el.addEventListener('pointerdown',function(e){
-    down=true;captured=false;sx=e.clientX;sy=e.clientY;
+    down=true;captured=false;el._swallowUntil=0;sx=e.clientX;sy=e.clientY;
     var pn=el.closest('.panel');var r=pn.getBoundingClientRect();ox=r.left;oy=r.top;
     inner=pn.closest('.phone-inner').getBoundingClientRect();
   });
@@ -7256,8 +7285,9 @@ function panelDrag(el){
     pn.style.left=Math.max(4,Math.min((ox+(e.clientX-sx)-inner.left)/k,maxL))+'px';
     pn.style.top=Math.max(minT,Math.min((oy+(e.clientY-sy)-inner.top)/k,maxT))+'px';
   });
-  el.addEventListener('pointerup',function(){down=false;captured=false});
-  el.addEventListener('pointercancel',function(){down=false;captured=false});
+  /* 松手（或手势被引擎掐掉）即开窗口，上面那条吞 click 的判据就靠它：只有真的拖过（captured）才开 */
+  el.addEventListener('pointerup',function(){if(captured)el._swallowUntil=Date.now()+150;down=false;captured=false});
+  el.addEventListener('pointercancel',function(){if(captured)el._swallowUntil=Date.now()+150;down=false;captured=false});
 }
 /* 面板内容架构：头部（一排一级视图 ＋ 筛选／搜索／✕ 三枚 icon）→ 统一列表（搜索条常态收进头部，点开才占一行）。
    **没有页内导航那一层了**（ADR-0075 ①）：容器里只有搜索条、列表与筛选 popover 三件——
