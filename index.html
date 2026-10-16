@@ -447,38 +447,33 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
   background:radial-gradient(122% 76% at 10% -4%,rgba(150,118,255,.22),transparent 62%),
              radial-gradient(118% 72% at 94% 2%,rgba(92,142,255,.17),transparent 60%)}
 .hv-scroll{position:relative;z-index:1;padding:4px 18px 12px}
-/* 顶栏三件（标题／搜索框／消息入口，ADR-0074）：**两行排**——第一行标题左对齐、消息钮贴右缘，
-   第二行搜索框通栏。为什么不挤成一行：标题加消息钮吃掉 ~110px，剩下给搜索框的只有 250px 上下，
-   「搜索素材、客户」这七个字放不下（本屏刚吃过同款亏——快捷工作六枚时最长那个名字被压成省略号，
-   是靠减一枚而不是靠缩字号解决的）。 */
+/* 顶栏两件（标题／消息入口，ADR-0074）：**一行**——标题左对齐、消息钮贴右缘。
+   原先还画过一版搜索框（先后跟消息钮同排、再撤），产品 2026-10-16 定了「不要搜索框」，
+   整条撤掉：`.hv-bar`／`.hv-srch` 连同 RIP_SEL 里那个选择器一并删净，不留在样式表里当摆设
+   （本仓库的老规矩：退休的形态不许在 DOM 与 CSS 里留影子）。
+   撤销的理由记在 ADR-0074 的「追加」一节：首屏的搜索落不到实处（宿主侧搜索不在本模块建模，
+   点下去只有一句「演示范围外」），而它占的正是屏幕上最贵的一行——一个死入口不值这个价。 */
 /* 标题与它离状态栏的距离**照工具页那一屏**（.ht-title 30/600/40、段头 padding-top 32）——
    两屏都是宿主底栏上的一级屏，摆一起要是一家人。本屏的 .hv-scroll 自带 4px 上内衬，
    故这里 28px（4+28=32）对齐工具页那个 32。 */
 .hv-top{display:flex;align-items:center;gap:10px;padding-top:28px}
 .hv-htitle{flex:1;min-width:0;font-size:30px;font-weight:600;line-height:40px;letter-spacing:.01em}
 /* 消息入口：白圆钮 ＋ 右上角一枚未读点。点是**演示态**（同「今日概况」那六个数，不是真读数）——
-   不给数字，免得凭空报出一个件数。 */
+   不给数字，免得凭空报出一个件数。flex:none 让它钉在右缘、不被标题挤走。 */
 .hv-msg{position:relative;overflow:hidden;flex:none;width:44px;height:44px;border-radius:50%;
   display:flex;align-items:center;justify-content:center;color:#2C5BD6;background:#fff;
   box-shadow:0 10px 20px -16px rgba(40,70,150,.95)}
 .hv-msg .dot{position:absolute;right:9px;top:9px;width:8px;height:8px;border-radius:50%;
   background:#FF4D4F;box-shadow:0 0 0 2px #fff}
-/* 搜索框：**是一枚按钮，不是 <input>**。宿主侧的搜索不在本模块建模（同「快捷工作」那五枚，
-   点一下落一句「演示范围外」）；做成真输入框更糟——能聚焦、能打字、打完什么也不发生。
-   下衬 6px 是补给下面那张通知条的：通知条自带的上外边距只有 6px，那是它当首件时定的，
-   两片白/浅紫卡直接贴 6px 看着挤。 */
-.hv-srch{display:flex;align-items:center;gap:8px;width:100%;height:46px;margin:10px 0 6px;padding:0 16px;
-  border-radius:999px;background:#fff;color:#8FA3C6;font-size:14px;font-weight:600;text-align:left;
-  box-shadow:0 10px 20px -18px rgba(40,70,150,.9);position:relative;overflow:hidden}
-.hv-srch svg{flex:none;color:#8FA3C6}
-.hv-srch:focus-visible{outline:2px solid #4E7BFF;outline-offset:2px}
 /* 渐变字：稿子上标题/数字/强调文字一律是「深海军蓝」或「紫→蓝」两族渐变实心字 */
 .hv-gn{background-image:linear-gradient(96deg,#0F2A58,#2A62B4);-webkit-background-clip:text;background-clip:text;
   color:transparent;-webkit-text-fill-color:transparent}
 .hv-gb{background-image:linear-gradient(96deg,#9452FF,#1677FE);-webkit-background-clip:text;background-clip:text;
   color:transparent;-webkit-text-fill-color:transparent}
-/* 通知条：外框浅紫渐变，右上角压一颗光泽球（稿子上是个 3D 机器人头），下半行是更白的浅底条 */
-.hv-banner{position:relative;margin-top:6px;height:88px;border-radius:22px;overflow:hidden;
+/* 通知条：外框浅紫渐变，右上角压一颗光泽球（稿子上是个 3D 机器人头），下半行是更白的浅底条。
+   上外边距 6px 是它当首件时定的（那时上面只有 .hv-scroll 的 4px 上内衬）；2026-10-16 顶上加了标题行，
+   6px 贴在 44px 高的标题行下面太挤，放到 16px。 */
+.hv-banner{position:relative;margin-top:16px;height:88px;border-radius:22px;overflow:hidden;
   background:linear-gradient(118deg,#EAE7FF 0%,#E7EFFE 50%,#F0EBFF 100%);
   box-shadow:0 10px 22px -16px rgba(60,80,190,.75)}
 .hv-bl1{display:flex;align-items:center;gap:7px;padding:14px 0 0 16px}
@@ -2514,11 +2509,11 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
         <section class="screen" id="host-home">
           <div class="hv-glow"></div>
           <div class="scroll hv-scroll">
-            <!-- 顶栏三件：页面标题「首页」／搜索框／消息入口。**不在 Figma 778:169 稿上**——
+            <!-- 顶栏两件：页面标题「首页」／消息入口。**不在 Figma 778:169 稿上**——
                  产品 2026-10-16 口头追加（ADR-0074），是本屏第四处刻意的出入。
-                 搜索与消息都是**宿主侧**的能力、本模块不建模：点一下落一句「演示范围外」，
+                 消息是**宿主侧**的能力、本模块不建模：点一下落一句「演示范围外」，
                  口径同下面那排「快捷工作」——这一屏演示的是「宿主还有别的模块」，不是那些模块自己的流程。
-                 （所以搜索框写成一枚 <button> 而不是 <input>：能聚焦、能打字、打完什么也不发生更糟。） -->
+                 （同一笔里画过一版搜索框，产品同日定了不要，已整条撤掉——见 ADR-0074「追加」。） -->
             <div class="hv-top">
               <h3 class="hv-htitle hv-gn">首页</h3>
               <button class="hv-msg" onclick="toast('宿主App消息（演示范围外）')" title="消息" aria-label="消息">
@@ -2526,11 +2521,8 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
                 <span class="dot"></span>
               </button>
             </div>
-            <button class="hv-srch" onclick="toast('宿主App搜索（演示范围外）')">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7.5"/><line x1="21" y1="21" x2="16.3" y2="16.3"/></svg>
-              <span>搜索素材、客户</span>
-            </button>
-            <!-- 通知条：宿主侧待办（素材库不承载任务，这里是宿主自己的数） -->
+            <!-- 通知条：宿主侧待办（素材库不承载任务，这里是宿主自己的数）。
+                 它是本屏原有的首件，标题加进来之后紧跟在标题下当第二眼。 -->
             <div class="hv-banner" onclick="toast('宿主App待办（演示范围外）')">
               <div class="hv-bl1"><span class="hv-bell"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.2a6 6 0 0 0-6 6v3c0 .6-.2 1.1-.6 1.6L4 15.6h16l-1.4-1.8a2.4 2.4 0 0 1-.6-1.6v-3a6 6 0 0 0-6-6z"/><path d="M9.7 18.6a2.4 2.4 0 0 0 4.6 0"/></svg></span>
                 <b class="hv-dl hv-gb">即将截止: 5</b></div>
@@ -3587,7 +3579,7 @@ function syncNav(id,params){
 }
 
 /* ---------- Material ripple（统一按压反馈，替代缩放） ---------- */
-var RIP_SEL='.btn,.chip,.iconbtn,.cell,.wk-card,.p-row,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.rah-b,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.hv-msg,.hv-srch,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close,.hw-add';
+var RIP_SEL='.btn,.chip,.iconbtn,.cell,.wk-card,.p-row,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.rah-b,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.hv-msg,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close,.hw-add';
 function ripInit(){
   document.addEventListener('pointerdown',function(e){
     var t=e.target.closest ? e.target.closest(RIP_SEL) : null;
