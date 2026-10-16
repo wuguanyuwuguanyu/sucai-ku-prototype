@@ -2008,7 +2008,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
    2026-10-14（ADR-0044）：**没命中就整段不出现**——素材库的徽章、条数、说明一律不画（原 .ra-hit-empty
    那行说明已随 raHitsEmpty() 一起删除），直接接话术卡。这一段只在真有命中时才有存在的理由。
    身份色用 primary——这段是**素材库**的能力，与 AI 话术卡一眼分开。
-   行＋原地摊开的观感与素材面板 .p-row/.pexp 同构，但类名独立（ra-hit-*）：pRowTap 的滚动定位是
+   行＋原地摊开的观感与素材面板 .p-card/.pexp 同构，但类名独立（ra-hit-*）：pRowTap 的滚动定位是
    document.querySelector('.pexp') 全局查询，共用类名会把两个面板的展开态串起来。
    有意复用的只有全产品同一套按钮 .psend/.rp-btn 与 wxSendSim 产出的 .wx-sim。
    ===== 别在这条注释里再手滑提前收尾（2026-10-14，ADR-0046）=====
@@ -2084,11 +2084,46 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .panel-search{flex:none;display:flex;align-items:center;gap:8px;background:var(--sc-high);border-radius:999px;height:44px;padding:0 16px;color:var(--on-surface-variant);font-size:13px;animation:fade .15s}
 .panel-search .iconbtn{width:32px;height:32px;margin-left:-8px}
 .psic{flex:none;display:flex;align-items:center}
-/* 叠加 chips 行（头部下方第一行）：筛选 icon 已收进头部，这一行只剩两枚叠加 chip 本体横滑 */
-.povrow{flex:none;display:flex;align-items:center;gap:6px;padding:6px 16px 0}
-.povrow .pchips{flex:1;min-width:0;padding:0}
 .panel-list{flex:1;overflow-y:auto;padding:10px 16px 14px;scrollbar-width:none}
 .panel-list::-webkit-scrollbar{display:none}
+
+/* ===== 素材库面板形态重做（ADR-0075）· 按 Figma 节点 1079:373「悬浮窗」复刻 =====
+   换算与全壳同一条：稿 750 画布 × k = 412/750 = 0.54933（.phone-inner 恒 412 布局像素宽）。
+   面板 714×840 → 392.2×461.4；稿上它贴在屏底（下缘距屏底 38 → 20.9）：916 − 461.4 − 20.9 = 433.7，取 434。
+   圆角量出来 ≈46 → 25.3（不是 M3 的哪一档，故不套 --shape-*，直接写换算值）。
+   底色换成稿上那块近白蓝 #EDEFFF——.panel 基类那层 --sc-low 是另外两个浮层在用的，这里按稿覆盖。
+   **只加 id 特异性覆盖，一个字节都不动 .panel 基类**：基类是三块浮层共用的一副壳，理由同 #aiPanel 那条（ADR-0042）。
+   头部一条（稿 93 → 51.1）：一排一级视图（全部／企业／部门／个人／朋友圈／最近使用，与素材库首页**同一套、同一顺序**）
+   ＋ 右端三枚常驻 icon，**面板里没有标题行**（ADR-0075 ①）。
+   头部内衬按稿：左 13.2（稿 24）、右 9.3（稿 17）；上 4 是为把那 40 高的一级视图摆到稿上那个位置
+   （稿：字块 top 34、指示条 top 74 —— 4 + (51.1−4−40)/2 = 7.5 起，字与条都落在稿上 ±0.5px 内）。
+   icon 三枚之间不留 gap：稿上三枚的间距是 61（圆心距 33.5），而本壳的钮是 32 的触摸靶、不是稿上那个 32 的 glyph 框，
+   留 gap 就把整排挤出面板。三枚贴排 = 96，圆心距 32，与稿上 33.5 基本同拍。
+   于是 .pnav 的可用宽 = 392.2 − 13.2 − 9.3 − 96 − 8（留给筛选 icon 的呼吸位）= 265.7；
+   六枚字自带 214.5 ＋ 5×8 间距 = 254.5 —— 排得下，还余 11 的安全量。
+   **稿上这一排其实是排不下的**：六枚文字排到 x 574（522–626）、右端筛选 icon 从 561 起，文字与 icon 直接相撞
+   （ADR-0075 待产品拍 ①：稿子截图里「最」后面就是漏斗）。本壳按「六枚横排」落、间距收到 8（不砍项、不换行），
+   并给 .pnav 兜一条 overflow-x:auto：字宽真多出来（换字体／换语言）时整排横滑，不压 icon；pNavPaint 会把当前那枚滚进可视区。
+   （这条只作兜底：.panel-head 带着 touch-action:none 是拖拽把手，触屏上这一排没打算真滑。）
+   产品若给一版不撞的间距、或点名砍哪一枚，改的就是这一段。 */
+#panel{left:9.9px;top:434px;width:392.2px;height:461.4px;border-radius:25.3px;background:#EDEFFF}
+#panel .panel-head{height:51.1px;padding:4px 9.3px 0 13.2px;gap:0;background:none;border-bottom:none}
+/* 一级视图排（ADR-0075 ①②）：头部第一件、吃掉所有剩余宽度、六枚一级视图横排。
+   六枚＝全部／企业／部门／个人／朋友圈／最近使用，与素材库首页**同一套、同一顺序**；
+   改前它是「叠在来源之上的一行 chips（最近使用／朋友圈）」——那两枚升成一级视图里的两项，那行整行退休：
+   它俩本来就是互斥单选语义，摊成一级视图比叠成 chip 更直白（面板这排不叠：库首页那枚「朋友圈」是能与最近使用叠着亮的
+   能力交集，面板这排里它俩是并列的两个视图，故面板里点「朋友圈」＝离开「最近使用」）。 */
+.pnav{flex:1;min-width:0;margin-right:8px;display:flex;align-items:center;gap:8px;overflow-x:auto;scrollbar-width:none}
+.pnav::-webkit-scrollbar{display:none}
+/* 面板里的一级视图＝库首页 .lib-tab 的同一件（选中态同一套：主色文字 ＋ 底下一条渐变指示条，ADR-0075 ⑤），
+   只是按稿瘦下来：稿 26 → 14.3px、字重 Regular／选中 Medium（库首页那排是 16px／SemiBold），
+   两色仍取库首页那两支 #526E9C／#102953。指示条稿 25×5 → 13.7×2.8、居中、离钮底 4.1（＝库首页那条的同款画法）。 */
+#panel .lib-tab{height:40px;font-size:14.3px;font-weight:400;color:#526E9C;min-width:0;padding:0;letter-spacing:0}
+#panel .lib-tab.on{color:#102953;font-weight:500}
+#panel .lib-tab.on::after{left:50%;right:auto;width:13.7px;height:2.8px;border-radius:2px;bottom:4.1px;transform:translateX(-50%);
+  background:linear-gradient(90deg,#1650FF,#9452FF)}
+/* 列表内衬：卡左右各距面板 22 → 12.1；上内衬 0——「面板顶到第一张卡顶」那 51.1（稿 93）已经由头部高度占满 */
+#panel .panel-list{padding:0 12.1px 14px}
 
 /* ===== 「实时辅助」浮层外壳 · 按 Figma 节点 831:5114「模块」（700×746 @750 画布）1:1 复刻 =====
    全部尺寸＝设计稿像素 × k，k = 412/750 = 0.54933（.phone-inner 恒 412 布局像素宽）。
@@ -2162,35 +2197,55 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .ai-drag{position:absolute;left:50%;bottom:5.5px;transform:translateX(-50%);width:30.8px;height:2.8px;
   border-radius:20px;background:#cbd4e7;pointer-events:none}
 
-.p-row{display:flex;align-items:center;gap:11px;background:var(--sc);border-radius:var(--shape-m);padding:11px 13px;margin-bottom:9px;position:relative;overflow:hidden;cursor:pointer}
-.p-row .pr-b{flex:1;min-width:0}
-/* 企业素材行尾发送快取：主色圆底icon，居复制内侧（复制守右缘） */
+/* ===== 素材库面板的卡（ADR-0075 ④）：标题（渐变色字）＋一行摘要＋行尾两枚取用钮、右上角一枚来源角标 =====
+   稿 670×134、行距 146 → 368×73.6、行距 80.2（卡间距 6.6）；白卡 90% 底、圆角 26 → 14.3、
+   阴影 0 2px 15px rgba(217,229,255,.5)；标题 30 → 16.5（PingFang Medium；字色是**渐变**，
+   稿上由右向左 #102953→#245bb9，故取 background-clip:text 那套写法），摘要 24 → 13.2（#6387C0）；
+   卡内衬 左 17.03／上 14.83／下 12.08，摘要距标题 7.1。高 73.6 = 14.83＋19.8＋7.1＋19.8＋12.08，
+   与稿逐项对上。**退休的是 `.p-row` 那一族（旧行形态）**——`.psend` 另有三处真身（命中浮层、托管清单），
+   留在下面不动；本卡那两枚钮是新件 .pc-btn，不复用 .psend/.rp-btn：稿上是圆底无描边（#F0F4FF）
+   另一种观感，硬套 .rp-btn 会把旧观感带回来。 */
+.p-card{display:flex;align-items:center;gap:18.1px;background:rgba(255,255,255,.9);border-radius:14.3px;
+  padding:14.83px 15.9px 12.08px 17.03px;margin-bottom:6.6px;position:relative;overflow:hidden;cursor:pointer;
+  box-shadow:0 2px 15px rgba(217,229,255,.5)}
+.p-card .pc-b{flex:1;min-width:0}
+.p-card .pc-b h5{font-size:16.5px;font-weight:500;line-height:19.8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  background:linear-gradient(to left,#102953,#245bb9);-webkit-background-clip:text;background-clip:text;color:transparent}
+/* 摘要一行（13.2/19.8）：卡高是量出来的 14.83＋19.8＋7.1＋19.8＋12.08 = 73.6，与稿同。
+   这一行不再挂组成条（ADR-0075 追补：稿上就是纯文字一行），行盒恒 19.8，一行行卡严丝合缝 */
+.p-card .pc-b p{font-size:13.2px;line-height:19.8px;color:#6387C0;margin-top:7.1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* 行尾两枚取用钮：转发／发圈（蓝）＋ 复制（紫）——稿上两枚字形就是这两支色 */
+.pc-acts{flex:none;display:flex;align-items:center;gap:16.5px}
+.pc-btn{width:26.4px;height:26.4px;flex:none;border:none;border-radius:50%;background:#F0F4FF;color:#1650FF;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
+.pc-btn.pur{color:#9452FF}
+/* 卡上的来源角标：直接复用全站那枚 .lc-src（它注释里写着"下一个『这东西从哪来』的问题直接调它"）。
+   只把贴角那侧的圆角按本卡的 14.3 重写——.lc-src 自带的是 11（库首页素材卡的半径），
+   比本卡小 3px 会在角上露出一道白边（宿主 overflow:hidden 只裁外缘，裁不掉小圆角内侧） */
+#panel .p-card .lc-src{border-radius:0 14.3px 1px 8px}
+/* 企业素材行尾发送快取：主色圆底icon，居复制内侧（复制守右缘）——命中浮层与托管清单在用，非面板件 */
 .psend{width:28px;height:28px;border:none;border-radius:50%;background:var(--primary-container);color:var(--on-primary-container);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
-.p-row .pr-b h5{font-size:16px;font-weight:500;color:var(--on-surface);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.p-row .pr-b p{font-size:10.5px;color:var(--on-surface-variant);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.p-row .pr-b .pv{font-size:12px;color:var(--on-surface-variant);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-top:2px}
 /* 面板分区标题（命中推荐 / 最近使用 / 各页计数头） */
 .p-sec{display:flex;align-items:center;gap:5px;padding:6px 2px 6px;font-size:11px;font-weight:500;color:var(--on-surface-variant)}
-/* 面板真搜索 + 搜索框下叠加 chips 行（M3 filter chip：32dp、选中 secondary-container＋check；与库首页 chip 同款语义） */
+/* 面板真搜索 + 筛选 popover 里的分组 chips（M3 filter chip：32dp、选中 secondary-container＋check；与库首页 chip 同款语义） */
 .panel-search input{flex:1;min-width:0;background:none;border:none;outline:none;font-size:13px;color:var(--on-surface);font-family:var(--f)}
 .panel-search input::placeholder{color:var(--on-surface-variant)}
 .pclr{flex:none;display:flex;align-items:center;justify-content:center;width:26px;height:26px;border:none;background:none;color:var(--outline);cursor:pointer}
-.pchips{flex:none;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:8px 16px 2px}
-.pchips::-webkit-scrollbar{display:none}
 .pchip{flex:none;height:32px;padding:0 12px;border-radius:var(--shape-s);border:1px solid var(--outline);background:transparent;
   color:var(--on-surface-variant);font-size:12px;font-weight:500;display:inline-flex;align-items:center;gap:5px;cursor:pointer;position:relative;overflow:hidden}
 .pchip.on{background:var(--secondary-container);border-color:transparent;color:var(--on-secondary-container)}
-/* 筛选 icon（头部，钉在搜索 icon 左边）：筛选形态的唯一入口——来源与分组都收在它的 popover 里，
-   故常驻（只在搜索态收起）。尺寸/圆底与头部另两枚 icon 一致（32dp）
-   有筛选（来源≠全部 或 分组≠全部）时点亮＋圆点；popover 开着时 icon 高亮 */
+/* 筛选 icon（头部，钉在搜索 icon 左边）：**现在只剩分组一段**（ADR-0075 ③）——来源已搬进头部那排一级视图，
+   故本钮是"分组"的唯一入口，仍常驻（只在搜索态收起）。尺寸/圆底与头部另两枚 icon 一致（32dp）
+   有筛选（分组≠全部）时点亮＋圆点；popover 开着时 icon 高亮 */
 .pflt{flex:none;width:32px;height:32px;border-radius:50%;border:none;background:transparent;color:var(--on-surface-variant);
   display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
 .pflt.on{color:var(--primary)}
 .pflt.on::after{content:'';position:absolute;top:3px;right:3px;width:5px;height:5px;border-radius:50%;background:var(--primary)}
 .pflt.open{color:var(--primary)}
-/* 筛选 popover：锚在筛选 icon（头部）正下方——顶部落 6px＝紧贴头部下缘、盖住 chips 行（那行此刻正被 mask 冻住），
+/* 筛选 popover：锚在筛选 icon（头部）正下方——顶部落 6px＝紧贴头部下缘、盖住第一张卡（那处此刻正被 mask 冻住），
    不遮微信会话（全屏底弹层违反悬浮窗无遮罩原则，已弃）；
-   两轴各占一段（来源 / 分组），同库首页侧栏；max-height 兜住分组极多的情形，超出在 popover 内滚动。
+   **只剩分组一段**（ADR-0075 ③；改前是「来源 / 分组」两段，来源搬去头部了），
+   max-height 兜住分组极多的情形，超出在 popover 内滚动。
    pfmask=面板内透明点击捕获，点面板任意处收起（不生成全屏遮罩）。搜索条展开时筛选钮收起，两者不会同框 */
 #panelBody{position:relative}
 .pfmask{position:absolute;inset:0;z-index:6}
@@ -2205,7 +2260,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .pfp-note{display:flex;gap:6px;align-items:flex-start;font-size:11px;line-height:1.6;color:var(--on-surface-variant);padding:2px 0 4px}
 .pfp-note svg{flex:none;margin-top:2px;color:var(--outline)}
 /* 悬浮窗点开＝行在原地摊开（手风琴一次一条）：预览=微信发送模拟＋就地取用，全程无底弹层、不遮微信会话 */
-.pexp{background:var(--sc-high);border-radius:var(--shape-m);margin:-5px 0 9px;padding:11px 13px;animation:fade .15s}
+.pexp{background:var(--sc-high);border-radius:14.3px;margin:-2px 0 6.6px;padding:12px 14px;animation:fade .15s}
 .pexp-t{font-size:12.5px;line-height:1.7;color:var(--on-surface);padding-bottom:8px;word-break:break-word} /* 独立类（不挂 .pexp 下）：悬浮窗展开区朋友圈文案用——全局壳为深色底近白字，脱离显式配色会白字不可见 */
 /* 分组段末尾的动作 chip（个人档「＋ 新建分组」「管理分组」，ADR-0017）：文字主色、无描边——
    既不是「未选中的筛选 chip」（描边）、也不是「选中的」（填充＋check），三种形态互不同形，不会被当成一个可选项 */
@@ -2983,13 +3038,24 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
           <!-- 悬浮球点开＝两选一入口（话术库 / 聊天辅助）：球本身不再直连某一个浮层，先问「你要哪一样」。
                位置由 openBallMenu() 现算（贴球，按 .phone-inner 布局像素），故这里不带内联定位。 -->
           <div class="bmenu" id="ballMenu" style="display:none"></div>
-          <div class="panel" id="panel" style="display:none;left:51px;top:170px">
+          <div class="panel" id="panel" style="display:none">
             <div class="panel-head" id="panelHead">
-              <!-- 头部只留「标题＋三枚 icon」：面板内点行是原地摊开（不翻二级屏），没有返回态、也不设返回箭头 -->
-              <span id="phTitle" style="flex:1;font-size:13.5px;font-weight:500;color:var(--on-surface)">素材库 · 快捷面板</span>
+              <!-- 头部＝一排一级视图（全部／企业／部门／个人／朋友圈／最近使用，与素材库首页**同一套、同一顺序**）
+                   ＋ 右端三枚常驻 icon（筛选 → 搜索 → ✕）。
+                   **面板里不再有标题行**——「素材库 · 快捷面板」那枚随形态重做撤掉（ADR-0075 ①）；
+                   下面那行叠加 chips（最近使用／朋友圈）整行撤掉，两枚升成一级视图里的两项（同篇 ②）。
+                   稿子（Figma 1079:373）上这一行是「六枚文字 ＋ 三枚 icon」并排，而 750 的稿宽里塞不下：
+                   六枚文字排到 x≈574 起（522–626）、右端筛选 icon 从 x≈561 起，直接压字（稿子截图里
+                   「最」后面就是漏斗）。本壳按「六枚横排、可横向滚动」落（ADR-0075 待产品拍 ①）：
+                   .pnav 吃掉剩余宽度、六枚放不下就横滑，三枚 icon 钉在右端不动。
+                   搜索态整排收起（搜索覆盖一切筛选、结果恒跨池，摆着六枚亮着的视图等于说结果受它约束）——
+                   与退休的那行叠加 chips 同一条处置。
+                   面板内点条仍是原地摊开（不翻二级屏），故头部没有返回态、也不设返回箭头 -->
+              <div class="pnav" id="pNav"></div>
               <!-- 头部右侧三枚常驻 icon：筛选 → 搜索 → ✕（筛选钉在搜索左边，两枚都是「常态只留 icon、点开才展开」的同一套路子）。
-                   筛选是面板唯一的筛选入口（来源＋分组两段都收在它的 popover 里，ADR-0012），故常驻、不进列表行 -->
-              <button class="pflt" id="pFlt" style="width:32px;height:32px" onclick="pFilterPop()" title="筛选来源与分组"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><polygon points="22 3 2 3 10 12.5 10 21 14 19 14 12.5 22 3"/></svg></button>
+                   筛选是面板唯一的筛选入口，**只剩分组一段**：来源已搬进上面那排一级视图，那枚 icon 再管来源
+                   等于同一件事两个入口（ADR-0075 ③） -->
+              <button class="pflt" id="pFlt" style="width:32px;height:32px" onclick="pFilterPop()" title="筛选分组"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><polygon points="22 3 2 3 10 12.5 10 21 14 19 14 12.5 22 3"/></svg></button>
               <button class="iconbtn" id="phSearch" style="width:32px;height:32px" onclick="pSearchEnter()" title="搜索素材"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7.5"/><line x1="21" y1="21" x2="16.3" y2="16.3"/></svg></button>
               <button class="iconbtn" style="width:32px;height:32px" onclick="closePanel()" title="收起面板"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
             </div>
@@ -3580,7 +3646,7 @@ function syncNav(id,params){
 }
 
 /* ---------- Material ripple（统一按压反馈，替代缩放） ---------- */
-var RIP_SEL='.btn,.chip,.iconbtn,.cell,.wk-card,.p-row,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.rah-b,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.hv-msg,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close,.hw-add';
+var RIP_SEL='.btn,.chip,.iconbtn,.cell,.wk-card,.p-card,.pc-btn,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.rah-b,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.hv-msg,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close,.hw-add';
 function ripInit(){
   document.addEventListener('pointerdown',function(e){
     var t=e.target.closest ? e.target.closest(RIP_SEL) : null;
@@ -7175,26 +7241,30 @@ function panelDrag(el){
       captured=true;try{el.setPointerCapture(e.pointerId)}catch(x){}
     }
     var pn=el.closest('.panel');
-    /* 夹取与 k 都按**面板自身**算。历史遗留：.panel 的 left/top 写在 432 空间里（所以老面板写的是
-       432-334 与 k=inner.width/432），但 .panel 的包含块是 section.screen＝.phone-inner 的 412 宽。
-       「实时辅助」浮层（.ai-panel，宽 384.5）若沿用老常量，右缘会被放到 432-334=98 而越出到 482 被裁掉，
-       首次拖拽还会因为 top 下限 60 > 新默认位 47 而无故下滑 13px。故只为 .ai-panel 改成按 412 空间算，
-       #panel（素材库面板）的行为逐字节不动。 */
-    var isAi=pn.classList.contains('ai-panel');
-    var k=inner.width/(isAi?412:432);
-    var maxL=isAi?(412-pn.offsetWidth-4):(432-334);
-    var minT=isAi?34:60;
-    var maxT=isAi?(916-pn.offsetHeight-4):600;
+    /* 夹取与 k 一律按 412 空间算（.phone-inner 恒 412×916，.panel 的包含块就是它）。
+       历史遗留：老 #panel 的定值写在 432 空间里（432-334 与 k=inner.width/432），而它的包含块其实是 412 宽，
+       于是「实时辅助」浮层（.ai-panel，宽 384.5）沿用老常量时右缘越出被裁、首拖还会无故下滑 13px——
+       当时只为 .ai-panel 开了一条 412 空间的分支。**ADR-0075 把这条分支收掉了**：新 #panel 的几何
+       （left 9.9／top 434／392.2 宽）本身就是在 412 空间里量出来的（稿 750 × 412/750），
+       两块浮层终于同一套算法，不必再靠 isAi 分辨。三个常量随新几何重算：
+       maxL = 412 − 392.2 − 4 ≈ 15.8（新面板比老面板宽得多，横向几乎没得挪）；
+       minT = 34（不压状态栏）；maxT = 916 − 461.4 − 4 ≈ 450.6（不越出手势条）。 */
+    var k=inner.width/412;
+    var maxL=412-pn.offsetWidth-4;
+    var minT=34;
+    var maxT=916-pn.offsetHeight-4;
     pn.style.left=Math.max(4,Math.min((ox+(e.clientX-sx)-inner.left)/k,maxL))+'px';
     pn.style.top=Math.max(minT,Math.min((oy+(e.clientY-sy)-inner.top)/k,maxT))+'px';
   });
   el.addEventListener('pointerup',function(){down=false;captured=false});
   el.addEventListener('pointercancel',function(){down=false;captured=false});
 }
-/* 面板内容架构：头部（筛选 icon ＋ 搜索 icon ＋ ✕）→ 叠加 chips 行 → 统一列表（搜索条常态收进头部，点开才占一行）。
-   无页内导航——chips 与库首页同款语义（朋友圈=能力交集、最近使用=本机记录·默认亮=面板落最近），
-   来源与分组统一收进头部那枚筛选 icon 的 popover（"两轴各占一段"同库首页侧栏）。
-   点行＝行在原地摊开（ADR-0023）：面板内不翻二级屏、没有返回态，头部恒为「标题＋三枚 icon」。 */
+/* 面板内容架构：头部（一排一级视图 ＋ 筛选／搜索／✕ 三枚 icon）→ 统一列表（搜索条常态收进头部，点开才占一行）。
+   **没有页内导航那一层了**（ADR-0075 ①）：容器里只有搜索条、列表与筛选 popover 三件——
+   六枚一级视图长在 #panelHead 里（那处是写死在 HTML 的静态头，panelRender 管不着它），由 pNavPaint 铺内容。
+   **改前那一行叠加 chips（最近使用／朋友圈）整行撤掉**（同篇 ②）：那两枚已升成一级视图里的两项。
+   来源与分组的分工也随之拆开：来源＝头部那排（一级视图），分组＝头部筛选 icon 的 popover（**只剩一段**，同篇 ③）。
+   点卡＝在原地摊开完整素材卡（ADR-0023）：面板内不翻二级屏、没有返回态，头部恒为「六枚视图＋三枚 icon」。 */
 function panelRender(){
   $('panelBody').innerHTML=
     '<div class="panel-search" id="pBar" style="display:none">'
@@ -7202,9 +7272,6 @@ function panelRender(){
     +'<span class="psic">'+I('search',16,2.2)+'</span>'
     +'<input id="pSearch" placeholder="搜索标题 / 正文 / 关键词 / 附件名" oninput="pSearch2(this.value)">'
     +'<button class="pclr" id="pClr" style="display:none" onclick="pSearchExit()" title="清空并退出搜索">'+I('x',14,2.4)+'</button>'
-    +'</div>'
-    +'<div class="povrow" id="pOvRow">'
-    +'<div class="pchips" id="pOv"></div>'
     +'</div>'
     +'<div id="pRows" class="panel-list"></div>'
     +'<div class="pfmask" id="pFltMask" style="display:none" onclick="pFilterPop(false)"></div>'
@@ -7238,20 +7305,39 @@ function pSearchExit(){ /* 退出＝清空关键词 / 点搜索条左缘返回�
   var si=$('pSearch');if(si)si.value='';
   pSearchSync();pRowsDraw();
 }
-/* 叠加 chips 行（与库首页同款语义）：最近使用默认亮＝面板落最近；朋友圈=能力交集，与它自由叠加。
-   搜索期间整行隐藏（搜索覆盖一切筛选，头部那枚筛选钮同时也收起，见 pSearchSync/pFltSync） */
-function pOvSync(){
-  var row=$('pOvRow'),el=$('pOv');if(!el)return;
-  if(row)row.style.display=pQ?'none':''; /* 搜索期整行收起：搜索覆盖一切筛选（头部那枚筛选钮同时收起，见 pFltSync） */
-  el.innerHTML=pOvChip(S.pRec,'最近使用','clock','pRecSet()')
-    +pOvChip(S.pMom,'朋友圈','photos','pMomSet()');
+/* 一级视图排（ADR-0075 ①②）：面板头部那一排＝素材库首页**同一套、同一顺序**的六枚。
+   与库首页同构：底下仍是 S.pRec／S.pMom／S.pSrc 那几个量，视图名是**算出来的**（pView()，对照 libView()），
+   点一枚＝把这三个量一次摆好（pViewPick()，对照 libTabPick()）。
+   **面板这排不叠**——库首页那枚「朋友圈」是能与「最近使用」叠着亮的能力交集（见 libTabsRender 那条注释），
+   面板这排里它俩是并列的两个视图，故点「朋友圈」即离开「最近使用」（ADR-0075 ②）。
+   于是「最近使用 ∩ 朋友圈」这个组合在面板里**不可达**：改前那行两枚 chips 能叠着亮，现在不能。
+   这是笔真变化，不是漏掉——面板只有一排、六个位置，叠法摆不进去；要那个交集的入口是库首页。
+   容器写死在 #panelHead（静态头），故这里铺内容而不是建容器。 */
+var PVIEWS=['全部','企业','部门','个人','朋友圈','最近使用'];
+function pView(){return S.pRec?'最近使用':(S.pMom?'朋友圈':S.pSrc)}
+function pNavPaint(){
+  var el=$('pNav');if(!el)return;
+  var cur=pView();
+  el.innerHTML=PVIEWS.map(function(n){
+    return '<button class="lib-tab'+(cur===n?' on':'')+'" onclick="pViewPick(\''+n+'\')">'+n+'</button>'}).join('');
+  /* 当前那枚滚进可视区（ADR-0075 待产品拍 ①）：六枚全排 254.5、可用 265.7，本来是排得下的，
+     这条只兜字体／语言把字宽撑大的情形。jsdom 没有布局（scrollWidth/clientWidth 恒 0），故整段加了值判断，
+     免得每跑一次 smoke 就在这处报一次假红 */
+  var on=el.querySelector('.lib-tab.on');
+  if(on&&el.scrollTo&&el.scrollWidth>el.clientWidth&&on.offsetWidth){
+    var l=on.offsetLeft-el.offsetLeft,r=l+on.offsetWidth;
+    if(l<el.scrollLeft)el.scrollTo({left:l,behavior:'smooth'});
+    else if(r>el.scrollLeft+el.clientWidth)el.scrollTo({left:r-el.clientWidth,behavior:'smooth'});
+  }
 }
-/* 叠加 chip：选中=check 前缀（与分组 chips 同款选中态），未选中=维度图标（库首页 fchip 同款） */
-function pOvChip(on,label,icon,fn){
-  return '<button class="pchip'+(on?' on':'')+'" onclick="'+fn+'">'+(on?I('check',12,2.4):I(icon,12,2.2))+' '+label+'</button>';
+/* 点一枚＝摆好三个量（与 libTabPick 逐句同构），分组与展开态一并落回初始——
+   换视图＝换一份列表，再留着上一个分组与上一条的展开态就是两笔无主的筛选 */
+function pViewPick(v){
+  S.pRec=(v==='最近使用');S.pMom=(v==='朋友圈');
+  S.pSrc=(v==='全部'||v==='企业'||v==='部门'||v==='个人')?v:'全部';
+  S.pGrp='全部';S.pExpId=null;
+  pRowsDraw();
 }
-function pRecSet(){S.pRec=!S.pRec;pRowsDraw()}
-function pMomSet(){S.pMom=!S.pMom;pRowsDraw()}
 /* 列表：搜索结果优先；否则命中推荐排在首位（引擎递来的，不依赖用户翻筛选）→ 统一池＝来源×分组 ∩ 叠加 */
 function pRowsDraw(){
   var el=$('pRows');if(!el)return;
@@ -7276,7 +7362,7 @@ function pRowsDraw(){
     if(!gl.length)h+=pPoolEmpty();
   }
   el.innerHTML=h;
-  pOvSync();pFltSync(); /* 先铺 chips 行（筛选钮长在里面），再同步它的开合态 */
+  pNavPaint();pFltSync(); /* 铺完卡再同步头部：视图排的选中态跟着上面那几个量走，筛选 icon 的点亮态跟着分组走 */
 }
 /* 统一池：最近使用亮时＝另一份列表（recentPool，跨两池、来源与分组一律不参与，ADR-0031）；
    否则＝来源×分组（pScriptList）∩ 朋友圈能力交集。「能不能发」与「看哪份列表」是两个问题，故只有前者参与这里 */
@@ -7287,31 +7373,31 @@ function pPoolList(){
   if(S.pSrc==='全部')gl.sort(dateCmp); /* 「全部」档不分组、按发布时间倒序（ADR-0009） */
   return gl;
 }
-/* 区段标头：最近榜上只写榜单名（＋能力名），**不点来源档与分组名**——那两个轴对这份列表不参与，
-   写上「最近使用 · 部门素材 · N 条」等于说"这份榜是部门素材里的"，是假的（ADR-0031 决策 5）；
-   浏览态照旧点名当前组合：叠加/能力名打头、来源×分组名收尾 */
+/* 区段标头：跨池的那两枚视图（最近使用／朋友圈）只写视图名（＋能力名），**不点来源档与分组名**——
+   那两个轴对这份列表不参与，写上「最近使用 · 部门素材 · N 条」等于说"这份榜是部门素材里的"，是假的（ADR-0031 决策 5）；
+   单一来源的三枚视图照旧点名当前组合：分组名（不限分组时点名来源档——企业档不再混说成「全部素材」）。
+   ADR-0075 把最近使用／朋友圈从叠加 chip 升成一级视图，这条口径没跟着变：升了级的那两枚仍是跨池的 */
 function pSecHead(n){
   var ic=S.pRec?'clock':(S.pMom?'photos':'folder');
   var tags=[];
   if(S.pRec)tags.push('最近使用');
   if(S.pMom)tags.push('可发朋友圈');
-  var base=S.pRec?'':((S.pGrp==='全部')?pSrcName():pGrpLabel(S.pGrp)); /* 不限分组时点名来源档（企业档不再混说成「全部素材」） */
+  var base=(S.pRec||S.pMom)?'':((S.pGrp==='全部')?pSrcName():pGrpLabel(S.pGrp));
   var t=tags.length?(base?tags.join(' · ')+' · '+base:tags.join(' · ')):base;
   return I(ic,12,2.4)+' '+esc(t)+' · '+n+' 条';
 }
-/* 池空诚实空态：点名原因＋最小出口（关筛选/看全部），口径与库首页空态一致。
-   最近榜那两条不带分组名、与 recentEmpty 同一套措辞（ADR-0031）：分组与来源对这份列表不参与，点名它们会指错原因。
-   能力分支的判定作用域＝榜单子集（最近使用开时只看进榜的，不看全量池） */
+/* 池空诚实空态：点名原因＋最小出口（换个视图／看全部），口径与库首页空态一致。
+   那两枚跨池视图（最近使用／朋友圈）的空态不带分组名、与 recentEmpty 同一套措辞（ADR-0031）：
+   分组与来源对这份列表不参与，点名它们会指错原因。
+   出口一律改成**换视图**（pViewPick('全部')）：ADR-0075 把这两枚升成一级视图之后，
+   「关闭最近使用」这种说法就不成立了——它不是一层叠着的筛选，是排上的一枚，关不掉、只能换走。
+   改前那两条出口（pRecSet／pMomSet）与「最近使用里没有可发朋友圈的素材」那支一并退休：
+   视图互斥之后「最近使用 ∩ 朋友圈」在面板里不可达（见 PVIEWS 那段），那支永远进不去，留着就是死影子 */
 function pPoolEmpty(){
-  if(S.pRec){
-    var all=recentPool(false);
-    if(!all.length)return pEmptyRow('还没有使用记录','发送、复制素材后，你最近用过的会出现在这里（仅记在本机）','关闭最近使用','pRecSet()');
-    if(!all.some(canMoments))return pEmptyRow('最近使用里没有可发朋友圈的素材','可发 = 纯文字、≤9 图或单视频（不含文件、语音消息）','关闭朋友圈','pMomSet()');
-  }
-  if(S.pMom){
-    if(S.pGrp!=='全部')return pEmptyRow('「'+esc(pGrpLabel(S.pGrp))+'」暂无可发朋友圈的素材','可发 = 纯文字、≤9 图或单视频（不含文件、语音消息）','看全部',"pGrpPick('全部')");
-    return pEmptyRow('暂无可发朋友圈的素材','可发 = 纯文字、≤9 图或单视频（不含文件、语音消息）','关闭朋友圈','pMomSet()');
-  }
+  if(S.pRec&&!recentPool(false).length)
+    return pEmptyRow('还没有使用记录','发送、复制素材后，你最近用过的会出现在这里（仅记在本机）','看全部素材',"pViewPick('全部')");
+  if(S.pMom)
+    return pEmptyRow('暂无可发朋友圈的素材','可发 = 纯文字、≤9 图或单视频（不含文件、语音消息）','看全部素材',"pViewPick('全部')");
   if(S.pGrp!=='全部')return pGrpEmpty('「'+esc(pGrpLabel(S.pGrp))+'」暂无素材'); /* 被分组收窄筛空：出口＝看全部（见 pGrpEmpty） */
   /* 这一档本来就没素材：不摆「看全部」（都到顶了，点了是死钮），只把为什么没有说清 */
   if(S.pSrc==='部门')return pEmptyRow('本部门暂无素材','专门发给本部门的素材由管理员按可见范围下发','','');
@@ -7323,25 +7409,31 @@ function pEmptyRow(txt,tip,btnTxt,fn){ /* 出口按需给：没说清原因就�
     +'<div style="text-align:center;padding:0 0 6px;font-size:11px;color:var(--on-surface-variant)">'+tip+'</div>'
     +(btnTxt?'<div style="text-align:center;padding:0 0 14px;font-size:12px;color:var(--primary);font-weight:500;cursor:pointer" onclick="'+fn+'">'+btnTxt+'</div>':'');
 }
-/* 筛选 icon 状态：来源与分组**统一收进这枚 icon 的 popover**——所以 icon 常驻。
-   旧版在「全部」档藏起 icon（那一档没有分组维度可筛，不摆点了没用的钮）；现在「全部」档也能从它切到
-   企业／部门／个人，藏起来反而断掉唯一入口（ADR-0012）。
-   有筛选（来源≠全部 或 分组≠全部）→ 点亮＋圆点；popover 开着 → icon 高亮。
-   唯一不出现的场合＝搜索态：搜索覆盖一切筛选，popover 压在搜索条上也没法用 */
+/* 筛选 icon 状态：**它现在只管分组一段**（来源已搬进头部那排一级视图，ADR-0075 ③）——所以 icon 仍常驻。
+   改前它在「全部」档也常驻（那一档能从它切到企业／部门／个人，藏起来会断掉唯一入口，ADR-0012）；
+   现在来源在头上，这一档的常驻理由换了个说法：分组在四档里都可选（「全部」档没有分组维度、只出一行说明），
+   收起来反而断掉分组的唯一入口。
+   有筛选（**分组≠全部**）→ 点亮＋圆点；popover 开着 → icon 高亮。
+   唯一不出现的场合＝搜索态：搜索覆盖一切筛选，popover 压在搜索条上也没法用。
+   **点亮条件比改前窄了一档**：不再把「来源≠全部」算作有筛选——来源是视图了，
+   点「企业」是换了一屏、不是给这一屏加了一层筛选，再点亮那个漏斗等于说"这屏还被别的条件收着"（假话） */
 function pFltSync(){
   var f=$('pFlt');if(!f)return;
   if(pSOn){ /* 搜索态不摆筛选钮：搜索覆盖一切筛选 */
     S.pFltOpen=false;f.style.display='none';f.classList.remove('on','open');pFltPopDraw();pHeadSync();return;
   }
   f.style.display='flex';
-  f.classList.toggle('on',S.pSrc!=='全部'||S.pGrp!=='全部');
+  f.classList.toggle('on',S.pGrp!=='全部');
   pFltPopDraw();pHeadSync();
 }
-/* 头部恒一态：标题「素材库 · 快捷面板」＋三枚 icon（筛选 → 搜索 → ✕）。
-   搜索态收起初筛选与搜索两枚 icon，只留 ✕（搜索条自己占一行，见 pSearchSync） */
+/* 头部恒一态：一排一级视图（#pNav，内容由 pNavPaint 铺）＋三枚 icon（筛选 → 搜索 → ✕）——**没有标题行**
+   （ADR-0075 ①：「素材库 · 快捷面板」那枚撤掉，面板就长在素材库的入口上，再说一遍自己是素材库是废话）。
+   搜索态收起初筛选与搜索两枚 icon，只留 ✕（搜索条自己占一行，见 pSearchSync），
+   那排一级视图同时整排收起——**只在有关键词时收**（pQ 非空），只是摊开条子还没输入时照常摆着：
+   搜索条只管查找，不替用户熄视图（改前那行叠加 chips 是同一条处置） */
 function pHeadSync(){
-  var tt=$('phTitle'),f=$('pFlt'),sb=$('phSearch');
-  if(tt)tt.textContent='素材库 · 快捷面板';
+  var nv=$('pNav'),f=$('pFlt'),sb=$('phSearch');
+  if(nv)nv.style.display=pQ?'none':'';
   if(f)f.style.display=pSOn?'none':'flex';
   if(sb)sb.style.display=pSOn?'none':'';
 }
@@ -7364,12 +7456,13 @@ function pScriptList(){
       &&(!gid||inGroup(m,gid));
   });
 }
-/* 筛选 popover：面板内锚定筛选行下拉，两轴各占一段（同库首页侧栏——来源是上位、分组是其子筛选，ADR-0011）。
-   来源段＝全部／企业／部门／个人四档互斥单选常驻（与库首页同源，ADR-0009；面板补上「部门」档见 ADR-0012）；
-   分组段随来源切换：企业·部门→企业分组（全部＋各分组）、个人→个人分组（同构）、
-   「全部」→分组轴收起，只留一行口径说明（跨池混排两套分组树落不到一处，ADR-0009）。
-   选来源不收起（下一步常是挑该来源下的分组），选分组即收起（收窄完成，该去看列表了）；
-   点面板任意处或再点 icon 收起。不生成全屏遮罩：popover 与 mask 都在面板内，微信会话全程可见 */
+/* 筛选 popover：面板内锚定筛选 icon 的下拉——**只剩分组一段**（ADR-0075 ③）。
+   改前是「来源 ＋ 分组」两段（同库首页侧栏：来源是上位、分组是其子筛选，ADR-0011）；来源搬进头部那排一级视图之后，
+   同一件事两个入口＝两处能改同一个量，故这一段整段退休，popover 里只留分组（段的标题也就不必再写「分组」上面还有一层）。
+   分组段随视图的**来源**切换：企业·部门→企业分组（全部＋各分组）、个人→个人分组（同构）、
+   「全部」与「朋友圈」两档→分组轴收起，只留一行口径说明（跨池混排两套分组树落不到一处，ADR-0009）。
+   选分组即收起（收窄完成，该去看卡了）；点面板任意处或再点 icon 收起。
+   不生成全屏遮罩：popover 与 mask 都在面板内，微信会话全程可见 */
 function pFilterPop(open){
   S.pFltOpen=open===undefined?!S.pFltOpen:!!open;
   pFltPopDraw();
@@ -7382,13 +7475,7 @@ function pFltPopDraw(){
     if(f)f.classList.remove('open');return;
   }
   p.style.display='';mk.style.display='';if(f)f.classList.add('open');
-  p.innerHTML='<div class="pfp-sec">来源</div>'+pSrcSegHtml()
-    +'<div class="pfp-sec" style="padding-top:12px">分组</div>'+pGrpSegHtml();
-}
-function pSrcSegHtml(){ /* 来源段四档：面板来源过去是三档（不加部门档，ADR-0008），现与库首页同源补齐（ADR-0012） */
-  var opts=[{v:'全部',n:'全部'},{v:'企业',n:'企业'},{v:'部门',n:'部门'},{v:'个人',n:'个人'}],h='';
-  for(var i=0;i<opts.length;i++)h+=pChipBtn(opts[i].n,S.pSrc===opts[i].v,"pSrcSet('"+opts[i].v+"')");
-  return '<div class="pfp-chips">'+h+'</div>';
+  p.innerHTML='<div class="pfp-sec">分组</div>'+pGrpSegHtml();
 }
 function pGrpSegHtml(){ /* 分组段随来源走：「全部」档没有分组维度 → 只出说明行，不摆一个点了没用的菜单 */
   if(S.pSrc==='全部')
@@ -7418,46 +7505,45 @@ function pGrpPick(v){ /* 分组段内的值已经限定在当前来源里（段�
   S.pGrp=v;S.pExpId=null;pRowsDraw();pFilterPop(false);
 }
 function pChipBtn(n,on,fn){return '<button class="pchip'+(on?' on':'')+'" onclick="'+fn+'">'+(on?I('check',12,2.4):'')+esc(n)+'</button>'}
-/* 换来源＝换池，分组回到「全部」（与库首页 srcPick 同规矩）；popover 不收起——下一步常是挑该来源下的分组。
-   退出最近榜那句**必须在 early return 之前**：点当前所在那一档也是一次「点筛选」，也要退出最近榜（ADR-0031 决策 2），
-   按老写法会在这里被 return 吃掉，用户点一下没反应。
-   点「个人」等任一档都走这一条，故不必再在来源段的渲染里另加一行 */
-function pSrcSet(v){
-  var wasRec=S.pRec;recentOff();
-  if(S.pSrc===v){if(wasRec)pRowsDraw();return} /* 值没变＝不重绘；但刚从最近榜退出来这一下得重绘，否则屏上还是榜 */
-  S.pSrc=v;S.pGrp='全部';S.pExpId=null;pRowsDraw();
-}
 /* 分组筛空的诚实空态：点名分组＋「看全部」出口，避免继承筛选导致的莫名空页 */
 function pGrpEmpty(txt){
   return '<div style="text-align:center;padding:14px 0 6px;font-size:12px;color:var(--on-surface-variant)">'+txt+'</div>'
     +'<div style="text-align:center;padding:0 0 14px;font-size:12px;color:var(--primary);font-weight:500;cursor:pointer" onclick="pGrpPick(\'全部\')">看全部</div>';
 }
-/* 面板行（跨来源混排）：点行 = 完整预览（看清再取用）；行尾按钮 = 直接取用（熟手快路径） */
-/* 行 = 摘要（标题+正文截断+来源标）＋行尾快取；点行＝在原地摊开完整卡（pRowTap，两池同一入口，ADR-0023） */
+/* 面板卡（ADR-0075 ④，跨来源混排）：点卡 = 完整预览（看清再取用）；卡上两枚钮 = 直接取用（熟手快路径）。
+   卡 = 标题（渐变色字）＋一行摘要＋行尾两枚圆形取用钮，来源从「行内标」改成**右上角一枚角标**（.lc-src）。
+   点卡＝在原地摊开完整卡（pRowTap，两池同一入口，ADR-0023） */
 function pRowHtml(m){
   var per=!m.type||m.personal; /* 个人素材（PS 原对象 / 搜索映射对象） */
-  var mom=S.pMom&&!pQ; /* 朋友圈筛选开（非搜索）＝可发子集，行尾快取换成发圈 */
-  var tap='pRowTap';
+  var mom=S.pMom&&!pQ; /* 朋友圈视图（非搜索）＝可发子集，卡上首钮换成发圈 */
   var open=S.pExpId===m.id;
   var ft=firstText(m);
-  var t=matTitle(m); /* 行首＝素材标题（存量素材按派生链生成），个人行不再拿正文当标题 */
+  var t=matTitle(m); /* 卡首＝素材标题（存量素材按派生链生成），个人素材不再拿正文当标题 */
   var cut=function(s,n){return esc(s.length>n?s.slice(0,n)+'…':s)};
-  /* 跨池混排语境才标来源（搜索结果恒跨池、「全部」档跨池）——企业行也标（个人行恒标）；单一来源视图里条条同源，标了是噪声 */
-  var entTag=(pQ||S.pSrc==='全部')?'<span style="color:var(--primary)">企业</span> · ':'';
+  /* 角标只在混排语境挂（搜索恒跨池、「全部」与「朋友圈」两档跨池、个人素材恒挂）——单一来源视图里条条同源，挂上就是噪声。
+     判定与库首页同一套（见 srcTagHtml 那条注释）；角标是同一枚皮，不是新件 */
+  var tag=(pQ||S.pSrc==='全部'||per)?srcTagHtml(per?'个人':'企业'):'';
+  /* 摘要＝首段截断的一行纯文字；朋友圈视图前缀可发图标；
+     存量素材无文本时这一行说清，而不是留一个空省略号。来源那截文字（改前是「企业 · 」/「个人 · 」）撤了——它上了角标。
+     **行尾那截组成条（compStrip）也撤了**（ADR-0075 追补）：稿上摘要就是纯文字一行；且这一行 nowrap＋ellipsis，
+     文字满行时它本就被裁在框外、只在「无文字内容…」这种短句上冒头——正是那儿已经用文字说明了附件，
+     留它等于同一件事说两遍，还多出 17px 的 inline-flex 把行盒撑高 0.7px（卡成 74.3 而非稿上的 73.6）。
+     「还有内容」这件事改由轻点摊开那条路回答（面板内原地展开，ADR-0023），不去挤这一行 */
   var sub=per
-    ?'<span style="color:var(--primary)">个人</span> · '+(ft?cut(ft,34):'无文字内容，附件可直接发送')
+    ?(ft?cut(ft,34):'无文字内容，附件可直接发送')
     :(mom
-      ?I('photos',10,2.2)+' '+entTag+(ft?cut(ft,32):'无文字内容，附件可直接发送')+compStrip(m)
-      :entTag+(ft?cut(ft,40):'这条素材只有附件、没有文字内容')+compStrip(m)); /* 行=首段截断＋组成条（多段/带媒体才出）；朋友圈页前缀可发图标；存量素材无文本时该行说清而不是留一个空省略号 */
-  var quick=mom
-    ?'<button class="rp-btn ghost" style="flex:none;padding:0 12px" onclick="oneKeyPost(\''+m.id+'\')" title="一键发圈">'+I('zap',12,2.2)+'</button>'
-    /* 双快取（企业＋个人）：发送在内侧主色圆底（重动作醒目＋与复制分层防误触），复制守右缘不动（肌肉记忆零迁移） */
-    :'<span style="flex:none;display:flex;align-items:center;gap:6px">'
-      +'<button class="psend" onclick="oneKeySend(\''+m.id+'\')" title="一键发送（文字＋附件）">'+I('send',12,2.2)+'</button>'
-      +'<button class="rp-btn ghost'+(ft?'':' dim')+'" style="flex:none;padding:0 12px" onclick="quickCopy(\''+m.id+'\')" title="'+(ft?'复制并填入输入框':'这条素材没有文字内容，附件可直接发送')+'">'+I('copy',12,2.2)+'</button></span>';
-  return '<div class="p-row"><div class="pr-b" onclick="'+tap+'(\''+m.id+'\')"><h5>'+esc(t)+'</h5><p>'+sub+'</p></div>'
-    +quick
-    +'<span style="flex:none;display:flex;color:var(--on-surface-variant);transform:rotate('+(open?90:0)+'deg);transition:transform .15s">'+I('chev',14,2.2)+'</span>' /* 行尾箭头＝「这里摊开」：摊开时转 90° */
+      ?I('photos',11,2.2)+' '+(ft?cut(ft,30):'无文字内容，附件可直接发送')
+      :(ft?cut(ft,30):'这条素材只有附件、没有文字内容'));
+  /* 两枚取用钮（稿上就是这两枚圆底：#F0F4FF 底、蓝紫两色字形）：转发／发圈在内侧（重动作），复制守右缘（肌肉记忆零迁移）。
+     卡整块可点（点了摊开），故两枚钮都得 stopPropagation——不然按「发送」会连带把这条摊开（全站同一处写法见宿主待办那枚钮） */
+  var acts=mom
+    ?'<button class="pc-btn" onclick="event.stopPropagation();oneKeyPost(\''+m.id+'\')" title="一键发圈">'+I('zap',13,2.2)+'</button>'
+      +'<button class="pc-btn pur" onclick="event.stopPropagation();quickCopy(\''+m.id+'\')" title="'+(ft?'复制文案':'这条素材没有文字内容，附件可直接发送')+'">'+I('copy',13,2.2)+'</button>'
+    :'<button class="pc-btn" onclick="event.stopPropagation();oneKeySend(\''+m.id+'\')" title="一键发送（文字＋附件）">'+I('send',13,2.2)+'</button>'
+      +'<button class="pc-btn pur" onclick="event.stopPropagation();quickCopy(\''+m.id+'\')" title="'+(ft?'复制并填入输入框':'这条素材没有文字内容，附件可直接发送')+'">'+I('copy',13,2.2)+'</button>';
+  return '<div class="p-card" onclick="pRowTap(\''+m.id+'\')">'+tag
+    +'<div class="pc-b"><h5>'+esc(t)+'</h5><p>'+sub+'</p></div>'
+    +'<div class="pc-acts">'+acts+'</div>'
     +'</div>'
     +(open?pExpHtml(m):'');
 }
