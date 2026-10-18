@@ -1909,13 +1909,21 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .wx-send{width:62px;height:37px;border-radius:9px;background:var(--wx);color:#fff;font-size:14px;font-weight:500;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
 
 /* 悬浮球（产品 UI · M3） */
-.ball{position:absolute;width:54px;height:54px;border-radius:50%;background:var(--primary);color:var(--on-primary);z-index:70;
+.ball{position:absolute;width:54px;height:54px;border-radius:50%;background:var(--primary);color:var(--on-primary);z-index:73;
   display:flex;align-items:center;justify-content:center;cursor:grab;touch-action:none;user-select:none;
   box-shadow:var(--e3),0 0 0 1px rgba(255,255,255,.7);overflow:visible}
 .ball.drag{cursor:grabbing}
 .ball.hit{animation:pulse 1s var(--emph) 2}
 @keyframes pulse{0%{box-shadow:var(--e3),0 0 0 4px rgba(255,255,255,.7)}50%{box-shadow:0 4px 12px 2px rgba(186,26,26,.45),0 0 0 9px rgba(186,26,26,.18)}100%{box-shadow:var(--e3),0 0 0 4px rgba(255,255,255,.7)}}
-.ball.stopped{background:var(--sc-highest);color:var(--on-surface-variant)}
+/* AI 模块球（ADR-0078）＝聊天辅助浮层收起后的**自己的**折叠态，与全局素材球是两颗独立的球：
+   全局球恒在、只有单击＋拖动；这一颗在辅助浮层被收起/顶掉后出现、点它＝重开辅助浮层。
+   42px（比 54 的全局球小一档，避免两颗球等权）、tertiary-container 与菜单里那枚「聊天辅助」同一套色；
+   **自由拖拽、不贴边**（产品口径「独立拖到任意位置」）：位置只由 left/top 记住，不做 edge 半隐藏。 */
+.mball{position:absolute;right:14px;top:100px;width:42px;height:42px;border-radius:50%;
+  background:var(--tertiary-container);color:var(--on-tertiary-container);z-index:73;
+  display:flex;align-items:center;justify-content:center;cursor:grab;touch-action:none;user-select:none;
+  box-shadow:var(--e3),0 0 0 1px rgba(255,255,255,.7)}
+.mball.drag{cursor:grabbing}
 .ball-badge{position:absolute;top:-4px;right:-4px;min-width:19px;height:19px;border-radius:10px;background:var(--error);color:#fff;
   font-size:10.5px;font-weight:500;display:none;align-items:center;justify-content:center;padding:0 5px;box-shadow:0 0 0 2.5px #fff}
 .ball-badge.show{display:flex}
@@ -2238,6 +2246,28 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .psend{width:28px;height:28px;border:none;border-radius:50%;background:var(--primary-container);color:var(--on-primary-container);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
 /* 面板分区标题（命中推荐 / 最近使用 / 各页计数头） */
 .p-sec{display:flex;align-items:center;gap:5px;padding:6px 2px 6px;font-size:11px;font-weight:500;color:var(--on-surface-variant)}
+/* ===== 面板内命中呈现（ADR-0078）=====
+   命中在面板里不再走横幅／不再把面板顶掉：
+   · 「命中推荐」区段**常驻列表最顶部**（pRowsDraw），整块包一层 #pHitSec 供脉冲；
+   · 区段**看不见**时（滚走了 / 正在搜索）才在头部下方出一条粘性提示 #pHitBar
+     「找到 N 条相关素材 · 查看」——点它＝退出搜索、回顶部、脉冲区段；
+     不自动滚、不自动切视图：用户手上正在做的事不被打断；
+   · 头部角标＝当前那枚一级视图右上角一枚主色小圆点（有未看的新命中时亮）。
+   可见性判据只看「搜索态 + #pRows.scrollTop」，不看 rect：jsdom 无布局，几何断言会假绿。 */
+.p-hitsec{border-radius:14px}
+.p-hitsec.fresh{animation:hitPulse 1.5s var(--emph)}
+@keyframes hitPulse{0%{background:rgba(22,80,255,.12);box-shadow:0 0 0 1.5px rgba(22,80,255,.5)}
+  70%{background:rgba(22,80,255,.05);box-shadow:0 0 0 1.5px rgba(22,80,255,.18)}
+  100%{background:transparent;box-shadow:0 0 0 1.5px rgba(22,80,255,0)}}
+.p-hitbar{flex:none;display:flex;align-items:center;gap:6px;margin:0 12.1px 8px;padding:9px 12px;border-radius:999px;
+  background:var(--primary-container);color:var(--on-primary-container);font-size:12px;cursor:pointer;
+  animation:fade .15s var(--emph)}
+.p-hitbar .hic{flex:none;display:flex}
+.p-hitbar .ht{flex:1;min-width:0;font-weight:500}
+.p-hitbar .hgo{flex:none;font-weight:600;color:var(--primary)}
+#panel .lib-tab{position:relative}
+.p-navdot{position:absolute;top:3px;right:-3px;width:6px;height:6px;border-radius:50%;background:var(--primary);
+  box-shadow:0 0 0 2px #EDEFFF;pointer-events:none}
 /* 面板真搜索 + 筛选 popover 里的分组 chips（M3 filter chip：32dp、选中 secondary-container＋check；与库首页 chip 同款语义） */
 .panel-search input{flex:1;min-width:0;background:none;border:none;outline:none;font-size:13px;color:var(--on-surface);font-family:var(--f)}
 .panel-search input::placeholder{color:var(--on-surface-variant)}
@@ -3049,6 +3079,11 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
             <button class="wx-send" onclick="wxSend()">发送</button>
           </div>
           <div class="ball" id="ball" style="right:12px;bottom:120px"></div>
+          <!-- AI 模块球（ADR-0078）：聊天辅助浮层收起/被顶掉后的**自己的**折叠态。
+               与全局素材球是两颗独立的球——全局球恒在（素材面板开时也不收起），这一颗只在
+               辅助浮层开过之后、且当前没展开时出现；点它＝重开辅助浮层（与菜单里的「聊天辅助」同一落点）。
+               位置自由拖拽、不贴边，默认落在右侧上方（避开会话输入框与素材面板的常态位置）。 -->
+          <div class="mball" id="aiBall" style="display:none"></div>
           <!-- 原「命中推荐弹卡」#recPop 已于 2026-10-15 整块删除（ADR-0061）：未开启聊天辅助时的命中
                改由下面的 #hpTip ＋ #hpPanel 承担（横幅先说一声、点开才看清单），微信屏里不再有第二套「命中展示」。 -->
           <!-- 顶部命中横幅（#hpTip · 2026-10-15 新增，ADR-0061）：未开启聊天辅助时命中素材关键词，
@@ -3793,8 +3828,8 @@ function resetDemo(){
   MOM={};MOM_INIT.forEach(function(r){MOM[r.id]=Date.now()+r.h*36e5});
   S.floatOn=true; S.pMom=false; S.pRec=true; S.pGrp='全部'; S.pSrc='全部'; S.pFltOpen=false; S.pExpId=null; S.libScroll=null;
   S.hostExp={};
-  pendingHits.length=0; pQ='';
-  closePanel(); closeAiPanel(); closeHpPanel(); hpHits=[]; hpMsg=''; S.aiTipsSeen=false; closeBallMenu(); raRounds=[]; raExpId=null; raStreamStop(); S.raPaused=false; wxRebuildChat(); updateBall(); ballBadge(); dkRefresh();
+  pendingHits.length=0; pQ=''; pHitNew=0;
+  closePanel(); closeAiPanel(); closeHpPanel(); aiBallReset(); hpHits=[]; hpMsg=''; S.aiTipsSeen=false; closeBallMenu(); raRounds=[]; raExpId=null; raStreamStop(); S.raPaused=false; wxRebuildChat(); updateBall(); ballBadge(); dkRefresh();
   render(cur,{}); toast('演示数据已重置');
 }
 <\/script>
@@ -7089,6 +7124,7 @@ REND['wechat']=function(){
   if(!wxBuilt){wxBuilt=true;wxRebuildChat()}
   var b=$('ball');
   if(b)b.style.display=S.floatOn?'flex':'none';
+  aiBallShow(); /* 模块球跟着微信屏一起进出：它只在这个场景里有意义 */
 };
 function bub(side,text,extra){
   return '<div class="bub-row '+side+'">'+(side==='me'?'':'<span class="ava">客</span>')
@@ -7131,9 +7167,11 @@ function kwMatch(msg){
 function matchKw(msg){
   var hits=kwMatch(msg);
   /* 与「实时辅助」浮层的分流：辅助开着＝命中就地进时间线那一轮（并按新进的 id 打脉冲），**不弹任何东西**；
-     辅助没开＝弹屏顶横幅 #hpTip（点它才展开 #hpPanel）——原「命中推荐弹卡」#recPop 的位置，ADR-0061。
+     辅助没开＝交给 hpShow 按"用户此刻在哪"分流（横幅／面板内区段／清单就地换，ADR-0078）。
      两条路互斥，由 hpShow 自身守住。
-     急停只停「自动展示」，不停「读会话」：时间线里的命中段照常跟着会话走。 */
+     急停只停「自动展示」，不停「读会话」：时间线里的命中段照常跟着会话走。
+     **S.stopped 自 ADR-0078 起没有球上入口**（长按撤掉了）：它仍是引擎侧的"自动展示"状态位，
+     冒烟直接写它来验分流；球上只剩单击＋拖动。 */
   if(aiOpen){raRoundPush(msg);raStreamKick();} /* 先让新一轮（新问题＋它命中的素材）带脉冲追加进来，380ms 后才开始流话术——这就是「先弹素材、再流话术」 */
   if(!hits.length||S.stopped)return; /* 急停／无命中：不自动展示，角标照常累加 */
   if(!aiOpen)hpShow(msg,hits);
@@ -7149,7 +7187,6 @@ function ballInit(){
   var b=$('ball');
   if(!b)return;
   b.innerHTML=I('ball',22,2.4)+'<span class="ball-badge" id="ballBadge"></span>';
-  b.classList.toggle('stopped',S.stopped);
   b.style.display=S.floatOn?'flex':'none';
   ballDrag(b);
   ballBadge();
@@ -7163,14 +7200,17 @@ function ballInit(){
   });
 }
 function ballDrag(b){
-  var sx,sy,ox,oy,inner,moved,down=false,lpFired=false,lastTap=0,lpTimer=null;
+  /* 全局球只有两档手势（ADR-0078）：**单击＝主操作（开两选一菜单）、拖动＝移动**。
+     长按（急停）与双击（快取最近一条）在这一笔里一并撤掉——三块浮层的词义统一成
+     「单击＝主操作 / 拖动＝移动 / 长按＝次要动作 / 双击＝快捷 / 关闭＝✕」，
+     而全局球没有次要动作与快捷动作可挂，就不要留两档没有对象的空手势（误触代价比便利大）。 */
+  var sx,sy,ox,oy,inner,moved,down=false;
   b.addEventListener('pointerdown',function(e){
-    down=true;moved=false;lpFired=false;sx=e.clientX;sy=e.clientY;
+    down=true;moved=false;sx=e.clientX;sy=e.clientY;
     var r=b.getBoundingClientRect();ox=r.left;oy=r.top;
     inner=b.closest('.phone-inner').getBoundingClientRect();
-    clearTimeout(lpTimer);
-    lpTimer=setTimeout(function(){lpFired=true;toggleStop()},550); /* 长按：急停/恢复 */
     b.setPointerCapture(e.pointerId);
+    b.parentNode.appendChild(b); /* 两颗球同为 z 73：被按住的那颗排到后面＝压在另一颗上（DOM 序即层序） */
   });
   b.addEventListener('pointermove',function(e){
     /* down 守卫（用户 2026-10-16 报的「球躲着鼠标跑」）：鼠标**没按下、光在球面上划过**也会派
@@ -7181,7 +7221,8 @@ function ballDrag(b){
     if(!down)return;
     if(Math.abs(e.clientX-sx)>5||Math.abs(e.clientY-sy)>5)moved=true;
     if(!moved)return;
-    var k=inner.width/432;
+    ballLift=null; /* 用户自己拖过了：面板开合不再把球弹回原位（这一下就是他的新位置） */
+    var k=(inner.width||432)/432;
     b.classList.remove('edge');
     b.classList.add('drag');
     b.style.left=Math.max(-24,Math.min((ox+(e.clientX-sx)-inner.left)/k,432-30))+'px';
@@ -7191,16 +7232,40 @@ function ballDrag(b){
   b.addEventListener('pointerup',function(){
     down=false;
     b.classList.remove('drag');
-    clearTimeout(lpTimer);
     if(moved){moved=false;ballSnap(b);return}
-    /* 长按已经触发过（lpFired）就不再落进点按分支：否则一次长按会「急停 ＋ 弹两选一菜单」各跑一次
-       ——aiBindCard 一直有这道守卫，这里补上，两处手势终于同一套判据 */
-    if(lpFired){lpFired=false;lastTap=0;return}
-    var now=Date.now();
-    if(now-lastTap<320){lastTap=0;ballDbl()} /* 双击：快取最近一条素材 */
-    else{lastTap=now;ballTap()}
+    ballTap();
   });
-  b.addEventListener('pointercancel',function(){down=false;moved=false;b.classList.remove('drag');clearTimeout(lpTimer)});
+  b.addEventListener('pointercancel',function(){down=false;moved=false;b.classList.remove('drag')});
+}
+/* ---------- 全局球在素材面板打开时的「让位」（ADR-0078）----------
+   产品口径：**球恒在**——素材库面板打开也不收起。面板的常态几何（#panel 覆盖块）是
+   left 9.9 / top 434 / 392.2 × 461.4，而球的默认位（right 12 / bottom 120）恰落在面板里、
+   会压住卡片行尾的取用钮。故：球只要与面板相交，就**抬到面板上沿之上 8px**，横向不动；
+   面板一关再还原到原位置（用户若在面板开着时自己拖过球，ballLift 已清空，不还原）。
+   判据全用内联 left/top/right/bottom 的布局像素，不读 getBoundingClientRect——
+   jsdom 无布局，几何断言会「全绿但实际是坏的」。 */
+var ballLift=null;
+function ballLiftForPanel(){
+  var b=$('ball');if(!b||b.style.display==='none')return;
+  var top=parseFloat(b.style.top);
+  if(isNaN(top))top=916-parseFloat(b.style.bottom||120)-54;
+  var left=parseFloat(b.style.left);
+  if(isNaN(left))left=412-parseFloat(b.style.right||12)-54;
+  if(left+54<=9.9||left>=402.1||top+54<=434||top>=895.4)return; /* 不相交＝不动 */
+  ballLift={left:b.style.left,top:b.style.top,right:b.style.right,bottom:b.style.bottom,edge:b.classList.contains('edge')};
+  b.style.left=left+'px';
+  b.style.top=(434-54-8)+'px';
+  b.style.right='auto';b.style.bottom='auto';
+}
+function ballUnliftForPanel(){
+  if(!ballLift)return;
+  var b=$('ball');
+  if(b){
+    b.style.left=ballLift.left;b.style.top=ballLift.top;
+    b.style.right=ballLift.right;b.style.bottom=ballLift.bottom;
+    b.classList.toggle('edge',ballLift.edge);
+  }
+  ballLift=null;
 }
 /* 松手自动贴边：球心在左半屏收左缘、右半屏收右缘，半隐藏；点按先复位 */
 function ballSnap(b){
@@ -7209,12 +7274,18 @@ function ballSnap(b){
   b.style.left=(cur+27<216?-24:432-30)+'px';
 }
 function placeBall(x,y){var b=$('ball');b.style.left=Math.max(8,Math.min(x-24))+'px';b.style.top=Math.max(80,Math.min(y-24,780))+'px';b.style.right='auto';b.style.bottom='auto'}
-function updateBall(){var b=$('ball');if(b)b.style.display=S.floatOn?'flex':'none'}
+function updateBall(){var b=$('ball');if(b)b.style.display=S.floatOn?'flex':'none';aiBallShow()}
 function ballTap(){
   var b=$('ball');
-  if(b&&b.classList.contains('edge')){ /* 半隐藏态：点按仅复位，不展开 */
+  if(b&&b.classList.contains('edge')){ /* 半隐藏态：**一次单击＝复位并同时开菜单**（ADR-0078）。
+     改前这里只复位就 return，用户得点第二下才见到菜单——同一次「点球」被拆成两下，
+     与「单击＝主操作」的词义不符。 */
     b.classList.remove('edge');
     b.style.left=(parseFloat(b.style.left||'0')<0?12:366)+'px';
+    /* 若此刻正被面板抬着（ballLift 在），这次复位要一路记到"面板关掉以后"：
+       横位换成新的、半隐藏取消，纵向仍回原高度——否则关面板时又被按回半隐藏。 */
+    if(ballLift){ballLift.left=b.style.left;ballLift.edge=false}
+    if(!ballMenuOpen)openBallMenu();
     return;
   }
   if(ballMenuOpen)closeBallMenu();else openBallMenu(); /* 球＝两选一入口：先问「话术库」还是「聊天辅助」，不再直连某一个浮层 */
@@ -7242,23 +7313,53 @@ function openBallMenu(){
 function closeBallMenu(){var m=$('ballMenu');if(m)m.style.display='none';ballMenuOpen=false} /* 幂等：元素缺失、本来没开都不抛（resetDemo 的冒烟替身会跑到它） */
 function pickLib(){closeBallMenu();openPanel()}
 function pickRa(){closeBallMenu();openAiPanel()}
-/* 双击球 = 复制填充最近使用里最近的一条素材 */
-function ballDbl(){
-  closeBallMenu(); /* 双击＝快捷复制：收起第一跳弹出的两选一菜单，别留着挡微信 */
-  if(panelOpen)closePanel();
-  var rid='';
-  for(var i=0;i<RECENT.length;i++){var rm=recById(RECENT[i].id);if(rm){rid=RECENT[i].id;break}}
-  if(!rid){toast('最近使用里暂无素材');return}
-  quickCopy(rid);
+/* ---------- AI 模块球（ADR-0078）----------
+   聊天辅助浮层收起后不再「整个关死」，而是收成**它自己的**一颗小球；全局素材球不受影响、恒在。
+   两颗球是**并列的两个模块折叠态**，不是「主球＋卫星」：都能独立拖、都能直接点开各自那块浮层。
+   出现条件只有两条：①这个模块开过（aiBallOn——没开过不凭空长出一颗球）；②当前没展开（aiOpen=false）。
+   不贴边、不半隐藏：产品口径「独立拖到任意位置」，位置由内联 left/top 记住，收起再开还在原处。 */
+var aiBallOn=false;
+function aiBallInit(){
+  var b=$('aiBall');if(!b)return;
+  b.innerHTML=I('sparkle',19,2.1);
+  aiBallDrag(b);
+  aiBallShow();
 }
-/* 长按急停：暂停一切自动推荐（全自动转半自动），再长按恢复 */
-function toggleStop(){
-  S.stopped=!S.stopped;
-  var b=$('ball');
-  if(b)b.classList.toggle('stopped',S.stopped);
-  if(S.stopped)closeHpPanel(); /* 急停＝连已经自动冒出来的那份一起收掉（原小卡 hideRec 的同一位置）。
-                                  辅助浮层的展开态不在此列：那是用户自己开的，急停停的是"自动展示"。 */
-  toast(S.stopped?'已急停：自动推荐已暂停，长按悬浮球恢复':'已恢复自动推荐');
+function aiBallShow(){
+  var b=$('aiBall');if(!b)return;
+  b.style.display=(aiBallOn&&!aiOpen&&S.floatOn)?'flex':'none';
+}
+function aiBallHide(){var b=$('aiBall');if(b)b.style.display='none'}
+function aiBallReset(){
+  aiBallOn=false;
+  var b=$('aiBall');if(!b)return;
+  b.style.display='none';b.style.left='';b.style.top='';b.style.right='';b.style.bottom='';b.classList.remove('drag');
+}
+function aiBallDrag(b){
+  var sx,sy,ox,oy,inner,moved,down=false;
+  b.addEventListener('pointerdown',function(e){
+    down=true;moved=false;sx=e.clientX;sy=e.clientY;
+    var r=b.getBoundingClientRect();ox=r.left;oy=r.top;
+    inner=b.closest('.phone-inner').getBoundingClientRect();
+    b.setPointerCapture(e.pointerId);
+    b.parentNode.appendChild(b); /* 两颗球同为 z 73：被按住的那颗排到后面＝压在另一颗上 */
+    b.classList.add('drag');
+  });
+  b.addEventListener('pointermove',function(e){
+    if(!down)return;
+    if(Math.abs(e.clientX-sx)>5||Math.abs(e.clientY-sy)>5)moved=true;
+    if(!moved)return;
+    var k=(inner.width||412)/412;
+    b.style.left=Math.max(0,Math.min((ox+(e.clientX-sx)-inner.left)/k,412-42))+'px';
+    b.style.top=Math.max(44,Math.min((oy+(e.clientY-sy)-inner.top)/k,916-42-16))+'px';
+    b.style.right='auto';
+  });
+  b.addEventListener('pointerup',function(){
+    down=false;b.classList.remove('drag');
+    if(moved){moved=false;return} /* 自由拖拽：松手就停在那儿，不贴边 */
+    openAiPanel();                /* 单击＝主操作：收起的那块浮层重新展开 */
+  });
+  b.addEventListener('pointercancel',function(){down=false;moved=false;b.classList.remove('drag')});
 }
 /* 命中角标：未处理命中数（打开面板即视为已处理，清零隐藏） */
 function ballBadge(){
@@ -7268,20 +7369,23 @@ function ballBadge(){
   bd.classList.toggle('show',n>0);
 }
 /* ---------- 悬浮面板（M3 bottom-sheet 风格浮层） ---------- */
-var panelOpen=false,pHit='',aiOpen=false; /* aiOpen=辅助回复浮层是否展开：与 panelOpen 互斥，同一层级只允许一个浮层（ADR-0028 决策 3） */
+var panelOpen=false,pHit='',aiOpen=false,pHitNew=0; /* aiOpen=辅助回复浮层是否展开：与 panelOpen 互斥，同一层级只允许一个浮层（ADR-0028 决策 3）；
+   pHitNew＝面板开着时新来、还没被「查看」消掉的那一批命中数（头部小圆点＋粘性提示条用它，ADR-0078） */
 function openPanel(){
   closeBallMenu();                    /* 面板开＝菜单收（菜单是球的展开，不是面板的） */
   if(aiOpen)closeAiPanel();
   closeHpPanel();                     /* 后开者胜（ADR-0028 决策 3）：命中浮层让位 */
-  panelOpen=true;
+  panelOpen=true;pHitNew=0;          /* 面板开＝顶部那份命中推荐当场可见，面板内「新命中」角标归零 */
   var last=pendingHits.slice(-1)[0];
   if(last)pHit=last.msg;
   for(var i=0;i<pendingHits.length;i++)pendingHits[i].done=true; /* 打开面板 = 命中已阅，角标清零 */
   ballBadge();dkRefresh();
   S.pMom=false;S.pRec=true;pQ='';pSOn=false;S.pFltOpen=false;S.pExpId=null; /* 打开面板永远落「最近使用」：命中推荐排在首位，引擎递来的东西不依赖用户翻筛选；搜索条同落收起态；筛选 popover 同落收起态（上次是点 ✕ 收起面板的话 popover 会留着开）；展开态同落收起（面板重开＝回到能扫的那一屏，不停在上次摊开的那条上） */
-  var b=$('ball');if(b)b.style.display='none';
+  /* 全局球**不收起**（ADR-0078，产品口径「球恒在，素材库面板打开时也不收起」）：
+     只把与面板相交的球抬到面板上沿之上，关面板时还原。 */
   var p=$('panel');
   p.style.display='flex';
+  ballLiftForPanel();
   panelRender();
   var ph=$('panelHead');
   if(ph&&!ph._dragged){panelDrag(ph);ph._dragged=true}
@@ -7289,6 +7393,8 @@ function openPanel(){
 function closePanel(){
   panelOpen=false;
   var p=$('panel');p.style.display='none';
+  ballUnliftForPanel();               /* 面板关了：球回原位（用户拖过就不回，见 ballLift） */
+  aiBallShow();                       /* 顶掉辅助浮层时它已收了球；这里再同步一次，幂等 */
   var b=$('ball');if(b)b.style.display=S.floatOn?'flex':'none';
 }
 function placePanel(){}
@@ -7360,6 +7466,11 @@ function panelRender(){
     +'<input id="pSearch" placeholder="搜索标题 / 正文 / 关键词 / 附件名" oninput="pSearch2(this.value)">'
     +'<button class="pclr" id="pClr" style="display:none" onclick="pSearchExit()" title="清空并退出搜索">'+I('x',14,2.4)+'</button>'
     +'</div>'
+    +'<div class="p-hitbar" id="pHitBar" style="display:none" onclick="pHitGoto()">'
+    +'<span class="hic">'+I('zap',13,2.4)+'</span>'
+    +'<span class="ht" id="pHitBarT"></span>'
+    +'<span class="hgo">查看</span>'
+    +'</div>'
     +'<div id="pRows" class="panel-list"></div>'
     +'<div class="pfmask" id="pFltMask" style="display:none" onclick="pFilterPop(false)"></div>'
     +'<div class="pfpop popcard" id="pFltPop" style="display:none"></div>';
@@ -7406,7 +7517,10 @@ function pNavPaint(){
   var el=$('pNav');if(!el)return;
   var cur=pView();
   el.innerHTML=PVIEWS.map(function(n){
-    return '<button class="lib-tab'+(cur===n?' on':'')+'" onclick="pViewPick(\''+n+'\')">'+n+'</button>'}).join('');
+    /* 头部角标（ADR-0078）：面板开着时新来的命中还没被「查看」消掉，就在**当前那枚一级视图**右上角
+       点一枚主色小圆点。不另占头部位、也不改三枚 icon 的排布；点提示条／回顶部即消。 */
+    return '<button class="lib-tab'+(cur===n?' on':'')+'" onclick="pViewPick(\''+n+'\')">'+n
+      +(pHitNew&&cur===n?'<i class="p-navdot"></i>':'')+'</button>'}).join('');
   /* 当前那枚滚进可视区（ADR-0075 待产品拍 ①）：六枚全排 254.5、可用 265.7，本来是排得下的，
      这条只兜字体／语言把字宽撑大的情形。jsdom 没有布局（scrollWidth/clientWidth 恒 0），故整段加了值判断，
      免得每跑一次 smoke 就在这处报一次假红 */
@@ -7440,8 +7554,12 @@ function pRowsDraw(){
   } else {
     var hits=pHit?kwMatch(pHit):[];
     if(hits.length){
+      /* 整块包一层 #pHitSec：命中来了要「让区段主色脉冲」，脉冲得有一个不散架的盒子
+         （只给 .p-sec 描边的话，底下那三张卡不在脉冲范围里，看不出"新的是这一坨"）。 */
+      h+='<div class="p-hitsec" id="pHitSec">';
       h+='<div class="p-sec">'+I('zap',12,2.4)+' 命中推荐</div>';
       for(var a=0;a<hits.length&&a<3;a++)h+=pRowHtml(hits[a]);
+      h+='</div>';
     }
     var gl=pPoolList();
     h+='<div class="p-sec">'+pSecHead(gl.length)+'</div>';
@@ -7450,6 +7568,42 @@ function pRowsDraw(){
   }
   el.innerHTML=h;
   pNavPaint();pFltSync(); /* 铺完卡再同步头部：视图排的选中态跟着上面那几个量走，筛选 icon 的点亮态跟着分组走 */
+  pHitBarSync();          /* 提示条是"区段看不见"的替身：换视图／进出搜索都重算一次 */
+}
+
+/* ---------- 面板内命中的提示（ADR-0078）----------
+   命中在面板开着时到达：先量区段**看不看得见**（只认搜索态与 #pRows.scrollTop，不认 rect），
+   看得见→直接主色脉冲，不必再弹一条；看不见→头部下方出粘性提示条＋头部小圆点，
+   点提示条＝退出搜索、回顶部、脉冲。两步都不自动滚、不自动切视图。 */
+function pHitBarSync(){
+  var bar=$('pHitBar'),t=$('pHitBarT');
+  if(!bar)return;
+  bar.style.display=pHitNew>0?'flex':'none';
+  if(t)t.textContent='找到 '+pHitNew+' 条相关素材';
+}
+function pHitPulse(){
+  var sec=$('pHitSec');if(!sec)return;
+  sec.classList.remove('fresh');
+  void sec.offsetWidth;              /* 重启动画（同一区段连着来两批时也要重演一次） */
+  sec.classList.add('fresh');
+  sec._pls=setTimeout(function(){if(sec)sec.classList.remove('fresh')},1600);
+}
+function pHitGoto(){
+  if(pSOn||pQ)pSearchExit();          /* 搜索态先退出：命中推荐只在非搜索态的列表顶上 */
+  var el=$('pRows');
+  if(el){
+    if(el.scrollTo)try{el.scrollTo({top:0,behavior:'smooth'})}catch(e){}
+    el.scrollTop=0;
+  }
+  pHitNew=0;pHitBarSync();pNavPaint();
+  pHitPulse();
+}
+function pHitNotify(n){
+  var rows=$('pRows');
+  var seen=!pQ&&(!rows||rows.scrollTop<40); /* 顶部第一屏＝区段就在眼前（搜索态恒不算看见） */
+  pHitNew=seen?0:n;
+  pRowsDraw();                              /* 换成这一批命中的区段；pNavPaint 顺带点/灭头部圆点 */
+  if(seen)pHitPulse();else pHitBarSync();
 }
 /* 统一池：最近使用亮时＝另一份列表（recentPool，跨两池、来源与分组一律不参与，ADR-0031）；
    否则＝来源×分组（pScriptList）∩ 朋友圈能力交集。「能不能发」与「看哪份列表」是两个问题，故只有前者参与这里 */
@@ -7789,10 +7943,28 @@ var hpTipOn=false,hpTipTimer=null,hpTipLeft=0,HP_TIP_SEC=3; /* HP_TIP_SEC＝横�
 function hpShow(msg,hits){
   if(aiOpen)return;                     /* 辅助开着＝命中归时间线，两条路绝不一起冒出来 */
   if(!hits||!hits.length)return;        /* 没命中＝连横幅都不弹（同 ADR-0044「没命中就整段不出现」） */
-  closeHpPanel();                       /* 新一批来了：先把上一次展开的清单收掉（内容换了，旧的不再是"当前这份"） */
-  closePanel();                         /* 后开者胜：素材库面板让位（球照旧留着——球的条件是"微信在前台"，不是"没有浮层"） */
   closeBallMenu();
   hpMsg=msg||'';hpHits=hits;hpExpId=null;
+  /* 三块大浮层互斥，但**命中不是浮层**（ADR-0078）：它是一条通知，不该把用户手上的东西顶掉。
+     于是按"用户此刻在哪"分流，而不是先 closePanel() 再说：
+       · 素材库面板开着 → 不弹横幅、不关面板，把这一批换成面板顶部的「命中推荐」区段；
+         看得见就脉冲，看不见才出粘性提示条（pHitNotify）；
+       · 命中清单开着 → 就地换这一批（不退回横幅：清单本来就是它的展开态）；
+       · 都没有 → 照旧弹横幅，点横幅才进清单。 */
+  if(panelOpen){
+    pHit=hpMsg;
+    for(var i=0;i<pendingHits.length;i++)pendingHits[i].done=true; /* 面板就摆在眼前，这一批已被呈现 */
+    ballBadge();dkRefresh();
+    pHitNotify(hits.length);
+    return;
+  }
+  if(hpOpen){
+    for(var j=0;j<pendingHits.length;j++)pendingHits[j].done=true; /* 清单就摊在眼前＝这一批已呈现 */
+    ballBadge();dkRefresh();
+    hpRender();
+    var b=$('hpBody');if(b)b.scrollTop=0;
+    return;
+  }
   hpTipShow();                          /* 这一步只弹横幅；浮层等 hpExpand()（点横幅）才开 */
 }
 function hpTipShow(){
@@ -7826,8 +7998,8 @@ function hpTipHide(){
   hpTipOn=false;
   if(hpTipTimer){clearInterval(hpTipTimer);hpTipTimer=null}
   var t=$('hpTip');if(t)t.classList.remove('show');
-  /* 横幅自隐**不等于这份命中没了**：它就退回"只记角标"——与它接手的那张弹卡（6 秒自隐）同一条口径，
-     与急停（toggleStop → closeHpPanel）也同一条：自动展示可以停，会话照读、角标照记。 */
+  /* 横幅自隐**不等于这份命中没了**：它就退回"只记角标"——与它接手的那张弹卡（6 秒自隐）同一条口径：
+     自动展示可以停，会话照读、角标照记。 */
 }
 function hpExpand(){ /* 点横幅＝看清单。**只有这一条路进 #hpPanel**——它没有别的入口，正是"先说一声、点开才看" */
   if(!hpTipOn)return;
@@ -8046,7 +8218,8 @@ function openAiPanel(){
   closeBallMenu();                    /* 同上：浮层开＝菜单收 */
   if(panelOpen)closePanel();          /* 后开者胜：素材库面板让位（两个方向都成立的关键） */
   closeHpPanel();                     /* 同上：命中浮层也让位——开着辅助时不留在屏上（与 matchKw 的分流同一条口径） */
-  aiOpen=true;
+  aiOpen=true;aiBallOn=true;          /* 开过一次就记住：收起时才有那颗模块球，没开过不凭空出现 */
+  aiBallHide();
   for(var i=0;i<pendingHits.length;i++)pendingHits[i].done=true; /* 打开浮层＝命中已阅、角标清零（与素材面板 openPanel 同一口径） */
   ballBadge();dkRefresh();
   raExpId=null; /* 重开＝落回能扫的那一屏（同 openPanel 的 S.pExpId=null），不停在上次摊开的那条上 */
@@ -8069,8 +8242,9 @@ function closeAiPanel(){
   aiOpen=false;
   raStreamStop(); /* 浮层都不在了，流式链必须掐断——否则 timer 会继续在隐藏的卡片上敲字 */
   var p=$('aiPanel'); if(p)p.style.display='none';
-  /* 刻意不动悬浮球：球是素材库的折叠态、存活条件是「微信前台」（ADR-0028 决策 2），
-     别的模块开浮层不等于离开微信——球留在右侧边缘，正好当"切回素材库"的入口。 */
+  /* 收起＝**收成它自己的小球**（ADR-0078，产品口径），不是整个关死；全局素材球照旧不动。
+     被别的浮层顶掉时走的也是这里（openPanel → closeAiPanel），所以"顶掉"与"收起"同一个去向。 */
+  aiBallShow();
 }
 function raSwap(i){
   /* i＝要换的那一轮（每一轮的问句右上角都有一枚「换一组」，见 aiRender）。省略参数时退回最新一轮。
@@ -8331,10 +8505,11 @@ function raFollow(el){
 /* 两个动作抽成具名函数：长按/双击的定时器回调只调它们，冒烟也就有真实的验点（不是只验常量） */
 function aiCardFill(el){ var t=el&&el._txt; if(!t)return; fillInput(t); toast('已填入输入框 · 长按可直接发送',null,null,1600) }
 function aiCardSend(el){ var t=el&&el._txt; if(!t)return; fillInput(t); wxSend(); toast('已按建议话术发送（演示）') }
-/* 手势绑定：与悬浮球同一套判据（ballDrag）——pointerdown 起 AI_LP_MS 长按、按 moved 阈值 5px 取消，
-   pointerup 里 Date.now()-lastTap<320 判双击。单点＝无动作（脚注里恒有"双击填输入框 / 长按直发"那行提示，
-   所以单点不反馈也不至于"点了没反应"）。这里的 lpFired 守卫（长按触发后不再落进点按分支）
-   原先只有本处有，2026-10-16 也补进了 ballDrag（那边长按曾连带 toggleStop+ballTap 各跑一次）。 */
+/* 手势绑定：pointerdown 起 AI_LP_MS 长按、按 moved 阈值 5px 取消，pointerup 里 320ms 判双击。
+   单点＝无动作（脚注里恒有"双击填输入框 / 长按直发"那行提示，所以单点不反馈也不至于"点了没反应"）。
+   这里的 lpFired 守卫（长按触发后不再落进点按分支）仍是这套手势的要害。
+   **2026-10-19（ADR-0078）起悬浮球不再共用这套判据**：球上只剩单击＋拖动，长按/双击两档撤掉，
+   别再把两边的节奏当成"同一套"来改——球那边现在短得多，只有 5px 阈值。 */
 function aiBindCard(el){
   var sx=0,sy=0,moved=false,lpFired=false,lastTap=0,lpTimer=null,inFoot=false;
   /* 脚注在卡内部（aiRender 把 .ai-foot 放进了 .ra-card），而两个手势是绑在**卡元素**上的，
@@ -8456,6 +8631,7 @@ buildNav();
 buildVer();   /* 侧栏顶部那枚演示版本开关（标准版／高级版／旗舰版三枚）：与目录同属演示件、同时建 */
 ripInit();
 ballInit();
+aiBallInit();
 dkRefresh();
 function tick(){
   var d=new Date();
