@@ -2259,6 +2259,8 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .p-hitx{flex:none;margin-left:auto;width:20px;height:20px;border:0;padding:0;border-radius:50%;
   display:flex;align-items:center;justify-content:center;background:transparent;color:var(--on-surface-variant);cursor:pointer}
 .p-hitx:active{background:rgba(0,0,0,.06)}
+/* 「最近 N 条消息」：这一批合并了几条原话（ADR-0081）。只在 >1 时出现，不抢「命中推荐」的读点 */
+.p-hitfrom{font-size:10px;font-weight:400;color:var(--on-surface-variant);margin-left:4px}
 .p-hitsec.fresh{animation:hitPulse 1.5s var(--emph)}
 @keyframes hitPulse{0%{background:rgba(22,80,255,.12);box-shadow:0 0 0 1.5px rgba(22,80,255,.5)}
   70%{background:rgba(22,80,255,.05);box-shadow:0 0 0 1.5px rgba(22,80,255,.18)}
@@ -6194,10 +6196,10 @@ function markUsed(id){
 /* 取用的那条是不是当前命中推荐里的：是就把区段收掉。所有取用路径都经过 markUsed，故挂在这一处，
    不在 pexTake／quickCopy／oneKeySend 各写一遍 */
 function pHitClearOnUse(id){
-  if(!panelOpen||!pHit)return;
-  var hs=kwMatch(pHit);
+  if(!panelOpen||!pHitMsgs.length)return;
+  var hs=pHitMerged();
   for(var i=0;i<hs.length;i++){
-    if(hs[i].id===id){pHit='';pHitNew=0;pRowsDraw();return}
+    if(hs[i].id===id){pHitMsgs=[];pHitNew=0;pRowsDraw();return} /* 整段收：一批里取走任一条，这一批就算办完（产品口径） */
   }
 }
 function recTimeOf(id){for(var r=0;r<RECENT.length;r++)if(RECENT[r].id===id)return RECENT[r].t;return 0}
@@ -7383,18 +7385,25 @@ function ballBadge(){
   bd.classList.toggle('show',n>0);
 }
 /* ---------- 悬浮面板（M3 bottom-sheet 风格浮层） ---------- */
-var panelOpen=false,pHit='',aiOpen=false,pHitNew=0; /* aiOpen=辅助回复浮层是否展开：与 panelOpen 互斥，同一层级只允许一个浮层（ADR-0028 决策 3）；
-   pHitNew＝面板开着时新来、还没被「查看」消掉的那一批命中数（头部小圆点＋粘性提示条用它，ADR-0078） */
+var panelOpen=false,pHitMsgs=[],aiOpen=false,pHitNew=0; /* aiOpen=辅助回复浮层是否展开：与 panelOpen 互斥，同一层级只允许一个浮层（ADR-0028 决策 3）；
+   pHitNew＝面板开着时区段看不见、新增的命中数（头部小圆点＋粘性提示条用它，ADR-0078）；
+   pHitMsgs＝当前这一批命中推荐的触发原话。**「一批」的边界不是时间窗，是区段的生命周期**（ADR-0081）：
+   区段出现后到达的客户消息**追加合并**（按素材去重、新消息的命中排前），直到区段被收掉
+   （取用任一命中／关面板／✕）才结束；中间不再一条顶一条。 */
 function openPanel(){
   closeBallMenu();                    /* 面板开＝菜单收（菜单是球的展开，不是面板的） */
   if(aiOpen)closeAiPanel();
   closeHpPanel();                     /* 后开者胜（ADR-0028 决策 3）：命中浮层让位 */
+  var wasOpen=panelOpen;             /* 已开着再被 openPanel（比如从球菜单再点一次）＝不重置这一批 */
   panelOpen=true;pHitNew=0;          /* 面板开＝顶部那份命中推荐当场可见，面板内「新命中」角标归零 */
-  /* 只接「还没呈现过」的命中（ADR-0080）：关面板即收，重开不再把上一批冒出来；
-     未读命中从 Dock「命中 N」进来时仍看得到——那枚按钮就是"我要看这次命中"的入口 */
-  var last=null;
-  for(var i=pendingHits.length-1;i>=0;i--){if(!pendingHits[i].done){last=pendingHits[i];break}}
-  pHit=last?last.msg:'';
+  /* 从关到开：把**所有还没呈现过**的命中一次收进这一批（ADR-0080／0081）——面板关着时连发的好几条
+     各命中不同素材，打开时应当都在，而不是只剩最后一条。已呈现过的重开不再冒出。 */
+  if(!wasOpen){
+    pHitMsgs=[];
+    for(var i=0;i<pendingHits.length;i++){
+      if(!pendingHits[i].done&&kwMatch(pendingHits[i].msg).length)pHitMsgs.push(pendingHits[i].msg);
+    }
+  }
   for(var i=0;i<pendingHits.length;i++)pendingHits[i].done=true; /* 打开面板 = 命中已阅，角标清零 */
   ballBadge();dkRefresh();
   S.pMom=false;S.pRec=true;pQ='';pSOn=false;S.pFltOpen=false;S.pExpId=null; /* 打开面板永远落「最近使用」：命中推荐排在首位，引擎递来的东西不依赖用户翻筛选；搜索条同落收起态；筛选 popover 同落收起态（上次是点 ✕ 收起面板的话 popover 会留着开）；展开态同落收起（面板重开＝回到能扫的那一屏，不停在上次摊开的那条上） */
@@ -7409,7 +7418,7 @@ function openPanel(){
 }
 function closePanel(){
   panelOpen=false;
-  pHit='';pHitNew=0;                  /* 关面板即收（ADR-0080）：命中推荐不跨开合残留 */
+  pHitMsgs=[];pHitNew=0;              /* 关面板即收（ADR-0080）：命中推荐不跨开合残留，也结束这一批 */
   var p=$('panel');p.style.display='none';
   ballUnliftForPanel();               /* 面板关了：球回原位（用户拖过就不回，见 ballLift） */
   aiBallShow();                       /* 顶掉辅助浮层时它已收了球；这里再同步一次，幂等 */
@@ -7570,12 +7579,13 @@ function pRowsDraw(){
       for(var i=0;i<res.length&&i<8;i++)h+=pRowHtml(res[i]);
     } else h='<div style="text-align:center;padding:20px 0;font-size:12px;color:var(--on-surface-variant)">没有找到「'+esc(pQ)+'」，换个关键词试试</div>';
   } else {
-    var hits=pHit?kwMatch(pHit):[];
+    var hits=pHitMerged();
     if(hits.length){
       /* 整块包一层 #pHitSec：命中来了要「让区段主色脉冲」，脉冲得有一个不散架的盒子
          （只给 .p-sec 描边的话，底下那三张卡不在脉冲范围里，看不出"新的是这一坨"）。 */
       h+='<div class="p-hitsec" id="pHitSec">';
       h+='<div class="p-sec">'+I('zap',12,2.4)+' <span>命中推荐</span>'
+        +(pHitMsgCount()>1?'<span class="p-hitfrom">最近 '+pHitMsgCount()+' 条消息</span>':'')
         +'<button class="p-hitx" title="收起命中推荐" onclick="pHitDismiss()">'+I('x',12,2.4)+'</button></div>';
       for(var a=0;a<hits.length&&a<3;a++)h+=pRowHtml(hits[a]);
       h+='</div>';
@@ -7619,13 +7629,40 @@ function pHitGoto(){
 }
 /* 主动收起：区段右上角那枚 ✕（ADR-0080）。取用任一命中、关面板也会走到同一个结果 */
 function pHitDismiss(){
-  pHit='';pHitNew=0;
+  pHitMsgs=[];pHitNew=0;
   pRowsDraw();
 }
-function pHitNotify(n){
+/* 这一批命中的素材：逐条消息回算，再按 id 去重。
+   遍历从**最后一条消息往前**，故后到消息的命中排在前面；同一条素材被几条消息先后命中只出现一次。
+   ADR-0081：连发消息合并成一批，不按时间窗切，也不一条顶一条。 */
+function pHitMerged(){
+  var seen={},out=[];
+  for(var i=pHitMsgs.length-1;i>=0;i--){
+    var hs=kwMatch(pHitMsgs[i]);
+    for(var j=0;j<hs.length;j++){
+      if(!seen[hs[j].id]){seen[hs[j].id]=1;out.push(hs[j])}
+    }
+  }
+  return out;
+}
+/* 这一批里真正命中过素材的消息条数（区段头「最近 N 条消息」用它；没命中的原话不算） */
+function pHitMsgCount(){
+  var n=0;
+  for(var i=0;i<pHitMsgs.length;i++)if(kwMatch(pHitMsgs[i]).length)n++;
+  return n;
+}
+/* 新命中并进这一批：不按时间窗判要不要合，只判「区段还在不在」——还在就是同一批。
+   连续两条一模一样的原话并集不变，跳过以免无谓重绘 */
+function pHitAdd(msg){
+  if(!msg||pHitMsgs[pHitMsgs.length-1]===msg)return;
+  if(!kwMatch(msg).length)return;
+  pHitMsgs.push(msg);
+  if(pHitMsgs.length>20)pHitMsgs.shift(); /* 极长会话兜底：只留最近 20 条原话 */
+}
+function pHitNotify(){
   var rows=$('pRows');
   var seen=!pQ&&(!rows||rows.scrollTop<40); /* 顶部第一屏＝区段就在眼前（搜索态恒不算看见） */
-  pHitNew=seen?0:n;
+  pHitNew=seen?0:pHitMerged().length; /* 看不见时，提示条报的是**整个区段**的条数（合并后不再只算最新一条） */
   pRowsDraw();                              /* 换成这一批命中的区段；pNavPaint 顺带点/灭头部圆点 */
   if(seen)pHitPulse();else pHitBarSync();
 }
@@ -7968,10 +8005,10 @@ function hpShow(msg,hits){
        · 命中清单开着 → 就地换这一批（不退回横幅：清单本来就是它的展开态）；
        · 都没有 → 照旧弹横幅，点横幅才进清单。 */
   if(panelOpen){
-    pHit=hpMsg;
+    pHitAdd(hpMsg);                    /* 并进当前这一批，不顶掉前面消息的命中（ADR-0081） */
     for(var i=0;i<pendingHits.length;i++)pendingHits[i].done=true; /* 面板就摆在眼前，这一批已被呈现 */
     ballBadge();dkRefresh();
-    pHitNotify(hits.length);
+    pHitNotify();
     return;
   }
   if(hpOpen){
@@ -8327,7 +8364,7 @@ function aiRender(pulseLast){
   if(c){var lr=rounds[rounds.length-1];c._txt=raFull(raAnsFor(lr.msg,lr.v));aiBindCard(c)}
 }
 /* 会话 → 轮次：把 #chatLog 里现有的客户消息逐条补成一轮（打开浮层时用）。
-   与素材面板的命中口径不同：素材面板只认最后一条客户消息（openPanel 里的 pHit），这里读**整个当前会话**
+   与素材面板的命中口径不同：素材面板只看**当前的这一批**（`pHitMsgs`：区段出现以来到达、还没被收掉的那几条消息，ADR-0081），这里读**整个当前会话**
    ——宿主模块本来就是读会话屏幕的，且只有这个口径才对得上眼睛看得见的东西。
    命中集在成轮时算好、存在轮里（不再有一条跨会话累积的全局命中段），会话一重建（resetDemo→wxRebuildChat）自动跟着回零。 */
 function raRebuildRounds(){
