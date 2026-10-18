@@ -7985,9 +7985,10 @@ function pexClose(reg){
    本浮层开＝素材库面板让位；反过来开哪个面板都把本浮层收起（openPanel／openAiPanel 里各一行）。
    **本浮层不是素材库面板的替身**：它没有筛选、没有搜索、没有 chips——那三样是"翻库"的工具，
    而这份清单是引擎递上来的，翻它没有意义（同 ADR-0006 修订三「会话本身即台账」的克制口径）。 */
-var hpOpen=false,hpHits=[],hpMsg='',hpExpId=null; /* hpMsg＝触发这份清单的那条客户原话（用来**回算每行命中的是哪几个词**：
-   命中集只存素材、不存"为什么命中"，而这浮层是扁平一张单、没有分区头可依，行内不点名就没有东西能解释它为什么在这儿。
-   它只在本浮层里用；时间线那条路不读它）；hpExpId＝本浮层同一时刻唯一摊开的那一行（按素材 id，只手风琴本表）。 */
+var hpOpen=false,hpHits=[],hpMsg='',hpMsgs=[],hpExpId=null; /* hpMsg＝**最新**那条客户原话（横幅文案用它）；
+   hpMsgs＝这一批命中清单的触发原话（ADR-0081：与素材库面板区段同一套合并口径——区段还在时新消息追加合并、
+   按素材去重，不按时间窗；清单关了＝这一批结束）。**为什么还要 hpMsg**：横幅只说最新一条，清单才是一阵子；
+   行内「为什么命中」逐个素材回算，不再只认 hpMsg。hpExpId＝本浮层同一时刻唯一摊开的那一行（按素材 id，只手风琴本表）。 */
 /* ---------- 命中两个浮层元素：横幅 #hpTip（先说一声）与浮层 #hpPanel（点开才看） ----------
    未开启聊天辅助时的命中链路＝**悬浮球（折叠态）→ 横幅 #hpTip → 浮层 #hpPanel**，三段是同一件事的三步：
    引擎发现了 → 告诉你有这件事 → 你要看才摊开清单。中途那一跳是用户点名要的（原先是命中即自动展开浮层）。 */
@@ -7997,7 +7998,8 @@ function hpShow(msg,hits){
   if(aiOpen)return;                     /* 辅助开着＝命中归时间线，两条路绝不一起冒出来 */
   if(!hits||!hits.length)return;        /* 没命中＝连横幅都不弹（同 ADR-0044「没命中就整段不出现」） */
   closeBallMenu();
-  hpMsg=msg||'';hpHits=hits;hpExpId=null;
+  hpMsg=msg||'';hpHits=hits;
+  if(!hpOpen)hpExpId=null;              /* 清单开着时新命中是**并进这一批**，不把用户正摊开的那行收掉 */
   /* 三块大浮层互斥，但**命中不是浮层**（ADR-0078）：它是一条通知，不该把用户手上的东西顶掉。
      于是按"用户此刻在哪"分流，而不是先 closePanel() 再说：
        · 素材库面板开着 → 不弹横幅、不关面板，把这一批换成面板顶部的「命中推荐」区段；
@@ -8012,10 +8014,12 @@ function hpShow(msg,hits){
     return;
   }
   if(hpOpen){
+    hpAdd(hpMsg);                        /* 并进当前这一批，不顶掉前面消息的命中（ADR-0081） */
+    hpHits=hpMerged();
     for(var j=0;j<pendingHits.length;j++)pendingHits[j].done=true; /* 清单就摊在眼前＝这一批已呈现 */
     ballBadge();dkRefresh();
     hpRender();
-    var b=$('hpBody');if(b)b.scrollTop=0;
+    var b=$('hpBody');if(b)b.scrollTop=0; /* 新命中排在最前：回到顶才能看见它——这是通知面，允许这一下滚 */
     return;
   }
   hpTipShow();                          /* 这一步只弹横幅；浮层等 hpExpand()（点横幅）才开 */
@@ -8062,13 +8066,40 @@ function hpExpand(){ /* 点横幅＝看清单。**只有这一条路进 #hpPanel
 function hpOpenPanel(){
   if(aiOpen)return;                     /* 兜底：横幅那 3 秒里若辅助被打开，这份清单就不该再顶上来 */
   hpOpen=true;hpExpId=null;
+  /* 点横幅进来＝把面板关着期间**累计的未呈现命中**一次全收进这一批（ADR-0081），
+     不再只看最后一条：客户连发几条各命中不同素材，点开清单应当都在。
+     收进来的这些此后算「已呈现」——之后打开素材库面板不会再把这批冒出来（同 ADR-0080 口径）。 */
+  hpMsgs=[];
+  for(var i=0;i<pendingHits.length;i++){
+    if(!pendingHits[i].done&&kwMatch(pendingHits[i].msg).length)hpMsgs.push(pendingHits[i].msg);
+  }
+  if(!hpMsgs.length&&hpHits.length)hpMsgs=[hpMsg]; /* 兜底：引擎没往 pendingHits 里记时，至少保留当前这条 */
+  hpHits=hpMerged();
+  for(var i=0;i<pendingHits.length;i++)pendingHits[i].done=true; /* 清单就摊在眼前＝这一批已呈现 */
+  ballBadge();dkRefresh();
   var p=$('hpPanel');if(!p)return;
   p.style.display='flex';
   hpRender();
   var ph=$('hpHead');if(ph&&!ph._dragged){panelDrag(ph);ph._dragged=true}
 }
+/* 清单这一批的合并：与面板区段同一条规则（ADR-0081）——逐条原话回算、按素材去重，
+   从最后一条原话往前遍历，故最近消息的命中排前。 */
+function hpMerged(){
+  var seen={},out=[];
+  for(var i=hpMsgs.length-1;i>=0;i--){
+    var hs=kwMatch(hpMsgs[i]);
+    for(var j=0;j<hs.length;j++)if(!seen[hs[j].id]){seen[hs[j].id]=1;out.push(hs[j])}
+  }
+  return out;
+}
+function hpAdd(msg){
+  if(!msg||hpMsgs[hpMsgs.length-1]===msg)return;
+  if(!kwMatch(msg).length)return;
+  hpMsgs.push(msg);
+  if(hpMsgs.length>20)hpMsgs.shift();
+}
 function closeHpPanel(){
-  hpOpen=false;hpExpId=null;
+  hpOpen=false;hpExpId=null;hpMsgs=[]; /* 清单关了＝这一批结束（ADR-0081）；再来的命中从横幅重新起一批 */
   hpTipHide();                          /* 横幅是这份清单的**前一态**：浮层都不在了，横幅更没有留着的理由 */
   var p=$('hpPanel');if(p)p.style.display='none';
   /* 与 closeAiPanel 同一条口径：不动悬浮球。球是素材库的折叠态、存活条件是「微信前台」，
@@ -8098,9 +8129,14 @@ function hpPaint(){
 function hpRow(m){
   var real=anyById(m.id)||m,open=hpExpId===m.id,ft=firstText(real);
   var cut=function(s,n){return esc(s.length>n?s.slice(0,n)+'…':s)};
-  /* 命中词：拿触发的那条原话反算（m.keywords ∩ hpMsg）。两个词同时命中就并列写出来——
-     `价格` 与 `多少钱` 在同一条素材的关键词表里是两回事，只写第一个会把"为什么命中的"说窄。 */
-  var ks=(m.keywords||[]).filter(function(k){return hpMsg.indexOf(k)>=0});
+  /* 命中词：拿**这一批里的各条原话**逐条反算（m.keywords ∩ hpMsgs），跨原话去重。
+     两个词同时命中就并列写出来——`价格` 与 `多少钱` 在同一条素材的关键词表里是两回事，
+     只写第一个会把"为什么命中的"说窄；合并了多条消息后，也不能只认最后一条。 */
+  var msgs=hpMsgs.length?hpMsgs:[hpMsg],ks=[],mi,mj,kk;
+  for(mi=0;mi<msgs.length;mi++){
+    kk=m.keywords||[];
+    for(mj=0;mj<kk.length;mj++)if(msgs[mi].indexOf(kk[mj])>=0&&ks.indexOf(kk[mj])<0)ks.push(kk[mj]);
+  }
   var sub='<span class="rah-kw">命中「'+esc(ks.length?ks.join('」「'):m.keywords[0])+'」</span>'
     +' · <span class="ra-hit-src">'+(m.personal?'个人':'企业')+'</span>'+(m.date?' · '+esc(m.date):'')
     +' · '+(ft?cut(ft,26):'这条素材只有附件、没有文字内容');
