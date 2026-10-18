@@ -3,7 +3,7 @@
      切换 = 顶部分段按钮 / 快捷键 1·2 / URL #app·#real（认不出的 hash —— 含旧 #admin —— 落默认视图）。
      （原自研「管理后台原型」视图②已下线：素材库后台并入线上后台复刻的「素材库」列表页与「素材库 · 新建」页，ADR-0048。）
      销售端 App 以原文内嵌在下方 <script type="text/plain"> 载体块内（运行时还原写入 iframe srcdoc，文档级隔离，样式与 JS 互不可见）。
-     线上后台复刻是线上后台 32 页（16 个模块页 ＋ 10 个新建页 ＋ 6 个详情页）的逐页静态快照，体积约 7.9MB，
+     线上后台复刻是线上后台 35 页（18 个模块页 ＋ 11 个新建页 ＋ 6 个详情页）的逐页静态快照，体积约 8.2MB，
      故**不内嵌**而外挂在同级 _online-admin.js（由 tools/build_online_admin.py 生成），首次切到该视图才按需加载（另一视图不受拖累）。
      其中两页按 ADR-0043 被**逐页覆盖**（微小助看板换新稿、素材库 · 新建加交互）：覆盖块的正文另有一处载体
      （下面的 srcBoard 片段，见 REA_COVER），注入的样式与脚本写在 reaBoardJs/reaMatJs 里。
@@ -82,7 +82,7 @@ body{font-family:var(--f);background:var(--surface);color:var(--on-surface);
 #srcApp,#srcBoard{display:none}
 
 /* 视图③（线上后台复刻）：iframe 撑满整块，不再另挂一条页签栏——
-   线上后台**自带的导航（侧边菜单 ＋ 顶部一级导航）**就是换页入口（32 页全部可达，见下方第 1 件事）。
+   线上后台**自带的导航（侧边菜单 ＋ 顶部一级导航）**就是换页入口（35 页全部可达，见下方第 1 件事）。
    旧版那条 chip 栏已删：它与真实后台的观感不搭，且菜单本来就在。
    注：#viewsReal 靠 .view 的 absolute+inset:0 撑满整块，**别在这里再写 position**
    ——id 选择器优先，会把它打回普通流，高度塌成内容高（这个坑踩过一次）。
@@ -9141,7 +9141,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     app:   '素材库 · 销售端 App 原型（总览）',
     real:  '素材库 · 线上后台复刻（总览）'
   };
-  /* 销售端 App 是内嵌载体，照旧一次性还原；线上后台复刻见下方 reaLoad()（7.9MB，按需加载） */
+  /* 销售端 App 是内嵌载体，照旧一次性还原；线上后台复刻见下方 reaLoad()（8.2MB，按需加载） */
   (function(){
     var f = document.createElement('iframe');
     f.srcdoc = docOf('srcApp');
@@ -9151,7 +9151,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 
   /* ============================================================
      视图③ · 线上后台复刻
-     线上后台 32 页（16 个模块页 ＋ 10 个新建页 ＋ 6 个详情页）的逐页静态快照存在同级 _online-admin.js 里
+     线上后台 35 页（18 个模块页 ＋ 11 个新建页 ＋ 6 个详情页）的逐页静态快照存在同级 _online-admin.js 里
      （window.__REAL_ADMIN__，由 tools/build_online_admin.py 生成），
      结构为 {css: 全站去重样式, shell: 各页共用的 DOM 前缀, pages[].rest: 各页剩余 DOM}。
      本视图做两件事：
@@ -9166,8 +9166,8 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
           不是在原型外壳上另挂一条导航——与下面那条「已删的 chip 栏」不是一回事。
           **入口仍然只有快照自带的这两级导航**——旧版另挂过一条顶部页签栏（那时 29 页），已删：
           线上后台的观感里不该有那条 M3 chip 栏，而导航本来就能走遍全部页。删前逐页验过可达性
-          （出口是「侧栏项 / 新建按钮 / 详情链接」三种，实测跑过 BFS）：16 个模块页靠侧栏，
-          10 个「· 新建」页靠模块页那枚新建按钮，6 个「· 详情」页靠列表行的详情按钮，
+          （出口是「侧栏项 / 新建按钮 / 详情链接」三种，实测跑过 BFS）：18 个模块页靠侧栏，
+          11 个「· 新建」页靠模块页那枚新建按钮，6 个「· 详情」页靠列表行的详情按钮，
           最远 3 跳到，没有一页变成孤儿。新增「客户唤醒 · 详情」同样按这三条入口自动接通
           （反查表由页名推导，不写死映射）。
           「当前在哪一页」也不再需要页签高亮来表示：每页快照**自带**它那一页的侧栏与顶栏选中态，
@@ -10573,15 +10573,32 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   /* 页内导航脚本：接快照自带的**两级导航**（侧边菜单 ＋ 顶部一级导航）→ postMessage 回外壳。
      两段同构，只是读文本的选择器不同（侧栏 .ykMenuText / 顶栏 .ant-pro-base-menu-horizontal-item-text）
      与跳转目标不同（侧栏走 NAMES｜CAT，顶栏走 NAMES｜TOP）。共用同一个 data-rea 属性与同一个
-     点击委托，所以下面只挂一次监听。 */
+     点击委托，所以下面只挂一次监听。
+     子页（· 新建 / · 详情）另接两处「回列表」的路，都是数据推导、不写死页名：
+       · 面包屑第一枚链接（如「新小红书运营 / 新建任务」里的「新小红书运营」）——快照里它是
+         一条指向现网的真 href，不接就会把 iframe 导航出去，原型里没有回程；
+       · 「取消」按钮——模块页那 9 张弹窗页由 REA_FX 接（见那里），这里只管没有弹窗的独立表单页。
+     覆盖页自己接的路（素材库 · 新建 的取消/返回）不抢，按 COVERED 跳过。 */
   function reaNavJs(curName){
     var names = window.__REAL_ADMIN__.pages.map(function(p){ return p.name; });
     return '(function(){'
       + 'var NAMES=' + reaJson(names) + ';'
       + 'var CAT=' + reaJson(reaCatFirst) + ';'
       + 'var TOP=' + reaJson(reaTopFirst) + ';'
+      + 'var COVERED=' + reaJson(Object.keys(REA_COVER)) + ';'
       + 'var CUR=' + reaJson(curName) + ';'
       + 'function page(t){for(var i=0;i<NAMES.length;i++){if(NAMES[i]===t)return NAMES[i];}return null;}'
+      /* 面包屑里的名字可能少了后缀（「视频号发布」→「视频号发布任务」）：精确匹配不到时，
+         按「模块页名以它开头」找唯一的一个。子页名（带「 · 」）不参与，免得跳到自己或兄弟页。 */
+      + 'function modOf(t){'
+        + 'var hit=page(t);if(hit)return hit;'
+        + 'var last=null;'
+        + 'for(var i=0;i<NAMES.length;i++){'
+          + 'if(NAMES[i].indexOf(" · ")>=0)continue;'
+          + 'if(NAMES[i].indexOf(t)===0){if(last)return null;last=NAMES[i];}'
+        + '}'
+        + 'return last;'
+      + '}'
       /* 一段通用接线：sel=要接的 li，txt=取文本的选择器，map=名称 → 页名的表 */
       + 'function wire(sel,txt,map){'
         + 'var lis=document.querySelectorAll(sel);'
@@ -10598,6 +10615,12 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
       + '}'
       + 'wire("li.ykMenuItemLi",".ykMenuText",CAT);'
       + 'wire("li.ant-menu-overflow-item",".ant-pro-base-menu-horizontal-item-text",TOP);'
+      /* 面包屑：链接文字对上某个模块页就接回原型（快照里它是一条指回现网的 href） */
+      + 'var CR=document.querySelectorAll("a.ant-breadcrumb-link"),ci;'
+      + 'for(ci=0;ci<CR.length;ci++){'
+        + 'var ct=(CR[ci].textContent||"").trim(),cto=ct?modOf(ct):null;'
+        + 'if(cto&&cto!==CUR)CR[ci].setAttribute("data-rea",cto);'
+      + '}'
       + 'document.addEventListener("click",function(e){'
         + 'var n=e.target;'
         + 'while(n&&n!==document.body){'
@@ -10607,6 +10630,18 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
             + 'return;'
           + '}'
           + 'n=n.parentNode;'
+        + '}'
+        /* 独立表单页的「取消」→ 回它模块页。弹窗页的取消归 REA_FX；覆盖页自己接的也不抢。 */
+        + 'if(CUR.indexOf(" · ")>0&&COVERED.indexOf(CUR)<0){'
+          + 'var b=e.target;'
+          + 'while(b&&b!==document.body&&!(b.classList&&b.classList.contains("ant-btn")))b=b.parentNode;'
+          + 'if(b&&b.classList&&b.classList.contains("ant-btn")'
+             + '&&(b.textContent||"").replace(/\\s+/g,"")==="取消"'
+             + '&&!b.closest(".ant-modal")){'
+            + 'e.preventDefault();'
+            + 'parent.postMessage({reaPage:CUR.split(" · ")[0]},"*");'
+            + 'return;'
+          + '}'
         + '}'
       + '},true);'
     + '})();';
