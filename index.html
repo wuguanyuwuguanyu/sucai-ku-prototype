@@ -2930,7 +2930,8 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
         </section>
 
         <!-- 宿主App 全局设置（二级页）· 逻辑照参考原型 APP-AI-005
-             AI智能回复／工作时间／闲置时长／多开托管＋保存。主页面那张托管状态卡上的条件条，改的就是这一屏里的值。
+             AI智能回复／工作时间／闲置时长／多开托管／托管范围＋保存（多开托管在托管范围上方，2026-10-19）。
+             主页面那张托管状态卡上的条件条，改的就是这一屏里的值。
              **首卡那行「AI智能回复」是 2026-10-15 加的**（ADR-0062）：它原先长在托管清单里当一条
              可挂动作，现在读作托管级的一项设置，入口就挂在本屏——谁都由这一位干、在哪几个平台干、
              多久看一次。右侧写值摘要（「由 ×× 负责」）而不是只给个 ›：不把当前那位说出来，
@@ -5095,6 +5096,18 @@ REND['host-ai-set']=function(){
     +'<div class="hva-segpad"><div class="tk-seg">';
   for(i=0;i<HVA_IDLES.length;i++)h+='<button class="'+(HVA_IDLE===HVA_IDLES[i]?'on':'')+'" onclick="hvaIdle('+HVA_IDLES[i]+')">'+HVA_IDLES[i]+' 分钟</button>';
   h+='</div></div></div>';
+  /* 多开托管：放在**托管范围上方**（2026-10-19 产品点名；上一版按「使用频率最低」垫在整屏最底）。
+     照线上那屏的两行——标题（带必设星号）＋「设置 ⚙」，下面一句话说明；第三行的已选摘要是本原型补的：
+     开关没了，这一格就成了「托管跑在哪几个账号上」的唯一入口，不把已选的说出来，员工回来看这一屏读不到自己选过什么。
+     **为什么提到范围之前**：先答「托管跑在哪几个账号上」，再答「这些号上允许接哪几类活」——
+     范围是多开的前提，顺序反过来就成了先划范围、再发现托管没开在哪个号上。
+     位置挪了不代表它是可选项：星号与「设置」仍在，员工没选过就仍走它自己的兜底摘要。 */
+  h+='<div class="hva-form"><div class="hva-cell hva-cellcol">'
+    +'<div class="hva-mthd"><b>多开托管<span class="req">*</span></b>'
+      +'<button class="hva-setlink" onclick="hvaAcctSheet(true)">设置'+I('gear',15,2.2)+'</button></div>'
+    +'<div class="hva-mtsub">开启后数智员工将自动对多开App执行托管任务</div>'
+    +'<div class="hva-mtval'+(pick.length?'':' ph')+'">'+hvaAcctSummary(pick)+'</div>'
+  +'</div></div>';
   /* 托管范围：后台派下来的活里，哪几类是**这台手机愿意替你做**的。默认 9 类全在（不动它＝现在的行为）——
      不是 12 类：另三类（AI朋友圈互动／AI客户画像分析／自动打招呼）是**员工自己在工具页就能创建的能力**，
      后台不派它们，范围里也就没有它们（口径见 HVA_TYPES 上 own 那段）。
@@ -5116,20 +5129,6 @@ REND['host-ai-set']=function(){
     +'</div>';
   }
   h+='<button class="hva-scope-add" onclick="hvaScopeSheet(true)">'+I('plus',15,2.4)+'管理托管范围</button></div>';
-  /* 多开托管：本屏**最底部**一张卡（2026-10-19 产品点名；2026-10-16 开发评审上技术负责人与开发 03 也是同一条判断）。
-     照线上那屏的两行——标题（带必设星号）＋「设置 ⚙」，下面一句话说明；第三行的已选摘要是本原型补的：
-     开关没了，这一格就成了「托管跑在哪几个号上」的唯一入口，不把已选的说出来，员工回来看这一屏读不到自己选过什么。
-     **为什么垫底**：它答的是「托管跑在哪几个账号上」，是**本机的一份配置**（每个员工登的微信都不一样），
-     不跟数智员工走，也不是开机条件——线上它就在最底下、且是必填项，本屏照线上保留星号。
-     原先它和「工作时间」同在一张卡里（理由「都是托管在什么条件下跑」），现按使用频率拆开：
-     这一格的频率远低于其余四格，评审上技术负责人原话是「我们一般人都不会用这个」。
-     位置挪了不代表它是可选项：星号与「设置」仍在，员工没选过就仍走它自己的兜底摘要。 */
-  h+='<div class="hva-form"><div class="hva-cell hva-cellcol">'
-    +'<div class="hva-mthd"><b>多开托管<span class="req">*</span></b>'
-      +'<button class="hva-setlink" onclick="hvaAcctSheet(true)">设置'+I('gear',15,2.2)+'</button></div>'
-    +'<div class="hva-mtsub">开启后数智员工将自动对多开App执行托管任务</div>'
-    +'<div class="hva-mtval'+(pick.length?'':' ph')+'">'+hvaAcctSummary(pick)+'</div>'
-  +'</div></div>';
   h+='<div class="hva-foot"><button class="btn btn-primary btn-block" onclick="hvaSaveSet()">保存设置</button></div>';
   $('hvaSetBody').innerHTML=h;
 };
