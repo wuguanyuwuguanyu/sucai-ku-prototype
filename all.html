@@ -10233,6 +10233,26 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
    ].join('\n');
   }
 
+  /* 「新小红书运营」列表页的覆盖脚本：**同样只改文案**——筛选标签、输入框提示、表头列名。
+     表头要连 AntD 的测宽行（ant-table-measure-row 里那个隐藏 th）一起换，否则再测列宽时
+     读到的还是旧文案。替换走文本节点遍历、不重写 th 的 innerHTML：测宽行里套着一层
+     .ant-table-measure-cell-content，整段换掉会把那层结构一起抹了。 */
+  function reaXhsListJs(){
+   return [
+    '(function(){',
+    'var OLD=' + reaJson('拓客行业') + ',NEW=' + reaJson('搜索关键词') + ';',
+    'var w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null,false),n;',
+    'while((n=w.nextNode())){',
+    '  if((n.nodeValue||"").trim()===OLD)n.nodeValue=n.nodeValue.replace(OLD,NEW);',
+    '}',
+    'var lb=document.querySelector(\'label[for="industry"]\');',
+    'if(lb)lb.title=NEW;',
+    'var ip=document.getElementById("industry");',
+    'if(ip)ip.placeholder="请输入" + NEW;',
+    '})();'
+   ].join('\n');
+  }
+
   /* 「新小红书运营 · 新建」的覆盖脚本：**只改文案，不动结构、不加控件**（登记见 docs/09 §2.3）。
      两处现场坑：
      ① 「拓客行业」「发送消息」两枚标签里嵌着 question-circle 图标，整体重写 textContent 会把图标抹掉，
@@ -10258,6 +10278,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     }) + ';',
     'var PH0=' + reaJson('请输入拓客行业，用途是搜索关键词、多个关键词之间用回行分隔，且每个关键词字段长度最长为30个文字') + ';',
     'var PH1=' + reaJson('请输入搜索关键词，用于搜索笔记；多个关键词之间用换行分隔，每个关键词最长 30 个字符') + ';',
+    'var DEDUP=' + reaJson('按小红书号去重，永久生效；仅在本任务内去重，匹配上即算已执行。') + ';',
     'var ls=document.querySelectorAll("span[class*=\\"_must_\\"]"),i,c;',
     'for(i=0;i<ls.length;i++){',
     '  var el=ls[i],t=(el.textContent||"").trim(),to=LABELS[t];',
@@ -10266,6 +10287,23 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     '  while(c&&!(c.nodeType===3&&(c.nodeValue||"").trim()===t))c=c.nextSibling;',
     '  if(c)c.nodeValue=c.nodeValue.replace(t,to);',
     '  else el.textContent=to;',
+    '}',
+    '/* 过滤已执行客户原来没有说明行，补一句口径（照 跳过笔记作者 那条说明的版式：',
+    '   灰字 p 长在控件盒里；下一行跟着抬 -10px，与其它带说明的行保持同一节奏）。 */',
+    'var rows=document.querySelectorAll("div[class*=\\"_form_input_\\"]"),q;',
+    'for(q=0;q<rows.length;q++){',
+    '  var sl=rows[q].querySelector("span[class*=\\"_must_\\"]");',
+    '  if(!sl||(sl.textContent||"").trim()!=="过滤已执行客户")continue;',
+    '  var box=rows[q].querySelector("div[class*=\\"_upload_box\\"]");',
+    '  if(box&&!box.querySelector("p")){',
+    '    var p=document.createElement("p");',
+    '    p.style.cssText="font-size: 14px; color: rgb(170, 170, 170);";',
+    '    p.textContent=DEDUP;',
+    '    box.appendChild(p);',
+    '  }',
+    '  var nxt=rows[q].nextElementSibling;',
+    '  if(nxt)nxt.style.marginTop="-10px";',
+    '  break;',
     '}',
     'var ns=document.querySelectorAll("p,div"),j;',
     'for(j=0;j<ns.length;j++){',
@@ -10291,15 +10329,17 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
        html  该页正文段的载体块 id（省略＝正文仍用快照那一段，只补交互）
        css   该页专用样式（只在这页注入；未覆盖页拿不到，这是「逐页覆盖」的底线）
        js    该页自己的注入脚本（在 REA_FX **之后**跑，见 reaDoc）
-     三张覆盖页，两种形态：
+     四张覆盖页，两种形态：
        微小助看板          换稿——正文整段换成 srcBoard，配 REA_BOARD_CSS ＋ reaBoardJs
        素材库 · 新建       补交互——**没有 html**，正文就是快照那一段，只多样式与脚本
+       新小红书运营         改文案——**只有脚本**：筛选标签、输入框提示、表头列名
        新小红书运营 · 新建  改文案——**没有 html 也没有 css**，正文是快照，脚本只做标签/提示语替换
      没有 html 的页，reaSplice 原样放过；这不是省事，是刻意：正文抄一份进来就成了会过期的副本，
      重抓源目录后静默与线上脱钩，而这一页的正文本来就不该变。 */
   var REA_COVER = {
     '微小助看板':    { html: 'srcBoard', css: REA_BOARD_CSS, js: reaBoardJs },
     '素材库 · 新建': { css: REA_MAT_CSS, js: reaMatJs },
+    '新小红书运营': { js: reaXhsListJs },
     '新小红书运营 · 新建': { js: reaXhsJs }
   };
 
