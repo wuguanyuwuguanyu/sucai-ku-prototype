@@ -10253,12 +10253,15 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
    ].join('\n');
   }
 
-  /* 「新小红书运营 · 新建」的覆盖脚本：**只改文案，不动结构、不加控件**（登记见 docs/09 §2.3）。
-     两处现场坑：
+  /* 「新小红书运营 · 新建」的覆盖脚本：文案替换 ＋ 评论承接联动私信的配置行（登记见 docs/09 §2.3）。
+     文案替换的两处现场坑：
      ① 「拓客行业」「发送消息」两枚标签里嵌着 question-circle 图标，整体重写 textContent 会把图标抹掉，
         所以只换它前面那个文本节点；
      ② 覆盖页拿不到外壳的通用「取消」回程（reaNavJs 按 COVERED 跳过，免得抢页自己的回程），
-        这一页没有自己的脚本就点不动，这里补上。 */
+        这一页没有自己的脚本就点不动，这里补上。
+     新加的配置行（承接条件、条件字段、回复后同时私信）**一律从快照现有行 clone**——radio 行、
+     带说明的开关行、话术节点的 textarea——连 css-xxxxxx 这枚 hash 类一起继承，不手写 AntD 结构；
+     快照重抓后 hash 若变，clone 出来的行跟着变，不会失配。 */
   function reaXhsJs(){
    return [
     '(function(){',
@@ -10321,6 +10324,108 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     '    ev.preventDefault();parent.postMessage({reaPage:MOD},"*");',
     '  });',
     '}',
+    '/* 评论承接联动私信（2026-10-18）：文案替换之后再补配置行。',
+    '   承接条件与两个条件字段插在「评论承接」之后；「回复后同时私信」插在评论回复内容之后。',
+    '   全部 clone 快照现有行，样式靠继承，不新造 AntD 结构。 */',
+    'var LR=document.querySelectorAll("div[class*=\\"_form_input_\\"]"),ii;',
+    'var rComment=null,rPrivate=null,rFixed=null,rMode=null;',
+    'for(ii=0;ii<LR.length;ii++){',
+    '  var lb=LR[ii].querySelector("span[class*=\\"_must_\\"]");',
+    '  if(!lb)continue;',
+    '  var lt=(lb.textContent||"").trim();',
+    '  if(lt==="评论承接")rComment=LR[ii];',
+    '  else if(lt==="私信承接")rPrivate=LR[ii];',
+    '  else if(lt==="固定话术"&&LR[ii].querySelector("div[class*=\\"_upload_box\\"]"))rFixed=LR[ii];',
+    '  else if(lt==="评论回复方式")rMode=LR[ii];',
+    '}',
+    'if(rComment&&rPrivate&&rFixed&&rMode){',
+    '  rComment.querySelector("span[class*=\\"_must_\\"]").textContent="① 评论承接";',
+    '  rPrivate.querySelector("span[class*=\\"_must_\\"]").textContent="② 私信承接";',
+    '  /* 承接条件：克隆「评论回复方式」行，三个按钮正好装三种模式 */',
+    '  var mr=rMode.cloneNode(true);',
+    '  mr.querySelector("span[class*=\\"_must_\\"]").textContent="承接条件";',
+    '  var mls=mr.querySelectorAll(".ant-radio-button-label");',
+    '  var mvs=["全部回复","命中关键词","AI判断"],mids=["all","keyword","ai"];',
+    '  for(ii=0;ii<mls.length&&ii<3;ii++)mls[ii].textContent=mvs[ii];',
+    '  var mins=mr.querySelectorAll("input[type=radio]");',
+    '  for(ii=0;ii<mins.length&&ii<3;ii++){mins[ii].name="rea-engage-mode";mins[ii].value=mids[ii];mins[ii].checked=(ii===0);}',
+    '  var mws=mr.querySelectorAll(".ant-radio-button-wrapper");',
+    '  for(ii=0;ii<mws.length;ii++)mws[ii].classList.toggle("ant-radio-button-wrapper-checked",ii===0);',
+    '  var mbs=mr.querySelectorAll(".ant-radio-button");',
+    '  for(ii=0;ii<mbs.length;ii++)mbs[ii].classList.toggle("ant-radio-button-checked",ii===0);',
+    '  rComment.insertAdjacentElement("afterend",mr);',
+    '  /* 条件字段：克隆评论承接行（white1 标签、无必填星号），清空控件盒，放快照的话术节点 textarea */',
+    '  var taTpl=document.querySelector("textarea[rows=\\"2\\"].ant-input");',
+    '  var mkRow=function(label,ph){',
+    '    var row=rComment.cloneNode(true);',
+    '    row.querySelector("span[class*=\\"_must_\\"]").textContent=label;',
+    '    var box=row.querySelector("div[class*=\\"_upload_box\\"]");',
+    '    box.innerHTML="";',
+    '    if(taTpl){',
+    '      var ta=taTpl.cloneNode(false);',
+    '      ta.value="";ta.placeholder=ph;ta.maxLength=200;ta.rows=2;ta.style.width="400px";',
+    '      box.appendChild(ta);',
+    '    }',
+    '    return row;',
+    '  };',
+    '  var kwRow=mkRow("关键词","多个关键词用换行分隔，例如：多少钱、发一份、怎么联系");',
+    '  var aiRow=mkRow("AI判断标准","描述什么算有效线索，例如：询问价格、要求发资料、索要联系方式");',
+    '  mr.insertAdjacentElement("afterend",kwRow);',
+    '  kwRow.insertAdjacentElement("afterend",aiRow);',
+    '  kwRow.style.display="none";aiRow.style.display="none";',
+    '  var syncMode=function(){',
+    '    var sel=mr.querySelector("input[type=radio]:checked");',
+    '    var v=sel?sel.value:"all";',
+    '    kwRow.style.display=(v==="keyword")?"":"none";',
+    '    aiRow.style.display=(v==="ai")?"":"none";',
+    '  };',
+    '  var syncRadio=function(){',
+    '    var ins=mr.querySelectorAll("input[type=radio]"),z,w,b;',
+    '    for(z=0;z<ins.length;z++){',
+    '      w=ins[z].closest(".ant-radio-button-wrapper");b=ins[z].closest(".ant-radio-button");',
+    '      if(w)w.classList.toggle("ant-radio-button-wrapper-checked",ins[z].checked);',
+    '      if(b)b.classList.toggle("ant-radio-button-checked",ins[z].checked);',
+    '    }',
+    '    syncMode();',
+    '  };',
+    '  mr.addEventListener("change",syncRadio);',
+    '  /* 点 label 时（无头环境里）不派发 change：补一个 click 兜底，延到激活行为之后再读状态 */',
+    '  mr.addEventListener("click",function(){setTimeout(syncRadio,0);});',
+    '  syncMode();',
+    '  /* 回复后同时私信：克隆评论承接行，换标签、换说明；开关可点 */',
+    '  var lkRow=rComment.cloneNode(true);',
+    '  lkRow.querySelector("span[class*=\\"_must_\\"]").textContent="回复后同时私信";',
+    '  var lkBox=lkRow.querySelector("div[class*=\\"_upload_box\\"]");',
+    '  var oldHint=lkBox.querySelector("span[style*=\\"margin-left\\"]");',
+    '  if(oldHint)lkBox.removeChild(oldHint);',
+    '  var lkHint=document.createElement("span");',
+    '  lkHint.style.cssText="margin-left: 8px; color: rgb(153, 153, 153);";',
+    '  lkHint.textContent="话术取下方「② 私信承接」；私信发送成功后才回复评论";',
+    '  lkBox.appendChild(lkHint);',
+    '  var lkSw=lkBox.querySelector("button[role=switch]");',
+    '  rFixed.insertAdjacentElement("afterend",lkRow);',
+    '  /* 私信承接只补一句触发入口，不复制话术 */',
+    '  var prBox=rPrivate.querySelector("div[class*=\\"_upload_box\\"]");',
+    '  var prHint=document.createElement("span");',
+    '  prHint.style.cssText="margin-left: 8px; color: rgb(153, 153, 153);";',
+    '  prHint.textContent="触发入口：客户主动私信 · ① 评论承接联动";',
+    '  prBox.appendChild(prHint);',
+    '  /* 联动开关依赖私信承接：下边关了，上边不许开（置灰并回落到关） */',
+    '  var prSw=prBox.querySelector("button[role=switch]");',
+    '  var syncLink=function(){',
+    '    if(!lkSw)return;',
+    '    var ok=!prSw||prSw.getAttribute("aria-checked")==="true";',
+    '    lkSw.disabled=!ok;',
+    '    lkSw.classList.toggle("ant-switch-disabled",!ok);',
+    '    if(!ok&&lkSw.getAttribute("aria-checked")==="true"){',
+    '      lkSw.setAttribute("aria-checked","false");',
+    '      lkSw.classList.remove("ant-switch-checked");',
+    '    }',
+    '  };',
+    '  /* 开关的翻转归 REA_FX（它已接管 .ant-switch）：这里只等它翻完再读状态 */',
+    '  prBox.addEventListener("click",function(){setTimeout(syncLink,0);});',
+    '  syncLink();',
+    '}',
     '})();'
    ].join('\n');
   }
@@ -10333,7 +10438,8 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
        微小助看板          换稿——正文整段换成 srcBoard，配 REA_BOARD_CSS ＋ reaBoardJs
        素材库 · 新建       补交互——**没有 html**，正文就是快照那一段，只多样式与脚本
        新小红书运营         改文案——**只有脚本**：筛选标签、输入框提示、表头列名
-       新小红书运营 · 新建  改文案——**没有 html 也没有 css**，正文是快照，脚本只做标签/提示语替换
+       新小红书运营 · 新建  文案 ＋ 补配置行——**没有 html 也没有 css**，正文仍是快照；脚本做标签/提示语替换，
+                              并在「评论承接」里注入联动私信的配置行（clone 快照行，见函数注释）
      没有 html 的页，reaSplice 原样放过；这不是省事，是刻意：正文抄一份进来就成了会过期的副本，
      重抓源目录后静默与线上脱钩，而这一页的正文本来就不该变。 */
   var REA_COVER = {
