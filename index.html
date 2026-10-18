@@ -5047,17 +5047,8 @@ REND['host-ai-set']=function(){
       +'<span class="vl">由 '+esc(HVA_HOST_AGENT)+' 负责</span><span class="cv">'+I('chev',16,2.4)+'</span></button>'
   +'</div>';
   h+='<div class="hva-form">'
-    +'<button class="hva-cell" onclick="hvaToast(\'工作时间\')"><span class="lb">工作时间</span><span class="vl">'+HVA_WORK+'</span><span class="cv">'+I('chev',16,2.4)+'</span></button>';
-  /* 多开托管：照线上那屏的两行——标题（带必设星号）＋「设置 ⚙」，下面一句话说明。
-     第三行的已选摘要是本原型补的：开关没了，这一格就成了「托管跑在哪几个号上」的唯一入口，
-     不把已选的说出来，员工回来看这一屏读不到自己选过什么。
-     和「工作时间」同在一张卡里：两行说的都是「托管在什么条件下跑」，拆成两张卡只是多一道边。 */
-  h+='<div class="hva-cell hva-cellcol">'
-    +'<div class="hva-mthd"><b>多开托管<span class="req">*</span></b>'
-      +'<button class="hva-setlink" onclick="hvaAcctSheet(true)">设置'+I('gear',15,2.2)+'</button></div>'
-    +'<div class="hva-mtsub">开启后数智员工将自动对多开App执行托管任务</div>'
-    +'<div class="hva-mtval'+(pick.length?'':' ph')+'">'+hvaAcctSummary(pick)+'</div>'
-  +'</div></div>';
+    +'<button class="hva-cell" onclick="hvaToast(\'工作时间\')"><span class="lb">工作时间</span><span class="vl">'+HVA_WORK+'</span><span class="cv">'+I('chev',16,2.4)+'</span></button>'
+  +'</div>';
   h+='<div class="hva-form"><div class="hva-form-h">闲置时长</div>'
     +'<div class="hva-txt">手机闲置多少分钟后，托管开始自动执行</div>'
     +'<div class="hva-segpad"><div class="tk-seg">';
@@ -5084,6 +5075,20 @@ REND['host-ai-set']=function(){
     +'</div>';
   }
   h+='<button class="hva-scope-add" onclick="hvaScopeSheet(true)">'+I('plus',15,2.4)+'管理托管范围</button></div>';
+  /* 多开托管：本屏**最底部**一张卡（2026-10-19 产品点名；2026-10-16 开发评审上技术负责人与开发 03 也是同一条判断）。
+     照线上那屏的两行——标题（带必设星号）＋「设置 ⚙」，下面一句话说明；第三行的已选摘要是本原型补的：
+     开关没了，这一格就成了「托管跑在哪几个号上」的唯一入口，不把已选的说出来，员工回来看这一屏读不到自己选过什么。
+     **为什么垫底**：它答的是「托管跑在哪几个账号上」，是**本机的一份配置**（每个员工登的微信都不一样），
+     不跟数智员工走，也不是开机条件——线上它就在最底下、且是必填项，本屏照线上保留星号。
+     原先它和「工作时间」同在一张卡里（理由「都是托管在什么条件下跑」），现按使用频率拆开：
+     这一格的频率远低于其余四格，评审上技术负责人原话是「我们一般人都不会用这个」。
+     位置挪了不代表它是可选项：星号与「设置」仍在，员工没选过就仍走它自己的兜底摘要。 */
+  h+='<div class="hva-form"><div class="hva-cell hva-cellcol">'
+    +'<div class="hva-mthd"><b>多开托管<span class="req">*</span></b>'
+      +'<button class="hva-setlink" onclick="hvaAcctSheet(true)">设置'+I('gear',15,2.2)+'</button></div>'
+    +'<div class="hva-mtsub">开启后数智员工将自动对多开App执行托管任务</div>'
+    +'<div class="hva-mtval'+(pick.length?'':' ph')+'">'+hvaAcctSummary(pick)+'</div>'
+  +'</div></div>';
   h+='<div class="hva-foot"><button class="btn btn-primary btn-block" onclick="hvaSaveSet()">保存设置</button></div>';
   $('hvaSetBody').innerHTML=h;
 };
