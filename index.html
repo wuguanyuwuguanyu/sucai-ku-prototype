@@ -9235,6 +9235,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   var REA_BOARD_PAGE = '微小助看板';      // 只服务 reaLanding()（视图③的落地页），与覆盖是两件事
   var REA_MAT_PAGE = '素材库 · 新建';     // 素材库的「· 新建」子页（独立表单路由，见 docs/09 §2.2）
   var REA_MAT_LIST = REA_MAT_PAGE.split(' · ')[0];   // 它保存/取消后回落的那张列表页名
+  var REA_XHS_PAGE = '新小红书运营';     // 小红书营销的模块页——「新小红书运营 · 新建」的「取消」回落到这里
 
   /* 覆盖块的正文只取一次：那边是一整块静态 HTML，每换一次页都重取没意义 */
   var REA_HTML_CACHE = {};
@@ -10232,18 +10233,74 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
    ].join('\n');
   }
 
+  /* 「新小红书运营 · 新建」的覆盖脚本：**只改文案，不动结构、不加控件**（登记见 docs/09 §2.3）。
+     两处现场坑：
+     ① 「拓客行业」「发送消息」两枚标签里嵌着 question-circle 图标，整体重写 textContent 会把图标抹掉，
+        所以只换它前面那个文本节点；
+     ② 覆盖页拿不到外壳的通用「取消」回程（reaNavJs 按 COVERED 跳过，免得抢页自己的回程），
+        这一页没有自己的脚本就点不动，这里补上。 */
+  function reaXhsJs(){
+   return [
+    '(function(){',
+    'var MOD=' + reaJson(REA_XHS_PAGE) + ';',
+    'var LABELS=' + reaJson({
+      '拓客行业策略': '关键词类型',
+      '方式': '录入方式',
+      '拓客行业': '搜索关键词',
+      '发布时间': '笔记发布时间',
+      '发布评论时间': '评论发布时间',
+      '发送消息': '首次触达方式'
+    }) + ';',
+    'var HELPS=' + reaJson({
+      '此处指的是视频作者发布时间': '此处指的是笔记作者发布时间',
+      '此处指的是视频下的评论用户的评论时间': '此处指的是笔记下的评论用户的评论时间',
+      '每刷一个视频，任务执行': '每刷一个笔记，任务执行'
+    }) + ';',
+    'var PH0=' + reaJson('请输入拓客行业，用途是搜索关键词、多个关键词之间用回行分隔，且每个关键词字段长度最长为30个文字') + ';',
+    'var PH1=' + reaJson('请输入搜索关键词，用于搜索笔记；多个关键词之间用换行分隔，每个关键词最长 30 个字符') + ';',
+    'var ls=document.querySelectorAll("span[class*=\\"_must_\\"]"),i,c;',
+    'for(i=0;i<ls.length;i++){',
+    '  var el=ls[i],t=(el.textContent||"").trim(),to=LABELS[t];',
+    '  if(!to)continue;',
+    '  c=el.firstChild;',
+    '  while(c&&!(c.nodeType===3&&(c.nodeValue||"").trim()===t))c=c.nextSibling;',
+    '  if(c)c.nodeValue=c.nodeValue.replace(t,to);',
+    '  else el.textContent=to;',
+    '}',
+    'var ns=document.querySelectorAll("p,div"),j;',
+    'for(j=0;j<ns.length;j++){',
+    '  var e=ns[j];',
+    '  if(e.children.length)continue;',
+    '  var h=(e.textContent||"").trim(),h2=HELPS[h];',
+    '  if(h2)e.textContent=h2;',
+    '}',
+    'var ta=document.querySelectorAll("textarea"),k;',
+    'for(k=0;k<ta.length;k++)if(ta[k].placeholder===PH0)ta[k].placeholder=PH1;',
+    'var bs=document.querySelectorAll("button.ant-btn"),n;',
+    'for(n=0;n<bs.length;n++){',
+    '  if((bs[n].textContent||"").replace(/\\s+/g,"")!=="取消")continue;',
+    '  bs[n].addEventListener("click",function(ev){',
+    '    ev.preventDefault();parent.postMessage({reaPage:MOD},"*");',
+    '  });',
+    '}',
+    '})();'
+   ].join('\n');
+  }
+
   /* 覆盖登记表（ADR-0043）：页名 → 该页的覆盖块。与 docs/09 §2.3 那张表一一对应，加页两处一起加。
        html  该页正文段的载体块 id（省略＝正文仍用快照那一段，只补交互）
        css   该页专用样式（只在这页注入；未覆盖页拿不到，这是「逐页覆盖」的底线）
        js    该页自己的注入脚本（在 REA_FX **之后**跑，见 reaDoc）
-     两张覆盖页，两种形态：
-       微小助看板     换稿——正文整段换成 srcBoard，配 REA_BOARD_CSS ＋ reaBoardJs
-       素材库 · 新建  补交互——**没有 html**，正文就是快照那一段，只多样式与脚本
+     三张覆盖页，两种形态：
+       微小助看板          换稿——正文整段换成 srcBoard，配 REA_BOARD_CSS ＋ reaBoardJs
+       素材库 · 新建       补交互——**没有 html**，正文就是快照那一段，只多样式与脚本
+       新小红书运营 · 新建  改文案——**没有 html 也没有 css**，正文是快照，脚本只做标签/提示语替换
      没有 html 的页，reaSplice 原样放过；这不是省事，是刻意：正文抄一份进来就成了会过期的副本，
      重抓源目录后静默与线上脱钩，而这一页的正文本来就不该变。 */
   var REA_COVER = {
     '微小助看板':    { html: 'srcBoard', css: REA_BOARD_CSS, js: reaBoardJs },
-    '素材库 · 新建': { css: REA_MAT_CSS, js: reaMatJs }
+    '素材库 · 新建': { css: REA_MAT_CSS, js: reaMatJs },
+    '新小红书运营 · 新建': { js: reaXhsJs }
   };
 
   /* 把被覆盖页的正文区（contentStart..contentEnd，构建脚本给出的那道缝）换成它登记表里那个载体的内容。
