@@ -2307,7 +2307,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
    既不是「未选中的筛选 chip」（描边）、也不是「选中的」（填充＋check），三种形态互不同形，不会被当成一个可选项 */
 .pfp-acts{display:flex;flex-wrap:wrap;gap:2px;margin-top:8px;padding-top:6px;border-top:1px solid var(--outline-variant)}
 .pchip.act{color:var(--primary);border-color:transparent;padding:0 8px 0 4px}
-.pexp .pexp-acts{display:flex;gap:8px;flex-wrap:wrap}
+/* .pexp-acts 已随 ADR-0079 删除：展开区不再摆底部动作钮，取用全走手势（单击／双击／长按） */
 /* 展开区＝三档取用手势的操作面（单击／双击／长按，判据与口径见 pexTake 那段注释）。
    这一条同时管 .ra-hit-exp（两处浮层的展开行）——它们与 .pexp 是**同一层手势面**，样式也共用一份，
    免得将来只改了面板那半边、浮层那半边悄悄退回"长按弹选择手柄"。
@@ -7791,25 +7791,16 @@ function pRowHtml(m){
     +'</div>'
     +(open?pExpHtml(m):'');
 }
-/* 行原地摊开的展开区：统一微信发送模拟（文本段绿气泡＋附件按微信消息形态逐条直出）＋就地取用动作；
-   朋友圈页（S.pMom）展开=朋友圈排版＋复制文案/一键发圈（对话动作收进默认页，切页即回）；
-   一键发圈按 canMoments 给禁用态（opacity .38 保留点击 → Snackbar 说原因，不吞动作） */
+/* 行原地摊开的展开区：统一微信发送模拟（文本段绿气泡＋附件按微信消息形态逐条直出）；
+   朋友圈页（S.pMom）展开=朋友圈排版。
+   底部动作钮已删（ADR-0079）：取用全走这块面上的手势，不再占一行高。
+   朋友圈视图不挂手势，那边照旧用卡上行尾的两枚 icon（保存／一键发圈） */
 function pExpHtml(m){
-  var mom=S.pMom&&!pQ,mm=canMoments(m);
-  var noTxt=!hasText(m); /* 存量无文本素材：复制类动作 dim ＋解释、不藏入口（与「一键发圈」不可发时同一机制） */
-  var cpAttr=noTxt?' dim':'',cpTip=noTxt?' title="这条素材没有文字内容，附件可直接发送"':'';
-  var post=(mom?'<button class="rp-btn ghost'+cpAttr+'"'+cpTip+' onclick="quickCopy(\''+m.id+'\');pExpClose()">'+I('copy',11,2.2)+' 复制文案</button>'
-    +(mm?'<button class="rp-btn amber" onclick="oneKeyPost(\''+m.id+'\');pExpClose()">'+I('zap',11,2.2)+' 一键发圈</button>'
-      :'<button class="rp-btn amber dim" title="'+esc(momReason(m))+'" onclick="momBlocked(\''+m.id+'\')">'+I('zap',11,2.2)+' 一键发圈</button>')
-    :'<button class="rp-btn ghost'+cpAttr+'"'+cpTip+' onclick="quickCopy(\''+m.id+'\');pExpClose()">'+I('copy',11,2.2)+' 复制填充</button>'
-    +'<button class="rp-btn pri" onclick="oneKeySend(\''+m.id+'\');pExpClose()">'+I('send',11,2.2)+' 一键发送</button>'
-    +(mm?'<button class="rp-btn amber" onclick="oneKeyPost(\''+m.id+'\');pExpClose()">'+I('zap',11,2.2)+' 一键发圈</button>'
-      :'<button class="rp-btn amber dim" title="'+esc(momReason(m))+'" onclick="momBlocked(\''+m.id+'\')">'+I('zap',11,2.2)+' 一键发圈</button>'));
-  /* data-take/data-mat＝这块展开区接三档取用手势（单击／双击／长按，见 pexTake）。
+  var mom=S.pMom&&!pQ;
+  /* data-take/data-mat＝这块展开区接三档取用手势（单击＝复制到剪贴板／双击＝发送／长按＝保存附件＋复制，见 pexTake）。
      **朋友圈视图那块不挂**：它是"看朋友圈排版"的预览面，且朋友圈没有会话输入框可填——
-     那边的操作落成卡上行尾那两枚 icon（保存／一键发圈），正是单击"下载附件"与双击"发送"在朋友圈语境下的对应物 */
-  return '<div class="pexp"'+(mom?'':' data-take="1" data-mat="'+m.id+'"')+'>'+(mom?momPrevBody(m):wxSendSim(m))
-    +'<div class="pexp-acts">'+post+'</div></div>';
+     那边的操作落成卡上行尾那两枚 icon（保存／一键发圈）。 */
+  return '<div class="pexp"'+(mom?'':' data-take="1" data-mat="'+m.id+'"')+'>'+(mom?momPrevBody(m):wxSendSim(m))+'</div>';
 }
 function pRowTap(id){ /* 手风琴：开新行收旧行，再点同一行收起 */
   S.pExpId=S.pExpId===id?null:id;
@@ -7821,22 +7812,23 @@ function pExpClose(){S.pExpId=null;if(panelOpen)pRowsDraw()}
 /* ---------- 展开卡的三档取用手势：单击／双击／长按（2026-10-16 产品点名） ----------
    作用面＝**已经摊开的那一条**（收起态上那一下仍然是"摊开"）：面板的 `.pexp` 与两处浮层共用的 `.ra-hit-exp`，
    两块都靠 `data-take` 声明"我接手势"，`data-mat` 带上这条是哪个素材。三档：
-     · 单击＝下载全部附件（按真实类型分别落，见 attsDesc）＋ 素材文字**填入微信输入框**。面板不关，
-       留着接着翻库——产品点名的原话就是"填完接着翻"；
+     · 单击＝素材文字**复制到剪贴板**（不进输入框、不下载附件）。面板不关，留着接着翻库；
      · 双击＝一键发送（文字＋附件按编排整组发出，同一键发送那条路）；
-     · 长按＝下载全部附件 ＋ 素材文字**复制到剪贴板**。
-   为什么展开区要吃手势：它本来就是"看清了、就地取用"的那一屏，取用不该再逼人瞄着那排小钮点。
+     · 长按＝下载全部附件 ＋ 素材文字**复制到剪贴板**（＝保存＋复制）。
+   为什么展开区要吃手势：它本来就是"看清了、就地取用"的那一屏；ADR-0079 起底部那排动作钮已删，
+   手势是这块面**唯一**的取用方式，也把那 32px 一行还给内容。
    为什么朋友圈视图那块**不接**：它是"看朋友圈排版"的预览面（要能顺着读），且朋友圈没有会话输入框可填；
-   它的操作落成卡上行尾那两枚 icon（保存／一键发圈）——正是单击"下载附件"与双击"发送"在朋友圈语境下的对应物。
+   它的操作落成卡上行尾那两枚 icon（保存／一键发圈），展开区只负责看排版（没有手势，也没有底部动作钮）。
    判别方式（三处都是既有做法，不新造）：长按＝pointerdown 起 AI_LP_MS 的定时器、位移超 8px 即取消（滚动不是长按）；
    单击／双击在 **pointerup** 上分（同 aiBindCard；长按那一下引擎随后还会补一次 click，靠 lpFired 作废）。
    **但补发的 click 还有第二发得单独挡**：它按**重绘之后**的版面重新命中，会落到别的行上去——
    见下面 pexSwallow 那条注释（真机上试出来的，不是防患于未然）。
-   **单击必须等双击窗口（PTAP_MS）才落地**：不等的话，双击的头一下已经把"下载＋填字"办了，
+   **单击必须等双击窗口（PTAP_MS）才落地**：不等的话，双击的头一下已经把"复制"办了，
    第二下再发送——同一件素材被取用两次、还多存一遍附件。
    为什么用委托而不是逐处绑定：展开区是每次重绘整个换掉的 innerHTML（pRowsDraw／hpPaint／raHitsDraw 各写一次），
    绑在元素上就得在这三处都补一次挂载，漏一处就静默失效；委托挂一次，重绘多少遍都还在。
-   与区内那排动作钮的关系：指针落在钮上＝**整串不参与**手势（见 pexReg），两条路各走各的、不叠加。 */
+   与区内动作钮的关系：面板 `.pexp` 里的钮已删（ADR-0079），但两处浮层的 `.ra-hit-exp` 还带动作钮——
+   指针落在钮上＝**整串不参与**手势（见 pexReg），两条路各走各的、不叠加。 */
 var PTAP_MS=320; /* 双击窗口：与 aiBindCard 的 320 同一档（同一只手上不该出现两套双击节奏） */
 var pexS={el:null,pid:null,sx:0,sy:0,moved:false,lpFired:false,lpTimer:null,dblTimer:null,dblEl:null};
 /* 手势办完事之后，浏览器还会照着**重绘后**的版面补发一发 click（真机 touchstart→touchend→click 必然有）。
@@ -7853,7 +7845,7 @@ document.addEventListener('click',function(e){
 function pexReg(e){ /* 这一串指针事件算不算"在展开区上做手势" */
   var t=e.target;
   if(!t||!t.closest)return null;
-  if(t.closest('button')||t.closest('a'))return null; /* 区内动作钮自己那条路更明确（还带 stopPropagation），不叠手势 */
+  if(t.closest('button')||t.closest('a'))return null; /* 浮层展开行里还有动作钮：钮自己那条路更明确（还带 stopPropagation），不叠手势 */
   var r=t.closest('.pexp[data-take],.ra-hit-exp[data-take]');
   return (r&&r.getAttribute('data-mat'))?r:null;
 }
@@ -7895,8 +7887,10 @@ function pexTake(reg,how){
   markUsed(id); /* 下载附件＝取用（同存图/复制），与发送、发圈同记一份本机记录 */
   var dl=attsDesc(m),ht=hasText(m),txt=ht?allTexts(m):'';
   if(how==='tap'){
-    if(ht){var inp=$('wxInput');if(inp)inp.value=txt} /* 只填不发：发送是双击那一档（填完由人来判断发不发） */
-    toast(pexReceipt(dl,ht,'已填入输入框'));
+    /* 单击＝只把文字放进粘贴板（ADR-0079 产品口径）：不下载附件、不自动填输入框；
+       没有文字就直说，不假装复制了一个空串 */
+    if(ht)copyText(txt,'文案已复制到剪贴板（演示）');
+    else toast('这条素材没有文字内容，附件可直接发送');
   }else{
     if(ht)copyText(txt,pexReceipt(dl,ht,'已复制到剪贴板'));
     else toast(pexReceipt(dl,ht,''));
