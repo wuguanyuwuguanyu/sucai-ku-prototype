@@ -2255,6 +2255,10 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
    · 头部角标＝当前那枚一级视图右上角一枚主色小圆点（有未看的新命中时亮）。
    可见性判据只看「搜索态 + #pRows.scrollTop」，不看 rect：jsdom 无布局，几何断言会假绿。 */
 .p-hitsec{border-radius:14px}
+/* 区段右上角的「主动收起」口（ADR-0080）：取用任一命中或关面板也会收，这枚是给"我现在不想看"的一条明路 */
+.p-hitx{flex:none;margin-left:auto;width:20px;height:20px;border:0;padding:0;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;background:transparent;color:var(--on-surface-variant);cursor:pointer}
+.p-hitx:active{background:rgba(0,0,0,.06)}
 .p-hitsec.fresh{animation:hitPulse 1.5s var(--emph)}
 @keyframes hitPulse{0%{background:rgba(22,80,255,.12);box-shadow:0 0 0 1.5px rgba(22,80,255,.5)}
   70%{background:rgba(22,80,255,.05);box-shadow:0 0 0 1.5px rgba(22,80,255,.18)}
@@ -6185,6 +6189,16 @@ function recById(id){var m=matById(id);if(m)return okLive(m)?m:null;return PS.fi
 function markUsed(id){
   if(!id)return;
   RECENT=[{id:id,t:Date.now()}].concat(RECENT.filter(function(r){return r.id!==id})).slice(0,15);
+  pHitClearOnUse(id); /* 取用任一命中＝这一批已经办完事：命中推荐区段当场收（ADR-0080） */
+}
+/* 取用的那条是不是当前命中推荐里的：是就把区段收掉。所有取用路径都经过 markUsed，故挂在这一处，
+   不在 pexTake／quickCopy／oneKeySend 各写一遍 */
+function pHitClearOnUse(id){
+  if(!panelOpen||!pHit)return;
+  var hs=kwMatch(pHit);
+  for(var i=0;i<hs.length;i++){
+    if(hs[i].id===id){pHit='';pHitNew=0;pRowsDraw();return}
+  }
 }
 function recTimeOf(id){for(var r=0;r<RECENT.length;r++)if(RECENT[r].id===id)return RECENT[r].t;return 0}
 function recentCmp(a,b){var d=recTimeOf(b.id)-recTimeOf(a.id);return d!==0?d:((b.date||'')<(a.date||'')?-1:((b.date||'')>(a.date||'')?1:0))} /* 最近使用=本机视角：按最后使用时间倒序 */
@@ -7376,8 +7390,11 @@ function openPanel(){
   if(aiOpen)closeAiPanel();
   closeHpPanel();                     /* 后开者胜（ADR-0028 决策 3）：命中浮层让位 */
   panelOpen=true;pHitNew=0;          /* 面板开＝顶部那份命中推荐当场可见，面板内「新命中」角标归零 */
-  var last=pendingHits.slice(-1)[0];
-  if(last)pHit=last.msg;
+  /* 只接「还没呈现过」的命中（ADR-0080）：关面板即收，重开不再把上一批冒出来；
+     未读命中从 Dock「命中 N」进来时仍看得到——那枚按钮就是"我要看这次命中"的入口 */
+  var last=null;
+  for(var i=pendingHits.length-1;i>=0;i--){if(!pendingHits[i].done){last=pendingHits[i];break}}
+  pHit=last?last.msg:'';
   for(var i=0;i<pendingHits.length;i++)pendingHits[i].done=true; /* 打开面板 = 命中已阅，角标清零 */
   ballBadge();dkRefresh();
   S.pMom=false;S.pRec=true;pQ='';pSOn=false;S.pFltOpen=false;S.pExpId=null; /* 打开面板永远落「最近使用」：命中推荐排在首位，引擎递来的东西不依赖用户翻筛选；搜索条同落收起态；筛选 popover 同落收起态（上次是点 ✕ 收起面板的话 popover 会留着开）；展开态同落收起（面板重开＝回到能扫的那一屏，不停在上次摊开的那条上） */
@@ -7392,6 +7409,7 @@ function openPanel(){
 }
 function closePanel(){
   panelOpen=false;
+  pHit='';pHitNew=0;                  /* 关面板即收（ADR-0080）：命中推荐不跨开合残留 */
   var p=$('panel');p.style.display='none';
   ballUnliftForPanel();               /* 面板关了：球回原位（用户拖过就不回，见 ballLift） */
   aiBallShow();                       /* 顶掉辅助浮层时它已收了球；这里再同步一次，幂等 */
@@ -7557,7 +7575,8 @@ function pRowsDraw(){
       /* 整块包一层 #pHitSec：命中来了要「让区段主色脉冲」，脉冲得有一个不散架的盒子
          （只给 .p-sec 描边的话，底下那三张卡不在脉冲范围里，看不出"新的是这一坨"）。 */
       h+='<div class="p-hitsec" id="pHitSec">';
-      h+='<div class="p-sec">'+I('zap',12,2.4)+' 命中推荐</div>';
+      h+='<div class="p-sec">'+I('zap',12,2.4)+' <span>命中推荐</span>'
+        +'<button class="p-hitx" title="收起命中推荐" onclick="pHitDismiss()">'+I('x',12,2.4)+'</button></div>';
       for(var a=0;a<hits.length&&a<3;a++)h+=pRowHtml(hits[a]);
       h+='</div>';
     }
@@ -7597,6 +7616,11 @@ function pHitGoto(){
   }
   pHitNew=0;pHitBarSync();pNavPaint();
   pHitPulse();
+}
+/* 主动收起：区段右上角那枚 ✕（ADR-0080）。取用任一命中、关面板也会走到同一个结果 */
+function pHitDismiss(){
+  pHit='';pHitNew=0;
+  pRowsDraw();
 }
 function pHitNotify(n){
   var rows=$('pRows');
@@ -7797,7 +7821,7 @@ function pRowHtml(m){
    朋友圈视图不挂手势，那边照旧用卡上行尾的两枚 icon（保存／一键发圈） */
 function pExpHtml(m){
   var mom=S.pMom&&!pQ;
-  /* data-take/data-mat＝这块展开区接三档取用手势（单击＝复制到剪贴板／双击＝发送／长按＝保存附件＋复制，见 pexTake）。
+  /* data-take/data-mat＝这块展开区接三档取用手势（单击＝下载附件＋填入输入框／双击＝发送／长按＝保存附件＋复制，见 pexTake）。
      **朋友圈视图那块不挂**：它是"看朋友圈排版"的预览面，且朋友圈没有会话输入框可填——
      那边的操作落成卡上行尾那两枚 icon（保存／一键发圈）。 */
   return '<div class="pexp"'+(mom?'':' data-take="1" data-mat="'+m.id+'"')+'>'+(mom?momPrevBody(m):wxSendSim(m))+'</div>';
@@ -7812,7 +7836,7 @@ function pExpClose(){S.pExpId=null;if(panelOpen)pRowsDraw()}
 /* ---------- 展开卡的三档取用手势：单击／双击／长按（2026-10-16 产品点名） ----------
    作用面＝**已经摊开的那一条**（收起态上那一下仍然是"摊开"）：面板的 `.pexp` 与两处浮层共用的 `.ra-hit-exp`，
    两块都靠 `data-take` 声明"我接手势"，`data-mat` 带上这条是哪个素材。三档：
-     · 单击＝素材文字**复制到剪贴板**（不进输入框、不下载附件）。面板不关，留着接着翻库；
+     · 单击＝下载全部附件（按真实类型分别落，见 attsDesc）＋ 素材文字**填入微信输入框**（只填不发）。面板不关，留着接着翻库；
      · 双击＝一键发送（文字＋附件按编排整组发出，同一键发送那条路）；
      · 长按＝下载全部附件 ＋ 素材文字**复制到剪贴板**（＝保存＋复制）。
    为什么展开区要吃手势：它本来就是"看清了、就地取用"的那一屏；ADR-0079 起底部那排动作钮已删，
@@ -7823,7 +7847,7 @@ function pExpClose(){S.pExpId=null;if(panelOpen)pRowsDraw()}
    单击／双击在 **pointerup** 上分（同 aiBindCard；长按那一下引擎随后还会补一次 click，靠 lpFired 作废）。
    **但补发的 click 还有第二发得单独挡**：它按**重绘之后**的版面重新命中，会落到别的行上去——
    见下面 pexSwallow 那条注释（真机上试出来的，不是防患于未然）。
-   **单击必须等双击窗口（PTAP_MS）才落地**：不等的话，双击的头一下已经把"复制"办了，
+   **单击必须等双击窗口（PTAP_MS）才落地**：不等的话，双击的头一下已经把"下载＋填字"办了，
    第二下再发送——同一件素材被取用两次、还多存一遍附件。
    为什么用委托而不是逐处绑定：展开区是每次重绘整个换掉的 innerHTML（pRowsDraw／hpPaint／raHitsDraw 各写一次），
    绑在元素上就得在这三处都补一次挂载，漏一处就静默失效；委托挂一次，重绘多少遍都还在。
@@ -7887,10 +7911,8 @@ function pexTake(reg,how){
   markUsed(id); /* 下载附件＝取用（同存图/复制），与发送、发圈同记一份本机记录 */
   var dl=attsDesc(m),ht=hasText(m),txt=ht?allTexts(m):'';
   if(how==='tap'){
-    /* 单击＝只把文字放进粘贴板（ADR-0079 产品口径）：不下载附件、不自动填输入框；
-       没有文字就直说，不假装复制了一个空串 */
-    if(ht)copyText(txt,'文案已复制到剪贴板（演示）');
-    else toast('这条素材没有文字内容，附件可直接发送');
+    if(ht){var inp=$('wxInput');if(inp)inp.value=txt} /* 只填不发：发送是双击那一档（填完由人来判断发不发） */
+    toast(pexReceipt(dl,ht,'已填入输入框'));
   }else{
     if(ht)copyText(txt,pexReceipt(dl,ht,'已复制到剪贴板'));
     else toast(pexReceipt(dl,ht,''));
