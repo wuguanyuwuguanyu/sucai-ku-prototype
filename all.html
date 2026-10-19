@@ -8987,20 +8987,16 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 <div class="_board_gf4go_1" style="margin-top: 21px; padding-bottom: 28px;">
   <div class="_title_gf4go_8" style="padding-bottom: 0px;">
     <h6>任务执行</h6>
-    <a href="https://test.yunkecn.com/cms/wechatAssistantModules/board/wxz/task">详细数据<span role="img" aria-label="right" class="anticon anticon-right"><svg viewBox="64 64 896 896" focusable="false" data-icon="right" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"></path></svg></span></a>
+    <a href="#" data-bd-detail="task">详细数据<span role="img" aria-label="right" class="anticon anticon-right"><svg viewBox="64 64 896 896" focusable="false" data-icon="right" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"></path></svg></span></a>
   </div>
 
-  <!-- 执行型 7 类共用一个台账面板（按类型过滤同一张表）；配置／资产型 4 类各有一个面板。
-       两段分开是 docs/10 §4a 的要求：那 4 个模块没有「完成率」这个概念。
-       版面上也真分开：执行型一行，配置／资产型另起一行、行首给一枚灰色分组标签，
-       「全部」自己留在左端（它是这张表的筛选器，不是第 8 类任务）。
-       换行不是装饰——12 个页签一行装不下：1440 的窗口下页签条要 1080px，容器只有 922px，
-       尾部的 5 个页签本来是被静默裁掉的（实测），分段顺手把它修了。 -->
+  <!-- 执行型 7 类共用一个台账面板（按类型过滤同一张表），「全部」是这张表的筛选器，
+       不是第 8 类任务。配置／资产型 4 类**不在这个板块里**——它们没有「完成率」这个概念
+       （docs/10 §4a），单独落成下方「配置 / 资产」一块，两边不共用指标、不共用 tabs。 -->
   <div class="ant-tabs ant-tabs-top css-vgijab rea-bd-tabs">
     <div role="tablist" aria-orientation="horizontal" class="ant-tabs-nav">
       <div class="ant-tabs-nav-wrap"><div class="ant-tabs-nav-list" style="transform: translate(0px, 0px);">
         <div data-node-key="all" class="ant-tabs-tab ant-tabs-tab-active" data-bd-pane="exec" data-bd-filter="all"><div role="tab" aria-selected="true" class="ant-tabs-tab-btn" tabindex="0">全部</div></div>
-        <span class="rea-bd-tabs-sep" aria-hidden="true"></span>
         <div data-node-key="t1" class="ant-tabs-tab" data-bd-pane="exec" data-bd-filter="发圈"><div role="tab" aria-selected="false" class="ant-tabs-tab-btn" tabindex="-1">发圈</div></div>
         <div data-node-key="t2" class="ant-tabs-tab" data-bd-pane="exec" data-bd-filter="群发好友"><div role="tab" aria-selected="false" class="ant-tabs-tab-btn" tabindex="-1">群发好友</div></div>
         <div data-node-key="t3" class="ant-tabs-tab" data-bd-pane="exec" data-bd-filter="群发群组"><div role="tab" aria-selected="false" class="ant-tabs-tab-btn" tabindex="-1">群发群组</div></div>
@@ -9008,12 +9004,6 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
         <div data-node-key="t5" class="ant-tabs-tab" data-bd-pane="exec" data-bd-filter="关联好友"><div role="tab" aria-selected="false" class="ant-tabs-tab-btn" tabindex="-1">关联好友</div></div>
         <div data-node-key="t6" class="ant-tabs-tab" data-bd-pane="exec" data-bd-filter="视频号发布任务"><div role="tab" aria-selected="false" class="ant-tabs-tab-btn" tabindex="-1">视频号发布任务</div></div>
         <div data-node-key="t7" class="ant-tabs-tab" data-bd-pane="exec" data-bd-filter="客户唤醒"><div role="tab" aria-selected="false" class="ant-tabs-tab-btn" tabindex="-1">客户唤醒</div></div>
-        <span class="rea-bd-tabs-break" aria-hidden="true"></span>
-        <span class="rea-bd-tabs-lab">配置／资产</span>
-        <div data-node-key="c1" class="ant-tabs-tab" data-bd-pane="cfg-ai"><div role="tab" aria-selected="false" class="ant-tabs-tab-btn" tabindex="-1">智能回复</div></div>
-        <div data-node-key="c2" class="ant-tabs-tab" data-bd-pane="cfg-hb"><div role="tab" aria-selected="false" class="ant-tabs-tab-btn" tabindex="-1">红包触发配置</div></div>
-        <div data-node-key="c3" class="ant-tabs-tab" data-bd-pane="cfg-zh"><div role="tab" aria-selected="false" class="ant-tabs-tab-btn" tabindex="-1">自动打招呼</div></div>
-        <div data-node-key="c4" class="ant-tabs-tab" data-bd-pane="cfg-qun"><div role="tab" aria-selected="false" class="ant-tabs-tab-btn" tabindex="-1">微信群管理</div></div>
         <div class="ant-tabs-ink-bar ant-tabs-ink-bar-animated" style="width: 28px; left: 14px; transform: translateX(-50%);"></div>
       </div></div>
       <div class="ant-tabs-nav-operations ant-tabs-nav-operations-hidden">
@@ -9280,7 +9270,34 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
         </div>
       </div>
 
-      <div role="tabpanel" tabindex="0" aria-hidden="true" class="ant-tabs-tabpane ant-tabs-tabpane-hidden" data-bd-pane="cfg-ai">
+    </div></div>
+  </div>
+</div>
+
+<!-- 配置 / 资产 · **独立板块**（不与任务执行共用 tabs，也不共用指标）。
+     这 4 个模块没有「完成率」这个概念：智能回复 / 红包触发是规则，自动打招呼是模版，
+     微信群管理是资产台账。指标各自带周期（近 7 日 / 群总数 / 模版数），**不随时间窗变**——
+     窗口从昨天切到今天，这一块一个字不动（PRD §2.4 / §3.3）。 -->
+<div class="_board_gf4go_1" style="margin-top: 21px; padding-bottom: 28px;">
+  <div class="_title_gf4go_8" style="padding-bottom: 0px;">
+    <h6>配置 / 资产</h6>
+    <span>不按完成率统计 · 指标自带周期，不随时间窗变化</span>
+  </div>
+  <div class="ant-tabs ant-tabs-top css-vgijab rea-bd-tabs">
+    <div role="tablist" aria-orientation="horizontal" class="ant-tabs-nav">
+      <div class="ant-tabs-nav-wrap"><div class="ant-tabs-nav-list" style="transform: translate(0px, 0px);">
+        <div data-node-key="c1" class="ant-tabs-tab ant-tabs-tab-active" data-bd-pane="cfg-ai"><div role="tab" aria-selected="true" class="ant-tabs-tab-btn" tabindex="0">智能回复</div></div>
+        <div data-node-key="c2" class="ant-tabs-tab" data-bd-pane="cfg-hb"><div role="tab" aria-selected="false" class="ant-tabs-tab-btn" tabindex="-1">红包触发配置</div></div>
+        <div data-node-key="c3" class="ant-tabs-tab" data-bd-pane="cfg-zh"><div role="tab" aria-selected="false" class="ant-tabs-tab-btn" tabindex="-1">自动打招呼</div></div>
+        <div data-node-key="c4" class="ant-tabs-tab" data-bd-pane="cfg-qun"><div role="tab" aria-selected="false" class="ant-tabs-tab-btn" tabindex="-1">微信群管理</div></div>
+        <div class="ant-tabs-ink-bar ant-tabs-ink-bar-animated" style="width: 56px; left: 42px; transform: translateX(-50%);"></div>
+      </div></div>
+      <div class="ant-tabs-nav-operations ant-tabs-nav-operations-hidden">
+        <button type="button" class="ant-tabs-nav-more" aria-haspopup="listbox" aria-expanded="false" style="visibility: hidden; order: 1;"><span role="img" aria-label="ellipsis" class="anticon anticon-ellipsis"><svg viewBox="64 64 896 896" focusable="false" data-icon="ellipsis" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M176 511a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0z"></path></svg></span></button>
+      </div>
+    </div>
+    <div class="ant-tabs-content-holder"><div class="ant-tabs-content ant-tabs-content-top">
+      <div role="tabpanel" tabindex="0" aria-hidden="false" class="ant-tabs-tabpane ant-tabs-tabpane-active" data-bd-pane="cfg-ai">
         <p class="rea-bd-note">智能回复维护的是<b>触发规则</b>，没有「完成了百分之几」——它只能答"配了几条、启用几条、命中几次"（docs/10 §4a）。</p>
         <div class="_threeBox_13z6g_50 rea-bd-cfg" style="padding: 14px 0 4px;">
           <div class="_card_13z6g_53" style="padding: 18px 0;"><p class="_cardTitle_13z6g_60">方案数</p><p class="_cardNum_13z6g_66">12</p></div>
@@ -9339,7 +9356,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 <div class="_board_gf4go_1" style="margin-top: 21px; padding-bottom: 28px;">
   <div class="_title_gf4go_8" style="padding-bottom: 0px;">
     <h6>素材与效果</h6>
-    <a href="https://test.yunkecn.com/cms/wechatAssistantModules/board/wxz/material">详细数据<span role="img" aria-label="right" class="anticon anticon-right"><svg viewBox="64 64 896 896" focusable="false" data-icon="right" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"></path></svg></span></a>
+    <a href="#" data-bd-detail="mat">详细数据<span role="img" aria-label="right" class="anticon anticon-right"><svg viewBox="64 64 896 896" focusable="false" data-icon="right" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"></path></svg></span></a>
   </div>
   <div class="ant-tabs ant-tabs-top css-vgijab rea-bd-tabs" id="rea-bd-mat-tabs">
     <div role="tablist" aria-orientation="horizontal" class="ant-tabs-nav">
@@ -9356,16 +9373,16 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     </div>
     <div class="ant-tabs-content-holder"><div class="ant-tabs-content ant-tabs-content-top">
       <div role="tabpanel" tabindex="0" aria-hidden="false" class="ant-tabs-tabpane ant-tabs-tabpane-active" data-bd-pane="m-quan">
-        <p class="rea-bd-note">15 条 ＝ 上方两条发圈任务的已执行之和（7 ＋ 8），口径一致。<b>这里刻意没有「阅读率」</b>：它的分母在现网没有可靠字段，硬造就是编数（docs/11 §6）。</p>
+        <p class="rea-bd-note">15 条 ＝ 上方两条发圈任务的已执行之和（7 ＋ 8），口径一致。<b>朋友圈发出后拿不到阅读次数与阅读时间</b>——端侧没有可回传的曝光／阅读字段，所以这一格只呈现「发了多少」，不呈现任何阅读效果指标（PRD §3.4）。</p>
         <div class="_threeBox_13z6g_50 rea-bd-cfg" style="padding: 14px 0 4px;">
           <div class="_card_13z6g_53" style="padding: 18px 0;"><p class="_cardTitle_13z6g_60">已发布条数</p><p class="_cardNum_13z6g_66">15</p></div>
-          <div class="_card_13z6g_53" style="padding: 18px 0;"><p class="_cardTitle_13z6g_60">总阅读次数</p><p class="_cardNum_13z6g_66">486</p></div>
-          <div class="_card_13z6g_53" style="padding: 18px 0;"><p class="_cardTitle_13z6g_60">总阅读时间</p><p class="_cardNum_13z6g_66">1,246<span> 分钟</span></p></div>
-          <div class="_card_13z6g_53" style="padding: 18px 0;"><p class="_cardTitle_13z6g_60">人均阅读次数</p><p class="_cardNum_13z6g_66">32.4</p></div>
+          <div class="_card_13z6g_53" style="padding: 18px 0;"><p class="_cardTitle_13z6g_60">应发人次</p><p class="_cardNum_13z6g_66">18</p></div>
+          <div class="_card_13z6g_53" style="padding: 18px 0;"><p class="_cardTitle_13z6g_60">发布完成率</p><p class="_cardNum_13z6g_66">83.3<span>%</span></p></div>
+          <div class="_card_13z6g_53" style="padding: 18px 0;"><p class="_cardTitle_13z6g_60">涉及发圈任务</p><p class="_cardNum_13z6g_66">2<span> 条</span></p></div>
         </div>
       </div>
       <div role="tabpanel" tabindex="0" aria-hidden="true" class="ant-tabs-tabpane ant-tabs-tabpane-hidden" data-bd-pane="m-art">
-        <p class="rea-bd-note">文章是唯一<b>可追踪</b>的素材类型（带原文链接，能回收到阅读与获客）——这也是现网给它挂「可追踪」角标的原因。</p>
+        <p class="rea-bd-note">文章是唯一<b>可追踪</b>的素材类型（带原文链接，能回收到获客与转发）——这也是现网给它挂「可追踪」角标的原因。</p>
         <div class="_threeBox_13z6g_50 rea-bd-cfg" style="padding: 14px 0 4px;">
           <div class="_card_13z6g_53" style="padding: 18px 0;"><p class="_cardTitle_13z6g_60">获客人数</p><p class="_cardNum_13z6g_66">86<span> 人</span></p></div>
           <div class="_card_13z6g_53" style="padding: 18px 0;"><p class="_cardTitle_13z6g_60">转发次数</p><p class="_cardNum_13z6g_66">214</p></div>
@@ -9391,6 +9408,163 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   <p class="rea-bd-note" id="rea-bd-mat-nodata" hidden><b>数据未就绪 · T+1 产出</b> —— 效果层（发圈／文章／素材／客户与群）由离线任务在次日凌晨跑出，<b>当天没有数</b>。换成含今日的窗口时这一整层不给数，也不拿昨天的旧值顶上来（PRD §2.7）。</p>
 </div>
 </div></div>
+</script>
+
+<!-- ============ 覆盖页之外的两张「详细数据」子页 ============
+     现网「任务执行 › 详细数据」「素材与效果 › 详细数据」指向 board/wxz/task、board/wxz/material，
+     这两个路由**不在 35 页快照里**（抓存件没有它们），所以点原来那两条 href 会把 iframe 导航到
+     现网测试地址、在原型里表现为空白页。这里按 ADR-0043 的覆盖机制补两张子页：
+     页名与正文由外壳脚本在运行时合成（克隆 微小助看板 的侧栏／顶栏外壳，只换正文区），
+     行数据由看板页在点「详细数据」时一并带过来，**不另编一份**。 -->
+<script type="text/plain" id="srcBoardTask">
+<div class="_board_gf4go_1" style="padding-bottom: 28px;">
+  <div class="_title_gf4go_8">
+    <h6>任务明细</h6>
+    <a href="#" data-rea="微小助看板" class="rea-bd-back">← 返回看板</a>
+  </div>
+  <div class="ant-divider css-vgijab ant-divider-horizontal" role="separator" style="margin: 0px;"></div>
+  <div class="rea-bd-row">
+    <span class="rea-bd-lab">时间窗</span>
+    <div class="ant-radio-group ant-radio-group-solid css-vgijab" id="rea-dtl-win">
+      <div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small">
+        <div class="ant-space-item">
+          <label class="ant-radio-button-wrapper css-vgijab" data-dtl-win="today">
+            <span class="ant-radio-button"><input name="rea-dtl-win" class="ant-radio-button-input" type="radio" value="0"><span class="ant-radio-button-inner"></span></span>
+            <span class="ant-radio-button-label">今日</span>
+          </label>
+        </div>
+        <div class="ant-space-item">
+          <label class="ant-radio-button-wrapper ant-radio-button-wrapper-checked css-vgijab" data-dtl-win="d1">
+            <span class="ant-radio-button ant-radio-button-checked"><input name="rea-dtl-win" class="ant-radio-button-input" type="radio" value="1" checked=""><span class="ant-radio-button-inner"></span></span>
+            <span class="ant-radio-button-label">昨天</span>
+          </label>
+        </div>
+      </div>
+    </div>
+    <span class="rea-bd-sep"></span>
+    <span class="rea-bd-lab" id="rea-dtl-count">共 9 条记录</span>
+    <span class="rea-bd-lab">数据更新时间：<span data-rea-d="now@now"></span></span>
+  </div>
+  <p class="rea-bd-note">口径与看板一致：<b>应执行 ＝ 该任务的执行人员数（人次）</b>；逾期数 ＝ 有效期已过且仍未执行。行数据由看板同一张任务表带过来，不另造一份。</p>
+  <div class="ant-table-wrapper css-vgijab rea-bd-table" style="margin-top: 12px;">
+    <div class="ant-spin-nested-loading css-vgijab"><div class="ant-spin-container">
+      <div class="ant-table ant-table-middle css-vgijab">
+        <div class="ant-table-container"><div class="ant-table-content">
+          <table style="table-layout: fixed;">
+            <colgroup><col style="width: 15%"><col style="width: 9%"><col style="width: 6%"><col style="width: 15%"><col style="width: 18%"><col style="width: 5%"><col style="width: 5%"><col style="width: 5%"><col style="width: 5%"><col style="width: 7%"><col style="width: 5%"><col style="width: 5%"></colgroup>
+            <thead class="ant-table-thead"><tr>
+              <th scope="col" class="ant-table-cell">任务名称</th>
+              <th scope="col" class="ant-table-cell">任务类型</th>
+              <th scope="col" class="ant-table-cell">创建人</th>
+              <th scope="col" class="ant-table-cell" title="该任务的执行人员人数；执行人员可跨大区（组织范围那一块按创建人所属大区聚合，两种口径不同）">执行人员</th>
+              <th scope="col" class="ant-table-cell">任务有效期</th>
+              <th scope="col" class="ant-table-cell">应执行</th>
+              <th scope="col" class="ant-table-cell">已执行</th>
+              <th scope="col" class="ant-table-cell">未执行</th>
+              <th scope="col" class="ant-table-cell" title="有效期已过且仍未执行">逾期数</th>
+              <th scope="col" class="ant-table-cell">完成率</th>
+              <th scope="col" class="ant-table-cell">状态</th>
+              <th scope="col" class="ant-table-cell">操作</th>
+            </tr></thead>
+            <tbody class="ant-table-tbody" id="rea-dtl-body"></tbody>
+          </table>
+        </div></div>
+      </div>
+    </div></div>
+  </div>
+</div>
+</script>
+
+<script type="text/plain" id="srcBoardMat">
+<div class="_board_gf4go_1" style="padding-bottom: 28px;">
+  <div class="_title_gf4go_8">
+    <h6>素材明细</h6>
+    <a href="#" data-rea="微小助看板" class="rea-bd-back">← 返回看板</a>
+  </div>
+  <div class="ant-divider css-vgijab ant-divider-horizontal" role="separator" style="margin: 0px;"></div>
+  <div class="rea-bd-row">
+    <span class="rea-bd-lab">时间窗</span>
+    <div class="ant-radio-group ant-radio-group-solid css-vgijab" id="rea-dtl-mat-win">
+      <div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small">
+        <div class="ant-space-item">
+          <label class="ant-radio-button-wrapper css-vgijab" data-dtl-win="today">
+            <span class="ant-radio-button"><input name="rea-dtl-mat-win" class="ant-radio-button-input" type="radio" value="0"><span class="ant-radio-button-inner"></span></span>
+            <span class="ant-radio-button-label">今日</span>
+          </label>
+        </div>
+        <div class="ant-space-item">
+          <label class="ant-radio-button-wrapper ant-radio-button-wrapper-checked css-vgijab" data-dtl-win="d1">
+            <span class="ant-radio-button ant-radio-button-checked"><input name="rea-dtl-mat-win" class="ant-radio-button-input" type="radio" value="1" checked=""><span class="ant-radio-button-inner"></span></span>
+            <span class="ant-radio-button-label">昨天</span>
+          </label>
+        </div>
+      </div>
+    </div>
+    <span class="rea-bd-sep"></span>
+    <span class="rea-bd-lab">数据更新时间：<span data-rea-d="now@now"></span></span>
+  </div>
+  <p class="rea-bd-note" id="rea-dtl-mat-nodata" hidden><b>数据未就绪 · T+1 产出</b> —— 效果层由离线任务在次日凌晨跑出，<b>当天没有数</b>。换成含今日的窗口时这一页不给数，也不拿昨天的旧值顶上来（PRD §2.7）。</p>
+  <div id="rea-dtl-mat-body">
+    <div style="margin-top: 16px;">
+      <h6 class="rea-dtl-h">发圈</h6>
+      <p class="rea-bd-note">已发布条数 ＝ 发圈任务的已执行人次之和。<b>朋友圈发出后拿不到阅读次数与阅读时间</b>，所以这里不出现任何阅读指标——能看到的只有「发了多少」。</p>
+      <div class="_threeBox_13z6g_50 rea-bd-cfg" id="rea-dtl-mat-quan-cards" style="padding: 14px 0 4px;"></div>
+      <div class="ant-table-wrapper css-vgijab rea-bd-table" style="margin-top: 10px;">
+        <div class="ant-spin-nested-loading css-vgijab"><div class="ant-spin-container">
+          <div class="ant-table ant-table-middle css-vgijab"><div class="ant-table-container"><div class="ant-table-content">
+            <table style="table-layout: fixed;">
+              <colgroup><col style="width: 34%"><col style="width: 16%"><col style="width: 16%"><col style="width: 17%"><col style="width: 17%"></colgroup>
+              <thead class="ant-table-thead"><tr>
+                <th scope="col" class="ant-table-cell">任务名称</th>
+                <th scope="col" class="ant-table-cell">创建人</th>
+                <th scope="col" class="ant-table-cell">应发人次</th>
+                <th scope="col" class="ant-table-cell">已发布条数</th>
+                <th scope="col" class="ant-table-cell">完成率</th>
+              </tr></thead>
+              <tbody class="ant-table-tbody" id="rea-dtl-mat-quan-body"></tbody>
+            </table>
+          </div></div></div>
+        </div></div>
+      </div>
+    </div>
+    <div style="margin-top: 20px;">
+      <h6 class="rea-dtl-h">文章 <span class="ant-badge css-vgijab"><sup class="ant-scroll-number ant-badge-count ant-badge-multiple-words" title="可追踪" style="background-color: rgb(36, 204, 185); padding: 0px 4px;">可追踪</sup></span></h6>
+      <p class="rea-bd-note">文章带原文链接，是唯一能回收到获客与转发的素材类型。</p>
+      <div class="_threeBox_13z6g_50 rea-bd-cfg" style="padding: 14px 0 4px;">
+        <div class="_card_13z6g_53" style="padding: 18px 0;"><p class="_cardTitle_13z6g_60">获客人数</p><p class="_cardNum_13z6g_66">86<span> 人</span></p></div>
+        <div class="_card_13z6g_53" style="padding: 18px 0;"><p class="_cardTitle_13z6g_60">转发次数</p><p class="_cardNum_13z6g_66">214</p></div>
+      </div>
+    </div>
+    <div style="margin-top: 20px;">
+      <h6 class="rea-dtl-h">素材</h6>
+      <p class="rea-bd-note">「热门」直接复用素材库的既有定义：<b>被发圈任务引用</b>（ADR-0040），不另造口径。</p>
+      <div class="_threeBox_13z6g_50 rea-bd-cfg" style="padding: 14px 0 4px;">
+        <div class="_card_13z6g_53" style="padding: 18px 0;"><p class="_cardTitle_13z6g_60">被引用任务数</p><p class="_cardNum_13z6g_66">2</p><p class="rea-dtl-sub">秋季新品主推</p></div>
+        <div class="_card_13z6g_53" style="padding: 18px 0;"><p class="_cardTitle_13z6g_60">被发过圈的人数</p><p class="_cardNum_13z6g_66">15<span> 人</span></p><p class="rea-dtl-sub">秋季新品主推</p></div>
+      </div>
+    </div>
+    <div style="margin-top: 20px;">
+      <h6 class="rea-dtl-h">客户与群</h6>
+      <p class="rea-bd-note">口径是<b>已执行</b>的人次，不是应执行——「被触达」说的是真发出去了多少。看板只收任务侧记录，不收销售端自发取用。</p>
+      <div class="ant-table-wrapper css-vgijab rea-bd-table" style="margin-top: 10px;">
+        <div class="ant-spin-nested-loading css-vgijab"><div class="ant-spin-container">
+          <div class="ant-table ant-table-middle css-vgijab"><div class="ant-table-container"><div class="ant-table-content">
+            <table style="table-layout: fixed;">
+              <colgroup><col style="width: 28%"><col style="width: 18%"><col style="width: 27%"><col style="width: 27%"></colgroup>
+              <thead class="ant-table-thead"><tr>
+                <th scope="col" class="ant-table-cell">任务类型</th>
+                <th scope="col" class="ant-table-cell">任务数</th>
+                <th scope="col" class="ant-table-cell">应触达人次</th>
+                <th scope="col" class="ant-table-cell">已触达人次</th>
+              </tr></thead>
+              <tbody class="ant-table-tbody" id="rea-dtl-mat-cus-body"></tbody>
+            </table>
+          </div></div></div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</div>
 </script>
 
 <script>
@@ -9505,6 +9679,10 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   var REA_MAT_PAGE = '素材库 · 新建';     // 素材库的「· 新建」子页（独立表单路由，见 docs/09 §2.2）
   var REA_MAT_LIST = REA_MAT_PAGE.split(' · ')[0];   // 它保存/取消后回落的那张列表页名
   var REA_XHS_PAGE = '新小红书运营';     // 小红书营销的模块页——「新小红书运营 · 新建」的「取消」回落到这里
+  /* 两张「详细数据」子页：现网路由（board/wxz/task、board/wxz/material）不在 35 页快照里，
+     由 reaSynthPages() 在运行时克隆看板页外壳合成，正文来自下面两个载体块。 */
+  var REA_DETAIL_TASK = '微小助看板 · 任务明细';
+  var REA_DETAIL_MAT  = '微小助看板 · 素材明细';
 
   /* 覆盖块的正文只取一次：那边是一整块静态 HTML，每换一次页都重取没意义 */
   var REA_HTML_CACHE = {};
@@ -9533,12 +9711,13 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     + '#rea-bd-cards ._num_gf4go_46>div p.rea-bd-cmp{font-size:22px}'
     + '.rea-bd-tabs .ant-tabs-tab{cursor:pointer}'
     + '.rea-bd-tabs .ant-tabs-nav-list{flex-wrap:wrap}'
-    /* 换行是分段的手段：这一条让执行型与配置／资产型各占一行（页签条一行装不下 12 个）。
-       rea-bd-tabs-break 只是个 0 高的断行占位，本身不画东西。 */
+    /* 页签条不折字：执行型 8 个（「全部」＋ 7 类）一行装得下 */
     + '.rea-bd-tabs .ant-tabs-nav-list .ant-tabs-tab{white-space:nowrap}'
-    + '.rea-bd-tabs-break{flex:0 0 100%;height:0;margin:0;padding:0}'
-    + '.rea-bd-tabs-sep{flex:none;align-self:center;width:1px;height:14px;background:#f0f0f2;margin:0 16px}'
-    + '.rea-bd-tabs-lab{flex:none;align-self:center;margin-right:12px;color:#999999;font-size:12px;line-height:1;white-space:nowrap}'
+    /* 「详细数据」子页：返回链接、小节标题、卡下的小字注释 */
+    + '.rea-bd-back{font-size:13px;color:#1677ff;text-decoration:none}'
+    + '.rea-bd-back:hover{color:#4096ff}'
+    + '.rea-dtl-h{margin:0;color:#333333;font-size:14px;font-weight:600}'
+    + '.rea-dtl-sub{margin:6px 0 0;color:#999999;font-size:12px}'
     /* 完成率那一格：数字上、细横条下。条长编码值、同色，不做"多少算差"的判读
        ——与组织范围那条柱一个做法（PRD §5.6）。 */
     + '.rea-bd-bar{display:block;height:6px;margin-top:5px;border-radius:3px;background:#f0f0f2;overflow:hidden}'
@@ -9553,7 +9732,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     /* 按窗口整块收起的几处：这些块自带 display，UA 的 [hidden] 压不住，
        各补一条 display:none（同 .rea-bd-bad 的写法） */
     + '#rea-bd-todaynote[hidden]{display:none}'
-    + '#rea-bd-mat-tabs[hidden],#rea-bd-mat-nodata[hidden]{display:none}';
+    + '#rea-bd-mat-tabs[hidden],#rea-bd-mat-nodata[hidden],#rea-dtl-mat-nodata[hidden]{display:none}';
 
   /* 注入进覆盖页的脚本。与 REA_FX 的分工：REA_FX 只认 AntD 自己的类名
      （单选框、开关、表格行悬停），本脚本只管本页新加的那几块，两者不交叉。
@@ -9776,6 +9955,38 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     '  return out;',
     '}',
 
+    '/* 「详细数据」两张子页不在 35 页快照里（现网那两条 href 指向 board/wxz/task、board/wxz/material，',
+    '   抓存件没抓这两条路由，直接点会把 iframe 导航出去、在原型里表现为空白页）。',
+    '   这里改成在原型内开子页，并把**当前窗口**与任务表整行一起带过去——',
+    '   子页不另编一份数，看到的就是这一页此刻的同一张表。 */',
+    'function dumpRows(){',
+    '  var rs=rows(),out=[],i,r,c;',
+    '  for(i=0;i<rs.length;i++){',
+    '    r=rs[i];c=r.cells;',
+    '    out.push({',
+    '      day:r.getAttribute("data-bd-day"),',
+    '      type:r.getAttribute("data-bd-type"),',
+    '      org:r.getAttribute("data-bd-org"),',
+    '      name:((c[0]&&c[0].getAttribute("title"))||(c[0]&&c[0].textContent)||"").trim(),',
+    '      creator:((c[2]&&c[2].textContent)||"").trim(),',
+    '      people:((c[3]&&c[3].textContent)||"").trim(),',
+    '      span:((c[4]&&c[4].textContent)||"").replace(/\\s+/g," ").trim(),',
+    '      need:+r.getAttribute("data-bd-need"),',
+    '      done:+r.getAttribute("data-bd-done"),',
+    '      left:+r.getAttribute("data-bd-left"),',
+    '      over:+r.getAttribute("data-bd-over"),',
+    '      state:((c[9]&&c[9].textContent)||"").trim()',
+    '    });',
+    '  }',
+    '  return out;',
+    '}',
+    'var dl=document.querySelectorAll("[data-bd-detail]");',
+    'for(var di=0;di<dl.length;di++)dl[di].addEventListener("click",function(e){',
+    '  e.preventDefault();',
+    '  var to=this.getAttribute("data-bd-detail")==="task"?' + reaJson(REA_DETAIL_TASK) + ':' + reaJson(REA_DETAIL_MAT) + ';',
+    '  parent.postMessage({reaPage:to,reaWin:CURW,reaRows:dumpRows()},"*");',
+    '});',
+
     'function setEffect(w){',
     '  var mat=document.getElementById("rea-bd-mat-tabs"),nd=document.getElementById("rea-bd-mat-nodata"),',
     '      off=(w==="today");',
@@ -9841,6 +10052,220 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     '  }',
     '  if(window.console&&console.warn)console.warn("[reaBoard] 自检未通过\\n"+BAD.join("\\n"));',
     '}',
+    '})();'
+   ].join('\n');
+  }
+
+  /* ============================================================
+     「详细数据」子页 ×2：任务明细 / 素材明细
+     现网看板那两枚「详细数据」指向 board/wxz/task、board/wxz/material——**这两条路由
+     不在 35 页快照里**（抓存件只抓了 18 个模块页 ＋ 11 个新建页 ＋ 6 个详情页），
+     原来直接写死的 href 一点就把 iframe 导航到现网测试地址，在此视图里就是一张空白页。
+     现在改为原型内的两张子页（页名由 reaSynthPages 合成，正文是 srcBoardTask / srcBoardMat）。
+     数据全部由看板页点进来时随 postMessage 带过来（dumpRows），**不在这里另编一份**：
+     两页的数字与看板同一时刻的那张表一致，窗口切换也只在这个快照上重算。
+     设计语言照旧是 AntD：标题条 / 单选钮 / 表格全部复用快照里的类名。
+     ============================================================ */
+  function reaBoardTaskJs(){
+   return [
+    '(function(){',
+    'var PAD=function(n){return (n<10?"0":"")+n};',
+    'function when(d,t){',
+    '  var s=d.getFullYear()+"-"+PAD(d.getMonth()+1)+"-"+PAD(d.getDate());',
+    '  if(!t)return s;',
+    '  if(t==="now")return s+" "+PAD(d.getHours())+":"+PAD(d.getMinutes())+":"+PAD(d.getSeconds());',
+    '  if(t==="hhmm")return s+" "+PAD(d.getHours())+":"+PAD(d.getMinutes());',
+    '  return s+" "+t;',
+    '}',
+    'function stamp(){',
+    '  var es=document.querySelectorAll("[data-rea-d]"),i,m,d;',
+    '  for(i=0;i<es.length;i++){',
+    '    m=/^(now|d(?:[+-]\\d+)?)(?:@(now|hhmm|\\d{2}:\\d{2}(?::\\d{2})?))?$/.exec(es[i].getAttribute("data-rea-d"));',
+    '    if(!m)continue;',
+    '    d=new Date();',
+    '    if(m[1]!=="now")d.setDate(d.getDate()+(parseInt(m[1].slice(1),10)||0));',
+    '    es[i].textContent=when(d,m[2]);',
+    '  }',
+    '}',
+    'function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}',
+    'var ROWS=window.__REA_ROWS||[],WIN=window.__REA_WIN||"d1";',
+    'var DAY={today:"0",d1:"-1"},WIRED={today:1,d1:1};',
+    'var CURW=DAY[WIN]!==undefined?WIN:"d1";',
+    'function winRows(w){var d=DAY[w],o=[],i;for(i=0;i<ROWS.length;i++)if(ROWS[i].day===d)o.push(ROWS[i]);return o}',
+    'function rate(r){return r.need?r.done/r.need*100:0}',
+    'function bar(p){return "<span class=\\"rea-bd-bar\\"><i style=\\"width:"+Math.max(0,Math.min(100,p)).toFixed(1)+"%\\"></i></span>"}',
+    'function tag(s){',
+    '  var c=s==="已完成"?"ant-tag ant-tag-green css-vgijab":(s==="进行中"?"ant-tag ant-tag-blue css-vgijab":"ant-tag css-vgijab");',
+    '  return "<span class=\\""+c+"\\">"+esc(s)+"</span>";',
+    '}',
+    '/* 六类有「· 详情」页，视频号发布任务没有；点详情照旧走 reaNavJs 的 data-rea 委托 */',
+    'var HAS={"发圈":1,"群发好友":1,"群发群组":1,"批量加好友":1,"关联好友":1,"客户唤醒":1};',
+    'function op(t){',
+    '  if(!HAS[t])return "<span class=\\"rea-bd-dim\\">—</span>";',
+    '  return "<button type=\\"button\\" class=\\"ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link\\" data-rea=\\""+esc(t)+" · 详情\\"><span>详情</span></button>";',
+    '}',
+    'function hover(){',
+    '  var rws=document.querySelectorAll("#rea-dtl-body tr.ant-table-row"),i;',
+    '  for(i=0;i<rws.length;i++)(function(tr){',
+    '    function on(){for(var j=0;j<tr.children.length;j++)tr.children[j].classList.add("ant-table-cell-row-hover")}',
+    '    function off(){for(var j=0;j<tr.children.length;j++)tr.children[j].classList.remove("ant-table-cell-row-hover")}',
+    '    tr.addEventListener("mouseenter",on);tr.addEventListener("mouseleave",off);',
+    '  })(rws[i]);',
+    '}',
+    'function paint(){',
+    '  var rs=winRows(CURW),h="",need=0,done=0,left=0,over=0,i,r,p;',
+    '  for(i=0;i<rs.length;i++){',
+    '    r=rs[i];need+=r.need;done+=r.done;left+=r.left;over+=r.over;p=rate(r);',
+    '    h+="<tr class=\\"ant-table-row ant-table-row-level-0\\">"',
+    '      +"<td class=\\"ant-table-cell ant-table-cell-ellipsis\\" title=\\""+esc(r.name)+"\\"><span class=\\"ant-typography ant-typography-ellipsis ant-typography-ellipsis-single-line css-vgijab\\" title=\\""+esc(r.name)+"\\">"+esc(r.name)+"</span></td>"',
+    '      +"<td class=\\"ant-table-cell\\">"+esc(r.type)+"</td>"',
+    '      +"<td class=\\"ant-table-cell\\">"+esc(r.creator)+"</td>"',
+    '      +"<td class=\\"ant-table-cell\\">"+esc(r.people)+"</td>"',
+    '      +"<td class=\\"ant-table-cell\\">"+esc(r.span)+"</td>"',
+    '      +"<td class=\\"ant-table-cell\\">"+r.need+"</td>"',
+    '      +"<td class=\\"ant-table-cell\\">"+r.done+"</td>"',
+    '      +"<td class=\\"ant-table-cell\\">"+r.left+"</td>"',
+    '      +"<td class=\\"ant-table-cell\\">"+r.over+"</td>"',
+    '      +"<td class=\\"ant-table-cell\\"><span data-rea-rate-num>"+p.toFixed(1)+"%</span>"+bar(p)+"</td>"',
+    '      +"<td class=\\"ant-table-cell\\">"+tag(r.state)+"</td>"',
+    '      +"<td class=\\"ant-table-cell\\">"+op(r.type)+"</td>"',
+    '      +"</tr>";',
+    '  }',
+    '  if(!rs.length)h="<tr class=\\"ant-table-row ant-table-row-level-0\\"><td class=\\"ant-table-cell\\" colspan=\\"12\\"><span class=\\"rea-bd-dim\\">该窗口没有任务</span></td></tr>";',
+    '  var tr=need?done/need*100:0;',
+    '  h+="<tr class=\\"ant-table-row ant-table-row-level-0 rea-bd-sum\\">"',
+    '    +"<td class=\\"ant-table-cell\\">合计</td>"',
+    '    +"<td class=\\"ant-table-cell\\">"+rs.length+" 条</td>"',
+    '    +"<td class=\\"ant-table-cell\\">—</td>"',
+    '    +"<td class=\\"ant-table-cell\\">—</td>"',
+    '    +"<td class=\\"ant-table-cell\\">—</td>"',
+    '    +"<td class=\\"ant-table-cell\\">"+need+"</td>"',
+    '    +"<td class=\\"ant-table-cell\\">"+done+"</td>"',
+    '    +"<td class=\\"ant-table-cell\\">"+left+"</td>"',
+    '    +"<td class=\\"ant-table-cell\\">"+over+"</td>"',
+    '    +"<td class=\\"ant-table-cell\\"><span data-rea-rate-num>"+tr.toFixed(1)+"%</span>"+bar(tr)+"</td>"',
+    '    +"<td class=\\"ant-table-cell\\">—</td>"',
+    '    +"<td class=\\"ant-table-cell\\"><span class=\\"rea-bd-dim\\">—</span></td>"',
+    '    +"</tr>";',
+    '  document.getElementById("rea-dtl-body").innerHTML=h;',
+    '  var n=document.getElementById("rea-dtl-count");if(n)n.textContent="共 "+rs.length+" 条记录";',
+    '  hover();',
+    '}',
+    'function setWinUi(){',
+    '  var ls=document.querySelectorAll("[data-dtl-win]"),i,on;',
+    '  for(i=0;i<ls.length;i++){',
+    '    on=ls[i].getAttribute("data-dtl-win")===CURW;',
+    '    ls[i].classList.toggle("ant-radio-button-wrapper-checked",on);',
+    '    var b=ls[i].querySelector(".ant-radio-button");',
+    '    if(b)b.classList.toggle("ant-radio-button-checked",on);',
+    '    var r=ls[i].querySelector("input");if(r)r.checked=on;',
+    '  }',
+    '}',
+    'var wg=document.getElementById("rea-dtl-win");',
+    'if(wg)wg.addEventListener("click",function(e){',
+    '  var n=e.target,id=null;',
+    '  while(n&&n!==wg&&n.nodeType===1){',
+    '    if(n.getAttribute&&n.getAttribute("data-dtl-win")){id=n.getAttribute("data-dtl-win");break}',
+    '    n=n.parentNode;',
+    '  }',
+    '  if(!id)return;',
+    '  e.preventDefault();e.stopPropagation();',
+    '  if(!WIRED[id])return;',
+    '  CURW=id;setWinUi();paint();',
+    '},true);',
+    'stamp();setWinUi();paint();',
+    '})();'
+   ].join('\n');
+  }
+
+  function reaBoardMatJs(){
+   return [
+    '(function(){',
+    'var PAD=function(n){return (n<10?"0":"")+n};',
+    'function when(d,t){',
+    '  var s=d.getFullYear()+"-"+PAD(d.getMonth()+1)+"-"+PAD(d.getDate());',
+    '  if(!t)return s;',
+    '  if(t==="now")return s+" "+PAD(d.getHours())+":"+PAD(d.getMinutes())+":"+PAD(d.getSeconds());',
+    '  if(t==="hhmm")return s+" "+PAD(d.getHours())+":"+PAD(d.getMinutes());',
+    '  return s+" "+t;',
+    '}',
+    'function stamp(){',
+    '  var es=document.querySelectorAll("[data-rea-d]"),i,m,d;',
+    '  for(i=0;i<es.length;i++){',
+    '    m=/^(now|d(?:[+-]\\d+)?)(?:@(now|hhmm|\\d{2}:\\d{2}(?::\\d{2})?))?$/.exec(es[i].getAttribute("data-rea-d"));',
+    '    if(!m)continue;',
+    '    d=new Date();',
+    '    if(m[1]!=="now")d.setDate(d.getDate()+(parseInt(m[1].slice(1),10)||0));',
+    '    es[i].textContent=when(d,m[2]);',
+    '  }',
+    '}',
+    'function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}',
+    'var ROWS=window.__REA_ROWS||[],WIN=window.__REA_WIN||"d1";',
+    'var DAY={today:"0",d1:"-1"},WIRED={today:1,d1:1};',
+    'var CURW=DAY[WIN]!==undefined?WIN:"d1";',
+    'function winRows(w){var d=DAY[w],o=[],i;for(i=0;i<ROWS.length;i++)if(ROWS[i].day===d)o.push(ROWS[i]);return o}',
+    'function card(t,n,u){return "<div class=\\"_card_13z6g_53\\" style=\\"padding:18px 0;\\"><p class=\\"_cardTitle_13z6g_60\\">"+esc(t)+"</p><p class=\\"_cardNum_13z6g_66\\">"+n+(u?"<span>"+u+"</span>":"")+"</p></div>"}',
+    'function hover(){',
+    '  var rws=document.querySelectorAll("#rea-dtl-mat-quan-body tr.ant-table-row, #rea-dtl-mat-cus-body tr.ant-table-row"),i;',
+    '  for(i=0;i<rws.length;i++)(function(tr){',
+    '    function on(){for(var j=0;j<tr.children.length;j++)tr.children[j].classList.add("ant-table-cell-row-hover")}',
+    '    function off(){for(var j=0;j<tr.children.length;j++)tr.children[j].classList.remove("ant-table-cell-row-hover")}',
+    '    tr.addEventListener("mouseenter",on);tr.addEventListener("mouseleave",off);',
+    '  })(rws[i]);',
+    '}',
+    'function paint(){',
+    '  var nod=document.getElementById("rea-dtl-mat-nodata"),body=document.getElementById("rea-dtl-mat-body"),',
+    '      rs=winRows(CURW),quan=[],i,r;',
+    '  var off=(CURW==="today");',
+    '  if(nod)nod.hidden=!off;',
+    '  if(body)body.style.display=off?"none":"";',
+    '  if(off)return;',
+    '  for(i=0;i<rs.length;i++){r=rs[i];if(r.type==="发圈")quan.push(r)}',
+    '  /* 发圈：只呈现「发了多少」，阅读次数／阅读时间端侧拿不到（PRD §3.4） */',
+    '  var need=0,done=0;for(i=0;i<quan.length;i++){need+=quan[i].need;done+=quan[i].done}',
+    '  var qc=document.getElementById("rea-dtl-mat-quan-cards");',
+    '  if(qc)qc.innerHTML=card("已发布条数",done)+card("应发人次",need)',
+    '    +card("发布完成率",(need?done/need*100:0).toFixed(1),"%")+card("涉及发圈任务",quan.length," 条");',
+    '  var h="";',
+    '  for(i=0;i<quan.length;i++){',
+    '    r=quan[i];var p=r.need?r.done/r.need*100:0;',
+    '    h+="<tr class=\\"ant-table-row ant-table-row-level-0\\"><td class=\\"ant-table-cell\\">"+esc(r.name)+"</td><td class=\\"ant-table-cell\\">"+esc(r.creator)+"</td><td class=\\"ant-table-cell\\">"+r.need+"</td><td class=\\"ant-table-cell\\">"+r.done+"</td><td class=\\"ant-table-cell\\">"+p.toFixed(1)+"%</td></tr>";',
+    '  }',
+    '  if(!quan.length)h="<tr class=\\"ant-table-row ant-table-row-level-0\\"><td class=\\"ant-table-cell\\" colspan=\\"5\\"><span class=\\"rea-bd-dim\\">该窗口没有发圈任务</span></td></tr>";',
+    '  var qb=document.getElementById("rea-dtl-mat-quan-body");if(qb)qb.innerHTML=h;',
+    '  /* 客户与群：按任务类型聚合「已执行」人次（看板上的 11／4／5 就是它） */',
+    '  var cus=[["批量加好友","加好友"],["关联好友","关联好友"],["群发群组","群发群组"]],ch="";',
+    '  for(i=0;i<cus.length;i++){',
+    '    var t=cus[i][0],cn=0,cd=0,ck=0,j;',
+    '    for(j=0;j<rs.length;j++)if(rs[j].type===t){ck++;cn+=rs[j].need;cd+=rs[j].done}',
+    '    ch+="<tr class=\\"ant-table-row ant-table-row-level-0\\"><td class=\\"ant-table-cell\\">"+cus[i][1]+"</td><td class=\\"ant-table-cell\\">"+ck+"</td><td class=\\"ant-table-cell\\">"+cn+"</td><td class=\\"ant-table-cell\\">"+cd+"</td></tr>";',
+    '  }',
+    '  var cb=document.getElementById("rea-dtl-mat-cus-body");if(cb)cb.innerHTML=ch;',
+    '  hover();',
+    '}',
+    'function setWinUi(){',
+    '  var ls=document.querySelectorAll("[data-dtl-win]"),i,on;',
+    '  for(i=0;i<ls.length;i++){',
+    '    on=ls[i].getAttribute("data-dtl-win")===CURW;',
+    '    ls[i].classList.toggle("ant-radio-button-wrapper-checked",on);',
+    '    var b=ls[i].querySelector(".ant-radio-button");',
+    '    if(b)b.classList.toggle("ant-radio-button-checked",on);',
+    '    var r=ls[i].querySelector("input");if(r)r.checked=on;',
+    '  }',
+    '}',
+    'var wg=document.getElementById("rea-dtl-mat-win");',
+    'if(wg)wg.addEventListener("click",function(e){',
+    '  var n=e.target,id=null;',
+    '  while(n&&n!==wg&&n.nodeType===1){',
+    '    if(n.getAttribute&&n.getAttribute("data-dtl-win")){id=n.getAttribute("data-dtl-win");break}',
+    '    n=n.parentNode;',
+    '  }',
+    '  if(!id)return;',
+    '  e.preventDefault();e.stopPropagation();',
+    '  if(!WIRED[id])return;',
+    '  CURW=id;setWinUi();paint();',
+    '},true);',
+    'stamp();setWinUi();paint();',
     '})();'
    ].join('\n');
   }
@@ -10783,8 +11208,11 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
        html  该页正文段的载体块 id（省略＝正文仍用快照那一段，只补交互）
        css   该页专用样式（只在这页注入；未覆盖页拿不到，这是「逐页覆盖」的底线）
        js    该页自己的注入脚本（在 REA_FX **之后**跑，见 reaDoc）
-     四张覆盖页，两种形态：
+     六张覆盖页，三种形态：
        微小助看板          换稿——正文整段换成 srcBoard，配 REA_BOARD_CSS ＋ reaBoardJs
+       微小助看板 · 任务明细  合成页——页名与 shell 由 reaSynthPages() 克隆看板页得到，正文换 srcBoardTask
+       微小助看板 · 素材明细  同上，正文换 srcBoardMat
+                            这两张补的是现网 board/wxz/task、board/wxz/material 两条**不在快照里**的路由
        素材库 · 新建       补交互——**没有 html**，正文就是快照那一段，只多样式与脚本
        新小红书运营         改文案——**只有脚本**：筛选标签、输入框提示、表头列名
        新小红书运营 · 新建  文案 ＋ 补配置行——**没有 html 也没有 css**，正文仍是快照；脚本做标签/提示语替换，
@@ -10793,6 +11221,8 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
      重抓源目录后静默与线上脱钩，而这一页的正文本来就不该变。 */
   var REA_COVER = {
     '微小助看板':    { html: 'srcBoard', css: REA_BOARD_CSS, js: reaBoardJs },
+    '微小助看板 · 任务明细': { html: 'srcBoardTask', css: REA_BOARD_CSS, js: reaBoardTaskJs },
+    '微小助看板 · 素材明细': { html: 'srcBoardMat',  css: REA_BOARD_CSS, js: reaBoardMatJs },
     '素材库 · 新建': { css: REA_MAT_CSS, js: reaMatJs },
     '新小红书运营': { js: reaXhsListJs },
     '新小红书运营 · 新建': { js: reaXhsJs }
@@ -10822,6 +11252,37 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
       if (P.pages[i].name === REA_BOARD_PAGE) return i;
     }
     return 0;
+  }
+
+  /* 两张「详细数据」子页在快照里没有对应路由（现网 board/wxz/task、board/wxz/material
+     不在 35 页内），所以克隆看板页的 shell/rest 造两页：外壳（侧栏、顶栏、选中态）与看板
+     完全一致，只有正文区被 REA_COVER 的 html 换掉。**不能改 _online-admin.js**——
+     那是构建产物，重跑 build 就没；合成放在运行时，重抓源目录后照样成立。 */
+  function reaSynthPages(){
+    if (reaSynthDone || !window.__REAL_ADMIN__) return;
+    var P = window.__REAL_ADMIN__, base = null, i;
+    for (i = 0; i < P.pages.length; i++){
+      if (P.pages[i].name === REA_BOARD_PAGE){ base = P.pages[i]; break; }
+    }
+    if (!base){ reaWarn('「详细数据」子页合成失败：快照里找不到「' + REA_BOARD_PAGE + '」页'); return; }
+    var add = [REA_DETAIL_TASK, REA_DETAIL_MAT];
+    for (i = 0; i < add.length; i++){
+      P.pages.push({
+        name: add[i],
+        rest: base.rest,
+        contentStart: base.contentStart,
+        contentEnd: base.contentEnd
+      });
+    }
+    reaSynthDone = true;
+  }
+
+  /* 子页要的那份数据（看不出页名的一律空串）：行由看板页带过来，窗口也跟着走。
+     用 reaJson 转义尖括号——拼进 srcdoc 的 script 里不能出现字面闭标签。 */
+  function reaDataJs(name){
+    if (name !== REA_DETAIL_TASK && name !== REA_DETAIL_MAT) return '';
+    return 'window.__REA_ROWS=' + reaJson(reaRows || []) + ';'
+      + 'window.__REA_WIN=' + reaJson(reaWinSel || 'd1') + ';';
   }
 
 
@@ -11088,6 +11549,9 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   var reaIndexed = false; // reaIndex() 跑过没有（四张反查表填上了没有）
   var reaIdx = -1;        // 当前已渲染的模块页序号
   var reaGroupNames = []; // 素材库列表页侧栏分组树里的分组名（供新建页的「所属分组」下拉用）
+  var reaRows = null;     // 看板点「详细数据」时带过来的任务行（两张子页用，不另存一份）
+  var reaWinSel = 'd1';   // 同上：点进来时的当前窗口（today / d1）
+  var reaSynthDone = false; // 两张「详细数据」子页合成过没有
 
   /* 从某页的 rest 里读出它侧栏当前的二级分类名（读不到就返回空串） */
   function reaCatOf(rest){
@@ -11216,6 +11680,8 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
       + '<style>' + REA_CSS + (cv && cv.css ? cv.css : '') + '</style>'
       + '</head><body>' + P.shell + reaSplice(p, p.rest)
       + '<script>' + reaNavJs(p.name) + '<' + '/script>'
+      /* 两张「详细数据」子页多一段：把看板带过来的行与窗口先落到 window 上 */
+      + (reaDataJs(p.name) ? '<script>' + reaDataJs(p.name) + '<' + '/script>' : '')
       /* 补行（演示行 / 刚存的行）必须排在 REA_FX **前面**：它的行悬停是加载时逐行绑的 */
       + (sv ? '<script>' + sv + '<' + '/script>' : '')
       + '<script>' + reaDemoJs(p.name) + '<' + '/script>'
@@ -11315,6 +11781,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   function reaEnter(){
     var P = window.__REAL_ADMIN__;
     if (!P) return;
+    reaSynthPages();
     if (!reaIndexed) reaIndex();
     if (reaIdx < 0) reaRender(reaLanding());
     else document.title = titles.real.replace('（总览）', ' · ' + P.pages[reaIdx].name);
@@ -11340,6 +11807,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
           reaSay('载体文件已加载，但未取到 window.__REAL_ADMIN__。');
           return;
         }
+        reaSynthPages();
         for (var k = 0; k < w.length; k++) w[k]();
       };
       s.onerror = function(){
@@ -11360,6 +11828,8 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     if (!d || !window.__REAL_ADMIN__) return;
     if (!d.reaPage && !d.reaSave) return;
     var P = window.__REAL_ADMIN__;
+    /* 看板点的「详细数据」：先把行与窗口收下，子页 reaDoc 时会灌进 window（见 reaDataJs） */
+    if (d.reaRows){ reaRows = d.reaRows; reaWinSel = d.reaWin || 'd1'; }
     var name = d.reaPage;
     if (!name && d.reaSave){
       reaSaved.push(d.reaSave);
