@@ -572,10 +572,14 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
    抬起靠这枚按钮自己向上顶出栏外（负 margin）＋一圈白描边压住栏沿——这样它仍然是一个普通 flex 项，
    不用绝对定位去猜栏高。按钮自己依旧要 overflow:hidden：涟漪得裁在这颗圆里，否则会在白栏上糊出一圈淡紫。
    这枚的整块按钮就是那颗圆，所以选中时不再叠那块软底（即上面 :not(.ai) 那一处）。 */
-.hv-tab button.ai{overflow:hidden;border-radius:22px;margin-top:-18px;padding:0 0 3px;gap:2px}
-.hv-tab button.ai .ic{width:42px;height:42px;border-radius:50%;color:#fff;align-items:center;justify-content:center;
-  background:linear-gradient(140deg,#9B6BFF,#2E7BFF);
-  box-shadow:0 10px 20px -10px rgba(96,84,255,.95),0 0 0 3.5px #fff}
+.hv-tab button.ai{overflow:hidden;border-radius:22px;margin-top:-8px;padding:0;gap:0}
+/* 这一枚的图标换成托管页那张「光球」的脸（hvAiOrb 画，见 JS）：珠光球体＋深色面罩＋两只白眼睛。
+   球后面那层淡彩渐变是球体的外晕（稿子上光球带着一圈半透明晕，落在白栏上）。 */
+.hv-tab button.ai .ic{width:51px;height:47px;border-radius:50%;align-items:center;justify-content:center;
+  background:linear-gradient(140deg,#DDF3FF,#FFE7F6 55%,#E7DCFF);
+  box-shadow:0 10px 20px -14px rgba(110,100,220,.7)}
+/* 稿子上这颗球不带文字（其余四枚才有字）；文字仍留在 DOM 里给读屏与冒烟认这枚是谁 */
+.hv-tab button.ai .lb{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .hv-tab button.ai .lb{color:#7B5BFF}
 
 /* ---------------- 宿主 App 工具页（底部 Tab「工具」）· 2026-10-16 起照线上旗舰版截图重排 ----------------
@@ -851,16 +855,24 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
      「同色系光晕＋渐变圆角块」图标、渐变实心 ✦。参考原型那身蓝白皮不搬——两屏并排会立刻看出接缝。
    · 保存钮走本壳既有的 M3 filled 按钮（.btn-primary，纯色胶囊）——稿子那套渐变实心钮在
      SKILL.md 的禁止清单上。视觉可以照抄设计稿，控件不照抄。 */
-#host-ai{background:linear-gradient(180deg,#EAECFC 0%,#F3F5FE 40%,#FFFFFF 100%)}
-.hva-glow{position:absolute;left:0;right:0;top:0;height:340px;pointer-events:none;
-  background:radial-gradient(120% 70% at 90% -6%,rgba(146,132,255,.32),transparent 64%),
-             radial-gradient(112% 66% at 8% 0%,rgba(122,166,255,.20),transparent 62%)}
-/* AI托管那屏的两层（2026-10-14）：.hva-head＝托管状态卡（不缩、不滚），
-   .hva-pane＝工作日志（吃掉剩下的高，自己滚）。外层这一层**故意不带 .scroll 类**——
-   带上就会有第二个滚动指示层（SB_RULES 挑 .scroll），而它自己一格都不滚。 */
-.hva-scroll{position:relative;z-index:1;flex:1;min-height:0;display:flex;flex-direction:column}
-.hva-head{flex:none;padding:0 18px}
-.hva-pane{flex:1;min-height:0;padding:0 18px 24px} /* 底距 24：原先那 148px 是给右下悬浮球让位的（球底距 80＋球高 52＋余量），球 2026-10-16 撤了（ADR-0065），留着就是日志尾部凭空空一大截 */
+/* 2026-10-20 整屏照 Figma「AI托管（未托管／已托管）」重画（节点 1321:1758 / 1321:2001，750×1700）：
+   顶部＝标题＋工作时段＋大形象＋渐变 CTA；下面一张半透明白卡装着按日倒序的时间线。
+   长度一律按 412/750 折算（×0.5493），y 再减掉 34px 状态栏（.screen::before 已占掉那 34）。
+   背景是稿子那张 750×1624 的浅紫插画：原型不带位图（ADR-0042），用三团径向渐变近似。 */
+#host-ai{background:
+  radial-gradient(120% 52% at 88% 6%,rgba(151,139,255,.46),transparent 64%),
+  radial-gradient(110% 46% at 10% 2%,rgba(176,199,255,.52),transparent 62%),
+  linear-gradient(180deg,#F0ECFF 0%,#F7F4FF 46%,#FFFFFF 78%)}
+.hva-glow{position:absolute;left:0;right:0;top:0;height:430px;pointer-events:none;
+  background:radial-gradient(58% 52% at 52% 46%,rgba(198,188,255,.55),transparent 72%),
+             radial-gradient(44% 44% at 88% 12%,rgba(143,166,255,.42),transparent 72%),
+             radial-gradient(38% 40% at 6% 24%,rgba(221,207,255,.55),transparent 74%)}
+/* 稿子在这一屏是**整页一起滚**（大形象和日志同一张纸），不像上一版头卡钉住、只滚日志。
+   .hva-head 因此只是个定高 259 的舞台：里面全按折算坐标绝对摆，滚出视口就跟着走。 */
+.hva-scroll{position:relative;z-index:1;flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none}
+.hva-scroll::-webkit-scrollbar{display:none}
+.hva-head{flex:none;height:259px;padding:0}
+.hva-pane{flex:none;padding:0 15px 22px}
 
 /* ---------------- 宿主 App AI托管 · 升级提示页（**非旗舰版**点底栏那枚「AI托管」进的屏） ----------------
    2026-10-16 照 Figma 节点 543:140（750×1800）**整屏重画**：上一版是按二期 PRD §2.2 手搓的
@@ -1083,35 +1095,62 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
    z-index:1 是为了压过卡片那团柔光（.hva-hero::after，它是伪元素、默认画在子元素之上）。
    名字走 quick 不走 act：工作日志里那条动作清单（hvaLogHtml 的 .hva-acts）已经占了 acts 这个词，
    再叫 hva-act* 会让「日志条目里那排动作标签」和「卡片上这排圆钮」在样式表里撞成一条规则。 */
-.hva-quick{flex:none;position:relative;z-index:1;display:flex;gap:7px}
-.hva-qk{flex:none;display:flex;flex-direction:column;align-items:center;gap:6px;
-  background:none;border:0;padding:0;cursor:pointer;font:inherit;color:inherit}
-.hva-qkcir{position:relative;overflow:hidden;width:44px;height:44px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;background:#fff;color:#2D528E;
-  box-shadow:0 7px 15px -11px rgba(50,80,180,.95)}
-.hva-qk small{font-size:11px;font-weight:600;color:#5B7BC0;line-height:1;white-space:nowrap}
-.hva-qk.on .hva-qkcir{background:linear-gradient(148deg,#8E7BFF,#4E7BFF);color:#fff;
-  box-shadow:0 9px 18px -10px rgba(90,84,249,.95)}
-.hva-qk.on small{color:#4A5FC8}
-/* 托管状态卡＝本屏的主开关面。开关／条件／当前状态三件事要一眼看全，所以它不是一条设置行，是一张卡。
-   右侧那团柔光是稿子上大机器人头像的替身（同首屏光泽球、工具页顶右插画：只求神似，不求逐像素） */
-.hva-hero{position:relative;border-radius:20px;padding:15px 16px 14px;overflow:hidden;
-  background:linear-gradient(150deg,#F4F1FF 0%,#EDF2FF 56%,#FBFBFF 100%);
-  box-shadow:0 14px 30px -24px rgba(60,80,190,.95)}
-.hva-hero::after{content:"";position:absolute;right:-28px;top:-34px;width:126px;height:126px;border-radius:50%;
-  pointer-events:none;background:radial-gradient(60% 60% at 40% 40%,rgba(160,140,255,.30),transparent 70%)}
-.hva-htop{position:relative;display:flex;align-items:center;gap:11px} /* 卡片第一行：头像＋两行字（.hva-hmain 撑开）＋右上那三颗圆 */
-.hva-orb{flex:none;width:50px;height:50px;border-radius:15px;position:relative;overflow:hidden;color:#fff;
-  display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(158deg,#8E7BFF,#5B9BFF);box-shadow:0 10px 20px -12px rgba(110,90,255,.95)}
-.hva-orb::after{content:"";position:absolute;inset:0;background:linear-gradient(150deg,rgba(255,255,255,.42),transparent 62%)}
-.hva-orb svg{position:relative;z-index:1}
-.hva-hmain{flex:1;min-width:0} /* 撑开，把三颗圆顶到卡片右缘；min-width:0 让长文案截断而不是把圆挤出去 */
-.hva-kicker{display:block;font-size:12px;font-weight:700;color:#526FD2;margin-bottom:2px}
-.hva-hmain h2{font-size:19px;font-weight:700;line-height:1.28;letter-spacing:.01em}
-.hva-cond{display:flex;align-items:center;gap:7px;margin-top:10px;border-radius:12px;padding:9px 11px;
-  background:rgba(255,255,255,.82);font-size:12.5px;font-weight:700;color:#355276}
-.hva-cond svg{flex:none;color:#6B7BE0}
+/* 头部的件全按稿子坐标绝对摆（x 直接 ×0.5493，y 再减 34）：标题在 36,96、切换图标 242,101、
+   齿轮 664,90、工作时段 38,164、形象 226,129、CTA 190,419、状态胶囊 38,212。 */
+.hva-hero{position:relative;height:259px}
+.hva-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+.hva-title{position:absolute;left:19.8px;top:15.4px;z-index:1;font-size:26.4px;font-weight:500;line-height:26.4px;
+  letter-spacing:.01em;white-space:nowrap;
+  /* 标题这支渐变（#245BB9→#102953 80%）与全站 .hv-gn（96deg #0F2A58→#2A62B4）不是同一支，
+     所以这里自己写死，不挂 hv-gn——挂上去两处都设 background-image，读的人会以为是同一支 */
+  background-image:linear-gradient(90deg,#245BB9,#102953 80%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+/* 开关／设置两颗仍叫 .hva-quick/.hva-qk（冒烟钉着它们）：稿子上它们不再并排挂在一张卡里，
+   而是各归各位——切换图标贴着标题，齿轮浮在右上角。小字只留给读屏，稿子上没有。 */
+.hva-quick{position:absolute;inset:0;z-index:3;pointer-events:none}
+.hva-qk{position:absolute;display:flex;align-items:center;justify-content:center;
+  background:none;border:0;padding:0;cursor:pointer;font:inherit;color:#173E73;pointer-events:auto}
+.hva-qk:nth-child(1){left:131px;top:19.3px;width:18px;height:18px}
+.hva-qk:nth-child(2){right:13px;top:15.4px;width:34.1px;height:34.1px}
+.hva-qkcir{display:flex;align-items:center;justify-content:center;background:none;border-radius:0;
+  box-shadow:none;color:inherit}
+.hva-qk:nth-child(2) .hva-qkcir{width:34.1px;height:34.1px;border-radius:50%;background:rgba(255,255,255,.55);
+  color:#3D63B4;box-shadow:0 8px 18px -14px rgba(70,80,170,.9);backdrop-filter:blur(4px)}
+.hva-qk small{display:none}
+.hva-qk.on .hva-qkcir{background:none;box-shadow:none;color:#173E73}
+.hva-work{position:absolute;left:20.9px;top:56.1px;display:flex;align-items:center;gap:2.7px;
+  font-size:13.2px;line-height:13.2px;color:#4777BB}
+.hva-work svg{flex:none;color:#5989CE}
+/* 「工作3小时」只在托管开着时出现（稿子 1321:2106，y=212）：白 30% 胶囊＋1px 白半描边＋绿点＋渐变字 */
+.hva-tag3{position:absolute;left:20.9px;top:82.4px;display:flex;align-items:center;gap:3.3px;height:24.2px;
+  padding:0 7.1px;border-radius:999px;background:rgba(255,255,255,.42);
+  border:1px solid rgba(255,255,255,.55);font-size:12.1px;line-height:12.1px;white-space:nowrap}
+.hva-tag3 i{flex:none;width:4.4px;height:4.4px;border-radius:50%;background:#28C76F;
+  box-shadow:0 0 0 1px rgba(40,199,111,.2)}
+.hva-tag3 span{background-image:linear-gradient(90deg,#1677FE,#9452FF);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+/* 形象：稿子上是一张 3D 人物位图。按 ADR-0042 用纯 SVG 画一个「远看是那位长发、浅粉西装、
+   戴耳环项链的年轻女性」的形，不嵌图。坐标 226,129 尺寸 320×371（折算后 124,37 176×204）。 */
+.hva-portrait{position:absolute;left:124px;top:37px;width:176px;height:204px;z-index:0;pointer-events:none}
+.hva-portrait svg{display:block;width:100%;height:100%}
+/* CTA：稿子上是一枚 370×94 的渐变胶囊（蓝→紫），右端一颗白圆套箭头。
+   开态翻成实心白胶囊＋渐变字，白圆翻成渐变圆（1321:2001）。
+   渐变实心钮本在 M3 禁止清单上；这里照用户给的新稿 1:1 复刻，按 .hw-add 的先例视为覆盖页的刻意例外。 */
+.hva-cta{position:absolute;left:104px;top:196.2px;width:203.3px;height:51.6px;z-index:2;border:0;
+  border-radius:25.8px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 30px 0 40px;cursor:pointer;
+  background:linear-gradient(90deg,rgba(42,131,255,.9),rgba(155,93,255,.9));color:#fff;
+  font-size:16.5px;font-weight:500;letter-spacing:.01em;
+  box-shadow:0 14px 26px -16px rgba(102,86,255,.9)}
+.hva-cta .arr{flex:none;width:26px;height:26px;border-radius:50%;background:#fff;
+  display:flex;align-items:center;justify-content:center;color:#2F7BFF}
+/* 开态胶囊是**实心白**，不是白 90%：稿子上它压在人物头发上，透过 10% 会看到发色，
+   描边也不再画（白底＋白描边等于没有边，只会让边缘发灰）。 */
+.hva-cta.on{background:#fff;color:transparent;
+  box-shadow:0 14px 26px -20px rgba(80,80,180,.5)}
+.hva-cta.on .tx{background-image:linear-gradient(90deg,#2E86FF,#9452FF);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.hva-cta.on .arr{background:linear-gradient(90deg,#2A83FF,#9B5DFF);color:#fff}
 .hva-sub{margin:2px 0 14px} /* 员工列表那两层筛选用的是同一个 .tk-seg，只在这里统一修上下距 */
 /* 托管清单那一整族的版式（栏头 .hva-grp／计数 .hva-n／视图分段器 .hva-view／清单 .hva-list／
    清单卡 .hva-card…／来源角标 .hva-ctl .hva-when .hva-min／图标层 .hva-cic 及其 22px 缩版）
@@ -1147,32 +1186,52 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 /* 就地重画（挂完一枚能力之后，见 hvaMine 的 quiet）：只免掉动画（面板上滑＋遮罩淡入），其余一样。
    遮罩也得免：它跟面板同一次 innerHTML 重建，只留面板不动的话，点一下遮罩会闪一下。 */
 .hva-sheet.quiet,.hva-mask.quiet{animation:none}
-/* 工作日志：按日倒序的时间线。日分隔＝两侧细线夹一个「日／月」；每条＝时间点＋竖线＋正文＋三类子卡 */
-.hva-day{display:flex;align-items:center;gap:10px;margin:4px 0 14px}
-.hva-day .ln{flex:1;height:1px;background:linear-gradient(90deg,transparent,#D8DFF2)}
-.hva-day .ln.r{background:linear-gradient(90deg,#D8DFF2,transparent)}
-.hva-day .d{display:flex;align-items:baseline;gap:3px}
-.hva-day .d b{font-size:17px;font-weight:700;line-height:1}
-.hva-day .d small{font-size:11.5px;font-weight:600;color:#8C9BB8}
-.hva-entry{position:relative;padding:0 0 20px 34px}
-.hva-entry::before{content:"";position:absolute;left:12px;top:22px;bottom:2px;width:2px;border-radius:2px;background:#E4EAF6}
-.hva-entries .hva-entry:last-child{padding-bottom:4px}
+/* 工作日志：稿子（1321:1853）是一张 690×1100 的半透明白卡（圆角 30）包住一条按日倒序的时间线，
+   日期 32px 渐变、时间 28px 浅蓝、正文 28px 深蓝渐变、引用条 #F8F6FF。全部 ×0.5493 折算。
+   卡内左边距 17.6（日期起跑线），条目再缩进 26.9：让出 8.8 的圆点与 1.1 的虚线轴。 */
+.hva-logcard{border-radius:16.5px;background:rgba(255,255,255,.9);
+  padding:18.7px 21.4px 22px 17.6px}
+.hva-day{margin:0 0 12px}
+.hva-day .d{display:block;font-size:16.5px;font-weight:600;line-height:19.8px;
+  background-image:linear-gradient(90deg,#245BB9,#102953 80%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.hva-entry{position:relative;padding:0 0 8px 26.9px}
+/* 虚线轴：稿子是一条 2px、5.98 实／5.97 空的竖向虚线，顶紫底蓝。用重复遮罩切，比 border-style:dashed 好控节奏 */
+.hva-entry::before{content:"";position:absolute;left:7.2px;top:26px;bottom:0;width:1.1px;
+  background-image:linear-gradient(180deg,#AA75FF,#67A6FF);
+  -webkit-mask-image:repeating-linear-gradient(180deg,#000 0 3.3px,transparent 3.3px 6.6px);
+  mask-image:repeating-linear-gradient(180deg,#000 0 3.3px,transparent 3.3px 6.6px)}
+.hva-entries .hva-entry:last-child{padding-bottom:0}
 .hva-entries .hva-entry:last-child::before{content:none}
-.hva-time{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.hva-time .dot{position:absolute;left:5px;top:1px;width:17px;height:17px;border-radius:50%;color:#7B5BFF;
-  display:flex;align-items:center;justify-content:center;background:#fff;box-shadow:0 0 0 2px #E4EAF6}
-.hva-time b{font-size:14.5px;font-weight:700;color:#2A4A7E;letter-spacing:.01em}
-.hva-body p{font-size:13.5px;line-height:1.72;color:#314966}
-.hva-body p em{font-style:normal;font-weight:700}
-.hva-quote{margin-top:9px;border-radius:12px;padding:9px 12px;font-size:12.5px;line-height:1.6;color:#5B7099;
-  background:#F4F6FC;box-shadow:inset 2.5px 0 0 #C9D6EF}
-.hva-acts{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}
-.hva-acts span{display:inline-flex;align-items:center;gap:5px;height:28px;padding:0 11px;border-radius:999px;
-  font-size:12px;font-weight:700;color:#5B6BFF;background:rgba(86,103,255,.09)}
+.hva-time{position:relative;display:flex;align-items:center;height:26.4px;font-size:15.4px;
+  line-height:26.4px;color:#6D92C7}
+/* 圆点与时间那行垂直居中对齐（稿子 dot y=857，时间行顶 841＋行高 48 的中心）：白心＋渐变描边 */
+.hva-time .dot{position:absolute;left:-26.9px;top:8.8px;width:8.8px;height:8.8px;border-radius:50%;
+  box-sizing:border-box;border:1.65px solid transparent;
+  background-image:linear-gradient(#fff,#fff),linear-gradient(90deg,#67A6FF,#AA75FF);
+  background-origin:border-box;background-clip:padding-box,border-box}
+.hva-body p{margin-top:1.6px;font-size:15.4px;line-height:19.8px;font-weight:500;
+  background-image:linear-gradient(90deg,#245BB9,#102953 80%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.hva-body p em{font-style:normal;font-weight:500;
+  background-image:linear-gradient(90deg,#1677FE,#9452FF);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.hva-quote{margin-top:7.7px;border-radius:7.7px;padding:7.1px 9.3px;font-size:13.2px;line-height:22px;
+  color:#3E6DB1;background:#F8F6FF}
+/* 动作清单（AI关注／点赞／收藏／转发）在稿子上不再是四枚胶囊，而是一排渐变图标＋渐变字，横向均分 */
+.hva-acts{display:flex;align-items:center;justify-content:space-between;font-size:13.2px;line-height:15.9px}
+.hva-acts span{display:inline-flex;align-items:center;gap:6px;
+  background-image:linear-gradient(90deg,#1677FE,#9452FF);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
 .hva-acts span svg{flex:none}
-.hva-box{margin-top:9px;border-radius:12px;padding:10px 12px;font-size:12.5px;line-height:1.62;color:#3A4B66;
-  background:linear-gradient(150deg,#F6F4FF,#F1F5FF);box-shadow:inset 0 0 0 1px rgba(200,208,245,.75)}
-.hva-box b{display:flex;align-items:center;gap:4px;margin-bottom:4px;font-size:12.5px;font-weight:700}
+/* 评论框：一块 #F8F6FF 圆角块，里面两段「✦ 渐变标签＋黑字正文」；换行回到块内左缘（稿子第二行 x=127） */
+.hva-box{margin-top:7.7px;border-radius:7.7px;padding:11px 15.4px 8.8px 10.4px;background:#F8F6FF}
+.hva-acts + .hva-crow{margin-top:16.5px}
+.hva-crow{padding-left:11px;font-size:13.2px;line-height:20.9px;color:#333}
+.hva-crow + .hva-crow{margin-top:14.3px}
+.hva-crow .ic{display:inline-block;width:15.4px;height:15.4px;margin-right:5.5px;vertical-align:-2.8px}
+.hva-crow .lb{background-image:linear-gradient(90deg,#1677FE,#9452FF);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
 /* 这里曾是右下那颗「添加托管动作」悬浮球（52px 渐变圆，稿子上它底下还有一行小字）。
    2026-10-16 随托管清单一屏一起删（ADR-0065）：它拉起来的浮窗就是"往清单里加一条"，
    清单不在，它没有落点。挂／摘能力现在在托管范围浮层里（设置页那颗「管理托管范围」）。 */
@@ -3873,14 +3932,48 @@ var HV_STATS=[{n:3,l:'待完成'},{n:10,l:'待唤醒'},{n:5,l:'待触达'},
    的跳变就是它要防的），宿主自己的可以有，稿子上也确实有。首页那枚是选中态、不跳转。
    五枚、AI托管居中抬起，是照参考原型 APP-AI-001 的 IA 排的（参考原型也是首页/任务/AI托管/工具/我的）。
    ★ 五屏共用这一个壳，所以合成一个函数：各屏各写一遍这十来行，迟早有一屏漏掉新加的那枚——
-     而「同一个底部栏一会儿在、一会儿不在」正是本模块要防的那件事。ai:1 那枚由 CSS 画成抬起的圆。 */
+     而「同一个底部栏一会儿在、一会儿不在」正是本模块要防的那件事。ai:1 那枚抬起、图标换成光球。 */
+/* 底栏正中「AI托管」那枚图标：稿子里是一颗白瓷光球——左上高光、右下泛粉紫，
+   中间一条深色面罩、面罩里两只白眼睛。零位图（ADR-0042），整颗用 SVG 形状画。
+   51×47 是稿子尺寸按 412/750 折算后的落位，与 .hv-tab button.ai .ic 的宽高一致。 */
+function hvAiOrb(){
+  return '<svg width="51" height="47" viewBox="0 0 102 94" aria-hidden="true">'
+    +'<defs>'
+    +'<radialGradient id="hvaOrbBody" cx="38" cy="26" r="76" gradientUnits="userSpaceOnUse">'
+      +'<stop stop-color="#FFFFFF"/><stop offset=".5" stop-color="#F4EDFF"/>'
+      +'<stop offset=".82" stop-color="#E2D2FA"/><stop offset="1" stop-color="#C9B2F0"/></radialGradient>'
+    +'<radialGradient id="hvaOrbPink" cx="30" cy="66" r="40" gradientUnits="userSpaceOnUse">'
+      +'<stop stop-color="#FFB9D9" stop-opacity=".9"/><stop offset="1" stop-color="#FFB9D9" stop-opacity="0"/></radialGradient>'
+    +'<radialGradient id="hvaOrbBlue" cx="72" cy="22" r="38" gradientUnits="userSpaceOnUse">'
+      +'<stop stop-color="#9FE3FF" stop-opacity=".9"/><stop offset="1" stop-color="#9FE3FF" stop-opacity="0"/></radialGradient>'
+    +'<radialGradient id="hvaOrbCyan" cx="70" cy="64" r="34" gradientUnits="userSpaceOnUse">'
+      +'<stop stop-color="#9FF0EA" stop-opacity=".85"/><stop offset="1" stop-color="#9FF0EA" stop-opacity="0"/></radialGradient>'
+    +'<linearGradient id="hvaVisor" x1="51" y1="28" x2="51" y2="67" gradientUnits="userSpaceOnUse">'
+      +'<stop stop-color="#443C64"/><stop offset=".45" stop-color="#221D3C"/><stop offset="1" stop-color="#141026"/></linearGradient>'
+    +'</defs>'
+    +'<ellipse cx="51" cy="86" rx="25" ry="5" fill="#6B5AA8" opacity=".16"/>'
+    +'<circle cx="51" cy="44" r="43" fill="#fff"/>'
+    +'<circle cx="51" cy="44" r="41" fill="url(#hvaOrbBody)"/>'
+    +'<circle cx="51" cy="44" r="41" fill="url(#hvaOrbBlue)"/>'
+    +'<circle cx="51" cy="44" r="41" fill="url(#hvaOrbPink)"/>'
+    +'<circle cx="51" cy="44" r="41" fill="url(#hvaOrbCyan)"/>'
+    +'<ellipse cx="33" cy="20" rx="11" ry="6" transform="rotate(-24 33 20)" fill="#fff" opacity=".9"/>'
+    +'<circle cx="23" cy="32" r="2.3" fill="#fff" opacity=".75"/>'
+    +'<rect x="18" y="28" width="66" height="39" rx="19.5" fill="url(#hvaVisor)"/>'
+    +'<rect x="18.6" y="28.6" width="64.8" height="37.8" rx="18.9" fill="none" stroke="#fff" stroke-opacity=".18" stroke-width="1.2"/>'
+    +'<rect x="24" y="31.4" width="54" height="10" rx="5" fill="#fff" opacity=".09"/>'
+    +'<rect x="34.2" y="44.4" width="7.2" height="14" rx="3.6" fill="#fff"/>'
+    +'<rect x="55.3" y="44.4" width="7.2" height="14" rx="3.6" fill="#fff"/>'
+  +'</svg>';
+}
 function hvTabsHtml(list){
   var h='';
   for(var i=0;i<list.length;i++){var v=list[i];
     /* 图标与文字分开上色：图标走 currentColor（实心），文字才吃 .hv-gn 的渐变裁剪——
        渐变裁剪会把 currentColor 也变成透明，套在图标上等于把图标擦掉 */
     h+='<button class="'+(v.on?'on':'')+(v.ai?' ai':'')+'" onclick="'+(v.fn||'')+'">'
-      +'<span class="ic">'+I(v.ic,24,1.9)+'</span>'
+      /* 中间抬起那一枚（ai）不画线性图标：它是托管页那张「光球的脸」，见 hvAiOrb */
+      +'<span class="ic">'+(v.ai?hvAiOrb():I(v.ic,24,1.9))+'</span>'
       +'<span class="lb'+(v.on?' hv-gn':'')+'">'+v.n+'</span></button>';
   }
   return h;
@@ -4406,9 +4499,11 @@ var HVA_ON=false;              /* 托管总开关。默认关：先让人看清�
    前两格驱动的是「托管清单｜工作日志」的分栏与那套甲／乙排法演示，后两格是清单的两个来源与
    「我的」页那张临时的「演示」卡。托管清单那一屏整块撤掉之后，这一屏只剩工作日志一栏——
    一栏的分段器没有意义，排法更没有两种可比。 */
-var HVA_WORK='09:00—18:00';     /* 托管条件之一：工作时间 */
+var HVA_WORK='09:00-18:00';     /* 托管条件之一：工作时间（稿子上是半角连字符，别再改回破折号） */
 var HVA_IDLE=10;               /* 托管条件之二：闲置门槛（分钟） */
 var HVA_IDLES=[5,10,15,30];
+var HVA_WORKED=3;              /* 开态胶囊「工作3小时」里的累计时长。原型是静态演示值，不接真时长 */
+var HVA_SWITCH='<svg width="14.2" height="14.2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5h15.5M15 4l3.5 3.5L15 11"/><path d="M21 16.5H5.5M9 13l-3.5 3.5L9 20"/></svg>';
 /* 多开托管：托管跑在哪几个账号上。**只读得到微信与企业微信两族**——抖音／小红书那些不在
    托管范围内，扫也不扫、列也不列，所以这份 App 表就是它的边界（别再往里加平台）。
    账号不是配置出来的，是**扫出来的**：HVA_ACCTS 在点「更新账号数据」之前恒空，照实体机——
@@ -4703,24 +4798,21 @@ function hvaActList(){
    正文里的 [[…]] 是要强调的词，渲染时才换成渐变强调字（见 hvaMark）——不让数据里直接写 HTML，
    那样改一个字都得担心标签配不配得平。 */
 var HVA_LOG=[
-  {d:'4',m:'10月',es:[
-    {tm:'14:36',st:'待核对',body:'小助在微信向 [[68 位目标客户]] 发起 [[七夕客户关怀]] 群发',blocks:[
-      {k:'quote',tx:'管理员下发：七夕客户关怀群发 · 今日内执行'},
-      {k:'acts',items:[['send','已执行群发'],['clock','结果追踪中']]},
-      {k:'box',lb:'结果摘要',tx:'68 位客户已发起，3 位结果待核对'}]},
-    {tm:'11:20',st:'已中断',body:'小助在 [[小红书视频]] 下对 [[amye]] 的评论做了互动',blocks:[
-      {k:'quote',tx:'amye：娃哈哈'},
-      {k:'acts',items:[['thumbsup','AI智能点赞'],['message','已关注']]},
-      {k:'box',lb:'AI智能回复',tx:'哈哈，看来你也 get 到回村带娃的快乐密码啦！娃在村里撒欢，咱也能偷会儿懒～'},
-      {k:'box',lb:'待确认',tx:'回复草稿已生成并暂停，等你确认后才会发出。'}]}
+  {d:'8月25日',es:[
+    {tm:'18:00',st:'已完成',body:'数智员工在[[抖音短视频]]进行了互动',blocks:[
+      {k:'quote',tx:'@小满家的猫：周末带娃去露营，轻装出发，把两天交给山野和晚风。'}]},
+    {tm:'16:45',st:'已完成',body:'数智员工在[[抖音短视频]]进行了互动',blocks:[
+      {k:'quote',tx:'@小满家的猫：周末带娃去露营，轻装出发，把两天交给山野和晚风。'},
+      {k:'box',acts:[['star','AI关注'],['thumb','AI点赞'],['heart','AI收藏'],['forward','AI转发']],crows:[
+        ['AI仿写评论：','刚刷到这条，带娃露营看着太舒服了，请问营地需要提前多久预约？'],
+        ['固定话术评论：','感谢关注～露营装备和亲子出行的问题都可以私信我，看到都会回复。']]}]},
+    {tm:'12:30',st:'已完成',body:'数智员工在[[抖音短视频]]进行了互动',blocks:[
+      {k:'quote',tx:'@小满家的猫：周末带娃去露营，轻装出发，把两天交给山野和晚风。'}]}
   ]},
-  {d:'3',m:'10月',es:[
-    {tm:'16:40',st:'已完成',body:'小助发布 [[七夕客户关怀朋友圈]]，并回查了发布结果',blocks:[
-      {k:'acts',items:[['photos','已发朋友圈'],['thumbsup','评论互动已开启']]},
-      {k:'box',lb:'执行结果',tx:'已确认发布'}]},
-    {tm:'10:18',st:'已完成',body:'小助向新好友 [[赵心怡]] 发送了欢迎问候',blocks:[
-      {k:'quote',tx:'赵心怡：你好呀，朋友推荐我来找你，说你们家售后很靠谱。'},
-      {k:'box',lb:'自动打招呼',tx:'感谢支持！给你准备了新客专属福利，智能门锁使用随时找我～'}]}
+  {d:'8月24日',es:[
+    {tm:'16:40',st:'已完成',body:'数智员工在[[抖音短视频]]完成了评论互动',blocks:[
+      {k:'quote',tx:'@阿远：新到的露营灯试了一晚，续航比想象中稳。'},
+      {k:'box',crows:[['AI仿写评论：','灯光氛围感很好，户外过夜续航确实关键，这款充一次能用几晚？']]}]}
   ]}
 ];
 /* 状态色只有三档，与任务页同一口径：绿＝做完了／琥珀＝等人看一眼／红＝没做成要人管 */
@@ -4794,34 +4886,105 @@ function hvaOpen(t){
        （不给「＋新建」、点卡是选中而不是进详情），所以「新建数智员工」与「员工详情／编辑」
        眼下在 App 里没有入口（侧栏目录里还能直达，那只是演示目录）。
        数智员工的建号／改号 要么收进托管全局设置页一行，要么认了「App 里只挑人、建号走后台」。 */
+/* 托管页那幅人像（稿子 1321:1758 顶上那张，320×371）：零位图（ADR-0042），整幅用 SVG 形状画。
+   坐标系 200×232（与稿子同比例），摆位与尺寸由 .hva-portrait 定；下半身会被 CTA 压住，所以只细画到胸口。
+   画法照稿子：中分深发、白瓷肤色、粉色西装外套＋白色内搭、金色耳环与细项链。 */
+function hvaPortrait(){
+  return '<div class="hva-portrait" aria-hidden="true"><svg viewBox="0 0 200 232" xmlns="http://www.w3.org/2000/svg">'
+    +'<defs>'
+    +'<linearGradient id="hvaHair" x1="100" y1="0" x2="100" y2="232" gradientUnits="userSpaceOnUse">'
+      +'<stop stop-color="#38242D"/><stop offset=".5" stop-color="#1E1219"/><stop offset="1" stop-color="#120A10"/></linearGradient>'
+    +'<linearGradient id="hvaSkin" x1="100" y1="45" x2="100" y2="150" gradientUnits="userSpaceOnUse">'
+      +'<stop stop-color="#FFEFE5"/><stop offset="1" stop-color="#F0C0A7"/></linearGradient>'
+    +'<linearGradient id="hvaBlz" x1="100" y1="146" x2="100" y2="232" gradientUnits="userSpaceOnUse">'
+      +'<stop stop-color="#FAE5EA"/><stop offset="1" stop-color="#E5B5C3"/></linearGradient>'
+    +'<linearGradient id="hvaBlzD" x1="60" y1="150" x2="150" y2="232" gradientUnits="userSpaceOnUse">'
+      +'<stop stop-color="#EFC4D0"/><stop offset="1" stop-color="#D9A3B4"/></linearGradient>'
+    +'</defs>'
+    /* ① 后层长发（整幅的轮廓底） */
+    +'<path d="M100 4C63 4 41 28 41 68c0 38-9 76-20 112-5 17-8 35-9 52h62c-7-39-6-76 0-110 4-22 11-40 22-51 11 11 18 29 22 51 6 34 7 71 0 110h62c-1-17-4-35-9-52-11-36-20-74-20-112 0-40-22-64-59-64Z" fill="url(#hvaHair)"/>'
+    /* ② 脖子与下颌影 */
+    +'<path d="M88 104v36c0 12 5.5 18 12 18s12-6 12-18v-36Z" fill="url(#hvaSkin)"/>'
+    +'<path d="M88 104c7 8 17 8 24 0v10c-7 7-17 7-24 0Z" fill="#E2A78E" opacity=".45"/>'
+    /* ③ 躯干：粉外套、白内搭、两片翻领 */
+    +'<path d="M100 148c-16 0-30 4-42 12-15 10-23 38-26 72h136c-3-34-11-62-26-72-12-8-26-12-42-12Z" fill="url(#hvaBlz)"/>'
+    +'<path d="M100 150l-14 16 14 30 14-30Z" fill="#FCF7F5"/>'
+    +'<path d="M100 196l-7 36h14Z" fill="#FCF7F5"/>'
+    +'<path d="M100 149c-11 2-21 7-28 14l14 12 14-15Z" fill="url(#hvaBlzD)"/>'
+    +'<path d="M100 149c11 2 21 7 28 14l-14 12-14-15Z" fill="url(#hvaBlzD)"/>'
+    /* ④ 脸与耳 */
+    +'<ellipse cx="100" cy="80" rx="33.5" ry="42.5" fill="url(#hvaSkin)"/>'
+    +'<ellipse cx="66.5" cy="85" rx="6" ry="9" fill="url(#hvaSkin)"/>'
+    +'<ellipse cx="133.5" cy="85" rx="6" ry="9" fill="url(#hvaSkin)"/>'
+    +'<path d="M64.5 82c1.5 2 1.5 5 0 7M135.5 82c-1.5 2-1.5 5 0 7" stroke="#DFA98F" stroke-width="1.2" fill="none" stroke-linecap="round"/>'
+    /* ⑤ 前层头发：顶盖＋两侧外翻的刘海＋垂到肩前的长发 */
+    +'<path d="M100 6c-27 0-44 18-45 45 8-16 24-26 45-26s37 10 45 26c-1-27-18-45-45-45Z" fill="url(#hvaHair)"/>'
+    +'<path d="M55 44c-4 20-3 44 4 62 3 8 9 11 13 7 3-3 2-9 0-16-4-17-6-36-5-53Z" fill="url(#hvaHair)"/>'
+    +'<path d="M145 44c4 20 3 44-4 62-3 8-9 11-13 7-3-3-2-9 0-16 4-17 6-36 5-53Z" fill="url(#hvaHair)"/>'
+    +'<path d="M58 108c-1 36-6 72-14 106l21 6c7-34 10-74 9-112Z" fill="url(#hvaHair)"/>'
+    +'<path d="M142 108c1 36 6 72 14 106l-21 6c-7-34-10-74-9-112Z" fill="url(#hvaHair)"/>'
+    /* ⑥ 五官：眉、眼、鼻、唇、腮红 */
+    +'<path d="M77 66c5-4 12-4 17-2M106 64c5-2 12-2 17 2" stroke="#3A2226" stroke-width="2.1" fill="none" stroke-linecap="round"/>'
+    +'<path d="M76 78c4-5 12-5 16 0-4 5-12 5-16 0ZM108 78c4-5 12-5 16 0-4 5-12 5-16 0Z" fill="#FFFDFC"/>'
+    +'<circle cx="84" cy="78.5" r="4.4" fill="#53342B"/><circle cx="116" cy="78.5" r="4.4" fill="#53342B"/>'
+    +'<circle cx="84" cy="79" r="2.1" fill="#1C1210"/><circle cx="116" cy="79" r="2.1" fill="#1C1210"/>'
+    +'<circle cx="82.6" cy="77" r="1.2" fill="#fff"/><circle cx="114.6" cy="77" r="1.2" fill="#fff"/>'
+    +'<path d="M76 78c4-5 12-5 16 0M108 78c4-5 12-5 16 0" stroke="#2B181B" stroke-width="1.7" fill="none" stroke-linecap="round"/>'
+    +'<path d="M100 84c-1 4-3 7-1 9 1 1 2 1 3 0" stroke="#D69B84" stroke-width="1.2" fill="none" stroke-linecap="round"/>'
+    +'<path d="M90 101c4-3 7-2 10 1 3-3 6-4 10-1-3 6-7 9-10 9s-7-3-10-9Z" fill="#D96F7E"/>'
+    +'<path d="M94 102c4 1.6 8 1.6 12 0-1.5 2.4-3.5 3.6-6 3.6s-4.5-1.2-6-3.6Z" fill="#FFF7F6" opacity=".9"/>'
+    +'<ellipse cx="74" cy="92" rx="7" ry="4" fill="#F29A9E" opacity=".28"/>'
+    +'<ellipse cx="126" cy="92" rx="7" ry="4" fill="#F29A9E" opacity=".28"/>'
+    /* ⑦ 金色首饰：耳环＋细项链 */
+    +'<circle cx="65.5" cy="96" r="4.2" stroke="#E0B36A" stroke-width="1.5" fill="none"/>'
+    +'<circle cx="134.5" cy="96" r="4.2" stroke="#E0B36A" stroke-width="1.5" fill="none"/>'
+    +'<path d="M85 146c5 9 10 13 15 13s10-4 15-13" stroke="#E0B36A" stroke-width="1.3" fill="none"/>'
+    +'<circle cx="100" cy="161" r="2.1" fill="#E0B36A"/>'
+  +'</svg></div>';
+}
+/* 互动动作那四枚图标（AI关注／AI点赞／AI收藏／AI转发）：稿子是实心、吃 #1677FF→#9452FF 这支渐变
+   （hvuGrad，与升级页同一支）。I() 那套是描边线性图标，形状对不上，所以这里单独一份实心 path，
+   统一 28×28 的坐标系。 */
+var HVA_ACT_P={
+  star:'M14 2.6l3.1 6.3 6.9 1-5 4.9 1.2 6.9-6.2-3.3-6.2 3.3 1.2-6.9-5-4.9 6.9-1L14 2.6Z',
+  thumb:'M23.5 10.1h-6c2.3-8.7-1.6-9.1-1.6-9.1-1.7 0-1.4 1.3-1.5 1.5 0 4.2-4.5 7.6-4.5 7.6v12c0 1.2 1.6 1.6 2.2 1.6h9.1c.9 0 1.6-2.2 1.6-2.2 2.2-7.6 2.2-9.9 2.2-9.9 0-1.6-1.5-1.5-1.5-1.5ZM7.4 10.1H3.8c-.8 0-.8.7-.8.7l.8 12.1c0 .8.8.8.8.8h3.1c.7 0 .6-.5.6-.5V11c0-.9-.9-.9-.9-.9Z',
+  heart:'M14 24.5S3.5 18.2 3.5 11.2C3.5 7.6 6.3 5 9.6 5c2 0 3.6 1 4.4 2.4C14.8 6 16.4 5 18.4 5c3.3 0 6.1 2.6 6.1 6.2 0 7-10.5 13.3-10.5 13.3Z',
+  forward:'M25.9 4.1 2.9 12.8c-.8.3-.8 1.5 0 1.8l6.4 2.2 2.3 6.8c.3.9 1.5 1 2 .2l3.4-5.1 6.3 4.6c.8.6 1.9.2 2.1-.8l2.7-17.3c.2-1.1-.9-1.9-1.9-1.5Z'
+};
+function hvaActIcon(n,s){ return '<svg width="'+s+'" height="'+s+'" viewBox="0 0 28 28" aria-hidden="true"><path d="'+HVA_ACT_P[n]+'" fill="url(#hvuGrad)"/></svg>'; }
+/* 页头右上那两枚：开关（稿子是一枚左右换向的箭头）与齿轮。两枚都还是 .hva-qk——开关必须留在
+   这里，冒烟用 #host-ai .hva-quick .hva-qk 数它俩并核对 onclick；<small> 是给读屏与冒烟的文案，
+   视觉上由 .hva-qk small{display:none} 收掉。 */
 function hvaActsHtml(){
   return '<div class="hva-quick">'
     +'<button class="hva-qk'+(HVA_ON?' on':'')+'" onclick="hvaToggle()" role="switch" aria-checked="'+(HVA_ON?'true':'false')+'" title="'+(HVA_ON?'关闭托管':'开启托管')+'">'
-      /* 电源图形是这一屏独有的，全站没有第二处用，不往 ICONS 里加——加进去等于为一次用法养一枚图标。
-         顶上一道缺口＋中间一根竖杆：缺口就是「关」的那件事本身，比一个实心圆环更像开关 */
-      +'<span class="hva-qkcir"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2.6" x2="12" y2="11.6"/></svg></span>'
-      +'<small>'+(HVA_ON?'已开启':'已关闭')+'</small></button>'
+      +'<span class="hva-qkcir">'+HVA_SWITCH+'</span>'
+      +'<small>托管开关</small></button>'
     +'<button class="hva-qk" onclick="go(\'host-ai-set\')" title="设置">'
-      +'<span class="hva-qkcir">'+I('gear',19,2.1)+'</span>'
+      +'<span class="hva-qkcir">'+I('gear',17,1.9)+'</span>'
       +'<small>设置</small></button>'
   +'</div>';
 }
-/* 托管状态卡：卡里三件事——谁在托管（名字）、现在什么状态（标题）、什么条件下生效（条件条），
-   加上右上那三颗圆钮。开关长在这张卡上（不是页头那行），状态与开关就在同一张卡里对得上。
-   卡片长得像状态卡，就得把状态说在卡里——开关的圆在卡右上角，滑块位置读不到卡外去。
-   ★ 那行「智能托管伙伴 · ××」里的名字**不写死**（2026-10-15，ADR-0062）：托管由哪位数智员工执行
-     是可以换的（AI托管全局设置 →「AI智能回复」→ 首卡），名字写死在这张卡上，
-     换完人回来看头卡还是旧名字，两处就对不上了。配色那枚光球不跟着换：它是托管的图形记号，
-     不是那位员工的头像（那位真头像在 AI配置 列表与回复那一屏的首卡上）。 */
+/* 页头（稿子 1321:1758／1321:2001 那一整块）：一幅人像打底，左上标题「智能小助」，
+   标题下是工作时段的读数（开态再多一枚「工作 N 小时」胶囊），右上两枚动作，底下是主 CTA。
+   状态不再另起一张卡：开／关读在 CTA 上（一键开启托管／一键关闭托管），
+   工作条件那两句（工作时间、闲置多久）收进 .hva-sr 给读屏——视觉上稿子没画这两行，
+   但口径还在，冒烟也从这里读（见 .hva-sr 的定义）。
+   ★ 人像旁边那行名字（原「智能托管伙伴 · ××」）随旧状态卡一起撤了（2026-10-20）：
+     稿子的页头只有标题「智能小助」；托管由哪位数智员工执行，仍可在 AI托管 设置里换。 */
 function hvaHeroHtml(){
   return '<div class="hva-hero">'
-    +'<div class="hva-htop"><span class="hva-orb">'+I('sparkle',25,2)+'</span>'
-      +'<span class="hva-hmain"><small class="hva-kicker">智能托管伙伴 · '+HVA_HOST_AGENT+'</small>'
-      +'<h2 class="hv-gn">'+(HVA_ON?'托管已开启':'托管已关闭')+'</h2></span>'
-      +hvaActsHtml()+'</div>'
-    /* 这里曾有一条状态说明（开/关各一句）。删了：开关状态标题里已经写死（托管已开启/已关闭），
-       生效条件下面 .hva-cond 那条也在写（工作时间 · 闲置 N 分钟），这句只是把同一件事再散文一遍 */
-    +'<div class="hva-cond">'+I('clock',15,2.2)+'<span>工作时间 '+HVA_WORK+' · 闲置 '+HVA_IDLE+' 分钟</span></div>'
+    +hvaPortrait()
+    +'<div class="hva-title">智能小助</div>'
+    +'<div class="hva-work">'+I('clock',13,2.2)+'<span>工作'+HVA_WORK+'</span></div>'
+    +(HVA_ON?'<div class="hva-tag3"><i></i><span>工作'+HVA_WORKED+'小时</span></div>':'')
+    +hvaActsHtml()
+    +'<button class="hva-cta'+(HVA_ON?' on':'')+'" onclick="hvaToggle()">'
+      +'<span class="tx">'+(HVA_ON?'一键关闭托管':'一键开启托管')+'</span>'
+      +'<span class="arr"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12.5 5.5 19 12l-6.5 6.5"/></svg></span>'
+    +'</button>'
+    +'<span class="hva-sr">'+(HVA_ON?'托管已开启。':'托管已关闭，不会自动执行。')
+      +'工作时间 '+HVA_WORK+' · 闲置 '+HVA_IDLE+' 分钟</span>'
   +'</div>';
 }
 /* 清单那一整族的渲染件（hvaQueueCard／hvaSrcTag／hvaTier／hvaPastDue／hvaAdminVisible／
@@ -4839,11 +5002,15 @@ function hvaHeroHtml(){
    （见 hvaScopeHtml）。所以它不再拦掉任何数据，只答"这一类交出去了没有"。
    设置页那张范围卡走的是另一条路（直接列 HVA_SCOPE，见 REND['host-ai-set']），不经过它。 */
 function hvaInScope(ty){ return HVA_SCOPE.indexOf(ty)>=0; }
+/* 工作日志（稿子 1321:1758 下半段）：一天一张白卡，日期一行（日大、月小），
+   下面一条时间轴——左侧虚线竖轨，每个时间点一枚白底渐变描边的圆点，再往右是正文与各种块。
+   条目上的状态标签（已完成／进行中）随新稿撤掉：稿子只留时间，状态那件事改由正文说。
+   块有三种：quote（原帖引用）、acts（四枚互动动作）、box（AI仿写／固定话术两行）。 */
 function hvaLogHtml(){
   var h='',i,j,k,m;
   for(i=0;i<HVA_LOG.length;i++){
     var d=HVA_LOG[i];
-    h+='<div class="hva-day"><span class="ln"></span><span class="d"><b class="hv-gn">'+d.d+'</b><small>'+d.m+'</small></span><span class="ln r"></span></div><div class="hva-entries">';
+    h+='<div class="hva-logcard"><div class="hva-day"><span class="d">'+d.d+'</span></div><div class="hva-entries">';
     for(j=0;j<d.es.length;j++){
       var e=d.es[j],b='';
       for(k=0;k<e.blocks.length;k++){
@@ -4851,16 +5018,21 @@ function hvaLogHtml(){
         if(B.k==='quote')b+='<div class="hva-quote">'+esc(B.tx)+'</div>';
         else if(B.k==='acts'){
           var its='';
-          for(m=0;m<B.items.length;m++)its+='<span>'+I(B.items[m][0],14,2.1)+esc(B.items[m][1])+'</span>';
+          for(m=0;m<B.items.length;m++)its+='<span>'+hvaActIcon(B.items[m][0],15.4)+esc(B.items[m][1])+'</span>';
           b+='<div class="hva-acts">'+its+'</div>';
         }
-        else b+='<div class="hva-box"><b>'+hvSpk(13)+esc(B.lb)+'</b>'+esc(B.tx)+'</div>';
+        else{
+          var rows='',its2='';
+          if(B.acts)for(m=0;m<B.acts.length;m++)its2+='<span>'+hvaActIcon(B.acts[m][0],15.4)+esc(B.acts[m][1])+'</span>';
+          for(m=0;m<B.crows.length;m++)rows+='<div class="hva-crow"><span class="ic">'+hvuSpk(15.4)+'</span>'
+            +'<span class="lb">'+esc(B.crows[m][0])+'</span>'+esc(B.crows[m][1])+'</div>';
+          b+='<div class="hva-box">'+(its2?'<div class="hva-acts">'+its2+'</div>':'')+rows+'</div>';
+        }
       }
-      h+='<div class="hva-entry"><div class="hva-time"><span class="dot">'+I('clock',10,2.8)+'</span><b>'+e.tm+'</b>'
-        +'<i class="tk-tag '+hvaStTag(e.st)+'">'+e.st+'</i></div>'
+      h+='<div class="hva-entry"><div class="hva-time"><span class="dot"></span>'+e.tm+'</div>'
         +'<div class="hva-body"><p>'+hvaMark(e.body)+'</p>'+b+'</div></div>';
     }
-    h+='</div>';
+    h+='</div></div>';
   }
   return h||'<div class="hv-empty">还没有托管记录</div>';
 }
