@@ -1105,8 +1105,8 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
      所以这里自己写死，不挂 hv-gn——挂上去两处都设 background-image，读的人会以为是同一支 */
   background-image:linear-gradient(90deg,#245BB9,#102953 80%);
   -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
-/* 开关／设置两颗仍叫 .hva-quick/.hva-qk（冒烟钉着它们）：稿子上它们不再并排挂在一张卡里，
-   而是各归各位——切换图标贴着标题，齿轮浮在右上角。小字只留给读屏，稿子上没有。 */
+/* 换人／设置两颗仍叫 .hva-quick/.hva-qk（冒烟钉着它们）：稿子上它们不再并排挂在一张卡里，
+   而是各归各位——⇄ 贴着标题，齿轮浮在右上角。小字只留给读屏，稿子上没有。 */
 .hva-quick{position:absolute;inset:0;z-index:3;pointer-events:none}
 .hva-qk{position:absolute;display:flex;align-items:center;justify-content:center;
   background:none;border:0;padding:0;cursor:pointer;font:inherit;color:#173E73;pointer-events:auto}
@@ -1117,7 +1117,6 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .hva-qk:nth-child(2) .hva-qkcir{width:34.1px;height:34.1px;border-radius:50%;background:rgba(255,255,255,.55);
   color:#3D63B4;box-shadow:0 8px 18px -14px rgba(70,80,170,.9);backdrop-filter:blur(4px)}
 .hva-qk small{display:none}
-.hva-qk.on .hva-qkcir{background:none;box-shadow:none;color:#173E73}
 .hva-work{position:absolute;left:20.9px;top:56.1px;display:flex;align-items:center;gap:2.7px;
   font-size:13.2px;line-height:13.2px;color:#4777BB}
 .hva-work svg{flex:none;color:#5989CE}
@@ -1129,10 +1128,11 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
   box-shadow:0 0 0 1px rgba(40,199,111,.2)}
 .hva-tag3 span{background-image:linear-gradient(90deg,#1677FE,#9452FF);
   -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
-/* 形象：稿子上是一张 3D 人物位图。按 ADR-0042 用纯 SVG 画一个「远看是那位长发、浅粉西装、
-   戴耳环项链的年轻女性」的形，不嵌图。坐标 226,129 尺寸 320×371（折算后 124,37 176×204）。 */
+/* 形象：稿子上是一张 3D 人物位图。原先按 ADR-0042 用纯 SVG 画；2026-10-20 产品直接给了
+   这张透明底人像原图，本屏改用位图（零位图的唯一例外，见 hvaPortrait 上那条注释）。
+   坐标 226,129 尺寸 320×371（折算后 124,37 176×204）。 */
 .hva-portrait{position:absolute;left:124px;top:37px;width:176px;height:204px;z-index:0;pointer-events:none}
-.hva-portrait svg{display:block;width:100%;height:100%}
+.hva-portrait img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 8%}
 /* CTA：稿子上是一枚 370×94 的渐变胶囊（蓝→紫），右端一颗白圆套箭头。
    开态翻成实心白胶囊＋渐变字，白圆翻成渐变圆（1321:2001）。
    渐变实心钮本在 M3 禁止清单上；这里照用户给的新稿 1:1 复刻，按 .hw-add 的先例视为覆盖页的刻意例外。 */
@@ -1269,6 +1269,56 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
    绿＝正在替你干活，与主页面那张托管状态卡同一套颜色语言。 */
 .hva-agent .st{font-size:11.5px;font-weight:700}
 .hva-agent .st.on{color:#1C9B52}
+/* ---------- 「数智员工选择」页（Figma 1321:1132，2026-10-20 照稿重画）----------
+   这一屏仍是 #host-ai-cfg（同一屏兼作 AI配置 与 选人），只在 pick 模式加一个 .pick 类换皮：
+   底色换成稿子的淡紫渐变，页头标题居中，两层筛选从「白胶囊分段器」换成
+   「下划线页签 ＋ 白芯胶囊段」，员工卡改成竖排居中：圆形头像／名字／两行摘要／底部状态胶囊。
+   卡上的 .pk 对勾、.hva-agent 类名与 hvaPickTo 落点都不动——冒烟按这三样认这一屏（见 ADR-0053）。
+   稿子里的员工是照片头像；本仓零位图（ADR-0042）仍在，唯一例外是产品直接给的托管人像
+   （HVA_PORTRAIT_SRC）：小助那张用它，其余几位仍走渐变＋图标。 */
+#host-ai-cfg.pick{background:
+  radial-gradient(120% 55% at 88% 0%,rgba(196,182,255,.55),rgba(196,182,255,0) 62%),
+  radial-gradient(90% 45% at 8% 10%,rgba(255,255,255,.75),rgba(255,255,255,0) 60%),
+  linear-gradient(180deg,#EFEDFE 0%,#F5F3FF 42%,#FBFAFF 100%)}
+#host-ai-cfg.pick .appbar{position:relative}
+#host-ai-cfg.pick .appbar h3{position:absolute;left:56px;right:56px;top:0;bottom:0;display:flex;
+  align-items:center;justify-content:center;padding:0;font-size:20px;font-weight:600;letter-spacing:.01em}
+#host-ai-cfg.pick #hvaCfgBack{color:#232735}
+#host-ai-cfg.pick #hvaCfgNew{width:34px;height:34px;margin-right:4px;margin-left:auto;border-radius:50%;
+  color:#6C4CF1;background:rgba(255,255,255,.62);box-shadow:0 6px 16px -12px rgba(80,60,180,.8)}
+.hva-tabs{display:flex;margin:2px 0 6px}
+.hva-tabs button{flex:1;position:relative;height:34px;font-size:13.5px;font-weight:600;color:#5A6478}
+.hva-tabs button.on{color:#6C4CF1;font-weight:700}
+.hva-tabs button.on::after{content:"";position:absolute;left:50%;bottom:0;width:20px;height:3px;
+  border-radius:2px;background:#6C4CF1;transform:translateX(-50%)}
+#host-ai-cfg.pick .tk-seg{margin:0 0 20px;padding:3px;background:rgba(255,255,255,.5);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.55)}
+#host-ai-cfg.pick .tk-seg button{height:32px;font-size:13px;font-weight:600;color:#77809A}
+#host-ai-cfg.pick .tk-seg button.on{color:#6C4CF1;font-weight:700;background:#fff;
+  box-shadow:0 4px 12px -7px rgba(108,76,241,.45),inset 0 0 0 1px rgba(108,76,241,.16)}
+#host-ai-cfg.pick .hva-grid{gap:12px}
+#host-ai-cfg.pick .hva-agent{align-items:center;gap:0;min-height:212px;padding:16px 12px 15px;
+  border:1px solid transparent;border-radius:16px;background:#fff;
+  box-shadow:0 12px 26px -22px rgba(60,50,140,.7)}
+#host-ai-cfg.pick .hva-agent.on{border-color:#8E6CFF;
+  background:linear-gradient(180deg,#FCFBFF 0%,#F1ECFF 100%);
+  box-shadow:0 16px 32px -24px rgba(108,76,241,.75)}
+#host-ai-cfg.pick .hva-agent .av{width:61px;height:61px;margin-bottom:11px;border-radius:50%;
+  color:#8C7BFF;background:linear-gradient(160deg,#F1EEFF,#E4E9FF)}
+#host-ai-cfg.pick .hva-agent .av::after{display:none}
+#host-ai-cfg.pick .hva-agent .av img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 8%}
+#host-ai-cfg.pick .hva-agent b{width:100%;font-size:15px;text-align:center}
+#host-ai-cfg.pick .hva-agent .ds{margin-top:7px;min-height:0;font-size:11.5px;line-height:1.5;
+  color:#8A90A6;text-align:center}
+/* 稿子的当前卡靠「紫描边＋浅紫底＋实心『使用中』」认，右上没有对勾。
+   对勾元素仍留在 DOM 里（冒烟按「恰一枚 .pk」认单选语义，ADR-0053），只是视觉上收起。 */
+#host-ai-cfg.pick .hva-agent .pk{position:absolute;width:1px;height:1px;overflow:hidden;
+  clip:rect(0 0 0 0);clip-path:inset(50%);background:none;color:transparent;right:auto;top:auto}
+.hva-use{display:inline-flex;align-items:center;justify-content:center;gap:4px;min-width:76px;height:26px;
+  margin-top:13px;padding:0 12px;border:1px solid #6C4CF1;border-radius:999px;background:#fff;
+  font-size:12px;font-weight:600;color:#6C4CF1}
+.hva-use.on{border-color:#AC93F4;background:#AC93F4;color:#fff}
+.hva-use svg{flex:none;width:13px;height:13px}
 /* ---------- 「AI智能回复」那一屏的首卡：当前托管的这位 ＋ 更换（2026-10-15，ADR-0062）----------
    横向一行：头像 ｜ 名／摘要 ｜ 「更换」。摘要两行截断，卡高才稳得住（五位员工各有长短）。
    这一卡**不写卡标题**（同一页其它卡都写）：卡面自己就是一句话「托管由这位执行」，
@@ -2965,7 +3015,8 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
              不另开一屏（口径见 REND 段：两屏各写一遍表单，迟早有一处改漏）。
              **同一屏兼作两处的「数智员工选择」页**：辅助回复用谁（ADR-0053，pick='fw'）
              与托管由谁执行（ADR-0062，pick='host'）。带 pick 进来时页头改叫「数智员工选择」、
-             点卡＝选中这一位（`hvaOpenAgent` 换成 `hvaPickTo`）、右上那枚「＋」收起。
+             点卡＝选中这一位（`hvaOpenAgent` 换成 `hvaPickTo`），整屏换成 Figma 1321:1132 的皮
+             （.pick：淡紫底、居中标题、下划线页签、竖排员工卡）；右上「＋」仍然在（2026-10-20）。
              标题带 id 就是为此——几种进入方式只差这一处文案，页面本身仍是同一屏。
              **两处各写各的状态**：pick 是带值的标签，各处那枚对勾看的是各处的"当前那一位"
              （见 hvaPickCur）——共用一个标签的话，两个都对的问题里必有一个答成另一个的答案。 -->
@@ -4868,79 +4919,24 @@ function hvaOpen(t){
   hvaScopeSheet(false);   /* 从浮层里点进来的：先把浮层收掉再切屏，否则退回来时它还盖着 */
   HVA_ACT=t; go('host-ai-act');
 }
-/* 页头那行两颗圆：托管总开关／设置。形态照用户给的那张截图（白圆＋圆内描边图标＋圆下小字），
+/* 页头那行两颗圆：**换人＋设置**（2026-10-20 起）。形态照用户给的那张截图（白圆＋圆内描边图标），
    配色走本 App 这套 token，不搬截图那身车机的皮。
-   开关那颗开着时圆翻成主色渐变＋白图标：截图里那颗白圆配「已关闭」正是关态该有的样子；
-   开态得反过来一眼能认出来，否则同一个圆只能靠底下那行小字读状态，等于没有状态。
-   小字只报开关自己的状态（已开启/已关闭），不写「托管」二字——同排另一颗是功能名，
-   掺一个状态名进去，两个标签就不是一类东西了；「这是托管的开关」由这张卡的标题说全。
-   圆单独一层（.hva-qkcir）是为了让它自己吃按压波纹：波纹要贴着圆裁，挂在外面那层
-   （列布局：圆＋小字）上会顺着整列铺开，糊一片。
-   只在这张卡里生成（不再单独摆一行在卡外）：同一屏里「开关」和「开关的状态」分开两处住，
-   用户得来回看；如今开关就长在写着「托管已开启/已关闭」的那张卡上。
-   ★ 第三颗「AI配置」撤掉（2026-10-15，产品：「我指的是AI托管页顶部三个并排的三个原型按钮中的
-     ai配置，因为可以从设置中直接到达这一页，没太有必要重复展示」）：那一屏本页还能走到——
-     页头这颗「设置」→ 首行「AI智能回复」→ 首卡「更换」（hvaPickHost）。同一个列表摆两处入口，
-     照 ADR-0056 那笔的口径就该撤一处。
-     ★ 留给下一笔的账（别当成已经定了）：「更换」那条是 **pick 模式**——它只负责挑一位
-       （不给「＋新建」、点卡是选中而不是进详情），所以「新建数智员工」与「员工详情／编辑」
-       眼下在 App 里没有入口（侧栏目录里还能直达，那只是演示目录）。
-       数智员工的建号／改号 要么收进托管全局设置页一行，要么认了「App 里只挑人、建号走后台」。 */
-/* 托管页那幅人像（稿子 1321:1758 顶上那张，320×371）：零位图（ADR-0042），整幅用 SVG 形状画。
-   坐标系 200×232（与稿子同比例），摆位与尺寸由 .hva-portrait 定；下半身会被 CTA 压住，所以只细画到胸口。
-   画法照稿子：中分深发、白瓷肤色、粉色西装外套＋白色内搭、金色耳环与细项链。 */
+   ★ 紧挨「智能小助」的这枚 ⇄ 点了**直接进数智员工选择页**（hvaPickHost）：⇄ 本来就是「换一位」，
+     而托管开／关已经有底下那颗「一键开启托管／一键关闭托管」——同一件事不再摆两个入口。
+     原先它是托管总开关，开着时翻主色渐变；那套 `on` 样式已随之撤掉。
+   ★ 另一颗齿轮仍进托管全局设置（host-ai-set）。
+   ★ 「AI配置」那枚第三颗 2026-10-15 已撤；如今 ⇄ 直接落到同一张列表的 pick 模式，
+     进详情／新建仍可从员工卡与右上「＋」走。 */
+/* 托管页那幅人像（稿子 1321:1758 顶上那张，320×371）。
+   ★ 2026-10-20 产品直接给了透明底人像原图（752af0e3….png），这一幅改用位图——**零位图
+     （ADR-0042）在本仓的唯一例外**：图不是画的，是产品指定的形象本身。原图 1132×1440，
+     这里压到 353×448（2× 于 176×204 的显示尺寸）后转 WebP（q82，18KB；同图 PNG 要 206KB）
+     内嵌成 data URI，离线单文件仍是自足的。
+     其余界面照旧不嵌图，别拿这一条当先例去铺别的位图。
+   头像（选择页里小助那一张）复用同一个串，别另存一份——改图时只该改一处。 */
+var HVA_PORTRAIT_SRC='data:image/webp;base64,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';
 function hvaPortrait(){
-  return '<div class="hva-portrait" aria-hidden="true"><svg viewBox="0 0 200 232" xmlns="http://www.w3.org/2000/svg">'
-    +'<defs>'
-    +'<linearGradient id="hvaHair" x1="100" y1="0" x2="100" y2="232" gradientUnits="userSpaceOnUse">'
-      +'<stop stop-color="#38242D"/><stop offset=".5" stop-color="#1E1219"/><stop offset="1" stop-color="#120A10"/></linearGradient>'
-    +'<linearGradient id="hvaSkin" x1="100" y1="45" x2="100" y2="150" gradientUnits="userSpaceOnUse">'
-      +'<stop stop-color="#FFEFE5"/><stop offset="1" stop-color="#F0C0A7"/></linearGradient>'
-    +'<linearGradient id="hvaBlz" x1="100" y1="146" x2="100" y2="232" gradientUnits="userSpaceOnUse">'
-      +'<stop stop-color="#FAE5EA"/><stop offset="1" stop-color="#E5B5C3"/></linearGradient>'
-    +'<linearGradient id="hvaBlzD" x1="60" y1="150" x2="150" y2="232" gradientUnits="userSpaceOnUse">'
-      +'<stop stop-color="#EFC4D0"/><stop offset="1" stop-color="#D9A3B4"/></linearGradient>'
-    +'</defs>'
-    /* ① 后层长发（整幅的轮廓底） */
-    +'<path d="M100 4C63 4 41 28 41 68c0 38-9 76-20 112-5 17-8 35-9 52h62c-7-39-6-76 0-110 4-22 11-40 22-51 11 11 18 29 22 51 6 34 7 71 0 110h62c-1-17-4-35-9-52-11-36-20-74-20-112 0-40-22-64-59-64Z" fill="url(#hvaHair)"/>'
-    /* ② 脖子与下颌影 */
-    +'<path d="M88 104v36c0 12 5.5 18 12 18s12-6 12-18v-36Z" fill="url(#hvaSkin)"/>'
-    +'<path d="M88 104c7 8 17 8 24 0v10c-7 7-17 7-24 0Z" fill="#E2A78E" opacity=".45"/>'
-    /* ③ 躯干：粉外套、白内搭、两片翻领 */
-    +'<path d="M100 148c-16 0-30 4-42 12-15 10-23 38-26 72h136c-3-34-11-62-26-72-12-8-26-12-42-12Z" fill="url(#hvaBlz)"/>'
-    +'<path d="M100 150l-14 16 14 30 14-30Z" fill="#FCF7F5"/>'
-    +'<path d="M100 196l-7 36h14Z" fill="#FCF7F5"/>'
-    +'<path d="M100 149c-11 2-21 7-28 14l14 12 14-15Z" fill="url(#hvaBlzD)"/>'
-    +'<path d="M100 149c11 2 21 7 28 14l-14 12-14-15Z" fill="url(#hvaBlzD)"/>'
-    /* ④ 脸与耳 */
-    +'<ellipse cx="100" cy="80" rx="33.5" ry="42.5" fill="url(#hvaSkin)"/>'
-    +'<ellipse cx="66.5" cy="85" rx="6" ry="9" fill="url(#hvaSkin)"/>'
-    +'<ellipse cx="133.5" cy="85" rx="6" ry="9" fill="url(#hvaSkin)"/>'
-    +'<path d="M64.5 82c1.5 2 1.5 5 0 7M135.5 82c-1.5 2-1.5 5 0 7" stroke="#DFA98F" stroke-width="1.2" fill="none" stroke-linecap="round"/>'
-    /* ⑤ 前层头发：顶盖＋两侧外翻的刘海＋垂到肩前的长发 */
-    +'<path d="M100 6c-27 0-44 18-45 45 8-16 24-26 45-26s37 10 45 26c-1-27-18-45-45-45Z" fill="url(#hvaHair)"/>'
-    +'<path d="M55 44c-4 20-3 44 4 62 3 8 9 11 13 7 3-3 2-9 0-16-4-17-6-36-5-53Z" fill="url(#hvaHair)"/>'
-    +'<path d="M145 44c4 20 3 44-4 62-3 8-9 11-13 7-3-3-2-9 0-16 4-17 6-36 5-53Z" fill="url(#hvaHair)"/>'
-    +'<path d="M58 108c-1 36-6 72-14 106l21 6c7-34 10-74 9-112Z" fill="url(#hvaHair)"/>'
-    +'<path d="M142 108c1 36 6 72 14 106l-21 6c-7-34-10-74-9-112Z" fill="url(#hvaHair)"/>'
-    /* ⑥ 五官：眉、眼、鼻、唇、腮红 */
-    +'<path d="M77 66c5-4 12-4 17-2M106 64c5-2 12-2 17 2" stroke="#3A2226" stroke-width="2.1" fill="none" stroke-linecap="round"/>'
-    +'<path d="M76 78c4-5 12-5 16 0-4 5-12 5-16 0ZM108 78c4-5 12-5 16 0-4 5-12 5-16 0Z" fill="#FFFDFC"/>'
-    +'<circle cx="84" cy="78.5" r="4.4" fill="#53342B"/><circle cx="116" cy="78.5" r="4.4" fill="#53342B"/>'
-    +'<circle cx="84" cy="79" r="2.1" fill="#1C1210"/><circle cx="116" cy="79" r="2.1" fill="#1C1210"/>'
-    +'<circle cx="82.6" cy="77" r="1.2" fill="#fff"/><circle cx="114.6" cy="77" r="1.2" fill="#fff"/>'
-    +'<path d="M76 78c4-5 12-5 16 0M108 78c4-5 12-5 16 0" stroke="#2B181B" stroke-width="1.7" fill="none" stroke-linecap="round"/>'
-    +'<path d="M100 84c-1 4-3 7-1 9 1 1 2 1 3 0" stroke="#D69B84" stroke-width="1.2" fill="none" stroke-linecap="round"/>'
-    +'<path d="M90 101c4-3 7-2 10 1 3-3 6-4 10-1-3 6-7 9-10 9s-7-3-10-9Z" fill="#D96F7E"/>'
-    +'<path d="M94 102c4 1.6 8 1.6 12 0-1.5 2.4-3.5 3.6-6 3.6s-4.5-1.2-6-3.6Z" fill="#FFF7F6" opacity=".9"/>'
-    +'<ellipse cx="74" cy="92" rx="7" ry="4" fill="#F29A9E" opacity=".28"/>'
-    +'<ellipse cx="126" cy="92" rx="7" ry="4" fill="#F29A9E" opacity=".28"/>'
-    /* ⑦ 金色首饰：耳环＋细项链 */
-    +'<circle cx="65.5" cy="96" r="4.2" stroke="#E0B36A" stroke-width="1.5" fill="none"/>'
-    +'<circle cx="134.5" cy="96" r="4.2" stroke="#E0B36A" stroke-width="1.5" fill="none"/>'
-    +'<path d="M85 146c5 9 10 13 15 13s10-4 15-13" stroke="#E0B36A" stroke-width="1.3" fill="none"/>'
-    +'<circle cx="100" cy="161" r="2.1" fill="#E0B36A"/>'
-  +'</svg></div>';
+  return '<div class="hva-portrait" aria-hidden="true"><img src="'+HVA_PORTRAIT_SRC+'" alt=""></div>';
 }
 /* 互动动作那四枚图标（AI关注／AI点赞／AI收藏／AI转发）：稿子是实心、吃 #1677FF→#9452FF 这支渐变
    （hvuGrad，与升级页同一支）。I() 那套是描边线性图标，形状对不上，所以这里单独一份实心 path，
@@ -4952,14 +4948,17 @@ var HVA_ACT_P={
   forward:'M25.9 4.1 2.9 12.8c-.8.3-.8 1.5 0 1.8l6.4 2.2 2.3 6.8c.3.9 1.5 1 2 .2l3.4-5.1 6.3 4.6c.8.6 1.9.2 2.1-.8l2.7-17.3c.2-1.1-.9-1.9-1.9-1.5Z'
 };
 function hvaActIcon(n,s){ return '<svg width="'+s+'" height="'+s+'" viewBox="0 0 28 28" aria-hidden="true"><path d="'+HVA_ACT_P[n]+'" fill="url(#hvuGrad)"/></svg>'; }
-/* 页头右上那两枚：开关（稿子是一枚左右换向的箭头）与齿轮。两枚都还是 .hva-qk——开关必须留在
-   这里，冒烟用 #host-ai .hva-quick .hva-qk 数它俩并核对 onclick；<small> 是给读屏与冒烟的文案，
-   视觉上由 .hva-qk small{display:none} 收掉。 */
+/* 页头右上那两枚：换人（稿子是一枚左右换向的箭头）与齿轮。两枚都还是 .hva-qk——
+   冒烟用 #host-ai .hva-quick .hva-qk 数它俩并核对 onclick；<small> 是给读屏与冒烟的文案，
+   视觉上由 .hva-qk small{display:none} 收掉。
+   ★ 2026-10-20 产品：紧挨「智能小助」的那枚左右箭头**点了直接进数智员工选择页**
+     （原先它是托管总开关）。开关仍有落点——底下那颗「一键开启托管／一键关闭托管」，
+     所以这里换成语义更贴箭头的「换人」：⇄ 本来就是「换一位」的意思。 */
 function hvaActsHtml(){
   return '<div class="hva-quick">'
-    +'<button class="hva-qk'+(HVA_ON?' on':'')+'" onclick="hvaToggle()" role="switch" aria-checked="'+(HVA_ON?'true':'false')+'" title="'+(HVA_ON?'关闭托管':'开启托管')+'">'
+    +'<button class="hva-qk" onclick="hvaPickHost()" title="选择数智员工">'
       +'<span class="hva-qkcir">'+HVA_SWITCH+'</span>'
-      +'<small>托管开关</small></button>'
+      +'<small>选择员工</small></button>'
     +'<button class="hva-qk" onclick="go(\'host-ai-set\')" title="设置">'
       +'<span class="hva-qkcir">'+I('gear',17,1.9)+'</span>'
       +'<small>设置</small></button>'
@@ -5128,7 +5127,8 @@ var HVA_SRC=['数智员工','自有员工','阿里百炼'];
 var HVA_OWN=['企业创建','我的创建'];
 var HVA_SRCV='数智员工', HVA_OWNV='企业创建';
 var HVA_AGENTS=[
-  {n:'小助',  s:'数智员工',o:'企业创建',ic:'sparkle',ds:'通用销售助理，负责客户接待、话术调用与日常问候',pa:['#9B6BFF','#2E7BFF']},
+  /* ph:1＝这位用产品给的人像当头像（仅「数智员工选择」页用，见 hvaAgentCard）。 */
+  {n:'小助',  s:'数智员工',o:'企业创建',ic:'sparkle',ph:1,ds:'通用销售助理，负责客户接待、话术调用与日常问候',pa:['#9B6BFF','#2E7BFF']},
   {n:'文案手',s:'数智员工',o:'企业创建',ic:'edit',   ds:'朋友圈与群发文案生成，按行业与客户标签出稿',      pa:['#FFA9D8','#9B8BFF']},
   {n:'数据眼',s:'数智员工',o:'我的创建',ic:'chart',  ds:'客户画像分析：从聊天记录里提取关注点与异议',      pa:['#7FDCD6','#5A8BFF']},
   {n:'话术员',s:'自有员工',o:'我的创建',ic:'chat2',  ds:'基于素材库话术库做首轮应答，超纲自动转人工',      pa:['#8CCBFF','#6B7BFF']},
@@ -5148,8 +5148,12 @@ function hvaList(){ var r=[],i; for(i=0;i<HVA_AGENTS.length;i++)
 function hvaAgent(n){ for(var i=0;i<HVA_AGENTS.length;i++)if(HVA_AGENTS[i].n===n)return HVA_AGENTS[i]; return null; }
 function hvaOpenAgent(n){ HVA_PROF=n; go('host-ai-agent'); }
 function hvaNew(){ HVA_PROF=''; go('host-ai-agent'); }
-function hvaSrc(v){ HVA_SRCV=v; REND['host-ai-cfg'](); }
-function hvaOwn(v){ HVA_OWNV=v; REND['host-ai-cfg'](); }
+/* 分段器重画要**带着 pick 一起**，否则点一下「自有员工」就退回 AI配置 的卡面与落点
+   （标题、加号、点卡行为全变）——pick 住在这次入栈的 params 里，分段器这两个回调拿不到它，
+   所以渲染时记一份最近一次的 pick 值。正常进入（无 pick）时由 REND 清空。 */
+var HVA_CFG_PICK='';
+function hvaSrc(v){ HVA_SRCV=v; REND['host-ai-cfg'](HVA_CFG_PICK?{pick:HVA_CFG_PICK}:undefined); }
+function hvaOwn(v){ HVA_OWNV=v; REND['host-ai-cfg'](HVA_CFG_PICK?{pick:HVA_CFG_PICK}:undefined); }
 function hvaToast(x){ toast('「'+x+'」在正式版是可编辑控件，原型不接输入法／选择器'); }
 /* pick＝选择模式（ADR-0053）：整卡的动作由「看这位的详情」换成「就要这一位」，当前那一位挂一枚对勾。
    卡面（头像／名／摘要／来源标签）一个字不改——选人的那一屏就是 AI配置 那一屏，
@@ -5167,10 +5171,32 @@ function hvaPickTo(pick,n){
   toast(pick==='host'?'托管已改为由「'+n+'」执行':'辅助回复已改为「'+n+'」');
   back();   /* 退回压进来的那一屏——退回去就是「选完了」这句话本身 */
 }
+/* 数字员工卡：两副面孔，同一份数据、同一个落点。
+   · 普通（AI配置）：横排信息卡，头像方块＋名／摘要＋来源标签，点卡看详情；
+   · pick（数智员工选择）：照 Figma 1321:1132 的竖排卡——圆形头像／居中名／两行摘要／
+     底部状态胶囊（当前那位＝实心紫「使用中」，其余＝描边「⇄ 启用」），点卡即选中。
+   两副面孔都保留 .hva-agent、恰一枚 .pk、卡内一个 <b> 名字——冒烟按这三样认这一屏（ADR-0053）。
+   当前那一位的对勾/实心胶囊看的是**这一处 pick 的当前值**（hvaPickCur），不是托管那一位：
+   两个问题各存一份答案，混用就会在另一处挂错人。
+   小助有产品给的人像（a.ph），选择页里用照片头像；其余员工仍走渐变＋图标。 */
 function hvaAgentCard(a,pick){
-  return '<button class="hva-agent" onclick="'+(pick?'hvaPickTo(\''+pick+'\',\''+a.n+'\')':'hvaOpenAgent(\''+a.n+'\')')+'">'
-    +(pick&&hvaPickCur(pick)===a.n?'<span class="pk" title="'+(pick==='host'?'当前托管用的就是这位':'当前辅助回复用的就是这位')+'">'+I('check',13,3)+'</span>':'')
-    +'<span class="av" style="background:linear-gradient(150deg,'+a.pa[0]+','+a.pa[1]+');box-shadow:0 10px 20px -13px '+a.pa[1]+'">'+I(a.ic,21,2)+'</span>'
+  var cur=!!pick&&hvaPickCur(pick)===a.n;
+  var av=pick&&a.ph?'<img src="'+HVA_PORTRAIT_SRC+'" alt="">':I(a.ic,pick?26:21,2);
+  if(pick){
+    /* 照片头像自带透明底，圆底由样式给（淡紫）；渐变＋图标那几位仍用各自的配色。 */
+    var avBg=a.ph?'':' style="background:linear-gradient(150deg,'+a.pa[0]+','+a.pa[1]+');box-shadow:0 10px 20px -13px '+a.pa[1]+'"';
+    return '<button class="hva-agent'+(cur?' on':'')+'" onclick="hvaPickTo(\''+pick+'\',\''+a.n+'\')">'
+      +(cur?'<span class="pk" title="'+(pick==='host'?'当前托管用的就是这位':'当前辅助回复用的就是这位')+'">'+I('check',13,3)+'</span>':'')
+      +'<span class="av"'+avBg+'>'+av+'</span>'
+      +'<b class="hv-gn">'+a.n+'</b><span class="ds">'+a.ds+'</span>'
+      +'<span class="hva-use'+(cur?' on':'')+'">'+(cur?'使用中':HVA_SWITCH+'<span>启用</span>')+'</span>'
+      /* 冒烟按文本认「当前托管」那一位（全表最多一枚）；稿子的卡面只有胶囊，没有这一行字，
+         所以选择模式下把它收进读屏（hva-sr）。 */
+      +(HVA_HOST_AGENT===a.n?'<span class="st on hva-sr">当前托管</span>':'')
+    +'</button>';
+  }
+  return '<button class="hva-agent" onclick="hvaOpenAgent(\''+a.n+'\')">'
+    +'<span class="av" style="background:linear-gradient(150deg,'+a.pa[0]+','+a.pa[1]+');box-shadow:0 10px 20px -13px '+a.pa[1]+'">'+av+'</span>'
     +'<b class="hv-gn">'+a.n+'</b><span class="ds">'+a.ds+'</span>'
     +'<span class="ft"><i class="hva-tag">'+a.s+'</i>'
       +(HVA_HOST_AGENT===a.n?'<span class="st on">当前托管</span>':'')+'</span>'
@@ -5178,15 +5204,19 @@ function hvaAgentCard(a,pick){
 }
 REND['host-ai-cfg']=function(p){
   var pick=(p&&p.pick)||'';
+  HVA_CFG_PICK=pick;
+  $('host-ai-cfg').classList.toggle('pick',!!pick);
   $('hvaCfgBack').innerHTML=I('back',24,2);
   $('hvaCfgNew').innerHTML=I('plus',24,2.2);
   $('hvaCfgTitle').textContent=pick?'数智员工选择':'AI配置';
-  /* 选人这一步不给「＋新建」：这一屏问的是「用现成的哪一位」，开一张建号的表单是另一个问题
-     （建完还得回来接着选，是两条路拧在一起）。收起而不是不画——返回的仍是同一屏，下一个人打开就是别的问题了 */
-  $('hvaCfgNew').style.display=pick?'none':'';
+  /* ＋新建两种模式都留着（2026-10-20 照选择页稿子；此前 pick 模式收过它）。建完 back() 会按
+     入栈时的 params 重画这一屏，新员工就在「我的创建」那一档里，接着点它就是选中。 */
+  $('hvaCfgNew').style.display='';
   var h='',i,s='';
   for(i=0;i<HVA_SRC.length;i++)s+='<button class="'+(HVA_SRCV===HVA_SRC[i]?'on':'')+'" onclick="hvaSrc(\''+HVA_SRC[i]+'\')">'+HVA_SRC[i]+'</button>';
-  h+='<div class="tk-seg hva-sub">'+s+'</div>';
+  /* 稿子的两层筛选长得不一样：来源是下划线页签（它是这一屏的主分类），归属是白芯胶囊段
+     （它是对当前分类的再筛）。语义上仍是两枚互斥单选，只是层级一深一浅。 */
+  h+=pick?'<div class="hva-tabs">'+s+'</div>':'<div class="tk-seg hva-sub">'+s+'</div>';
   s='';
   for(i=0;i<HVA_OWN.length;i++)s+='<button class="'+(HVA_OWNV===HVA_OWN[i]?'on':'')+'" onclick="hvaOwn(\''+HVA_OWN[i]+'\')">'+HVA_OWN[i]+'</button>';
   h+='<div class="tk-seg hva-sub">'+s+'</div>';
@@ -5301,11 +5331,13 @@ REND['host-ai-set']=function(){
     +'</div>';
   }
   h+='<button class="hva-scope-add" onclick="hvaScopeSheet(true)">'+I('plus',15,2.4)+'管理托管范围</button></div>';
-  h+='<div class="hva-foot"><button class="btn btn-primary btn-block" onclick="hvaSaveSet()">保存设置</button></div>';
+  /* 2026-10-20 产品：这一屏撤掉「保存设置」。它本来也没有"草稿态"——工作时间、闲置时长、
+     多开账号、托管范围每一处都是点了就写回同一份状态（hvaIdle／hvaAcctSave／hvaScopeOff 都当场重画），
+     页底那颗按钮只是再说一句"已保存"再退出去，等于给一件已经发生的事补一道仪式。
+     返回用页头左侧箭头。 */
   $('hvaSetBody').innerHTML=h;
 };
 function hvaIdle(v){ HVA_IDLE=v; REND['host-ai-set'](); }
-function hvaSaveSet(){ toast('设置已保存：工作时间 '+HVA_WORK+' · 闲置 '+HVA_IDLE+' 分钟'); back(); }
 
 /* ---------- 托管动作配置（二级页）· 照现网设置截图 ----------
    四张页共用一个屏幕与一个渲染器，里面按 HVA_ACT 分四支。**不做一套「字段描述引擎」**：
@@ -5464,8 +5496,14 @@ REND['host-ai-act']=function(){
     h+='<div class="hva-form">'+hvaActSwRow('hello','','通过后自动打招呼',c.hello)
       +'<div class="hva-acthint">长按消息进行其他操作，支持编辑</div></div>';
   }
-  h+='<div class="hva-foot"><button class="btn btn-primary btn-block" onclick="hvaActSave()">'
-    +(HVA_ACT==='画像分析'?'保存设置':'保存方案')+'</button></div>';
+  /* 2026-10-20 产品：**AI智能回复那一屏撤掉页底这颗按钮**（它那颗写「保存方案」）。
+     与设置页同理，这一屏也没有草稿态：平台勾选、更新时间都是点了就写回（hvaActSet），
+     按钮只负责退出去＋说一句摘要。返回用页头左侧箭头。
+     另外三屏（朋友圈互动／画像分析／自动打招呼）**保留**：那几屏有输入框与成组的单选，
+     页底那颗仍是"这一屏看完了、存下"的落点，产品这次只点名了回复那一屏。 */
+  if(HVA_ACT!=='AI智能回复')
+    h+='<div class="hva-foot"><button class="btn btn-primary btn-block" onclick="hvaActSave()">'
+      +(HVA_ACT==='画像分析'?'保存设置':'保存方案')+'</button></div>';
   $('hvaActBody').innerHTML=h;
 };
 /* 存完退回去，并把「存了什么」说全：这一屏没有列表能看出结果，只回一句「已保存」等于让人自己回去翻。
