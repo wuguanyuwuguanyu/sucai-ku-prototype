@@ -1303,6 +1303,10 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 #host-ai-cfg.pick .hva-agent.on{border-color:#8E6CFF;
   background:linear-gradient(180deg,#FCFBFF 0%,#F1ECFF 100%);
   box-shadow:0 16px 32px -24px rgba(108,76,241,.75)}
+/* 卡身与胶囊是两件事：卡身点进详情，胶囊才是「就要这一位」。两个按钮不能嵌套，
+   所以外层 .hva-agent 是 div，这枚 .hva-hit 只负责把头像／名／摘要竖排撑满。 */
+#host-ai-cfg.pick .hva-hit{display:flex;flex-direction:column;align-items:center;width:100%;
+  padding:0;text-align:center}
 #host-ai-cfg.pick .hva-agent .av{width:61px;height:61px;margin-bottom:11px;border-radius:50%;
   color:#8C7BFF;background:linear-gradient(160deg,#F1EEFF,#E4E9FF)}
 #host-ai-cfg.pick .hva-agent .av::after{display:none}
@@ -1319,6 +1323,80 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
   font-size:12px;font-weight:600;color:#6C4CF1}
 .hva-use.on{border-color:#AC93F4;background:#AC93F4;color:#fff}
 .hva-use svg{flex:none;width:13px;height:13px}
+/* ---------- 数智员工详情／新建（Figma 1330:3434，2026-10-20 照稿重画）----------
+   一屏两模式：HVA_PROF 有值＝详情（稿子没有页头标题，只剩左上返回箭头）；空＝新建（留标题）。
+   结构：大头像＋编辑角标 → 信息卡 → 设定描述 → 知识 → 大模型设置 → 底部固定渐变按钮。
+   稿子是 750 宽的设计稿，这里按本壳 412 折算；纵向不等比压缩（本壳可视高度只有 916，
+   原稿 1200），所以行高／卡间距取的是「气质一致、内容不挤」的那一版。 */
+#host-ai-agent{background:linear-gradient(180deg,#EDF4FF 0%,#F7F8FE 46%,#F7F8FE 100%)}
+#host-ai-agent .appbar{height:52px}
+#host-ai-agent .hva-pg{padding:0 16px 20px}
+.hva-dp-av{position:relative;width:96px;height:96px;margin:0 auto;border:3px solid #fff;
+  border-radius:50%;background:linear-gradient(160deg,#F1EEFF,#E4E9FF);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 14px 30px -18px rgba(70,80,160,.55)}
+.hva-dp-av img{display:block;width:100%;height:100%;border-radius:50%;object-fit:cover;object-position:50% 8%}
+.hva-dp-edit{position:absolute;right:-2px;bottom:-2px;width:26px;height:26px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;color:#fff;border:2px solid #fff;
+  background:linear-gradient(150deg,#A98BFF,#6C4CF1);box-shadow:0 4px 10px -4px rgba(80,60,180,.5)}
+.hva-dp-card{margin-top:14px;padding:16px;border-radius:18px;background:#fff;
+  box-shadow:0 14px 30px -28px rgba(50,70,140,.9)}
+/* 信息卡三行：姓名*（带锁）／职业*／联系方式。标签 16 中等、值 14 右对齐，行间内缩分隔线。 */
+.hva-dp-row{display:flex;align-items:center;gap:10px;min-height:52px}
+.hva-dp-row+.hva-dp-row{box-shadow:inset 0 1px 0 #EFF2F8}
+.hva-dp-row .lb{flex:1;display:flex;align-items:center;gap:4px;min-width:0;
+  font-size:16px;font-weight:500;color:#333}
+.hva-dp-row .req{display:inline-flex;align-items:baseline;gap:1px}
+.hva-dp-row .req i{font-style:normal;font-size:13px;line-height:1;color:#FF5C5C}
+.hva-dp-row .lk{display:flex;color:#C2CBDA}
+.hva-dp-row .vl{flex:none;max-width:64%;font-size:14px;color:#355283;text-align:right;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hva-dp-row .vl.ph{color:#A9B6CD}
+.hva-dp-h{display:flex;align-items:center;gap:4px;min-height:24px;font-size:16px;font-weight:500;color:#333}
+.hva-dp-h .lk{display:flex;color:#C2CBDA}
+.hva-dp-h .rt{margin-left:auto;display:flex;align-items:center;gap:2px;height:28px;
+  padding:0 0 0 8px;font-size:13px;font-weight:500;color:#6575FF}
+.hva-dp-desc{position:relative;margin-top:13px;min-height:232px;padding:14px 14px 44px;
+  border-radius:12px;background:#F8FAFD}
+.hva-dp-txt{font-size:14px;line-height:21px;color:#333;white-space:pre-wrap;word-break:break-word}
+.hva-dp-txt.ph{color:#A9B6CD}
+.hva-dp-polish{position:absolute;left:14px;bottom:11px;display:inline-flex;align-items:center;gap:4px;
+  height:26px;padding:0 2px;font-size:13.5px;font-weight:600}
+.hva-dp-polish svg{color:#6C5CFF}
+.hva-dp-polish span{background-image:linear-gradient(90deg,#1677FE,#9452FF);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.hva-dp-kds{margin-top:7px;font-size:12px;line-height:20px;color:#B0BBCE}
+.hva-dp-files{margin-top:10px;display:flex;flex-direction:column;gap:10px}
+.hva-dp-file{display:flex;align-items:center;gap:12px;min-height:60px;padding:9px 10px;
+  border-radius:12px;background:#F8FAFD}
+.hva-dp-fic{flex:none;width:40px;height:40px;border-radius:9px;display:flex;align-items:center;
+  justify-content:center;font-size:10.5px;font-weight:800;letter-spacing:.02em;color:#fff}
+.hva-dp-fic.ppt{background:linear-gradient(155deg,#FFB75E,#F4792F)}
+.hva-dp-fic.pdf{background:linear-gradient(155deg,#E36A5E,#B93A3A)}
+.hva-dp-file .tx{flex:1;min-width:0}
+.hva-dp-file .tx b{display:block;font-size:14px;font-weight:600;color:#333;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hva-dp-file .tx em{display:block;margin-top:3px;font-style:normal;font-size:11.5px;color:#B0BBCE;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hva-dp-del{flex:none;align-self:flex-start;width:22px;height:22px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;background:#DCE3EF;color:#fff}
+.hva-dp-upload{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;
+  height:44px;margin-top:12px;border:1px dashed #C9D8F4;border-radius:12px;background:#F8FAFD;
+  font-size:12.5px;font-weight:500;color:#688CC4}
+.hva-dp-upload i{width:16px;height:16px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;background:#A9C2EA;color:#fff}
+.hva-dp-model{display:flex;align-items:center;gap:10px;min-height:52px}
+.hva-dp-mic{flex:none;width:26px;height:26px;border-radius:8px;display:flex;align-items:center;
+  justify-content:center;color:#fff;background:#19C37A}
+.hva-dp-model .mn{flex:1;min-width:0;font-size:14px;color:#333;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hva-dp-chg{flex:none;font-size:13px;font-weight:500;color:#6575FF}
+.hva-dpfoot{flex:none;padding:6px 18px 8px}
+.hva-dp-save{position:relative;display:flex;align-items:center;justify-content:center;width:100%;
+  height:47px;padding:0;border-radius:26px;font-size:15px;font-weight:500;letter-spacing:.02em;
+  color:#fff;background:linear-gradient(96deg,#1677FF 0%,#437AFC 34%,#707DF9 66%,#9452FF 100%);
+  box-shadow:0 12px 26px -14px rgba(90,84,249,.8)}
+.hva-dp-save .sp{position:absolute;right:17px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.92)}
 /* ---------- 「AI智能回复」那一屏的首卡：当前托管的这位 ＋ 更换（2026-10-15，ADR-0062）----------
    横向一行：头像 ｜ 名／摘要 ｜ 「更换」。摘要两行截断，卡高才稳得住（五位员工各有长短）。
    这一卡**不写卡标题**（同一页其它卡都写）：卡面自己就是一句话「托管由这位执行」，
@@ -3016,8 +3094,8 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
              不另开一屏（口径见 REND 段：两屏各写一遍表单，迟早有一处改漏）。
              **同一屏兼作两处的「数智员工选择」页**：辅助回复用谁（ADR-0053，pick='fw'）
              与托管由谁执行（ADR-0062，pick='host'）。带 pick 进来时页头改叫「数智员工选择」、
-             点卡＝选中这一位（`hvaOpenAgent` 换成 `hvaPickTo`），整屏换成 Figma 1321:1132 的皮
-             （.pick：淡紫底、居中标题、下划线页签、竖排员工卡）；右上「＋」仍然在（2026-10-20）。
+             整屏换成 Figma 1321:1132 的皮（.pick：淡紫底、居中标题、下划线页签、竖排员工卡）；
+             卡身点进详情，只有底部胶囊（启用／使用中）才选中并退回（2026-10-20）；右上「＋」仍然在。
              标题带 id 就是为此——几种进入方式只差这一处文案，页面本身仍是同一屏。
              **两处各写各的状态**：pick 是带值的标签，各处那枚对勾看的是各处的"当前那一位"
              （见 hvaPickCur）——共用一个标签的话，两个都对的问题里必有一个答成另一个的答案。 -->
@@ -3038,6 +3116,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
             <h3 id="hvaProfTitle">员工详情</h3>
           </div>
           <div class="hva-pg" id="hvaProfBody"></div>
+          <div class="hva-dpfoot" id="hvaProfFoot"></div>
         </section>
 
         <!-- 宿主App 全局设置（二级页）· 逻辑照参考原型 APP-AI-005
@@ -3352,6 +3431,8 @@ var ICONS = {
   alert:'<circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="13"/><line x1="12" y1="16.5" x2="12.01" y2="16.5"/>',
   copy:'<rect x="9" y="9" width="13" height="13" rx="2.5"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',
   edit:'<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>',
+  /* 全屏（四角箭头）：详情页「设定描述」右上那枚，照 Figma 1330:3434 的 ⛶。 */
+  expand:'<polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/>',
   trash:'<polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>',
   chev:'<polyline points="9 18 15 12 9 6"/>',
   drop:'<path d="M7 10l5 5 5-5z" fill="currentColor" stroke="none"/>',
@@ -4568,7 +4649,6 @@ var HVA_ACCT_APPS=[
 var HVA_ACCTS=[];              /* {app,n,sub,on} —— 扫出来的账号，on＝本次勾选 */
 var HVA_SCANNING=false;        /* 正在占用屏幕读账号 */
 var HVA_MODEL='小助 · 通用销售助理';
-var HVA_KNOW=126;              /* 已挂载知识条数（演示值） */
 
 /* 托管动作配置：**某一项能力自己怎么做**（二级页，照现网设置截图）。与上面那份
    HVA_WORK／HVA_IDLE／HVA_SCOPE 是两层：那些说的是「托管什么时候跑」，所有能力共用；
@@ -5129,11 +5209,13 @@ var HVA_OWN=['企业创建','我的创建'];
 var HVA_SRCV='数智员工', HVA_OWNV='企业创建';
 var HVA_AGENTS=[
   /* ph:1＝这位用产品给的人像当头像（仅「数智员工选择」页用，见 hvaAgentCard）。 */
-  {n:'小助',  s:'数智员工',o:'企业创建',ic:'sparkle',ph:1,ds:'通用销售助理，负责客户接待、话术调用与日常问候',pa:['#9B6BFF','#2E7BFF']},
-  {n:'文案手',s:'数智员工',o:'企业创建',ic:'edit',   ds:'朋友圈与群发文案生成，按行业与客户标签出稿',      pa:['#FFA9D8','#9B8BFF']},
-  {n:'数据眼',s:'数智员工',o:'我的创建',ic:'chart',  ds:'客户画像分析：从聊天记录里提取关注点与异议',      pa:['#7FDCD6','#5A8BFF']},
-  {n:'话术员',s:'自有员工',o:'我的创建',ic:'chat2',  ds:'基于素材库话术库做首轮应答，超纲自动转人工',      pa:['#8CCBFF','#6B7BFF']},
-  {n:'炼金士',s:'阿里百炼',o:'企业创建',ic:'zap',    ds:'接入百炼平台的行业大模型，做长文摘要与合规检查',  pa:['#FFBB86','#FF8FB0']}
+  /* job／tel 是详情页照 Figma 1330:3434 补的两行（2026-10-20）：稿子上有「职业*」「联系方式」。
+     PRD §5.3 目前只写到姓名／设定描述／知识／大模型设置——原型照稿先落，PRD 待同步。 */
+  {n:'小助',  s:'数智员工',o:'企业创建',ic:'sparkle',ph:1,job:'销售助理',tel:'15211029983',ds:'通用销售助理，负责客户接待、话术调用与日常问候',pa:['#9B6BFF','#2E7BFF']},
+  {n:'文案手',s:'数智员工',o:'企业创建',ic:'edit',   job:'内容策划',tel:'13800138002',ds:'朋友圈与群发文案生成，按行业与客户标签出稿',      pa:['#FFA9D8','#9B8BFF']},
+  {n:'数据眼',s:'数智员工',o:'我的创建',ic:'chart',  job:'数据分析师',tel:'13900139003',ds:'客户画像分析：从聊天记录里提取关注点与异议',      pa:['#7FDCD6','#5A8BFF']},
+  {n:'话术员',s:'自有员工',o:'我的创建',ic:'chat2',  job:'客服专员',tel:'13700137004',ds:'基于素材库话术库做首轮应答，超纲自动转人工',      pa:['#8CCBFF','#6B7BFF']},
+  {n:'炼金士',s:'阿里百炼',o:'企业创建',ic:'zap',    job:'行业顾问',tel:'13600136005',ds:'接入百炼平台的行业大模型，做长文摘要与合规检查',  pa:['#FFBB86','#FF8FB0']}
 ];
 /* 托管用的那位必须真的在名单里（写错一个字不会报错，只会让头卡、回复那一屏的首卡、
    列表上那枚标记三处一起退回兜底，而页面照常渲染）。这一条**晚一步查**：HVA_BADTYPE 那个
@@ -5172,10 +5254,13 @@ function hvaPickTo(pick,n){
   toast(pick==='host'?'托管已改为由「'+n+'」执行':'辅助回复已改为「'+n+'」');
   back();   /* 退回压进来的那一屏——退回去就是「选完了」这句话本身 */
 }
-/* 数字员工卡：两副面孔，同一份数据、同一个落点。
+/* 数字员工卡：两副面孔，同一份数据。
    · 普通（AI配置）：横排信息卡，头像方块＋名／摘要＋来源标签，点卡看详情；
    · pick（数智员工选择）：照 Figma 1321:1132 的竖排卡——圆形头像／居中名／两行摘要／
-     底部状态胶囊（当前那位＝实心紫「使用中」，其余＝描边「⇄ 启用」），点卡即选中。
+     底部一颗胶囊（当前那位＝实心紫「使用中」，其余＝描边「⇄ 启用」）。
+   ★ pick 卡拆成**两个按钮**（2026-10-20）：卡片主体点进详情，只有底部胶囊才是「选中这一位」。
+     原先整卡一个按钮＝点哪儿都直接选中并退回，人想先看看这位是谁没有路。两个按钮不能嵌套，
+     所以外层由 <button> 换成 <div>，里面并排两枚 <button>（.hva-hit ／ .hva-use）。
    两副面孔都保留 .hva-agent、恰一枚 .pk、卡内一个 <b> 名字——冒烟按这三样认这一屏（ADR-0053）。
    当前那一位的对勾/实心胶囊看的是**这一处 pick 的当前值**（hvaPickCur），不是托管那一位：
    两个问题各存一份答案，混用就会在另一处挂错人。
@@ -5186,15 +5271,18 @@ function hvaAgentCard(a,pick){
   if(pick){
     /* 照片头像自带透明底，圆底由样式给（淡紫）；渐变＋图标那几位仍用各自的配色。 */
     var avBg=a.ph?'':' style="background:linear-gradient(150deg,'+a.pa[0]+','+a.pa[1]+');box-shadow:0 10px 20px -13px '+a.pa[1]+'"';
-    return '<button class="hva-agent'+(cur?' on':'')+'" onclick="hvaPickTo(\''+pick+'\',\''+a.n+'\')">'
-      +(cur?'<span class="pk" title="'+(pick==='host'?'当前托管用的就是这位':'当前辅助回复用的就是这位')+'">'+I('check',13,3)+'</span>':'')
-      +'<span class="av"'+avBg+'>'+av+'</span>'
-      +'<b class="hv-gn">'+a.n+'</b><span class="ds">'+a.ds+'</span>'
-      +'<span class="hva-use'+(cur?' on':'')+'">'+(cur?'使用中':HVA_SWITCH+'<span>启用</span>')+'</span>'
-      /* 冒烟按文本认「当前托管」那一位（全表最多一枚）；稿子的卡面只有胶囊，没有这一行字，
-         所以选择模式下把它收进读屏（hva-sr）。 */
-      +(HVA_HOST_AGENT===a.n?'<span class="st on hva-sr">当前托管</span>':'')
-    +'</button>';
+    return '<div class="hva-agent'+(cur?' on':'')+'">'
+      +'<button class="hva-hit" onclick="hvaOpenAgent(\''+a.n+'\')">'
+        +(cur?'<span class="pk" title="'+(pick==='host'?'当前托管用的就是这位':'当前辅助回复用的就是这位')+'">'+I('check',13,3)+'</span>':'')
+        +'<span class="av"'+avBg+'>'+av+'</span>'
+        +'<b class="hv-gn">'+a.n+'</b><span class="ds">'+a.ds+'</span>'
+        /* 冒烟按文本认「当前托管」那一位（全表最多一枚）；稿子的卡面只有胶囊，没有这一行字，
+           所以选择模式下把它收进读屏（hva-sr）。 */
+        +(HVA_HOST_AGENT===a.n?'<span class="st on hva-sr">当前托管</span>':'')
+      +'</button>'
+      +'<button class="hva-use'+(cur?' on':'')+'" onclick="hvaPickTo(\''+pick+'\',\''+a.n+'\')">'
+        +(cur?'使用中':HVA_SWITCH+'<span>启用</span>')+'</button>'
+    +'</div>';
   }
   return '<button class="hva-agent" onclick="hvaOpenAgent(\''+a.n+'\')">'
     +'<span class="av" style="background:linear-gradient(150deg,'+a.pa[0]+','+a.pa[1]+');box-shadow:0 10px 20px -13px '+a.pa[1]+'">'+av+'</span>'
@@ -5227,40 +5315,68 @@ REND['host-ai-cfg']=function(p){
   $('hvaCfgBody').innerHTML=h;
 };
 
-/* ---------- 宿主 App 数智员工详情／新建（二级页）· 逻辑照参考原型 APP-AI-003／004 ----------
-   HVA_PROF 空＝新建、非空＝编辑，共用这一屏与这个渲染器：两屏各写一遍表单，迟早有一处改漏。 */
+/* ---------- 宿主 App 数智员工详情／新建（二级页）· 2026-10-20 照 Figma 1330:3434 重画 ----------
+   HVA_PROF 空＝新建、非空＝详情，共用这一屏与这个渲染器：两屏各写一遍表单，迟早有一处改漏。
+   稿子的详情页**没有页头标题**（只有左上返回箭头），新建模式仍留标题——人得知道自己在建东西。
+   ★ 稿子比 PRD §5.3 多两行：「职业*」「联系方式」。原型照稿先落，PRD 尚未同步（提交说明里标了）。
+   ★ 原先那行「参与托管」开关（ADR-0051）已于 ADR-0062 撤掉，新版不再出现：
+     托管由谁执行是托管级、单选的事，收在「AI智能回复」首卡那一处。 */
 REND['host-ai-agent']=function(){
   $('hvaProfBack').innerHTML=I('back',24,2);
   var a=hvaAgent(HVA_PROF), isNew=!a;
-  $('hvaProfTitle').textContent=isNew?'新建数智员工':'员工详情';
-  var h='<div class="hva-prof">'
-    +'<span class="hva-pav" style="background:linear-gradient(150deg,'+(a?a.pa[0]:'#9B6BFF')+','+(a?a.pa[1]:'#2E7BFF')+');box-shadow:0 16px 30px -18px '+(a?a.pa[1]:'#2E7BFF')+'">'
-      +I(a?a.ic:'sparkle',36,1.9)+'</span>'
-    +'<b class="hv-gn">'+(a?esc(a.n):'新建数智员工')+'</b>'
-    /* 状态这一行只报两种事实：这位**眼下就在托管**（HVA_HOST_AGENT 指着他），
-       或者他只是名单里的普通一位。原先写的是他自己的托管开关（已加入／停在清单外），
-       开关撤掉后那句话没有依据了，而且"参与托管"本来也不是员工自己的属性。 */
-    +'<span class="st'+(a&&HVA_HOST_AGENT===a.n?' on':'')+'">'
-      +(a?(HVA_HOST_AGENT===a.n?'当前托管 · '+a.s:a.s):'填完下面的设定即可创建')+'</span></div>';
-  h+='<div class="hva-form">';
-  if(isNew){
-    h+='<button class="hva-cell" onclick="hvaToast(\'员工名称\')"><span class="lb">姓名</span><span class="vl ph">请输入员工名称</span><span class="cv">'+I('chev',16,2.4)+'</span></button>';
-  }else{
-    /* 编辑态这一行不是按钮：点了没反应的按钮比一枚锁更让人犯嘀咕，索性给锁不给手 */
-    h+='<div class="hva-cell"><span class="lb">姓名</span><span class="vl">'+esc(a.n)+'</span><span class="hva-lock" title="创建后不可改名">'+I('lock',14,2.2)+'</span></div>';
+  $('hvaProfTitle').textContent=isNew?'新建数智员工':'';
+  var pa=a?a.pa:['#9B6BFF','#2E7BFF'];
+  var av=a&&a.ph?'<img src="'+HVA_PORTRAIT_SRC+'" alt="">':I(a?a.ic:'sparkle',34,1.9);
+  var avStyle=a&&a.ph?'':' style="background:linear-gradient(150deg,'+pa[0]+','+pa[1]+')"';
+  var h='<span class="hva-dp-av"'+avStyle+'>'+av
+    +'<button class="hva-dp-edit" onclick="hvaToast(\'更换头像\')" title="更换头像">'+I('edit',12,2.2)+'</button>'
+    +'</span>';
+  /* 信息卡：姓名*（创建后锁定）／职业*／联系方式。详情态的名与锁照稿；新建态给占位。 */
+  h+='<div class="hva-dp-card">'
+    +'<div class="hva-dp-row"><span class="lb"><span class="req">姓名<i>*</i></span>'
+      +(a?'<span class="lk" title="创建后不可改名">'+I('lock',12,2.4)+'</span>':'')
+      +'</span><span class="vl">'+(a?esc(a.n):'新建数智员工')+'</span></div>'
+    +'<div class="hva-dp-row"><span class="lb"><span class="req">职业<i>*</i></span></span>'
+      +'<span class="vl'+(isNew?' ph':'')+'">'+(isNew?'请选择职业':esc(a.job||'数智员工'))+'</span></div>'
+    +'<div class="hva-dp-row"><span class="lb">联系方式</span>'
+      +'<span class="vl'+(isNew?' ph':'')+'">'+(isNew?'请输入手机号':esc(a.tel||'—'))+'</span></div>'
+    +'</div>';
+  /* 设定描述：稿上带锁（创建后不可改）与右上「全屏」，正文是一段人设 prompt，左下角智能润色。 */
+  var desc=isNew
+    ?'#人设身份\n描述这位员工是谁、负责什么、说话什么风格。\n\n#能力&任务\n托管执行时会按这段设定来做事。'
+    :('#人设身份\n'+a.ds+'。你叫'+a.n+'，对外以'+(a.job||'数智员工')+'的身份出现。\n\n'
+      +'#能力&任务\n按上面的设定接管对话；遇到不确定的事先问清再答，超纲交给人工。');
+  h+='<div class="hva-dp-card">'
+    +'<div class="hva-dp-h"><span>设定描述</span>'
+      +(a?'<span class="lk" title="创建后不可改">'+I('lock',12,2.4)+'</span>':'')
+      +'<button class="rt" onclick="hvaToast(\'全屏编辑\')">全屏'+I('expand',13,2.2)+'</button></div>'
+    +'<div class="hva-dp-desc"><div class="hva-dp-txt'+(isNew?' ph':'')+'">'+esc(desc)+'</div>'
+      +'<button class="hva-dp-polish" onclick="hvaToast(\'智能润色\')">'+I('sparkle',13,2)+'<span>智能润色</span></button></div>'
+    +'</div>';
+  /* 知识：稿上两份文件（一份已解析、一份上传中）＋虚线框上传。新建态还没有文件，只留上传入口。 */
+  var fileRow=function(kind,nm,sub){
+    return '<div class="hva-dp-file"><span class="hva-dp-fic '+kind+'">'+kind.toUpperCase()+'</span>'
+      +'<span class="tx"><b>'+esc(nm)+'</b>'+(sub?'<em>'+esc(sub)+'</em>':'')+'</span>'
+      +'<button class="hva-dp-del" title="删除知识文件" onclick="hvaToast(\'删除知识文件\')">'+I('x',12,2.6)+'</button></div>';
+  };
+  h+='<div class="hva-dp-card"><div class="hva-dp-h"><span>知识</span></div>'
+    +'<div class="hva-dp-kds">'+(isNew?'还没有上传知识文件。':'上传的文件会作为这位数智员工的专属知识，应答时按需检索。')+'</div>';
+  if(!isNew){
+    h+='<div class="hva-dp-files">'
+      +fileRow('ppt','公司产品介绍.pptx','')
+      +fileRow('pdf','销售话术手册.pdf','正在上传解析，请耐心等待…')
+      +'</div>';
   }
-  h+='<button class="hva-cell" onclick="hvaToast(\'大模型设置\')"><span class="lb">大模型</span><span class="vl'+(isNew?' ph':'')+'">'+(isNew?'未选择':HVA_MODEL)+'</span><span class="cv">'+I('chev',16,2.4)+'</span></button>';
-  /* 这里原先有一行「参与托管」开关（2026-10-14 加，ADR-0051；2026-10-15 撤掉，ADR-0062）。
-     它答的其实是"托管由谁来做"——一件托管级、单选的事，长在**一位员工**身上就必然能答出
-     "两位都参与托管"这种产品里没有的状态，而这个开关本身又不告诉人另一位是谁。
-     现在这件事收在唯一一处：AI托管全局设置 →「AI智能回复」那一屏的首卡（抬头那行状态也读同一份状态）。 */
-  h+='</div>';
-  h+='<div class="hva-form"><div class="hva-form-h">设定描述</div><div class="hva-txt'+(isNew?' ph':'')+'">'
-    +(isNew?'描述这位员工是谁、负责什么、说话什么风格。托管执行时会按这段设定来做事。':esc(a.ds))+'</div></div>';
-  h+='<div class="hva-form"><button class="hva-cell" onclick="hvaToast(\'知识库\')"><span class="lb">知识</span>'
-    +'<span class="vl">'+(isNew?'未挂载':('已挂载 '+HVA_KNOW+' 条素材'))+'</span><span class="cv">'+I('chev',16,2.4)+'</span></button></div>';
-  h+='<div class="hva-foot"><button class="btn btn-primary btn-block" onclick="hvaSave()">'+(isNew?'创建':'保存')+'</button></div>';
+  h+='<button class="hva-dp-upload" onclick="hvaToast(\'上传知识文件\')"><i>'+I('plus',11,2.6)+'</i>上传单个 pdf/doc文件，不超过20MB</button>'
+    +'</div>';
+  /* 大模型设置：稿上就一行，绿色模型标＋型号＋「更换」。 */
+  h+='<div class="hva-dp-card"><div class="hva-dp-model">'
+    +'<span class="hva-dp-mic">'+I('sparkle',15,2)+'</span>'
+    +'<span class="mn"'+(isNew?' style="color:#A9B6CD"':'')+'>'+(isNew?'未选择大模型':esc(HVA_MODEL))+'</span>'
+    +'<button class="hva-dp-chg" onclick="hvaToast(\'更换大模型\')">更换</button></div></div>';
   $('hvaProfBody').innerHTML=h;
+  $('hvaProfFoot').innerHTML='<button class="btn btn-primary hva-dp-save" onclick="hvaSave()">'
+    +(isNew?'创建数智员工':'保存设置')+'<span class="sp">'+I('sparkle',17,1.8)+'</span></button>';
 };
 function hvaSave(){
   if(HVA_PROF){ toast('已保存「'+HVA_PROF+'」的设定'); back(); return; }
