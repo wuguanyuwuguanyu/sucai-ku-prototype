@@ -872,7 +872,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .hva-scroll{position:relative;z-index:1;flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none}
 .hva-scroll::-webkit-scrollbar{display:none}
 .hva-head{flex:none;height:259px;padding:0}
-.hva-pane{flex:none;padding:0 15px 22px}
+.hva-pane{flex:none;padding:0 15px 22px}   /* 只是日志的内容容器，不滚；滚动归 #hvaBody——**别给它挂 .scroll** */
 
 /* ---------------- 宿主 App AI托管 · 升级提示页（**非旗舰版**点底栏那枚「AI托管」进的屏） ----------------
    2026-10-16 照 Figma 节点 543:140（750×1800）**整屏重画**：上一版是按二期 PRD §2.2 手搓的
@@ -2901,19 +2901,20 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
              骨架整段由 REND['host-ai'] 填：页头那行圆形动作／托管状态卡／工作日志。
              页头不再写死在标记里——那行第一颗就是托管总开关，它得跟着 HVA_ON 换样子与文案，
              留在静态段里就得另找一处回写；整段一处生成，开关状态只有一个来源。
-             **两层**（2026-10-14，产品要求）：托管状态卡钉在上面不动，滑的只有下面的工作日志——
-             滑两屏之后人得还看得见托管开着没有。所以这一层不再自己滚（原先是它的 class="scroll" 在滚）：
-             它只把竖向切成「不缩的头 ＋ 吃掉剩下的体」；真正滚的是 #hvaPane，
-             滚动指示层（SB_RULES 挑的 .scroll）也随之归它。
+             **整页一起滚**（2026-10-20 照稿重画后）：头（大形象）与日志同一张纸，滚的是 #hvaBody
+             （.hva-scroll，也挂着 .scroll 给 SB_RULES 认）。#hvaPane 只是日志的内容容器，
+             **不许再挂 .scroll**——挂了它就是一只 overflow:auto ＋ overscroll-behavior:contain 的套娃：
+             内容恰好撑满、自己滚不动，却把手指的滚动链截断在它这层，于是往下滑出去之后再也滑不回来
+             （2026-10-20 修的正是这个：滑到日志区后手势全被它吃掉）。
              **#hvaBody 这个 id 留着当两层的共同祖先**：渲染器按 id 取件、冒烟按它当作用域找 .hva-hero，
              拆成两个置顶元素时若把 id 挪给其中一层，另一层的东西就从那些查询里消失了。
              2026-10-16 撤掉两件（见 ADR-0065）：右下那颗悬浮球「＋」与「加入托管清单」底部浮窗的挂点
              ——它们服务的托管清单一屏已经删了。挂/摘能力搬进托管范围浮层（#hvaScopeWrap，在设置页那一屏）。 -->
         <section class="screen" id="host-ai">
           <div class="hva-glow"></div>
-          <div class="hva-scroll" id="hvaBody">
+          <div class="scroll hva-scroll" id="hvaBody">
             <div class="hva-head" id="hvaHead"></div>
-            <div class="scroll hva-pane" id="hvaPane"></div>
+            <div class="hva-pane" id="hvaPane"></div>
           </div>
           <div class="hv-tab" id="hvaTab"></div>
         </section>
