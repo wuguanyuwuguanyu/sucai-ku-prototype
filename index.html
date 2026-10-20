@@ -1213,30 +1213,54 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 /* 就地重画（挂完一枚能力之后，见 hvaMine 的 quiet）：只免掉动画（面板上滑＋遮罩淡入），其余一样。
    遮罩也得免：它跟面板同一次 innerHTML 重建，只留面板不动的话，点一下遮罩会闪一下。 */
 .hva-sheet.quiet,.hva-mask.quiet{animation:none}
-/* 工作日志：稿子（1321:1853）是一张 690×1100 的半透明白卡（圆角 30）包住一条按日倒序的时间线，
-   日期 32px 渐变、时间 28px 浅蓝、正文 28px 深蓝渐变、引用条 #F8F6FF。全部 ×0.5493 折算。
-   卡内左边距 17.6（日期起跑线），条目再缩进 26.9：让出 8.8 的圆点与 1.1 的虚线轴。 */
-.hva-logcard{border-radius:16.5px;background:rgba(255,255,255,.9);
-  padding:18.7px 21.4px 22px 17.6px}
-.hva-day{margin:0 0 12px}
-.hva-day .d{display:block;font-size:16.5px;font-weight:600;line-height:19.8px;
-  background-image:linear-gradient(90deg,#245BB9,#102953 80%);
+/* 工作日志：稿子（1336:6328 的「列表」段）是一张 690×1100 的半透明白卡（圆角 30）包住一条按日倒序的
+   时间线，全部 ×0.5493 折算。2026-10-20 照新稿重排了四样：
+     · 卡头加「工作日志 ✦」——原先这屏没有标题，日志直接从日期开始；
+     · 日期从左上角一行「8月25日」改成**居中的日子徽**（日大月小，两侧一道 #E0E1FF 细线拉满）；
+     · 时间点那枚空心圆点换成**渐变底＋白色时针对钩**的小圆钟（稿子里它本身就是一枚钟），
+       时间字样也从浅蓝改成 #333；
+     · 一天一张卡改成**整段一张卡**（稿子的「模块」只画了一张，标题也在卡里）。
+   卡内左边距 17.6（标题与日期带起跑线），条目再缩进 26.9：让出 13.2 的圆钟与 1.1 的虚线轴。 */
+.hva-logcard{border-radius:16.5px;padding:9.3px 21.4px 22px 17.6px;
+  background:linear-gradient(180deg,rgba(248,246,255,.9),rgba(255,255,255,.9))}
+/* 卡头：17.6 的渐变字＋右边一枚双星（稿子 1336:6412 的「ai」，图形见 hvaLogSpk）。
+   星比字低一点点（稿子星心在 x 基线上），所以 gap 之后还要往下推 2.2。 */
+.hva-lhd{display:flex;align-items:center;gap:4px;height:19.8px;margin:0 0 9.3px;
+  font-size:17.6px;font-weight:600;line-height:19.8px;letter-spacing:.01em;
+  background-image:linear-gradient(90deg,#1677FE,#9452FF);
   -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.hva-lhd svg{flex:none;margin-top:4.4px}
+/* 日期带：日大月小居中对齐，两侧细线 flex 平分。线在徽的 05月 那一行高度上（稿子 y=641），
+   不是正中——`translateY(4px)` 就是把线从徽心挪到那行。 */
+.hva-day{display:flex;align-items:center;margin:0 2px 3px}
+.hva-day .ln{flex:1;height:1px;background:#E0E1FF;transform:translateY(4px)}
+.hva-day .b{position:relative;flex:none;padding:0 16px 0 15px;text-align:center}
+/* 徽底那团青蓝晕（稿子 1336:6514：椭圆 ＋ 19px 高斯模糊、28% 不透明）。它只是衬底，不参与命中 */
+.hva-day .b::before{content:"";position:absolute;left:0;right:0;top:2px;bottom:-2px;z-index:0;
+  background:radial-gradient(58% 64% at 50% 55%,rgba(23,255,171,.2),rgba(0,106,255,.18) 60%,rgba(0,106,255,0) 78%);
+  filter:blur(5px);pointer-events:none}
+.hva-day .dd,.hva-day .mm{position:relative;z-index:1;display:block;color:#333}
+.hva-day .dd{font-size:18.7px;font-weight:600;line-height:20.9px}
+.hva-day .mm{margin-top:.5px;font-size:11px;line-height:12.1px}
+.hva-day .mm b{font-weight:600}   /* 「05」比「月」重一档（稿子：数字 SemiBold、月 Regular） */
+.hva-entries + .hva-day{margin-top:14px}
 .hva-entry{position:relative;padding:0 0 8px 26.9px}
-/* 虚线轴：稿子是一条 2px、5.98 实／5.97 空的竖向虚线，顶紫底蓝。用重复遮罩切，比 border-style:dashed 好控节奏 */
-.hva-entry::before{content:"";position:absolute;left:7.2px;top:26px;bottom:0;width:1.1px;
+/* 虚线轴：稿子是一条 1.1px、1.87 实／1.87 空的竖向虚线，顶紫底蓝。用重复遮罩切，比 border-style:dashed 好控节奏 */
+.hva-entry::before{content:"";position:absolute;left:7.4px;top:26px;bottom:0;width:1.1px;
   background-image:linear-gradient(180deg,#AA75FF,#67A6FF);
-  -webkit-mask-image:repeating-linear-gradient(180deg,#000 0 3.3px,transparent 3.3px 6.6px);
-  mask-image:repeating-linear-gradient(180deg,#000 0 3.3px,transparent 3.3px 6.6px)}
+  -webkit-mask-image:repeating-linear-gradient(180deg,#000 0 1.9px,transparent 1.9px 3.8px);
+  mask-image:repeating-linear-gradient(180deg,#000 0 1.9px,transparent 1.9px 3.8px)}
 .hva-entries .hva-entry:last-child{padding-bottom:0}
 .hva-entries .hva-entry:last-child::before{content:none}
 .hva-time{position:relative;display:flex;align-items:center;height:26.4px;font-size:15.4px;
-  line-height:26.4px;color:#6D92C7}
-/* 圆点与时间那行垂直居中对齐（稿子 dot y=857，时间行顶 841＋行高 48 的中心）：白心＋渐变描边 */
-.hva-time .dot{position:absolute;left:-26.9px;top:8.8px;width:8.8px;height:8.8px;border-radius:50%;
-  box-sizing:border-box;border:1.65px solid transparent;
-  background-image:linear-gradient(#fff,#fff),linear-gradient(90deg,#67A6FF,#AA75FF);
-  background-origin:border-box;background-clip:padding-box,border-box}
+  line-height:26.4px;color:#333}
+/* 圆钟与时间那行垂直居中：13.2 的渐变圆底（#4C97FF→#B385FF）＋白色时针对钩（竖一笔、横一笔）。
+   稿子里 dot 外圈那枚白心渐变环是它落在白卡上的柔光，这里用一枚同色的淡投影替。 */
+.hva-time .dot{position:absolute;left:-25.3px;top:6.6px;width:13.2px;height:13.2px;border-radius:50%;
+  background-image:linear-gradient(135deg,#4C97FF 6%,#B385FF 94%);
+  box-shadow:0 1px 5px -1px rgba(120,130,255,.55)}
+.hva-time .dot::after{content:"";position:absolute;left:6.6px;top:3.6px;width:3.3px;height:3.7px;
+  border-left:1.1px solid #fff;border-bottom:1.1px solid #fff;border-bottom-left-radius:1.2px}
 .hva-body p{margin-top:1.6px;font-size:15.4px;line-height:19.8px;font-weight:500;
   background-image:linear-gradient(90deg,#245BB9,#102953 80%);
   -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
@@ -4954,10 +4978,12 @@ function hvaActList(){
 }
 /* 工作日志＝托管真做过的事，按日倒序。日期钉在任务页那一天（TK_TODAY＝2026-10-04）：
    宿主两屏说的是同一天，来回切才不会一会儿 10 月 4 日、一会儿别的日子。
+   日期拆成 d（日子）／m（月份数字）两段：稿子把它排成居中的日子徽（日大、月小），
+   一行「8月25日」的写法拆不开——渲染见 hvaLogHtml 那条日期带。
    正文里的 [[…]] 是要强调的词，渲染时才换成渐变强调字（见 hvaMark）——不让数据里直接写 HTML，
    那样改一个字都得担心标签配不配得平。 */
 var HVA_LOG=[
-  {d:'8月25日',es:[
+  {d:'25',m:'08',es:[
     {tm:'18:00',st:'已完成',body:'数智员工在[[抖音短视频]]进行了互动',blocks:[
       {k:'quote',tx:'@小满家的猫：周末带娃去露营，轻装出发，把两天交给山野和晚风。'}]},
     {tm:'16:45',st:'已完成',body:'数智员工在[[抖音短视频]]进行了互动',blocks:[
@@ -4968,7 +4994,7 @@ var HVA_LOG=[
     {tm:'12:30',st:'已完成',body:'数智员工在[[抖音短视频]]进行了互动',blocks:[
       {k:'quote',tx:'@小满家的猫：周末带娃去露营，轻装出发，把两天交给山野和晚风。'}]}
   ]},
-  {d:'8月24日',es:[
+  {d:'24',m:'08',es:[
     {tm:'16:40',st:'已完成',body:'数智员工在[[抖音短视频]]完成了评论互动',blocks:[
       {k:'quote',tx:'@阿远：新到的露营灯试了一晚，续航比想象中稳。'},
       {k:'box',crows:[['AI仿写评论：','灯光氛围感很好，户外过夜续航确实关键，这款充一次能用几晚？']]}]}
@@ -5135,15 +5161,20 @@ function hvaHeroHtml(){
    （见 hvaScopeHtml）。所以它不再拦掉任何数据，只答"这一类交出去了没有"。
    设置页那张范围卡走的是另一条路（直接列 HVA_SCOPE，见 REND['host-ai-set']），不经过它。 */
 function hvaInScope(ty){ return HVA_SCOPE.indexOf(ty)>=0; }
-/* 工作日志（稿子 1321:1758 下半段）：一天一张白卡，日期一行（日大、月小），
-   下面一条时间轴——左侧虚线竖轨，每个时间点一枚白底渐变描边的圆点，再往右是正文与各种块。
+/* 工作日志（稿子 1336:6328「列表」段）：**整段一张白卡**，卡头一行「工作日志 ✦」，
+   下面按日倒序：一天一条日期带（日子大、月份小，两侧细线），再接一条时间轴——
+   左侧虚线竖轨，每个时间点一枚渐变底＋白色时针的小圆钟，再往右是正文与各种块。
    条目上的状态标签（已完成／进行中）随新稿撤掉：稿子只留时间，状态那件事改由正文说。
-   块有三种：quote（原帖引用）、acts（四枚互动动作）、box（AI仿写／固定话术两行）。 */
+   块有三种：quote（原帖引用）、acts（四枚互动动作）、box（AI仿写／固定话术两行）。
+   日期不再是一行「8月25日」的字，而是 {d:日子, m:月份} 两段（见 HVA_LOG 上头那段）。 */
 function hvaLogHtml(){
   var h='',i,j,k,m;
+  h='<div class="hva-logcard"><div class="hva-lhd">工作日志'+hvaLogSpk(15)+'</div>';
   for(i=0;i<HVA_LOG.length;i++){
     var d=HVA_LOG[i];
-    h+='<div class="hva-logcard"><div class="hva-day"><span class="d">'+d.d+'</span></div><div class="hva-entries">';
+    h+='<div class="hva-day"><i class="ln"></i><span class="b"><span class="dd">'+d.d+'</span>'
+      +'<span class="mm"><b>'+d.m+'</b>月</span></span><i class="ln"></i></div>'
+      +'<div class="hva-entries">';
     for(j=0;j<d.es.length;j++){
       var e=d.es[j],b='';
       for(k=0;k<e.blocks.length;k++){
@@ -5165,9 +5196,16 @@ function hvaLogHtml(){
       h+='<div class="hva-entry"><div class="hva-time"><span class="dot"></span>'+e.tm+'</div>'
         +'<div class="hva-body"><p>'+hvaMark(e.body)+'</p>'+b+'</div></div>';
     }
-    h+='</div></div>';
+    h+='</div>';
   }
-  return h||'<div class="hv-empty">还没有托管记录</div>';
+  h+='</div>';
+  return HVA_LOG.length?h:'<div class="hv-empty">还没有托管记录</div>';
+}
+/* 卡头那枚双星（稿子 1336:6412 的「ai」）：图形照 Figma 原样（26.15×28 视框），实心吃 #1677FE→#9452FF。
+   **别拿 hvSpk／hvuSpk 顶替**：那两枚是四角星，这是一枚带尾的双星，形状不是一回事。 */
+function hvaLogSpk(s){
+  return '<svg width="'+s+'" height="'+(s*28/26.1524).toFixed(1)+'" viewBox="0 0 26.1524 27.9997" aria-hidden="true">'
+    +'<path fill-rule="evenodd" clip-rule="evenodd" fill="url(#hvuGrad)" d="M21.0591 0.370738C21.0096 0.208962 20.8856 0.0810641 20.726 0.0271822C20.5943 -0.0171279 20.4506 -0.00695864 20.3264 0.0554453C20.2022 0.117849 20.1079 0.227357 20.0641 0.359797L18.8863 3.92665L15.3419 5.17833C15.1272 5.25274 14.9849 5.45807 14.9898 5.68633C14.9948 5.91459 15.1459 6.11347 15.3637 6.17836L18.8798 7.24623L19.9836 10.7934C20.0511 11.0113 20.2509 11.1604 20.4779 11.1624C20.7049 11.1644 20.9072 11.0188 20.9785 10.8021L22.1585 7.23967L25.7726 6.15867C25.9937 6.09558 26.1478 5.8947 26.1523 5.66375C26.1568 5.43281 26.0106 5.22602 25.7922 5.15426L22.1629 3.9179L21.0591 0.370738ZM10.2562 9.20434C10.1753 8.95858 9.98177 8.76682 9.73606 8.68886C9.31425 8.55567 8.86467 8.79039 8.73078 9.21371L6.76454 15.4627L0.543945 17.5667C0.21657 17.6786 -0.00262397 17.9886 2.37246e-05 18.336C0.00267142 18.6833 0.226565 18.9899 0.555608 19.0968L6.84851 21.1024L8.92437 27.4474C9.03366 27.7784 9.34246 28.0013 9.68961 27.9997C10.0368 27.9981 10.3435 27.7724 10.4498 27.4404L12.416 21.1891L18.7672 19.3967C19.1027 19.3001 19.3376 18.9968 19.3482 18.6464C19.3589 18.296 19.1429 17.9789 18.8139 17.862L12.3297 15.5517L10.2562 9.20434Z"/></svg>';
 }
 var HVA_TABS=[
   {n:'首页',ic:'homefill',fn:"go('host-home')"},
