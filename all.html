@@ -9433,7 +9433,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
       <div class="ant-table ant-table-middle css-vgijab">
         <div class="ant-table-container"><div class="ant-table-content">
           <table style="table-layout: fixed;">
-            <colgroup><col style="width: 16%"><col style="width: 11%"><col style="width: 9%"><col style="width: 9%"><col style="width: 9%"><col style="width: 9%"><col style="width: 7%"><col style="width: 30%"></colgroup>
+            <colgroup><col style="width: 22%"><col style="width: 14%"><col style="width: 9%"><col style="width: 9%"><col style="width: 9%"><col style="width: 9%"><col style="width: 7%"><col style="width: 21%"></colgroup>
             <thead class="ant-table-thead"><tr>
               <th scope="col" class="ant-table-cell">执行人</th>
               <th scope="col" class="ant-table-cell">所属大区</th>
@@ -9688,28 +9688,38 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
        贴在标题后面，别让三个子元素各占一边 */
     + '._title_gf4go_8>span.rea-bd-title-sub{color:#999999;margin-left:10px;margin-right:auto}'
     /* 7 类完成度：一行一类，固定顺序。条长＝占「应执行」的比例，三段与三张卡同色同义
-       （绿 #00c28a 已执行 · 紫 #c250ff 待执行未逾期 · 橙 #ff8f17 逾期）——
-       三色都取自快照里已在用的卡渐变端色，不引入新色。 */
-    + '.rea-bd-legend{display:flex;flex-wrap:wrap;gap:16px;margin:10px 0 0;color:#748194;font-size:12px}'
+       （绿 #00c28a 已执行 · 紫 #9d53ff 待执行未逾期 · 橙 #ff8f17 逾期）——
+       三色都取自快照里已在用的卡渐变端色，不引入新色；紫取渐变深端而不是 #c250ff，
+       是因为 #c250ff 在 8px 细条上太扎眼，深端与三张卡仍是一套色。 */
+    + '.rea-bd-legend{display:flex;flex-wrap:wrap;gap:18px;margin:12px 0 0;color:#748194;font-size:12px}'
     + '.rea-bd-legend>span{display:inline-flex;align-items:center;gap:6px}'
-    + '.rea-bd-key{display:inline-block;width:10px;height:10px;border-radius:2px}'
-    + '.rea-bd-key.d{background:#00c28a}.rea-bd-key.l{background:#c250ff}.rea-bd-key.o{background:#ff8f17}'
+    + '.rea-bd-key{display:inline-block;width:8px;height:8px;border-radius:2px}'
+    + '.rea-bd-key.d{background:#00c28a}.rea-bd-key.l{background:#9d53ff}.rea-bd-key.o{background:#ff8f17}'
     + '.rea-bd-types{margin-top:10px;border:1px solid #f0f0f2;border-radius:6px;overflow:hidden}'
-    + '.rea-bd-type{display:flex;align-items:center;gap:12px;padding:10px 14px;cursor:pointer;border-top:1px solid #f0f0f2}'
+    + '.rea-bd-type{display:flex;align-items:center;gap:14px;padding:9px 16px;cursor:pointer;border-top:1px solid #f0f0f2}'
     + '.rea-bd-type:first-child{border-top:0}'
     + '.rea-bd-type:hover{background:#F7F8FC}'
     + '.rea-bd-type.on{background:#fffbe6}'
-    + '.rea-bd-type .nm{flex:0 0 104px;color:#333333;font-size:13px}'
+    + '.rea-bd-type .nm{flex:0 0 96px;color:#333333;font-size:13px}'
     + '.rea-bd-type .track{flex:1 1 auto;min-width:80px}'
-    + '.rea-bd-type .qty{flex:0 0 116px;text-align:right;color:#333333;font-size:12px;white-space:nowrap}'
-    + '.rea-bd-type .od{flex:0 0 62px;text-align:right;font-size:12px;white-space:nowrap;color:#ff8f17}'
-    + '.rea-bd-type .od.zero{color:#999999}'
-    + '.rea-bd-track{display:flex;height:10px;border-radius:5px;background:#f0f0f2;overflow:hidden}'
-    + '.rea-bd-track.sm{height:6px;border-radius:3px;margin-top:4px}'
+    + '.rea-bd-type .rate{flex:0 0 48px;text-align:right;color:#333333;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums}'
+    + '.rea-bd-type .qty{flex:0 0 96px;text-align:right;color:#999999;font-size:12px;white-space:nowrap;font-variant-numeric:tabular-nums}'
+    + '.rea-bd-type .od{flex:0 0 40px;text-align:right;font-size:12px;white-space:nowrap;color:#c9cdd4}'
+    + '.rea-bd-type .od b{display:inline-block;min-width:24px;padding:0 7px;border-radius:10px;background:#fff2e8;color:#ff8f17;font-weight:500;line-height:18px;font-variant-numeric:tabular-nums}'
+    + '.rea-bd-type-head{cursor:default;background:#fafafa}'
+    + '.rea-bd-type-head:hover{background:#fafafa}'
+    + '.rea-bd-type-head .nm,.rea-bd-type-head .rate,.rea-bd-type-head .qty,.rea-bd-type-head .od{color:#999999;font-size:12px;font-weight:400}'
+    + '.rea-bd-track{display:flex;height:8px;border-radius:4px;background:#f0f0f2;overflow:hidden}'
+    + '.rea-bd-track.sm{height:6px;border-radius:3px;margin-top:5px}'
     + '.rea-bd-track>i{display:block;height:100%}'
+    /* 2px 白缝把三段分开，不再糊成一根彩带 */
+    + '.rea-bd-track>i+i{box-shadow:inset 2px 0 0 #ffffff}'
     + '.rea-bd-track>i.d{background:#00c28a}'
-    + '.rea-bd-track>i.l{background:#c250ff}'
+    + '.rea-bd-track>i.l{background:#9d53ff}'
     + '.rea-bd-track>i.o{background:#ff8f17}'
+    /* 欠账清单的进度格：上面一行「已执行 / 应执行 ＋ 百分比」，下面细条——比只有条好读 */
+    + '.rea-bd-pg .n{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:#333333;font-variant-numeric:tabular-nums}'
+    + '.rea-bd-pg .n em{font-style:normal;color:#999999}'
     + '.rea-bd-sub{display:flex;align-items:baseline;gap:12px;margin:22px 0 0}'
     + '.rea-bd-sub h6{margin:0;color:#333333;font-size:14px;font-weight:600}'
     + '.rea-bd-sub .rea-bd-lab{margin-left:auto}'
@@ -9724,8 +9734,10 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     + '.rea-bd-org-row:hover,.rea-bd-org-row.on{background:#F7F8FC}'
     + '.rea-bd-org-row .nm{flex:0 0 96px;color:#333333;font-size:13px}'
     + '.rea-bd-org-row .track{flex:1 1 auto;min-width:80px}'
-    + '.rea-bd-org-row .qty{flex:0 0 150px;text-align:right;color:#748194;font-size:12px;white-space:nowrap}'
-    + '.rea-bd-org-row .rate{flex:0 0 56px;text-align:right;color:#333333;font-size:13px;font-weight:600}'
+    + '.rea-bd-org-row .qty{flex:0 0 150px;text-align:right;color:#748194;font-size:12px;white-space:nowrap;font-variant-numeric:tabular-nums}'
+    + '.rea-bd-org-row .qty b{color:#ff8f17;font-weight:500}'
+    + '.rea-bd-org-row .qty b.zero{color:#999999}'
+    + '.rea-bd-org-row .rate{flex:0 0 56px;text-align:right;color:#333333;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums}'
     + '.rea-bd-org-row .more{flex:0 0 12px;color:#999999;font-size:10px;text-align:right}'
     + '.rea-bd-org-list{padding:2px 14px 10px 42px;background:#F7F8FC;border-top:1px solid #f0f0f2}'
     + '.rea-bd-org-item{display:flex;align-items:baseline;gap:12px;padding:6px 0;font-size:12px;color:#333333;border-top:1px dashed #f0f0f2}'
@@ -9737,8 +9749,11 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     + '.rea-bd-org-item .o.zero{color:#999999}'
     /* 执行人明细子页：点人可以展开他的任务清单 */
     + '.rea-bd-people tr.ant-table-row{cursor:pointer}'
-    + '.rea-bd-caret{display:inline-block;width:14px;color:#999999;font-size:10px}'
-    + '.rea-bd-caret.on{color:#1677ff}'
+    + '.rea-bd-caret{display:inline-block;width:0;height:0;border-left:5px solid #bfbfbf;border-top:4px solid transparent;border-bottom:4px solid transparent;margin-right:9px;vertical-align:middle;transition:transform .15s}'
+    + '.rea-bd-caret.on{transform:rotate(90deg);border-left-color:#1677ff}'
+    /* 执行人明细的完成率：先给数字，再给一根定宽细条——条不再铺满整格 */
+    + '.rea-dtl-rate .pct{display:inline-block;min-width:46px;color:#333333;font-variant-numeric:tabular-nums}'
+    + '.rea-dtl-rate .rea-bd-track.sm{display:inline-flex;width:120px;vertical-align:middle;margin:0 0 0 10px}'
     + '.rea-bd-ptasks{padding:4px 0 4px 14px}'
     + '.rea-bd-ptask{display:flex;align-items:baseline;gap:12px;padding:6px 0;font-size:12px;color:#333333;border-top:1px dashed #f0f0f2}'
     + '.rea-bd-ptask:first-child{border-top:0}'
@@ -9974,6 +9989,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     'function renderTypes(w){',
     '  var rs=winRows(w),box=document.getElementById("rea-bd-types"),h="",i,j,t,a;',
     '  if(!box)return;',
+    '  h="<div class=\\"rea-bd-type rea-bd-type-head\\"><span class=\\"nm\\">任务类型</span><span class=\\"track\\"></span><span class=\\"rate\\">完成率</span><span class=\\"qty\\">已执行 / 应执行</span><span class=\\"od\\">逾期</span></div>";',
     '  for(i=0;i<TYPES.length;i++){',
     '    t=TYPES[i];a={need:0,done:0,left:0,over:0};',
     '    for(j=0;j<rs.length;j++){',
@@ -9986,8 +10002,9 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     '    h+="<div class=\\"rea-bd-type"+(CURT===t?" on":"")+"\\" data-bd-type-row=\\""+esc(t)+"\\">"',
     '      +"<span class=\\"nm\\">"+esc(t)+"</span>"',
     '      +"<span class=\\"track\\">"+(a.need?seg(a.need,a.done,a.left,a.over,false):"")+"</span>"',
+    '      +"<span class=\\"rate\\">"+(a.need?(a.done/a.need*100).toFixed(1)+"%":"—")+"</span>"',
     '      +"<span class=\\"qty\\">"+(a.need?a.done+" / "+a.need+" 人次":"—")+"</span>"',
-    '      +"<span class=\\"od"+(a.over?"":" zero")+"\\">逾期 "+a.over+"</span>"',
+    '      +"<span class=\\"od\\">"+(a.over?"<b>"+a.over+"</b>":"—")+"</span>"',
     '      +"</div>";',
     '  }',
     '  box.innerHTML=h;',
@@ -10033,7 +10050,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     '      +"<td class=\\"ant-table-cell\\">"+esc((c[2]&&c[2].textContent)||"")+"</td>"',
     '      +"<td class=\\"ant-table-cell\\"><span class=\\"rea-bd-people\\" title=\\""+esc((c[3]&&c[3].textContent)||"")+"\\">"+esc((c[3]&&c[3].textContent)||"")+"</span></td>"',
     '      +"<td class=\\"ant-table-cell\\"><span class=\\"rea-bd-span\\" title=\\""+esc(span)+"\\">"+esc(shortSpan(span))+"</span></td>"',
-    '      +"<td class=\\"ant-table-cell\\">"+done+" / "+need+seg(need,done,left,over,true)+"</td>"',
+    '      +"<td class=\\"ant-table-cell\\"><div class=\\"rea-bd-pg\\"><span class=\\"n\\"><span>"+done+" / "+need+"</span><em>"+(need?Math.round(done/need*100)+"%":"")+"</em></span>"+seg(need,done,left,over,true)+"</div></td>"',
     '      +"<td class=\\"ant-table-cell\\">"+(over?"<span class=\\"rea-bd-over\\">"+over+"</span>":"<span class=\\"rea-bd-dim\\">0</span>")+"</td>"',
     '      +"<td class=\\"ant-table-cell\\">"+tag(state)+"</td>"',
     '      +"<td class=\\"ant-table-cell\\">"+op(r.getAttribute("data-bd-type"))+"</td>"',
@@ -10073,7 +10090,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     '    h+="<div class=\\"rea-bd-org-row"+(ORG_OPEN[o]?" on":"")+"\\" data-bd-org-row=\\""+esc(o)+"\\">"',
     '      +"<span class=\\"nm\\">"+esc(o)+"</span>"',
     '      +"<span class=\\"track\\">"+(a.need?seg(a.need,a.done,a.left,a.over,false):"")+"</span>"',
-    '      +"<span class=\\"qty\\">"+(a.need?a.done+" / "+a.need+" 人次 · 逾期 "+a.over:"—")+"</span>"',
+    '      +"<span class=\\"qty\\">"+(a.need?a.done+" / "+a.need+" 人次 · 逾期 <b"+(a.over?"":" class=\\"zero\\"")+">"+a.over+"</b>":"—")+"</span>"',
     '      +"<span class=\\"rate\\">"+(a.need?rate.toFixed(1)+"%":"—")+"</span>"',
     '      +"<span class=\\"more\\">"+(ORG_OPEN[o]?"\\u25be":"\\u25b8")+"</span>"',
     '      +"</div>";',
@@ -10384,14 +10401,14 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     '    p=ps[i];need+=p.need;done+=p.done;left+=p.left;over+=p.over;',
     '    r=rate(p);',
     '    h+="<tr class=\\"ant-table-row ant-table-row-level-0 rea-bd-prow\\" data-dtl-person=\\""+esc(p.n)+"\\">"',
-    '      +"<td class=\\"ant-table-cell\\"><span class=\\"rea-bd-caret"+(OPEN[p.n]?" on":"")+"\\">"+(OPEN[p.n]?"\\u25be":"\\u25b8")+"</span><span class=\\"ant-typography css-vgijab\\">"+esc(p.n)+"</span></td>"',
+    '      +"<td class=\\"ant-table-cell\\"><span class=\\"rea-bd-caret"+(OPEN[p.n]?" on":"")+"\\"></span><span class=\\"ant-typography css-vgijab\\">"+esc(p.n)+"</span></td>"',
     '      +"<td class=\\"ant-table-cell\\">"+esc(p.o)+"</td>"',
     '      +"<td class=\\"ant-table-cell\\">"+p.tasks.length+"</td>"',
     '      +"<td class=\\"ant-table-cell\\">"+p.need+"</td>"',
     '      +"<td class=\\"ant-table-cell\\">"+p.done+"</td>"',
     '      +"<td class=\\"ant-table-cell\\">"+p.left+"</td>"',
     '      +"<td class=\\"ant-table-cell\\">"+(p.over?"<span class=\\"rea-bd-over\\">"+p.over+"</span>":"<span class=\\"rea-bd-dim\\">0</span>")+"</td>"',
-    '      +"<td class=\\"ant-table-cell\\">"+r.toFixed(1)+"%"+seg(p.need,p.done,p.left,p.over)+"</td>"',
+    '      +"<td class=\\"ant-table-cell rea-dtl-rate\\"><span class=\\"pct\\">"+r.toFixed(1)+"%</span>"+seg(p.need,p.done,p.left,p.over)+"</td>"',
     '      +"</tr>";',
     '    if(OPEN[p.n]){',
     '      h+="<tr class=\\"ant-table-expanded-row\\"><td class=\\"ant-table-cell\\" colspan=\\"8\\"><div class=\\"rea-bd-ptasks\\">";',
@@ -10418,7 +10435,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     '      +"<td class=\\"ant-table-cell\\">"+done+"</td>"',
     '      +"<td class=\\"ant-table-cell\\">"+left+"</td>"',
     '      +"<td class=\\"ant-table-cell\\">"+over+"</td>"',
-    '      +"<td class=\\"ant-table-cell\\">"+tr.toFixed(1)+"%"+seg(need,done,left,over)+"</td>"',
+    '      +"<td class=\\"ant-table-cell rea-dtl-rate\\"><span class=\\"pct\\">"+tr.toFixed(1)+"%</span>"+seg(need,done,left,over)+"</td>"',
     '      +"</tr>";',
     '  }',
     '  document.getElementById("rea-dtl-body").innerHTML=h;',
