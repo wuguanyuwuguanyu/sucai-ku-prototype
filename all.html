@@ -8850,35 +8850,62 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   </div>
   <div class="ant-divider css-vgijab ant-divider-horizontal" role="separator" style="margin: 0px;"></div>
 
-  <!-- 第 4 层 · 时效：业务域 / 时间窗 / 自定义区间
-       原来还有一枚「对比上期」开关（环比），已整件撤掉（PRD §5.8）：本页还没有值得被"比"的结论，
-       一排箭头还会把"↓2.0pt"读成"今天做得差"，而它往往只是窗口或名单变了。
-       顺带撤掉的还有它要的那条后端依赖（按小时留存上一日进度快照），本层因此只剩时效一件事。 -->
-  <div class="rea-bd-row">
-    <span class="rea-bd-lab">业务域</span>
-    <div class="ant-radio-group ant-radio-group-solid css-vgijab rea-bd-domain">
-      <div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small">
-        <div class="ant-space-item">
-          <label class="ant-radio-button-wrapper ant-radio-button-wrapper-checked css-vgijab">
-            <span class="ant-radio-button ant-radio-button-checked"><input name="rea-bd-domain" class="ant-radio-button-input" type="radio" value="wxz" checked=""><span class="ant-radio-button-inner"></span></span>
-            <span class="ant-radio-button-label">微小助</span>
-          </label>
-        </div>
-        <div class="ant-space-item">
-          <label class="ant-radio-button-wrapper css-vgijab" data-rea-page="企业微信看板">
-            <span class="ant-radio-button"><input name="rea-bd-domain" class="ant-radio-button-input" type="radio" value="qywx"><span class="ant-radio-button-inner"></span></span>
-            <span class="ant-radio-button-label">企业微信</span>
-          </label>
-        </div>
-        <div class="ant-space-item">
-          <label class="ant-radio-button-wrapper css-vgijab" data-rea-page="悬浮窗看板">
-            <span class="ant-radio-button"><input name="rea-bd-domain" class="ant-radio-button-input" type="radio" value="xfc"><span class="ant-radio-button-inner"></span></span>
-            <span class="ant-radio-button-label">悬浮窗</span>
-          </label>
+
+  <!-- 新鲜度标注那一段、以及「演示数据只落到两天」那句说明，都已经撤掉（PRD §5.7）：
+       窗口的选中态自己就说清是哪一档，页顶还挨着一条「数据更新时间」；
+       再挂一条 T+1／准实时的常驻文案，就是把同一个意思说两遍。 -->
+
+  <!-- 第 1 层 · 执行健康度三卡：固定看「今日」，不跟下方任务执行板块的时间窗走。
+       三张卡都由任务台账里今日那几行算出来（见注入脚本的自检），不另写一份数。
+       原来的第四张「异常 · 失败」已撤（PRD §5.1）：失败在后端就归「进行中」，不是一种独立状态，
+       单列一张卡等于拿我们的口径去解释现网的分桶；页上不再出现这个数。 -->
+  <div class="ant-row css-vgijab" id="rea-bd-cards" style="margin-left: -16px; margin-right: -16px; row-gap: 21px; padding-top: 21px;">
+    <div class="ant-col ant-col-8 css-vgijab" style="padding-left: 16px; padding-right: 16px;">
+      <div class="_card_gf4go_35" style="background: linear-gradient(90deg, rgb(194, 80, 255) 0%, rgb(157, 83, 255) 100%); box-shadow: rgb(136, 83, 255) 0px 0px 1px 0px;">
+        <h6>待执行</h6>
+        <div class="_num_gf4go_46">
+          <div><p data-rea-sum="left">18</p><p>人次</p></div>
+          <div><p data-rea-sum="left-of-need">43.9%</p><p>占应执行</p></div>
         </div>
       </div>
     </div>
-    <span class="rea-bd-sep"></span>
+    <div class="ant-col ant-col-8 css-vgijab" style="padding-left: 16px; padding-right: 16px;">
+      <div class="_card_gf4go_35" style="background: linear-gradient(270deg, rgb(0, 194, 138) 0%, rgb(0, 217, 121) 100%); box-shadow: rgb(0, 173, 122) 0px 0px 1px 0px;">
+        <h6>完成率</h6>
+        <div class="_num_gf4go_46">
+          <div><p data-rea-sum="rate">56.1%</p><p>已完成</p></div>
+          <div><p class="rea-bd-cmp" data-rea-sum="rate-frac">23 ÷ 41</p><p>已执行 / 应执行</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="ant-col ant-col-8 css-vgijab" style="padding-left: 16px; padding-right: 16px;">
+      <div class="_card_gf4go_35" style="background: linear-gradient(90deg, rgb(255, 176, 38) 0%, rgb(255, 143, 23) 100%); box-shadow: rgb(255, 101, 76) 0px 0px 1px 0px;">
+        <h6>逾期未做</h6>
+        <div class="_num_gf4go_46">
+          <div><p data-rea-sum="over">0</p><p>人次</p></div>
+          <div><p data-rea-sum="over-of-left">0.0%</p><p>占待执行</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 三卡固定看今日，于是两处「看着像坏了、其实是口径」的地方常驻，靠这一句兜住（PRD §2.2） -->
+  <p class="rea-bd-note" id="rea-bd-todaynote">三张卡看的是<b>今日</b>：今天的任务大多还没到期，所以「逾期未做」常为 <b>0</b>（逾期＝有效期已过且仍未执行，欠账看下方时间窗切到跨天窗口）；完成率也天然比全天低——它比的是「今天到此刻 vs 今天全部」，不是今天做得差。</p>
+
+  <div class="rea-bd-bad" id="rea-bd-bad" hidden></div>
+</div>
+
+<div class="_board_gf4go_1" style="margin-top: 21px; padding-bottom: 28px;">
+  <div class="_title_gf4go_8" style="padding-bottom: 0px;">
+    <h6>任务执行</h6>
+    <a href="#" data-bd-detail="task">详细数据<span role="img" aria-label="right" class="anticon anticon-right"><svg viewBox="64 64 896 896" focusable="false" data-icon="right" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"></path></svg></span></a>
+  </div>
+
+  <!-- 时间窗（PRD §2.2／§4.4）：它现在归「任务执行」板块，筛的是这张任务台账，
+       同时是下方「组织范围」与「素材与效果」的取数窗口。
+       业务域三枚标签已撤：企业微信／悬浮窗两张看板走侧栏进，不在本页顶部再挂一个切换器。
+       本板块上方的执行健康度三卡固定看今日，不跟这个窗口走。 -->
+  <div class="rea-bd-row">
     <span class="rea-bd-lab">时间窗</span>
     <div class="ant-radio-group ant-radio-group-solid css-vgijab rea-bd-window">
       <div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small">
@@ -8939,55 +8966,6 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
       <div class="ant-picker-active-bar" style="position: absolute; width: 0px;"></div>
       <span class="ant-picker-suffix"><span role="img" aria-label="calendar" class="anticon anticon-calendar"><svg viewBox="64 64 896 896" focusable="false" data-icon="calendar" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M880 184H712v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H384v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H144c-17.7 0-32 14.3-32 32v664c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V216c0-17.7-14.3-32-32-32zm-40 656H184V460h656v380zM184 392V256h128v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h256v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h128v136H184z"></path></svg></span></span>
     </div>
-  </div>
-
-  <!-- 新鲜度标注那一段、以及「演示数据只落到两天」那句说明，都已经撤掉（PRD §5.7）：
-       窗口的选中态自己就说清是哪一档，页顶还挨着一条「数据更新时间」；
-       再挂一条 T+1／准实时的常驻文案，就是把同一个意思说两遍。 -->
-
-  <!-- 第 1 层 · 执行健康度三卡：三张卡都由下方九行算出来（见注入脚本的自检），不另写一份数。
-       原来的第四张「异常 · 失败」已撤（PRD §5.1）：失败在后端就归「进行中」，不是一种独立状态，
-       单列一张卡等于拿我们的口径去解释现网的分桶；页上不再出现这个数。 -->
-  <div class="ant-row css-vgijab" id="rea-bd-cards" style="margin-left: -16px; margin-right: -16px; row-gap: 21px; padding-top: 21px;">
-    <div class="ant-col ant-col-8 css-vgijab" style="padding-left: 16px; padding-right: 16px;">
-      <div class="_card_gf4go_35" style="background: linear-gradient(90deg, rgb(194, 80, 255) 0%, rgb(157, 83, 255) 100%); box-shadow: rgb(136, 83, 255) 0px 0px 1px 0px;">
-        <h6>待执行</h6>
-        <div class="_num_gf4go_46">
-          <div><p data-rea-sum="left">20</p><p>人次</p></div>
-          <div><p data-rea-sum="left-of-need">25.6%</p><p>占应执行</p></div>
-        </div>
-      </div>
-    </div>
-    <div class="ant-col ant-col-8 css-vgijab" style="padding-left: 16px; padding-right: 16px;">
-      <div class="_card_gf4go_35" style="background: linear-gradient(270deg, rgb(0, 194, 138) 0%, rgb(0, 217, 121) 100%); box-shadow: rgb(0, 173, 122) 0px 0px 1px 0px;">
-        <h6>完成率</h6>
-        <div class="_num_gf4go_46">
-          <div><p data-rea-sum="rate">74.4%</p><p>已完成</p></div>
-          <div><p class="rea-bd-cmp" data-rea-sum="rate-frac">58 ÷ 78</p><p>已执行 / 应执行</p></div>
-        </div>
-      </div>
-    </div>
-    <div class="ant-col ant-col-8 css-vgijab" style="padding-left: 16px; padding-right: 16px;">
-      <div class="_card_gf4go_35" style="background: linear-gradient(90deg, rgb(255, 176, 38) 0%, rgb(255, 143, 23) 100%); box-shadow: rgb(255, 101, 76) 0px 0px 1px 0px;">
-        <h6>逾期未做</h6>
-        <div class="_num_gf4go_46">
-          <div><p data-rea-sum="over">10</p><p>人次</p></div>
-          <div><p data-rea-sum="over-of-left">50.0%</p><p>占待执行</p></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 今日窗口下两处「看着像坏了、其实是口径」的地方，靠这一句兜住（PRD §2.2） -->
-  <p class="rea-bd-note" id="rea-bd-todaynote" hidden>窗口是<b>今日</b>：今天的任务大多还没到期，所以「逾期未做」恒为 <b>0</b>（逾期＝有效期已过且仍未执行，欠账要看跨天窗口）；完成率也天然比全天低——它比的是「今天到此刻 vs 今天全部」，不是今天做得差。</p>
-
-  <div class="rea-bd-bad" id="rea-bd-bad" hidden></div>
-</div>
-
-<div class="_board_gf4go_1" style="margin-top: 21px; padding-bottom: 28px;">
-  <div class="_title_gf4go_8" style="padding-bottom: 0px;">
-    <h6>任务执行</h6>
-    <a href="#" data-bd-detail="task">详细数据<span role="img" aria-label="right" class="anticon anticon-right"><svg viewBox="64 64 896 896" focusable="false" data-icon="right" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"></path></svg></span></a>
   </div>
 
   <!-- 执行型 7 类共用一个台账面板（按类型过滤同一张表），「全部」是这张表的筛选器，
@@ -9731,7 +9709,6 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     + '.rea-bd-bad[hidden]{display:none}'
     /* 按窗口整块收起的几处：这些块自带 display，UA 的 [hidden] 压不住，
        各补一条 display:none（同 .rea-bd-bad 的写法） */
-    + '#rea-bd-todaynote[hidden]{display:none}'
     + '#rea-bd-mat-tabs[hidden],#rea-bd-mat-nodata[hidden],#rea-dtl-mat-nodata[hidden]{display:none}';
 
   /* 注入进覆盖页的脚本。与 REA_FX 的分工：REA_FX 只认 AntD 自己的类名
@@ -9790,27 +9767,28 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     '  "left-of-need":function(t){return (t.need?t.left/t.need*100:0).toFixed(1)+"%"},',
     '  "over-of-left":function(t){return (t.left?t.over/t.left*100:0).toFixed(1)+"%"}',
     '};',
-    '/* 静态正文里写的那一份数＝**默认窗口（昨天）**那一份，跑起来跟算出来的对一遍。',
-    '   但换窗口换的就是同一个坑位，所以期望值必须在开跑前抄一份留底，',
-    '   不能拿元素当下的文本去比——那样第二次换窗口就会自己跟自己比、误报一片。 */',
-    'var AUTH={};',
-    'function auth(scope,attr,pfx){',
+    '/* 三张卡静态正文里写的是**今日**那一份，跑起来跟算出来的对一遍。',
+    '   换窗口换的就是同一个坑位，所以期望值必须在开跑前抄一份留底，',
+    '   不能拿元素当下的文本去比——那样第二次换窗口就会自己跟自己比、误报一片。',
+    '   期望值挂在元素自己身上（__reaExp），不按 data-rea-sum 的键名存：',
+    '   合计行也有同名键，按名字存会让两张不同的表互相校验。 */',
+    'function auth(scope,attr){',
     '  if(!scope)return;',
     '  var es=scope.querySelectorAll("["+attr+"]"),i;',
-    '  for(i=0;i<es.length;i++)AUTH[pfx+es[i].getAttribute(attr)]=(es[i].textContent||"").trim();',
+    '  for(i=0;i<es.length;i++)es[i].__reaExp=(es[i].textContent||"").trim();',
     '}',
-    'function chk(key,val){',
-    '  var a=AUTH[key];',
+    'function chk(el,key,val){',
+    '  var a=el.__reaExp;',
     '  if(a!==undefined&&a!==val)bad("「"+key+"」静态正文写的是 "+a+"，算出来是 "+val);',
     '}',
-    '/* chkOn 只在渲染默认窗口时给 true：别的窗口没有第二份手写副本可比。',
-    '   合计行永远 false——它跟页签过滤走，本来就该变。 */',
+    '/* chkOn 给 true ＝ 这一处有手写副本可比（只有三卡抄过底）；',
+    '   合计行没有副本，即使传 true 也因 __reaExp 未设而跳过。 */',
     'function fill(scope,t,chkOn){',
     '  if(!scope)return;',
     '  var es=scope.querySelectorAll("[data-rea-sum]"),i,k,f,v;',
     '  for(i=0;i<es.length;i++){',
     '    k=es[i].getAttribute("data-rea-sum");f=SUM[k];if(!f)continue;',
-    '    v=f(t);if(chkOn)chk("sum:"+k,v);',
+    '    v=f(t);if(chkOn)chk(es[i],k,v);',
     '    /* 合计行的完成率格跟明细行长一个样（数字 ＋ 横条），所以先认里头的数字格；',
     '       认不出才整格当文本写。 */',
     '    if(es[i].querySelector("[data-rea-rate-num]"))paintRate(es[i],parseFloat(v));',
@@ -9947,7 +9925,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     '   （docs/11 §1 第一条自律：指不回来源的指标不许出现）。 */',
     'var DAY={today:"0",d1:"-1"};   /* 行上的 data-bd-day：0＝今日下发的，-1＝昨天下的 */',
     'var WIRED={today:1,d1:1};       /* 只有这两档接上了数 */',
-    'var DEFW="d1";                  /* 默认窗口——静态正文里那份数就是它那一份 */',
+    'var DEFW="d1";                  /* 默认窗口——任务台账静态正文里那份数就是它那一份 */',
     'var CURW=DEFW,CURF="all";       /* 当前窗口 ／ 当前页签过滤：两个正交的轴 */',
     'function winRows(w){',
     '  var rs=rows(),out=[],i,d=DAY[w];',
@@ -9994,17 +9972,13 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     '  if(nd)nd.hidden=!off;',
     '}',
 
-    '/* 今日窗口下的两个"看着像坏了、其实是口径"的地方，得有一句话兜住（PRD §2.2）。 */',
-    'function setTodayNote(w){',
-    '  var el=document.getElementById("rea-bd-todaynote");if(el)el.hidden=(w!=="today");',
-    '}',
-
-    '/* 换窗口＝整页换一份数：三卡、大区、效果层、明细表，一起动。 */',
+    '/* 换窗口＝换一份数：大区、效果层、明细表一起动。',
+    '   三卡是唯一的例外——它们固定看「今日」，不跟这个窗口走（PRD §2.2）。 */',
     'function applyWin(w){',
     '  CURW=w;',
     '  var t=tally(winRows(w));',
-    '  fill(document.getElementById("rea-bd-cards"),t,w===DEFW);',
-    '  fillOrg(t);setEffect(w);setTodayNote(w);',
+    '  fill(document.getElementById("rea-bd-cards"),tally(winRows("today")),true);',
+    '  fillOrg(t);setEffect(w);',
     '  filterRows(CURF);',
     '}',
     '/* 时间窗的点击：接数的档照常走（点选态仍交给 REA_FX），没接数的档在捕获阶段',
@@ -10022,27 +9996,15 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     '  applyWin(id);',
     '},true);',
 
-    '/* 业务域那根轴：点「企业微信／悬浮窗」＝换到那两张看板去（它们仍是快照页）。',
-    '   用捕获监听、且不拦事件——REA_FX 的点选态照旧生效，两边各干各的。 */',
-    'var dm=document.querySelector(".rea-bd-domain");',
-    'if(dm)dm.addEventListener("click",function(e){',
-    '  var n=e.target,to=null;',
-    '  while(n&&n!==dm&&n.nodeType===1){',
-    '    if(n.getAttribute&&n.getAttribute("data-rea-page")){to=n.getAttribute("data-rea-page");break}',
-    '    n=n.parentNode;',
-    '  }',
-    '  if(to)parent.postMessage({reaPage:to},"*");',
-    '},true);',
-
     '/* --- 开跑 --- */',
     '/* 期望值必须在任何写入之前抄底：下面每个坑位都会被换窗口覆写，',
     '   拿覆写后的文本去比就成了自己比自己。 */',
-    'auth(document.getElementById("rea-bd-cards"),"data-rea-sum","sum:");',
+    'auth(document.getElementById("rea-bd-cards"),"data-rea-sum");',
     'stamp();',          /* 先钉日期：后面的有效期判断要用到 */
     'rowCheck();',
     'var gs=document.querySelectorAll(".rea-bd-tabs");',
     'for(var gi=0;gi<gs.length;gi++)tabs(gs[gi]);',
-    'applyWin(DEFW);',   /* 装完页签再按默认窗口铺一遍数 */
+    'applyWin(DEFW);',   /* 装完页签再按默认窗口铺一遍数（三卡照旧写今日） */
 
     'if(BAD.length){',
     '  var el=document.getElementById("rea-bd-bad");',
