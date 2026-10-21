@@ -12328,11 +12328,148 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
    ].join('\n');
   }
 
+  /* 「群发好友 · 详情」的覆盖：员工完成情况表里「群发好友数」是枚链接按钮，点开是好友明细弹窗。
+     快照抓取时弹窗没打开（源页里连一枚 .ant-modal 都没有），所以这一页没有现成的弹窗可抄——
+     按 AntD 的结构在运行时补一座（与 reaMatJs 的消息弹窗同一做派：两枚 HASH 必须挂在
+     .ant-modal-root 与 .ant-modal 上，否则遮罩/居中/标题那一套规则一条都命不中）。
+     正文与样式仍是快照那一段；任务名、有效期从页内「任务信息」按标签文字读，不认快照的 css hash。
+     好友行由「群发好友数」那个数字生成（演示数据，确定性规则：同一页每次打开同一份）。 */
+  var REA_QF_CSS = [
+    '.rea-qf-bar{display:flex;justify-content:space-between;align-items:baseline;gap:16px;',
+    'margin-bottom:12px;color:rgba(0,0,0,0.65);font-size:13px;line-height:22px}',
+    '.rea-qf-bar b{font-weight:600;color:rgba(0,0,0,0.88)}',
+    '.rea-qf-scroll{max-height:52vh;overflow:auto}',
+    '.rea-qf-table .ant-table-tbody>tr.ant-table-row:hover>td{background:#fbfbfb}',
+    '.rea-qf-pager{margin-top:12px;text-align:right}',
+    '.rea-qf-empty{color:rgba(0,0,0,0.45);text-align:center;padding:32px 0}'
+  ].join('\n');
+
+  function reaQfDetailJs(){
+   return [
+    '(function(){',
+    'var NICK=' + reaJson(['林小满','顾北','周舟','沈知夏','陆远','许乐','苏晴','陈默',
+                           '方糖','向南','白露','唐果','江野','夏至','秦朗','叶青',
+                           '温言','程曦','柳岸','安然']) + ',',
+    '    HASH="css-vgijab",CLOSE=' + reaJson(REA_MN_ICON.close) + ';',
+    'function q(s,r){return (r||document).querySelector(s)}',
+    'function txt(n){return ((n&&n.textContent)||"").replace(/\\s+/g,"")}',
+    'function pad(n){return (n<10?"0":"")+n}',
+    'function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;")',
+    '  .replace(/>/g,"&gt;").replace(/"/g,"&quot;")}',
+    /* 「任务信息」那栏是 label span ＋ value span 的 p，按标签文字找最后那枚 span */
+    'function infoVal(label){',
+    '  var ps=document.querySelectorAll("p"),i;',
+    '  for(i=0;i<ps.length;i++){',
+    '    if(txt(ps[i]).indexOf(label)!==0)continue;',
+    '    var sp=ps[i].querySelectorAll("span");',
+    '    return sp.length?txt(sp[sp.length-1]):"";',
+    '  }',
+    '  return "";',
+    '}',
+    'function baseTime(){',
+    '  var s=infoVal("有效期：").split("~")[0];',
+    '  var m=/^(\\d{4})\\/(\\d{1,2})\\/(\\d{1,2})\\s+(\\d{1,2}):(\\d{2})/.exec(s);',
+    '  return m?new Date(+m[1],+m[2]-1,+m[3],+m[4],+m[5],0):new Date(2026,8,2,9,0,0);',
+    '}',
+    'function fmt(d){',
+    '  return d.getFullYear()+"/"+pad(d.getMonth()+1)+"/"+pad(d.getDate())+" "',
+    '    +pad(d.getHours())+":"+pad(d.getMinutes())+":"+pad(d.getSeconds());',
+    '}',
+    'function rowsOf(n){',
+    '  var b=baseTime(),out=[],i;',
+    '  for(i=0;i<n;i++){',
+    '    var d=new Date(b.getTime()+(i*3+1)*60000+i*17000);',
+    '    out.push({nick:NICK[i%NICK.length],time:fmt(d),ok:true});',
+    '  }',
+    '  return out;',
+    '}',
+    'function table(n){',
+    '  var rs=rowsOf(n),h=\'<div class="ant-table-wrapper rea-qf-table \'+HASH+\'">\'',
+    '    +\'<div class="ant-spin-nested-loading \'+HASH+\'"><div class="ant-spin-container">\'',
+    '    +\'<div class="ant-table \'+HASH+\'"><div class="ant-table-container"><div class="ant-table-content">\'',
+    '    +\'<table style="table-layout:auto"><thead class="ant-table-thead"><tr>\'',
+    '    +\'<th class="ant-table-cell" style="width:64px">序号</th>\'',
+    '    +\'<th class="ant-table-cell">微信昵称</th>\'',
+    '    +\'<th class="ant-table-cell">发送时间</th>\'',
+    '    +\'<th class="ant-table-cell" style="width:96px">发送结果</th>\'',
+    '    +\'</tr></thead><tbody class="ant-table-tbody">\',k;',
+    '  if(!rs.length){',
+    '    h+=\'<tr class="ant-table-placeholder"><td class="ant-table-cell" colspan="4">\'',
+    '      +\'<div class="rea-qf-empty">暂无群发记录</div></td></tr>\';',
+    '  }else{',
+    '    for(k=0;k<rs.length;k++){',
+    '      h+=\'<tr class="ant-table-row ant-table-row-level-0" data-row-key="\'+k+\'">\'',
+    '        +\'<td class="ant-table-cell">\'+(k+1)+\'</td>\'',
+    '        +\'<td class="ant-table-cell">\'+esc(rs[k].nick)+\'</td>\'',
+    '        +\'<td class="ant-table-cell">\'+rs[k].time+\'</td>\'',
+    '        +\'<td class="ant-table-cell">\'+(rs[k].ok?"成功":"失败")+\'</td></tr>\';',
+    '    }',
+    '  }',
+    '  h+=\'</tbody></table></div></div></div></div></div></div>\';',
+    '  return h;',
+    '}',
+    'function onKey(e){if(e.key==="Escape"||e.keyCode===27)close()}',
+    'function close(){',
+    '  var w=document.querySelector("[data-rea-qf]");',
+    '  if(w&&w.parentNode)w.parentNode.removeChild(w);',
+    '  document.removeEventListener("keydown",onKey);',
+    '}',
+    'function open(who,n){',
+    '  close();',
+    '  var task=infoVal("任务名称：")||"-";',
+    '  var w=document.createElement("div");',
+    '  w.className="ant-modal-root "+HASH;w.setAttribute("data-rea-qf","1");',
+    '  w.innerHTML=\'<div class="ant-modal-mask"></div>\'',
+    '    +\'<div class="ant-modal-wrap ant-modal-centered">\'',
+    '    +\'<div class="ant-modal \'+HASH+\'" role="dialog" aria-modal="true" aria-label="群发好友明细" style="width: 760px;">\'',
+    '    +\'<div class="ant-modal-content">\'',
+    '    +\'<button type="button" class="ant-modal-close" aria-label="Close">\'',
+    '    +\'<span class="ant-modal-close-x">\'+CLOSE+\'</span></button>\'',
+    '    +\'<div class="ant-modal-header"><div class="ant-modal-title">群发好友明细</div></div>\'',
+    '    +\'<div class="ant-modal-body">\'',
+    '    +\'<div class="rea-qf-bar"><span>任务：<b>\'+esc(task)+\'</b></span>\'',
+    '    +\'<span>执行人：<b>\'+esc(who||"-")+\'</b> · 群发好友数：<b>\'+n+\'</b></span></div>\'',
+    '    +\'<div class="rea-qf-scroll">\'+table(n)+\'</div>\'',
+    '    +\'<ul class="ant-pagination ant-pagination-end ant-pagination-mini rea-qf-pager \'+HASH+\'">\'',
+    '    +\'<li class="ant-pagination-total-text">共 \'+n+\' 条记录</li></ul>\'',
+    '    +\'</div>\'',
+    '    +\'<div class="ant-modal-footer">\'',
+    '    +\'<button type="button" class="ant-btn \'+HASH+\' ant-btn-default ant-btn-color-default\'',
+    '    +\' ant-btn-variant-outlined" data-qf-close><span>关 闭</span></button>\'',
+    '    +\'</div></div></div></div></div>\';',
+    '  document.body.appendChild(w);',
+    '  q("[data-qf-close]",w).addEventListener("click",close);',
+    '  q(".ant-modal-close",w).addEventListener("click",close);',
+    '  q(".ant-modal-wrap",w).addEventListener("click",function(e){if(e.target===this)close()});',
+    '  document.addEventListener("keydown",onKey);',
+    '}',
+    /* 只接「群发好友数」那一列：按表头文字定位列号，不认列序（重抓后列序变了也不会接错） */
+    'var ths=document.querySelectorAll(".ant-table-thead th"),idx=-1,i;',
+    'for(i=0;i<ths.length;i++){if(txt(ths[i])==="群发好友数"){idx=i;break}}',
+    'if(idx<0)return;',
+    'var tb=document.querySelector(".ant-table-tbody");',
+    'if(!tb)return;',
+    'tb.addEventListener("click",function(e){',
+    '  var n=e.target;',
+    '  while(n&&n!==tb&&!(n.classList&&n.classList.contains("ant-btn")))n=n.parentNode;',
+    '  if(!n||n===tb)return;',
+    '  var td=n;while(td&&td!==tb&&td.tagName!=="TD")td=td.parentNode;',
+    '  if(!td||td===tb||td.tagName!=="TD")return;',
+    '  var tr=td.parentNode;',
+    '  if(Array.prototype.indexOf.call(tr.children,td)!==idx)return;',
+    '  var cnt=parseInt(txt(n),10);',
+    '  if(isNaN(cnt))return;',
+    '  open(txt(tr.children[0]),cnt);',
+    '});',
+    '})();'
+   ].join('\n');
+  }
+
   /* 覆盖登记表（ADR-0043）：页名 → 该页的覆盖块。与 docs/09 §2.3 那张表一一对应，加页两处一起加。
        html  该页正文段的载体块 id（省略＝正文仍用快照那一段，只补交互）
        css   该页专用样式（只在这页注入；未覆盖页拿不到，这是「逐页覆盖」的底线）
        js    该页自己的注入脚本（在 REA_FX **之后**跑，见 reaDoc）
-     八张覆盖页，四种形态：
+     九张覆盖页，五种形态：
        微小助看板          换稿——正文整段换成 srcBoard，配 REA_BOARD_CSS ＋ reaBoardJs
        微小助看板 · 执行人明细  合成页——页名与 shell 由 reaSynthPages() 克隆看板页得到，正文换 srcBoardTask
        微小助看板 · 素材明细  同上，正文换 srcBoardMat
@@ -12345,6 +12482,8 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
        新小红书运营 · 任务配置快照
                             合成页——外壳由 reaSynthPages() 克隆详情页，正文换 srcXhsSnapshot；
                             现网 /snapshotTasks 不在 36 页快照里，也没有源目录
+       群发好友 · 详情      补弹窗——**没有 html**，正文就是快照那一段；脚本给「群发好友数」补好友明细弹窗，
+                            行为与样式见 reaQfDetailJs 上方注释
      没有 html 的页，reaSplice 原样放过；这不是省事，是刻意：正文抄一份进来就成了会过期的副本，
      重抓源目录后静默与线上脱钩，而这一页的正文本来就不该变。 */
   var REA_COVER = {
@@ -12355,7 +12494,8 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     '新小红书运营': { js: reaXhsListJs },
     '新小红书运营 · 新建': { js: reaXhsJs },
     '新小红书运营 · 详情': { js: reaXhsDetailJs },
-    '新小红书运营 · 任务配置快照': { js: reaXhsSnapshotJs }
+    '新小红书运营 · 任务配置快照': { js: reaXhsSnapshotJs },
+    '群发好友 · 详情': { css: REA_QF_CSS, js: reaQfDetailJs }
   };
 
   /* 把被覆盖页的正文区（contentStart..contentEnd，构建脚本给出的那道缝）换成它登记表里那个载体的内容。
