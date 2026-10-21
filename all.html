@@ -9986,10 +9986,11 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     <h6>素材数据</h6>
     <a href="#" data-bd-detail="mat">详细数据<span role="img" aria-label="right" class="anticon anticon-right"><svg viewBox="64 64 896 896" focusable="false" data-icon="right" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"></path></svg></span></a>
   </div>
-  <!-- 素材数据不再分 tab、也不再出指标卡：只保留日期区间，具体素材的使用与转发进「详细数据」。 -->
+  <!-- 素材数据不分 tab：上面是日期区间，下面给一眼总览；细到任务与素材的拆解进「详细数据」。
+       四个数与明细页同源——发圈与客户与群从任务台账的已执行人次求和，文章那两个是明细页的同一份演示数。 -->
   <div class="rea-bd-row">
     <span class="rea-bd-lab">日期区间</span>
-    <div class="ant-picker ant-picker-range ant-picker-outlined css-vgijab">
+    <div class="ant-picker ant-picker-range ant-picker-outlined css-vgijab" id="rea-bd-mat-range">
       <div class="ant-picker-input"><input aria-invalid="false" autocomplete="off" size="12" placeholder="开始日期" date-range="start" value=""></div>
       <div class="ant-picker-range-separator"><span aria-label="to" class="ant-picker-separator"><span role="img" aria-label="swap-right" class="anticon anticon-swap-right"><svg viewBox="64 64 896 896" focusable="false" data-icon="swap-right" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M873.1 596.2l-164-208A32 32 0 00684 376h-64.8c-6.7 0-10.4 7.7-6.3 13l144.3 183H152c-4.4 0-8 3.6-8 8v60c0 4.4 3.6 8 8 8h695.9c26.8 0 41.7-30.8 25.2-51.8z"></path></svg></span></span></div>
       <div class="ant-picker-input"><input aria-invalid="false" autocomplete="off" size="12" placeholder="结束日期" date-range="end" value=""></div>
@@ -9997,6 +9998,8 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
       <span class="ant-picker-suffix"><span role="img" aria-label="calendar" class="anticon anticon-calendar"><svg viewBox="64 64 896 896" focusable="false" data-icon="calendar" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M880 184H712v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H384v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H144c-17.7 0-32 14.3-32 32v664c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V216c0-17.7-14.3-32-32-32zm-40 656H184V460h656v380zM184 392V256h128v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h256v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h128v136H184z"></path></svg></span></span>
     </div>
   </div>
+  <div class="_threeBox_13z6g_50 rea-bd-cfg" style="padding: 14px 0 4px;" id="rea-bd-mat-cards"></div>
+  <p class="rea-bd-note">按所选日期区间汇总，每一段都能在「详细数据」里拆到任务与素材；效果层由离线任务次日产出，区间含今天时明细页不给数。</p>
 </div>
 </div></div>
 </script>
@@ -10947,6 +10950,29 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     '  renderTypes(w);renderFollow(w);renderOrg(w);',
     '  typesCheck(w);',
     '}',
+    '/* 素材数据（第 3 层）：四个数与「详细数据」同源——发圈与客户与群从台账的已执行人次求和，',
+    '   文章那两个是明细页的同一份演示数；它跟自己的日期区间走，不跟任务时间窗（PRD §2.7）。 */',
+    'function matCard(t,n,u,sub){return "<div class=\\"_card_13z6g_53\\" style=\\"padding:18px 0;\\"><p class=\\"_cardTitle_13z6g_60\\">"+t+"</p><p class=\\"_cardNum_13z6g_66\\">"+n+(u?"<span>"+u+"</span>":"")+"</p>"+(sub?"<p class=\\"rea-dtl-sub\\">"+sub+"</p>":"")+"</div>"}',
+    'function renderMat(){',
+    '  var el=document.getElementById("rea-bd-mat-cards");if(!el)return;',
+    '  var rs=winRows("d1"),qn=0,qd=0,tn=0,td=0,ACC={"批量加好友":1,"关联好友":1,"群发群组":1},i,r,t;',
+    '  for(i=0;i<rs.length;i++){r=rs[i];t=r.getAttribute("data-bd-type");',
+    '    if(t==="发圈"){qn+=+r.getAttribute("data-bd-need");qd+=+r.getAttribute("data-bd-done")}',
+    '    else if(ACC[t]){tn+=+r.getAttribute("data-bd-need");td+=+r.getAttribute("data-bd-done")}',
+    '  }',
+    '  el.innerHTML=matCard("发圈已发布",qd," 人次",qn?("应发 "+qn+" 人次 · "+(qd/qn*100).toFixed(1)+"%"):"")',
+    '    +matCard("文章获客",86," 人","")',
+    '    +matCard("文章转发",214," 次","")',
+    '    +matCard("客户与群已触达",td," 人次",tn?("应触达 "+tn+" 人次"):"");',
+    '}',
+    '/* 日期区间默认落到昨天（与明细页默认窗口一致）；换区间去「详细数据」。 */',
+    'function fillMatDates(){',
+    '  var box=document.getElementById("rea-bd-mat-range");if(!box)return;',
+    '  var d=new Date(),i,ins;d.setDate(d.getDate()-1);',
+    '  var s=d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2);',
+    '  ins=box.querySelectorAll("input[date-range]");',
+    '  for(i=0;i<ins.length;i++)ins[i].value=s;',
+    '}',
     '/* 时间窗的点击：接数的档照常走（点选态仍交给 REA_FX），没接数的档在捕获阶段',
     '   拦掉这次点选、**页上不给任何说明**——那六档本来就没有对应的演示集，',
     '   点上去静默不动就是如实（docs/11 §8.3）；拦得住是因为 REA_FX 挂在 document 的冒泡阶段。 */',
@@ -10972,6 +10998,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     'var gs=document.querySelectorAll(".rea-bd-tabs");',
     'for(var gi=0;gi<gs.length;gi++)tabs(gs[gi]);',
     'applyWin(DEFW);',   /* 装完页签再按默认窗口铺一遍数（三卡照旧写今日） */
+    'renderMat();fillMatDates();',
 
     'if(BAD.length){',
     '  var el=document.getElementById("rea-bd-bad");',
