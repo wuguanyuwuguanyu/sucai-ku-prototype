@@ -9999,6 +9999,33 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     </div>
   </div>
   <div class="_threeBox_13z6g_50 rea-bd-cfg" style="padding: 14px 0 4px;" id="rea-bd-mat-cards"></div>
+  <!-- 群发好友回复：素材数据里唯一有「回传」的效果项——好友回没回，端侧拿得到。
+       按周汇总（日粒度太碎、月粒度看不出运营动作），本周因为效果层 T+1 还没走完，标「回补中」。 -->
+  <div class="rea-qft" id="rea-qft">
+    <div class="rea-qft-hd">
+      <h6>群发好友回复</h6>
+      <span class="sub">按周汇总 · 截至昨日</span>
+      <div class="ant-radio-group ant-radio-group-solid css-vgijab rea-qft-win" id="rea-qft-win">
+        <div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small">
+          <div class="ant-space-item">
+            <label class="ant-radio-button-wrapper css-vgijab" data-qft-win="4">
+              <span class="ant-radio-button"><input name="rea-qft-win" class="ant-radio-button-input" type="radio" value="4"><span class="ant-radio-button-inner"></span></span>
+              <span class="ant-radio-button-label">近 4 周</span>
+            </label>
+          </div>
+          <div class="ant-space-item">
+            <label class="ant-radio-button-wrapper ant-radio-button-wrapper-checked css-vgijab" data-qft-win="12">
+              <span class="ant-radio-button ant-radio-button-checked"><input name="rea-qft-win" class="ant-radio-button-input" type="radio" value="12" checked=""><span class="ant-radio-button-inner"></span></span>
+              <span class="ant-radio-button-label">近 12 周</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="rea-qft-kpis" id="rea-qft-kpis"></div>
+    <div class="rea-qft-chart" id="rea-qft-chart"></div>
+    <p class="rea-bd-note">回复率 ＝ 已回复好友数 ÷ 已发送好友数，按群发任务记录；环比为前一个等长窗口。<b>效果层 T+1</b>，本周尚未走完，最后一根柱标「回补中」。点「详细数据」可按任务拆到好友列表。</p>
+  </div>
   <p class="rea-bd-note">按所选日期区间汇总，每一段都能在「详细数据」里拆到任务与素材；效果层由离线任务次日产出，区间含今天时明细页不给数。</p>
 </div>
 </div></div>
@@ -10150,6 +10177,29 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
                 <th scope="col" class="ant-table-cell">已触达人次</th>
               </tr></thead>
               <tbody class="ant-table-tbody" id="rea-dtl-mat-cus-body"></tbody>
+            </table>
+          </div></div></div>
+        </div></div>
+      </div>
+    </div>
+    <div style="margin-top: 20px;">
+      <h6 class="rea-dtl-h">群发好友 <span class="ant-badge css-vgijab"><sup class="ant-scroll-number ant-badge-count ant-badge-multiple-words" title="可追踪" style="background-color: rgb(36, 204, 185); padding: 0px 4px;">可追踪</sup></span></h6>
+      <p class="rea-bd-note">回复率 ＝ <b>已回复好友数 ÷ 已发送好友数</b>；好友回没回是端侧拿得到的，所以这一项不像发圈那样只能看「发了多少」。点数字打开「群发好友列表」，点「已回复」时预筛「是否回复＝是」。</p>
+      <div class="_threeBox_13z6g_50 rea-bd-cfg" id="rea-dtl-mat-qf-cards" style="padding: 14px 0 4px;"></div>
+      <div class="ant-table-wrapper css-vgijab rea-bd-table" style="margin-top: 10px;">
+        <div class="ant-spin-nested-loading css-vgijab"><div class="ant-spin-container">
+          <div class="ant-table ant-table-middle css-vgijab"><div class="ant-table-container"><div class="ant-table-content">
+            <table style="table-layout: fixed;">
+              <colgroup><col style="width: 30%"><col style="width: 14%"><col style="width: 15%"><col style="width: 15%"><col style="width: 12%"><col style="width: 14%"></colgroup>
+              <thead class="ant-table-thead"><tr>
+                <th scope="col" class="ant-table-cell">任务名称</th>
+                <th scope="col" class="ant-table-cell">创建人</th>
+                <th scope="col" class="ant-table-cell">已发送好友数</th>
+                <th scope="col" class="ant-table-cell">已回复好友数</th>
+                <th scope="col" class="ant-table-cell">回复率</th>
+                <th scope="col" class="ant-table-cell">操作</th>
+              </tr></thead>
+              <tbody class="ant-table-tbody" id="rea-dtl-mat-qf-body"></tbody>
             </table>
           </div></div></div>
         </div></div>
@@ -10461,6 +10511,9 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     + '.rea-bd-over{color:#ff8f17}'
     + '.rea-bd-people,.rea-bd-span{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}'
     + '.rea-bd-table .ant-table-cell{white-space:nowrap}'
+    /* 素材明细「群发好友」表里的数字：点开好友列表，样式照 AntD 链接按钮 */
+    + '.rea-qf-link{color:#1677ff;text-decoration:none;font-variant-numeric:tabular-nums}'
+    + '.rea-qf-link:hover{color:#4096ff}'
     + '.rea-bd-tabs .ant-tabs-tab{cursor:pointer}'
     + '.rea-bd-tabs .ant-tabs-nav-list{flex-wrap:wrap}'
     /* 页签条不折字：执行型 8 个（「全部」＋ 7 类）一行装得下 */
@@ -10483,7 +10536,203 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     + '.rea-bd-bad[hidden]{display:none}'
     /* 按窗口整块收起的几处：这些块自带 display，UA 的 [hidden] 压不住，
        各补一条 display:none（同 .rea-bd-bad 的写法） */
-    + '#rea-dtl-mat-nodata[hidden]{display:none}';
+    + '#rea-dtl-mat-nodata[hidden]{display:none}'
+    /* 群发好友回复趋势：看板「素材数据」下的一块周趋势。图表是手绘 SVG（不引 ECharts），
+       但观感照 ECharts 的默认款：浅色网格、柱＋折线双轴、图例在左上、悬停浮窗。
+       色仍只用看板已有的绿系（#00c28a 是「已执行」那根条的颜色），不引入新色板。 */
+    + '.rea-qft{margin-top:20px;padding:14px 16px 10px;border:1px solid #f0f0f2;border-radius:6px;background:#fff}'
+    + '.rea-qft-hd{display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px}'
+    + '.rea-qft-hd h6{margin:0;color:#333333;font-size:14px;font-weight:600}'
+    + '.rea-qft-hd .sub{color:#999999;font-size:12px}'
+    + '.rea-qft-hd .rea-qft-win{margin-left:auto}'
+    + '.rea-qft-kpis{display:flex;flex-wrap:wrap;gap:12px 36px;margin:10px 0 0}'
+    + '.rea-qft-kpi .k{display:block;color:#999999;font-size:12px}'
+    + '.rea-qft-kpi b{color:#333333;font-size:22px;font-weight:600;line-height:1.35;font-variant-numeric:tabular-nums}'
+    + '.rea-qft-kpi b i{font-style:normal;font-size:12px;font-weight:400;color:#999999;margin-left:3px}'
+    + '.rea-qft-kpi b em{font-style:normal;font-size:12px;font-weight:500;margin-left:8px}'
+    + '.rea-qft-kpi b em.up{color:#00a870}.rea-qft-kpi b em.down{color:#f5222d}'
+    + '.rea-qft-kpi b em.flat{color:#999999}'
+    + '.rea-qft-chart{position:relative;margin-top:4px;min-height:220px}'
+    + '.rea-qft-chart svg{display:block;width:100%}'
+    + '.rea-qft-tip{position:absolute;z-index:5;display:none;pointer-events:none;padding:8px 10px;'
+    +   'background:rgba(255,255,255,.96);border:1px solid #f0f0f2;border-radius:6px;'
+    +   'box-shadow:0 3px 6px -4px rgba(0,0,0,.12),0 6px 16px 0 rgba(0,0,0,.08);'
+    +   'color:#333333;font-size:12px;line-height:20px;white-space:nowrap}'
+    + '.rea-qft-tip .d{color:#999999;margin-bottom:2px}'
+    + '.rea-qft-tip .r{display:flex;align-items:center;gap:6px}'
+    + '.rea-qft-tip .r i{width:8px;height:8px;border-radius:2px;background:#8ee6c8}'
+    + '.rea-qft-tip .r.line i{height:2px;border-radius:1px;background:#00a870}'
+    + '.rea-qft-tip .r b{margin-left:auto;padding-left:16px;font-weight:600;font-variant-numeric:tabular-nums}'
+    + '.rea-qft-empty{padding:36px 0 30px;text-align:center;color:#999999;font-size:12px}';
+
+  /* 看板「素材数据 › 群发好友回复」的周趋势。手绘 SVG，不引任何图表库——
+     观感照 ECharts 默认款（浅网格、柱＋折线双轴、左上图例、悬停浮窗），
+     但节点、尺寸、配色都自己算，免得为一张图往 8MB 的载体里再塞一个库。
+     数据分两截：本周从台账的群发好友任务派生（与素材明细同一条 qfSentOf），
+     之前 23 周是确定性演示序列（同一页每次打开都是同一份，不随刷新跳）。
+     效果层 T+1：本周只到昨天，所以最后一根柱标「回补中」，不冒充完整周。 */
+  function reaQfTrendJs(){
+    return `
+/* ---- 群发好友回复趋势（周） ---- */
+function qfSentOf(r){return (+r.getAttribute("data-bd-done"))*9+(+r.getAttribute("data-bd-row"))*3}
+function qfRateOf(r){return 0.30+(((+r.getAttribute("data-bd-row"))*7)%13)/100}
+function qfRepOf(r){return Math.round(qfSentOf(r)*qfRateOf(r))}
+function qfWeekStart(d){
+  var x=new Date(d.getFullYear(),d.getMonth(),d.getDate());
+  x.setDate(x.getDate()-((x.getDay()+6)%7));
+  return x;
+}
+function qfSeries(){
+  var rs=winRows("d1"),sent=0,rep=0,i,r,out=[],ago,w,s,rt,mon=qfWeekStart(new Date());
+  for(i=0;i<rs.length;i++){
+    r=rs[i];
+    if(r.getAttribute("data-bd-type")!=="群发好友")continue;
+    sent+=qfSentOf(r);rep+=qfRepOf(r);
+  }
+  for(ago=23;ago>=0;ago--){
+    if(ago===0){
+      out.push({sent:sent,rep:rep,rate:sent?rep/sent:0,cur:1,start:mon});
+    }else{
+      w=ago;s=150+((w*37)%71)+(w%3)*9;rt=0.29+((w*11)%9)/100;
+      out.push({sent:s,rep:Math.round(s*rt),rate:rt,cur:0,start:new Date(mon.getTime()-ago*604800000)});
+    }
+  }
+  return out;
+}
+function qfMd(d){return (d.getMonth()+1)+"/"+d.getDate()}
+function qfBandTip(d){return qfMd(d)+" ~ "+qfMd(new Date(d.getTime()+6*86400000))}
+function qfSmooth(pts){
+  if(pts.length<2)return "";
+  var d="M"+pts[0][0].toFixed(1)+","+pts[0][1].toFixed(1),i,p0,p1,p2,p3,c1x,c1y,c2x,c2y;
+  for(i=0;i<pts.length-1;i++){
+    p0=pts[i-1]||pts[i];p1=pts[i];p2=pts[i+1];p3=pts[i+2]||p2;
+    c1x=p1[0]+(p2[0]-p0[0])/6;c1y=p1[1]+(p2[1]-p0[1])/6;
+    c2x=p2[0]-(p3[0]-p1[0])/6;c2y=p2[1]-(p3[1]-p1[1])/6;
+    d+="C"+c1x.toFixed(1)+","+c1y.toFixed(1)+" "+c2x.toFixed(1)+","+c2y.toFixed(1)+" "+p2[0].toFixed(1)+","+p2[1].toFixed(1);
+  }
+  return d;
+}
+var QFW=12;
+function renderQfTrend(){
+  var box=document.getElementById("rea-qft-chart");
+  var kb=document.getElementById("rea-qft-kpis");
+  if(!box||!kb)return;
+  var all=qfSeries(),view=all.slice(-QFW),prev=all.slice(-QFW*2,-QFW);
+  var ts=0,tr=0,ps=0,pr=0,i;
+  for(i=0;i<view.length;i++){ts+=view[i].sent;tr+=view[i].rep}
+  for(i=0;i<prev.length;i++){ps+=prev[i].sent;pr+=prev[i].rep}
+  var rate=ts?tr/ts:0,prate=ps?pr/ps:0,delta=(rate-prate)*100;
+  var cls=delta>0.05?"up":(delta<-0.05?"down":"flat");
+  var sign=delta>0.05?"↑ ":delta<-0.05?"↓ ":"";
+  kb.innerHTML=
+    "<p class='rea-qft-kpi'><span class='k'>回复率</span><b>"+(rate*100).toFixed(1)+"%"
+      +"<em class='"+cls+"'>"+sign+Math.abs(delta).toFixed(1)+"pp</em></b></p>"
+    +"<p class='rea-qft-kpi'><span class='k'>已发送好友</span><b>"+ts+"<i> 人</i></b></p>"
+    +"<p class='rea-qft-kpi'><span class='k'>已回复好友</span><b>"+tr+"<i> 人</i></b></p>"
+    +"<p class='rea-qft-kpi'><span class='k'>未回复好友</span><b>"+(ts-tr)+"<i> 人</i></b></p>";
+
+  var cw=box.clientWidth||900,n=view.length;
+  var w=Math.max(560,cw),h=228,L=48,R=58,T=34,B=28,pw=w-L-R,ph=h-T-B;
+  var ms=0,mr=0,maxS,maxR;
+  for(i=0;i<n;i++){if(view[i].sent>ms)ms=view[i].sent;if(view[i].rate>mr)mr=view[i].rate}
+  maxS=Math.max(100,Math.ceil(ms*1.15/50)*50);
+  maxR=Math.max(0.4,Math.ceil(mr*1.25*20)/20);
+  var band=pw/n,barW=Math.min(20,band*0.46);
+  function yS(v){return T+ph-(v/maxS)*ph}
+  function yR(v){return T+ph-(v/maxR)*ph}
+  var g="",k,val,yy;
+  for(k=0;k<=4;k++){
+    val=maxS*k/4;yy=T+ph-ph*k/4;
+    g+="<line x1='"+L+"' y1='"+yy.toFixed(1)+"' x2='"+(w-R)+"' y2='"+yy.toFixed(1)+"' stroke='#f0f0f2'/>";
+    g+="<text x='"+(L-8)+"' y='"+(yy+4).toFixed(1)+"' text-anchor='end' fill='#999999' font-size='11'>"+Math.round(val)+"</text>";
+    g+="<text x='"+(w-R+8)+"' y='"+(yy+4).toFixed(1)+"' fill='#999999' font-size='11'>"+(maxR*k/4*100).toFixed(0)+"%</text>";
+  }
+  g+="<line x1='"+L+"' y1='"+(T+ph)+"' x2='"+(w-R)+"' y2='"+(T+ph)+"' stroke='#e8e8e8'/>";
+  g+="<text x='"+L+"' y='"+(T-14)+"' fill='#999999' font-size='11'>人次</text>";
+  g+="<text x='"+(w-R)+"' y='"+(T-14)+"' text-anchor='end' fill='#999999' font-size='11'>回复率</text>";
+  g+="<g transform='translate("+(L+56)+","+(T-10)+")'>"
+    +"<rect x='0' y='-6' width='10' height='12' rx='2' fill='#8ee6c8'/>"
+    +"<text x='15' y='4' fill='#748194' font-size='12'>已发送好友</text>"
+    +"<line x1='98' y1='0' x2='114' y2='0' stroke='#00a870' stroke-width='2'/>"
+    +"<circle cx='106' cy='0' r='3.2' fill='#ffffff' stroke='#00a870' stroke-width='2'/>"
+    +"<text x='120' y='4' fill='#748194' font-size='12'>回复率</text></g>";
+  var cx0=L+(n-1)*band;
+  g+="<rect x='"+cx0.toFixed(1)+"' y='"+T+"' width='"+band.toFixed(1)+"' height='"+ph+"' fill='#f7f8fc'/>";
+  g+="<line x1='"+cx0.toFixed(1)+"' y1='"+T+"' x2='"+cx0.toFixed(1)+"' y2='"+(T+ph)+"' stroke='#d9d9d9' stroke-dasharray='4 3'/>";
+  g+="<text x='"+(w-R-4)+"' y='"+(T+13)+"' text-anchor='end' fill='#999999' font-size='11'>回补中</text>";
+  for(i=0;i<n;i++){
+    var bx=L+i*band+(band-barW)/2,by=yS(view[i].sent),bh=T+ph-by;
+    g+="<rect x='"+bx.toFixed(1)+"' y='"+by.toFixed(1)+"' width='"+barW.toFixed(1)+"' height='"+Math.max(0,bh).toFixed(1)+"' rx='2' fill='url(#qftGrad)'/>";
+  }
+  var pts=[],path,area;
+  for(i=0;i<n;i++)pts.push([L+i*band+band/2,yR(view[i].rate)]);
+  path=qfSmooth(pts);
+  area=path+"L"+pts[n-1][0].toFixed(1)+","+(T+ph)+"L"+pts[0][0].toFixed(1)+","+(T+ph)+"Z";
+  g+="<path d='"+area+"' fill='url(#qftArea)'/>";
+  g+="<path d='"+path+"' fill='none' stroke='#00a870' stroke-width='2' stroke-linecap='round'/>";
+  for(i=0;i<n;i++){
+    g+="<circle cx='"+pts[i][0].toFixed(1)+"' cy='"+pts[i][1].toFixed(1)+"' r='3.4' fill='#ffffff' stroke='#00a870' stroke-width='2'/>";
+  }
+  var step=Math.ceil(n/8);
+  for(i=0;i<n;i++){
+    if(i%step!==0&&i!==n-1)continue;
+    g+="<text x='"+(L+i*band+band/2).toFixed(1)+"' y='"+(T+ph+18)+"' text-anchor='middle' fill='#999999' font-size='11'>"+qfMd(view[i].start)+"</text>";
+  }
+  for(i=0;i<n;i++){
+    g+="<rect class='qft-band' data-qft-i='"+i+"' x='"+(L+i*band).toFixed(1)+"' y='"+T+"' width='"+band.toFixed(1)+"' height='"+ph+"' fill='transparent'/>";
+  }
+  box.innerHTML="<svg viewBox='0 0 "+w+" "+h+"' width='"+w+"' height='"+h+"' role='img' aria-label='群发好友回复率周趋势'>"
+    +"<defs><linearGradient id='qftGrad' x1='0' y1='0' x2='0' y2='1'>"
+    +"<stop offset='0%' stop-color='#8ee6c8'/><stop offset='100%' stop-color='#d8f7ec'/></linearGradient>"
+    +"<linearGradient id='qftArea' x1='0' y1='0' x2='0' y2='1'>"
+    +"<stop offset='0%' stop-color='rgba(0,168,112,.20)'/><stop offset='100%' stop-color='rgba(0,168,112,0)'/></linearGradient>"
+    +"</defs><g>"+g+"</g></svg>";
+  var tip=document.createElement("div");
+  tip.className="rea-qft-tip";
+  box.appendChild(tip);
+  var bands=box.querySelectorAll("[data-qft-i]"),j;
+  for(j=0;j<bands.length;j++){
+    bands[j].addEventListener("mouseenter",function(){
+      var idx=+this.getAttribute("data-qft-i"),v=view[idx];
+      var x=L+idx*band+band/2,y=yR(v.rate);
+      tip.innerHTML="<div class='d'>"+qfBandTip(v.start)+(v.cur?" · 回补中":"")+"</div>"
+        +"<div class='r'><i></i>已发送好友<b>"+v.sent+"</b></div>"
+        +"<div class='r'><i></i>已回复好友<b>"+v.rep+"</b></div>"
+        +"<div class='r line'><i></i>回复率<b>"+(v.rate*100).toFixed(1)+"%</b></div>";
+      tip.style.display="block";
+      var tw=tip.offsetWidth,th=tip.offsetHeight,left=x+14;
+      if(left+tw>w-4)left=x-tw-14;
+      tip.style.left=Math.max(4,left)+"px";
+      tip.style.top=Math.max(4,Math.min(T+ph-th-8,y-th/2))+"px";
+    });
+    bands[j].addEventListener("mouseleave",function(){tip.style.display="none"});
+  }
+}
+var qfw=document.getElementById("rea-qft-win");
+if(qfw)qfw.addEventListener("click",function(e){
+  var n=e.target,id=null;
+  while(n&&n!==qfw&&n.nodeType===1){
+    if(n.getAttribute&&n.getAttribute("data-qft-win")){id=+n.getAttribute("data-qft-win");break}
+    n=n.parentNode;
+  }
+  if(!id||id===QFW)return;
+  e.preventDefault();
+  var ls=qfw.querySelectorAll("[data-qft-win]"),i,on,b;
+  for(i=0;i<ls.length;i++){
+    on=+ls[i].getAttribute("data-qft-win")===id;
+    ls[i].classList.toggle("ant-radio-button-wrapper-checked",on);
+    b=ls[i].querySelector(".ant-radio-button");
+    if(b)b.classList.toggle("ant-radio-button-checked",on);
+  }
+  QFW=id;renderQfTrend();
+},true);
+var qfrt=null;
+window.addEventListener("resize",function(){
+  if(qfrt)clearTimeout(qfrt);
+  qfrt=setTimeout(renderQfTrend,150);
+});
+`;
+  }
 
   /* 注入进覆盖页的脚本。与 REA_FX 的分工：REA_FX 只认 AntD 自己的类名
      （单选框、开关、表格行悬停），本脚本只管本页新加的那几块，两者不交叉。
@@ -10536,7 +10785,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     '  done:function(t){return String(t.done)},',
     '  left:function(t){return String(t.left)},',
     '  over:function(t){return String(t.over)},',
-    '  rate:function(t){return (t.need?t.done/t.need*100:0).toFixed(1)+"%"}',
+    '  rate:function(t){return (t.need?t.done/t.need*100:0).toFixed(1)+"%"},',
     '  "left-of-need":function(t){return (t.need?t.left/t.need*100:0).toFixed(1)+"%"},',
     '  "over-of-left":function(t){return (t.left?t.over/t.left*100:0).toFixed(1)+"%"}',
     '};',
@@ -10962,6 +11211,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     '    +matCard("文章转发",214," 次","")',
     '    +matCard("客户与群已触达",td," 人次",tn?("应触达 "+tn+" 人次"):"");',
     '}',
+    reaQfTrendJs(),
     '/* 日期区间默认落到昨天（与明细页默认窗口一致）；换区间去「详细数据」。 */',
     'function fillMatDates(){',
     '  var box=document.getElementById("rea-bd-mat-range");if(!box)return;',
@@ -10995,7 +11245,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     'var gs=document.querySelectorAll(".rea-bd-tabs");',
     'for(var gi=0;gi<gs.length;gi++)tabs(gs[gi]);',
     'applyWin(DEFW);',   /* 装完页签再按默认窗口铺一遍数（三卡照旧写今日） */
-    'renderMat();fillMatDates();',
+    'renderMat();fillMatDates();renderQfTrend();',
 
     'if(BAD.length){',
     '  var el=document.getElementById("rea-bd-bad");',
@@ -11212,6 +11462,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   function reaBoardMatJs(){
    return [
     '(function(){',
+    reaQfListJs(),
     'var PAD=function(n){return (n<10?"0":"")+n};',
     'function when(d,t){',
     '  var s=d.getFullYear()+"-"+PAD(d.getMonth()+1)+"-"+PAD(d.getDate());',
@@ -11237,13 +11488,25 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     'function winRows(w){var d=DAY[w],o=[],i;for(i=0;i<ROWS.length;i++)if(ROWS[i].day===d)o.push(ROWS[i]);return o}',
     'function card(t,n,u){return "<div class=\\"_card_13z6g_53\\" style=\\"padding:18px 0;\\"><p class=\\"_cardTitle_13z6g_60\\">"+esc(t)+"</p><p class=\\"_cardNum_13z6g_66\\">"+n+(u?"<span>"+u+"</span>":"")+"</p></div>"}',
     'function hover(){',
-    '  var rws=document.querySelectorAll("#rea-dtl-mat-quan-body tr.ant-table-row, #rea-dtl-mat-cus-body tr.ant-table-row"),i;',
+    '  var rws=document.querySelectorAll("#rea-dtl-mat-quan-body tr.ant-table-row, #rea-dtl-mat-cus-body tr.ant-table-row, #rea-dtl-mat-qf-body tr.ant-table-row"),i;',
     '  for(i=0;i<rws.length;i++)(function(tr){',
     '    function on(){for(var j=0;j<tr.children.length;j++)tr.children[j].classList.add("ant-table-cell-row-hover")}',
     '    function off(){for(var j=0;j<tr.children.length;j++)tr.children[j].classList.remove("ant-table-cell-row-hover")}',
     '    tr.addEventListener("mouseenter",on);tr.addEventListener("mouseleave",off);',
     '  })(rws[i]);',
     '}',
+    '/* 群发好友：与看板趋势同一条派生规则（已执行人次×9＋行号×3，回复率 30%–42%），',
+    '   所以看板那一周的点、这张表的任务行、弹窗里的好友行三处能对上。 */',
+    'function qfSentOf(r){return r.done*9+r.id*3}',
+    'function qfRateOf(r){return 0.30+((r.id*7)%13)/100}',
+    'function qfRepOf(r){return Math.round(qfSentOf(r)*qfRateOf(r))}',
+    'function qfPct(rep,sent){return sent?(rep/sent*100).toFixed(1):"0.0"}',
+    /* 发送时间从任务有效期的起点算（与详情页同一条规则）；有效期是「YYYY-MM-DD HH:mm ~ …」 */
+    'function qfStart(r){',
+    '  var m=/(\\d{4})-(\\d{2})-(\\d{2})\\s+(\\d{2}):(\\d{2})/.exec(r.span||"");',
+    '  return m?new Date(+m[1],+m[2]-1,+m[3],+m[4],+m[5],0):new Date();',
+    '}',
+    'var QFROWS=[];',
     'function paint(){',
     '  var nod=document.getElementById("rea-dtl-mat-nodata"),body=document.getElementById("rea-dtl-mat-body"),',
     '      rs=winRows(CURW),quan=[],i,r;',
@@ -11272,6 +11535,24 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     '    ch+="<tr class=\\"ant-table-row ant-table-row-level-0\\"><td class=\\"ant-table-cell\\">"+cus[i][1]+"</td><td class=\\"ant-table-cell\\">"+ck+"</td><td class=\\"ant-table-cell\\">"+cn+"</td><td class=\\"ant-table-cell\\">"+cd+"</td></tr>";',
     '  }',
     '  var cb=document.getElementById("rea-dtl-mat-cus-body");if(cb)cb.innerHTML=ch;',
+    '  /* 群发好友：只认任务类型；已发送／已回复两列都点得开共用弹窗 */',
+    '  var qf=[],qs=0,qr=0,qh="",sent,rep;',
+    '  for(i=0;i<rs.length;i++)if(rs[i].type==="群发好友")qf.push(rs[i]);',
+    '  QFROWS=qf;',
+    '  for(i=0;i<qf.length;i++){',
+    '    r=qf[i];sent=qfSentOf(r);rep=qfRepOf(r);qs+=sent;qr+=rep;',
+    '    qh+="<tr class=\\"ant-table-row ant-table-row-level-0\\">"',
+    '      +"<td class=\\"ant-table-cell\\">"+esc(r.name)+"</td>"',
+    '      +"<td class=\\"ant-table-cell\\">"+esc(r.creator)+"</td>"',
+    '      +"<td class=\\"ant-table-cell\\"><a href=\\"#\\" class=\\"rea-qf-link\\" data-qf-open=\\""+i+"\\" data-qf-mode=\\"all\\">"+sent+"</a></td>"',
+    '      +"<td class=\\"ant-table-cell\\"><a href=\\"#\\" class=\\"rea-qf-link\\" data-qf-open=\\""+i+"\\" data-qf-mode=\\"yes\\">"+rep+"</a></td>"',
+    '      +"<td class=\\"ant-table-cell\\">"+qfPct(rep,sent)+"%</td>"',
+    '      +"<td class=\\"ant-table-cell\\"><a href=\\"#\\" class=\\"rea-qf-link\\" data-qf-open=\\""+i+"\\" data-qf-mode=\\"all\\">查看好友</a></td></tr>";',
+    '  }',
+    '  if(!qf.length)qh="<tr class=\\"ant-table-row\\"><td class=\\"ant-table-cell\\" colspan=\\"6\\"><span class=\\"rea-bd-dim\\">该窗口没有群发好友任务</span></td></tr>";',
+    '  var qfc=document.getElementById("rea-dtl-mat-qf-cards");',
+    '  if(qfc)qfc.innerHTML=card("已发送好友",qs," 人")+card("已回复好友",qr," 人")+card("回复率",qfPct(qr,qs),"%");',
+    '  var qfb=document.getElementById("rea-dtl-mat-qf-body");if(qfb)qfb.innerHTML=qh;',
     '  hover();',
     '}',
     'function setWinUi(){',
@@ -11297,6 +11578,18 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     '  CURW=id;setWinUi();paint();',
     '},true);',
     'stamp();setWinUi();paint();',
+    '/* 群发好友表的点击：数字与「查看好友」都走同一座弹窗；已回复那一列预筛「是」。 */',
+    'var qfb=document.getElementById("rea-dtl-mat-qf-body");',
+    'if(qfb)qfb.addEventListener("click",function(e){',
+    '  var n=e.target;',
+    '  while(n&&n!==qfb&&!(n.getAttribute&&n.getAttribute("data-qf-open")))n=n.parentNode;',
+    '  if(!n||n===qfb)return;',
+    '  e.preventDefault();',
+    '  var idx=+n.getAttribute("data-qf-open"),mode=n.getAttribute("data-qf-mode")||"all";',
+    '  var r=QFROWS[idx];if(!r)return;',
+    '  var sent=qfSentOf(r),rep=qfRepOf(r);',
+    '  QF.open(QF.friends(sent,mode==="yes"?rep:sent,qfStart(r),r.id),{pre:mode==="yes"?"yes":""});',
+    '});',
     '})();'
    ].join('\n');
   }
@@ -12383,231 +12676,254 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     '.rea-qf-dd .ant-select-item-option-active{background:rgba(0,0,0,0.04)}'
   ].join('\n');
 
-  function reaQfDetailJs(){
-   return [
-    '(function(){',
-    'var NICK=' + reaJson(['林小满','顾北','周舟','沈知夏','陆远','许乐','苏晴','陈默',
-                           '方糖','向南','白露','唐果','江野','夏至','秦朗','叶青',
-                           '温言','程曦','柳岸','安然']) + ',',
-    '    WXID=' + reaJson(['linxiaoman','gubei','zhouzhou','shenzhixia','luyuan','xule',
-                           'suqing','chenmo','fangtang','xiangnan','bailu','tangguo',
-                           'jiangye','xiazhi','qinlang','yeqing','wenyan','chengxi',
-                           'liuan','anran']) + ',',
-    '    REPLY=' + reaJson(['收到了，谢谢','好的，稍后看看','这个活动还有吗？','已了解',
-                            '麻烦发下详情','收到','可以，我转给同事','好的']) + ',',
-    '    HASH="css-vgijab",CLOSE=' + reaJson(REA_MN_ICON.close) + ',',
-    '    HELP=' + reaJson(reaMnIc('question-circle', [
+  /* 群发好友列表弹窗的共用件：详情页（点「群发好友数」）和素材明细页（点「已发送／已回复」）
+     打开的是同一座弹窗，所以结构、样式类名、筛选与空态只写这一份。
+     页面只负责给出好友行：详情页按数字生成，素材明细页按任务派生。
+     生成规则确定性（同一页每次打开同一份），筛选只在传进来的那批行里筛，不回快照查。 */
+  function reaQfListJs(){
+    return `
+var QF=(function(){
+var NICK=${reaJson(['林小满','顾北','周舟','沈知夏','陆远','许乐','苏晴','陈默',
+                      '方糖','向南','白露','唐果','江野','夏至','秦朗','叶青',
+                      '温言','程曦','柳岸','安然'])},
+    WXID=${reaJson(['linxiaoman','gubei','zhouzhou','shenzhixia','luyuan','xule',
+                      'suqing','chenmo','fangtang','xiangnan','bailu','tangguo',
+                      'jiangye','xiazhi','qinlang','yeqing','wenyan','chengxi',
+                      'liuan','anran'])},
+    REPLY=${reaJson(['收到了，谢谢','好的，稍后看看','这个活动还有吗？','已了解',
+                       '麻烦发下详情','收到','可以，我转给同事','好的'])},
+    HASH="css-vgijab",CLOSE=${reaJson(REA_MN_ICON.close)},
+    HELP=${reaJson(reaMnIc('question-circle', [
       'M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z',
       'M623.6 316.7C593.6 290.4 554 276 512 276s-81.6 14.5-111.6 40.7C369.2 344 352 380.7 352 420v7.6c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V420c0-44.1 43.1-80 96-80s96 35.9 96 80c0 31.1-22 59.6-56.1 72.7-21.2 8.1-39.2 22.3-52.1 40.9-13.1 19-19.9 41.8-19.9 64.9V620c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8v-22.7a48.3 48.3 0 0130.9-44.8c59-22.7 97.1-74.7 97.1-132.5.1-39.3-17.1-76-48.3-103.3zM472 732a40 40 0 1080 0 40 40 0 10-80 0z'
-    ])) + ',',
-    '    EMPTY=' + reaJson('<svg width="64" height="41" viewBox="0 0 64 41" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0 1)" fill="none" fill-rule="evenodd"><ellipse fill="#F5F5F5" cx="32" cy="33" rx="32" ry="7"></ellipse><g fill-rule="nonzero" stroke="#D9D9D9"><path d="M55 12.76L44.854 1.258C44.367.474 43.656 0 42.907 0H21.093c-.749 0-1.46.474-1.947 1.257L9 12.761V22h46v-9.24z"></path><path d="M41.613 15.931c0-1.605.994-2.93 2.227-2.93H18.624c-1.233 0-2.227 1.325-2.227 2.93V41c0 1.605.994 2.93 2.227 2.93h22.989c1.233 0 2.227-1.325 2.227-2.93V15.93z" fill="#FAFAFA"></path></g></g></svg>') + ',',
-    '    ARROW=' + reaJson('<span class="anticon anticon-down" aria-hidden="true"><svg viewBox="64 64 896 896" focusable="false" width="1em" height="1em" fill="currentColor"><path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"></path></svg></span>') + ';',
-    'var ML=null,DD=null,ALL=[],KW="",REP="";',
-    'function q(s,r){return (r||document).querySelector(s)}',
-    'function txt(n){return ((n&&n.textContent)||"").replace(/\\s+/g,"")}',
-    'function pad(n){return (n<10?"0":"")+n}',
-    'function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;")',
-    '  .replace(/>/g,"&gt;").replace(/"/g,"&quot;")}',
-    /* 「任务信息」那栏是 label span ＋ value span 的 p，按标签文字找最后那枚 span */
-    'function infoVal(label){',
-    '  var ps=document.querySelectorAll("p"),i;',
-    '  for(i=0;i<ps.length;i++){',
-    '    if(txt(ps[i]).indexOf(label)!==0)continue;',
-    '    var sp=ps[i].querySelectorAll("span");',
-    '    return sp.length?txt(sp[sp.length-1]):"";',
-    '  }',
-    '  return "";',
-    '}',
-    'function baseTime(){',
-    '  var s=infoVal("有效期：").split("~")[0];',
-    '  var m=/^(\\d{4})\\/(\\d{1,2})\\/(\\d{1,2})\\s+(\\d{1,2}):(\\d{2})/.exec(s);',
-    '  return m?new Date(+m[1],+m[2]-1,+m[3],+m[4],+m[5],0):new Date(2026,8,2,9,0,0);',
-    '}',
-    'function fmt(d){',
-    '  return d.getFullYear()+"/"+pad(d.getMonth()+1)+"/"+pad(d.getDate())+" "',
-    '    +pad(d.getHours())+":"+pad(d.getMinutes())+":"+pad(d.getSeconds());',
-    '}',
-    'function rowsOf(n){',
-    '  var b=baseTime(),out=[],i;',
-    '  for(i=0;i<n;i++){',
-    '    var d=new Date(b.getTime()+(i*3+1)*60000+i*17000);',
-    '    var rep=(i%3===0);',
-    '    out.push({',
-    '      nick:NICK[i%NICK.length],',
-    '      wxid:WXID[i%WXID.length]+(1024+i),',
-    '      replied:rep,',
-    '      send:fmt(d),',
-    '      reply:rep?fmt(new Date(d.getTime()+(7+i%9)*60000)):"-",',
-    '      text:rep?REPLY[i%REPLY.length]:"-"',
-    '    });',
-    '  }',
-    '  return out;',
-    '}',
-    'function matches(r){',
-    '  if(KW&&r.nick.toLowerCase().indexOf(KW)<0)return false;',
-    '  if(REP==="yes"&&!r.replied)return false;',
-    '  if(REP==="no"&&r.replied)return false;',
-    '  return true;',
-    '}',
-    'function tableShell(){',
-    '  return \'<div class="ant-table-wrapper rea-qf-table \'+HASH+\'">\'',
-    '    +\'<div class="ant-spin-nested-loading \'+HASH+\'"><div class="ant-spin-container">\'',
-    '    +\'<div class="ant-table \'+HASH+\'"><div class="ant-table-container"><div class="ant-table-content">\'',
-    '    +\'<table style="table-layout:fixed;min-width:1000px"><thead class="ant-table-thead"><tr>\'',
-    '    +\'<th class="ant-table-cell" style="width:64px">序号</th>\'',
-    '    +\'<th class="ant-table-cell" style="width:140px">昵称</th>\'',
-    '    +\'<th class="ant-table-cell" style="width:160px">微信号</th>\'',
-    '    +\'<th class="ant-table-cell" style="width:110px">是否回复<span class="rea-qf-help"\'',
-    '    +\' title="好友是否回复了本次群发消息">\'+HELP+\'</span></th>\'',
-    '    +\'<th class="ant-table-cell" style="width:170px">发送时间</th>\'',
-    '    +\'<th class="ant-table-cell" style="width:170px">回复时间</th>\'',
-    '    +\'<th class="ant-table-cell" style="width:186px">回复内容</th>\'',
-    '    +\'</tr></thead><tbody class="ant-table-tbody" data-qf-tbody></tbody></table>\'',
-    '    +\'</div></div></div></div></div></div>\';',
-    '}',
-    'function render(){',
-    '  var body=q("[data-qf-tbody]",ML),i,k,h="";',
-    '  if(!body)return;',
-    '  var rs=[];',
-    '  for(i=0;i<ALL.length;i++)if(matches(ALL[i]))rs.push(ALL[i]);',
-    '  if(!rs.length){',
-    '    h+=\'<tr class="ant-table-placeholder"><td class="ant-table-cell" colspan="7">\'',
-    '      +\'<div class="ant-empty ant-empty-normal \'+HASH+\'"><div class="ant-empty-image">\'+EMPTY+\'</div>\'',
-    '      +\'<div class="ant-empty-description">暂无数据</div></div></td></tr>\';',
-    '  }else{',
-    '    for(k=0;k<rs.length;k++){',
-    '      var r=rs[k];',
-    '      h+=\'<tr class="ant-table-row ant-table-row-level-0" data-row-key="\'+k+\'">\'',
-    '        +\'<td class="ant-table-cell">\'+(k+1)+\'</td>\'',
-    '        +\'<td class="ant-table-cell">\'+esc(r.nick)+\'</td>\'',
-    '        +\'<td class="ant-table-cell">\'+esc(r.wxid)+\'</td>\'',
-    '        +\'<td class="ant-table-cell">\'+(r.replied?"是":"否")+\'</td>\'',
-    '        +\'<td class="ant-table-cell">\'+r.send+\'</td>\'',
-    '        +\'<td class="ant-table-cell">\'+r.reply+\'</td>\'',
-    '        +\'<td class="ant-table-cell">\'+esc(r.text)+\'</td></tr>\';',
-    '    }',
-    '  }',
-    '  body.innerHTML=h;',
-    '  var t=q("[data-qf-total]",ML);',
-    '  if(t)t.textContent="共 "+rs.length+" 条记录";',
-    '}',
-    'function closeDD(){if(DD&&DD.parentNode)DD.parentNode.removeChild(DD);DD=null}',
-    'function openDD(){',
-    '  closeDD();',
-    '  var sel=q("[data-qf-sel]",ML),c=q(".ant-modal-content",ML);',
-    '  if(!sel||!c)return;',
-    '  var r=sel.getBoundingClientRect(),cr=c.getBoundingClientRect();',
-    '  var opts=[["","全部"],["yes","是"],["no","否"]],h="",i;',
-    '  for(i=0;i<opts.length;i++){',
-    '    h+=\'<div class="ant-select-item ant-select-item-option\'',
-    '      +(opts[i][0]===REP?" ant-select-item-option-selected":"")+\'" data-qf-opt="\'+opts[i][0]+\'">\'',
-    '      +\'<div class="ant-select-item-option-content">\'+opts[i][1]+\'</div></div>\';',
-    '  }',
-    '  DD=document.createElement("div");',
-    '  DD.className="ant-select-dropdown "+HASH+" rea-qf-dd";',
-    '  DD.style.cssText="left:"+(r.left-cr.left)+"px;top:"+(r.bottom-cr.top+4)+"px;width:"+r.width+"px";',
-    '  DD.innerHTML=\'<div class="rc-virtual-list"><div class="rc-virtual-list-holder">\'',
-    '    +\'<div class="rc-virtual-list-holder-inner">\'+h+\'</div></div></div>\';',
-    '  c.appendChild(DD);',
-    '  var its=DD.querySelectorAll("[data-qf-opt]"),j;',
-    '  for(j=0;j<its.length;j++){',
-    '    its[j].addEventListener("click",function(){',
-    '      setRep(this.getAttribute("data-qf-opt"),txt(this));',
-    '    });',
-    '  }',
-    '}',
-    'function setRep(v,lbl){',
-    '  REP=v;',
-    '  var sel=q("[data-qf-sel]",ML);',
-    '  if(sel){',
-    '    var ph=q(".ant-select-selection-placeholder",sel)||q(".ant-select-selection-item",sel);',
-    '    if(ph){ph.textContent=lbl||"是否回复";ph.className="ant-select-selection-item"}',
-    '  }',
-    '  closeDD();',
-    '}',
-    'function onKey(e){if(e.key==="Escape"||e.keyCode===27)closeModal()}',
-    'function closeModal(){',
-    '  closeDD();',
-    '  var w=document.querySelector("[data-rea-qf]");',
-    '  if(w&&w.parentNode)w.parentNode.removeChild(w);',
-    '  document.removeEventListener("keydown",onKey);',
-    '  ML=null;ALL=[];',
-    '}',
-    'function open(n){',
-    '  closeModal();',
-    '  var w=document.createElement("div");',
-    '  w.className="ant-modal-root "+HASH;w.setAttribute("data-rea-qf","1");',
-    '  w.innerHTML=\'<div class="ant-modal-mask"></div>\'',
-    '    +\'<div class="ant-modal-wrap ant-modal-centered">\'',
-    '    +\'<div class="ant-modal \'+HASH+\' rea-qf-modal" role="dialog" aria-modal="true"\'',
-    '    +\' aria-label="群发好友列表" style="width: 900px;">\'',
-    '    +\'<div class="ant-modal-content">\'',
-    '    +\'<button type="button" class="ant-modal-close" aria-label="Close">\'',
-    '    +\'<span class="ant-modal-close-x">\'+CLOSE+\'</span></button>\'',
-    '    +\'<div class="ant-modal-header"><div class="ant-modal-title">群发好友列表</div></div>\'',
-    '    +\'<div class="ant-modal-body">\'',
-    '    +\'<div class="rea-qf-tool">\'',
-    '    +\'<input type="text" class="ant-input \'+HASH+\' ant-input-outlined" data-qf-kw\'',
-    '    +\' placeholder="请输入好友昵称" style="width:180px">\'',
-    '    +\'<span class="ant-select \'+HASH+\' ant-select-outlined ant-select-single ant-select-show-arrow"\'',
-    '    +\' data-qf-sel style="width:130px">\'',
-    '    +\'<span class="ant-select-selector"><span class="ant-select-selection-wrap">\'',
-    '    +\'<span class="ant-select-selection-search"><input type="search" autocomplete="off"\'',
-    '    +\' class="ant-select-selection-search-input" role="combobox" readonly style="opacity:0"></span>\'',
-    '    +\'<span class="ant-select-selection-placeholder">是否回复</span>\'',
-    '    +\'</span></span>\'',
-    '    +\'<span class="ant-select-arrow">\'+ARROW+\'</span></span>\'',
-    '    +\'<button type="button" class="ant-btn \'+HASH+\' ant-btn-primary ant-btn-color-primary\'',
-    '    +\' ant-btn-variant-solid" data-qf-query><span>查询</span></button>\'',
-    '    +\'</div>\'',
-    '    +\'<div class="rea-qf-scroll">\'+tableShell()+\'</div>\'',
-    '    +\'<ul class="ant-pagination ant-pagination-end ant-pagination-mini rea-qf-pager \'+HASH+\'">\'',
-    '    +\'<li class="ant-pagination-total-text" data-qf-total>共 0 条记录</li></ul>\'',
-    '    +\'</div>\'',
-    '    +\'<div class="ant-modal-footer">\'',
-    '    +\'<button type="button" class="ant-btn \'+HASH+\' ant-btn-default ant-btn-color-default\'',
-    '    +\' ant-btn-variant-outlined" data-qf-close><span>关 闭</span></button>\'',
-    '    +\'</div></div></div></div></div>\';',
-    '  document.body.appendChild(w);',
-    '  ML=w;',
-    '  ALL=rowsOf(n);KW="";REP="";',
-    '  render();',
-    '  q("[data-qf-close]",w).addEventListener("click",closeModal);',
-    '  q(".ant-modal-close",w).addEventListener("click",closeModal);',
-    '  q(".ant-modal-wrap",w).addEventListener("click",function(e){if(e.target===this)closeModal()});',
-    '  q("[data-qf-query]",w).addEventListener("click",render);',
-    '  q("[data-qf-sel]",w).addEventListener("click",function(e){e.stopPropagation();DD?closeDD():openDD()});',
-    '  var kw=q("[data-qf-kw]",w);',
-    '  kw.addEventListener("input",function(){KW=String(this.value||"").replace(/\\s+/g,"").toLowerCase()});',
-    '  kw.addEventListener("keydown",function(e){if(e.key==="Enter")render()});',
-    '  document.addEventListener("click",function(e){',
-    '    if(!DD)return;',
-    '    var sel=q("[data-qf-sel]",ML);',
-    '    if(DD.contains(e.target)||(sel&&sel.contains(e.target)))return;',
-    '    closeDD();',
-    '  });',
-    '  document.addEventListener("keydown",onKey);',
-    '}',
-    /* 只接「群发好友数」那一列：按表头文字定位列号，不认列序（重抓后列序变了也不会接错） */
-    'var ths=document.querySelectorAll(".ant-table-thead th"),idx=-1,i;',
-    'for(i=0;i<ths.length;i++){if(txt(ths[i])==="群发好友数"){idx=i;break}}',
-    'if(idx<0)return;',
-    'var tb=document.querySelector(".ant-table-tbody");',
-    'if(!tb)return;',
-    'tb.addEventListener("click",function(e){',
-    '  var n=e.target;',
-    '  while(n&&n!==tb&&!(n.classList&&n.classList.contains("ant-btn")))n=n.parentNode;',
-    '  if(!n||n===tb)return;',
-    '  var td=n;while(td&&td!==tb&&td.tagName!=="TD")td=td.parentNode;',
-    '  if(!td||td===tb||td.tagName!=="TD")return;',
-    '  var tr=td.parentNode;',
-    '  if(Array.prototype.indexOf.call(tr.children,td)!==idx)return;',
-    '  var cnt=parseInt(txt(n),10);',
-    '  if(isNaN(cnt))return;',
-    '  open(cnt);',
-    '});',
-    '})();'
-   ].join('\n');
+    ]))},
+    EMPTY=${reaJson('<svg width="64" height="41" viewBox="0 0 64 41" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0 1)" fill="none" fill-rule="evenodd"><ellipse fill="#F5F5F5" cx="32" cy="33" rx="32" ry="7"></ellipse><g fill-rule="nonzero" stroke="#D9D9D9"><path d="M55 12.76L44.854 1.258C44.367.474 43.656 0 42.907 0H21.093c-.749 0-1.46.474-1.947 1.257L9 12.761V22h46v-9.24z"></path><path d="M41.613 15.931c0-1.605.994-2.93 2.227-2.93H18.624c-1.233 0-2.227 1.325-2.227 2.93V41c0 1.605.994 2.93 2.227 2.93h22.989c1.233 0 2.227-1.325 2.227-2.93V15.93z" fill="#FAFAFA"></path></g></g></svg>')},
+    ARROW=${reaJson('<span class="anticon anticon-down" aria-hidden="true"><svg viewBox="64 64 896 896" focusable="false" width="1em" height="1em" fill="currentColor"><path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"></path></svg></span>')};
+var ML=null,DD=null,ALL=[],KW="",REP="";
+function q(s,r){return (r||document).querySelector(s)}
+function txt(n){return ((n&&n.textContent)||"").replace(/\\s+/g,"")}
+function pad(n){return (n<10?"0":"")+n}
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;")
+  .replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+function fmt(d){
+  return d.getFullYear()+"/"+pad(d.getMonth()+1)+"/"+pad(d.getDate())+" "
+    +pad(d.getHours())+":"+pad(d.getMinutes())+":"+pad(d.getSeconds());
+}
+/* 好友行：回复与否按比例摊开（i*replied/sent 的台阶变化），保证正好 replied 行是「是」。 */
+function friends(sent,replied,start,seed){
+  sent=Math.max(0,sent|0);
+  replied=Math.max(0,Math.min(sent,replied|0));
+  seed=seed||0;
+  var b=(start instanceof Date&&!isNaN(start.getTime()))?start:new Date(2026,8,2,9,0,0);
+  var out=[],i,d,rep;
+  for(i=0;i<sent;i++){
+    d=new Date(b.getTime()+(i*3+1)*60000+i*17000);
+    rep=sent?Math.floor((i+1)*replied/sent)>Math.floor(i*replied/sent):false;
+    out.push({
+      nick:NICK[(seed+i)%NICK.length],
+      wxid:WXID[(seed+i)%WXID.length]+(1024+i),
+      replied:rep,
+      send:fmt(d),
+      reply:rep?fmt(new Date(d.getTime()+(7+i%9)*60000)):"-",
+      text:rep?REPLY[(seed+i)%REPLY.length]:"-"
+    });
+  }
+  return out;
+}
+function matches(r){
+  if(KW&&r.nick.toLowerCase().indexOf(KW)<0)return false;
+  if(REP==="yes"&&!r.replied)return false;
+  if(REP==="no"&&r.replied)return false;
+  return true;
+}
+function tableShell(){
+  return '<div class="ant-table-wrapper rea-qf-table '+HASH+'">'
+    +'<div class="ant-spin-nested-loading '+HASH+'"><div class="ant-spin-container">'
+    +'<div class="ant-table '+HASH+'"><div class="ant-table-container"><div class="ant-table-content">'
+    +'<table style="table-layout:fixed;width:100%"><thead class="ant-table-thead"><tr>'
+    +'<th class="ant-table-cell" style="width:60px">序号</th>'
+    +'<th class="ant-table-cell" style="width:120px">昵称</th>'
+    +'<th class="ant-table-cell" style="width:150px">微信号</th>'
+    +'<th class="ant-table-cell" style="width:104px">是否回复<span class="rea-qf-help"'
+    +' title="好友是否回复了本次群发消息">'+HELP+'</span></th>'
+    +'<th class="ant-table-cell" style="width:170px">发送时间</th>'
+    +'<th class="ant-table-cell" style="width:170px">回复时间</th>'
+    +'<th class="ant-table-cell" style="width:178px">回复内容</th>'
+    +'</tr></thead><tbody class="ant-table-tbody" data-qf-tbody></tbody></table>'
+    +'</div></div></div></div></div></div>';
+}
+function render(){
+  var body=q("[data-qf-tbody]",ML),i,k,h="";
+  if(!body)return;
+  var rs=[];
+  for(i=0;i<ALL.length;i++)if(matches(ALL[i]))rs.push(ALL[i]);
+  if(!rs.length){
+    h+='<tr class="ant-table-placeholder"><td class="ant-table-cell" colspan="7">'
+      +'<div class="ant-empty ant-empty-normal '+HASH+'"><div class="ant-empty-image">'+EMPTY+'</div>'
+      +'<div class="ant-empty-description">暂无数据</div></div></td></tr>';
+  }else{
+    for(k=0;k<rs.length;k++){
+      var r=rs[k];
+      h+='<tr class="ant-table-row ant-table-row-level-0" data-row-key="'+k+'">'
+        +'<td class="ant-table-cell">'+(k+1)+'</td>'
+        +'<td class="ant-table-cell">'+esc(r.nick)+'</td>'
+        +'<td class="ant-table-cell">'+esc(r.wxid)+'</td>'
+        +'<td class="ant-table-cell">'+(r.replied?"是":"否")+'</td>'
+        +'<td class="ant-table-cell">'+r.send+'</td>'
+        +'<td class="ant-table-cell">'+r.reply+'</td>'
+        +'<td class="ant-table-cell">'+esc(r.text)+'</td></tr>';
+    }
+  }
+  body.innerHTML=h;
+  var t=q("[data-qf-total]",ML);
+  if(t)t.textContent="共 "+rs.length+" 条记录";
+}
+function closeDD(){if(DD&&DD.parentNode)DD.parentNode.removeChild(DD);DD=null}
+function openDD(){
+  closeDD();
+  var sel=q("[data-qf-sel]",ML),c=q(".ant-modal-content",ML);
+  if(!sel||!c)return;
+  var r=sel.getBoundingClientRect(),cr=c.getBoundingClientRect();
+  var opts=[["","全部"],["yes","是"],["no","否"]],h="",i;
+  for(i=0;i<opts.length;i++){
+    h+='<div class="ant-select-item ant-select-item-option'
+      +(opts[i][0]===REP?" ant-select-item-option-selected":"")+'" data-qf-opt="'+opts[i][0]+'">'
+      +'<div class="ant-select-item-option-content">'+opts[i][1]+'</div></div>';
+  }
+  DD=document.createElement("div");
+  DD.className="ant-select-dropdown "+HASH+" rea-qf-dd";
+  DD.style.cssText="left:"+(r.left-cr.left)+"px;top:"+(r.bottom-cr.top+4)+"px;width:"+r.width+"px";
+  DD.innerHTML='<div class="rc-virtual-list"><div class="rc-virtual-list-holder">'
+    +'<div class="rc-virtual-list-holder-inner">'+h+'</div></div></div>';
+  c.appendChild(DD);
+  var its=DD.querySelectorAll("[data-qf-opt]"),j;
+  for(j=0;j<its.length;j++){
+    its[j].addEventListener("click",function(){
+      setRep(this.getAttribute("data-qf-opt"),txt(this));
+    });
+  }
+}
+function setRep(v,lbl){
+  REP=v;
+  var sel=q("[data-qf-sel]",ML);
+  if(sel){
+    var ph=q(".ant-select-selection-placeholder",sel)||q(".ant-select-selection-item",sel);
+    if(ph){ph.textContent=lbl||"是否回复";ph.className="ant-select-selection-item"}
+  }
+  closeDD();
+}
+function onKey(e){if(e.key==="Escape"||e.keyCode===27)closeModal()}
+function closeModal(){
+  closeDD();
+  var w=document.querySelector("[data-rea-qf]");
+  if(w&&w.parentNode)w.parentNode.removeChild(w);
+  document.removeEventListener("keydown",onKey);
+  ML=null;ALL=[];
+}
+function open(rows,opt){
+  closeModal();
+  var w=document.createElement("div");
+  w.className="ant-modal-root "+HASH;w.setAttribute("data-rea-qf","1");
+  w.innerHTML='<div class="ant-modal-mask"></div>'
+    +'<div class="ant-modal-wrap ant-modal-centered">'
+    +'<div class="ant-modal '+HASH+' rea-qf-modal" role="dialog" aria-modal="true"'
+    +' aria-label="群发好友列表" style="width: 1000px;">'
+    +'<div class="ant-modal-content">'
+    +'<button type="button" class="ant-modal-close" aria-label="Close">'
+    +'<span class="ant-modal-close-x">'+CLOSE+'</span></button>'
+    +'<div class="ant-modal-header"><div class="ant-modal-title">群发好友列表</div></div>'
+    +'<div class="ant-modal-body">'
+    +'<div class="rea-qf-tool">'
+    +'<input type="text" class="ant-input '+HASH+' ant-input-outlined" data-qf-kw'
+    +' placeholder="请输入好友昵称" style="width:180px">'
+    +'<span class="ant-select '+HASH+' ant-select-outlined ant-select-single ant-select-show-arrow"'
+    +' data-qf-sel style="width:130px">'
+    +'<span class="ant-select-selector"><span class="ant-select-selection-wrap">'
+    +'<span class="ant-select-selection-search"><input type="search" autocomplete="off"'
+    +' class="ant-select-selection-search-input" role="combobox" readonly style="opacity:0"></span>'
+    +'<span class="ant-select-selection-placeholder">是否回复</span>'
+    +'</span></span>'
+    +'<span class="ant-select-arrow">'+ARROW+'</span></span>'
+    +'<button type="button" class="ant-btn '+HASH+' ant-btn-primary ant-btn-color-primary'
+    +' ant-btn-variant-solid" data-qf-query><span>查询</span></button>'
+    +'</div>'
+    +'<div class="rea-qf-scroll">'+tableShell()+'</div>'
+    +'<ul class="ant-pagination ant-pagination-end ant-pagination-mini rea-qf-pager '+HASH+'">'
+    +'<li class="ant-pagination-total-text" data-qf-total>共 0 条记录</li></ul></div>'
+    +'<div class="ant-modal-footer">'
+    +'<button type="button" class="ant-btn '+HASH+' ant-btn-default ant-btn-color-default'
+    +' ant-btn-variant-outlined" data-qf-close><span>关 闭</span></button>'
+    +'</div></div></div></div></div>';
+  document.body.appendChild(w);
+  ML=w;
+  ALL=rows||[];KW="";REP=(opt&&opt.pre)||"";
+  var lbl=REP==="yes"?"是":(REP==="no"?"否":"");
+  if(lbl){
+    var ph=q(".ant-select-selection-placeholder",w);
+    if(ph){ph.textContent=lbl;ph.className="ant-select-selection-item"}
+  }
+  render();
+  q("[data-qf-close]",w).addEventListener("click",closeModal);
+  q(".ant-modal-close",w).addEventListener("click",closeModal);
+  q(".ant-modal-wrap",w).addEventListener("click",function(e){if(e.target===this)closeModal()});
+  q("[data-qf-query]",w).addEventListener("click",render);
+  q("[data-qf-sel]",w).addEventListener("click",function(e){e.stopPropagation();DD?closeDD():openDD()});
+  var kw=q("[data-qf-kw]",w);
+  kw.addEventListener("input",function(){KW=String(this.value||"").replace(/\\s+/g,"").toLowerCase()});
+  kw.addEventListener("keydown",function(e){if(e.key==="Enter")render()});
+  document.addEventListener("click",function(e){
+    if(!DD)return;
+    var sel=q("[data-qf-sel]",ML);
+    if(DD.contains(e.target)||(sel&&sel.contains(e.target)))return;
+    closeDD();
+  });
+  document.addEventListener("keydown",onKey);
+}
+return {open:open,friends:friends};
+})();
+`;
+  }
+
+  /* 「群发好友 · 详情」的覆盖脚本：把「群发好友数」那一列接到共用弹窗上。
+     好友行按数字生成，发送时间从页内「任务信息」的有效期起算。 */
+  function reaQfDetailJs(){
+    return `(function(){
+${reaQfListJs()}
+function txt(n){return ((n&&n.textContent)||"").replace(/\\s+/g,"")}
+function infoVal(label){
+  var ps=document.querySelectorAll("p"),i;
+  for(i=0;i<ps.length;i++){
+    if(txt(ps[i]).indexOf(label)!==0)continue;
+    var sp=ps[i].querySelectorAll("span");
+    return sp.length?txt(sp[sp.length-1]):"";
+  }
+  return "";
+}
+function baseTime(){
+  var s=infoVal("有效期：").split("~")[0];
+  var m=/^(\\d{4})\\/(\\d{1,2})\\/(\\d{1,2})\\s+(\\d{1,2}):(\\d{2})/.exec(s);
+  return m?new Date(+m[1],+m[2]-1,+m[3],+m[4],+m[5],0):new Date(2026,8,2,9,0,0);
+}
+function rowsOf(n){return QF.friends(n,Math.ceil(n/3),baseTime(),0)}
+/* 只接「群发好友数」那一列：按表头文字定位列号，不认列序（重抓后列序变了也不会接错） */
+var ths=document.querySelectorAll(".ant-table-thead th"),idx=-1,i;
+for(i=0;i<ths.length;i++){if(txt(ths[i])==="群发好友数"){idx=i;break}}
+if(idx<0)return;
+var tb=document.querySelector(".ant-table-tbody");
+if(!tb)return;
+tb.addEventListener("click",function(e){
+  var n=e.target;
+  while(n&&n!==tb&&!(n.classList&&n.classList.contains("ant-btn")))n=n.parentNode;
+  if(!n||n===tb)return;
+  var td=n;while(td&&td!==tb&&td.tagName!=="TD")td=td.parentNode;
+  if(!td||td===tb||td.tagName!=="TD")return;
+  var tr=td.parentNode;
+  if(Array.prototype.indexOf.call(tr.children,td)!==idx)return;
+  var cnt=parseInt(txt(n),10);
+  if(isNaN(cnt))return;
+  QF.open(rowsOf(cnt),{});
+});
+})();`;
   }
 
   /* 覆盖登记表（ADR-0043）：页名 → 该页的覆盖块。与 docs/09 §2.3 那张表一一对应，加页两处一起加。
@@ -12634,7 +12950,8 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   var REA_COVER = {
     '微小助看板':    { html: 'srcBoard', css: REA_BOARD_CSS, js: reaBoardJs },
     '微小助看板 · 执行人明细': { html: 'srcBoardTask', css: REA_BOARD_CSS, js: reaBoardTaskJs },
-    '微小助看板 · 素材明细': { html: 'srcBoardMat',  css: REA_BOARD_CSS, js: reaBoardMatJs },
+    /* 素材明细页自己也会开「群发好友列表」，所以它除了看板样式，还要带上弹窗那一份 */
+    '微小助看板 · 素材明细': { html: 'srcBoardMat',  css: REA_BOARD_CSS + '\n' + REA_QF_CSS, js: reaBoardMatJs },
     '素材库 · 新建': { css: REA_MAT_CSS, js: reaMatJs },
     '新小红书运营': { js: reaXhsListJs },
     '新小红书运营 · 新建': { js: reaXhsJs },
