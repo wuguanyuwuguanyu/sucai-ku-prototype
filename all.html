@@ -1246,11 +1246,16 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
    ★ 件又换了一批：方案三点名撤掉的「切换员工」在这里**回来了**，但换了样子——不占一行，
      是卡右上那枚名胶囊（「智能」+ HVA_HOST_AGENT ＋ ⇄），点了直接进数智员工选择页。
      所以这一套仍是单独一个 hvaHeroB()，硬塞回 hvaHeroHtml 的分支只会把那段变成四岔。
-   ★ 右缘一条线：托管开关的右缘 ＝ 设置块的右缘 ＝ 370（卡宽 384 − 内边距 14）。
-     改其中一件的宽度时另一件跟着挪，别让这条线断掉。 */
+   ★ 右缘一条线：托管开关的右缘 ＝ 设置块的右缘（各自离卡右缘 14）。
+     改其中一件的宽度时另一件跟着挪，别让这条线断掉。
+   ★ 卡宽**不许写死**（2026-10-21 真机修的 bug）：原先进原型时按 412 画布写成 `left:14px;width:384px`，
+     桌面壳里正好、装进 APK 就露馅——真机 WebView 的布局宽是设备宽（393/360 都有），
+     卡却仍是 384 宽，右缘被顶到 398 直接切在屏幕外，跟下面 15 内边距的「工作日志」对不齐。
+     所以左右都用 15（**与 .hva-pane 的 padding 同一个数**，卡和日志卡才共用一条竖线），
+     宽度交给 right 撑开，卡内坐标仍是相对卡自身的。 */
 .hva-head-b{height:133px}
 .hva-hero-b{height:133px}
-.hva-hero-b .hva-card{position:absolute;left:14px;top:14px;width:384px;height:108px;border-radius:22px;
+.hva-hero-b .hva-card{position:absolute;left:15px;right:15px;top:14px;height:108px;border-radius:22px;
   overflow:hidden;background:linear-gradient(155deg,#EAECF1,#D5DAE3)}
 .hva-hero-b .hva-card.on{background:linear-gradient(155deg,#EAF2FF,#E8DFFF)}
 /* 形象挪到卡左、贴卡底；盒子仍按各自原图比例给（人像 176×204／机器人 482×543）——
@@ -12009,7 +12014,8 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
         这一页没有自己的脚本就点不动，这里补上。
      新加的配置行（承接条件、条件字段、回复后同时私信）**一律从快照现有行 clone**——radio 行、
      带说明的开关行、话术节点的 textarea——连 css-xxxxxx 这枚 hash 类一起继承，不手写 AntD 结构；
-     快照重抓后 hash 若变，clone 出来的行跟着变，不会失配。 */
+     快照重抓后 hash 若变，clone 出来的行跟着变，不会失配。
+     末尾还把三十多行平铺表单按「主动拓客 / 执行任务时回复消息 / 执行设置」插标题分组（只插标题，不包容器）。 */
   function reaXhsJs(){
    return [
     '(function(){',
@@ -12297,6 +12303,55 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     '  }',
     '  syncLink();',
     '}',
+    '/* 页面分组（2026-10-21）：快照把这张表单三十多行平铺，运营看不出哪几行在配拓客、哪几行在配回复。',
+    '   这里只**插标题**、不包分组容器——各行仍是平铺兄弟节点，syncShow 那套按元素引用的显隐一行都不用改；',
+    '   分组标题也不参与显隐（关掉某项只是收起它的配置行）。',
+    '   大标题 clone 页内现成的 _titleBar_（16px/500 ＋ 底分隔线），小标题用与标签同字号的块，',
+    '   左内边距与 _form_input_ 对齐、落在标签列左侧。定位一律按标签文字，快照重抓后行序变了也不会插错；',
+    '   标签找不到就跳过这一枚标题——宁可少一个分组，也不插到错行。 */',
+    'var TH=document.querySelector("h4[class*=\\"_titleBar_\\"]");',
+    'var pickRow=function(name){',
+    '  var all=document.querySelectorAll("div[class*=\\"_form_input_\\"]"),x,s2;',
+    '  for(x=0;x<all.length;x++){',
+    '    s2=all[x].querySelector("span[class*=\\"_must_\\"]");',
+    '    if(s2&&(s2.textContent||"").trim()===name)return all[x];',
+    '  }',
+    '  return null;',
+    '};',
+    'var headBig=function(text){',
+    '  if(!TH)return null;',
+    '  var h=TH.cloneNode(false);',
+    '  h.textContent=text;',
+    '  h.style.marginTop="16px";h.style.marginBottom="0px";',
+    '  return h;',
+    '};',
+    'var headSub=function(text){',
+    '  var d=document.createElement("div");',
+    '  d.style.cssText="padding: 24px 20% 0; font-size: 15px; font-weight: 500; line-height: 22px; color: var(--yk-text-bold, rgba(0, 0, 0, .85));";',
+    '  d.setAttribute("data-rea-head","");',
+    '  d.textContent=text;',
+    '  return d;',
+    '};',
+    'var place=function(node,names){',
+    '  if(!node)return;',
+    '  if(typeof names==="string")names=[names];',
+    '  var row=null,x;',
+    '  for(x=0;x<names.length&&!row;x++)row=pickRow(names[x]);',
+    '  if(row&&row.parentNode)row.parentNode.insertBefore(node,row);',
+    '};',
+    '/* 一、主动拓客：找谁 → 筛谁 → 多久跑一次 → 第一句说什么 */',
+    'place(headBig("一、主动拓客"),"关键词类型");',
+    'place(headSub("找笔记"),"关键词类型");',
+    'place(headSub("筛客户"),"跳过笔记作者");',
+    'place(headSub("执行节奏"),"执行频率");',
+    'place(headSub("首次触达与话术"),"首次触达方式");',
+    '/* 二、执行任务时回复消息：客户回我们之后怎么接。评论在前、私信在后——',
+    '   既顺着客户旅程（先评论 → 他回评论 → 联动私信 → 他继续私信），也保住现网 ①② 的编号。 */',
+    'place(headBig("二、执行任务时回复消息"),"用户回复后自动承接");',
+    'place(headSub("评论回复"),["① 评论承接","评论承接"]);',
+    'place(headSub("私信回复"),["② 私信承接","私信承接"]);',
+    '/* 三、执行设置：谁来跑、什么类型、什么时候通知／截止、提醒弹到哪 */',
+    'place(headBig("三、执行设置"),"执行人员");',
     '})();'
    ].join('\n');
   }
