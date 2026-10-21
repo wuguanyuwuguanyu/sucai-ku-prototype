@@ -9527,10 +9527,10 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     </div>
     <div class="ant-col ant-col-8 css-vgijab" style="padding-left: 16px; padding-right: 16px;">
       <div class="_card_gf4go_35" style="background: linear-gradient(270deg, rgb(0, 194, 138) 0%, rgb(0, 217, 121) 100%); box-shadow: rgb(0, 173, 122) 0px 0px 1px 0px;">
-        <h6>完成率</h6>
+        <h6>已完成</h6>
         <div class="_num_gf4go_46">
-          <div><p data-rea-sum="rate">56.1%</p><p>已完成</p></div>
-          <div><p class="rea-bd-cmp" data-rea-sum="rate-frac">23 ÷ 41</p><p>已执行 / 应执行</p></div>
+          <div><p data-rea-sum="done">23</p><p>人次</p></div>
+          <div><p data-rea-sum="rate">56.1%</p><p>完成率</p></div>
         </div>
       </div>
     </div>
@@ -10461,8 +10461,6 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     + '.rea-bd-over{color:#ff8f17}'
     + '.rea-bd-people,.rea-bd-span{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}'
     + '.rea-bd-table .ant-table-cell{white-space:nowrap}'
-    /* 卡里数字的长度天然不等：完成率那格摆的是「58 ÷ 78」，收一档免得折行错开基线 */
-    + '#rea-bd-cards ._num_gf4go_46>div p.rea-bd-cmp{font-size:22px}'
     + '.rea-bd-tabs .ant-tabs-tab{cursor:pointer}'
     + '.rea-bd-tabs .ant-tabs-nav-list{flex-wrap:wrap}'
     /* 页签条不折字：执行型 8 个（「全部」＋ 7 类）一行装得下 */
@@ -10538,8 +10536,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     '  done:function(t){return String(t.done)},',
     '  left:function(t){return String(t.left)},',
     '  over:function(t){return String(t.over)},',
-    '  rate:function(t){return (t.need?t.done/t.need*100:0).toFixed(1)+"%"},',
-    '  "rate-frac":function(t){return t.done+" ÷ "+t.need},',
+    '  rate:function(t){return (t.need?t.done/t.need*100:0).toFixed(1)+"%"}',
     '  "left-of-need":function(t){return (t.need?t.left/t.need*100:0).toFixed(1)+"%"},',
     '  "over-of-left":function(t){return (t.left?t.over/t.left*100:0).toFixed(1)+"%"}',
     '};',
