@@ -9559,7 +9559,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   </div>
 
   <!-- 时间窗（PRD §2.2／§4.4）：它现在归「任务执行」板块，筛的是这张任务台账，
-       同时是下方「组织范围」与「素材与效果」的取数窗口。
+       同时是下方「组织范围」的取数窗口。素材数据有自己的日期区间，不跟这个窗口走。
        业务域三枚标签已撤：企业微信／悬浮窗两张看板走侧栏进，不在本页顶部再挂一个切换器。
        本板块上方的执行健康度三卡固定看今日，不跟这个窗口走。 -->
   <div class="rea-bd-row">
@@ -9982,63 +9982,26 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 
 <div class="_board_gf4go_1" style="margin-top: 21px; padding-bottom: 28px;">
   <div class="_title_gf4go_8" style="padding-bottom: 0px;">
-    <h6>素材与效果</h6>
+    <h6>素材数据</h6>
     <a href="#" data-bd-detail="mat">详细数据<span role="img" aria-label="right" class="anticon anticon-right"><svg viewBox="64 64 896 896" focusable="false" data-icon="right" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"></path></svg></span></a>
   </div>
-  <div class="ant-tabs ant-tabs-top css-vgijab rea-bd-tabs" id="rea-bd-mat-tabs">
-    <div role="tablist" aria-orientation="horizontal" class="ant-tabs-nav">
-      <div class="ant-tabs-nav-wrap"><div class="ant-tabs-nav-list" style="transform: translate(0px, 0px);">
-        <div data-node-key="m1" class="ant-tabs-tab ant-tabs-tab-active" data-bd-pane="m-quan"><div role="tab" aria-selected="true" class="ant-tabs-tab-btn" tabindex="0">发圈</div></div>
-        <div data-node-key="m2" class="ant-tabs-tab" data-bd-pane="m-art"><div role="tab" aria-selected="false" class="ant-tabs-tab-btn" tabindex="-1"><span class="ant-badge css-vgijab">文章<sup data-show="true" class="ant-scroll-number ant-badge-count ant-badge-multiple-words" title="可追踪" style="background-color: rgb(36, 204, 185); padding: 0px 4px; right: -10px; top: -8px; border-radius: 5px 5px 5px 0px;">可追踪</sup></span></div></div>
-        <div data-node-key="m3" class="ant-tabs-tab" data-bd-pane="m-mat"><div role="tab" aria-selected="false" class="ant-tabs-tab-btn" tabindex="-1">素材</div></div>
-        <div data-node-key="m4" class="ant-tabs-tab" data-bd-pane="m-cus"><div role="tab" aria-selected="false" class="ant-tabs-tab-btn" tabindex="-1">客户与群</div></div>
-        <div class="ant-tabs-ink-bar ant-tabs-ink-bar-animated" style="width: 28px; left: 14px; transform: translateX(-50%);"></div>
-      </div></div>
-      <div class="ant-tabs-nav-operations ant-tabs-nav-operations-hidden">
-        <button type="button" class="ant-tabs-nav-more" aria-haspopup="listbox" aria-expanded="false" style="visibility: hidden; order: 1;"><span role="img" aria-label="ellipsis" class="anticon anticon-ellipsis"><svg viewBox="64 64 896 896" focusable="false" data-icon="ellipsis" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M176 511a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0z"></path></svg></span></button>
-      </div>
+  <!-- 素材数据不再分 tab、也不再出指标卡：只保留日期区间，具体素材的使用与转发进「详细数据」。 -->
+  <div class="rea-bd-row">
+    <span class="rea-bd-lab">日期区间</span>
+    <div class="ant-picker ant-picker-range ant-picker-outlined css-vgijab">
+      <div class="ant-picker-input"><input aria-invalid="false" autocomplete="off" size="12" placeholder="开始日期" date-range="start" value=""></div>
+      <div class="ant-picker-range-separator"><span aria-label="to" class="ant-picker-separator"><span role="img" aria-label="swap-right" class="anticon anticon-swap-right"><svg viewBox="64 64 896 896" focusable="false" data-icon="swap-right" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M873.1 596.2l-164-208A32 32 0 00684 376h-64.8c-6.7 0-10.4 7.7-6.3 13l144.3 183H152c-4.4 0-8 3.6-8 8v60c0 4.4 3.6 8 8 8h695.9c26.8 0 41.7-30.8 25.2-51.8z"></path></svg></span></span></div>
+      <div class="ant-picker-input"><input aria-invalid="false" autocomplete="off" size="12" placeholder="结束日期" date-range="end" value=""></div>
+      <div class="ant-picker-active-bar" style="position: absolute; width: 0px;"></div>
+      <span class="ant-picker-suffix"><span role="img" aria-label="calendar" class="anticon anticon-calendar"><svg viewBox="64 64 896 896" focusable="false" data-icon="calendar" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M880 184H712v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H384v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H144c-17.7 0-32 14.3-32 32v664c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V216c0-17.7-14.3-32-32-32zm-40 656H184V460h656v380zM184 392V256h128v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h256v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h128v136H184z"></path></svg></span></span>
     </div>
-    <div class="ant-tabs-content-holder"><div class="ant-tabs-content ant-tabs-content-top">
-      <div role="tabpanel" tabindex="0" aria-hidden="false" class="ant-tabs-tabpane ant-tabs-tabpane-active" data-bd-pane="m-quan">
-        <p class="rea-bd-note">15 条 ＝ 上方两条发圈任务的已执行之和（7 ＋ 8），口径一致。<b>朋友圈发出后拿不到阅读次数与阅读时间</b>——端侧没有可回传的曝光／阅读字段，所以这一格只呈现「发了多少」，不呈现任何阅读效果指标（PRD §3.4）。</p>
-        <div class="_threeBox_13z6g_50 rea-bd-cfg" style="padding: 14px 0 4px;">
-          <div class="_card_13z6g_53" style="padding: 18px 0;"><p class="_cardTitle_13z6g_60">已发布条数</p><p class="_cardNum_13z6g_66">15</p></div>
-          <div class="_card_13z6g_53" style="padding: 18px 0;"><p class="_cardTitle_13z6g_60">应发人次</p><p class="_cardNum_13z6g_66">18</p></div>
-          <div class="_card_13z6g_53" style="padding: 18px 0;"><p class="_cardTitle_13z6g_60">发布完成率</p><p class="_cardNum_13z6g_66">83.3<span>%</span></p></div>
-          <div class="_card_13z6g_53" style="padding: 18px 0;"><p class="_cardTitle_13z6g_60">涉及发圈任务</p><p class="_cardNum_13z6g_66">2<span> 条</span></p></div>
-        </div>
-      </div>
-      <div role="tabpanel" tabindex="0" aria-hidden="true" class="ant-tabs-tabpane ant-tabs-tabpane-hidden" data-bd-pane="m-art">
-        <p class="rea-bd-note">文章是唯一<b>可追踪</b>的素材类型（带原文链接，能回收到获客与转发）——这也是现网给它挂「可追踪」角标的原因。</p>
-        <div class="_threeBox_13z6g_50 rea-bd-cfg" style="padding: 14px 0 4px;">
-          <div class="_card_13z6g_53" style="padding: 18px 0;"><p class="_cardTitle_13z6g_60">获客人数</p><p class="_cardNum_13z6g_66">86<span> 人</span></p></div>
-          <div class="_card_13z6g_53" style="padding: 18px 0;"><p class="_cardTitle_13z6g_60">转发次数</p><p class="_cardNum_13z6g_66">214</p></div>
-        </div>
-      </div>
-      <div role="tabpanel" tabindex="0" aria-hidden="true" class="ant-tabs-tabpane ant-tabs-tabpane-hidden" data-bd-pane="m-mat">
-        <p class="rea-bd-note">「热门」直接复用素材库的既有定义：<b>被发圈任务引用</b>（ADR-0040），不另造一个口径。样例素材「秋季新品主推」被 2 条任务引用、被 15 人发过圈。</p>
-        <div class="_threeBox_13z6g_50 rea-bd-cfg" style="padding: 14px 0 4px;">
-          <div class="_card_13z6g_53" style="padding: 18px 0;"><p class="_cardTitle_13z6g_60">被引用任务数</p><p class="_cardNum_13z6g_66">2</p></div>
-          <div class="_card_13z6g_53" style="padding: 18px 0;"><p class="_cardTitle_13z6g_60">被发过圈的人数</p><p class="_cardNum_13z6g_66">15<span> 人</span></p></div>
-        </div>
-      </div>
-      <div role="tabpanel" tabindex="0" aria-hidden="true" class="ant-tabs-tabpane ant-tabs-tabpane-hidden" data-bd-pane="m-cus">
-        <p class="rea-bd-note">口径是<b>已执行</b>的人次（11 ／ 4 ／ 5），不是应执行——「被触达」说的是真发出去了多少。看板只收任务侧记录，不收销售端在悬浮窗里的自发取用（docs/11 §9）。</p>
-        <div class="_threeBox_13z6g_50 rea-bd-cfg" style="padding: 14px 0 4px;">
-          <div class="_card_13z6g_53" style="padding: 18px 0;"><p class="_cardTitle_13z6g_60">加好友 · 已触达人次</p><p class="_cardNum_13z6g_66">11</p></div>
-          <div class="_card_13z6g_53" style="padding: 18px 0;"><p class="_cardTitle_13z6g_60">关联 · 已触达人次</p><p class="_cardNum_13z6g_66">4</p></div>
-          <div class="_card_13z6g_53" style="padding: 18px 0;"><p class="_cardTitle_13z6g_60">群发群组 · 已触达人次</p><p class="_cardNum_13z6g_66">5</p></div>
-        </div>
-      </div>
-    </div></div>
   </div>
-  <p class="rea-bd-note" id="rea-bd-mat-nodata" hidden><b>数据未就绪 · T+1 产出</b> —— 效果层（发圈／文章／素材／客户与群）由离线任务在次日凌晨跑出，<b>当天没有数</b>。换成含今日的窗口时这一整层不给数，也不拿昨天的旧值顶上来（PRD §2.7）。</p>
 </div>
 </div></div>
 </script>
 
 <!-- ============ 覆盖页之外的两张「详细数据」子页 ============
-     现网「任务执行 › 详细数据」「素材与效果 › 详细数据」指向 board/wxz/task、board/wxz/material，
+     现网「任务执行 › 详细数据」「素材数据 › 详细数据」指向 board/wxz/task、board/wxz/material，
      这两个路由**不在 36 页快照里**（抓存件没有它们），所以点原来那两条 href 会把 iframe 导航到
      现网测试地址、在原型里表现为空白页。这里按 ADR-0043 的覆盖机制补两张子页：
      页名与正文由外壳脚本在运行时合成（克隆 微小助看板 的侧栏／顶栏外壳，只换正文区），
@@ -10518,7 +10481,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     + '.rea-bd-bad[hidden]{display:none}'
     /* 按窗口整块收起的几处：这些块自带 display，UA 的 [hidden] 压不住，
        各补一条 display:none（同 .rea-bd-bad 的写法） */
-    + '#rea-bd-mat-tabs[hidden],#rea-bd-mat-nodata[hidden],#rea-dtl-mat-nodata[hidden]{display:none}';
+    + '#rea-dtl-mat-nodata[hidden]{display:none}';
 
   /* 注入进覆盖页的脚本。与 REA_FX 的分工：REA_FX 只认 AntD 自己的类名
      （单选框、开关、表格行悬停），本脚本只管本页新加的那几块，两者不交叉。
@@ -10975,20 +10938,13 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     '  parent.postMessage({reaPage:to,reaWin:CURW,reaRows:dumpRows()},"*");',
     '});',
 
-    'function setEffect(w){',
-    '  var mat=document.getElementById("rea-bd-mat-tabs"),nd=document.getElementById("rea-bd-mat-nodata"),',
-    '      off=(w==="today");',
-    '  if(mat)mat.hidden=off;',
-    '  if(nd)nd.hidden=!off;',
-    '}',
-
     '/* 换窗口＝换一份数：三卡之外的三块（类型概览／欠账清单／组织范围）一起动。',
     '   三卡是唯一的例外——它们固定看「今日」，不跟这个窗口走（PRD §2.2）。 */',
     'function applyWin(w){',
     '  CURW=w;',
     '  fill(document.getElementById("rea-bd-cards"),tally(winRows("today")),true);',
     '  renderTypes(w);renderFollow(w);renderOrg(w);',
-    '  setEffect(w);typesCheck(w);',
+    '  typesCheck(w);',
     '}',
     '/* 时间窗的点击：接数的档照常走（点选态仍交给 REA_FX），没接数的档在捕获阶段',
     '   拦掉这次点选、**页上不给任何说明**——那六档本来就没有对应的演示集，',
