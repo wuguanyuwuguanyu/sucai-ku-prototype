@@ -9642,8 +9642,8 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
       <span><i class="rea-bd-key o"></i>逾期未做</span>
     </div>
 
-    <!-- 7 类固定顺序、一行一类：条长＝占「应执行」的比例，三段与三张卡同色同义
-         （绿＝已执行 · 紫＝待执行未逾期 · 橙＝逾期）。某类在当前窗口为 0 也保留空行，
+    <!-- 7 类固定顺序、一行一类：条长＝占「应执行」的比例，三段与三张卡同义
+         （绿＝已执行 · 浅蓝＝待执行未逾期 · 橙＝逾期）。某类在当前窗口为 0 也保留空行，
          不跳位——跨窗口、跨类型才比得起来。 -->
     <div class="rea-bd-types" id="rea-bd-types"></div>
 
@@ -10429,14 +10429,14 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     /* 板块标题右侧的分工说明：标题行是 space-between，靠 margin-right:auto 把它
        贴在标题后面，别让三个子元素各占一边 */
     + '._title_gf4go_8>span.rea-bd-title-sub{color:#999999;margin-left:10px;margin-right:auto}'
-    /* 7 类完成度：一行一类，固定顺序。条长＝占「应执行」的比例，三段与三张卡同色同义
-       （绿 #00c28a 已执行 · 紫 #9d53ff 待执行未逾期 · 橙 #ff8f17 逾期）——
-       三色都取自快照里已在用的卡渐变端色，不引入新色；紫取渐变深端而不是 #c250ff，
-       是因为 #c250ff 在 8px 细条上太扎眼，深端与三张卡仍是一套色。 */
+    /* 7 类完成度：一行一类，固定顺序。条长＝占「应执行」的比例，绿／蓝／橙三段分别对
+       已执行／待执行未逾期／逾期（绿 #00c28a · 橙 #ff8f17 取卡渐变端色；
+       蓝 #69b1ff 取 AntD 蓝 4，和看板主色 #1677ff 同一支色阶——原先是紫 #9d53ff，
+       产品嫌紫色条太扎眼，改浅蓝，别再改回去）。 */
     + '.rea-bd-legend{display:flex;flex-wrap:wrap;gap:18px;margin:12px 0 0;color:#748194;font-size:12px}'
     + '.rea-bd-legend>span{display:inline-flex;align-items:center;gap:6px}'
     + '.rea-bd-key{display:inline-block;width:8px;height:8px;border-radius:2px}'
-    + '.rea-bd-key.d{background:#00c28a}.rea-bd-key.l{background:#9d53ff}.rea-bd-key.o{background:#ff8f17}'
+    + '.rea-bd-key.d{background:#00c28a}.rea-bd-key.l{background:#69b1ff}.rea-bd-key.o{background:#ff8f17}'
     + '.rea-bd-types{margin-top:10px;border:1px solid #f0f0f2;border-radius:6px;overflow:hidden}'
     + '.rea-bd-type{display:flex;align-items:center;gap:14px;padding:9px 16px;cursor:pointer;border-top:1px solid #f0f0f2}'
     + '.rea-bd-type:first-child{border-top:0}'
@@ -10457,7 +10457,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     /* 2px 白缝把三段分开，不再糊成一根彩带 */
     + '.rea-bd-track>i+i{box-shadow:inset 2px 0 0 #ffffff}'
     + '.rea-bd-track>i.d{background:#00c28a}'
-    + '.rea-bd-track>i.l{background:#9d53ff}'
+    + '.rea-bd-track>i.l{background:#69b1ff}'
     + '.rea-bd-track>i.o{background:#ff8f17}'
     /* 欠账清单的进度格：上面一行「已执行 / 应执行 ＋ 百分比」，下面细条——比只有条好读 */
     + '.rea-bd-pg .n{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:#333333;font-variant-numeric:tabular-nums}'
@@ -10903,7 +10903,7 @@ window.addEventListener("resize",function(){
     '  for(i=0;i<ns.length;i++)out.push({n:ns[i],o:ORG_OF[ns[i]],d:i<d,l:i>=d,over:i>=d&&over>0});',
     '  return out;',
     '}',
-    '/* 三色分段条：绿＝已执行、紫＝待执行未逾期、橙＝逾期。用 flex 权重直接吃原始人次，',
+    '/* 三色分段条：绿＝已执行、浅蓝＝待执行未逾期、橙＝逾期。用 flex 权重直接吃原始人次，',
     '   不做百分比取整——三段宽度天然加起来是 100%，不会因为四舍五入留缝或溢出。',
     '   条只编码状态，不做「低于多少算差」的阈值判读（PRD §5.6）。 */',
     'function seg(need,done,left,over,small){',
@@ -11296,7 +11296,7 @@ window.addEventListener("resize",function(){
     'var CURW=DAY[WIN]!==undefined?WIN:"d1";',
     'function winRows(w){var d=DAY[w],o=[],i;for(i=0;i<ROWS.length;i++)if(ROWS[i].day===d)o.push(ROWS[i]);return o}',
     'function rate(r){return r.need?r.done/r.need*100:0}',
-    '/* 分段条与看板同色同义：绿＝已执行、紫＝待执行未逾期、橙＝逾期（PRD §5.6）。 */',
+    '/* 分段条与看板同色同义：绿＝已执行、浅蓝＝待执行未逾期、橙＝逾期（PRD §5.6）。 */',
     'function seg(need,done,left,over){',
     '  var pend=left-over;if(pend<0)pend=0;',
     '  var h="<span class=\\"rea-bd-track sm\\">";',
