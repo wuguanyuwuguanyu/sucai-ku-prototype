@@ -1225,11 +1225,11 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
    ★ 产品另一条：**闲置多久会自动执行**得摆在首页——它原先是设置页「闲置时长」那一格的值，
      这里抄在右卡底部，读的仍是同一个 HVA_IDLE（hvaIdle 改完会连主页一起重画），不另存一份。
    ★ 左卡 .hva-ca 是 position:relative ＋ overflow:hidden：形象贴卡底、被 22 圆角裁一刀，照参考图那股劲儿。
-   尺寸：14 + 224 + 12 + 148 + 14 = 412；两卡同高 140（比例 224:140 ≈ 1.6，与参考图两卡约 1.56 对得上），
-   头卡舞台＝140＋上下各 14＝168。 */
-.hva-head-c{height:168px}
-.hva-hero-c{height:168px}
-.hva-hero-c .hva-ca{position:absolute;left:14px;top:14px;width:224px;height:140px;border-radius:22px;
+   尺寸：14 + 224 + 12 + 148 + 14 = 412；两卡同高 120（比例 224:120 ≈ 1.87，比参考图更扁，
+   是产品 2026-10-21 手调出来的），头卡舞台＝上 14＋卡 120＋下 11＝145。 */
+.hva-head-c{height:145px}
+.hva-hero-c{height:145px}
+.hva-hero-c .hva-ca{position:absolute;left:14px;top:14px;width:224px;height:120px;border-radius:22px;
   overflow:hidden;background:linear-gradient(155deg,#EAECF1,#D5DAE3)}
 .hva-hero-c .hva-ca.on{background:linear-gradient(155deg,#EAF2FF,#E8DFFF)}
 .hva-ca-h{position:absolute;left:14px;top:12px;display:flex;align-items:center;gap:7px}
@@ -1254,15 +1254,17 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .hva-hero-c .hva-cta.on .hva-sw i{left:18px}
 /* 右卡：白底，上面一枚大圆「设置」，底下两行是托管条件的现值（工作时间／闲置多久自动执行）。
    .hva-quick 在这一套里回到流里（前两套是绝对定位／display:contents），里面只剩一枚 .hva-qk。 */
-.hva-hero-c .hva-cb{position:absolute;left:250px;top:14px;width:148px;height:140px;border-radius:22px;
-  background:#fff;padding:17px 14px;display:flex;flex-direction:column;justify-content:space-between;
+.hva-hero-c .hva-cb{position:absolute;left:250px;top:14px;width:148px;height:120px;border-radius:22px;
+  background:#fff;padding:14px;display:flex;flex-direction:column;justify-content:space-between;
   box-shadow:0 12px 26px -20px rgba(60,80,130,.85),0 2px 8px -6px rgba(70,90,150,.22)}
 .hva-hero-c .hva-quick{position:static;inset:auto;pointer-events:auto}
+/* justify-content 必须显式写 flex-start：基类 .hva-qk 是居中排的（前两套就一枚图标／一枚胶囊，居中看不出），
+   这一套「圆＋字」整行居中后圆会离卡左缘 19.5px，跟下面两行现值（贴左缘）错开一截。 */
 .hva-hero-c .hva-qk{position:static;left:auto;top:auto;right:auto;width:100%;height:auto;
-  display:flex;align-items:center;gap:9px;padding:0;color:#3D4A63}
+  display:flex;align-items:center;justify-content:flex-start;gap:9px;padding:0;color:#3D4A63}
 .hva-hero-c .hva-qkcir{flex:none;width:38px;height:38px;border-radius:50%;color:#fff;
   background:linear-gradient(135deg,#2E86FF,#9452FF);box-shadow:0 8px 16px -11px rgba(80,90,220,.95)}
-.hva-cb-tx{display:flex;align-items:center;gap:3px;font-size:13px;font-weight:600;color:#3D4A63;white-space:nowrap}
+.hva-cb-tx{display:flex;align-items:center;gap:3px;font-size:15px;line-height:20px;font-weight:600;color:#3D4A63;white-space:nowrap}
 .hva-cb-tx i{font-style:normal;font-weight:400;color:#A9B3C5}
 /* 右卡底部那两行「现值」：11px，比卡上别的字小一档但不至于要看第二眼；
    一条淡分隔线把它和上面的入口分开——上面是「去做」，下面是「现在是」。 */
