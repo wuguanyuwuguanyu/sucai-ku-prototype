@@ -7,7 +7,7 @@
      故**不内嵌**而外挂在同级 _online-admin.js（由 tools/build_online_admin.py 生成），首次切到该视图才按需加载（另一视图不受拖累）。
      其中若干页按 ADR-0043 被**逐页覆盖**（微小助看板换新稿、素材库 · 新建加交互、
      小红书运营四页改配置口径并补「任务配置快照」页）：
-     覆盖块的正文另有四块载体（srcBoard / srcBoardTask / srcBoardMat / srcXhsSnapshot，见 REA_COVER），
+     覆盖块的正文另有三块载体（srcBoard / srcBoardTask / srcXhsSnapshot，见 REA_COVER），
      注入的样式与脚本写在 reaBoardJs/reaMatJs/reaXhs*.js 里。
      编辑规则：载体块内即普通 HTML/CSS/JS，唯闭标签须写作转义形态 <\/script>（防载体块被提前终止）；
      改完跑 python3 tools/check_all.py 校验完整性（--extract app 可单端导出还原文本）。 -->
@@ -9559,7 +9559,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   </div>
 
   <!-- 时间窗（PRD §2.2／§4.4）：它现在归「任务执行」板块，筛的是这张任务台账，
-       本板块里的「各大区完成率」（文档里叫组织范围）也吃这个窗口。素材数据有自己的日期区间，不跟这个窗口走。
+       本板块里的「各大区完成率」（文档里叫组织范围）也吃这个窗口；下方「群发好友回复」按周汇总，不跟这个窗口走。
        业务域三枚标签已撤：企业微信／悬浮窗两张看板走侧栏进，不在本页顶部再挂一个切换器。
        本板块上方的执行健康度三卡固定看今日，不跟这个窗口走。 -->
   <div class="rea-bd-row">
@@ -9687,7 +9687,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
       </div></div>
     </div>
 
-    <!-- 全量任务台账不再上板，但仍是这一块与两张子页的**唯一数据源**：
+    <!-- 全量任务台账不再上板，但仍是这一块与执行人明细子页的**唯一数据源**：
          7 类完成度、大区完成率、欠账清单、执行人明细全部从这 16 行派生。
          藏起来是为了不再把模块列表抄一遍，不是为了删数——行上的 data-bd-* 与
          相对日期（data-rea-d）照旧受自检保护。 -->
@@ -9931,6 +9931,37 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   </div>
 </div>
 
+<!-- 群发好友回复 · **独立板块**（第 3 层 · 效果）。
+     任务执行回答「做没做」，这一块回答「做了以后好友回没回」——好友回没回是端侧能回传的，
+     所以它是看板上唯一一项有反馈的效果数据。按周汇总：日粒度太碎（一天的群发任务数不固定，
+     曲线全是锯齿），月粒度又把运营动作抹平（PRD §2.7 / §3.4）。
+     周窗口与上方任务时间窗无关：时间窗筛的是「哪一段任务」，这里看的是「哪几周的回信」。 -->
+<div class="_board_gf4go_1" id="rea-qft" style="margin-top: 21px; padding-bottom: 28px;">
+  <div class="rea-qft-hd">
+    <h6>群发好友回复</h6>
+    <span class="sub">效果 · 按周汇总 · 截至昨日</span>
+    <div class="ant-radio-group ant-radio-group-solid css-vgijab rea-qft-win" id="rea-qft-win">
+      <div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small">
+        <div class="ant-space-item">
+          <label class="ant-radio-button-wrapper css-vgijab" data-qft-win="4">
+            <span class="ant-radio-button"><input name="rea-qft-win" class="ant-radio-button-input" type="radio" value="4"><span class="ant-radio-button-inner"></span></span>
+            <span class="ant-radio-button-label">近 4 周</span>
+          </label>
+        </div>
+        <div class="ant-space-item">
+          <label class="ant-radio-button-wrapper ant-radio-button-wrapper-checked css-vgijab" data-qft-win="12">
+            <span class="ant-radio-button ant-radio-button-checked"><input name="rea-qft-win" class="ant-radio-button-input" type="radio" value="12" checked=""><span class="ant-radio-button-inner"></span></span>
+            <span class="ant-radio-button-label">近 12 周</span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="rea-qft-kpis" id="rea-qft-kpis"></div>
+  <div class="rea-qft-chart" id="rea-qft-chart"></div>
+  <p class="rea-bd-note">回复率 ＝ 已回复好友数 ÷ 已发送好友数，按群发任务记录；环比为前一个等长窗口。<b>效果层 T+1</b>，本周尚未走完，最后一根柱标「回补中」。逐任务的好友列表在「微信营销任务 › 群发好友 › 详情」里看。</p>
+</div>
+
 <!-- 配置 / 资产 · **独立板块**（不与任务执行共用 tabs，也不共用指标）。
      这 3 个模块没有「完成率」这个概念：智能回复是规则，自动打招呼是模版，
      微信群管理是资产台账。指标各自带周期（近 7 日 / 群总数 / 模版数），**不随时间窗变**——
@@ -9981,62 +10012,14 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   </div>
 </div>
 
-<div class="_board_gf4go_1" style="margin-top: 21px; padding-bottom: 28px;">
-  <div class="_title_gf4go_8" style="padding-bottom: 0px;">
-    <h6>素材数据</h6>
-    <a href="#" data-bd-detail="mat">详细数据<span role="img" aria-label="right" class="anticon anticon-right"><svg viewBox="64 64 896 896" focusable="false" data-icon="right" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"></path></svg></span></a>
-  </div>
-  <!-- 素材数据不分 tab：上面是日期区间，下面给一眼总览；细到任务与素材的拆解进「详细数据」。
-       四个数与明细页同源——发圈与客户与群从任务台账的已执行人次求和，文章那两个是明细页的同一份演示数。 -->
-  <div class="rea-bd-row">
-    <span class="rea-bd-lab">日期区间</span>
-    <div class="ant-picker ant-picker-range ant-picker-outlined css-vgijab" id="rea-bd-mat-range">
-      <div class="ant-picker-input"><input aria-invalid="false" autocomplete="off" size="12" placeholder="开始日期" date-range="start" value=""></div>
-      <div class="ant-picker-range-separator"><span aria-label="to" class="ant-picker-separator"><span role="img" aria-label="swap-right" class="anticon anticon-swap-right"><svg viewBox="64 64 896 896" focusable="false" data-icon="swap-right" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M873.1 596.2l-164-208A32 32 0 00684 376h-64.8c-6.7 0-10.4 7.7-6.3 13l144.3 183H152c-4.4 0-8 3.6-8 8v60c0 4.4 3.6 8 8 8h695.9c26.8 0 41.7-30.8 25.2-51.8z"></path></svg></span></span></div>
-      <div class="ant-picker-input"><input aria-invalid="false" autocomplete="off" size="12" placeholder="结束日期" date-range="end" value=""></div>
-      <div class="ant-picker-active-bar" style="position: absolute; width: 0px;"></div>
-      <span class="ant-picker-suffix"><span role="img" aria-label="calendar" class="anticon anticon-calendar"><svg viewBox="64 64 896 896" focusable="false" data-icon="calendar" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M880 184H712v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H384v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H144c-17.7 0-32 14.3-32 32v664c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V216c0-17.7-14.3-32-32-32zm-40 656H184V460h656v380zM184 392V256h128v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h256v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h128v136H184z"></path></svg></span></span>
-    </div>
-  </div>
-  <div class="_threeBox_13z6g_50 rea-bd-cfg" style="padding: 14px 0 4px;" id="rea-bd-mat-cards"></div>
-  <!-- 群发好友回复：素材数据里唯一有「回传」的效果项——好友回没回，端侧拿得到。
-       按周汇总（日粒度太碎、月粒度看不出运营动作），本周因为效果层 T+1 还没走完，标「回补中」。 -->
-  <div class="rea-qft" id="rea-qft">
-    <div class="rea-qft-hd">
-      <h6>群发好友回复</h6>
-      <span class="sub">按周汇总 · 截至昨日</span>
-      <div class="ant-radio-group ant-radio-group-solid css-vgijab rea-qft-win" id="rea-qft-win">
-        <div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small">
-          <div class="ant-space-item">
-            <label class="ant-radio-button-wrapper css-vgijab" data-qft-win="4">
-              <span class="ant-radio-button"><input name="rea-qft-win" class="ant-radio-button-input" type="radio" value="4"><span class="ant-radio-button-inner"></span></span>
-              <span class="ant-radio-button-label">近 4 周</span>
-            </label>
-          </div>
-          <div class="ant-space-item">
-            <label class="ant-radio-button-wrapper ant-radio-button-wrapper-checked css-vgijab" data-qft-win="12">
-              <span class="ant-radio-button ant-radio-button-checked"><input name="rea-qft-win" class="ant-radio-button-input" type="radio" value="12" checked=""><span class="ant-radio-button-inner"></span></span>
-              <span class="ant-radio-button-label">近 12 周</span>
-            </label>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="rea-qft-kpis" id="rea-qft-kpis"></div>
-    <div class="rea-qft-chart" id="rea-qft-chart"></div>
-    <p class="rea-bd-note">回复率 ＝ 已回复好友数 ÷ 已发送好友数，按群发任务记录；环比为前一个等长窗口。<b>效果层 T+1</b>，本周尚未走完，最后一根柱标「回补中」。点「详细数据」可按任务拆到好友列表。</p>
-  </div>
-  <p class="rea-bd-note">按所选日期区间汇总，每一段都能在「详细数据」里拆到任务与素材；效果层由离线任务次日产出，区间含今天时明细页不给数。</p>
-</div>
-</div></div>
+  </div></div>
 </script>
 
-<!-- ============ 覆盖页之外的两张「详细数据」子页 ============
-     现网「任务执行 › 详细数据」「素材数据 › 详细数据」指向 board/wxz/task、board/wxz/material，
-     这两个路由**不在 36 页快照里**（抓存件没有它们），所以点原来那两条 href 会把 iframe 导航到
-     现网测试地址、在原型里表现为空白页。这里按 ADR-0043 的覆盖机制补两张子页：
-     页名与正文由外壳脚本在运行时合成（克隆 微小助看板 的侧栏／顶栏外壳，只换正文区），
-     行数据由看板页在点「详细数据」时一并带过来，**不另编一份**。 -->
+<!-- ============ 覆盖页之外的「详细数据」子页 ============
+     现网「任务执行 › 详细数据」指向 board/wxz/task，这条路由**不在 36 页快照里**（抓存件没有它），
+     所以点原来那条 href 会把 iframe 导航到现网测试地址、在原型里表现为空白页。这里按 ADR-0043
+     的覆盖机制补一张子页：页名与正文由外壳脚本在运行时合成（克隆 微小助看板 的侧栏／顶栏外壳，
+     只换正文区），行数据由看板页在点「详细数据」时一并带过来，**不另编一份**。 -->
 <script type="text/plain" id="srcBoardTask">
 <div class="_board_gf4go_1" style="padding-bottom: 28px;">
   <div class="_title_gf4go_8">
@@ -10090,121 +10073,6 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
         </div></div>
       </div>
     </div></div>
-  </div>
-</div>
-</script>
-
-<script type="text/plain" id="srcBoardMat">
-<div class="_board_gf4go_1" style="padding-bottom: 28px;">
-  <div class="_title_gf4go_8">
-    <h6>素材明细</h6>
-    <a href="#" data-rea="微小助看板" class="rea-bd-back">← 返回看板</a>
-  </div>
-  <div class="ant-divider css-vgijab ant-divider-horizontal" role="separator" style="margin: 0px;"></div>
-  <div class="rea-bd-row">
-    <span class="rea-bd-lab">时间窗</span>
-    <div class="ant-radio-group ant-radio-group-solid css-vgijab" id="rea-dtl-mat-win">
-      <div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small">
-        <div class="ant-space-item">
-          <label class="ant-radio-button-wrapper css-vgijab" data-dtl-win="today">
-            <span class="ant-radio-button"><input name="rea-dtl-mat-win" class="ant-radio-button-input" type="radio" value="0"><span class="ant-radio-button-inner"></span></span>
-            <span class="ant-radio-button-label">今日</span>
-          </label>
-        </div>
-        <div class="ant-space-item">
-          <label class="ant-radio-button-wrapper ant-radio-button-wrapper-checked css-vgijab" data-dtl-win="d1">
-            <span class="ant-radio-button ant-radio-button-checked"><input name="rea-dtl-mat-win" class="ant-radio-button-input" type="radio" value="1" checked=""><span class="ant-radio-button-inner"></span></span>
-            <span class="ant-radio-button-label">昨天</span>
-          </label>
-        </div>
-      </div>
-    </div>
-    <span class="rea-bd-sep"></span>
-    <span class="rea-bd-lab">数据更新时间：<span data-rea-d="now@now"></span></span>
-  </div>
-  <p class="rea-bd-note" id="rea-dtl-mat-nodata" hidden><b>数据未就绪 · T+1 产出</b> —— 效果层由离线任务在次日凌晨跑出，<b>当天没有数</b>。换成含今日的窗口时这一页不给数，也不拿昨天的旧值顶上来（PRD §2.7）。</p>
-  <div id="rea-dtl-mat-body">
-    <div style="margin-top: 16px;">
-      <h6 class="rea-dtl-h">发圈</h6>
-      <p class="rea-bd-note">已发布条数 ＝ 发圈任务的已执行人次之和。<b>朋友圈发出后拿不到阅读次数与阅读时间</b>，所以这里不出现任何阅读指标——能看到的只有「发了多少」。</p>
-      <div class="_threeBox_13z6g_50 rea-bd-cfg" id="rea-dtl-mat-quan-cards" style="padding: 14px 0 4px;"></div>
-      <div class="ant-table-wrapper css-vgijab rea-bd-table" style="margin-top: 10px;">
-        <div class="ant-spin-nested-loading css-vgijab"><div class="ant-spin-container">
-          <div class="ant-table ant-table-middle css-vgijab"><div class="ant-table-container"><div class="ant-table-content">
-            <table style="table-layout: fixed;">
-              <colgroup><col style="width: 34%"><col style="width: 16%"><col style="width: 16%"><col style="width: 17%"><col style="width: 17%"></colgroup>
-              <thead class="ant-table-thead"><tr>
-                <th scope="col" class="ant-table-cell">任务名称</th>
-                <th scope="col" class="ant-table-cell">创建人</th>
-                <th scope="col" class="ant-table-cell">应发人次</th>
-                <th scope="col" class="ant-table-cell">已发布条数</th>
-                <th scope="col" class="ant-table-cell">完成率</th>
-              </tr></thead>
-              <tbody class="ant-table-tbody" id="rea-dtl-mat-quan-body"></tbody>
-            </table>
-          </div></div></div>
-        </div></div>
-      </div>
-    </div>
-    <div style="margin-top: 20px;">
-      <h6 class="rea-dtl-h">文章 <span class="ant-badge css-vgijab"><sup class="ant-scroll-number ant-badge-count ant-badge-multiple-words" title="可追踪" style="background-color: rgb(36, 204, 185); padding: 0px 4px;">可追踪</sup></span></h6>
-      <p class="rea-bd-note">文章带原文链接，是唯一能回收到获客与转发的素材类型。</p>
-      <div class="_threeBox_13z6g_50 rea-bd-cfg" style="padding: 14px 0 4px;">
-        <div class="_card_13z6g_53" style="padding: 18px 0;"><p class="_cardTitle_13z6g_60">获客人数</p><p class="_cardNum_13z6g_66">86<span> 人</span></p></div>
-        <div class="_card_13z6g_53" style="padding: 18px 0;"><p class="_cardTitle_13z6g_60">转发次数</p><p class="_cardNum_13z6g_66">214</p></div>
-      </div>
-    </div>
-    <div style="margin-top: 20px;">
-      <h6 class="rea-dtl-h">素材</h6>
-      <p class="rea-bd-note">「热门」直接复用素材库的既有定义：<b>被发圈任务引用</b>（ADR-0040），不另造口径。</p>
-      <div class="_threeBox_13z6g_50 rea-bd-cfg" style="padding: 14px 0 4px;">
-        <div class="_card_13z6g_53" style="padding: 18px 0;"><p class="_cardTitle_13z6g_60">被引用任务数</p><p class="_cardNum_13z6g_66">2</p><p class="rea-dtl-sub">秋季新品主推</p></div>
-        <div class="_card_13z6g_53" style="padding: 18px 0;"><p class="_cardTitle_13z6g_60">被发过圈的人数</p><p class="_cardNum_13z6g_66">15<span> 人</span></p><p class="rea-dtl-sub">秋季新品主推</p></div>
-      </div>
-    </div>
-    <div style="margin-top: 20px;">
-      <h6 class="rea-dtl-h">客户与群</h6>
-      <p class="rea-bd-note">口径是<b>已执行</b>的人次，不是应执行——「被触达」说的是真发出去了多少。看板只收任务侧记录，不收销售端自发取用。</p>
-      <div class="ant-table-wrapper css-vgijab rea-bd-table" style="margin-top: 10px;">
-        <div class="ant-spin-nested-loading css-vgijab"><div class="ant-spin-container">
-          <div class="ant-table ant-table-middle css-vgijab"><div class="ant-table-container"><div class="ant-table-content">
-            <table style="table-layout: fixed;">
-              <colgroup><col style="width: 28%"><col style="width: 18%"><col style="width: 27%"><col style="width: 27%"></colgroup>
-              <thead class="ant-table-thead"><tr>
-                <th scope="col" class="ant-table-cell">任务类型</th>
-                <th scope="col" class="ant-table-cell">任务数</th>
-                <th scope="col" class="ant-table-cell">应触达人次</th>
-                <th scope="col" class="ant-table-cell">已触达人次</th>
-              </tr></thead>
-              <tbody class="ant-table-tbody" id="rea-dtl-mat-cus-body"></tbody>
-            </table>
-          </div></div></div>
-        </div></div>
-      </div>
-    </div>
-    <div style="margin-top: 20px;">
-      <h6 class="rea-dtl-h">群发好友 <span class="ant-badge css-vgijab"><sup class="ant-scroll-number ant-badge-count ant-badge-multiple-words" title="可追踪" style="background-color: rgb(36, 204, 185); padding: 0px 4px;">可追踪</sup></span></h6>
-      <p class="rea-bd-note">回复率 ＝ <b>已回复好友数 ÷ 已发送好友数</b>；好友回没回是端侧拿得到的，所以这一项不像发圈那样只能看「发了多少」。点数字打开「群发好友列表」，点「已回复」时预筛「是否回复＝是」。</p>
-      <div class="_threeBox_13z6g_50 rea-bd-cfg" id="rea-dtl-mat-qf-cards" style="padding: 14px 0 4px;"></div>
-      <div class="ant-table-wrapper css-vgijab rea-bd-table" style="margin-top: 10px;">
-        <div class="ant-spin-nested-loading css-vgijab"><div class="ant-spin-container">
-          <div class="ant-table ant-table-middle css-vgijab"><div class="ant-table-container"><div class="ant-table-content">
-            <table style="table-layout: fixed;">
-              <colgroup><col style="width: 30%"><col style="width: 14%"><col style="width: 15%"><col style="width: 15%"><col style="width: 12%"><col style="width: 14%"></colgroup>
-              <thead class="ant-table-thead"><tr>
-                <th scope="col" class="ant-table-cell">任务名称</th>
-                <th scope="col" class="ant-table-cell">创建人</th>
-                <th scope="col" class="ant-table-cell">已发送好友数</th>
-                <th scope="col" class="ant-table-cell">已回复好友数</th>
-                <th scope="col" class="ant-table-cell">回复率</th>
-                <th scope="col" class="ant-table-cell">操作</th>
-              </tr></thead>
-              <tbody class="ant-table-tbody" id="rea-dtl-mat-qf-body"></tbody>
-            </table>
-          </div></div></div>
-        </div></div>
-      </div>
-    </div>
   </div>
 </div>
 </script>
@@ -10399,10 +10267,9 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
      由 reaSynthPages() 克隆详情页外壳合成，正文来自载体块 srcXhsSnapshot。
      只读，回答「这次执行为什么这么发」（PRD §4.10）。 */
   var REA_XHS_SNAPSHOT = '新小红书运营 · 任务配置快照';
-  /* 两张「详细数据」子页：现网路由（board/wxz/task、board/wxz/material）不在 36 页快照里，
-     由 reaSynthPages() 在运行时克隆看板页外壳合成，正文来自下面两个载体块。 */
+  /* 「详细数据」子页：现网路由 board/wxz/task 不在 36 页快照里，
+     由 reaSynthPages() 在运行时克隆看板页外壳合成，正文来自下面那个载体块。 */
   var REA_DETAIL_TASK = '微小助看板 · 执行人明细';
-  var REA_DETAIL_MAT  = '微小助看板 · 素材明细';
 
   /* 覆盖块的正文只取一次：那边是一整块静态 HTML，每换一次页都重取没意义 */
   var REA_HTML_CACHE = {};
@@ -10511,9 +10378,6 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     + '.rea-bd-over{color:#ff8f17}'
     + '.rea-bd-people,.rea-bd-span{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}'
     + '.rea-bd-table .ant-table-cell{white-space:nowrap}'
-    /* 素材明细「群发好友」表里的数字：点开好友列表，样式照 AntD 链接按钮 */
-    + '.rea-qf-link{color:#1677ff;text-decoration:none;font-variant-numeric:tabular-nums}'
-    + '.rea-qf-link:hover{color:#4096ff}'
     + '.rea-bd-tabs .ant-tabs-tab{cursor:pointer}'
     + '.rea-bd-tabs .ant-tabs-nav-list{flex-wrap:wrap}'
     /* 页签条不折字：执行型 8 个（「全部」＋ 7 类）一行装得下 */
@@ -10534,15 +10398,11 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     + '.rea-bd-bad{margin:14px 0 0;padding:10px 12px;border:1px solid #ff4d4f;background:#fffbe6;'
     +   'border-radius:4px;color:#ff4d4f;font-size:12px;line-height:1.7}'
     + '.rea-bd-bad[hidden]{display:none}'
-    /* 按窗口整块收起的几处：这些块自带 display，UA 的 [hidden] 压不住，
-       各补一条 display:none（同 .rea-bd-bad 的写法） */
-    + '#rea-dtl-mat-nodata[hidden]{display:none}'
-    /* 群发好友回复趋势：看板「素材数据」下的一块周趋势。图表是手绘 SVG（不引 ECharts），
+    /* 群发好友回复趋势：看板「群发好友回复」板块的周趋势。图表是手绘 SVG（不引 ECharts），
        但观感照 ECharts 的默认款：浅色网格、柱＋折线双轴、图例在左上、悬停浮窗。
        色仍只用看板已有的绿系（#00c28a 是「已执行」那根条的颜色），不引入新色板。 */
-    + '.rea-qft{margin-top:20px;padding:14px 16px 10px;border:1px solid #f0f0f2;border-radius:6px;background:#fff}'
-    + '.rea-qft-hd{display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px}'
-    + '.rea-qft-hd h6{margin:0;color:#333333;font-size:14px;font-weight:600}'
+    + '.rea-qft-hd{display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px;padding:15px 0 0}'
+    + '.rea-qft-hd h6{margin:0;color:var(--yk-text-bold);font-size:16px;font-weight:500}'
     + '.rea-qft-hd .sub{color:#999999;font-size:12px}'
     + '.rea-qft-hd .rea-qft-win{margin-left:auto}'
     + '.rea-qft-kpis{display:flex;flex-wrap:wrap;gap:12px 36px;margin:10px 0 0}'
@@ -10565,10 +10425,10 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     + '.rea-qft-tip .r b{margin-left:auto;padding-left:16px;font-weight:600;font-variant-numeric:tabular-nums}'
     + '.rea-qft-empty{padding:36px 0 30px;text-align:center;color:#999999;font-size:12px}';
 
-  /* 看板「素材数据 › 群发好友回复」的周趋势。手绘 SVG，不引任何图表库——
+  /* 看板「群发好友回复」板块的周趋势。手绘 SVG，不引任何图表库——
      观感照 ECharts 默认款（浅网格、柱＋折线双轴、左上图例、悬停浮窗），
      但节点、尺寸、配色都自己算，免得为一张图往 8MB 的载体里再塞一个库。
-     数据分两截：本周从台账的群发好友任务派生（与素材明细同一条 qfSentOf），
+     数据分两截：本周从台账的群发好友任务派生（qfSentOf），
      之前 23 周是确定性演示序列（同一页每次打开都是同一份，不随刷新跳）。
      效果层 T+1：本周只到昨天，所以最后一根柱标「回补中」，不冒充完整周。 */
   function reaQfTrendJs(){
@@ -11150,8 +11010,8 @@ window.addEventListener("resize",function(){
     '  return out;',
     '}',
 
-    '/* 「详细数据」两张子页不在 36 页快照里（现网那两条 href 指向 board/wxz/task、board/wxz/material，',
-    '   抓存件没抓这两条路由，直接点会把 iframe 导航出去、在原型里表现为空白页）。',
+    '/* 「详细数据」子页不在 36 页快照里（现网那条 href 指向 board/wxz/task，',
+    '   抓存件没抓这条路由，直接点会把 iframe 导航出去、在原型里表现为空白页）。',
     '   这里改成在原型内开子页，并把**当前窗口**与任务表整行一起带过去——',
     '   子页不另编一份数，看到的就是这一页此刻的同一张表。 */',
     'function dumpRows(){',
@@ -11184,7 +11044,7 @@ window.addEventListener("resize",function(){
     'var dl=document.querySelectorAll("[data-bd-detail]");',
     'for(var di=0;di<dl.length;di++)dl[di].addEventListener("click",function(e){',
     '  e.preventDefault();',
-    '  var to=this.getAttribute("data-bd-detail")==="task"?' + reaJson(REA_DETAIL_TASK) + ':' + reaJson(REA_DETAIL_MAT) + ';',
+    '  var to=' + reaJson(REA_DETAIL_TASK) + ';',
     '  parent.postMessage({reaPage:to,reaWin:CURW,reaRows:dumpRows()},"*");',
     '});',
 
@@ -11196,30 +11056,7 @@ window.addEventListener("resize",function(){
     '  renderTypes(w);renderFollow(w);renderOrg(w);',
     '  typesCheck(w);',
     '}',
-    '/* 素材数据（第 3 层）：四个数与「详细数据」同源——发圈与客户与群从台账的已执行人次求和，',
-    '   文章那两个是明细页的同一份演示数；它跟自己的日期区间走，不跟任务时间窗（PRD §2.7）。 */',
-    'function matCard(t,n,u,sub){return "<div class=\\"_card_13z6g_53\\" style=\\"padding:18px 0;\\"><p class=\\"_cardTitle_13z6g_60\\">"+t+"</p><p class=\\"_cardNum_13z6g_66\\">"+n+(u?"<span>"+u+"</span>":"")+"</p>"+(sub?"<p class=\\"rea-dtl-sub\\">"+sub+"</p>":"")+"</div>"}',
-    'function renderMat(){',
-    '  var el=document.getElementById("rea-bd-mat-cards");if(!el)return;',
-    '  var rs=winRows("d1"),qn=0,qd=0,tn=0,td=0,ACC={"批量加好友":1,"关联好友":1,"群发群组":1},i,r,t;',
-    '  for(i=0;i<rs.length;i++){r=rs[i];t=r.getAttribute("data-bd-type");',
-    '    if(t==="发圈"){qn+=+r.getAttribute("data-bd-need");qd+=+r.getAttribute("data-bd-done")}',
-    '    else if(ACC[t]){tn+=+r.getAttribute("data-bd-need");td+=+r.getAttribute("data-bd-done")}',
-    '  }',
-    '  el.innerHTML=matCard("发圈已发布",qd," 人次",qn?("应发 "+qn+" 人次 · "+(qd/qn*100).toFixed(1)+"%"):"")',
-    '    +matCard("文章获客",86," 人","")',
-    '    +matCard("文章转发",214," 次","")',
-    '    +matCard("客户与群已触达",td," 人次",tn?("应触达 "+tn+" 人次"):"");',
-    '}',
     reaQfTrendJs(),
-    '/* 日期区间默认落到昨天（与明细页默认窗口一致）；换区间去「详细数据」。 */',
-    'function fillMatDates(){',
-    '  var box=document.getElementById("rea-bd-mat-range");if(!box)return;',
-    '  var d=new Date(),i,ins;d.setDate(d.getDate()-1);',
-    '  var s=d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2);',
-    '  ins=box.querySelectorAll("input[date-range]");',
-    '  for(i=0;i<ins.length;i++)ins[i].value=s;',
-    '}',
     '/* 时间窗的点击：接数的档照常走（点选态仍交给 REA_FX），没接数的档在捕获阶段',
     '   拦掉这次点选、**页上不给任何说明**——那六档本来就没有对应的演示集，',
     '   点上去静默不动就是如实（docs/11 §8.3）；拦得住是因为 REA_FX 挂在 document 的冒泡阶段。 */',
@@ -11245,7 +11082,7 @@ window.addEventListener("resize",function(){
     'var gs=document.querySelectorAll(".rea-bd-tabs");',
     'for(var gi=0;gi<gs.length;gi++)tabs(gs[gi]);',
     'applyWin(DEFW);',   /* 装完页签再按默认窗口铺一遍数（三卡照旧写今日） */
-    'renderMat();fillMatDates();renderQfTrend();',
+    'renderQfTrend();',
 
     'if(BAD.length){',
     '  var el=document.getElementById("rea-bd-bad");',
@@ -11260,13 +11097,13 @@ window.addEventListener("resize",function(){
   }
 
   /* ============================================================
-     「详细数据」子页 ×2：执行人明细 / 素材明细
-     现网看板那两枚「详细数据」指向 board/wxz/task、board/wxz/material——**这两条路由
-     不在 36 页快照里**（抓存件只抓了 18 个模块页 ＋ 11 个新建页 ＋ 7 个详情页），
-     原来直接写死的 href 一点就把 iframe 导航到现网测试地址，在此视图里就是一张空白页。
-     现在改为原型内的两张子页（页名由 reaSynthPages 合成，正文是 srcBoardTask / srcBoardMat）。
+     「详细数据」子页：执行人明细
+     现网看板「任务执行」那枚「详细数据」指向 board/wxz/task——**这条路由不在 36 页快照里**
+     （抓存件只抓了 18 个模块页 ＋ 11 个新建页 ＋ 7 个详情页），原来直接写死的 href
+     一点就把 iframe 导航到现网测试地址，在此视图里就是一张空白页。
+     现在改为原型内的子页（页名由 reaSynthPages 合成，正文是 srcBoardTask）。
      数据全部由看板页点进来时随 postMessage 带过来（dumpRows），**不在这里另编一份**：
-     两页的数字与看板同一时刻的那张表一致，窗口切换也只在这个快照上重算。
+     子页的数字与看板同一时刻的那张表一致，窗口切换也只在这个快照上重算。
      设计语言照旧是 AntD：标题条 / 单选钮 / 表格全部复用快照里的类名。
      ============================================================ */
   function reaBoardTaskJs(){
@@ -11455,141 +11292,6 @@ window.addEventListener("resize",function(){
     '  CURW=id;setWinUi();paint();',
     '},true);',
     'stamp();setWinUi();paint();',
-    '})();'
-   ].join('\n');
-  }
-
-  function reaBoardMatJs(){
-   return [
-    '(function(){',
-    reaQfListJs(),
-    'var PAD=function(n){return (n<10?"0":"")+n};',
-    'function when(d,t){',
-    '  var s=d.getFullYear()+"-"+PAD(d.getMonth()+1)+"-"+PAD(d.getDate());',
-    '  if(!t)return s;',
-    '  if(t==="now")return s+" "+PAD(d.getHours())+":"+PAD(d.getMinutes())+":"+PAD(d.getSeconds());',
-    '  if(t==="hhmm")return s+" "+PAD(d.getHours())+":"+PAD(d.getMinutes());',
-    '  return s+" "+t;',
-    '}',
-    'function stamp(){',
-    '  var es=document.querySelectorAll("[data-rea-d]"),i,m,d;',
-    '  for(i=0;i<es.length;i++){',
-    '    m=/^(now|d(?:[+-]\\d+)?)(?:@(now|hhmm|\\d{2}:\\d{2}(?::\\d{2})?))?$/.exec(es[i].getAttribute("data-rea-d"));',
-    '    if(!m)continue;',
-    '    d=new Date();',
-    '    if(m[1]!=="now")d.setDate(d.getDate()+(parseInt(m[1].slice(1),10)||0));',
-    '    es[i].textContent=when(d,m[2]);',
-    '  }',
-    '}',
-    'function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}',
-    'var ROWS=window.__REA_ROWS||[],WIN=window.__REA_WIN||"d1";',
-    'var DAY={today:"0",d1:"-1"},WIRED={today:1,d1:1};',
-    'var CURW=DAY[WIN]!==undefined?WIN:"d1";',
-    'function winRows(w){var d=DAY[w],o=[],i;for(i=0;i<ROWS.length;i++)if(ROWS[i].day===d)o.push(ROWS[i]);return o}',
-    'function card(t,n,u){return "<div class=\\"_card_13z6g_53\\" style=\\"padding:18px 0;\\"><p class=\\"_cardTitle_13z6g_60\\">"+esc(t)+"</p><p class=\\"_cardNum_13z6g_66\\">"+n+(u?"<span>"+u+"</span>":"")+"</p></div>"}',
-    'function hover(){',
-    '  var rws=document.querySelectorAll("#rea-dtl-mat-quan-body tr.ant-table-row, #rea-dtl-mat-cus-body tr.ant-table-row, #rea-dtl-mat-qf-body tr.ant-table-row"),i;',
-    '  for(i=0;i<rws.length;i++)(function(tr){',
-    '    function on(){for(var j=0;j<tr.children.length;j++)tr.children[j].classList.add("ant-table-cell-row-hover")}',
-    '    function off(){for(var j=0;j<tr.children.length;j++)tr.children[j].classList.remove("ant-table-cell-row-hover")}',
-    '    tr.addEventListener("mouseenter",on);tr.addEventListener("mouseleave",off);',
-    '  })(rws[i]);',
-    '}',
-    '/* 群发好友：与看板趋势同一条派生规则（已执行人次×9＋行号×3，回复率 30%–42%），',
-    '   所以看板那一周的点、这张表的任务行、弹窗里的好友行三处能对上。 */',
-    'function qfSentOf(r){return r.done*9+r.id*3}',
-    'function qfRateOf(r){return 0.30+((r.id*7)%13)/100}',
-    'function qfRepOf(r){return Math.round(qfSentOf(r)*qfRateOf(r))}',
-    'function qfPct(rep,sent){return sent?(rep/sent*100).toFixed(1):"0.0"}',
-    /* 发送时间从任务有效期的起点算（与详情页同一条规则）；有效期是「YYYY-MM-DD HH:mm ~ …」 */
-    'function qfStart(r){',
-    '  var m=/(\\d{4})-(\\d{2})-(\\d{2})\\s+(\\d{2}):(\\d{2})/.exec(r.span||"");',
-    '  return m?new Date(+m[1],+m[2]-1,+m[3],+m[4],+m[5],0):new Date();',
-    '}',
-    'var QFROWS=[];',
-    'function paint(){',
-    '  var nod=document.getElementById("rea-dtl-mat-nodata"),body=document.getElementById("rea-dtl-mat-body"),',
-    '      rs=winRows(CURW),quan=[],i,r;',
-    '  var off=(CURW==="today");',
-    '  if(nod)nod.hidden=!off;',
-    '  if(body)body.style.display=off?"none":"";',
-    '  if(off)return;',
-    '  for(i=0;i<rs.length;i++){r=rs[i];if(r.type==="发圈")quan.push(r)}',
-    '  /* 发圈：只呈现「发了多少」，阅读次数／阅读时间端侧拿不到（PRD §3.4） */',
-    '  var need=0,done=0;for(i=0;i<quan.length;i++){need+=quan[i].need;done+=quan[i].done}',
-    '  var qc=document.getElementById("rea-dtl-mat-quan-cards");',
-    '  if(qc)qc.innerHTML=card("已发布条数",done)+card("应发人次",need)',
-    '    +card("发布完成率",(need?done/need*100:0).toFixed(1),"%")+card("涉及发圈任务",quan.length," 条");',
-    '  var h="";',
-    '  for(i=0;i<quan.length;i++){',
-    '    r=quan[i];var p=r.need?r.done/r.need*100:0;',
-    '    h+="<tr class=\\"ant-table-row ant-table-row-level-0\\"><td class=\\"ant-table-cell\\">"+esc(r.name)+"</td><td class=\\"ant-table-cell\\">"+esc(r.creator)+"</td><td class=\\"ant-table-cell\\">"+r.need+"</td><td class=\\"ant-table-cell\\">"+r.done+"</td><td class=\\"ant-table-cell\\">"+p.toFixed(1)+"%</td></tr>";',
-    '  }',
-    '  if(!quan.length)h="<tr class=\\"ant-table-row ant-table-row-level-0\\"><td class=\\"ant-table-cell\\" colspan=\\"5\\"><span class=\\"rea-bd-dim\\">该窗口没有发圈任务</span></td></tr>";',
-    '  var qb=document.getElementById("rea-dtl-mat-quan-body");if(qb)qb.innerHTML=h;',
-    '  /* 客户与群：按任务类型聚合「已执行」人次（看板上的 11／4／5 就是它） */',
-    '  var cus=[["批量加好友","加好友"],["关联好友","关联好友"],["群发群组","群发群组"]],ch="";',
-    '  for(i=0;i<cus.length;i++){',
-    '    var t=cus[i][0],cn=0,cd=0,ck=0,j;',
-    '    for(j=0;j<rs.length;j++)if(rs[j].type===t){ck++;cn+=rs[j].need;cd+=rs[j].done}',
-    '    ch+="<tr class=\\"ant-table-row ant-table-row-level-0\\"><td class=\\"ant-table-cell\\">"+cus[i][1]+"</td><td class=\\"ant-table-cell\\">"+ck+"</td><td class=\\"ant-table-cell\\">"+cn+"</td><td class=\\"ant-table-cell\\">"+cd+"</td></tr>";',
-    '  }',
-    '  var cb=document.getElementById("rea-dtl-mat-cus-body");if(cb)cb.innerHTML=ch;',
-    '  /* 群发好友：只认任务类型；已发送／已回复两列都点得开共用弹窗 */',
-    '  var qf=[],qs=0,qr=0,qh="",sent,rep;',
-    '  for(i=0;i<rs.length;i++)if(rs[i].type==="群发好友")qf.push(rs[i]);',
-    '  QFROWS=qf;',
-    '  for(i=0;i<qf.length;i++){',
-    '    r=qf[i];sent=qfSentOf(r);rep=qfRepOf(r);qs+=sent;qr+=rep;',
-    '    qh+="<tr class=\\"ant-table-row ant-table-row-level-0\\">"',
-    '      +"<td class=\\"ant-table-cell\\">"+esc(r.name)+"</td>"',
-    '      +"<td class=\\"ant-table-cell\\">"+esc(r.creator)+"</td>"',
-    '      +"<td class=\\"ant-table-cell\\"><a href=\\"#\\" class=\\"rea-qf-link\\" data-qf-open=\\""+i+"\\" data-qf-mode=\\"all\\">"+sent+"</a></td>"',
-    '      +"<td class=\\"ant-table-cell\\"><a href=\\"#\\" class=\\"rea-qf-link\\" data-qf-open=\\""+i+"\\" data-qf-mode=\\"yes\\">"+rep+"</a></td>"',
-    '      +"<td class=\\"ant-table-cell\\">"+qfPct(rep,sent)+"%</td>"',
-    '      +"<td class=\\"ant-table-cell\\"><a href=\\"#\\" class=\\"rea-qf-link\\" data-qf-open=\\""+i+"\\" data-qf-mode=\\"all\\">查看好友</a></td></tr>";',
-    '  }',
-    '  if(!qf.length)qh="<tr class=\\"ant-table-row\\"><td class=\\"ant-table-cell\\" colspan=\\"6\\"><span class=\\"rea-bd-dim\\">该窗口没有群发好友任务</span></td></tr>";',
-    '  var qfc=document.getElementById("rea-dtl-mat-qf-cards");',
-    '  if(qfc)qfc.innerHTML=card("已发送好友",qs," 人")+card("已回复好友",qr," 人")+card("回复率",qfPct(qr,qs),"%");',
-    '  var qfb=document.getElementById("rea-dtl-mat-qf-body");if(qfb)qfb.innerHTML=qh;',
-    '  hover();',
-    '}',
-    'function setWinUi(){',
-    '  var ls=document.querySelectorAll("[data-dtl-win]"),i,on;',
-    '  for(i=0;i<ls.length;i++){',
-    '    on=ls[i].getAttribute("data-dtl-win")===CURW;',
-    '    ls[i].classList.toggle("ant-radio-button-wrapper-checked",on);',
-    '    var b=ls[i].querySelector(".ant-radio-button");',
-    '    if(b)b.classList.toggle("ant-radio-button-checked",on);',
-    '    var r=ls[i].querySelector("input");if(r)r.checked=on;',
-    '  }',
-    '}',
-    'var wg=document.getElementById("rea-dtl-mat-win");',
-    'if(wg)wg.addEventListener("click",function(e){',
-    '  var n=e.target,id=null;',
-    '  while(n&&n!==wg&&n.nodeType===1){',
-    '    if(n.getAttribute&&n.getAttribute("data-dtl-win")){id=n.getAttribute("data-dtl-win");break}',
-    '    n=n.parentNode;',
-    '  }',
-    '  if(!id)return;',
-    '  e.preventDefault();e.stopPropagation();',
-    '  if(!WIRED[id])return;',
-    '  CURW=id;setWinUi();paint();',
-    '},true);',
-    'stamp();setWinUi();paint();',
-    '/* 群发好友表的点击：数字与「查看好友」都走同一座弹窗；已回复那一列预筛「是」。 */',
-    'var qfb=document.getElementById("rea-dtl-mat-qf-body");',
-    'if(qfb)qfb.addEventListener("click",function(e){',
-    '  var n=e.target;',
-    '  while(n&&n!==qfb&&!(n.getAttribute&&n.getAttribute("data-qf-open")))n=n.parentNode;',
-    '  if(!n||n===qfb)return;',
-    '  e.preventDefault();',
-    '  var idx=+n.getAttribute("data-qf-open"),mode=n.getAttribute("data-qf-mode")||"all";',
-    '  var r=QFROWS[idx];if(!r)return;',
-    '  var sent=qfSentOf(r),rep=qfRepOf(r);',
-    '  QF.open(QF.friends(sent,mode==="yes"?rep:sent,qfStart(r),r.id),{pre:mode==="yes"?"yes":""});',
-    '});',
     '})();'
    ].join('\n');
   }
@@ -12676,9 +12378,8 @@ window.addEventListener("resize",function(){
     '.rea-qf-dd .ant-select-item-option-active{background:rgba(0,0,0,0.04)}'
   ].join('\n');
 
-  /* 群发好友列表弹窗的共用件：详情页（点「群发好友数」）和素材明细页（点「已发送／已回复」）
-     打开的是同一座弹窗，所以结构、样式类名、筛选与空态只写这一份。
-     页面只负责给出好友行：详情页按数字生成，素材明细页按任务派生。
+  /* 群发好友列表弹窗：详情页（点「群发好友数」）打开它，
+     结构、样式类名、筛选与空态只写这一份。页面只负责给出好友行（按数字生成）。
      生成规则确定性（同一页每次打开同一份），筛选只在传进来的那批行里筛，不回快照查。 */
   function reaQfListJs(){
     return `
@@ -12930,11 +12631,10 @@ tb.addEventListener("click",function(e){
        html  该页正文段的载体块 id（省略＝正文仍用快照那一段，只补交互）
        css   该页专用样式（只在这页注入；未覆盖页拿不到，这是「逐页覆盖」的底线）
        js    该页自己的注入脚本（在 REA_FX **之后**跑，见 reaDoc）
-     九张覆盖页，五种形态：
+     八张覆盖页，五种形态：
        微小助看板          换稿——正文整段换成 srcBoard，配 REA_BOARD_CSS ＋ reaBoardJs
-       微小助看板 · 执行人明细  合成页——页名与 shell 由 reaSynthPages() 克隆看板页得到，正文换 srcBoardTask
-       微小助看板 · 素材明细  同上，正文换 srcBoardMat
-                            这两张补的是现网 board/wxz/task、board/wxz/material 两条**不在快照里**的路由
+       微小助看板 · 执行人明细  合成页——页名与 shell 由 reaSynthPages() 克隆看板页得到，正文换 srcBoardTask；
+                            补的是现网 board/wxz/task 这条**不在快照里**的路由
        素材库 · 新建       补交互——**没有 html**，正文就是快照那一段，只多样式与脚本
        新小红书运营         改文案——**只有脚本**：筛选标签、输入框提示、表头列名
        新小红书运营 · 新建  文案 ＋ 补配置行——**没有 html 也没有 css**，正文仍是快照；脚本做标签/提示语替换，
@@ -12950,8 +12650,6 @@ tb.addEventListener("click",function(e){
   var REA_COVER = {
     '微小助看板':    { html: 'srcBoard', css: REA_BOARD_CSS, js: reaBoardJs },
     '微小助看板 · 执行人明细': { html: 'srcBoardTask', css: REA_BOARD_CSS, js: reaBoardTaskJs },
-    /* 素材明细页自己也会开「群发好友列表」，所以它除了看板样式，还要带上弹窗那一份 */
-    '微小助看板 · 素材明细': { html: 'srcBoardMat',  css: REA_BOARD_CSS + '\n' + REA_QF_CSS, js: reaBoardMatJs },
     '素材库 · 新建': { css: REA_MAT_CSS, js: reaMatJs },
     '新小红书运营': { js: reaXhsListJs },
     '新小红书运营 · 新建': { js: reaXhsJs },
@@ -12986,8 +12684,8 @@ tb.addEventListener("click",function(e){
     return 0;
   }
 
-  /* 两张「详细数据」子页在快照里没有对应路由（现网 board/wxz/task、board/wxz/material
-     不在 36 页内），所以克隆看板页的 shell/rest 造两页：外壳（侧栏、顶栏、选中态）与看板
+  /* 「详细数据」子页在快照里没有对应路由（现网 board/wxz/task 不在 36 页内），
+     所以克隆看板页的 shell/rest 造一页：外壳（侧栏、顶栏、选中态）与看板
      完全一致，只有正文区被 REA_COVER 的 html 换掉。**不能改 _online-admin.js**——
      那是构建产物，重跑 build 就没；合成放在运行时，重抓源目录后照样成立。 */
   function reaSynthPages(){
@@ -12999,7 +12697,7 @@ tb.addEventListener("click",function(e){
     }
     var board = find(REA_BOARD_PAGE);
     if (board){
-      var add = [REA_DETAIL_TASK, REA_DETAIL_MAT];
+      var add = [REA_DETAIL_TASK];
       for (i = 0; i < add.length; i++){
         P.pages.push({
           name: add[i],
@@ -13029,7 +12727,7 @@ tb.addEventListener("click",function(e){
   /* 子页要的那份数据（看不出页名的一律空串）：行由看板页带过来，窗口也跟着走。
      用 reaJson 转义尖括号——拼进 srcdoc 的 script 里不能出现字面闭标签。 */
   function reaDataJs(name){
-    if (name !== REA_DETAIL_TASK && name !== REA_DETAIL_MAT) return '';
+    if (name !== REA_DETAIL_TASK) return '';
     return 'window.__REA_ROWS=' + reaJson(reaRows || []) + ';'
       + 'window.__REA_WIN=' + reaJson(reaWinSel || 'd1') + ';';
   }
@@ -13298,9 +12996,9 @@ tb.addEventListener("click",function(e){
   var reaIndexed = false; // reaIndex() 跑过没有（四张反查表填上了没有）
   var reaIdx = -1;        // 当前已渲染的模块页序号
   var reaGroupNames = []; // 素材库列表页侧栏分组树里的分组名（供新建页的「所属分组」下拉用）
-  var reaRows = null;     // 看板点「详细数据」时带过来的任务行（两张子页用，不另存一份）
+  var reaRows = null;     // 看板点「详细数据」时带过来的任务行（子页用，不另存一份）
   var reaWinSel = 'd1';   // 同上：点进来时的当前窗口（today / d1）
-  var reaSynthDone = false; // 两张「详细数据」子页合成过没有
+  var reaSynthDone = false; // 合成子页（执行人明细／任务配置快照）跑过没有
 
   /* 从某页的 rest 里读出它侧栏当前的二级分类名（读不到就返回空串） */
   function reaCatOf(rest){
@@ -13429,7 +13127,7 @@ tb.addEventListener("click",function(e){
       + '<style>' + REA_CSS + (cv && cv.css ? cv.css : '') + '</style>'
       + '</head><body>' + P.shell + reaSplice(p, p.rest)
       + '<script>' + reaNavJs(p.name) + '<' + '/script>'
-      /* 两张「详细数据」子页多一段：把看板带过来的行与窗口先落到 window 上 */
+      /* 「详细数据」子页多一段：把看板带过来的行与窗口先落到 window 上 */
       + (reaDataJs(p.name) ? '<script>' + reaDataJs(p.name) + '<' + '/script>' : '')
       /* 补行（演示行 / 刚存的行）必须排在 REA_FX **前面**：它的行悬停是加载时逐行绑的 */
       + (sv ? '<script>' + sv + '<' + '/script>' : '')
