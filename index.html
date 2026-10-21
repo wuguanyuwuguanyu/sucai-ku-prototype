@@ -1180,6 +1180,43 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
   box-shadow:0 2px 6px -1px rgba(94,86,190,.38);transition:left .22s}
 .hva-cta.on .hva-sw{background:linear-gradient(90deg,#2E86FF,#9452FF);box-shadow:none}
 .hva-cta.on .hva-sw i{left:22px}
+/* ---------------- 头卡 · 方案二（形象在左，右侧竖排）----------------
+   2026-10-21 产品要对比两套排法：设置页「页头布局」切换（状态 HVA_LAYOUT，默认 'a'＝上面那套稿子排法）。
+   方案二只换摆法，读数一个不换——名字／工作时间／设置／托管开关读的仍是同一份（HVA_ON／HVA_HOST_AGENT）。
+   右侧那列走 flex（.hva-bside），所以「工作 N 小时」那枚胶囊出现／消失时，下面两颗自己让位，
+   不用给开／关两种状态各写一套坐标。
+   ★ .hva-quick 在这一套里是 display:contents：只当冒烟的挂点、不出盒子——
+     ⇄ 绝对定位到 .hva-bside 的右上（贴着名字），齿轮那颗留在流里、当右侧第二颗按钮。
+     两枚仍住在同一个 .hva-quick 里（冒烟按它数 2 枚、核对 onclick）。 */
+.hva-head-b{height:216px}
+.hva-hero-b{height:216px}
+.hva-hero-b .hva-portrait{left:20px;top:21px;width:150px;height:174px}
+.hva-hero-b .hva-robot{left:18px;top:21px;width:154px;height:173.5px}
+.hva-hero-b .hva-bside{position:absolute;left:190px;top:24px;right:18px;
+  display:flex;flex-direction:column;align-items:flex-start;gap:10px}
+.hva-hero-b .hva-title,.hva-hero-b .hva-work,.hva-hero-b .hva-tag3,
+.hva-hero-b .hva-cta,.hva-hero-b .hva-qk{position:static}
+.hva-hero-b .hva-quick{display:contents}
+/* 名字比方案一那支标题小一档（26.4→18）：右侧一列要和形象分左右，字号大了会把那一列撑成一堵字墙 */
+.hva-hero-b .hva-title{font-size:18px;line-height:24px}
+.hva-hero-b .hva-work{font-size:12.6px;line-height:13px}
+.hva-hero-b .hva-tag3{left:auto;top:auto;height:22px;font-size:11.6px}
+/* ⇄ 那颗必须写回 absolute：上面那条把它压成了 static，而 .hva-qk 底下那条 absolute 的优先级比它低。
+   它是右侧那列里唯一**不占位**的一件——贴着名字的右上角，不参与竖排让位。 */
+.hva-hero-b .hva-qk:nth-child(1){position:absolute;left:84px;right:auto;top:2px;width:20px;height:20px;color:#2F5FA8}
+/* 设置这颗按产品要求放大、提亮：28→36 高，白底＋一圈淡蓝描边＋更实的投影，字也大一号（12.5→14） */
+.hva-hero-b .hva-qk:nth-child(2){left:auto;right:auto;top:auto;height:36px;padding:0 16px 0 11px;gap:5px;
+  border-radius:18px;background:#fff;color:#2E6BE6;font-weight:600;
+  box-shadow:0 0 0 1.5px #DCE6FF,0 10px 20px -14px rgba(70,90,190,.8)}
+.hva-hero-b .hva-qk:nth-child(2) svg{width:17px;height:17px}
+.hva-hero-b .hva-qk:nth-child(2) small{font-size:14px;font-weight:600;letter-spacing:0}
+.hva-hero-b .hva-cta{left:auto;top:auto;width:100%;height:48px;border-radius:24px;
+  padding:0 10px 0 18px;font-size:14.5px}
+/* 开关放大一档（46×26→58×32，圆芯 22→28）：它与「设置」是方案二里仅有的两颗可点件，得一眼认得出 */
+.hva-hero-b .hva-sw{width:58px;height:32px;border-radius:16px}
+.hva-hero-b .hva-sw i{left:2px;width:28px;height:28px}
+.hva-hero-b .hva-cta.on .hva-sw i{left:28px}
+.hva-hero-b .hva-cta.on .hva-sw{box-shadow:0 4px 12px -2px rgba(90,90,220,.5)}
 .hva-sub{margin:2px 0 14px} /* 员工列表那两层筛选用的是同一个 .tk-seg，只在这里统一修上下距 */
 /* 托管清单那一整族的版式（栏头 .hva-grp／计数 .hva-n／视图分段器 .hva-view／清单 .hva-list／
    清单卡 .hva-card…／来源角标 .hva-ctl .hva-when .hva-min／图标层 .hva-cic 及其 22px 缩版）
@@ -1484,6 +1521,18 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .hva-form-h{display:flex;align-items:center;gap:5px;padding:14px 15px 2px;font-size:13.5px;font-weight:700;color:#2A4A7E}
 .hva-txt{padding:0 15px 15px;font-size:13.5px;line-height:1.72;color:#5B7099}
 .hva-txt.ph{color:#A9B6CD}
+/* 页头布局那枚两档（2026-10-21，**原型对比用**的控件）：两格竖排「方案名＋一句排法」，
+   选中的那格吃淡蓝→淡紫底＋一圈内描边。**别改用 .tk-seg**——冒烟按 #hvaSetBody 里 .tk-seg button
+   的枚数核对「闲置时长」那三档，这里多两枚会把那条断言读成 5。 */
+.hva-layseg{display:flex;gap:8px}
+.hva-layseg button{flex:1;height:52px;border:0;border-radius:14px;cursor:pointer;font-family:inherit;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  background:#F4F6FC;color:#5B7099;transition:background .18s,box-shadow .18s}
+.hva-layseg button b{font-size:13.5px;font-weight:700;color:#4A5B78}
+.hva-layseg button small{font-size:11px;line-height:1;color:#93A1BA}
+.hva-layseg button.on{background:linear-gradient(135deg,#EDF3FF,#F2EBFF);box-shadow:inset 0 0 0 1.5px #8FA8FF}
+.hva-layseg button.on b{color:#3358D8}
+.hva-layseg button.on small{color:#6C7FD0}
 /* 多开托管那一格（照线上那屏）：标题（带必设星号）＋右侧「设置 ⚙」一行，下面一句话说明，
    再下面一行已选摘要。它是本壳里唯一一枚竖排的 .hva-cell——「设置」得跟标题同一行，
    而 .hva-cell 是横向 flex，所以另起一个竖排变体，不去改横排那条。 */
@@ -4681,6 +4730,10 @@ REND['host-task']=function(){
    一份状态管三屏：主页面那张托管状态卡、全局设置屏、员工详情屏改的都是下面这几个变量。
    分头各存一份，迟早出现「设置里开着、回主页还写着已关闭」——自相矛盾比少一个开关更伤。 */
 var HVA_ON=false;              /* 托管总开关。默认关：先让人看清「开着之后它会替我做什么」，再看怎么开 */
+/* 头卡排法（2026-10-21，产品要看实物对比）：'a'＝稿子那套（形象居中打底、标题左上、CTA 压底），
+   'b'＝形象在左、右侧竖排名字／工作时间／设置／托管开关。切换的入口在全局设置首卡「页头布局」。
+   默认 'a'——线上走稿子那一版；'b' 只是同一份状态的另一种摆法，两套读的是同一批变量。 */
+var HVA_LAYOUT='a';
 /* HVA_VIEW／HVA_SCHEME／HVA_SCHEMES／HVA_SUBS 四格 2026-10-16 一并删（见 ADR-0065）：
    前两格驱动的是「托管清单｜工作日志」的分栏与那套甲／乙排法演示，后两格是清单的两个来源与
    「我的」页那张临时的「演示」卡。托管清单那一屏整块撤掉之后，这一屏只剩工作日志一栏——
@@ -5008,6 +5061,10 @@ function hvaMark(s){return esc(s).split('[[').join('<em class="hv-gb">').split('
 /* 视图／档位／开关都落在同一份状态上，改完立刻重画这一屏：三处各存一份就会互相打架 */
 function hvaToggle(){ HVA_ON=!HVA_ON; REND['host-ai']();
   toast(HVA_ON?'托管已开启：工作时间＋闲置条件满足后自动执行':'托管已关闭：下方动作都不会自动执行'); }
+/* 头卡排法（2026-10-21）：切完主页面与设置页各重画一次——主页面换摆法，设置页那两格换选中态。
+   两屏都在 DOM 里（设置页只是没显示），所以这一屏点下去，返回时主页已经是新排法。 */
+function hvaLayout(v){ HVA_LAYOUT=v; REND['host-ai'](); REND['host-ai-set']();
+  toast(v==='b'?'页头已切成方案二：形象在左、右侧竖排':'页头已切回方案一：形象居中'); }
 /* 悬浮球那颗「＋」与「加入托管清单」浮窗 2026-10-16 一并撤掉（见 ADR-0065）。
    它们整族（hvaAdd／hvaTask／hvaSheet／hvaSheetHtml／hvaOptCard／hvaPick／hvaRemove
    ＋ 静态骨架里那两颗挂点）存在的前提是**托管清单这一屏**：
@@ -5134,16 +5191,23 @@ function hvaActsHtml(){
    ★ 人像旁边那行名字（原「智能托管伙伴 · ××」）随旧状态卡一起撤了（2026-10-20）：
      稿子的页头只有标题「智能小助」；托管由哪位数智员工执行，仍可在 AI托管 设置里换。 */
 function hvaHeroHtml(){
-  return '<div class="hva-hero">'
+  /* 两套排法（见 HVA_LAYOUT）：'a' 是稿子那一版，件全部绝对定位、铺满整张 259 高的舞台；
+     'b' 把同一个 .hva-hero 换成 hva-hero-b，右侧那四件收进 .hva-bside 按列往下排
+     （flex 负责让位，见 CSS 那段）。**两套的件是同一批**——加一件时两边都要想一遍怎么落，
+     所以这里只改外层容器与一句包壳，不复制一份 hvaHeroB()。 */
+  var b=HVA_LAYOUT==='b';
+  return '<div class="hva-hero'+(b?' hva-hero-b':'')+'">'
     +hvaHeroArt()
-    +'<div class="hva-title">智能小助</div>'
-    +'<div class="hva-work">'+I('clock',13,2.2)+'<span>工作'+HVA_WORK+'</span></div>'
-    +(HVA_ON?'<div class="hva-tag3"><i></i><span>工作'+HVA_WORKED+'小时</span></div>':'')
-    +hvaActsHtml()
-    +'<button class="hva-cta'+(HVA_ON?' on':'')+'" onclick="hvaToggle()" role="switch" aria-checked="'+(HVA_ON?'true':'false')+'">'
-      +'<span class="tx">'+(HVA_ON?'一键关闭托管':'一键开启托管')+'</span>'
-      +'<span class="hva-sw" aria-hidden="true"><i></i></span>'
-    +'</button>'
+    +(b?'<div class="hva-bside">':'')
+      +'<div class="hva-title">智能小助</div>'
+      +'<div class="hva-work">'+I('clock',13,2.2)+'<span>工作'+HVA_WORK+'</span></div>'
+      +(HVA_ON?'<div class="hva-tag3"><i></i><span>工作'+HVA_WORKED+'小时</span></div>':'')
+      +hvaActsHtml()
+      +'<button class="hva-cta'+(HVA_ON?' on':'')+'" onclick="hvaToggle()" role="switch" aria-checked="'+(HVA_ON?'true':'false')+'">'
+        +'<span class="tx">'+(HVA_ON?'一键关闭托管':'一键开启托管')+'</span>'
+        +'<span class="hva-sw" aria-hidden="true"><i></i></span>'
+      +'</button>'
+    +(b?'</div>':'')
     +'<span class="hva-sr">'+(HVA_ON?'托管已开启。':'托管已关闭，不会自动执行。')
       +'工作时间 '+HVA_WORK+' · 闲置 '+HVA_IDLE+' 分钟</span>'
   +'</div>';
@@ -5230,6 +5294,9 @@ REND['host-ai']=function(){
      从前这一屏还有「托管清单｜工作日志」那道分段器，切栏时 **#hvaPane 这个元素本身不动**、
      只换它的内容，所以滚动位置照旧；现在没有可切的第二栏，那两格仍是分开的两个元素——
      拆了就得让日志跟着头卡一起滚，「头卡钉住」这件事就没了落点。 */
+  /* 头卡舞台的高度跟着排法走：'a' 259（稿子坐标），'b' 216（右侧四件竖排的实测高度＋边距）。
+     只改 .hva-head 这一处，.hva-hero 自己也有高度——两者同高才不会在日志卡前留一道空当。 */
+  $('hvaHead').className='hva-head'+(HVA_LAYOUT==='b'?' hva-head-b':'');
   $('hvaHead').innerHTML=hvaHeroHtml();
   $('hvaPane').innerHTML=hvaLogHtml();
   $('hvaTab').innerHTML=hvTabsHtml(HVA_TABS);
@@ -5496,6 +5563,18 @@ REND['host-ai-set']=function(){
      不再是一条"我加的活"。右侧写值摘要而不是只给个 ›：这一行是"谁来干托管里那些事"的唯一入口，
      不把当前那位说出来，员工得点进去才知道。
      放在首卡（本屏第一眼），照的是线上后台「数智员工托管」那一屏——那边也是先答"选了谁"再答其余。 */
+  /* 页头布局（2026-10-21）：**原型对比用的开关**，不是一条托管设置——只换主页头卡的排法，
+     托管那几项（工作时间／闲置／多开／范围）一个不动，所以它不写进下面的设置卡群，
+     自己一张卡、一句说明讲清「对比用」。放首卡是因为它是本屏唯一的「看东西」入口，
+     垫在范围卡后面得先滚一段才摸得到。
+     两处刻意避开：**不用 .hva-cell**——设置页首行是「AI智能回复」，冒烟按 .hva-cell 认那一行；
+     **不用 .tk-seg**——冒烟按 #hvaSetBody 里 .tk-seg button 的枚数核对闲置时长那三档。 */
+  h+='<div class="hva-form"><div class="hva-form-h">页头布局</div>'
+    +'<div class="hva-txt">原型对比用：切换 AI托管 主页头卡的两套排法，托管设置不受影响</div>'
+    +'<div class="hva-segpad"><div class="hva-layseg">'
+    +'<button class="'+(HVA_LAYOUT==='a'?'on':'')+'" onclick="hvaLayout(\'a\')"><b>方案一</b><small>形象居中</small></button>'
+    +'<button class="'+(HVA_LAYOUT==='b'?'on':'')+'" onclick="hvaLayout(\'b\')"><b>方案二</b><small>形象在左</small></button>'
+    +'</div></div></div>';
   h+='<div class="hva-form">'
     +'<button class="hva-cell" onclick="hvaOpenReply()"><span class="lb">AI智能回复</span>'
       +'<span class="vl">由 '+esc(HVA_HOST_AGENT)+' 负责</span><span class="cv">'+I('chev',16,2.4)+'</span></button>'
