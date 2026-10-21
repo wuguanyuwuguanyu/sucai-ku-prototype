@@ -3,10 +3,12 @@
      切换 = 顶部分段按钮 / 快捷键 1·2 / URL #app·#real（认不出的 hash —— 含旧 #admin —— 落默认视图）。
      （原自研「管理后台原型」视图②已下线：素材库后台并入线上后台复刻的「素材库」列表页与「素材库 · 新建」页，ADR-0048。）
      销售端 App 以原文内嵌在下方 <script type="text/plain"> 载体块内（运行时还原写入 iframe srcdoc，文档级隔离，样式与 JS 互不可见）。
-     线上后台复刻是线上后台 35 页（18 个模块页 ＋ 11 个新建页 ＋ 6 个详情页）的逐页静态快照，体积约 8.2MB，
+     线上后台复刻是线上后台 36 页（18 个模块页 ＋ 11 个新建页 ＋ 7 个详情页）的逐页静态快照，体积约 8.4MB，
      故**不内嵌**而外挂在同级 _online-admin.js（由 tools/build_online_admin.py 生成），首次切到该视图才按需加载（另一视图不受拖累）。
-     其中两页按 ADR-0043 被**逐页覆盖**（微小助看板换新稿、素材库 · 新建加交互）：覆盖块的正文另有一处载体
-     （下面的 srcBoard 片段，见 REA_COVER），注入的样式与脚本写在 reaBoardJs/reaMatJs 里。
+     其中若干页按 ADR-0043 被**逐页覆盖**（微小助看板换新稿、素材库 · 新建加交互、
+     小红书运营四页改配置口径并补「任务配置快照」页）：
+     覆盖块的正文另有四块载体（srcBoard / srcBoardTask / srcBoardMat / srcXhsSnapshot，见 REA_COVER），
+     注入的样式与脚本写在 reaBoardJs/reaMatJs/reaXhs*.js 里。
      编辑规则：载体块内即普通 HTML/CSS/JS，唯闭标签须写作转义形态 <\/script>（防载体块被提前终止）；
      改完跑 python3 tools/check_all.py 校验完整性（--extract app 可单端导出还原文本）。 -->
 <html lang="zh-CN">
@@ -82,7 +84,7 @@ body{font-family:var(--f);background:var(--surface);color:var(--on-surface);
 #srcApp,#srcBoard{display:none}
 
 /* 视图③（线上后台复刻）：iframe 撑满整块，不再另挂一条页签栏——
-   线上后台**自带的导航（侧边菜单 ＋ 顶部一级导航）**就是换页入口（35 页全部可达，见下方第 1 件事）。
+   线上后台**自带的导航（侧边菜单 ＋ 顶部一级导航）**就是换页入口（36 页全部可达，见下方第 1 件事）。
    旧版那条 chip 栏已删：它与真实后台的观感不搭，且菜单本来就在。
    注：#viewsReal 靠 .view 的 absolute+inset:0 撑满整块，**别在这里再写 position**
    ——id 选择器优先，会把它打回普通流，高度塌成内容高（这个坑踩过一次）。
@@ -9810,7 +9812,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 
 <!-- ============ 覆盖页之外的两张「详细数据」子页 ============
      现网「任务执行 › 详细数据」「素材与效果 › 详细数据」指向 board/wxz/task、board/wxz/material，
-     这两个路由**不在 35 页快照里**（抓存件没有它们），所以点原来那两条 href 会把 iframe 导航到
+     这两个路由**不在 36 页快照里**（抓存件没有它们），所以点原来那两条 href 会把 iframe 导航到
      现网测试地址、在原型里表现为空白页。这里按 ADR-0043 的覆盖机制补两张子页：
      页名与正文由外壳脚本在运行时合成（克隆 微小助看板 的侧栏／顶栏外壳，只换正文区），
      行数据由看板页在点「详细数据」时一并带过来，**不另编一份**。 -->
@@ -9963,6 +9965,79 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 </div>
 </script>
 
+<script type="text/plain" id="srcXhsSnapshot"><div class="h-full overflow-auto"><div class="h-full"><div class="_boxadd_28xtg_149">
+  <h4 style="padding-left: 10px; font-weight: normal;">
+    <nav class="ant-breadcrumb css-vgijab"><ol>
+      <li class="ant-breadcrumb-item"><a class="ant-breadcrumb-link" href="#" data-rea="新小红书运营">任务列表</a></li>
+      <li class="ant-breadcrumb-separator" aria-hidden="true">/</li>
+      <li class="ant-breadcrumb-item"><span class="ant-breadcrumb-link"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" style="padding: 0px; height: auto;" data-rea="新小红书运营 · 详情"><span>任务详情</span></button></span></li>
+      <li class="ant-breadcrumb-separator" aria-hidden="true">/</li>
+      <li class="ant-breadcrumb-item"><span class="ant-breadcrumb-link">任务配置快照</span></li>
+    </ol></nav>
+  </h4>
+  <div style="height: calc(-117px + 100vh); overflow-y: auto; box-sizing: border-box; background: var(--yk-content-bg, #fff); border: 1px solid rgb(241, 242, 245); border-radius: 5px; padding: 16px; margin-top: 8px;">
+    <div style="margin-bottom: 16px;">
+      <button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-rea="新小红书运营 · 详情"><span>返回任务详情</span></button>
+      <span style="margin-left: 12px; color: rgb(153, 153, 153);">当前查看：本次执行使用的配置（执行时冻结，不随任务配置变化）</span>
+    </div>
+    <div class="ant-spin-nested-loading css-vgijab"><div class="ant-spin-container">
+      <div style="margin-bottom: 24px;">
+        <h4 style="border-left: 3px solid rgb(22, 119, 255); padding-left: 8px; margin-bottom: 12px;">基础信息</h4>
+        <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">任务名称</span><div style="flex: 1 1 0%; white-space: pre-wrap;">新小红书运营任务20261013</div></div>
+        <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">执行人员</span><div style="flex: 1 1 0%; white-space: pre-wrap;">雅楠002</div></div>
+        <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">任务类型</span><div style="flex: 1 1 0%; white-space: pre-wrap;">月循环</div></div>
+        <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">有效期</span><div style="flex: 1 1 0%; white-space: pre-wrap;">2026-11-01 01:02 ~ 2028-10-12 12:37</div></div>
+      </div>
+      <div style="margin-bottom: 24px;">
+        <h4 style="border-left: 3px solid rgb(22, 119, 255); padding-left: 8px; margin-bottom: 12px;">搜索词</h4>
+        <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">搜索策略</span><div style="flex: 1 1 0%; white-space: pre-wrap;">词条</div></div>
+        <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">词表来源</span><div style="flex: 1 1 0%; white-space: pre-wrap;">手动输入</div></div>
+        <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">最终词表</span><div style="flex: 1 1 0%; white-space: pre-wrap;">3re w</div></div>
+      </div>
+      <div style="margin-bottom: 24px;">
+        <h4 style="border-left: 3px solid rgb(22, 119, 255); padding-left: 8px; margin-bottom: 12px;">筛选与人群</h4>
+        <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">筛选词</span><div style="flex: 1 1 0%; white-space: pre-wrap;">沃尔沃</div></div>
+        <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">地域</span><div style="flex: 1 1 0%; white-space: pre-wrap;">全国</div></div>
+        <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">年龄</span><div style="flex: 1 1 0%; white-space: pre-wrap;">不限</div></div>
+        <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">性别</span><div style="flex: 1 1 0%; white-space: pre-wrap;">不限</div></div>
+        <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">粉丝数下限</span><div style="flex: 1 1 0%; white-space: pre-wrap;">不限</div></div>
+      </div>
+      <div style="margin-bottom: 24px;">
+        <h4 style="border-left: 3px solid rgb(22, 119, 255); padding-left: 8px; margin-bottom: 12px;">执行规则</h4>
+        <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">单次执行上限</span><div style="flex: 1 1 0%; white-space: pre-wrap;">500</div></div>
+        <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">发布时间</span><div style="flex: 1 1 0%; white-space: pre-wrap;">30日内</div></div>
+        <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">发布评论时间</span><div style="flex: 1 1 0%; white-space: pre-wrap;">30日内</div></div>
+        <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">执行频率</span><div style="flex: 1 1 0%; white-space: pre-wrap;">1 ~ 10 分钟</div></div>
+        <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">查看回复频率</span><div style="flex: 1 1 0%; white-space: pre-wrap;">每 100 次碰撞</div></div>
+      </div>
+      <div style="margin-bottom: 24px;">
+        <h4 style="border-left: 3px solid rgb(22, 119, 255); padding-left: 8px; margin-bottom: 12px;">触达方式与首轮话术</h4>
+        <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">触达方式</span><div style="flex: 1 1 0%; white-space: pre-wrap;">私信</div></div>
+        <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">消息生成类型</span><div style="flex: 1 1 0%; white-space: pre-wrap;">固定话术</div></div>
+        <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">首轮内容</span><div style="flex: 1 1 0%; white-space: pre-wrap;">2</div></div>
+      </div>
+      <div style="margin-bottom: 24px;">
+        <h4 style="border-left: 3px solid rgb(22, 119, 255); padding-left: 8px; margin-bottom: 12px;">回复承接</h4>
+        <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">总开关</span><div style="flex: 1 1 0%; white-space: pre-wrap;">开</div></div>
+        <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">① 评论承接</span><div style="flex: 1 1 0%; white-space: pre-wrap;">开</div></div>
+        <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">承接条件</span><div style="flex: 1 1 0%; white-space: pre-wrap;">仅关键词</div></div>
+        <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">关键词</span><div style="flex: 1 1 0%; white-space: pre-wrap;">沃尔沃、多少钱</div></div>
+        <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">评论回复方式</span><div style="flex: 1 1 0%; white-space: pre-wrap;">固定话术</div></div>
+        <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">评论固定话术</span><div style="flex: 1 1 0%; white-space: pre-wrap;">沃尔沃</div></div>
+        <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">回复后同时私信</span><div style="flex: 1 1 0%; white-space: pre-wrap;">开</div></div>
+        <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">私信内容（联动主动发起）</span><div style="flex: 1 1 0%; white-space: pre-wrap;">固定话术 · 这里好像发不了文件，您发我微信我加您。</div></div>
+        <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">私信发不出去时</span><div style="flex: 1 1 0%; white-space: pre-wrap;">回一条兜底评论</div></div>
+        <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">兜底评论话术</span><div style="flex: 1 1 0%; white-space: pre-wrap;">这里发不了文件，您私信我，我发您</div></div>
+        <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">② 私信承接</span><div style="flex: 1 1 0%; white-space: pre-wrap;">关</div></div>
+        <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">承接模式</span><div style="flex: 1 1 0%; white-space: pre-wrap;"><span style="color: rgb(153, 153, 153);">—（未开启）</span></div></div>
+        <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">话术流程</span><div style="flex: 1 1 0%; white-space: pre-wrap;"><span style="color: rgb(153, 153, 153);">—（未开启）</span></div></div>
+        <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">流程结束后 AI 接管</span><div style="flex: 1 1 0%; white-space: pre-wrap;"><span style="color: rgb(153, 153, 153);">—（未开启）</span></div></div>
+      </div>
+    </div></div>
+  </div>
+</div></div></div>
+</script>
+
 <script>
 (function(){
   /* 载体文本还原：拆字写法，避免本 script 块被字面终止符提前截断；
@@ -9990,7 +10065,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 
   /* ============================================================
      视图③ · 线上后台复刻
-     线上后台 35 页（18 个模块页 ＋ 11 个新建页 ＋ 6 个详情页）的逐页静态快照存在同级 _online-admin.js 里
+     线上后台 36 页（18 个模块页 ＋ 11 个新建页 ＋ 7 个详情页）的逐页静态快照存在同级 _online-admin.js 里
      （window.__REAL_ADMIN__，由 tools/build_online_admin.py 生成），
      结构为 {css: 全站去重样式, shell: 各页共用的 DOM 前缀, pages[].rest: 各页剩余 DOM}。
      本视图做两件事：
@@ -10075,7 +10150,12 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   var REA_MAT_PAGE = '素材库 · 新建';     // 素材库的「· 新建」子页（独立表单路由，见 docs/09 §2.2）
   var REA_MAT_LIST = REA_MAT_PAGE.split(' · ')[0];   // 它保存/取消后回落的那张列表页名
   var REA_XHS_PAGE = '新小红书运营';     // 小红书营销的模块页——「新小红书运营 · 新建」的「取消」回落到这里
-  /* 两张「详细数据」子页：现网路由（board/wxz/task、board/wxz/material）不在 35 页快照里，
+  var REA_XHS_DETAIL = '新小红书运营 · 详情';   // 来源：线上后台页面/线上详情页html/新小红书运营.html（构建按「· 详情」收进载体）
+  /* 任务配置快照：现网路由 /snapshotTasks 不在 36 页快照里，也没有对应源目录，
+     由 reaSynthPages() 克隆详情页外壳合成，正文来自载体块 srcXhsSnapshot。
+     只读，回答「这次执行为什么这么发」（PRD §4.10）。 */
+  var REA_XHS_SNAPSHOT = '新小红书运营 · 任务配置快照';
+  /* 两张「详细数据」子页：现网路由（board/wxz/task、board/wxz/material）不在 36 页快照里，
      由 reaSynthPages() 在运行时克隆看板页外壳合成，正文来自下面两个载体块。 */
   var REA_DETAIL_TASK = '微小助看板 · 执行人明细';
   var REA_DETAIL_MAT  = '微小助看板 · 素材明细';
@@ -10630,7 +10710,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     '  return out;',
     '}',
 
-    '/* 「详细数据」两张子页不在 35 页快照里（现网那两条 href 指向 board/wxz/task、board/wxz/material，',
+    '/* 「详细数据」两张子页不在 36 页快照里（现网那两条 href 指向 board/wxz/task、board/wxz/material，',
     '   抓存件没抓这两条路由，直接点会把 iframe 导航出去、在原型里表现为空白页）。',
     '   这里改成在原型内开子页，并把**当前窗口**与任务表整行一起带过去——',
     '   子页不另编一份数，看到的就是这一页此刻的同一张表。 */',
@@ -10724,7 +10804,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   /* ============================================================
      「详细数据」子页 ×2：执行人明细 / 素材明细
      现网看板那两枚「详细数据」指向 board/wxz/task、board/wxz/material——**这两条路由
-     不在 35 页快照里**（抓存件只抓了 18 个模块页 ＋ 11 个新建页 ＋ 6 个详情页），
+     不在 36 页快照里**（抓存件只抓了 18 个模块页 ＋ 11 个新建页 ＋ 7 个详情页），
      原来直接写死的 href 一点就把 iframe 导航到现网测试地址，在此视图里就是一张空白页。
      现在改为原型内的两张子页（页名由 reaSynthPages 合成，正文是 srcBoardTask / srcBoardMat）。
      数据全部由看板页点进来时随 postMessage 带过来（dumpRows），**不在这里另编一份**：
@@ -11990,11 +12070,40 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
    ].join('\n');
   }
 
+  /* 「新小红书运营 · 详情」的覆盖脚本：把「查看任务配置快照」接回原型里的快照页。
+     详情页正文来自快照（构建脚本按「线上详情页html」收进载体），这里不抄副本，只补一个跳转属性——
+     REA_FX 的 document 级点击监听认 data-rea，会 postMessage 回外壳换页。 */
+  function reaXhsDetailJs(){
+   return [
+    '(function(){',
+    'var TO=' + reaJson(REA_XHS_SNAPSHOT) + ';',
+    'var bs=document.querySelectorAll("button"),i;',
+    'for(i=0;i<bs.length;i++){',
+    '  if((bs[i].textContent||"").replace(/\\s+/g,"")==="查看任务配置快照"){bs[i].setAttribute("data-rea",TO);break;}',
+    '}',
+    '})();'
+   ].join('\n');
+  }
+
+  /* 「新小红书运营 · 任务配置快照」的覆盖脚本：运行时合成页没有正文缝，整段换掉 #subapp-viewport。
+     只读页的正文来自载体块 srcXhsSnapshot（PRD §4.10 的逐行口径），不参与构建——现网 /snapshotTasks
+     不在 36 页快照里，源目录也没有这一页。壳（侧栏、顶栏、页签）仍由详情页克隆而来。 */
+  function reaXhsSnapshotJs(){
+   return [
+    '(function(){',
+    'var H=' + reaJson(reaCoverHtml('srcXhsSnapshot')) + ';',
+    'var v=document.getElementById("subapp-viewport");',
+    'if(!v)return;',
+    'v.innerHTML=H;',
+    '})();'
+   ].join('\n');
+  }
+
   /* 覆盖登记表（ADR-0043）：页名 → 该页的覆盖块。与 docs/09 §2.3 那张表一一对应，加页两处一起加。
        html  该页正文段的载体块 id（省略＝正文仍用快照那一段，只补交互）
        css   该页专用样式（只在这页注入；未覆盖页拿不到，这是「逐页覆盖」的底线）
        js    该页自己的注入脚本（在 REA_FX **之后**跑，见 reaDoc）
-     六张覆盖页，三种形态：
+     八张覆盖页，四种形态：
        微小助看板          换稿——正文整段换成 srcBoard，配 REA_BOARD_CSS ＋ reaBoardJs
        微小助看板 · 执行人明细  合成页——页名与 shell 由 reaSynthPages() 克隆看板页得到，正文换 srcBoardTask
        微小助看板 · 素材明细  同上，正文换 srcBoardMat
@@ -12003,6 +12112,10 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
        新小红书运营         改文案——**只有脚本**：筛选标签、输入框提示、表头列名
        新小红书运营 · 新建  文案 ＋ 补配置行——**没有 html 也没有 css**，正文仍是快照；脚本做标签/提示语替换，
                               并在「评论承接」里注入联动私信的配置行（clone 快照行，见函数注释）
+       新小红书运营 · 详情  补跳转——正文就是快照那一段；脚本把「查看任务配置快照」接到快照页
+       新小红书运营 · 任务配置快照
+                            合成页——外壳由 reaSynthPages() 克隆详情页，正文换 srcXhsSnapshot；
+                            现网 /snapshotTasks 不在 36 页快照里，也没有源目录
      没有 html 的页，reaSplice 原样放过；这不是省事，是刻意：正文抄一份进来就成了会过期的副本，
      重抓源目录后静默与线上脱钩，而这一页的正文本来就不该变。 */
   var REA_COVER = {
@@ -12011,7 +12124,9 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     '微小助看板 · 素材明细': { html: 'srcBoardMat',  css: REA_BOARD_CSS, js: reaBoardMatJs },
     '素材库 · 新建': { css: REA_MAT_CSS, js: reaMatJs },
     '新小红书运营': { js: reaXhsListJs },
-    '新小红书运营 · 新建': { js: reaXhsJs }
+    '新小红书运营 · 新建': { js: reaXhsJs },
+    '新小红书运营 · 详情': { js: reaXhsDetailJs },
+    '新小红书运营 · 任务配置快照': { js: reaXhsSnapshotJs }
   };
 
   /* 把被覆盖页的正文区（contentStart..contentEnd，构建脚本给出的那道缝）换成它登记表里那个载体的内容。
@@ -12041,24 +12156,41 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   }
 
   /* 两张「详细数据」子页在快照里没有对应路由（现网 board/wxz/task、board/wxz/material
-     不在 35 页内），所以克隆看板页的 shell/rest 造两页：外壳（侧栏、顶栏、选中态）与看板
+     不在 36 页内），所以克隆看板页的 shell/rest 造两页：外壳（侧栏、顶栏、选中态）与看板
      完全一致，只有正文区被 REA_COVER 的 html 换掉。**不能改 _online-admin.js**——
      那是构建产物，重跑 build 就没；合成放在运行时，重抓源目录后照样成立。 */
   function reaSynthPages(){
     if (reaSynthDone || !window.__REAL_ADMIN__) return;
-    var P = window.__REAL_ADMIN__, base = null, i;
-    for (i = 0; i < P.pages.length; i++){
-      if (P.pages[i].name === REA_BOARD_PAGE){ base = P.pages[i]; break; }
+    var P = window.__REAL_ADMIN__, i;
+    function find(name){
+      for (var k = 0; k < P.pages.length; k++) if (P.pages[k].name === name) return P.pages[k];
+      return null;
     }
-    if (!base){ reaWarn('「详细数据」子页合成失败：快照里找不到「' + REA_BOARD_PAGE + '」页'); return; }
-    var add = [REA_DETAIL_TASK, REA_DETAIL_MAT];
-    for (i = 0; i < add.length; i++){
+    var board = find(REA_BOARD_PAGE);
+    if (board){
+      var add = [REA_DETAIL_TASK, REA_DETAIL_MAT];
+      for (i = 0; i < add.length; i++){
+        P.pages.push({
+          name: add[i],
+          rest: board.rest,
+          contentStart: board.contentStart,
+          contentEnd: board.contentEnd
+        });
+      }
+    } else {
+      reaWarn('「详细数据」子页合成失败：快照里找不到「' + REA_BOARD_PAGE + '」页');
+    }
+    /* 任务配置快照：克隆详情页（详情页不在就退回列表页）的壳，正文由覆盖脚本整段换掉 */
+    var xhs = find(REA_XHS_DETAIL) || find(REA_XHS_PAGE);
+    if (xhs){
       P.pages.push({
-        name: add[i],
-        rest: base.rest,
-        contentStart: base.contentStart,
-        contentEnd: base.contentEnd
+        name: REA_XHS_SNAPSHOT,
+        rest: xhs.rest,
+        contentStart: xhs.contentStart,
+        contentEnd: xhs.contentEnd
       });
+    } else {
+      reaWarn('「任务配置快照」页合成失败：快照里找不到「' + REA_XHS_DETAIL + '」页');
     }
     reaSynthDone = true;
   }
