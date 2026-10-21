@@ -9559,7 +9559,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   </div>
 
   <!-- 时间窗（PRD §2.2／§4.4）：它现在归「任务执行」板块，筛的是这张任务台账，
-       同时是下方「组织范围」的取数窗口。素材数据有自己的日期区间，不跟这个窗口走。
+       本板块下半的「组织范围」也吃这个窗口。素材数据有自己的日期区间，不跟这个窗口走。
        业务域三枚标签已撤：企业微信／悬浮窗两张看板走侧栏进，不在本页顶部再挂一个切换器。
        本板块上方的执行健康度三卡固定看今日，不跟这个窗口走。 -->
   <div class="rea-bd-row">
@@ -9915,6 +9915,14 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
           </div></div>
         </div>
     </div>
+
+    <!-- 组织范围是**任务执行板块内的一段**，不是并列板块：它和上面的 7 类完成度、欠账清单
+         吃同一个时间窗，只是换了个切法——按任务创建人所属大区比完成率。 -->
+    <div class="rea-bd-sub">
+      <h6>组织范围</h6>
+    </div>
+    <p class="rea-bd-note">比的是<b>完成率</b>（已执行 ÷ 应执行，人次）· 按<b>任务创建人</b>所属大区聚合；执行人员可跨大区，人维度看右上角「执行人明细」，两处不可相加。点大区就地展开该大区没做满的任务。</p>
+    <div class="rea-bd-org" id="rea-bd-org"></div>
   </div>
 </div>
 
@@ -9966,18 +9974,6 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
       </div>
     </div></div>
   </div>
-</div>
-
-<div class="_board_gf4go_1" style="margin-top: 21px; padding-bottom: 28px;">
-  <div class="_title_gf4go_8" style="padding-bottom: 0px;">
-    <h6>组织范围</h6>
-    <span>比的是完成率（已执行 ÷ 应执行，人次）· 按任务创建人所属大区聚合</span>
-  </div>
-  <!-- 旧稿是一根没有刻度的柱，只写聚合方式、不写比的是哪个指标，还挂着一句没兑现的
-       「可下钻到人」。现在每行给全三样：完成率、分子／分母、逾期绝对数；点大区就地
-       展开该大区没做满的任务——回答的是「这个数由哪几条任务构成」。 -->
-  <div class="rea-bd-org" id="rea-bd-org"></div>
-  <p class="rea-bd-note">组织范围按<b>任务创建人</b>所属大区聚合；执行人员可跨大区，人维度看右上角「执行人明细」，两处不可相加。</p>
 </div>
 
 <div class="_board_gf4go_1" style="margin-top: 21px; padding-bottom: 28px;">
