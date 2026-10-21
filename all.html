@@ -1225,10 +1225,11 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
    ★ 产品另一条：**闲置多久会自动执行**得摆在首页——它原先是设置页「闲置时长」那一格的值，
      这里抄在右卡底部，读的仍是同一个 HVA_IDLE（hvaIdle 改完会连主页一起重画），不另存一份。
    ★ 左卡 .hva-ca 是 position:relative ＋ overflow:hidden：形象贴卡底、被 22 圆角裁一刀，照参考图那股劲儿。
-   尺寸：14 + 224 + 12 + 148 + 14 = 412；两卡同高 164，头卡舞台＝164＋上下各 14＝192。 */
-.hva-head-c{height:192px}
-.hva-hero-c{height:192px}
-.hva-hero-c .hva-ca{position:absolute;left:14px;top:14px;width:224px;height:164px;border-radius:22px;
+   尺寸：14 + 224 + 12 + 148 + 14 = 412；两卡同高 140（比例 224:140 ≈ 1.6，与参考图两卡约 1.56 对得上），
+   头卡舞台＝140＋上下各 14＝168。 */
+.hva-head-c{height:168px}
+.hva-hero-c{height:168px}
+.hva-hero-c .hva-ca{position:absolute;left:14px;top:14px;width:224px;height:140px;border-radius:22px;
   overflow:hidden;background:linear-gradient(155deg,#EAECF1,#D5DAE3)}
 .hva-hero-c .hva-ca.on{background:linear-gradient(155deg,#EAF2FF,#E8DFFF)}
 .hva-ca-h{position:absolute;left:14px;top:12px;display:flex;align-items:center;gap:7px}
@@ -1253,8 +1254,8 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .hva-hero-c .hva-cta.on .hva-sw i{left:18px}
 /* 右卡：白底，上面一枚大圆「设置」，底下两行是托管条件的现值（工作时间／闲置多久自动执行）。
    .hva-quick 在这一套里回到流里（前两套是绝对定位／display:contents），里面只剩一枚 .hva-qk。 */
-.hva-hero-c .hva-cb{position:absolute;left:250px;top:14px;width:148px;height:164px;border-radius:22px;
-  background:#fff;padding:20px 14px;display:flex;flex-direction:column;justify-content:space-between;
+.hva-hero-c .hva-cb{position:absolute;left:250px;top:14px;width:148px;height:140px;border-radius:22px;
+  background:#fff;padding:17px 14px;display:flex;flex-direction:column;justify-content:space-between;
   box-shadow:0 12px 26px -20px rgba(60,80,130,.85),0 2px 8px -6px rgba(70,90,150,.22)}
 .hva-hero-c .hva-quick{position:static;inset:auto;pointer-events:auto}
 .hva-hero-c .hva-qk{position:static;left:auto;top:auto;right:auto;width:100%;height:auto;
@@ -5386,7 +5387,7 @@ REND['host-ai']=function(){
      只换它的内容，所以滚动位置照旧；现在没有可切的第二栏，那两格仍是分开的两个元素——
      拆了就得让日志跟着头卡一起滚，「头卡钉住」这件事就没了落点。 */
   /* 头卡舞台的高度跟着排法走：'a' 259（稿子坐标），'b' 216（右侧四件竖排的实测高度＋边距），
-     'c' 192（两卡 164＋上下各 14）。
+     'c' 168（两卡 140＋上下各 14）。
      只改 .hva-head 这一处，.hva-hero 自己也有高度——两者同高才不会在日志卡前留一道空当。 */
   $('hvaHead').className='hva-head'+(HVA_LAYOUT==='b'?' hva-head-b':(HVA_LAYOUT==='c'?' hva-head-c':''));
   $('hvaHead').innerHTML=hvaHeroHtml();
