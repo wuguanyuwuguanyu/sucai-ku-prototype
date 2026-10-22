@@ -12277,9 +12277,8 @@ window.addEventListener("resize",function(){
     '  }',
     '  syncLink();',
     '}',
-    '/* 页面重做（2026-10-22）：四十行平铺表单搬进六张卡片，同时补四件运营看得见的东西——',
-    '   卡片头一句话说清在配什么 · 条件行自解释 · 卡 5 顶部只读规则条与随开关亮灭的客户旅程 ·',
-    '   右侧常驻「客户视角预览」；执行节奏默认折叠；保存时按「缺失必填 / 配置矛盾 / 建议项」分组校验。',
+    '/* 页面重做（2026-10-22）：四十行平铺表单搬进六张卡片——卡片头一句话说清在配什么、条件行自解释；',
+    '   保存时按「缺失必填 / 配置矛盾 / 建议项」分组校验；总开关关掉时 ①② 两组整组收起（本页补的联动）。',
     '   搬行一律按**标签文字**（快照重抓后行序变了也不会搬错），认不出的行落进「其他设置」卡并 warn；',
     '   行本身还是快照原来那些节点，syncShow／syncLink 按元素引用的显隐一行都不用改。 */',
     'var FORM=document.querySelector("[class*=_form_input_]");',
@@ -12291,31 +12290,27 @@ window.addEventListener("resize",function(){
     '  for(ri=0;ri<allRows.length;ri++){var l0=labelOf(allRows[ri]);if(l0&&!byLabel[l0])byLabel[l0]=allRows[ri];}',
     '  var taken={};',
     '  var takeRow=function(name){var r=byLabel[name];if(!r||taken[name])return null;taken[name]=1;return r;};',
-    '  var grid=document.createElement("div");grid.className="rea-xhs-grid css-vgijab";',
     '  var mainCol=document.createElement("div");mainCol.className="rea-xhs-main";',
-    '  var sideCol=document.createElement("aside");sideCol.className="rea-xhs-side";',
-    '  grid.appendChild(mainCol);grid.appendChild(sideCol);CON.appendChild(grid);',
-    '  var mkCard=function(title,sub,foldable){',
+    '  CON.appendChild(mainCol);',
+    '  var mkCard=function(title,sub){',
     '    var c=document.createElement("section");c.className="ant-card ant-card-bordered css-vgijab rea-xhs-card";',
     '    var hd=document.createElement("div");hd.className="ant-card-head";',
     '    var hr=document.createElement("div");hr.className="rea-xhs-headrow";',
     '    var tt=document.createElement("div");tt.className="ant-card-head-title";tt.textContent=title;',
     '    hr.appendChild(tt);',
-    '    var fd=null;',
-    '    if(foldable){fd=document.createElement("span");fd.className="rea-xhs-fold";fd.setAttribute("role","button");hr.appendChild(fd);}',
     '    hd.appendChild(hr);',
     '    if(sub){var sb=document.createElement("div");sb.className="rea-xhs-sub";sb.textContent=sub;hd.appendChild(sb);}',
     '    var bd=document.createElement("div");bd.className="ant-card-body";',
     '    c.appendChild(hd);c.appendChild(bd);mainCol.appendChild(c);',
-    '    return {el:c,body:bd,head:hd,fold:fd};',
+    '    return {el:c,body:bd,head:hd};',
     '  };',
     '  var CARDS=[',
     '    {title:"任务安排",sub:"谁跑、什么时候跑、提醒弹到哪",rows:["任务名称","执行人员","任务类型","通知时间","截止时间","全局弹窗"]},',
     '    {title:"找谁",sub:"搜什么，在哪些笔记和评论里找",rows:["关键词类型","录入方式","搜索关键词","笔记发布时间","筛选词","评论发布时间","拓客所属地","客户年龄段","客户性别","客户粉丝数量"]},',
     '    {title:"不找谁",sub:"排除掉这些人，避免重复打扰",rows:["跳过笔记作者","过滤已执行客户","过滤赞助笔记"]},',
     '    {title:"第一句话",sub:"第一次接触，发私信还是回评论",rows:["首次触达方式","消息生成类型","沟通身份","沟通风格"]},',
-    '    {title:"他回了之后",sub:"客户回复后，机器人怎么接着聊",rows:["用户回复后自动承接","① 评论承接","承接条件","关键词","评论回复方式","固定话术","回复后同时私信","私信内容","私信发不出去时","兜底评论话术","② 私信承接","承接模式","话术流程","流程结束后AI接管"]},',
-    '    {title:"执行节奏",sub:"有默认值，一般不用改",fold:true,rows:["单次执行上限","执行频率","查看评论、私信回复频率"]}',
+    '    {title:"回复消息",sub:"任务执行期间收到的评论和私信，都按这套规则处理",rows:["用户回复后自动承接","① 评论承接","承接条件","关键词","评论回复方式","固定话术","回复后同时私信","私信内容","私信发不出去时","兜底评论话术","② 私信承接","承接模式","话术流程","流程结束后AI接管"]},',
+    '    {title:"执行节奏",sub:"有默认值，一般不用改",rows:["单次执行上限","执行频率","查看评论、私信回复频率"]}',
     '  ];',
     '  var cardRefs={};',
     '  CARDS.forEach(function(cfg){',
@@ -12335,7 +12330,7 @@ window.addEventListener("resize",function(){
     '    return r!==footRow&&!r.closest(".rea-xhs-card");',
     '  });',
     '  if(restRows.length){',
-    '    var other=mkCard("其他设置","快照里没认出的行，先原样放在这里",false);',
+    '    var other=mkCard("其他设置","快照里没认出的行，先原样放在这里");',
     '    restRows.forEach(function(r){other.body.appendChild(r);});',
     '    mainCol.insertBefore(other.el,foot);',
     '    console.warn("[rea] 新小红书运营 · 新建：有 "+restRows.length+" 行没归进卡片");',
@@ -12357,27 +12352,15 @@ window.addEventListener("resize",function(){
     '  /* ①② 两组之间拉一条细线，替掉旧的分组小标题 */',
     '  var sepBefore=function(name){',
     '    var r=byLabel[name];if(!r||!r.parentNode)return;',
-    '    var d=document.createElement("div");d.className="rea-xhs-sep";',
+    '    var d=document.createElement("div");d.className="rea-xhs-sep";d.setAttribute("data-rea-grp","1");',
     '    r.parentNode.insertBefore(d,r);',
     '  };',
     '  sepBefore("① 评论承接");sepBefore("② 私信承接");',
-    '  /* 规则条：这三条是产品口径，不是控件——只读，放在卡 5 最上面 */',
-    '  var rules=document.createElement("div");rules.className="rea-xhs-rules";',
-    '  ["同一位客户只回一次评论：已私信过的人不会再收到评论",',
-    '   "先私信成功，才回评论：私信发不出去时按下方「私信发不出去时」处理",',
-    '   "联动私信不计入回复轮次：AI 接管后仍从节点 1 继续"].forEach(function(txt){',
-    '    var d=document.createElement("div");d.textContent="· "+txt;rules.appendChild(d);',
-    '  });',
-    '  /* 客户旅程：亮＝这条链路真的会跑，灰＝没开 */',
-    '  var flow=document.createElement("div");flow.className="rea-xhs-flow";',
-    '  [["客户评论","c1"],["我们回评论","r1"],["客户回复评论","c2"],["我们发私信","d1"],["AI 接着聊","a1"]].forEach(function(st,si){',
-    '    if(si){var ar=document.createElement("span");ar.className="rea-xhs-arrow";ar.textContent="→";flow.appendChild(ar);}',
-    '    var nd=document.createElement("span");nd.className="rea-xhs-node";nd.setAttribute("data-step",st[1]);nd.textContent=st[0];',
-    '    flow.appendChild(nd);',
-    '  });',
-    '  var card5=cardRefs["他回了之后"];',
-    '  card5.body.insertBefore(flow,card5.body.firstChild);',
-    '  card5.body.insertBefore(rules,flow);',
+    '  /* 「过滤已执行客户」的去重口径说明这次不展示，开关本身照旧 */',
+    '  var fRow=byLabel["过滤已执行客户"];',
+    '  if(fRow){[].slice.call(fRow.querySelectorAll("p")).forEach(function(p){',
+    '    if(/按小红书号去重/.test(p.textContent||""))p.parentNode.removeChild(p);',
+    '  });}',
     '  var onOf=function(name){',
     '    var r=byLabel[name];if(!r)return true;',
     '    var s=r.querySelector("button[role=switch]");',
@@ -12393,97 +12376,24 @@ window.addEventListener("resize",function(){
     '    var f=r.querySelector("textarea,input.ant-input");',
     '    return f?(f.value||"").trim():"";',
     '  };',
-    '  var paintFlow=function(){',
-    '    var master=onOf("用户回复后自动承接"),c1=onOf("① 评论承接"),lk=onOf("回复后同时私信"),c2=onOf("② 私信承接"),ai=onOf("流程结束后AI接管");',
-    '    var lit={c1:true,r1:master&&c1,c2:master&&c1,d1:master&&c1&&lk&&c2,a1:master&&c1&&lk&&c2&&ai};',
-    '    var ch=flow.children,z;',
-    '    for(z=0;z<ch.length;z++){',
-    '      var ds=ch[z].getAttribute("data-step");',
-    '      if(ds)ch[z].className="rea-xhs-node"+(lit[ds]?" rea-on":"");',
-    '    }',
-    '  };',
-    '  /* 执行节奏：默认折叠（有默认值，一般不用改） */',
-    '  var foldCard=cardRefs["执行节奏"];',
-    '  var setFold=function(open){',
-    '    foldCard.el.classList.toggle("rea-xhs-card-collapsed",!open);',
-    '    if(foldCard.fold)foldCard.fold.textContent=open?"收起":"展开";',
-    '  };',
-    '  setFold(false);',
-    '  foldCard.head.addEventListener("click",function(){',
-    '    setFold(foldCard.el.classList.contains("rea-xhs-card-collapsed"));',
+    '  /* 总开关（快照里叫「用户回复后自动承接」）：关掉时 ①② 两组整组收起。',
+    '     标签换成本页的叫法；组内的行打 data-rea-grp，靠卡上的类名整组隐藏——',
+    '     行自己的 display 仍归快照的 syncShow 管，这边不碰内联样式。 */',
+    '  var masterRow=byLabel["用户回复后自动承接"];',
+    '  if(masterRow){',
+    '    var mlab=masterRow.querySelector("span[class*=_must_]");if(mlab)mlab.textContent="自动回复客户消息";',
+    '  }',
+    '  ["① 评论承接","承接条件","关键词","评论回复方式","固定话术","回复后同时私信","私信内容",',
+    '   "私信发不出去时","兜底评论话术","② 私信承接","承接模式","话术流程","流程结束后AI接管"].forEach(function(nm){',
+    '    var r=byLabel[nm];if(r)r.setAttribute("data-rea-grp","1");',
     '  });',
-    '  /* 右侧「客户视角预览」：三个视角跟着表单实时重画 */',
-    '  var prevCard=document.createElement("div");prevCard.className="ant-card ant-card-bordered css-vgijab rea-xhs-prev";',
-    '  var ph=document.createElement("div");ph.className="ant-card-head";',
-    '  var pt=document.createElement("div");pt.className="ant-card-head-title";pt.textContent="客户视角预览";',
-    '  ph.appendChild(pt);',
-    '  var pb=document.createElement("div");pb.className="ant-card-body";',
-    '  var tabs=document.createElement("div");tabs.className="rea-xhs-tabs";',
-    '  [["comment","客户看到的评论"],["dm","客户收到的私信"],["chat","完整对话"]].forEach(function(tb,ti){',
-    '    var b=document.createElement("span");b.className="rea-xhs-tab"+(ti===0?" rea-on":"");',
-    '    b.setAttribute("data-tab",tb[0]);b.textContent=tb[1];tabs.appendChild(b);',
-    '  });',
-    '  var screen=document.createElement("div");screen.className="rea-xhs-screen";',
-    '  var tip=document.createElement("div");tip.className="rea-xhs-tip";',
-    '  pb.appendChild(tabs);pb.appendChild(screen);pb.appendChild(tip);',
-    '  prevCard.appendChild(ph);prevCard.appendChild(pb);sideCol.appendChild(prevCard);',
-    '  var curTab="comment";',
-    '  var mkMsg=function(me,txt){',
-    '    var w=document.createElement("div");w.className="rea-xhs-msg"+(me?" rea-me":"");',
-    '    var b=document.createElement("div");b.className="rea-xhs-bub";b.textContent=txt;',
-    '    w.appendChild(b);return w;',
+    '  var card5=cardRefs["回复消息"];',
+    '  var syncMaster=function(){',
+    '    card5.el.classList.toggle("rea-xhs-master-off",!onOf("用户回复后自动承接"));',
     '  };',
-    '  var mkEmpty=function(txt){var d=document.createElement("div");d.className="rea-xhs-empty";d.textContent=txt;return d;};',
-    '  var firstLine=function(s){return s?s.split(/\\n/)[0]:"";};',
-    '  var renderPrev=function(){',
-    '    while(screen.firstChild)screen.removeChild(screen.firstChild);',
-    '    var master=onOf("用户回复后自动承接"),c1=onOf("① 评论承接"),lk=onOf("回复后同时私信"),c2=onOf("② 私信承接"),ai=onOf("流程结束后AI接管");',
-    '    var cond=labelChecked("承接条件"),how=labelChecked("评论回复方式");',
-    '    var fixed=valOf("固定话术"),op=valOf("私信内容"),fl=valOf("话术流程"),fb=valOf("兜底评论话术"),kw=valOf("关键词");',
-    '    var fbMode=labelChecked("私信发不出去时");',
-    '    var reply=function(){',
-    '      if(how==="固定话术")return fixed||"（还没填固定话术）";',
-    '      return "（AI 按沟通身份与风格实时生成）";',
-    '    };',
-    '    if(curTab==="comment"){',
-    '      if(!(master&&c1)){screen.appendChild(mkEmpty("未开启 ① 评论承接：客户回复后不会自动回评论"));tip.textContent="";return;}',
-    '      if(cond==="仅关键词")screen.appendChild(mkMsg(false,"客户评论："+(firstLine(kw)||"（还没填关键词）")));',
-    '      screen.appendChild(mkMsg(true,reply()));',
-    '      tip.textContent=cond==="仅关键词"?"只回复命中关键词的评论":"所有评论都会收到这句回复";',
-    '    } else if(curTab==="dm"){',
-    '      if(!lk){screen.appendChild(mkEmpty("「回复后同时私信」没开：评论回复后不会发私信"));tip.textContent="";return;}',
-    '      if(!(master&&c1&&c2)){screen.appendChild(mkEmpty("② 私信承接没开：客户回私信后没人接"));tip.textContent="";return;}',
-    '      screen.appendChild(mkMsg(true,op||firstLine(fl)||"（还没填私信内容）"));',
-    '      tip.textContent="私信发送成功后才回复评论"+(fbMode==="回一条兜底评论"&&fb?"；发不出去时改用兜底评论":"；发不出去时不回评论");',
-    '    } else {',
-    '      screen.appendChild(mkMsg(false,"客户：（在笔记下留言）多少钱？"));',
-    '      if(master&&c1){',
-    '        screen.appendChild(mkMsg(true,reply()));',
-    '        if(lk&&c2){',
-    '          screen.appendChild(mkMsg(false,"客户：可以私信聊吗"));',
-    '          screen.appendChild(mkMsg(true,op||firstLine(fl)||"（还没填私信内容）"));',
-    '          if(ai)screen.appendChild(mkMsg(true,"（AI 接着聊）"));',
-    '        }',
-    '      } else screen.appendChild(mkEmpty("承接没开：客户回复后不会再有人接"));',
-    '      tip.textContent="按客户旅程演示；灰色的环节表示当前没开";',
-    '    }',
-    '  };',
-    '  tabs.addEventListener("click",function(ev){',
-    '    var tb=ev.target.closest("[data-tab]");if(!tb)return;',
-    '    curTab=tb.getAttribute("data-tab");',
-    '    var ch=tabs.children,z;',
-    '    for(z=0;z<ch.length;z++)ch[z].className="rea-xhs-tab"+(ch[z].getAttribute("data-tab")===curTab?" rea-on":"");',
-    '    renderPrev();',
-    '  });',
-    '  renderPrev();paintFlow();',
-    '  var redraw=function(){renderPrev();paintFlow();};',
-    '  var pend=0;',
-    '  CON.addEventListener("input",function(){',
-    '    if(pend)return;pend=1;',
-    '    requestAnimationFrame(function(){pend=0;redraw();});',
-    '  });',
-    '  /* 开关/单选的翻转归 REA_FX（document 级委托），等它翻完再重画 */',
-    '  CON.addEventListener("click",function(){setTimeout(redraw,0);});',
+    '  syncMaster();',
+    '  /* 开关的翻转归 REA_FX（document 级委托），等它翻完再读 aria-checked */',
+    '  CON.addEventListener("click",function(){setTimeout(syncMaster,0);});',
     '  /* 保存校验：先算问题清单，再按「缺失必填 / 配置矛盾 / 建议项」分组落到页脚 */',
     '  /* 只盯着**能读回值**的输入框。执行人员／沟通身份／沟通风格／拓客所属地是快照里的自定义下拉，',
     '     选项面板没被抓住、文本一直停在「请选择…」，校验它们只会永远红着、演示里也改不动；',
@@ -12491,7 +12401,7 @@ window.addEventListener("resize",function(){
     '  var REQUIRED=["任务名称","搜索关键词","筛选词","固定话术","话术流程"];',
     '  var emptyOf=function(name){',
     '    var r=byLabel[name];if(!r)return false;',
-    '    /* offsetParent 为 null：本行被收起，或整张卡（执行节奏）折着——按 PRD 不校验、但值留着 */',
+    '    /* offsetParent 为 null：本行被收起（总开关关、② 关等）——按 PRD 不校验、但值留着 */',
     '    if(r.offsetParent===null)return false;',
     '    var f=r.querySelector("textarea,input.ant-input");',
     '    if(f)return !(f.value||"").trim();',
@@ -12534,21 +12444,23 @@ window.addEventListener("resize",function(){
     '    clearBad();',
     '    var list=[];',
     '    REQUIRED.forEach(function(nm){if(emptyOf(nm))list.push({k:"miss",t:"「"+nm+"」还没填",row:nm});});',
+    '    /* 总开关关掉时 ①② 整组收起：下面这些规则一条都不跑 */',
+    '    var master=onOf("用户回复后自动承接");',
     '    var cond=labelChecked("承接条件"),how=labelChecked("评论回复方式"),mode=labelChecked("承接模式");',
-    '    if(cond==="仅关键词"&&!valOf("关键词"))list.push({k:"miss",t:"承接条件选了「仅关键词」，但关键词是空的",row:"关键词"});',
-    '    if(onOf("① 评论承接")&&how==="固定话术"&&!valOf("固定话术"))list.push({k:"miss",t:"评论回复方式选了「固定话术」，但固定话术是空的",row:"固定话术"});',
-    '    if(onOf("② 私信承接")&&mode==="自定义话术流程"&&!valOf("话术流程"))list.push({k:"miss",t:"私信承接选了「自定义话术流程」，但话术流程还没有内容",row:"话术流程"});',
-    '    if(onOf("回复后同时私信")&&!onOf("② 私信承接"))list.push({k:"conflict",t:"「回复后同时私信」开着，但「② 私信承接」是关的——客户回私信后没人接",row:"② 私信承接"});',
-    '    if(onOf("回复后同时私信")&&mode==="自定义话术流程"&&!valOf("私信内容"))list.push({k:"miss",t:"「回复后同时私信」开着，但私信内容是空的",row:"私信内容"});',
-    '    if(onOf("回复后同时私信")&&labelChecked("私信发不出去时")==="回一条兜底评论"&&!valOf("兜底评论话术"))list.push({k:"miss",t:"「私信发不出去时」选了回兜底评论，但兜底评论话术是空的",row:"兜底评论话术"});',
-    '    var fbt=valOf("兜底评论话术"),bad=["已私信","私你了","已私","私信你了","已经私信","私了"],bi;',
+    '    if(master&&cond==="仅关键词"&&!valOf("关键词"))list.push({k:"miss",t:"承接条件选了「仅关键词」，但关键词是空的",row:"关键词"});',
+    '    if(master&&onOf("① 评论承接")&&how==="固定话术"&&!valOf("固定话术"))list.push({k:"miss",t:"评论回复方式选了「固定话术」，但固定话术是空的",row:"固定话术"});',
+    '    if(master&&onOf("② 私信承接")&&mode==="自定义话术流程"&&!valOf("话术流程"))list.push({k:"miss",t:"私信承接选了「自定义话术流程」，但话术流程还没有内容",row:"话术流程"});',
+    '    if(master&&onOf("回复后同时私信")&&!onOf("② 私信承接"))list.push({k:"conflict",t:"「回复后同时私信」开着，但「② 私信承接」是关的——客户回私信后没人接",row:"② 私信承接"});',
+    '    if(master&&onOf("回复后同时私信")&&mode==="自定义话术流程"&&!valOf("私信内容"))list.push({k:"miss",t:"「回复后同时私信」开着，但私信内容是空的",row:"私信内容"});',
+    '    if(master&&onOf("回复后同时私信")&&labelChecked("私信发不出去时")==="回一条兜底评论"&&!valOf("兜底评论话术"))list.push({k:"miss",t:"「私信发不出去时」选了回兜底评论，但兜底评论话术是空的",row:"兜底评论话术"});',
+    '    var fbt=master?valOf("兜底评论话术"):"",bad=["已私信","私你了","已私","私信你了","已经私信","私了"],bi;',
     '    for(bi=0;bi<bad.length;bi++){',
     '      if(fbt&&fbt.indexOf(bad[bi])>=0){',
     '        list.push({k:"suggest",t:"兜底评论话术里别写「"+bad[bi]+"」——私信其实没发出去",row:"兜底评论话术"});',
     '        break;',
     '      }',
     '    }',
-    '    var kws=valOf("关键词");',
+    '    var kws=master?valOf("关键词"):"";',
     '    if(kws&&kws.split(/\\n/).some(function(l){return l.replace(/\\s/g,"").length>30;})){',
     '      list.push({k:"suggest",t:"关键词里有超过 30 个字的，搜不出来",row:"关键词"});',
     '    }',
@@ -12900,11 +12812,9 @@ tb.addEventListener("click",function(e){
      色值全部取自快照已出现过的色（规则 B）：#1677ff / #e6f4ff / #bae0ff / #91caff / #ff4d4f /
      #fff1f0 / #ffccc7 / #f6ffed / #b7eb8f / #52c41a / #f0f0f0 / #fafafa / #d9d9d9 / #8c8c8c。 */
   var REA_XHS_CSS =
-      /* 两栏：左表单卡列、右客户视角预览（窄屏收起预览，只留表单） */
-      '.rea-xhs-grid{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:20px;align-items:start}'
-    + '.rea-xhs-main{min-width:0}'
-    + '.rea-xhs-side{position:sticky;top:0}'
-    /* 卡片头：标题 16px/500 ＋ 一行灰副标题；折叠卡的头整块可点 */
+      /* 单列：卡片自上而下一张一张排 */
+      '.rea-xhs-main{min-width:0}'
+    /* 卡片头：标题 16px/500 ＋ 一行灰副标题 */
     + '.rea-xhs-card{margin-bottom:16px}'
     + '.rea-xhs-card>.ant-card-head{min-height:auto;padding:14px 20px 12px;font-weight:400}'
     + '.rea-xhs-card>.ant-card-head .ant-card-head-title{white-space:normal;overflow:visible;'
@@ -12912,42 +12822,19 @@ tb.addEventListener("click",function(e){
     + '.rea-xhs-headrow{display:flex;align-items:center;width:100%}'
     + '.rea-xhs-headrow .ant-card-head-title{flex:1}'
     + '.rea-xhs-sub{margin-top:2px;font-size:13px;font-weight:400;color:#8c8c8c}'
-    + '.rea-xhs-fold{padding-left:12px;font-size:13px;color:#1677ff;cursor:pointer;user-select:none}'
     + '.rea-xhs-card>.ant-card-body{padding:2px 20px 18px}'
-    + '.rea-xhs-card-collapsed>.ant-card-body{display:none}'
-    /* 快照行原本是 `padding:24px 20% 0`（给整页宽留白），进了卡片要把这层缩进收掉 */
+    /* 快照行原本是 `padding:24px 20% 0`（给整页宽留白），进了卡片要把这层缩进收掉。
+       标签列快照给的是 130px＋nowrap，进卡片后左边没有那 20% 的留白，「查看评论、私信回复频率」
+       这种 13 字的标签会溢出卡片左边缘被裁掉——本页把标签列统一放宽到 210px（右对齐不变）。 */
     + '.rea-xhs-card [class*=_form_input_]{padding:14px 0 0}'
+    + '.rea-xhs-card [class*=_must_]{width:210px;flex:0 0 210px}'
     + '.rea-xhs-sep{height:1px;background:#f0f0f0;margin-top:16px}'
     /* 条件自解释：长在控件盒顶部，跟着整行的显隐一起走 */
     + '.rea-xhs-cond{margin-bottom:6px;font-size:12px;line-height:18px;color:#8c8c8c}'
-    /* 规则条：只读，不进任何控件 */
-    + '.rea-xhs-rules{margin:10px 0 4px;padding:10px 14px;background:#e6f4ff;border:1px solid #bae0ff;'
-    +   'border-radius:6px;font-size:13px;line-height:22px;color:rgba(51,51,51,.88)}'
-    + '.rea-xhs-rules>div+div{margin-top:2px}'
-    /* 旅程时间线：亮＝这条链路真的会跑，灰＝没开 */
-    + '.rea-xhs-flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:8px 0 2px;font-size:12px}'
-    + '.rea-xhs-node{padding:1px 10px;border:1px solid #d9d9d9;border-radius:12px;background:#ffffff;'
-    +   'color:#8c8c8c;line-height:20px;white-space:nowrap}'
-    + '.rea-xhs-node.rea-on{border-color:#91caff;background:#e6f4ff;color:#1677ff}'
-    + '.rea-xhs-arrow{color:#d9d9d9}'
+    /* 总开关关掉：①② 两组整组收起。行自己的 display 仍归快照的 syncShow 管，
+       所以这边用 !important 压过它——开回来时只摘类名，不碰行的内联样式 */
+    + '.rea-xhs-master-off [data-rea-grp]{display:none!important}'
     + '.rea-xhs-footer{margin-top:8px}'
-    /* 右侧预览 */
-    + '.rea-xhs-prev>.ant-card-head{min-height:auto;padding:14px 16px 10px;font-weight:400}'
-    + '.rea-xhs-prev>.ant-card-body{padding:12px 16px 16px}'
-    + '.rea-xhs-tabs{display:flex;margin-bottom:10px;border-bottom:1px solid #f0f0f0}'
-    + '.rea-xhs-tab{padding:6px 8px 8px;margin-bottom:-1px;border-bottom:2px solid transparent;'
-    +   'font-size:13px;line-height:18px;color:#8c8c8c;cursor:pointer;white-space:nowrap}'
-    + '.rea-xhs-tab.rea-on{border-bottom-color:#1677ff;color:#1677ff}'
-    + '.rea-xhs-screen{min-height:240px;padding:12px;background:#fafafa;border-radius:8px}'
-    + '.rea-xhs-msg{display:flex;margin-bottom:10px}'
-    + '.rea-xhs-msg:last-child{margin-bottom:0}'
-    + '.rea-xhs-msg.rea-me{justify-content:flex-end}'
-    + '.rea-xhs-bub{max-width:225px;padding:8px 10px;background:#ffffff;border:1px solid #f0f0f0;'
-    +   'border-radius:8px;font-size:13px;line-height:20px;color:rgba(51,51,51,.88);'
-    +   'white-space:pre-wrap;word-break:break-word}'
-    + '.rea-xhs-msg.rea-me .rea-xhs-bub{background:#e6f4ff;border-color:#bae0ff}'
-    + '.rea-xhs-empty{padding:60px 8px;text-align:center;font-size:13px;line-height:20px;color:#8c8c8c}'
-    + '.rea-xhs-tip{min-height:18px;margin-top:10px;font-size:12px;line-height:18px;color:#8c8c8c}'
     /* 保存校验：默认藏着，点保存才算 */
     + '.rea-xhs-sum{display:none;padding:12px 16px;background:#fff1f0;border:1px solid #ffccc7;'
     +   'border-radius:6px;font-size:13px;line-height:22px}'
@@ -12959,8 +12846,7 @@ tb.addEventListener("click",function(e){
     + '.rea-xhs-sum-i:hover{color:#1677ff}'
     + '.rea-xhs-bad textarea,.rea-xhs-bad input.ant-input{border-color:#ff4d4f}'
     + '.rea-xhs-flash{animation:rea-xhs-flash 1.2s ease}'
-    + '@keyframes rea-xhs-flash{0%,100%{background:transparent}20%,60%{background:#fff1f0}}'
-    + '@media (max-width:1320px){.rea-xhs-grid{grid-template-columns:minmax(0,1fr)}.rea-xhs-side{display:none}}';
+    + '@keyframes rea-xhs-flash{0%,100%{background:transparent}20%,60%{background:#fff1f0}}';
 
   var REA_COVER = {
     '微小助看板':    { html: 'srcBoard', css: REA_BOARD_CSS, js: reaBoardJs },
