@@ -9725,28 +9725,28 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 
 <!-- 执行趋势 · **独立板块**（第 2 层 · 过程）。
      任务执行回答「这批活做没做」，这一块回答「这些天是越干越顺、还是越拖越多」——
-     每天完成了多少人次、又新增了多少逾期人次。原来看板只给欠账的**快照**（选一段窗口知道欠多少），
+     每周做满了多少条任务、又有多少条到期没做满。原来看板只给欠账的**快照**（选一段窗口知道欠多少），
      看不出是月初就堆着、还是上周才崩的。
-     它有自己的时间窗（近 4 周按日 / 近 12 周按周），**不跟下方任务执行的时间窗联动**：
-     那边筛的是「哪一批任务」，这里看的是「日子过得怎么样」，两者不是同一份数。
-     位置放在三卡之后、任务执行之前：先看今天，再看这几周的走势，最后才拆这一批任务。
-     完成与新增逾期的量级差一截（日 40–70 对 0–13），所以上下两张小图各用各的纵轴、
-     共用一条日期轴——不做双轴，也不把逾期压成贴着零线的一条缝。 -->
+     口径是**任务条数**（不是人次）：一条派给 15 人与派给 2 人都算 1 条；好处是两条线同单位、
+     量级接近，能画在一张图、共用一根纵轴里。按周汇总——一天才 7–9 条任务、做满 0–1 条，
+     按天画几乎贴着零线。
+     它有自己的时间窗（近 12 周 / 近 26 周），**不跟下方任务执行的时间窗联动**：
+     那边筛的是「哪一批任务」，这里看的是「任务有没有落地」。 -->
 <div class="_board_gf4go_1 rea-bd-sec" id="rea-tr">
   <div class="rea-tr-hd">
     <h6>执行趋势</h6>
     <div class="ant-radio-group ant-radio-group-solid css-vgijab rea-tr-win" id="rea-tr-win">
       <div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small">
         <div class="ant-space-item">
-          <label class="ant-radio-button-wrapper css-vgijab" data-tr-win="4">
-            <span class="ant-radio-button"><input name="rea-tr-win" class="ant-radio-button-input" type="radio" value="4"><span class="ant-radio-button-inner"></span></span>
-            <span class="ant-radio-button-label">近 4 周</span>
-          </label>
-        </div>
-        <div class="ant-space-item">
           <label class="ant-radio-button-wrapper ant-radio-button-wrapper-checked css-vgijab" data-tr-win="12">
             <span class="ant-radio-button ant-radio-button-checked"><input name="rea-tr-win" class="ant-radio-button-input" type="radio" value="12" checked=""><span class="ant-radio-button-inner"></span></span>
             <span class="ant-radio-button-label">近 12 周</span>
+          </label>
+        </div>
+        <div class="ant-space-item">
+          <label class="ant-radio-button-wrapper css-vgijab" data-tr-win="26">
+            <span class="ant-radio-button"><input name="rea-tr-win" class="ant-radio-button-input" type="radio" value="26"><span class="ant-radio-button-inner"></span></span>
+            <span class="ant-radio-button-label">近 26 周</span>
           </label>
         </div>
       </div>
@@ -10691,7 +10691,7 @@ body .subapp{background:#fff!important}
 .rea-tr-hd{display:flex;align-items:baseline;flex-wrap:wrap;gap:8px 12px;padding:0}
 .rea-tr-hd h6{margin:0;color:#1F2329;font-size:16px;line-height:24px;font-weight:600}
 .rea-tr-hd .rea-tr-win{margin-left:auto}
-.rea-tr-chart{position:relative;margin-top:8px;min-height:240px}
+.rea-tr-chart{position:relative;margin-top:8px;min-height:220px}
 .rea-tr-chart svg{display:block;width:100%}
 /* 浮窗沿用「群发好友回复」那套外框，只把系列点的颜色换成绿／橙 */
 .rea-tr-tip .r i{background:#52C41A}
@@ -10888,111 +10888,111 @@ window.addEventListener("resize",function(){
 `;
   }
 
-  /* 看板「执行趋势」板块：每天完成了多少人次、又新增了多少逾期人次。
-     末两天直接从台账的 today / d1 两档派生（与三卡、「昨天」那一屏同数），更早的是
-     确定性演示序列——同一页每次打开都是同一份，不随刷新跳。
-     两张小图共用一条日期轴，但各用各的纵轴：完成日 40–70 人次，新增逾期 0–13 人次，
-     塞进同一根轴里逾期会贴着零线，看不出来；分成双轴又会被当成两条能互相换算的曲线。 */
+  /* 看板「执行趋势」板块：每周做满了多少条任务、又有多少条到期没做满。
+     回答的是「欠账在扩大还是收敛」——看板原来只给欠账快照（选一段窗口知道欠多少），
+     看不出是月初就堆着、还是上周才崩的。
+     口径是**任务条数**，不是人次：一条任务在某天做满就算 1 条，拖了十天也只算 1 条。
+     所以整块按周汇总——演示集一天 7–9 条任务、做满 0–1 条，按天画几乎贴着零线。
+     两条线同单位、同量级，共用一根纵轴画在一张图里；折线用直线段、不做平滑曲线：
+     条数是整数，平滑会把 0 → 3 连成一段不存在的缓坡。
+     本周的两条数直接数台账的行（与下方欠账清单同一批），其余周是确定性演示序列。 */
   function reaTrendJs(){
     return `
-/* ---- 执行趋势（日 / 周） ---- */
+/* ---- 执行趋势（周） ---- */
 function trHash(n){return Math.abs(Math.sin(n*12.9898+3.7)*43758.5453)%1}
 function trMid(d){return new Date(d.getFullYear(),d.getMonth(),d.getDate())}
-function trDaily(){
-  var out=[],today=trMid(new Date()),tt=tally(winRows("today")),ty=tally(winRows("d1"));
-  var i,ago,d,wd,h,done,over;
-  for(i=83;i>=0;i--){
-    ago=i;
-    d=new Date(today.getTime());d.setDate(d.getDate()-ago);
-    wd=d.getDay();h=trHash(ago);
-    /* 周末掉量、周中略高：不按真实业务拟合，只求曲线别像随机噪声 */
-    done=Math.round((48+16*h+8*Math.sin(ago/5))*(wd===0||wd===6?0.55:1));
-    over=Math.round(h*6+((ago%11===4)?7:0));
-    if(ago===1){done=ty.done;over=ty.over}
-    if(ago===0){done=tt.done;over=tt.over}
-    out.push({date:d,done:done,over:over,today:ago===0});
-  }
-  return out;
-}
 function trWeekStart(d){
   var x=trMid(d);x.setDate(x.getDate()-((x.getDay()+6)%7));return x;
 }
-var TRMODE=12;
-function trBuckets(){
-  var days=trDaily(),out=[],i,k,s,e,dd,oo;
-  if(TRMODE===4){
-    for(i=days.length-28;i<days.length;i++)
-      out.push({s:days[i].date,e:null,done:days[i].done,over:days[i].over,cur:days[i].today});
-    return out;
+/* 本周从台账的行上数：做满＝已执行达到应执行；到期没做满＝还有逾期人次的行 */
+function trWeekRows(){
+  var out=[],a=winRows("today"),b=winRows("d1"),i;
+  for(i=0;i<a.length;i++)out.push(a[i]);
+  for(i=0;i<b.length;i++)out.push(b[i]);
+  return out;
+}
+function trFullTasks(rs){
+  var n=0,i,r;
+  for(i=0;i<rs.length;i++){
+    r=rs[i];
+    if(+r.getAttribute("data-bd-done")>=+r.getAttribute("data-bd-need"))n++;
   }
-  var mon=trWeekStart(days[days.length-1].date);
-  for(k=11;k>=0;k--){
+  return n;
+}
+function trMissTasks(rs){
+  var n=0,i,r;
+  for(i=0;i<rs.length;i++){
+    r=rs[i];
+    if(+r.getAttribute("data-bd-over")>0)n++;
+  }
+  return n;
+}
+var TRMODE=12;
+function trWeeks(){
+  var out=[],mon=trWeekStart(new Date()),rows=trWeekRows(),k,s,e,h1,h2;
+  for(k=25;k>=0;k--){
     s=new Date(mon.getTime());s.setDate(s.getDate()-k*7);
     e=new Date(s.getTime());e.setDate(e.getDate()+6);
-    dd=0;oo=0;
-    for(i=0;i<days.length;i++)if(days[i].date>=s&&days[i].date<=e){dd+=days[i].done;oo+=days[i].over}
-    out.push({s:s,e:e,done:dd,over:oo,cur:k===0});
+    if(k===0){out.push({s:s,e:e,full:trFullTasks(rows),miss:trMissTasks(rows),cur:1});continue}
+    h1=trHash(k*3+1);h2=trHash(k*7+5);
+    out.push({s:s,e:e,full:3+Math.round(h1*4),miss:3+Math.round(h2*4)+((k%9===4)?3:0),cur:0});
   }
   return out;
 }
 function trMd(d){return (d.getMonth()+1)+"/"+d.getDate()}
-function trLabel(b){return b.e?trMd(b.s)+" ~ "+trMd(b.e):trMd(b.s)}
-/* 四等分的上限取整数倍：刻度才落得下整数，不会写出 12.5 这种半格 */
-function trNice(v,q){return Math.max(q*2,Math.ceil(v*1.12/(q*2))*(q*2))}
+function trLab(b){return trMd(b.s)+" ~ "+trMd(b.e)}
+/* 四等分的上限取 4 的整数倍：刻度才落得下整数条，不会写出 2.5 这种半格 */
+function trNice(v){return Math.max(8,Math.ceil(v*1.15/4)*4)}
 function renderTrTrend(){
   var box=document.getElementById("rea-tr-chart");if(!box)return;
-  var view=trBuckets(),n=view.length,i;
+  var all=trWeeks(),view=all.slice(-TRMODE),n=view.length,i;
   var w=Math.max(560,box.clientWidth||900);
-  var L=52,R=16,T=30,B=26,hA=124,hB=62,gap=26;
-  var h=T+hA+gap+hB+B,pw=w-L-R;
-  var yB0=T+hA+gap,iMax=0,dMax=0;
-  for(i=0;i<n;i++){if(view[i].over>iMax)iMax=view[i].over;if(view[i].done>dMax)dMax=view[i].done}
-  var maxD=trNice(dMax,TRMODE===4?10:50),maxO=trNice(iMax,2);
-  var band=pw/n,barW=Math.min(TRMODE===4?12:20,band*0.46);
-  function yD(v){return T+hA-(v/maxD)*hA}
-  function yO(v){return yB0+hB-(v/maxO)*hB}
+  var L=44,R=16,T=34,B=28,h=220,pw=w-L-R,ph=h-T-B;
+  var mv=0;
+  for(i=0;i<n;i++){if(view[i].full>mv)mv=view[i].full;if(view[i].miss>mv)mv=view[i].miss}
+  var maxY=trNice(mv),band=pw/n;
+  function yY(v){return T+ph-(v/maxY)*ph}
   var g="",k,val,yy;
   for(k=0;k<=4;k++){
-    val=Math.round(maxD*k/4);yy=T+hA-hA*k/4;
+    val=Math.round(maxY*k/4);yy=T+ph-ph*k/4;
     g+="<line x1='"+L+"' y1='"+yy.toFixed(1)+"' x2='"+(w-R)+"' y2='"+yy.toFixed(1)+"' stroke='#EFF1F5'/>";
     g+="<text x='"+(L-8)+"' y='"+(yy+4).toFixed(1)+"' text-anchor='end' fill='#8F959E' font-size='11'>"+val+"</text>";
   }
-  for(k=0;k<=2;k++){
-    val=Math.round(maxO*k/2);yy=yB0+hB-hB*k/2;
-    g+="<line x1='"+L+"' y1='"+yy.toFixed(1)+"' x2='"+(w-R)+"' y2='"+yy.toFixed(1)+"' stroke='#EFF1F5'/>";
-    g+="<text x='"+(L-8)+"' y='"+(yy+4).toFixed(1)+"' text-anchor='end' fill='#8F959E' font-size='11'>"+val+"</text>";
-  }
-  g+="<line x1='"+L+"' y1='"+(T+hA)+"' x2='"+(w-R)+"' y2='"+(T+hA)+"' stroke='#E5E8EF'/>";
-  g+="<line x1='"+L+"' y1='"+(yB0+hB)+"' x2='"+(w-R)+"' y2='"+(yB0+hB)+"' stroke='#E5E8EF'/>";
-  g+="<text x='"+L+"' y='"+(T-14)+"' fill='#8F959E' font-size='11'>人次</text>";
-  g+="<g transform='translate("+(L+44)+","+(T-10)+")'>"
-    +"<rect x='0' y='-6' width='10' height='12' rx='2' fill='#52C41A'/>"
-    +"<text x='15' y='4' fill='#646A73' font-size='12'>完成人次</text>"
-    +"<rect x='92' y='-6' width='10' height='12' rx='2' fill='#FAAD14'/>"
-    +"<text x='107' y='4' fill='#646A73' font-size='12'>新增逾期人次</text></g>";
-  /* 当前这一段（今天／本周）是半截的：底色压淡、左边一道虚线，别让它冒充完整一段 */
+  g+="<line x1='"+L+"' y1='"+(T+ph)+"' x2='"+(w-R)+"' y2='"+(T+ph)+"' stroke='#E5E8EF'/>";
+  g+="<text x='"+L+"' y='"+(T-14)+"' fill='#8F959E' font-size='11'>条</text>";
+  g+="<g transform='translate("+(L+40)+","+(T-10)+")'>"
+    +"<line x1='0' y1='0' x2='16' y2='0' stroke='#52C41A' stroke-width='2'/>"
+    +"<circle cx='8' cy='0' r='3' fill='#ffffff' stroke='#52C41A' stroke-width='2'/>"
+    +"<text x='22' y='4' fill='#646A73' font-size='12'>做满任务</text>"
+    +"<line x1='96' y1='0' x2='112' y2='0' stroke='#FAAD14' stroke-width='2'/>"
+    +"<circle cx='104' cy='0' r='3' fill='#ffffff' stroke='#FAAD14' stroke-width='2'/>"
+    +"<text x='118' y='4' fill='#646A73' font-size='12'>到期没做满</text></g>";
+  /* 本周还没走完：底色压淡、左边一道虚线，别让它冒充完整一周 */
   var cx0=L+(n-1)*band;
-  g+="<rect x='"+cx0.toFixed(1)+"' y='"+T+"' width='"+band.toFixed(1)+"' height='"+(yB0+hB-T)+"' fill='#F7F8FA'/>";
-  g+="<line x1='"+cx0.toFixed(1)+"' y1='"+T+"' x2='"+cx0.toFixed(1)+"' y2='"+(yB0+hB)+"' stroke='#D9D9D9' stroke-dasharray='4 3'/>";
-  g+="<rect class='tr-hov' x='0' y='0' width='"+band.toFixed(1)+"' height='"+(yB0+hB-T)+"' fill='#1F2329' opacity='0'/>";
-  for(i=0;i<n;i++){
-    var bx=(L+i*band+(band-barW)/2).toFixed(1);
-    var by=yD(view[i].done),bh=T+hA-by;
-    g+="<rect x='"+bx+"' y='"+by.toFixed(1)+"' width='"+barW.toFixed(1)+"' height='"+Math.max(0,bh).toFixed(1)+"' rx='2' fill='#52C41A'/>";
-    if(view[i].over>0){
-      var oy=yO(view[i].over),oh=yB0+hB-oy;
-      g+="<rect x='"+bx+"' y='"+oy.toFixed(1)+"' width='"+barW.toFixed(1)+"' height='"+Math.max(2,oh).toFixed(1)+"' rx='2' fill='#FAAD14'/>";
-    }
+  g+="<rect x='"+cx0.toFixed(1)+"' y='"+T+"' width='"+band.toFixed(1)+"' height='"+ph+"' fill='#F7F8FA'/>";
+  g+="<line x1='"+cx0.toFixed(1)+"' y1='"+T+"' x2='"+cx0.toFixed(1)+"' y2='"+(T+ph)+"' stroke='#D9D9D9' stroke-dasharray='4 3'/>";
+  g+="<text x='"+(cx0+band/2).toFixed(1)+"' y='"+(T+13)+"' text-anchor='middle' fill='#8F959E' font-size='11'>本周</text>";
+  g+="<rect class='tr-hov' x='0' y='0' width='"+band.toFixed(1)+"' height='"+ph+"' fill='#1F2329' opacity='0'/>";
+  var series=[{k:"full",c:"#52C41A"},{k:"miss",c:"#FAAD14"}],si,pts,path;
+  for(si=0;si<series.length;si++){
+    pts=[];
+    for(i=0;i<n;i++)pts.push([L+i*band+band/2,yY(view[i][series[si].k])]);
+    path="M"+pts[0][0].toFixed(1)+","+pts[0][1].toFixed(1);
+    for(i=1;i<n;i++)path+="L"+pts[i][0].toFixed(1)+","+pts[i][1].toFixed(1);
+    g+="<path d='"+path+"' fill='none' stroke='"+series[si].c+"' stroke-width='2' stroke-linejoin='round' stroke-linecap='round'/>";
+    for(i=0;i<n;i++)g+="<circle cx='"+pts[i][0].toFixed(1)+"' cy='"+pts[i][1].toFixed(1)+"' r='3' fill='#ffffff' stroke='"+series[si].c+"' stroke-width='2'/>";
   }
+  /* 末点补一枚日期标签，但只在格够宽时补：26 周时格只有 30 来像素，
+     硬补会和前一枚标签叠在一起，末尾那格还有「本周」压底，不靠标签也认得出来 */
   var step=Math.ceil(n/8);
   for(i=0;i<n;i++){
-    if(i%step!==0&&i!==n-1)continue;
-    g+="<text x='"+(L+i*band+band/2).toFixed(1)+"' y='"+(yB0+hB+18)+"' text-anchor='middle' fill='#8F959E' font-size='11'>"+trMd(view[i].s)+"</text>";
+    if(i%step!==0&&!(i===n-1&&band>=60))continue;
+    g+="<text x='"+(L+i*band+band/2).toFixed(1)+"' y='"+(T+ph+18)+"' text-anchor='middle' fill='#8F959E' font-size='11'>"+trMd(view[i].s)+"</text>";
   }
   for(i=0;i<n;i++){
-    g+="<rect class='tr-band' data-tr-i='"+i+"' x='"+(L+i*band).toFixed(1)+"' y='"+T+"' width='"+band.toFixed(1)+"' height='"+(yB0+hB-T)+"' fill='transparent'/>";
+    g+="<rect class='tr-band' data-tr-i='"+i+"' x='"+(L+i*band).toFixed(1)+"' y='"+T+"' width='"+band.toFixed(1)+"' height='"+ph+"' fill='transparent'/>";
   }
-  box.innerHTML="<svg viewBox='0 0 "+w+" "+h+"' width='"+w+"' height='"+h+"' role='img' aria-label='完成与新增逾期趋势'>"
+  box.innerHTML="<svg viewBox='0 0 "+w+" "+h+"' width='"+w+"' height='"+h+"' role='img' aria-label='做满与到期没做满的任务数趋势'>"
     +"<g>"+g+"</g></svg>";
   var tip=document.createElement("div");
   tip.className="rea-qft-tip rea-tr-tip";
@@ -11001,16 +11001,16 @@ function renderTrTrend(){
   for(j=0;j<bands.length;j++){
     bands[j].addEventListener("mouseenter",function(){
       var idx=+this.getAttribute("data-tr-i"),v=view[idx];
-      var bx=L+idx*band,x=bx+band/2,y=yD(v.done);
+      var bx=L+idx*band,x=bx+band/2,y=Math.min(yY(v.full),yY(v.miss));
       if(hov){hov.setAttribute("x",bx.toFixed(1));hov.setAttribute("opacity","0.05")}
-      tip.innerHTML="<div class='d'>"+trLabel(v)+(v.cur?(TRMODE===4?" · 今天进行中":" · 本周进行中"):"")+"</div>"
-        +"<div class='r done'><i></i>完成<b>"+v.done+" 人次</b></div>"
-        +"<div class='r over'><i></i>新增逾期<b>"+v.over+" 人次</b></div>";
+      tip.innerHTML="<div class='d'>"+trLab(v)+(v.cur?" · 本周进行中":"")+"</div>"
+        +"<div class='r done'><i></i>做满<b>"+v.full+" 条</b></div>"
+        +"<div class='r over'><i></i>到期没做满<b>"+v.miss+" 条</b></div>";
       tip.style.display="block";
       var tw=tip.offsetWidth,th=tip.offsetHeight,left=x+14;
       if(left+tw>w-4)left=x-tw-14;
       tip.style.left=Math.max(4,left)+"px";
-      tip.style.top=Math.max(4,Math.min(yB0+hB-th-8,y-th/2))+"px";
+      tip.style.top=Math.max(4,Math.min(T+ph-th-8,y-th/2))+"px";
     });
     bands[j].addEventListener("mouseleave",function(){tip.style.display="none";if(hov)hov.setAttribute("opacity","0")});
   }
