@@ -12772,11 +12772,501 @@ tb.addEventListener("click",function(e){
 })();`;
   }
 
+  /* ---------- 微信营销任务 ·「从素材库选择」（2026-10-23） ----------
+     三张「· 新建」页共用：发圈 · 新建 / 群发好友 · 新建 / 群发群组 · 新建。
+     交互口径照参考原型 V5.97 的发圈任务：
+       ① 任务内容里加一枚「从素材库选择」，它本身就是打开素材库弹窗的入口
+          （不另设「打开素材库」按钮，一次点击干一件事）；点弹窗的「确定」才落定来源，
+          取消则表单原样不动；
+       ② 弹窗＝左边素材分组、中间素材列表、右边内容预览，单选；只列企业素材，
+          且只列能作为发送内容的（纯文本 / 图片 / 单条视频，不含文件与语音）；
+       ③ 选定后回填一张「标题 ＋ 一行正文 ＋ ×」的卡，发圈页右栏效果预览同步；
+          × 同时清掉来源，不留「选了来源、没有素材」的空档；
+       ④ 群发好友页选中素材后收起「内容类型 / 描述文本」（来源互斥），切回临时创建再露出。
+     群发群组 · 新建 在快照里其实没有表单（抓存件是列表页），本段另造一张完整
+     新建表单：任务名称 / 执行人员 / 任务内容 / 群发哪些群 / 任务类型 / 通知时间 /
+     截止时间 / 全局弹窗，任务内容同样挂这枚素材库入口。
+     素材是演示数据（企业素材，分组与素材库页的两组对齐）；个人素材不参与派发，
+     与参考原型口径一致。 */
+  var REA_WXT_GROUPS = ['全部素材', '世界杯', '执业药师'];
+  var REA_WXT_MATS = [
+    {id:'wm-1', title:'世界杯开幕倒计时', group:'世界杯', text:'距开幕还剩 3 天，这份观赛指南请收好：赛程、看点、热门球员一次看全。', images:3, video:0},
+    {id:'wm-2', title:'小组赛对阵表', group:'世界杯', text:'小组赛完整对阵表已出，收藏这张图，开赛不迷路。', images:1, video:0},
+    {id:'wm-3', title:'决赛门票福利', group:'世界杯', text:'评论区留言支持你心中的冠军，抽 5 位送决赛门票。', images:0, video:0},
+    {id:'wm-4', title:'执业药师报名提醒', group:'执业药师', text:'2026 年执业药师报名今天开始，报名入口和材料清单都在这里。', images:2, video:0},
+    {id:'wm-5', title:'药师考试冲刺资料', group:'执业药师', text:'考前 30 天冲刺资料包，重点章节和高频考点已整理。', images:0, video:1}
+  ];
+
+  /* 三页共用样式。只写新增件，色值全取自快照已出现的色（规则 B）：
+     #1677ff / #e6f4ff / #f0f0f0 / #fafafa / #d9d9d9 / #999999 / #333333 / #ff4d4f。 */
+  var REA_WXT_CSS =
+      /* ---- 素材库弹窗 ---- */
+      '.rea-wxt-mask{position:fixed;inset:0;z-index:2200;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center}'
+    + '.rea-wxt-modal{width:920px;max-width:calc(100% - 48px);height:560px;max-height:calc(100% - 64px);background:#fff;border-radius:8px;box-shadow:0 6px 16px rgba(0,0,0,.12);display:flex;flex-direction:column;overflow:hidden}'
+    + '.rea-wxt-hd{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid #f0f0f0}'
+    + '.rea-wxt-title{font-size:16px;font-weight:500;color:rgba(0,0,0,.88)}'
+    + '.rea-wxt-x{border:0;background:transparent;font-size:20px;line-height:1;color:#999999;cursor:pointer;padding:0 4px}'
+    + '.rea-wxt-x:hover{color:#333333}'
+    + '.rea-wxt-bd{flex:1;min-height:0;display:flex}'
+    + '.rea-wxt-left{width:180px;flex:none;border-right:1px solid #f0f0f0;padding:14px 8px;overflow:auto}'
+    + '.rea-wxt-lh{padding:0 12px 8px;font-size:12px;color:#999999}'
+    + '.rea-wxt-g{display:block;width:100%;text-align:left;border:0;background:transparent;padding:8px 12px;border-radius:6px;font-size:14px;color:rgba(0,0,0,.88);cursor:pointer;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
+    + '.rea-wxt-g:hover{background:#fafafa}'
+    + '.rea-wxt-g.on{background:#e6f4ff;color:#1677ff}'
+    + '.rea-wxt-mid{width:360px;flex:none;border-right:1px solid #f0f0f0;display:flex;flex-direction:column;min-height:0}'
+    + '.rea-wxt-search{padding:14px 16px 10px}'
+    + '.rea-wxt-search input{width:100%;height:32px;padding:4px 11px;border:1px solid #d9d9d9;border-radius:6px;font-size:14px;outline:none;box-sizing:border-box}'
+    + '.rea-wxt-search input:focus{border-color:#1677ff;box-shadow:0 0 0 2px rgba(5,145,255,.1)}'
+    + '.rea-wxt-list{flex:1;min-height:0;overflow:auto;padding:0 8px 12px}'
+    + '.rea-wxt-row{display:block;width:100%;text-align:left;border:1px solid transparent;background:transparent;border-radius:6px;padding:10px 12px;cursor:pointer;margin-bottom:4px}'
+    + '.rea-wxt-row:hover{background:#fafafa}'
+    + '.rea-wxt-row.on{border-color:#1677ff;background:#e6f4ff}'
+    + '.rea-wxt-rt{display:block;font-size:14px;color:rgba(0,0,0,.88);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
+    + '.rea-wxt-rs{display:block;margin-top:2px;font-size:12px;color:#999999;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
+    + '.rea-wxt-empty{padding:40px 12px;text-align:center;color:#999999;font-size:13px}'
+    + '.rea-wxt-pv{flex:1;min-width:0;padding:14px 16px;overflow:auto;background:#fafafa}'
+    + '.rea-wxt-pvt{font-size:12px;color:#999999;margin-bottom:10px}'
+    + '.rea-wxt-pvempty{font-size:13px;line-height:20px;color:#999999}'
+    + '.rea-wxt-pvname{font-size:12px;color:#2e448f;margin-bottom:6px}'
+    + '.rea-wxt-pvtext{font-size:14px;line-height:20px;color:rgba(0,0,0,.88);white-space:pre-wrap;word-break:break-word}'
+    + '.rea-wxt-pvmeta{margin-top:10px;font-size:12px;color:#999999}'
+    + '.rea-wxt-pvgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:8px}'
+    + '.rea-wxt-pvcell{display:block;padding-top:100%;background:#f0f0f0;border-radius:2px}'
+    + '.rea-wxt-pvvideo{display:flex;align-items:center;justify-content:center;gap:6px;height:120px;margin-top:8px;background:#f0f0f0;border-radius:2px;color:#666666;font-size:13px}'
+    + '.rea-wxt-ft{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;border-top:1px solid #f0f0f0}'
+    + '.rea-wxt-sel{font-size:13px;color:#999999}'
+    + '.rea-wxt-btn{height:32px;padding:0 15px;margin-left:8px;border:1px solid #d9d9d9;background:#fff;border-radius:6px;font-size:14px;cursor:pointer;color:rgba(0,0,0,.88)}'
+    + '.rea-wxt-btn:hover{border-color:#1677ff;color:#1677ff}'
+    + '.rea-wxt-primary{background:#1677ff;border-color:#1677ff;color:#fff}'
+    + '.rea-wxt-primary:hover{background:#4096ff;border-color:#4096ff;color:#fff}'
+    + '.rea-wxt-primary:disabled{background:#f5f5f5;border-color:#d9d9d9;color:rgba(0,0,0,.25);cursor:not-allowed}'
+    /* ---- 已选素材卡（发/群发共用的同一形） ---- */
+    + '.rea-wxt-picked{display:flex;align-items:flex-start;gap:8px;margin-top:12px;padding:10px 12px;border:1px solid #f0f0f0;border-radius:6px;background:#fafafa;max-width:560px}'
+    + '.rea-wxt-pkmain{flex:1;min-width:0}'
+    + '.rea-wxt-pkt{display:block;font-size:14px;color:rgba(0,0,0,.88);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
+    + '.rea-wxt-pks{display:block;margin-top:2px;font-size:12px;color:#999999;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
+    + '.rea-wxt-pkx{border:0;background:transparent;color:#999999;font-size:18px;line-height:18px;cursor:pointer;padding:0 2px}'
+    + '.rea-wxt-pkx:hover{color:#ff4d4f}'
+    + '.rea-wxt-host:empty{display:none}'
+    /* 发圈右栏预览里补的媒体区（挂在 previewRight 下，不塞进 max-height:100px 的 textCon） */
+    + '.rea-wxt-pvmedia{margin-top:8px}'
+    /* ---- 群发群组 · 新建：另造的表单 ---- */
+    /* 栏宽照发圈/群发好友那两张现网表单的横向节奏：标签列右对齐到 ~654px，控件从 ~670px 起 */
+    + '.rea-wxt-form{max-width:1240px;background:#fff;border-radius:6px;padding:8px 24px 20px}'
+    + '.rea-wxt-frow{display:flex;padding:14px 0;border-bottom:1px solid #f0f0f0}'
+    + '.rea-wxt-frow:last-of-type{border-bottom:0}'
+    + '.rea-wxt-flab{width:400px;flex:none;text-align:right;padding-right:16px;font-size:14px;line-height:32px;color:rgba(0,0,0,.88)}'
+    + '.rea-wxt-freq:before{content:"*";color:#ff4d4f;margin-right:4px;font-family:SimSun,sans-serif}'
+    + '.rea-wxt-fctl{flex:1;min-width:0}'
+    + '.rea-wxt-inp{width:100%;max-width:640px}'
+    + '.rea-wxt-ta{width:100%;max-width:640px;margin-top:10px;resize:vertical}'
+    + '.rea-wxt-ferr{min-height:0;font-size:12px;line-height:20px;color:#ff4d4f}'
+    + '.rea-wxt-bad{border-color:#ff4d4f!important}'
+    + '.rea-wxt-hint{margin-left:8px;font-size:12px;color:#999999}'
+    + '.rea-wxt-dt{display:flex;align-items:center;max-width:640px}'
+    + '.rea-wxt-dt .rea-wxt-inp{width:220px;margin-right:8px}'
+    + '.rea-wxt-swrow{display:flex;align-items:center;min-height:32px}'
+    + '.rea-wxt-src{display:flex;gap:8px;flex-wrap:wrap}'
+    + '.rea-wxt-temp{margin-top:12px}'
+    + '.rea-wxt-foot{display:flex;justify-content:flex-end;gap:8px;padding:20px 0 0;border-top:1px solid #f0f0f0;margin-top:8px}'
+    + '.rea-wxt-groupscope{max-width:560px;margin-top:8px}';
+
+  /* 三页共用的注入脚本：PAGE 只用来分流三处接线，弹窗与选材逻辑只有一份。
+     对照参考原型，刻意保留的三条：
+       · pill 只开弹窗、不改来源（取消后表单原样不动，不需要「记住打开前的来源」）；
+       · 「移除」同时清掉来源，不留「选了来源、没有素材」的空档；
+       · 保存校验只在「选了素材库来源却没选素材」时报错（群发群组那页另加必填项）。 */
+  function reaWxtJs(page){
+    return `(function(){
+var PAGE=${reaJson(page)};
+var MATS=${reaJson(REA_WXT_MATS)};
+var GROUPS=${reaJson(REA_WXT_GROUPS)};
+function norm(s){return String(s==null?'':s).replace(/\\s+/g,'')}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function q(s,r){return (r||document).querySelector(s)}
+function qa(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
+
+/* ---------- 素材（企业素材；分组与素材库页对齐） ---------- */
+function byId(id){for(var i=0;i<MATS.length;i++)if(MATS[i].id===id)return MATS[i];return null}
+function shape(m){
+  if(m.video)return m.video>1?(m.video+' 条视频'):'1 条视频';
+  if(m.images)return m.images+' 张图片';
+  return '';
+}
+function sub(m){return m.text||shape(m)}
+function pool(){
+  var g=PICK.group,qq=PICK.q,out=[],i;
+  for(i=0;i<MATS.length;i++){
+    if(g!=='全部素材'&&MATS[i].group!==g)continue;
+    if(qq&&(MATS[i].title+' '+MATS[i].group+' '+MATS[i].text).indexOf(qq)<0)continue;
+    out.push(MATS[i]);
+  }
+  return out;
+}
+
+/* ---------- 已选素材卡 ---------- */
+function showCard(host,m,onClear){
+  if(!host)return;
+  host.innerHTML=m?('<div class="rea-wxt-picked"><span class="rea-wxt-pkmain">'
+    +'<span class="rea-wxt-pkt">'+esc(m.title)+'</span>'
+    +'<span class="rea-wxt-pks">'+esc(sub(m))+'</span></span>'
+    +'<button type="button" class="rea-wxt-pkx" aria-label="移除已选素材" title="移除">×</button></div>'):'';
+  var x=host.querySelector('.rea-wxt-pkx');
+  if(x)x.addEventListener('click',function(e){e.preventDefault();onClear()});
+}
+
+/* ---------- 素材库弹窗 ---------- */
+var PICK={open:false,group:'全部素材',q:'',sel:null};
+var MASK=null;
+function closePick(){
+  if(MASK&&MASK.parentNode)MASK.parentNode.removeChild(MASK);
+  MASK=null;PICK.open=false;
+}
+function pickHtml(){
+  var groups='',i;
+  for(i=0;i<GROUPS.length;i++){
+    groups+='<button type="button" class="rea-wxt-g'+(PICK.group===GROUPS[i]?' on':'')+'" data-group="'+esc(GROUPS[i])+'">'+esc(GROUPS[i])+'</button>';
+  }
+  return '<div class="rea-wxt-modal" role="dialog" aria-modal="true" aria-label="从素材库选择">'
+    +'<div class="rea-wxt-hd"><span class="rea-wxt-title">从素材库选择</span>'
+    +'<button type="button" class="rea-wxt-x" aria-label="关闭">×</button></div>'
+    +'<div class="rea-wxt-bd">'
+    +'<div class="rea-wxt-left"><div class="rea-wxt-lh">素材分组</div><div class="rea-wxt-groups">'+groups+'</div></div>'
+    +'<div class="rea-wxt-mid"><div class="rea-wxt-search"><input type="text" placeholder="搜索素材（标题 / 关键词 / 正文）" aria-label="搜索素材" value="'+esc(PICK.q)+'"></div>'
+    +'<div class="rea-wxt-list"></div></div>'
+    +'<div class="rea-wxt-pv"><div class="rea-wxt-pvt">内容预览</div><div class="rea-wxt-pvc"></div></div>'
+    +'</div>'
+    +'<div class="rea-wxt-ft"><span class="rea-wxt-sel"></span><span class="rea-wxt-acts">'
+    +'<button type="button" class="rea-wxt-btn rea-wxt-cancel">取消</button>'
+    +'<button type="button" class="rea-wxt-btn rea-wxt-primary rea-wxt-ok">确定</button></span></div>'
+    +'</div>';
+}
+function renderPick(){
+  if(!MASK)return;
+  var rows=pool(),h='',i,m;
+  for(i=0;i<rows.length;i++){
+    m=rows[i];
+    h+='<button type="button" class="rea-wxt-row'+(PICK.sel===m.id?' on':'')+'" data-id="'+esc(m.id)+'">'
+      +'<span class="rea-wxt-rt">'+esc(m.title)+'</span>'
+      +(sub(m)?'<span class="rea-wxt-rs">'+esc(sub(m))+'</span>':'')+'</button>';
+  }
+  if(!rows.length)h='<div class="rea-wxt-empty">该分组下没有可发送的素材</div>';
+  q('.rea-wxt-list',MASK).innerHTML=h;
+  qa('.rea-wxt-g',MASK).forEach(function(b){b.classList.toggle('on',b.getAttribute('data-group')===PICK.group)});
+  var cur=byId(PICK.sel),pv=q('.rea-wxt-pvc',MASK);
+  if(!cur){
+    pv.innerHTML='<div class="rea-wxt-pvempty">点左侧任意一条素材，这里显示它发出去的样子。</div>';
+  }else{
+    var media='';
+    if(cur.video)media='<div class="rea-wxt-pvvideo">▶<span>'+esc(shape(cur))+'</span></div>';
+    else if(cur.images){
+      media='<div class="rea-wxt-pvgrid">';
+      for(i=0;i<cur.images;i++)media+='<span class="rea-wxt-pvcell"></span>';
+      media+='</div>';
+    }
+    pv.innerHTML='<div class="rea-wxt-pvname">素材预览</div><div class="rea-wxt-pvtext">'+esc(cur.text)+'</div>'+media
+      +'<div class="rea-wxt-pvmeta">'+esc(cur.group)+' · '+esc(cur.title)+'</div>';
+  }
+  q('.rea-wxt-sel',MASK).textContent=cur?('已选：'+cur.title):'尚未选择';
+  q('.rea-wxt-ok',MASK).disabled=!cur;
+}
+function openPick(onOk,curId){
+  closePick();
+  var cur=byId(curId);
+  PICK.open=true;PICK.q='';PICK.sel=cur?cur.id:null;PICK.group=cur?cur.group:'全部素材';
+  MASK=document.createElement('div');
+  MASK.className='rea-wxt-mask';
+  MASK.innerHTML=pickHtml();
+  document.body.appendChild(MASK);
+  MASK.addEventListener('click',function(e){
+    var t=e.target;
+    if(t===MASK)return closePick();
+    var g=t.closest?t.closest('.rea-wxt-g'):null;
+    if(g){PICK.group=g.getAttribute('data-group');renderPick();return}
+    var row=t.closest?t.closest('.rea-wxt-row'):null;
+    if(row){PICK.sel=row.getAttribute('data-id');renderPick();return}
+    if(t.closest&&t.closest('.rea-wxt-x'))return closePick();
+    if(t.closest&&t.closest('.rea-wxt-cancel'))return closePick();
+    if(t.closest&&t.closest('.rea-wxt-ok')){
+      var m=byId(PICK.sel);
+      if(m){closePick();onOk(m)}
+      return;
+    }
+  });
+  var inp=q('.rea-wxt-search input',MASK);
+  if(inp){
+    inp.addEventListener('input',function(){PICK.q=inp.value;renderPick()});
+    inp.focus();
+  }
+  renderPick();
+}
+document.addEventListener('keydown',function(e){
+  if(PICK.open&&(e.key==='Escape'||e.keyCode===27))closePick();
+});
+
+/* ---------- 通用小件 ---------- */
+function setPrimary(btn,on){
+  if(!btn||!btn.classList)return;
+  btn.classList.remove('ant-btn-primary','ant-btn-color-primary','ant-btn-variant-solid',
+    'ant-btn-default','ant-btn-color-default','ant-btn-variant-outlined');
+  var add=on?['ant-btn-primary','ant-btn-color-primary','ant-btn-variant-solid']
+            :['ant-btn-default','ant-btn-color-default','ant-btn-variant-outlined'];
+  for(var i=0;i<add.length;i++)btn.classList.add(add[i]);
+}
+function findLabel(t){
+  var ns=document.querySelectorAll('div,span,label'),i;
+  for(i=0;i<ns.length;i++){
+    if(ns[i].children.length)continue;
+    if(norm(ns[i].textContent)===t)return ns[i];
+  }
+  return null;
+}
+function upClass(n,frag){
+  while(n&&n!==document.body){
+    if(n.className&&String(n.className).indexOf(frag)>=0)return n;
+    n=n.parentNode;
+  }
+  return null;
+}
+function cloneSrcBtn(space,text){
+  var tpl=null,i;
+  var bs=qa('.ant-btn',space);
+  for(i=0;i<bs.length;i++)if(norm(bs[i].textContent)==='临时创建')tpl=bs[i];
+  if(!tpl)return null;
+  var item=tpl.closest('.ant-space-item');
+  if(!item)return null;
+  var cp=item.cloneNode(true),btn=cp.querySelector('button');
+  var sp=btn.querySelector('span');
+  if(sp)sp.textContent=text;else btn.textContent=text;
+  /* 排在「临时创建」前面，与参考原型的三枚选项同序（选择文章 ／ 从素材库选择 ／ 临时创建） */
+  space.insertBefore(cp,item);
+  return btn;
+}
+function toast(t){
+  var w=document.createElement('div');
+  w.className='ant-message css-mncuj7';
+  w.innerHTML='<div class="ant-message-notice-wrapper"><div class="ant-message-notice">'
+    +'<div class="ant-message-notice-content"><div class="ant-message-custom-content ant-message-info"><span></span></div></div>'
+    +'</div></div>';
+  w.querySelector('span').textContent=t;
+  document.body.appendChild(w);
+  setTimeout(function(){if(w.parentNode)w.parentNode.removeChild(w)},2400);
+}
+
+/* 覆盖页不再走 reaNavJs 的「取消 → 回模块页」那条通用接线（它只接未覆盖的子页），
+   这里补回来：三页的 取 消 都回各自的模块页。 */
+(function(){
+  var back=PAGE.split(' · ')[0],bs=qa('button.ant-btn'),i;
+  for(i=0;i<bs.length;i++){
+    if(norm(bs[i].textContent)!=='取消'&&norm(bs[i].textContent)!=='取 消')continue;
+    bs[i].addEventListener('click',function(e){
+      e.preventDefault();parent.postMessage({reaPage:back},'*');
+    });
+  }
+})();
+
+/* ---------- 发圈 · 新建 ---------- */
+function initFq(){
+  var lab=findLabel('任务内容');if(!lab)return;
+  /* 发圈页的「任务内容」标题与右栏是同级的两个 div（_addgroup_ 下 _addtitle_ ＋ _addright_），
+     标题不在 _addright_ 里面——先找同级右栏，再退回祖先链兜底。 */
+  var box=null,par=lab.parentNode;
+  if(par&&par.querySelector)box=par.querySelector('[class*="_addright_"]');
+  if(!box)box=upClass(lab,'_addright_');
+  if(!box)return;
+  var space=box.querySelector('.ant-space');if(!space)return;
+  var tempBtn=null,bs=qa('.ant-btn',space),i;
+  for(i=0;i<bs.length;i++)if(norm(bs[i].textContent)==='临时创建')tempBtn=bs[i];
+  if(!tempBtn)return;
+  var btn=cloneSrcBtn(space,'从素材库选择');if(!btn)return;
+  var host=document.createElement('div');host.className='rea-wxt-host';
+  box.appendChild(host);
+  var picked=null;
+  function preview(m){
+    var pr=document.querySelector('[class*="preview-module_previewRight"]')||document;
+    var ts=pr.querySelector?pr.querySelector('.textShow'):null;
+    if(ts)ts.textContent=m?m.text:'';
+    var old=document.querySelector('.rea-wxt-pvmedia');
+    if(old&&old.parentNode)old.parentNode.removeChild(old);
+    if(!m||!(m.images||m.video))return;
+    var d=document.createElement('div');d.className='rea-wxt-pvmedia';
+    if(m.video)d.innerHTML='<div class="rea-wxt-pvvideo">▶<span>'+esc(shape(m))+'</span></div>';
+    else{
+      var g='',k;for(k=0;k<m.images;k++)g+='<span class="rea-wxt-pvcell"></span>';
+      d.innerHTML='<div class="rea-wxt-pvgrid">'+g+'</div>';
+    }
+    var right=document.querySelector('[class*="preview-module_previewRight"]');
+    if(right)right.appendChild(d);
+  }
+  function apply(m){
+    picked=m;
+    setPrimary(btn,!!m);
+    setPrimary(tempBtn,false);
+    showCard(host,m,function(){apply(null)});
+    preview(m);
+  }
+  btn.addEventListener('click',function(e){e.preventDefault();openPick(function(m){apply(m)},picked?picked.id:null)});
+  tempBtn.addEventListener('click',function(e){e.preventDefault();apply(null)});
+  /* 新克隆的那枚带着「临时创建」的按钮样式（克隆是整颗拷的），初始态得自己扳回来：
+     默认来源是临时创建，素材库那枚先按次要按钮画。 */
+  setPrimary(btn,false);setPrimary(tempBtn,true);
+}
+
+/* ---------- 群发好友 · 新建 ---------- */
+function initQf(){
+  var lab=findLabel('任务内容');if(!lab)return;
+  var row=upClass(lab,'_form_input_');if(!row)return;
+  var box=row.querySelector('[class*="_upload_box_"]');if(!box)return;
+  var space=box.querySelector('.ant-space');if(!space)return;
+  var tempBtn=null,bs=qa('.ant-btn',space),i;
+  for(i=0;i<bs.length;i++)if(norm(bs[i].textContent)==='临时创建')tempBtn=bs[i];
+  if(!tempBtn)return;
+  var btn=cloneSrcBtn(space,'从素材库选择');if(!btn)return;
+  var host=document.createElement('div');host.className='rea-wxt-host';
+  space.parentNode.insertBefore(host,space.nextSibling);
+  var picked=null,hideRows=[];
+  ['内容类型','描述文本'].forEach(function(t){
+    var l=findLabel(t);if(!l)return;
+    var r=upClass(l,'_form_input_');if(r)hideRows.push(r);
+  });
+  function manual(v){
+    for(var k=0;k<hideRows.length;k++)hideRows[k].style.display=v?'':'none';
+  }
+  function apply(m){
+    picked=m;
+    if(m){
+      setPrimary(btn,true);setPrimary(tempBtn,false);manual(false);
+    }else{
+      setPrimary(btn,false);setPrimary(tempBtn,true);manual(true);
+    }
+    showCard(host,m,function(){apply(null)});
+  }
+  btn.addEventListener('click',function(e){e.preventDefault();openPick(function(m){apply(m)},picked?picked.id:null)});
+  tempBtn.addEventListener('click',function(e){e.preventDefault();apply(null)});
+  setPrimary(btn,false);setPrimary(tempBtn,true);
+}
+
+/* ---------- 群发群组 · 新建（快照里没有表单，这一页整页另造） ---------- */
+function initQs(){
+  var pc=document.querySelector('.pagecontent');if(pc)pc.style.display='none';
+  var sf=document.querySelector('.searchform');if(sf)sf.style.display='none';
+  var ft=document.querySelector('.yk-page-right-content-footer');if(ft)ft.style.display='none';
+  /* 这张快照页是列表页（页头只有一个大标题 ＋ 状态筛选），新建页的「面包屑 ＋ 表单」
+     两张现网新建页里都是正文自带的一段，这里照抄同一段面包屑，页头整条拿掉。 */
+  var ph=document.querySelector('.ant-page-header');if(ph)ph.style.display='none';
+  var rc=document.querySelector('.rightcontent');if(!rc)return;
+  var crumb=document.createElement('h4');
+  crumb.style.cssText='padding-left:10px;font-weight:normal;margin:0 0 12px';
+  crumb.innerHTML='<nav class="ant-breadcrumb css-vgijab"><ol>'
+    +'<li class="ant-breadcrumb-item"><span class="ant-breadcrumb-link">微信营销任务</span></li>'
+    +'<li class="ant-breadcrumb-separator" aria-hidden="true">/</li>'
+    +'<li class="ant-breadcrumb-item"><a class="ant-breadcrumb-link rea-wxt-crumb">群发群组</a></li>'
+    +'<li class="ant-breadcrumb-separator" aria-hidden="true">/</li>'
+    +'<li class="ant-breadcrumb-item"><span class="ant-breadcrumb-link">新建任务</span></li>'
+    +'</ol></nav>';
+  crumb.querySelector('.rea-wxt-crumb').addEventListener('click',function(e){
+    e.preventDefault();parent.postMessage({reaPage:'群发群组'},'*');
+  });
+  rc.insertBefore(crumb,rc.firstChild);
+  function radio(name,val,label,on){
+    return '<label class="ant-radio-wrapper'+(on?' ant-radio-wrapper-checked':'')+' css-vgijab">'
+      +'<span class="ant-radio ant-wave-target'+(on?' ant-radio-checked':'')+'"><input name="'+name+'" class="ant-radio-input" type="radio" value="'+val+'"'+(on?' checked':'')+'><span class="ant-radio-inner"></span></span>'
+      +'<span class="ant-radio-label">'+label+'</span></label>';
+  }
+  function frow(label,req,inner){
+    return '<div class="rea-wxt-frow"><div class="rea-wxt-flab'+(req?' rea-wxt-freq':'')+'">'+label+'</div>'
+      +'<div class="rea-wxt-fctl">'+inner+'<div class="rea-wxt-ferr"></div></div></div>';
+  }
+  var form=document.createElement('div');
+  form.className='rea-wxt-form';
+  form.innerHTML=
+    frow('任务名称',1,'<input type="text" class="ant-input css-vgijab ant-input-outlined rea-wxt-inp" id="rea-wxt-name" placeholder="请输入任务名称">')
+    +frow('执行人员',1,'<input type="text" class="ant-input css-vgijab ant-input-outlined rea-wxt-inp" id="rea-wxt-exec" placeholder="请选择组织架构">')
+    +frow('任务内容',1,'<div class="rea-wxt-src">'
+        +'<button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined rea-wxt-srcbtn">从素材库选择</button>'
+        +'<button type="button" class="ant-btn css-vgijab ant-btn-primary ant-btn-color-primary ant-btn-variant-solid rea-wxt-tempbtn">临时创建</button></div>'
+        +'<div class="rea-wxt-host"></div>'
+        +'<div class="rea-wxt-temp">'
+          +'<div class="ant-radio-group ant-radio-group-outline css-vgijab">'
+            +radio('rea-wxt-ctype','text','文 本',true)+radio('rea-wxt-ctype','image','图 片',false)+radio('rea-wxt-ctype','video','视 频',false)
+          +'</div>'
+          +'<textarea class="ant-input css-vgijab rea-wxt-ta" rows="4" placeholder="输入群发内容"></textarea>'
+        +'</div>')
+    +frow('群发哪些群',1,'<div class="ant-radio-group ant-radio-group-outline css-vgijab">'
+        +radio('rea-wxt-scope','all','全部群',true)+radio('rea-wxt-scope','names','按群聊名称选择',false)
+        +'</div><input type="text" class="ant-input css-vgijab ant-input-outlined rea-wxt-inp rea-wxt-groupscope" placeholder="输入群聊名称，多个用换行分隔" style="display:none">')
+    +frow('任务类型',0,'<div class="ant-radio-group ant-radio-group-outline css-vgijab">'
+        +radio('rea-wxt-type','once','单次任务',true)+radio('rea-wxt-type','week','周循环',false)
+        +radio('rea-wxt-type','month','月循环',false)+radio('rea-wxt-type','custom','自定义循环',false)
+        +'</div>')
+    +frow('通知时间',0,'<div class="rea-wxt-dt"><input type="datetime-local" class="ant-input css-vgijab ant-input-outlined rea-wxt-inp"><span class="rea-wxt-hint">到达时间将会推送提醒</span></div>')
+    +frow('截止时间',0,'<div class="rea-wxt-dt"><input type="datetime-local" class="ant-input css-vgijab ant-input-outlined rea-wxt-inp"><span class="rea-wxt-hint">未到达开始时间的任务在员工任务列表中不可见</span></div>')
+    +frow('全局弹窗',0,'<div class="rea-wxt-swrow"><button type="button" role="switch" aria-checked="false" class="ant-switch css-vgijab"><div class="ant-switch-handle"></div><span class="ant-switch-inner"><span class="ant-switch-inner-checked"></span><span class="ant-switch-inner-unchecked"></span></span></button><span class="rea-wxt-hint">员工打开工作手机时强制弹窗提醒</span></div>')
+    +'<div class="rea-wxt-foot">'
+      +'<button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined rea-wxt-cancelbtn">取 消</button>'
+      +'<button type="button" class="ant-btn css-vgijab ant-btn-primary ant-btn-color-primary ant-btn-variant-solid rea-wxt-savebtn">保 存</button>'
+    +'</div>';
+  rc.insertBefore(form,crumb.nextSibling);
+  var nameI=q('#rea-wxt-name',form),execI=q('#rea-wxt-exec',form),
+      host=q('.rea-wxt-host',form),temp=q('.rea-wxt-temp',form),
+      srcBtn=q('.rea-wxt-srcbtn',form),tempBtn=q('.rea-wxt-tempbtn',form),
+      ta=q('.rea-wxt-ta',form),scopeI=q('.rea-wxt-groupscope',form),
+      picked=null;
+  function manual(v){temp.style.display=v?'':'none'}
+  function apply(m){
+    picked=m;
+    if(m){setPrimary(srcBtn,true);setPrimary(tempBtn,false);manual(false)}
+    else{setPrimary(srcBtn,false);setPrimary(tempBtn,true);manual(true)}
+    showCard(host,m,function(){apply(null)});
+  }
+  srcBtn.addEventListener('click',function(e){e.preventDefault();openPick(function(m){apply(m)},picked?picked.id:null)});
+  tempBtn.addEventListener('click',function(e){e.preventDefault();apply(null)});
+  /* 群发范围：选「按群聊名称选择」才露出输入框。radio 的翻转归 REA_FX，
+     它直接改 input.checked、不派发 change，所以点击后异步读当前值。 */
+  qa('input[name="rea-wxt-scope"]',form).forEach(function(r){
+    r.addEventListener('click',function(){
+      setTimeout(function(){
+        var on=q('input[name="rea-wxt-scope"]:checked',form);
+        scopeI.style.display=(on&&on.value==='names')?'':'none';
+      },0);
+    });
+  });
+  function setErr(el,msg){
+    var ctl=el.closest('.rea-wxt-fctl');
+    var e=ctl?ctl.querySelector('.rea-wxt-ferr'):null;
+    if(e)e.textContent=msg||'';
+    if(el.classList)el.classList.toggle('rea-wxt-bad',!!msg);
+  }
+  q('.rea-wxt-cancelbtn',form).addEventListener('click',function(e){
+    e.preventDefault();parent.postMessage({reaPage:'群发群组'},'*');
+  });
+  q('.rea-wxt-savebtn',form).addEventListener('click',function(e){
+    e.preventDefault();
+    var ok=true;
+    if(!nameI.value.trim()){setErr(nameI,'请填写任务名称');ok=false}else setErr(nameI,'');
+    if(!execI.value.trim()){setErr(execI,'请选择执行人员');ok=false}else setErr(execI,'');
+    var contentOk=!!picked||!!ta.value.trim();
+    var ctl=q('.rea-wxt-srcbtn',form).closest('.rea-wxt-fctl');
+    var ce=ctl?ctl.querySelector('.rea-wxt-ferr'):null;
+    if(ce)ce.textContent=contentOk?'':'请从素材库选择一条素材，或临时创建内容';
+    if(!contentOk)ok=false;
+    if(!ok){toast('请先补全必填项');return}
+    toast('群发群组任务已保存（演示）');
+    setTimeout(function(){parent.postMessage({reaPage:'群发群组'},'*')},900);
+  });
+}
+
+if(PAGE==='发圈 · 新建')initFq();
+else if(PAGE==='群发好友 · 新建')initQf();
+else if(PAGE==='群发群组 · 新建')initQs();
+})();`;
+  }
+
   /* 覆盖登记表（ADR-0043）：页名 → 该页的覆盖块。与 docs/09 §2.3 那张表一一对应，加页两处一起加。
        html  该页正文段的载体块 id（省略＝正文仍用快照那一段，只补交互）
        css   该页专用样式（只在这页注入；未覆盖页拿不到，这是「逐页覆盖」的底线）
        js    该页自己的注入脚本（在 REA_FX **之后**跑，见 reaDoc）
-     八张覆盖页，五种形态：
+     十一张覆盖页，六种形态：
        微小助看板          换稿——正文整段换成 srcBoard，配 REA_BOARD_CSS ＋ reaBoardJs
        微小助看板 · 执行人明细  合成页——页名与 shell 由 reaSynthPages() 克隆看板页得到，正文换 srcBoardTask；
                             补的是现网 board/wxz/task 这条**不在快照里**的路由
@@ -12790,6 +13280,11 @@ tb.addEventListener("click",function(e){
                             现网 /snapshotTasks 不在 36 页快照里，也没有源目录
        群发好友 · 详情      补弹窗——**没有 html**，正文就是快照那一段；脚本给「群发好友数」补好友明细弹窗，
                             行为与样式见 reaQfDetailJs 上方注释
+       发圈 · 新建          补选材——**没有 html**，正文就是快照那一段；任务内容加「从素材库选择」，
+       群发好友 · 新建      弹窗与选材逻辑共用 reaWxtJs()／REA_WXT_CSS；群发好友那页选中素材后
+                            收起「内容类型 / 描述文本」（来源互斥）
+       群发群组 · 新建      另造表单——快照抓到的其实是列表页（新建弹窗没抓到），
+                            脚本整页另造一张完整新建表单，任务内容同样挂素材库入口
      没有 html 的页，reaSplice 原样放过；这不是省事，是刻意：正文抄一份进来就成了会过期的副本，
      重抓源目录后静默与线上脱钩，而这一页的正文本来就不该变。 */
 
@@ -12843,7 +13338,11 @@ tb.addEventListener("click",function(e){
     '新小红书运营 · 新建': { css: REA_XHS_CSS, js: reaXhsJs },
     '新小红书运营 · 详情': { js: reaXhsDetailJs },
     '新小红书运营 · 任务配置快照': { js: reaXhsSnapshotJs },
-    '群发好友 · 详情': { css: REA_QF_CSS, js: reaQfDetailJs }
+    '群发好友 · 详情': { css: REA_QF_CSS, js: reaQfDetailJs },
+    /* 微信营销任务 · 任务内容「从素材库选择」（2026-10-23）：三页共用一份弹窗与选材逻辑 */
+    '发圈 · 新建': { css: REA_WXT_CSS, js: function(){ return reaWxtJs('发圈 · 新建'); } },
+    '群发好友 · 新建': { css: REA_WXT_CSS, js: function(){ return reaWxtJs('群发好友 · 新建'); } },
+    '群发群组 · 新建': { css: REA_WXT_CSS, js: function(){ return reaWxtJs('群发群组 · 新建'); } }
   };
 
   /* 把被覆盖页的正文区（contentStart..contentEnd，构建脚本给出的那道缝）换成它登记表里那个载体的内容。
