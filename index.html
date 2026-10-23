@@ -12856,16 +12856,18 @@ tb.addEventListener("click",function(e){
     {id:'wm-3', title:'决赛门票福利', group:'世界杯', dept:'销售二部', text:'评论区留言支持你心中的冠军，抽 5 位送决赛门票。', images:0, video:0},
     {id:'wm-4', title:'执业药师报名提醒', group:'执业药师', dept:'售后部', text:'2026 年执业药师报名今天开始，报名入口和材料清单都在这里。', images:2, video:0},
     {id:'wm-5', title:'药师考试冲刺资料', group:'执业药师', dept:'售后部', text:'考前 30 天冲刺资料包，重点章节和高频考点已整理。', images:0, video:1},
-    {id:'wm-6', title:'世界杯观赛攻略长图', group:'世界杯', dept:'销售一部', text:'十张长图讲透小组赛到决赛的看点，整包发群正合适。', images:10, video:0},
+    {id:'wm-6', title:'世界杯观赛攻略长图', group:'世界杯', dept:'销售一部', text:'', images:10, video:0},
     {id:'wm-7', title:'世界杯报名表', group:'世界杯', dept:'销售二部', text:'参赛报名的表格模板，填好回传即可。', images:0, video:0, files:1}
   ];
   /* wm-6（10 张图）、wm-7（含文件）发不了朋友圈：发圈页的素材库看不到它们，群发页正常可选——
      这条差异是故意留的，用来演示「为什么某个素材在这里搜不到」。 */
 
-  /* 三页共用样式。只写新增件，色值全取自快照已出现的色（规则 B）：
+  /* 素材库弹窗是**四页共用件**（发圈 · 新建／群发好友 · 新建／群发群组 · 新建／
+     自动打招呼 · 新建的欢迎语模版）。这一半只管弹窗本身，另一半（已选卡、发圈预览、
+     群发群组表单）在 REA_WXT_CSS 里；欢迎语模版那页只用这一半 ＋ REA_ZD_CSS。
+     只写新增件，色值全取自快照已出现的色（规则 B）：
      #1677ff / #e6f4ff / #f0f0f0 / #fafafa / #d9d9d9 / #999999 / #333333 / #ff4d4f。 */
-  var REA_WXT_CSS =
-      /* ---- 素材库弹窗 ---- */
+  var REA_PICK_CSS =
       '.rea-wxt-mask{position:fixed;inset:0;z-index:2200;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center}'
     + '.rea-wxt-modal{width:920px;max-width:calc(100% - 48px);height:560px;max-height:calc(100% - 64px);background:#fff;border-radius:8px;box-shadow:0 6px 16px rgba(0,0,0,.12);display:flex;flex-direction:column;overflow:hidden}'
     + '.rea-wxt-hd{display:flex;align-items:flex-start;justify-content:space-between;padding:16px 24px 12px;border-bottom:1px solid #f0f0f0}'
@@ -12919,6 +12921,13 @@ tb.addEventListener("click",function(e){
     + '.rea-wxt-primary{background:#1677ff;border-color:#1677ff;color:#fff}'
     + '.rea-wxt-primary:hover{background:#4096ff;border-color:#4096ff;color:#fff}'
     + '.rea-wxt-primary:disabled{background:#f5f5f5;border-color:#d9d9d9;color:rgba(0,0,0,.25);cursor:not-allowed}'
+    /* 超出剩余条数的素材（只有欢迎语模版会传 max）：置灰、点了不改选、只在页脚提示 */
+    + '.rea-wxt-row.off{opacity:.45;cursor:not-allowed}'
+    + '.rea-wxt-row.off:hover{background:transparent}'
+;
+
+  /* 任务三页自己的样式（已选卡、发圈预览媒体、群发群组表单）。 */
+  var REA_WXT_CSS = REA_PICK_CSS
     /* ---- 已选素材卡（发/群发共用的同一形） ---- */
     + '.rea-wxt-picked{display:flex;align-items:flex-start;gap:8px;margin-top:12px;padding:10px 12px;border:1px solid #f0f0f0;border-radius:6px;background:#fafafa;max-width:560px}'
     + '.rea-wxt-pkmain{flex:1;min-width:0}'
@@ -12950,57 +12959,193 @@ tb.addEventListener("click",function(e){
     + '.rea-wxt-foot{display:flex;justify-content:flex-end;gap:8px;padding:20px 0 0;border-top:1px solid #f0f0f0;margin-top:8px}'
     + '.rea-wxt-groupscope{max-width:560px;margin-top:8px}';
 
-  /* 三页共用的注入脚本：PAGE 只用来分流三处接线，弹窗与选材逻辑只有一份。
+  /* 素材库弹窗的注入脚本（四页共用一份，别各页再抄一遍）。各页只传三枚口径参数：
+       tip      弹窗标题下那句说明（各页口径不同，照实说清自己列的是什么）
+       moments  是否按朋友圈可发口径过滤（只有发圈 · 新建为 true）
+       counts   列表每行是否显示「n 条」消息数（只有欢迎语模版为 true）
+     openPick(onOk, curId, max) 的 max＝调用方还能再放几条：传了就把超出的素材置灰、
+     点了不改选、只在页脚说还差多少；任务三页不传，就没有上限这一说。 */
+  function reaPickJs(cfg){
+    return [
+      'var MATS=' + reaJson(REA_WXT_MATS) + ',GROUPS=' + reaJson(REA_WXT_GROUPS) + ',DEPTS=' + reaJson(REA_WXT_DEPTS) + ';',
+      'var PK_TIP=' + reaJson(cfg.tip) + ',PK_MOMENTS=' + (cfg.moments ? 'true' : 'false')
+        + ',PK_COUNTS=' + (cfg.counts ? 'true' : 'false') + ';',
+      'function pkEsc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}',
+      'function pkQ(s,r){return (r||document).querySelector(s)}',
+      'function pkQA(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}',
+      '',
+      '/* ---------- 素材（企业素材；分组与素材库页对齐） ---------- */',
+      'function byId(id){for(var i=0;i<MATS.length;i++)if(MATS[i].id===id)return MATS[i];return null}',
+      'function shape(m){',
+      '  if(m.video)return m.video>1?(m.video+" 条视频"):"1 条视频";',
+      '  if(m.images)return m.images+" 张图片";',
+      '  if(m.files)return m.files>1?(m.files+" 个文件"):"1 个文件";',
+      '  return "";',
+      '}',
+      'function sub(m){return m.text||shape(m)}',
+      '/* 一条素材＝几条消息：欢迎语模版按它铺行，也按它算上限 */',
+      'function mlen(m){return (m.text?1:0)+(m.images||0)+(m.video||0)+(m.files||0)}',
+      '/* 朋友圈能不能发：只认文本 / 图片 / 视频三种消息（白名单，与 App 的 canMoments 同一口径），',
+      '   且图片最多 9 张、图片与视频不混排、视频最多 1 条。**含文件的素材发不了朋友圈**——',
+      '   文件照样能发群，发圈页只是不列。发圈页只列过得了这一关的素材；欢迎语模版不设限。 */',
+      'function canMoment(m){return !m.files&&m.images<=9&&m.video<=1&&!(m.images&&m.video)}',
+      'function avail(m){return !PK_MOMENTS||canMoment(m)}',
+      'function pool(){',
+      '  var d=PICK.dept,g=PICK.group,qq=PICK.q,out=[],i;',
+      '  for(i=0;i<MATS.length;i++){',
+      '    if(!avail(MATS[i]))continue;',
+      '    if(d!==DEPTS.root&&MATS[i].dept!==d)continue;',
+      '    if(g!=="全部素材"&&MATS[i].group!==g)continue;',
+      '    if(qq&&(MATS[i].title+" "+MATS[i].group+" "+MATS[i].text).indexOf(qq)<0)continue;',
+      '    out.push(MATS[i]);',
+      '  }',
+      '  return out;',
+      '}',
+      '/* 工作域计数：该域下、本页可选的素材条数（全公司＝并集），不随分组／搜索变 */',
+      'function deptCount(name){',
+      '  var n=0,i;',
+      '  for(i=0;i<MATS.length;i++)if(avail(MATS[i])&&(name===DEPTS.root||MATS[i].dept===name))n++;',
+      '  return n;',
+      '}',
+      '',
+      '/* ---------- 素材库弹窗 ---------- */',
+      'var PICK={open:false,dept:DEPTS.root,group:"全部素材",q:"",sel:null,max:null,hint:""};',
+      'var MASK=null;',
+      'function closePick(){',
+      '  if(MASK&&MASK.parentNode)MASK.parentNode.removeChild(MASK);',
+      '  MASK=null;PICK.open=false;',
+      '}',
+      'function pickHtml(){',
+      '  var groups="",depts="",i;',
+      '  for(i=0;i<GROUPS.length;i++){',
+      '    groups+=\'<button type="button" class="rea-wxt-g\'+(PICK.group===GROUPS[i]?" on":"")+\'" data-group="\'+pkEsc(GROUPS[i])+\'">\'+pkEsc(GROUPS[i])+"</button>";',
+      '  }',
+      '  /* 工作域是两级：全公司（父）＋ 各部门（子，始终展开，照参考原型的树形） */',
+      '  depts+=\'<button type="button" class="rea-wxt-dep rea-wxt-dep0\'+(PICK.dept===DEPTS.root?" on":"")+\'" data-dept="\'+pkEsc(DEPTS.root)+\'">\'',
+      '    +\'<span class="rea-wxt-care" aria-hidden="true">▾</span><span class="rea-wxt-dname">\'+pkEsc(DEPTS.root)+"</span>"',
+      '    +\'<span class="rea-wxt-cnt">\'+deptCount(DEPTS.root)+"</span></button>";',
+      '  for(i=0;i<DEPTS.children.length;i++){',
+      '    var dn=DEPTS.children[i];',
+      '    depts+=\'<button type="button" class="rea-wxt-dep rea-wxt-dep1\'+(PICK.dept===dn?" on":"")+\'" data-dept="\'+pkEsc(dn)+\'">\'',
+      '      +\'<span class="rea-wxt-dname">\'+pkEsc(dn)+"</span>"',
+      '      +\'<span class="rea-wxt-cnt">\'+deptCount(dn)+"</span></button>";',
+      '  }',
+      '  return \'<div class="rea-wxt-modal" role="dialog" aria-modal="true" aria-label="从素材库选择">\'',
+      '    +\'<div class="rea-wxt-hd"><div class="rea-wxt-hdt"><span class="rea-wxt-title">从素材库选择</span>\'',
+      '    +\'<div class="rea-wxt-sub">\'+pkEsc(PK_TIP)+"</div></div>"',
+      '    +\'<button type="button" class="rea-wxt-x" aria-label="关闭">×</button></div>\'',
+      '    +\'<div class="rea-wxt-bd">\'',
+      '    +\'<div class="rea-wxt-left"><div class="rea-wxt-lh">当前工作域</div><div class="rea-wxt-depts">\'+depts+"</div>"',
+      '    +\'<div class="rea-wxt-lh rea-wxt-lh2">分组</div><div class="rea-wxt-groups">\'+groups+"</div></div>"',
+      '    +\'<div class="rea-wxt-mid"><div class="rea-wxt-search"><input type="text" placeholder="搜索素材（标题 / 关键词 / 正文）" aria-label="搜索素材" value="\'+pkEsc(PICK.q)+\'"></div>\'',
+      '    +\'<div class="rea-wxt-list"></div></div>\'',
+      '    +\'<div class="rea-wxt-pv"><div class="rea-wxt-pvt">内容预览</div><div class="rea-wxt-pvc"></div></div>\'',
+      '    +"</div>"',
+      '    +\'<div class="rea-wxt-ft"><span class="rea-wxt-sel"></span><span class="rea-wxt-acts">\'',
+      '    +\'<button type="button" class="rea-wxt-btn rea-wxt-cancel">取消</button>\'',
+      '    +\'<button type="button" class="rea-wxt-btn rea-wxt-primary rea-wxt-ok">确定</button></span></div>\'',
+      '    +"</div>";',
+      '}',
+      'function renderPick(){',
+      '  if(!MASK)return;',
+      '  var rows=pool(),h="",i,m;',
+      '  for(i=0;i<rows.length;i++){',
+      '    m=rows[i];',
+      '    var n=mlen(m),over=PICK.max!=null&&n>PICK.max,rs=sub(m);',
+      '    if(PK_COUNTS)rs=over?(n+" 条 · 超出剩余 "+PICK.max+" 条"):(rs?rs+" · "+n+" 条":n+" 条");',
+      '    h+=\'<button type="button" class="rea-wxt-row\'+(PICK.sel===m.id?" on":"")+(over?" off":"")+\'" data-id="\'+pkEsc(m.id)+\'"\'+(over?\' aria-disabled="true" title="超出剩余条数"\':"")+">"',
+      '      +\'<span class="rea-wxt-rt">\'+pkEsc(m.title)+"</span>"',
+      '      +(rs?\'<span class="rea-wxt-rs">\'+pkEsc(rs)+"</span>":"")+"</button>";',
+      '  }',
+      '  if(!rows.length)h=\'<div class="rea-wxt-empty">该工作域 / 分组下没有可发送的素材</div>\';',
+      '  pkQ(".rea-wxt-list",MASK).innerHTML=h;',
+      '  pkQA(".rea-wxt-g",MASK).forEach(function(b){b.classList.toggle("on",b.getAttribute("data-group")===PICK.group)});',
+      '  pkQA(".rea-wxt-dep",MASK).forEach(function(b){b.classList.toggle("on",b.getAttribute("data-dept")===PICK.dept)});',
+      '  var cur=byId(PICK.sel),pv=pkQ(".rea-wxt-pvc",MASK);',
+      '  if(!cur){',
+      '    pv.innerHTML=\'<div class="rea-wxt-pvempty">点左侧任意一条素材，这里显示它发出去的样子。</div>\';',
+      '  }else{',
+      '    var media="";',
+      '    if(cur.video)media=\'<div class="rea-wxt-pvvideo">▶<span>\'+pkEsc(shape(cur))+"</span></div>";',
+      '    else if(cur.files)media=\'<div class="rea-wxt-pvfile"><svg class="rea-wxt-pvfic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M9.5 1.5H4a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V5z"/><path d="M9.5 1.5V5H13"/></svg><span>\'+pkEsc(shape(cur))+"</span></div>";',
+      '    else if(cur.images){',
+      '      media=\'<div class="rea-wxt-pvgrid">\';',
+      '      for(i=0;i<cur.images;i++)media+=\'<span class="rea-wxt-pvcell"></span>\';',
+      '      media+="</div>";',
+      '    }',
+      '    pv.innerHTML=\'<div class="rea-wxt-pvname">素材预览</div><div class="rea-wxt-pvtext">\'+pkEsc(cur.text)+"</div>"+media',
+      '      +\'<div class="rea-wxt-pvmeta">\'+pkEsc(cur.dept)+" · "+pkEsc(cur.group)+" · "+pkEsc(cur.title)+"</div>";',
+      '  }',
+      '  pkQ(".rea-wxt-sel",MASK).textContent=cur?("已选："+cur.title+(PK_COUNTS?" · "+mlen(cur)+" 条":"")):(PICK.hint||"尚未选择");',
+      '  pkQ(".rea-wxt-ok",MASK).disabled=!cur;',
+      '}',
+      'function openPick(onOk,curId,max){',
+      '  closePick();',
+      '  var cur=byId(curId);',
+      '  PICK.open=true;PICK.q="";PICK.sel=cur?cur.id:null;PICK.max=(typeof max==="number")?max:null;PICK.hint="";',
+      '  PICK.group=cur?cur.group:"全部素材";PICK.dept=cur?cur.dept:DEPTS.root;',
+      '  MASK=document.createElement("div");',
+      '  MASK.className="rea-wxt-mask";',
+      '  MASK.innerHTML=pickHtml();',
+      '  document.body.appendChild(MASK);',
+      '  MASK.addEventListener("click",function(e){',
+      '    var t=e.target;',
+      '    if(t===MASK)return closePick();',
+      '    var d=t.closest?t.closest(".rea-wxt-dep"):null;',
+      '    if(d){PICK.dept=d.getAttribute("data-dept");PICK.hint="";renderPick();return}',
+      '    var g=t.closest?t.closest(".rea-wxt-g"):null;',
+      '    if(g){PICK.group=g.getAttribute("data-group");PICK.hint="";renderPick();return}',
+      '    var row=t.closest?t.closest(".rea-wxt-row"):null;',
+      '    if(row){',
+      '      var rm=byId(row.getAttribute("data-id"));',
+      '      if(rm&&PICK.max!=null&&mlen(rm)>PICK.max){',
+      '        PICK.hint="当前还可添加 "+PICK.max+" 条，该素材有 "+mlen(rm)+" 条";renderPick();return;',
+      '      }',
+      '      PICK.hint="";PICK.sel=row.getAttribute("data-id");renderPick();return;',
+      '    }',
+      '    if(t.closest&&t.closest(".rea-wxt-x"))return closePick();',
+      '    if(t.closest&&t.closest(".rea-wxt-cancel"))return closePick();',
+      '    if(t.closest&&t.closest(".rea-wxt-ok")){',
+      '      var m=byId(PICK.sel);',
+      '      if(m&&PICK.max!=null&&mlen(m)>PICK.max){',
+      '        PICK.hint="当前还可添加 "+PICK.max+" 条，该素材有 "+mlen(m)+" 条";renderPick();',
+      '      }else if(m){closePick();onOk(m)}',
+      '      return;',
+      '    }',
+      '  });',
+      '  var inp=pkQ(".rea-wxt-search input",MASK);',
+      '  if(inp){',
+      '    inp.addEventListener("input",function(){PICK.q=inp.value;renderPick()});',
+      '    inp.focus();',
+      '  }',
+      '  renderPick();',
+      '}',
+      'document.addEventListener("keydown",function(e){',
+      '  if(PICK.open&&(e.key==="Escape"||e.keyCode===27))closePick();',
+      '});',
+      'window.__reaPick={open:openPick};'
+    ].join('\n');
+  }
+
+  /* 三页共用的注入脚本：PAGE 只用来分流三处接线，弹窗与选材逻辑只有一份（见 reaPickJs）。
      对照参考原型，刻意保留的三条：
        · pill 只开弹窗、不改来源（取消后表单原样不动，不需要「记住打开前的来源」）；
        · 「移除」同时清掉来源，不留「选了来源、没有素材」的空档；
        · 保存校验只在「选了素材库来源却没选素材」时报错（群发群组那页另加必填项）。 */
   function reaWxtJs(page){
+    var tip=page==='发圈 · 新建'
+      ? '已过滤掉不能发朋友圈的素材：含文件、图片超过 9 张、图片与视频混排、视频超过 1 条。'
+      : '先选部门工作域，再选分组。只列出能作为群发内容的素材，个人素材不在可选范围内。';
     return `(function(){
 var PAGE=${reaJson(page)};
-var MATS=${reaJson(REA_WXT_MATS)};
-var GROUPS=${reaJson(REA_WXT_GROUPS)};
-var DEPTS=${reaJson(REA_WXT_DEPTS)};
 function norm(s){return String(s==null?'':s).replace(/\\s+/g,'')}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function q(s,r){return (r||document).querySelector(s)}
 function qa(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
 
-/* ---------- 素材（企业素材；分组与素材库页对齐） ---------- */
-function byId(id){for(var i=0;i<MATS.length;i++)if(MATS[i].id===id)return MATS[i];return null}
-function shape(m){
-  if(m.video)return m.video>1?(m.video+' 条视频'):'1 条视频';
-  if(m.images)return m.images+' 张图片';
-  if(m.files)return m.files>1?(m.files+' 个文件'):'1 个文件';
-  return '';
-}
-function sub(m){return m.text||shape(m)}
-/* 朋友圈能不能发：只认文本 / 图片 / 视频三种消息（白名单，与 App 的 canMoments 同一口径），
-   且图片最多 9 张、图片与视频不混排、视频最多 1 条。**含文件的素材发不了朋友圈**——
-   文件照样能发群，发圈页只是不列。
-   发圈页只列过得了这一关的素材——列表里没有的，不是没搜到，是发不了。 */
-function canMoment(m){return !m.files&&m.images<=9&&m.video<=1&&!(m.images&&m.video)}
-/* 本页可选的素材：群发页不设限，发圈页要过朋友圈那一关 */
-function avail(m){return PAGE!=='发圈 · 新建'||canMoment(m)}
-function pool(){
-  var d=PICK.dept,g=PICK.group,qq=PICK.q,out=[],i;
-  for(i=0;i<MATS.length;i++){
-    if(!avail(MATS[i]))continue;
-    if(d!==DEPTS.root&&MATS[i].dept!==d)continue;
-    if(g!=='全部素材'&&MATS[i].group!==g)continue;
-    if(qq&&(MATS[i].title+' '+MATS[i].group+' '+MATS[i].text).indexOf(qq)<0)continue;
-    out.push(MATS[i]);
-  }
-  return out;
-}
-/* 工作域计数：该域下、本页可选的素材条数（全公司＝并集），不随分组／搜索变 */
-function deptCount(name){
-  var n=0,i;
-  for(i=0;i<MATS.length;i++)if(avail(MATS[i])&&(name===DEPTS.root||MATS[i].dept===name))n++;
-  return n;
-}
+${reaPickJs({tip:tip, moments:page==='发圈 · 新建', counts:false})}
 
-/* ---------- 已选素材卡 ---------- */
+/* ---------- 已选素材卡（任务三页的同一形；欢迎语模版不用它，素材直接铺成表行） ---------- */
 function showCard(host,m,onClear){
   if(!host)return;
   host.innerHTML=m?('<div class="rea-wxt-picked"><span class="rea-wxt-pkmain">'
@@ -13010,114 +13155,6 @@ function showCard(host,m,onClear){
   var x=host.querySelector('.rea-wxt-pkx');
   if(x)x.addEventListener('click',function(e){e.preventDefault();onClear()});
 }
-
-/* ---------- 素材库弹窗 ---------- */
-var PICK={open:false,dept:'全公司',group:'全部素材',q:'',sel:null};
-var MASK=null;
-function closePick(){
-  if(MASK&&MASK.parentNode)MASK.parentNode.removeChild(MASK);
-  MASK=null;PICK.open=false;
-}
-function pickHtml(){
-  var groups='',depts='',i;
-  for(i=0;i<GROUPS.length;i++){
-    groups+='<button type="button" class="rea-wxt-g'+(PICK.group===GROUPS[i]?' on':'')+'" data-group="'+esc(GROUPS[i])+'">'+esc(GROUPS[i])+'</button>';
-  }
-  /* 工作域是两级：全公司（父）＋ 各部门（子，始终展开，照参考原型的树形） */
-  depts+='<button type="button" class="rea-wxt-dep rea-wxt-dep0'+(PICK.dept===DEPTS.root?' on':'')+'" data-dept="'+esc(DEPTS.root)+'">'
-    +'<span class="rea-wxt-care" aria-hidden="true">▾</span><span class="rea-wxt-dname">'+esc(DEPTS.root)+'</span>'
-    +'<span class="rea-wxt-cnt">'+deptCount(DEPTS.root)+'</span></button>';
-  for(i=0;i<DEPTS.children.length;i++){
-    var dn=DEPTS.children[i];
-    depts+='<button type="button" class="rea-wxt-dep rea-wxt-dep1'+(PICK.dept===dn?' on':'')+'" data-dept="'+esc(dn)+'">'
-      +'<span class="rea-wxt-dname">'+esc(dn)+'</span>'
-      +'<span class="rea-wxt-cnt">'+deptCount(dn)+'</span></button>';
-  }
-  var tip=PAGE==='发圈 · 新建'
-    ? '已过滤掉不能发朋友圈的素材：含文件、图片超过 9 张、图片与视频混排、视频超过 1 条。'
-    : '先选部门工作域，再选分组。只列出能作为群发内容的素材，个人素材不在可选范围内。';
-  return '<div class="rea-wxt-modal" role="dialog" aria-modal="true" aria-label="从素材库选择">'
-    +'<div class="rea-wxt-hd"><div class="rea-wxt-hdt"><span class="rea-wxt-title">从素材库选择</span>'
-    +'<div class="rea-wxt-sub">'+tip+'</div></div>'
-    +'<button type="button" class="rea-wxt-x" aria-label="关闭">×</button></div>'
-    +'<div class="rea-wxt-bd">'
-    +'<div class="rea-wxt-left"><div class="rea-wxt-lh">当前工作域</div><div class="rea-wxt-depts">'+depts+'</div>'
-    +'<div class="rea-wxt-lh rea-wxt-lh2">分组</div><div class="rea-wxt-groups">'+groups+'</div></div>'
-    +'<div class="rea-wxt-mid"><div class="rea-wxt-search"><input type="text" placeholder="搜索素材（标题 / 关键词 / 正文）" aria-label="搜索素材" value="'+esc(PICK.q)+'"></div>'
-    +'<div class="rea-wxt-list"></div></div>'
-    +'<div class="rea-wxt-pv"><div class="rea-wxt-pvt">内容预览</div><div class="rea-wxt-pvc"></div></div>'
-    +'</div>'
-    +'<div class="rea-wxt-ft"><span class="rea-wxt-sel"></span><span class="rea-wxt-acts">'
-    +'<button type="button" class="rea-wxt-btn rea-wxt-cancel">取消</button>'
-    +'<button type="button" class="rea-wxt-btn rea-wxt-primary rea-wxt-ok">确定</button></span></div>'
-    +'</div>';
-}
-function renderPick(){
-  if(!MASK)return;
-  var rows=pool(),h='',i,m;
-  for(i=0;i<rows.length;i++){
-    m=rows[i];
-    h+='<button type="button" class="rea-wxt-row'+(PICK.sel===m.id?' on':'')+'" data-id="'+esc(m.id)+'">'
-      +'<span class="rea-wxt-rt">'+esc(m.title)+'</span>'
-      +(sub(m)?'<span class="rea-wxt-rs">'+esc(sub(m))+'</span>':'')+'</button>';
-  }
-  if(!rows.length)h='<div class="rea-wxt-empty">该工作域 / 分组下没有可发送的素材</div>';
-  q('.rea-wxt-list',MASK).innerHTML=h;
-  qa('.rea-wxt-g',MASK).forEach(function(b){b.classList.toggle('on',b.getAttribute('data-group')===PICK.group)});
-  qa('.rea-wxt-dep',MASK).forEach(function(b){b.classList.toggle('on',b.getAttribute('data-dept')===PICK.dept)});
-  var cur=byId(PICK.sel),pv=q('.rea-wxt-pvc',MASK);
-  if(!cur){
-    pv.innerHTML='<div class="rea-wxt-pvempty">点左侧任意一条素材，这里显示它发出去的样子。</div>';
-  }else{
-    var media='';
-    if(cur.video)media='<div class="rea-wxt-pvvideo">▶<span>'+esc(shape(cur))+'</span></div>';
-    else if(cur.files)media='<div class="rea-wxt-pvfile"><svg class="rea-wxt-pvfic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M9.5 1.5H4a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V5z"/><path d="M9.5 1.5V5H13"/></svg><span>'+esc(shape(cur))+'</span></div>';
-    else if(cur.images){
-      media='<div class="rea-wxt-pvgrid">';
-      for(i=0;i<cur.images;i++)media+='<span class="rea-wxt-pvcell"></span>';
-      media+='</div>';
-    }
-    pv.innerHTML='<div class="rea-wxt-pvname">素材预览</div><div class="rea-wxt-pvtext">'+esc(cur.text)+'</div>'+media
-      +'<div class="rea-wxt-pvmeta">'+esc(cur.dept)+' · '+esc(cur.group)+' · '+esc(cur.title)+'</div>';
-  }
-  q('.rea-wxt-sel',MASK).textContent=cur?('已选：'+cur.title):'尚未选择';
-  q('.rea-wxt-ok',MASK).disabled=!cur;
-}
-function openPick(onOk,curId){
-  closePick();
-  var cur=byId(curId);
-  PICK.open=true;PICK.q='';PICK.sel=cur?cur.id:null;PICK.group=cur?cur.group:'全部素材';PICK.dept=cur?cur.dept:DEPTS.root;
-  MASK=document.createElement('div');
-  MASK.className='rea-wxt-mask';
-  MASK.innerHTML=pickHtml();
-  document.body.appendChild(MASK);
-  MASK.addEventListener('click',function(e){
-    var t=e.target;
-    if(t===MASK)return closePick();
-    var d=t.closest?t.closest('.rea-wxt-dep'):null;
-    if(d){PICK.dept=d.getAttribute('data-dept');renderPick();return}
-    var g=t.closest?t.closest('.rea-wxt-g'):null;
-    if(g){PICK.group=g.getAttribute('data-group');renderPick();return}
-    var row=t.closest?t.closest('.rea-wxt-row'):null;
-    if(row){PICK.sel=row.getAttribute('data-id');renderPick();return}
-    if(t.closest&&t.closest('.rea-wxt-x'))return closePick();
-    if(t.closest&&t.closest('.rea-wxt-cancel'))return closePick();
-    if(t.closest&&t.closest('.rea-wxt-ok')){
-      var m=byId(PICK.sel);
-      if(m){closePick();onOk(m)}
-      return;
-    }
-  });
-  var inp=q('.rea-wxt-search input',MASK);
-  if(inp){
-    inp.addEventListener('input',function(){PICK.q=inp.value;renderPick()});
-    inp.focus();
-  }
-  renderPick();
-}
-document.addEventListener('keydown',function(e){
-  if(PICK.open&&(e.key==='Escape'||e.keyCode===27))closePick();
-});
 
 /* ---------- 通用小件 ---------- */
 function setPrimary(btn,on){
@@ -13499,16 +13536,25 @@ else if(PAGE==='群发群组 · 新建')initQs();
     + '.rea-zd-mp img{display:block;width:100%;height:auto}'
     + '.rea-zd-mptitle{padding:8px 10px;font-size:13px;line-height:18px;color:#333333;'
     +   'overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
-    + '.rea-zd-mpfoot{padding:0 10px 8px;font-size:12px;line-height:16px;color:#6b6b6b}';
+    + '.rea-zd-mpfoot{padding:0 10px 8px;font-size:12px;line-height:16px;color:#6b6b6b}'
+    /* 「从素材库选择」跟在「添加回复内容」右边，同一枚工具栏里的次按钮 */
+    + '.rea-zd-srcbtn{margin-left:8px}';
 
   /* 注入脚本。**不动 _online-admin.js、不重跑构建**：模版弹窗的 DOM 是快照自带的，
      这一笔只补它缺的二级弹窗、表格行与预览。 */
   function reaZdJs(){
    return [
     '(function(){',
+    /* 素材库弹窗与任务三页共用一份（reaPickJs）：欢迎语模版不按朋友圈口径筛，
+       列表行显示「n 条」，并且按表格剩余空位传上限。 */
+    reaPickJs({
+      tip: '素材会按顺序铺成回复内容，选完后仍可逐条编辑。',
+      moments: false,
+      counts: true
+    }),
     'var VARS=' + reaJson(REA_ZD_VARS) + ',TYPES=' + reaJson(REA_ZD_TYPES) + ',',
     '    DEMO=' + reaJson(REA_ZD_DEMO) + ',ICON=' + reaJson(REA_ZD_ICON) + ',',
-    '    PIC=' + reaJson(REA_ZD_PIC) + ',MAX=10;',
+    '    PIC=' + reaJson(REA_ZD_PIC) + ',VPOSTER=' + reaJson(REA_ZD_VPOSTER) + ',MAX=10;',
     'var MRS=document.querySelectorAll(".ant-modal-root");',
     'if(!MRS.length)return;',
     'var MR=MRS[MRS.length-1];',
@@ -13522,6 +13568,13 @@ else if(PAGE==='群发群组 · 新建')initQs();
     'var ADDB=null,abs=BD.querySelectorAll("button.ant-btn");',
     'for(fi=0;fi<abs.length;fi++)if((abs[fi].textContent||"").replace(/\\s+/g,"")==="添加回复内容")ADDB=abs[fi];',
     'if(!ADDB||!TB)return;',
+    '/* 「从素材库选择」＝「添加回复内容」右侧的次按钮。与手建并存、不互斥：',
+    '   取完照样能逐行编辑／删除，素材只是把 n 条消息一次铺成 n 行。 */',
+    'var SRCB=document.createElement("button");',
+    'SRCB.type="button";',
+    'SRCB.className="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined rea-zd-srcbtn";',
+    'SRCB.innerHTML="<span>从素材库选择</span>";',
+    'if(ADDB.parentNode)ADDB.parentNode.insertBefore(SRCB,ADDB.nextSibling);',
     '',
     'function q(s,r){return (r||document).querySelector(s)}',
     'function up(n,c){while(n&&n.nodeType===1){if(n.classList&&n.classList.contains(c))return n;n=n.parentNode}return null}',
@@ -13777,6 +13830,29 @@ else if(PAGE==='群发群组 · 新建')initQs();
     '}',
     '',
     'ADDB.addEventListener("click",function(e){e.preventDefault();openEditor(-1)});',
+    '',
+    '/* 一条素材＝一段回复：素材的第 i 条消息铺成第 i 行，类型与内容照抄（**复制，不是引用**）。',
+    '   图片／视频用本页占位图；文件名按素材标题顺延编号，取两次就是两套行，不拦。 */',
+    'function matRows(m){',
+    '  var rs=[],i,t=m.title||"素材";',
+    '  if(m.text)rs.push({t:"text",c:m.text,src:"",title:"",path:"",size:""});',
+    '  for(i=0;i<(m.images||0);i++)rs.push({t:"image",c:t+"-"+(i+1)+".png",src:PIC,title:"",path:"",size:""});',
+    '  for(i=0;i<(m.video||0);i++)rs.push({t:"video",c:t+"-"+(i+1)+".mp4",src:VPOSTER,title:"",path:"",size:""});',
+    '  for(i=0;i<(m.files||0);i++)rs.push({t:"file",c:t+"-"+(i+1)+".pdf",src:"",title:"",path:"",size:(i?"1.6 MB":"2.4 MB")});',
+    '  return rs;',
+    '}',
+    'function pour(m){',
+    '  var rs=matRows(m),k;',
+    '  for(k=0;k<rs.length;k++)ST.msgs.push(rs[k]);',
+    '  drawMsgs();drawPreview();',
+    '  msg("已铺入《"+m.title+"》的 "+rs.length+" 条回复内容");',
+    '}',
+    'if(SRCB)SRCB.addEventListener("click",function(e){',
+    '  e.preventDefault();',
+    '  var left=MAX-ST.msgs.length;',
+    '  if(left<=0){msg("最多添加 "+MAX+" 条回复内容");return}',
+    '  openPick(pour,null,left);',
+    '});',
     'if(TB)TB.addEventListener("click",function(e){',
     '  var n=up(e.target,"ant-btn");if(!n)return;',
     '  var ed=n.getAttribute("data-zd-edit"),dl=n.getAttribute("data-zd-del");',
@@ -13836,12 +13912,14 @@ else if(PAGE==='群发群组 · 新建')initQs();
        群发好友 · 详情      补弹窗——**没有 html**，正文就是快照那一段；脚本给「群发好友数」补好友明细弹窗，
                             行为与样式见 reaQfDetailJs 上方注释
        发圈 · 新建          补选材——**没有 html**，正文就是快照那一段；任务内容加「从素材库选择」，
-       群发好友 · 新建      弹窗与选材逻辑共用 reaWxtJs()／REA_WXT_CSS；群发好友那页选中素材后
-                            收起「内容类型 / 描述文本」（来源互斥）
+       群发好友 · 新建      弹窗与选材逻辑共用 reaPickJs()／REA_PICK_CSS（还在 reaWxtJs 里接线）；
+                            群发好友那页选中素材后收起「内容类型 / 描述文本」（来源互斥）
        群发群组 · 新建      另造表单——快照抓到的其实是列表页（新建弹窗没抓到），
                             脚本整页另造一张完整新建表单，任务内容同样挂素材库入口
        自动打招呼 · 新建    补弹窗与预览——**没有 html**，正文就是快照那一段；模版弹窗里补
-                            「添加回复内容」二级弹窗、回复内容表格行与右侧手机预览（配 REA_ZD_CSS）
+                            「添加回复内容」二级弹窗、回复内容表格行与右侧手机预览；
+                            「从素材库选择」把一条素材的消息按顺序铺成回复内容行
+                            （同一套弹窗，配 REA_PICK_CSS ＋ REA_ZD_CSS）
      没有 html 的页，reaSplice 原样放过；这不是省事，是刻意：正文抄一份进来就成了会过期的副本，
      重抓源目录后静默与线上脱钩，而这一页的正文本来就不该变。 */
 
@@ -13901,7 +13979,7 @@ else if(PAGE==='群发群组 · 新建')initQs();
     '群发好友 · 新建': { css: REA_WXT_CSS, js: function(){ return reaWxtJs('群发好友 · 新建'); } },
     '群发群组 · 新建': { css: REA_WXT_CSS, js: function(){ return reaWxtJs('群发群组 · 新建'); } },
     /* 自动打招呼 · 新建：欢迎语模版的「添加回复内容」流（2026-10-23） */
-    '自动打招呼 · 新建': { css: REA_ZD_CSS, js: reaZdJs }
+    '自动打招呼 · 新建': { css: REA_PICK_CSS + REA_ZD_CSS, js: reaZdJs }
   };
 
   /* 把被覆盖页的正文区（contentStart..contentEnd，构建脚本给出的那道缝）换成它登记表里那个载体的内容。
