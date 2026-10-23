@@ -9672,9 +9672,9 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
      由 all.html 的 reaSplice() 按页名替换进去（ADR-0043：线上后台是设计面，可逐页覆盖）。
      这里是**片段**不是整页：只填 <div class="pagecontent"> 里的那一段，外壳与样式仍走快照。
      未被覆盖的页一个字节都读不到它。 -->
-<script type="text/plain" id="srcBoard"><div class="ant-spin-nested-loading css-vgijab"><div class="ant-spin-container">
-<div class="_board_gf4go_1" style="padding-bottom: 28px;">
-  <div class="_title_gf4go_8">
+<script type="text/plain" id="srcBoard"><div class="ant-spin-nested-loading css-vgijab rea-bd-page"><div class="ant-spin-container">
+<div class="_board_gf4go_1 rea-bd-sec">
+  <div class="_title_gf4go_8 rea-bd-pagehead">
     <h6>微小助看板</h6>
     <span>数据更新时间：<span data-rea-d="now@now"></span></span>
   </div>
@@ -9689,32 +9689,34 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
        三张卡都由任务台账里今日那几行算出来（见注入脚本的自检），不另写一份数。
        原来的第四张「异常 · 失败」已撤（PRD §5.1）：失败在后端就归「进行中」，不是一种独立状态，
        单列一张卡等于拿我们的口径去解释现网的分桶；页上不再出现这个数。 -->
-  <div class="ant-row css-vgijab" id="rea-bd-cards" style="margin-left: -16px; margin-right: -16px; row-gap: 21px; padding-top: 21px;">
-    <div class="ant-col ant-col-8 css-vgijab" style="padding-left: 16px; padding-right: 16px;">
-      <div class="_card_gf4go_35" style="background: linear-gradient(90deg, rgb(194, 80, 255) 0%, rgb(157, 83, 255) 100%); box-shadow: rgb(136, 83, 255) 0px 0px 1px 0px;">
-        <h6>待执行</h6>
-        <div class="_num_gf4go_46">
-          <div><p data-rea-sum="left">18</p><p>人次</p></div>
-          <div><p data-rea-sum="left-of-need">43.9%</p><p>占应执行</p></div>
-        </div>
+  <div class="rea-bd-sechead">
+    <h6>执行健康度</h6>
+    <span>固定看今日 · 不随时间窗变化</span>
+  </div>
+
+  <div class="ant-row css-vgijab" id="rea-bd-cards">
+    <div class="ant-col ant-col-8 css-vgijab">
+      <div class="rea-bd-kpi">
+        <div class="rea-bd-kpi-top"><span class="lab">待执行</span></div>
+        <div class="rea-bd-kpi-main"><b data-rea-sum="left">18</b><span>人次</span></div>
+        <div class="rea-bd-kpi-sub"><span data-rea-sum="left-of-need">43.9%</span><span>占应执行</span></div>
+        <span class="rea-bd-kpi-bar" data-bd-kpibar="left" aria-hidden="true"><i class="d"></i><i class="l"></i><i class="o"></i></span>
       </div>
     </div>
-    <div class="ant-col ant-col-8 css-vgijab" style="padding-left: 16px; padding-right: 16px;">
-      <div class="_card_gf4go_35" style="background: linear-gradient(270deg, rgb(0, 194, 138) 0%, rgb(0, 217, 121) 100%); box-shadow: rgb(0, 173, 122) 0px 0px 1px 0px;">
-        <h6>已完成</h6>
-        <div class="_num_gf4go_46">
-          <div><p data-rea-sum="done">23</p><p>人次</p></div>
-          <div><p data-rea-sum="rate">56.1%</p><p>完成率</p></div>
-        </div>
+    <div class="ant-col ant-col-8 css-vgijab">
+      <div class="rea-bd-kpi">
+        <div class="rea-bd-kpi-top"><span class="lab">已完成</span></div>
+        <div class="rea-bd-kpi-main"><b data-rea-sum="done">23</b><span>人次</span></div>
+        <div class="rea-bd-kpi-sub"><span data-rea-sum="rate">56.1%</span><span>完成率</span></div>
+        <span class="rea-bd-kpi-bar" data-bd-kpibar="done" aria-hidden="true"><i class="d"></i><i class="l"></i><i class="o"></i></span>
       </div>
     </div>
-    <div class="ant-col ant-col-8 css-vgijab" style="padding-left: 16px; padding-right: 16px;">
-      <div class="_card_gf4go_35" style="background: linear-gradient(90deg, rgb(255, 176, 38) 0%, rgb(255, 143, 23) 100%); box-shadow: rgb(255, 101, 76) 0px 0px 1px 0px;">
-        <h6>逾期未做</h6>
-        <div class="_num_gf4go_46">
-          <div><p data-rea-sum="over">0</p><p>人次</p></div>
-          <div><p data-rea-sum="over-of-left">0.0%</p><p>占待执行</p></div>
-        </div>
+    <div class="ant-col ant-col-8 css-vgijab">
+      <div class="rea-bd-kpi">
+        <div class="rea-bd-kpi-top"><span class="lab">逾期未做</span></div>
+        <div class="rea-bd-kpi-main"><b data-rea-sum="over">0</b><span>人次</span></div>
+        <div class="rea-bd-kpi-sub"><span data-rea-sum="over-of-left">0.0%</span><span>占待执行</span></div>
+        <span class="rea-bd-kpi-bar" data-bd-kpibar="over" aria-hidden="true"><i class="d"></i><i class="l"></i><i class="o"></i></span>
       </div>
     </div>
   </div>
@@ -9725,8 +9727,8 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   <div class="rea-bd-bad" id="rea-bd-bad" hidden></div>
 </div>
 
-<div class="_board_gf4go_1" style="margin-top: 21px; padding-bottom: 28px;">
-  <div class="_title_gf4go_8" style="padding-bottom: 0px;">
+<div class="_board_gf4go_1 rea-bd-sec">
+  <div class="_title_gf4go_8 rea-bd-sec-title">
     <h6>任务执行</h6>
     <span class="rea-bd-title-sub">比完成度与欠账 · 全量任务在「微信营销任务」各模块列表</span>
     <a href="#" data-bd-detail="task">执行人明细<span role="img" aria-label="right" class="anticon anticon-right"><svg viewBox="64 64 896 896" focusable="false" data-icon="right" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"></path></svg></span></a>
@@ -9753,47 +9755,47 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
           </label>
         </div>
         <div class="ant-space-item">
-          <label class="ant-radio-button-wrapper css-vgijab" data-bd-win="d2">
+          <label class="ant-radio-button-wrapper css-vgijab rea-bd-win-off" data-bd-win="d2" title="演示数据未接入">
             <span class="ant-radio-button"><input name="rea-bd-win" class="ant-radio-button-input" type="radio" value="2"><span class="ant-radio-button-inner"></span></span>
             <span class="ant-radio-button-label">前天</span>
           </label>
         </div>
         <div class="ant-space-item">
-          <label class="ant-radio-button-wrapper css-vgijab" data-bd-win="w7">
+          <label class="ant-radio-button-wrapper css-vgijab rea-bd-win-off" data-bd-win="w7" title="演示数据未接入">
             <span class="ant-radio-button"><input name="rea-bd-win" class="ant-radio-button-input" type="radio" value="3"><span class="ant-radio-button-inner"></span></span>
             <span class="ant-radio-button-label">近一周</span>
           </label>
         </div>
         <div class="ant-space-item">
-          <label class="ant-radio-button-wrapper css-vgijab" data-bd-win="m1">
+          <label class="ant-radio-button-wrapper css-vgijab rea-bd-win-off" data-bd-win="m1" title="演示数据未接入">
             <span class="ant-radio-button"><input name="rea-bd-win" class="ant-radio-button-input" type="radio" value="4"><span class="ant-radio-button-inner"></span></span>
             <span class="ant-radio-button-label">近一月</span>
           </label>
         </div>
         <div class="ant-space-item">
-          <label class="ant-radio-button-wrapper css-vgijab" data-bd-win="m3">
+          <label class="ant-radio-button-wrapper css-vgijab rea-bd-win-off" data-bd-win="m3" title="演示数据未接入">
             <span class="ant-radio-button"><input name="rea-bd-win" class="ant-radio-button-input" type="radio" value="5"><span class="ant-radio-button-inner"></span></span>
             <span class="ant-radio-button-label">近三月</span>
           </label>
         </div>
         <div class="ant-space-item">
-          <label class="ant-radio-button-wrapper css-vgijab" data-bd-win="m6">
+          <label class="ant-radio-button-wrapper css-vgijab rea-bd-win-off" data-bd-win="m6" title="演示数据未接入">
             <span class="ant-radio-button"><input name="rea-bd-win" class="ant-radio-button-input" type="radio" value="6"><span class="ant-radio-button-inner"></span></span>
             <span class="ant-radio-button-label">近半年</span>
           </label>
         </div>
         <div class="ant-space-item">
-          <label class="ant-radio-button-wrapper css-vgijab" data-bd-win="y1">
+          <label class="ant-radio-button-wrapper css-vgijab rea-bd-win-off" data-bd-win="y1" title="演示数据未接入">
             <span class="ant-radio-button"><input name="rea-bd-win" class="ant-radio-button-input" type="radio" value="7"><span class="ant-radio-button-inner"></span></span>
             <span class="ant-radio-button-label">近一年</span>
           </label>
         </div>
       </div>
     </div>
-    <div class="ant-picker ant-picker-range ant-picker-outlined css-vgijab">
-      <div class="ant-picker-input"><input aria-invalid="false" autocomplete="off" size="12" placeholder="开始日期" date-range="start" value=""></div>
+    <div class="ant-picker ant-picker-range ant-picker-outlined css-vgijab rea-bd-off" title="演示数据未接入" aria-disabled="true">
+      <div class="ant-picker-input"><input aria-invalid="false" autocomplete="off" size="12" placeholder="开始日期" date-range="start" value="" disabled></div>
       <div class="ant-picker-range-separator"><span aria-label="to" class="ant-picker-separator"><span role="img" aria-label="swap-right" class="anticon anticon-swap-right"><svg viewBox="64 64 896 896" focusable="false" data-icon="swap-right" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M873.1 596.2l-164-208A32 32 0 00684 376h-64.8c-6.7 0-10.4 7.7-6.3 13l144.3 183H152c-4.4 0-8 3.6-8 8v60c0 4.4 3.6 8 8 8h695.9c26.8 0 41.7-30.8 25.2-51.8z"></path></svg></span></span></div>
-      <div class="ant-picker-input"><input aria-invalid="false" autocomplete="off" size="12" placeholder="结束日期" date-range="end" value=""></div>
+      <div class="ant-picker-input"><input aria-invalid="false" autocomplete="off" size="12" placeholder="结束日期" date-range="end" value="" disabled></div>
       <div class="ant-picker-active-bar" style="position: absolute; width: 0px;"></div>
       <span class="ant-picker-suffix"><span role="img" aria-label="calendar" class="anticon anticon-calendar"><svg viewBox="64 64 896 896" focusable="false" data-icon="calendar" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M880 184H712v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H384v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H144c-17.7 0-32 14.3-32 32v664c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V216c0-17.7-14.3-32-32-32zm-40 656H184V460h656v380zM184 392V256h128v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h256v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h128v136H184z"></path></svg></span></span>
     </div>
@@ -9841,8 +9843,8 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
       <div class="ant-spin-nested-loading css-vgijab"><div class="ant-spin-container">
         <div class="ant-table ant-table-middle css-vgijab">
           <div class="ant-table-container"><div class="ant-table-content">
-            <table style="table-layout: fixed;">
-              <colgroup><col style="width: 19%"><col style="width: 10%"><col style="width: 7%"><col style="width: 11%"><col style="width: 23%"><col style="width: 12%"><col style="width: 6%"><col style="width: 6%"><col style="width: 6%"></colgroup>
+            <table class="rea-bd-follow" style="table-layout: fixed;">
+              <colgroup><col style="width: 18%"><col style="width: 14%"><col style="width: 6%"><col style="width: 11%"><col style="width: 21%"><col style="width: 11%"><col style="width: 6%"><col style="width: 7%"><col style="width: 6%"></colgroup>
               <thead class="ant-table-thead"><tr>
                 <th scope="col" class="ant-table-cell">任务名称</th>
                 <th scope="col" class="ant-table-cell">任务类型</th>
@@ -10110,7 +10112,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
      所以它是看板上唯一一项有反馈的效果数据。按周汇总：日粒度太碎（一天的群发任务数不固定，
      曲线全是锯齿），月粒度又把运营动作抹平（PRD §2.7 / §3.4）。
      周窗口与上方任务时间窗无关：时间窗筛的是「哪一段任务」，这里看的是「哪几周的回信」。 -->
-<div class="_board_gf4go_1" id="rea-qft" style="margin-top: 21px; padding-bottom: 28px;">
+<div class="_board_gf4go_1 rea-bd-sec" id="rea-qft">
   <div class="rea-qft-hd">
     <h6>群发好友回复</h6>
     <span class="sub">效果 · 按周汇总 · 截至昨日</span>
@@ -10140,8 +10142,8 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
      这 3 个模块没有「完成率」这个概念：智能回复是规则，自动打招呼是模版，
      微信群管理是资产台账。指标各自带周期（近 7 日 / 群总数 / 模版数），**不随时间窗变**——
      窗口从昨天切到今天，这一块一个字不动（PRD §2.4 / §3.3）。 -->
-<div class="_board_gf4go_1" style="margin-top: 21px; padding-bottom: 28px;">
-  <div class="_title_gf4go_8" style="padding-bottom: 0px;">
+<div class="_board_gf4go_1 rea-bd-sec">
+  <div class="_title_gf4go_8 rea-bd-sec-title">
     <h6>配置 / 资产</h6>
     <span>不按完成率统计 · 指标自带周期，不随时间窗变化</span>
   </div>
@@ -10195,8 +10197,8 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
      的覆盖机制补一张子页：页名与正文由外壳脚本在运行时合成（克隆 微小助看板 的侧栏／顶栏外壳，
      只换正文区），行数据由看板页在点「详细数据」时一并带过来，**不另编一份**。 -->
 <script type="text/plain" id="srcBoardTask">
-<div class="_board_gf4go_1" style="padding-bottom: 28px;">
-  <div class="_title_gf4go_8">
+<div class="_board_gf4go_1 rea-bd-page rea-bd-sec">
+  <div class="_title_gf4go_8 rea-bd-pagehead">
     <h6>执行人明细</h6>
     <span class="rea-bd-title-sub">按执行人聚合 · 与「各大区完成率」按创建人聚合是两个口径，不可相加</span>
     <a href="#" data-rea="微小助看板" class="rea-bd-back">← 返回看板</a>
@@ -10204,7 +10206,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   <div class="ant-divider css-vgijab ant-divider-horizontal" role="separator" style="margin: 0px;"></div>
   <div class="rea-bd-row">
     <span class="rea-bd-lab">时间窗</span>
-    <div class="ant-radio-group ant-radio-group-solid css-vgijab" id="rea-dtl-win">
+    <div class="ant-radio-group ant-radio-group-solid css-vgijab rea-bd-window" id="rea-dtl-win">
       <div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small">
         <div class="ant-space-item">
           <label class="ant-radio-button-wrapper css-vgijab" data-dtl-win="today">
@@ -10230,7 +10232,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     <div class="ant-spin-nested-loading css-vgijab"><div class="ant-spin-container">
       <div class="ant-table ant-table-middle css-vgijab">
         <div class="ant-table-container"><div class="ant-table-content">
-          <table style="table-layout: fixed;">
+          <table class="rea-bd-people-table" style="table-layout: fixed;">
             <colgroup><col style="width: 22%"><col style="width: 14%"><col style="width: 9%"><col style="width: 9%"><col style="width: 9%"><col style="width: 9%"><col style="width: 7%"><col style="width: 21%"></colgroup>
             <thead class="ant-table-thead"><tr>
               <th scope="col" class="ant-table-cell">执行人</th>
@@ -10455,149 +10457,247 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     if (window.console && console.warn) console.warn('[reaCover] ' + t);
   }
 
-  /* 本页自带的样式。前缀一律 .rea-bd-*，绝不下探未覆盖页——
-     取值只取快照里已经出现的色（#f0f0f2 / #748194 / #999999 / #333333 / #F7F8FC /
-     #1677ff / #ff4d4f / #fffbe6），这是 ADR-0043 规则 B 的要求。 */
-  var REA_BOARD_CSS =
-      '.rea-bd-row{display:flex;align-items:center;flex-wrap:wrap;gap:10px 10px;padding:16px 0 0}'
-    + '.rea-bd-lab{color:#748194;font-size:12px}'
-    + '.rea-bd-sep{width:1px;height:20px;background:#f0f0f2;margin:0 4px}'
-    + '.rea-bd-note{margin:8px 0 0;color:#999999;font-size:12px;line-height:1.6}'
-    + '.rea-bd-note b{color:#333333;font-weight:600}'
-    + '.rea-bd-sum td{background:#F7F8FC;font-weight:600}'
-    + '.rea-bd-dim{color:#999999}'
-    + '.rea-bd-cfg ._card_13z6g_53:last-child{margin-right:0}'
-    /* 板块标题右侧的分工说明：标题行是 space-between，靠 margin-right:auto 把它
-       贴在标题后面，别让三个子元素各占一边 */
-    + '._title_gf4go_8>span.rea-bd-title-sub{color:#999999;margin-left:10px;margin-right:auto}'
-    /* 7 类完成度：一行一类，固定顺序。条长＝占「应执行」的比例，绿／蓝／橙三段分别对
-       已执行／待执行未逾期／逾期（绿 #00c28a · 橙 #ff8f17 取卡渐变端色；
-       蓝 #69b1ff 取 AntD 蓝 4，和看板主色 #1677ff 同一支色阶——原先是紫 #9d53ff，
-       产品嫌紫色条太扎眼，改浅蓝，别再改回去）。 */
-    + '.rea-bd-legend{display:flex;flex-wrap:wrap;gap:18px;margin:12px 0 0;color:#748194;font-size:12px}'
-    + '.rea-bd-legend>span{display:inline-flex;align-items:center;gap:6px}'
-    + '.rea-bd-key{display:inline-block;width:8px;height:8px;border-radius:2px}'
-    + '.rea-bd-key.d{background:#00c28a}.rea-bd-key.l{background:#69b1ff}.rea-bd-key.o{background:#ff8f17}'
-    + '.rea-bd-types{margin-top:10px;border:1px solid #f0f0f2;border-radius:6px;overflow:hidden}'
-    + '.rea-bd-type{display:flex;align-items:center;gap:14px;padding:9px 16px;cursor:pointer;border-top:1px solid #f0f0f2}'
-    + '.rea-bd-type:first-child{border-top:0}'
-    + '.rea-bd-type:hover{background:#F7F8FC}'
-    + '.rea-bd-type.on{background:#fffbe6}'
-    + '.rea-bd-type .nm{flex:0 0 96px;color:#333333;font-size:13px}'
-    + '.rea-bd-type .track{flex:1 1 auto;min-width:80px}'
-    + '.rea-bd-type .rate{flex:0 0 48px;text-align:right;color:#333333;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums}'
-    + '.rea-bd-type .qty{flex:0 0 96px;text-align:right;color:#999999;font-size:12px;white-space:nowrap;font-variant-numeric:tabular-nums}'
-    + '.rea-bd-type .od{flex:0 0 40px;text-align:right;font-size:12px;white-space:nowrap;color:#c9cdd4}'
-    + '.rea-bd-type .od b{display:inline-block;min-width:24px;padding:0 7px;border-radius:10px;background:#fff2e8;color:#ff8f17;font-weight:500;line-height:18px;font-variant-numeric:tabular-nums}'
-    + '.rea-bd-type-head{cursor:default;background:#fafafa}'
-    + '.rea-bd-type-head:hover{background:#fafafa}'
-    + '.rea-bd-type-head .nm,.rea-bd-type-head .rate,.rea-bd-type-head .qty,.rea-bd-type-head .od{color:#999999;font-size:12px;font-weight:400}'
-    + '.rea-bd-track{display:flex;height:8px;border-radius:4px;background:#f0f0f2;overflow:hidden}'
-    + '.rea-bd-track.sm{height:6px;border-radius:3px;margin-top:5px}'
-    + '.rea-bd-track>i{display:block;height:100%}'
-    /* 2px 白缝把三段分开，不再糊成一根彩带 */
-    + '.rea-bd-track>i+i{box-shadow:inset 2px 0 0 #ffffff}'
-    + '.rea-bd-track>i.d{background:#00c28a}'
-    + '.rea-bd-track>i.l{background:#69b1ff}'
-    + '.rea-bd-track>i.o{background:#ff8f17}'
-    /* 欠账清单的进度格：上面一行「已执行 / 应执行 ＋ 百分比」，下面细条——比只有条好读 */
-    + '.rea-bd-pg .n{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:#333333;font-variant-numeric:tabular-nums}'
-    + '.rea-bd-pg .n em{font-style:normal;color:#999999}'
-    + '.rea-bd-sub{display:flex;align-items:baseline;gap:12px;margin:22px 0 0}'
-    + '.rea-bd-sub h6{margin:0;color:#333333;font-size:14px;font-weight:600}'
-    + '.rea-bd-sub .rea-bd-lab{margin-left:auto}'
-    + '.rea-bd-clear{font-size:12px;color:#1677ff;text-decoration:none}'
-    + '.rea-bd-clear:hover{color:#4096ff}'
-    + '.rea-bd-clear[hidden]{display:none}'
-    /* 组织范围：三行固定顺序，每行给全「完成率 ＋ 分子分母 ＋ 逾期数」，
-       点开就地列出该大区没做满的任务。 */
-    + '.rea-bd-org{margin-top:10px;border:1px solid #f0f0f2;border-radius:6px;overflow:hidden}'
-    + '.rea-bd-org-row{display:flex;align-items:center;gap:12px;padding:10px 14px;cursor:pointer;border-top:1px solid #f0f0f2}'
-    + '.rea-bd-org-row:first-child{border-top:0}'
-    + '.rea-bd-org-row:hover,.rea-bd-org-row.on{background:#F7F8FC}'
-    + '.rea-bd-org-row .nm{flex:0 0 96px;color:#333333;font-size:13px}'
-    + '.rea-bd-org-row .track{flex:1 1 auto;min-width:80px}'
-    + '.rea-bd-org-row .qty{flex:0 0 150px;text-align:right;color:#748194;font-size:12px;white-space:nowrap;font-variant-numeric:tabular-nums}'
-    + '.rea-bd-org-row .qty b{color:#ff8f17;font-weight:500}'
-    + '.rea-bd-org-row .qty b.zero{color:#999999}'
-    + '.rea-bd-org-row .rate{flex:0 0 56px;text-align:right;color:#333333;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums}'
-    + '.rea-bd-org-row .more{flex:0 0 12px;color:#999999;font-size:10px;text-align:right}'
-    + '.rea-bd-org-list{padding:2px 14px 10px 42px;background:#F7F8FC;border-top:1px solid #f0f0f2}'
-    + '.rea-bd-org-item{display:flex;align-items:baseline;gap:12px;padding:6px 0;font-size:12px;color:#333333;border-top:1px dashed #f0f0f2}'
-    + '.rea-bd-org-item:first-child{border-top:0}'
-    + '.rea-bd-org-item .t{flex:0 0 36%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
-    + '.rea-bd-org-item .y{flex:0 0 96px;color:#748194}'
-    + '.rea-bd-org-item .m{flex:0 0 74px;text-align:right;color:#748194;white-space:nowrap}'
-    + '.rea-bd-org-item .o{flex:0 0 58px;text-align:right;color:#ff8f17;white-space:nowrap}'
-    + '.rea-bd-org-item .o.zero{color:#999999}'
-    /* 执行人明细子页：点人可以展开他的任务清单 */
-    + '.rea-bd-people tr.ant-table-row{cursor:pointer}'
-    + '.rea-bd-caret{display:inline-block;width:0;height:0;border-left:5px solid #bfbfbf;border-top:4px solid transparent;border-bottom:4px solid transparent;margin-right:9px;vertical-align:middle;transition:transform .15s}'
-    + '.rea-bd-caret.on{transform:rotate(90deg);border-left-color:#1677ff}'
-    /* 执行人明细的完成率：先给数字，再给一根定宽细条——条不再铺满整格 */
-    + '.rea-dtl-rate .pct{display:inline-block;min-width:46px;color:#333333;font-variant-numeric:tabular-nums}'
-    + '.rea-dtl-rate .rea-bd-track.sm{display:inline-flex;width:120px;vertical-align:middle;margin:0 0 0 10px}'
-    + '.rea-bd-ptasks{padding:4px 0 4px 14px}'
-    + '.rea-bd-ptask{display:flex;align-items:baseline;gap:12px;padding:6px 0;font-size:12px;color:#333333;border-top:1px dashed #f0f0f2}'
-    + '.rea-bd-ptask:first-child{border-top:0}'
-    + '.rea-bd-ptask .t{flex:0 0 200px}'
-    + '.rea-bd-ptask .y{flex:0 0 100px;color:#748194}'
-    + '.rea-bd-ptask .s{flex:1 1 auto;text-align:right}'
-    + '.rea-bd-ptask .s.done{color:#00c28a}'
-    + '.rea-bd-ptask .s.left{color:#748194}'
-    + '.rea-bd-ptask .s.over{color:#ff8f17}'
-    + '.rea-bd-ptask .d{flex:0 0 265px;color:#999999}'
-    + '.rea-bd-org-item .c{flex:0 0 56px;color:#999999}'
-    /* 欠账清单与执行人明细里「逾期 N」同一处橙——橙是逾期**状态色**，不是阈值色（PRD §5.6） */
-    + '.rea-bd-over{color:#ff8f17}'
-    + '.rea-bd-people,.rea-bd-span{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}'
-    + '.rea-bd-table .ant-table-cell{white-space:nowrap}'
-    + '.rea-bd-tabs .ant-tabs-tab{cursor:pointer}'
-    + '.rea-bd-tabs .ant-tabs-nav-list{flex-wrap:wrap}'
-    /* 页签条不折字：执行型 8 个（「全部」＋ 7 类）一行装得下 */
-    + '.rea-bd-tabs .ant-tabs-nav-list .ant-tabs-tab{white-space:nowrap}'
-    /* 「详细数据」子页：返回链接、小节标题、卡下的小字注释 */
-    + '.rea-bd-back{font-size:13px;color:#1677ff;text-decoration:none}'
-    + '.rea-bd-back:hover{color:#4096ff}'
-    + '.rea-dtl-h{margin:0;color:#333333;font-size:14px;font-weight:600}'
-    + '.rea-dtl-sub{margin:6px 0 0;color:#999999;font-size:12px}'
-    /* 完成率那一格：数字上、细横条下。条长编码值、同色，不做"多少算差"的判读
-       ——与组织范围那条柱一个做法（PRD §5.6）。 */
-    + '.rea-bd-bar{display:block;height:6px;margin-top:5px;border-radius:3px;background:#f0f0f2;overflow:hidden}'
-    + '.rea-bd-bar>i{display:block;height:100%;border-radius:3px;background:#1677ff}'
-    /* 有效期那一格窄，日期会折行；不锁住的话它挑在连字符上断，折出「…2026-／10-13 23:59」
-       这种把日期拦腰截断的样子。锁了每个日期自己，断点就只剩中间那个「~」。 */
-    + '.rea-bd-table [data-rea-d]{white-space:nowrap}'
-    /* 自检没过时的红条：平时 hidden（:hidden 兜住），只在数据自相矛盾时现身 */
-    + '.rea-bd-bad{margin:14px 0 0;padding:10px 12px;border:1px solid #ff4d4f;background:#fffbe6;'
-    +   'border-radius:4px;color:#ff4d4f;font-size:12px;line-height:1.7}'
-    + '.rea-bd-bad[hidden]{display:none}'
-    /* 群发好友回复趋势：看板「群发好友回复」板块的周趋势。图表是手绘 SVG（不引 ECharts），
-       但观感照 ECharts 的默认款：浅色网格、柱＋折线双轴、图例在左上、悬停浮窗。
-       色仍只用看板已有的绿系（#00c28a 是「已执行」那根条的颜色），不引入新色板。 */
-    + '.rea-qft-hd{display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px;padding:15px 0 0}'
-    + '.rea-qft-hd h6{margin:0;color:var(--yk-text-bold);font-size:16px;font-weight:500}'
-    + '.rea-qft-hd .sub{color:#999999;font-size:12px}'
-    + '.rea-qft-hd .rea-qft-win{margin-left:auto}'
-    + '.rea-qft-kpis{display:flex;flex-wrap:wrap;gap:12px 36px;margin:10px 0 0}'
-    + '.rea-qft-kpi .k{display:block;color:#999999;font-size:12px}'
-    + '.rea-qft-kpi b{color:#333333;font-size:22px;font-weight:600;line-height:1.35;font-variant-numeric:tabular-nums}'
-    + '.rea-qft-kpi b i{font-style:normal;font-size:12px;font-weight:400;color:#999999;margin-left:3px}'
-    + '.rea-qft-kpi b em{font-style:normal;font-size:12px;font-weight:500;margin-left:8px}'
-    + '.rea-qft-kpi b em.up{color:#00a870}.rea-qft-kpi b em.down{color:#f5222d}'
-    + '.rea-qft-kpi b em.flat{color:#999999}'
-    + '.rea-qft-chart{position:relative;margin-top:4px;min-height:220px}'
-    + '.rea-qft-chart svg{display:block;width:100%}'
-    + '.rea-qft-tip{position:absolute;z-index:5;display:none;pointer-events:none;padding:8px 10px;'
-    +   'background:rgba(255,255,255,.96);border:1px solid #f0f0f2;border-radius:6px;'
-    +   'box-shadow:0 3px 6px -4px rgba(0,0,0,.12),0 6px 16px 0 rgba(0,0,0,.08);'
-    +   'color:#333333;font-size:12px;line-height:20px;white-space:nowrap}'
-    + '.rea-qft-tip .d{color:#999999;margin-bottom:2px}'
-    + '.rea-qft-tip .r{display:flex;align-items:center;gap:6px}'
-    + '.rea-qft-tip .r i{width:8px;height:8px;border-radius:2px;background:#8ee6c8}'
-    + '.rea-qft-tip .r.line i{height:2px;border-radius:1px;background:#00a870}'
-    + '.rea-qft-tip .r b{margin-left:auto;padding-left:16px;font-weight:600;font-variant-numeric:tabular-nums}'
-    + '.rea-qft-empty{padding:36px 0 30px;text-align:center;color:#999999;font-size:12px}';
+  /* 本页自带的样式（ADR-0082 瑞士极简）：白底、少框线、单一蓝强调、系统字体。
+     前缀一律 .rea-bd-* / .rea-qft-*，只注入看板两页，绝不下探未覆盖页。
+     取值只用 ADR-0082 token 表：主蓝 #1677FF、浅蓝底 #E6F4FF、表头 #F7F8FA、
+     描边 #E5E8EF、文字 #1F2329 / #646A73 / #8F959E、状态 #52C41A / #FAAD14 / #FF4D4F。 */
+  var REA_BOARD_CSS = `
+/* ---------- 页面基线 ---------- */
+.rea-bd-page{color:#1F2329;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
+.rea-bd-page :focus-visible{outline:2px solid rgba(22,119,255,.45);outline-offset:2px;border-radius:4px}
+/* 瑞士极简的「白底」：内容区那层 #F2F5FA 的灰底只在本页抹平（这份 CSS 只注入本页与执行人明细） */
+html,body{background:#fff}
+body .subapp{background:#fff!important}
+/* 覆盖页去掉现网那张卡片外壳：留白、小标题、分割线来分组 */
+.rea-bd-sec{border:0!important;border-radius:0!important;background:transparent!important;padding-bottom:32px!important}
+.rea-bd-sec+.rea-bd-sec{margin-top:32px}
+.rea-bd-page ._board_gf4go_1{padding-left:20px;padding-right:20px}
+.rea-bd-page ._title_gf4go_8{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 0;padding:0 0 16px}
+.rea-bd-page ._title_gf4go_8.rea-bd-pagehead h6{font-size:20px;line-height:28px;font-weight:600;color:#1F2329}
+.rea-bd-page ._title_gf4go_8.rea-bd-sec-title h6{font-size:16px;line-height:24px;font-weight:600;color:#1F2329}
+.rea-bd-page ._title_gf4go_8>span{font-size:12px;color:#8F959E}
+.rea-bd-page .ant-divider{margin:0!important;border-color:#E5E8EF!important}
+.rea-bd-sechead{display:flex;align-items:baseline;gap:12px;margin:24px 0 0}
+.rea-bd-sechead h6{margin:0;font-size:16px;line-height:24px;font-weight:600;color:#1F2329}
+.rea-bd-sechead span{font-size:12px;color:#8F959E}
+
+/* ---------- 通用文字与工具行 ---------- */
+.rea-bd-note{margin:10px 0 0;color:#8F959E;font-size:12px;line-height:1.75}
+.rea-bd-note b{color:#646A73;font-weight:600}
+.rea-bd-row{display:flex;align-items:center;flex-wrap:wrap;gap:10px 12px;padding:20px 0 0}
+.rea-bd-lab{color:#8F959E;font-size:12px}
+.rea-bd-sep{width:1px;height:16px;background:#E5E8EF;margin:0 4px}
+.rea-bd-dim{color:#8F959E}
+/* 标题右侧的分工说明：贴在标题后面，不要三个子元素各占一边 */
+._title_gf4go_8>span.rea-bd-title-sub{color:#8F959E;margin-left:10px;margin-right:auto;font-size:12px}
+
+/* ---------- 执行健康度三卡 ---------- */
+#rea-bd-cards{margin:8px -16px 0;row-gap:24px;padding-top:8px;border-top:1px solid #E5E8EF}
+#rea-bd-cards>.ant-col{padding-left:16px;padding-right:16px}
+.rea-bd-kpi{display:flex;flex-direction:column;height:100%;padding:16px 0 0}
+.rea-bd-kpi-top{display:flex;align-items:center;gap:8px}
+.rea-bd-kpi-top .lab{font-size:14px;font-weight:500;color:#646A73}
+.rea-bd-kpi-main{display:flex;align-items:baseline;gap:6px;margin-top:8px}
+.rea-bd-kpi-main b{font-size:40px;line-height:1.1;font-weight:600;color:#1F2329;letter-spacing:-.5px}
+.rea-bd-kpi-main span{font-size:12px;color:#8F959E}
+.rea-bd-kpi-sub{display:flex;align-items:baseline;gap:6px;margin-top:6px}
+.rea-bd-kpi-sub span:first-child{font-size:14px;font-weight:600;color:#1F2329}
+.rea-bd-kpi-sub span:last-child{font-size:12px;color:#8F959E}
+/* 三卡底部共一条三段健康条；每张卡只把自己那一段点实，其余两段退后 */
+.rea-bd-kpi-bar{display:flex;height:6px;margin-top:18px;border-radius:3px;background:#F0F2F5;overflow:hidden}
+.rea-bd-kpi-bar i{display:block;height:100%;min-width:0;opacity:.22}
+.rea-bd-kpi-bar i+i{box-shadow:inset 2px 0 0 #fff}
+.rea-bd-kpi-bar i.d{background:#52C41A}
+.rea-bd-kpi-bar i.l{background:#1677FF}
+.rea-bd-kpi-bar i.o{background:#FAAD14}
+.rea-bd-kpi-bar i.on{opacity:1}
+
+/* ---------- 图例与三段条 ---------- */
+.rea-bd-legend{display:flex;flex-wrap:wrap;gap:20px;margin:14px 0 0;color:#646A73;font-size:12px}
+.rea-bd-legend>span{display:inline-flex;align-items:center;gap:6px}
+.rea-bd-key{display:inline-block;width:8px;height:8px;border-radius:50%}
+.rea-bd-key.d{background:#52C41A}.rea-bd-key.l{background:#1677FF}.rea-bd-key.o{background:#FAAD14}
+.rea-bd-track{display:flex;height:8px;border-radius:4px;background:#F0F2F5;overflow:hidden}
+.rea-bd-track.sm{height:6px;border-radius:3px;margin-top:6px}
+.rea-bd-track>i{display:block;height:100%}
+.rea-bd-track>i+i{box-shadow:inset 2px 0 0 #fff}
+.rea-bd-track>i.d{background:#52C41A}
+.rea-bd-track>i.l{background:#1677FF}
+.rea-bd-track>i.o{background:#FAAD14}
+
+/* ---------- 7 类完成度 ---------- */
+.rea-bd-types{margin-top:12px;border-top:1px solid #E5E8EF;border-bottom:1px solid #E5E8EF}
+.rea-bd-type{display:flex;align-items:center;gap:16px;min-height:44px;padding:8px 12px;cursor:pointer;border-top:1px solid #F0F2F5}
+.rea-bd-type:first-child{border-top:0}
+.rea-bd-type:hover{background:#F7F8FA}
+.rea-bd-type.on{background:#E6F4FF;box-shadow:inset 2px 0 0 #1677FF}
+.rea-bd-type .nm{flex:0 0 108px;color:#1F2329;font-size:14px}
+.rea-bd-type .track{flex:1 1 auto;min-width:80px}
+.rea-bd-type .rate{flex:0 0 56px;text-align:right;color:#1F2329;font-size:14px;font-weight:600}
+.rea-bd-type .qty{flex:0 0 112px;text-align:right;color:#646A73;font-size:12px;white-space:nowrap}
+.rea-bd-type .od{flex:0 0 48px;text-align:right;font-size:12px;white-space:nowrap;color:#8F959E}
+.rea-bd-type .od b{color:#FAAD14;font-weight:600}
+.rea-bd-type-head{cursor:default;background:#F7F8FA;min-height:36px}
+.rea-bd-type-head:hover{background:#F7F8FA}
+.rea-bd-type-head .nm,.rea-bd-type-head .rate,.rea-bd-type-head .qty,.rea-bd-type-head .od{color:#8F959E;font-size:12px;font-weight:400}
+
+/* ---------- 各大区完成率 ---------- */
+.rea-bd-org{margin-top:12px;border-top:1px solid #E5E8EF;border-bottom:1px solid #E5E8EF}
+.rea-bd-org-row{display:flex;align-items:center;gap:16px;min-height:48px;padding:8px 12px;cursor:pointer;border-top:1px solid #F0F2F5}
+.rea-bd-org-row:first-child{border-top:0}
+.rea-bd-org-row:hover{background:#F7F8FA}
+.rea-bd-org-row.on{background:#E6F4FF;box-shadow:inset 2px 0 0 #1677FF}
+.rea-bd-org-row .nm{flex:0 0 96px;color:#1F2329;font-size:14px}
+.rea-bd-org-row .track{flex:1 1 auto;min-width:80px}
+.rea-bd-org-row .qty{flex:0 0 170px;text-align:right;color:#646A73;font-size:12px;white-space:nowrap}
+.rea-bd-org-row .qty b{color:#FAAD14;font-weight:600}
+.rea-bd-org-row .qty b.zero{color:#8F959E}
+.rea-bd-org-row .rate{flex:0 0 60px;text-align:right;color:#1F2329;font-size:14px;font-weight:600}
+.rea-bd-org-row .more{display:inline-block;flex:0 0 12px;color:#8F959E;font-size:16px;line-height:1;text-align:right;transition:transform .15s,color .15s}
+.rea-bd-org-row:hover .more{color:#1677FF}
+.rea-bd-org-row.on .more{transform:rotate(90deg);color:#1677FF}
+.rea-bd-org-list{padding:4px 16px 12px 44px;background:#FAFBFC;border-top:1px solid #F0F2F5}
+.rea-bd-org-item{display:flex;align-items:baseline;gap:12px;padding:8px 0;font-size:12px;color:#1F2329;border-top:1px solid #F0F2F5}
+.rea-bd-org-item:first-child{border-top:0}
+.rea-bd-org-item .t{flex:0 0 36%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rea-bd-org-item .y{flex:0 0 96px;color:#646A73}
+.rea-bd-org-item .m{flex:0 0 74px;text-align:right;color:#646A73;white-space:nowrap}
+.rea-bd-org-item .o{flex:0 0 58px;text-align:right;color:#FAAD14;white-space:nowrap}
+.rea-bd-org-item .o.zero{color:#8F959E}
+.rea-bd-org-item .c{flex:0 0 56px;color:#8F959E}
+.rea-bd-org-item .t .rea-bd-dim{color:#8F959E}
+
+/* ---------- 小节标题 ---------- */
+.rea-bd-sub{display:flex;align-items:baseline;gap:12px;margin:32px 0 0;padding-top:24px;border-top:1px solid #E5E8EF}
+.rea-bd-sub h6{margin:0;color:#1F2329;font-size:14px;font-weight:600}
+.rea-bd-sub .rea-bd-lab{margin-left:auto}
+.rea-bd-clear{font-size:12px;color:#1677FF;text-decoration:none;margin-left:auto}
+.rea-bd-clear:hover{color:#4096FF}
+.rea-bd-clear[hidden]{display:none}
+
+/* ---------- 表格 ---------- */
+.rea-bd-table{margin-top:12px}
+.rea-bd-page .rea-bd-table .ant-table{background:transparent}
+.rea-bd-page .rea-bd-table .ant-table-thead>tr>th{background:#F7F8FA;color:#646A73;font-size:12px;font-weight:500;border-bottom:1px solid #E5E8EF;padding:10px 12px}
+.rea-bd-page .rea-bd-table .ant-table-thead>tr>th::before{display:none!important}
+.rea-bd-page .rea-bd-table .ant-table-tbody>tr>td{border-bottom:1px solid #F0F2F5;padding:11px 12px;color:#1F2329;font-size:14px}
+.rea-bd-page .rea-bd-table .ant-table-tbody>tr:last-child>td{border-bottom:1px solid #E5E8EF}
+.rea-bd-page .rea-bd-table .ant-table-tbody>tr>td.ant-table-cell-row-hover{background:#F7F8FA}
+.rea-bd-page .rea-bd-table .ant-table-tbody>tr:hover>td{background:#F7F8FA}
+.rea-bd-page .rea-bd-table .ant-table-expanded-row>td{background:#FAFBFC;border-bottom:1px solid #F0F2F5}
+.rea-bd-follow th:nth-child(7),.rea-bd-follow td:nth-child(7){text-align:right}
+.rea-bd-people-table th:nth-child(n+3),.rea-bd-people-table td:nth-child(n+3){text-align:right}
+.rea-bd-people-table th:first-child,.rea-bd-people-table td:first-child{text-align:left}
+.rea-bd-people,.rea-bd-span{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.rea-bd-table .ant-table-cell{white-space:nowrap}
+.rea-bd-table .ant-table-cell-ellipsis{overflow:hidden;text-overflow:ellipsis}
+.rea-bd-table [data-rea-d]{white-space:nowrap}
+
+/* 状态标记：圆点 ＋ 文字，不用大色块 tag */
+.rea-bd-page .rea-bd-table .ant-tag{display:inline-flex;align-items:center;gap:6px;margin:0;padding:0;border:0;background:none;color:#646A73;font-size:14px;line-height:20px}
+.rea-bd-page .rea-bd-table .ant-tag::before{content:"";width:6px;height:6px;border-radius:50%;background:#8F959E;flex:none}
+.rea-bd-page .rea-bd-table .ant-tag-green::before{background:#52C41A}
+.rea-bd-page .rea-bd-table .ant-tag-blue::before{background:#1677FF}
+.rea-bd-page .rea-bd-table .ant-btn-link{padding:0;height:auto;font-size:14px;color:#1677FF}
+.rea-bd-page .rea-bd-table .ant-btn-link:hover{color:#4096FF}
+.rea-bd-page .rea-bd-table .ant-btn-link:hover::after{content:" ›"}
+.rea-bd-page .rea-bd-table .ant-btn-link>span{display:inline}
+/* 跟进表九列的可用宽度下限：窄到放不下就横向滚动，不靠折行／硬挤把字挤成两截 */
+.rea-bd-page .rea-bd-table .ant-table-content{overflow-x:auto;overscroll-behavior-x:contain}
+.rea-bd-page .rea-bd-table .rea-bd-follow{min-width:900px}
+/* 单元格左右留白收到 10px，任务名过长走省略号（整行都有 title） */
+.rea-bd-page .rea-bd-table .rea-bd-follow>thead>tr>th,
+.rea-bd-page .rea-bd-table .rea-bd-follow>tbody>tr>td{padding-left:10px;padding-right:10px}
+.rea-bd-page .rea-bd-table .rea-bd-follow>tbody>tr>td:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* 欠账清单的进度格：数字一行，细条一行 */
+.rea-bd-pg .n{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:#1F2329;font-variant-numeric:tabular-nums}
+.rea-bd-pg .n em{font-style:normal;color:#8F959E}
+
+/* 执行人明细：完成率＝数字 ＋ 定宽细条 */
+.rea-dtl-rate .pct{display:inline-block;min-width:48px;color:#1F2329;font-size:14px;font-variant-numeric:tabular-nums}
+.rea-dtl-rate .rea-bd-track.sm{display:inline-flex;width:120px;vertical-align:middle;margin:0 0 0 12px}
+.rea-bd-caret{display:inline-block;width:0;height:0;border-left:5px solid #8F959E;border-top:4px solid transparent;border-bottom:4px solid transparent;margin-right:9px;vertical-align:middle;transition:transform .15s}
+.rea-bd-caret.on{transform:rotate(90deg);border-left-color:#1677FF}
+.rea-bd-ptasks{padding:4px 0 8px 16px}
+.rea-bd-ptask{display:flex;align-items:baseline;gap:12px;padding:8px 0;font-size:12px;color:#1F2329;border-top:1px solid #F0F2F5}
+.rea-bd-ptask:first-child{border-top:0}
+.rea-bd-ptask .t{flex:0 0 200px}
+.rea-bd-ptask .y{flex:0 0 100px;color:#646A73}
+.rea-bd-ptask .s{flex:1 1 auto;text-align:right}
+.rea-bd-ptask .s.done{color:#52C41A}
+.rea-bd-ptask .s.left{color:#8F959E}
+.rea-bd-ptask .s.over{color:#FAAD14}
+.rea-bd-ptask .d{flex:0 0 265px;color:#8F959E}
+.rea-bd-people tr.ant-table-row{cursor:pointer}
+.rea-bd-sum td{background:#F7F8FA!important;font-weight:600}
+.rea-bd-over{color:#FAAD14}
+.rea-bd-back{font-size:14px;color:#1677FF;text-decoration:none;margin-left:auto}
+.rea-bd-back:hover{color:#4096FF}
+.rea-dtl-h{margin:0;color:#1F2329;font-size:14px;font-weight:600}
+.rea-dtl-sub{margin:6px 0 0;color:#8F959E;font-size:12px}
+.rea-bd-bar{display:block;height:6px;margin-top:5px;border-radius:3px;background:#F0F2F5;overflow:hidden}
+.rea-bd-bar>i{display:block;height:100%;border-radius:3px;background:#1677FF}
+
+/* 自检红条：平时 hidden，自相矛盾时现身 */
+.rea-bd-bad{margin:14px 0 0;padding:10px 12px;border:1px solid #FF4D4F;background:#FFF1F0;border-radius:6px;color:#CF1322;font-size:12px;line-height:1.7}
+.rea-bd-bad[hidden]{display:none}
+
+/* ---------- 时间窗：接通的两档可点，其余六档与日期区间置灰 ---------- */
+.rea-bd-window .ant-radio-button-wrapper,.rea-qft-win .ant-radio-button-wrapper{height:32px;line-height:30px;padding:0 12px;font-size:12px;color:#646A73;border-color:#E5E8EF;background:#fff}
+.rea-bd-window .ant-radio-button-wrapper:not(:first-child)::before,.rea-qft-win .ant-radio-button-wrapper:not(:first-child)::before{background-color:#E5E8EF}
+.rea-bd-window .ant-radio-button-wrapper-checked,.rea-qft-win .ant-radio-button-wrapper-checked{background:#E6F4FF!important;border-color:#1677FF!important;color:#1677FF!important;box-shadow:none}
+.rea-bd-window .ant-radio-button-wrapper-checked::before,.rea-qft-win .ant-radio-button-wrapper-checked::before{background-color:#1677FF!important}
+.rea-bd-window .ant-radio-button-wrapper:hover,.rea-qft-win .ant-radio-button-wrapper:hover{color:#1677FF}
+.rea-bd-win-off{opacity:.42;cursor:not-allowed}
+.rea-bd-win-off:hover{color:#646A73!important}
+.rea-bd-off{opacity:.42;cursor:not-allowed}
+.rea-bd-off input{pointer-events:none}
+
+/* ---------- 群发好友回复 ---------- */
+.rea-qft-hd{display:flex;align-items:baseline;flex-wrap:wrap;gap:8px 12px;padding:0}
+.rea-qft-hd h6{margin:0;color:#1F2329;font-size:16px;line-height:24px;font-weight:600}
+.rea-qft-hd .sub{color:#8F959E;font-size:12px}
+.rea-qft-hd .rea-qft-win{margin-left:auto}
+.rea-qft-kpis{display:flex;flex-wrap:wrap;gap:16px 48px;margin:0;padding:20px 0 0;border-top:1px solid #E5E8EF}
+.rea-qft-kpi{display:flex;flex-direction:column;gap:4px;margin:0}
+.rea-qft-kpi .k{color:#8F959E;font-size:12px}
+.rea-qft-kpi b{color:#1F2329;font-size:20px;font-weight:600;line-height:1.3}
+.rea-qft-kpi.primary b{font-size:28px;line-height:1.2}
+.rea-qft-kpi b i{font-style:normal;font-size:12px;font-weight:400;color:#8F959E;margin-left:2px}
+.rea-qft-kpi b em{font-style:normal;font-size:12px;font-weight:500;margin-left:8px}
+.rea-qft-kpi b em.up{color:#52C41A}.rea-qft-kpi b em.down{color:#FAAD14}
+.rea-qft-kpi b em.flat{color:#8F959E}
+.rea-qft-chart{position:relative;margin-top:16px;min-height:220px}
+.rea-qft-chart svg{display:block;width:100%}
+.rea-qft-tip{position:absolute;z-index:5;display:none;pointer-events:none;padding:8px 10px;background:rgba(255,255,255,.98);border:1px solid #E5E8EF;border-radius:6px;box-shadow:0 6px 16px rgba(0,0,0,.08);color:#1F2329;font-size:12px;line-height:20px;white-space:nowrap}
+.rea-qft-tip .d{color:#8F959E;margin-bottom:2px}
+.rea-qft-tip .r{display:flex;align-items:center;gap:6px}
+.rea-qft-tip .r i{width:8px;height:8px;border-radius:2px;background:#BAE0FF}
+.rea-qft-tip .r.line i{height:2px;border-radius:1px;background:#1677FF}
+.rea-qft-tip .r b{margin-left:auto;padding-left:16px;font-weight:600;font-variant-numeric:tabular-nums}
+.rea-qft-empty{padding:36px 0 30px;text-align:center;color:#8F959E;font-size:12px}
+
+/* ---------- 配置 / 资产 ---------- */
+.rea-bd-tabs .ant-tabs-tab{cursor:pointer;font-size:14px}
+.rea-bd-tabs .ant-tabs-tab+.ant-tabs-tab{margin-left:28px}
+.rea-bd-tabs .ant-tabs-nav{margin-bottom:8px}
+.rea-bd-tabs .ant-tabs-nav-list{flex-wrap:wrap}
+.rea-bd-tabs .ant-tabs-nav-list .ant-tabs-tab{white-space:nowrap}
+.rea-bd-tabs .ant-tabs-tab-btn{color:#646A73}
+.rea-bd-tabs .ant-tabs-tab-active .ant-tabs-tab-btn{color:#1677FF}
+.rea-bd-tabs .ant-tabs-ink-bar{background:#1677FF}
+.rea-bd-cfg{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:32px!important;margin:16px 0 0!important;padding:0!important}
+.rea-bd-cfg ._card_13z6g_53{flex:none!important;width:auto!important;margin:0!important;padding:16px 0 0!important;background:#fff!important;border:0!important;border-top:1px solid #E5E8EF!important;border-radius:0!important;box-shadow:none!important}
+.rea-bd-cfg ._cardTitle_13z6g_60{margin:0 0 6px!important;color:#8F959E!important;font-size:12px!important;font-weight:400!important;text-align:left!important}
+.rea-bd-cfg ._cardNum_13z6g_66{margin:0!important;color:#1F2329!important;font-size:24px!important;font-weight:600!important;line-height:1.3!important;text-align:left!important}
+.rea-bd-cfg ._cardNum_13z6g_66 span{font-size:12px!important;font-weight:400!important;color:#8F959E!important;margin-left:4px}
+
+/* ---------- 无障碍与动效 ---------- */
+.rea-bd-type[tabindex="0"],.rea-bd-org-row[tabindex="0"],.rea-bd-people tr[tabindex="0"]{outline-offset:-2px}
+@media (prefers-reduced-motion: reduce){.rea-bd-page *{transition:none!important;animation:none!important}}
+`;
+
 
   /* 看板「群发好友回复」板块的周趋势。手绘 SVG，不引任何图表库——
      观感照 ECharts 默认款（浅网格、柱＋折线双轴、左上图例、悬停浮窗），
@@ -10646,6 +10746,7 @@ function qfSmooth(pts){
   }
   return d;
 }
+function qfNum(n){return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,",")}
 var QFW=12;
 function renderQfTrend(){
   var box=document.getElementById("rea-qft-chart");
@@ -10657,70 +10758,70 @@ function renderQfTrend(){
   for(i=0;i<prev.length;i++){ps+=prev[i].sent;pr+=prev[i].rep}
   var rate=ts?tr/ts:0,prate=ps?pr/ps:0,delta=(rate-prate)*100;
   var cls=delta>0.05?"up":(delta<-0.05?"down":"flat");
-  var sign=delta>0.05?"↑ ":delta<-0.05?"↓ ":"";
+  var sign=delta>0.05?"↑ ":delta<-0.05?"↓ ":"— ";
   kb.innerHTML=
-    "<p class='rea-qft-kpi'><span class='k'>回复率</span><b>"+(rate*100).toFixed(1)+"%"
+    "<p class='rea-qft-kpi primary'><span class='k'>回复率</span><b>"+(rate*100).toFixed(1)+"%"
       +"<em class='"+cls+"'>"+sign+Math.abs(delta).toFixed(1)+"pp</em></b></p>"
-    +"<p class='rea-qft-kpi'><span class='k'>已发送好友</span><b>"+ts+"<i> 人</i></b></p>"
-    +"<p class='rea-qft-kpi'><span class='k'>已回复好友</span><b>"+tr+"<i> 人</i></b></p>"
-    +"<p class='rea-qft-kpi'><span class='k'>未回复好友</span><b>"+(ts-tr)+"<i> 人</i></b></p>";
+    +"<p class='rea-qft-kpi'><span class='k'>已发送好友</span><b>"+qfNum(ts)+"<i> 人</i></b></p>"
+    +"<p class='rea-qft-kpi'><span class='k'>已回复好友</span><b>"+qfNum(tr)+"<i> 人</i></b></p>"
+    +"<p class='rea-qft-kpi'><span class='k'>未回复好友</span><b>"+qfNum(ts-tr)+"<i> 人</i></b></p>";
 
   var cw=box.clientWidth||900,n=view.length;
   var w=Math.max(560,cw),h=228,L=48,R=58,T=34,B=28,pw=w-L-R,ph=h-T-B;
   var ms=0,mr=0,maxS,maxR;
   for(i=0;i<n;i++){if(view[i].sent>ms)ms=view[i].sent;if(view[i].rate>mr)mr=view[i].rate}
   maxS=Math.max(100,Math.ceil(ms*1.15/50)*50);
-  maxR=Math.max(0.4,Math.ceil(mr*1.25*20)/20);
+  /* 右轴只在几档「四等分后还是整数％」的上限里挑（0.4/0.5/0.6/0.8/1），
+     否则四等分会把刻度写成 11.3% / 33.8% 这种没法读的数 */
+  var LAD=[0.4,0.5,0.6,0.8,1],want=mr*1.25;
+  maxR=1;
+  for(i=0;i<LAD.length;i++){if(LAD[i]>=want){maxR=LAD[i];break}}
   var band=pw/n,barW=Math.min(20,band*0.46);
   function yS(v){return T+ph-(v/maxS)*ph}
   function yR(v){return T+ph-(v/maxR)*ph}
   var g="",k,val,yy;
   for(k=0;k<=4;k++){
     val=maxS*k/4;yy=T+ph-ph*k/4;
-    g+="<line x1='"+L+"' y1='"+yy.toFixed(1)+"' x2='"+(w-R)+"' y2='"+yy.toFixed(1)+"' stroke='#f0f0f2'/>";
-    g+="<text x='"+(L-8)+"' y='"+(yy+4).toFixed(1)+"' text-anchor='end' fill='#999999' font-size='11'>"+Math.round(val)+"</text>";
-    g+="<text x='"+(w-R+8)+"' y='"+(yy+4).toFixed(1)+"' fill='#999999' font-size='11'>"+(maxR*k/4*100).toFixed(0)+"%</text>";
+    g+="<line x1='"+L+"' y1='"+yy.toFixed(1)+"' x2='"+(w-R)+"' y2='"+yy.toFixed(1)+"' stroke='#EFF1F5'/>";
+    g+="<text x='"+(L-8)+"' y='"+(yy+4).toFixed(1)+"' text-anchor='end' fill='#8F959E' font-size='11'>"+Math.round(val)+"</text>";
+    /* 右轴是 0–maxR 四等分：12.5% / 37.5% 照实写，别四舍五入成 13% / 38% 混人 */
+    g+="<text x='"+(w-R+8)+"' y='"+(yy+4).toFixed(1)+"' fill='#8F959E' font-size='11'>"+(Math.round(maxR*k/4*1000)/10)+"%</text>";
   }
-  g+="<line x1='"+L+"' y1='"+(T+ph)+"' x2='"+(w-R)+"' y2='"+(T+ph)+"' stroke='#e8e8e8'/>";
-  g+="<text x='"+L+"' y='"+(T-14)+"' fill='#999999' font-size='11'>人次</text>";
-  g+="<text x='"+(w-R)+"' y='"+(T-14)+"' text-anchor='end' fill='#999999' font-size='11'>回复率</text>";
+  g+="<line x1='"+L+"' y1='"+(T+ph)+"' x2='"+(w-R)+"' y2='"+(T+ph)+"' stroke='#E5E8EF'/>";
+  g+="<text x='"+L+"' y='"+(T-14)+"' fill='#8F959E' font-size='11'>人次</text>";
+  g+="<text x='"+(w-R)+"' y='"+(T-14)+"' text-anchor='end' fill='#8F959E' font-size='11'>回复率</text>";
   g+="<g transform='translate("+(L+56)+","+(T-10)+")'>"
-    +"<rect x='0' y='-6' width='10' height='12' rx='2' fill='#8ee6c8'/>"
-    +"<text x='15' y='4' fill='#748194' font-size='12'>已发送好友</text>"
-    +"<line x1='98' y1='0' x2='114' y2='0' stroke='#00a870' stroke-width='2'/>"
-    +"<circle cx='106' cy='0' r='3.2' fill='#ffffff' stroke='#00a870' stroke-width='2'/>"
-    +"<text x='120' y='4' fill='#748194' font-size='12'>回复率</text></g>";
+    +"<rect x='0' y='-6' width='10' height='12' rx='2' fill='#BAE0FF'/>"
+    +"<text x='15' y='4' fill='#646A73' font-size='12'>已发送好友</text>"
+    +"<line x1='98' y1='0' x2='114' y2='0' stroke='#1677FF' stroke-width='2'/>"
+    +"<circle cx='106' cy='0' r='3.2' fill='#ffffff' stroke='#1677FF' stroke-width='2'/>"
+    +"<text x='120' y='4' fill='#646A73' font-size='12'>回复率</text></g>";
   var cx0=L+(n-1)*band;
-  g+="<rect x='"+cx0.toFixed(1)+"' y='"+T+"' width='"+band.toFixed(1)+"' height='"+ph+"' fill='#f7f8fc'/>";
-  g+="<line x1='"+cx0.toFixed(1)+"' y1='"+T+"' x2='"+cx0.toFixed(1)+"' y2='"+(T+ph)+"' stroke='#d9d9d9' stroke-dasharray='4 3'/>";
-  g+="<text x='"+(w-R-4)+"' y='"+(T+13)+"' text-anchor='end' fill='#999999' font-size='11'>回补中</text>";
+  g+="<rect x='"+cx0.toFixed(1)+"' y='"+T+"' width='"+band.toFixed(1)+"' height='"+ph+"' fill='#F7F8FA'/>";
+  g+="<line x1='"+cx0.toFixed(1)+"' y1='"+T+"' x2='"+cx0.toFixed(1)+"' y2='"+(T+ph)+"' stroke='#D9D9D9' stroke-dasharray='4 3'/>";
+  g+="<text x='"+(cx0+band/2).toFixed(1)+"' y='"+(T+13)+"' text-anchor='middle' fill='#8F959E' font-size='11'>回补中</text>";
   for(i=0;i<n;i++){
     var bx=L+i*band+(band-barW)/2,by=yS(view[i].sent),bh=T+ph-by;
-    g+="<rect x='"+bx.toFixed(1)+"' y='"+by.toFixed(1)+"' width='"+barW.toFixed(1)+"' height='"+Math.max(0,bh).toFixed(1)+"' rx='2' fill='url(#qftGrad)'/>";
+    g+="<rect x='"+bx.toFixed(1)+"' y='"+by.toFixed(1)+"' width='"+barW.toFixed(1)+"' height='"+Math.max(0,bh).toFixed(1)+"' rx='2' fill='#BAE0FF'/>";
   }
-  var pts=[],path,area;
+  var pts=[],path;
   for(i=0;i<n;i++)pts.push([L+i*band+band/2,yR(view[i].rate)]);
   path=qfSmooth(pts);
-  area=path+"L"+pts[n-1][0].toFixed(1)+","+(T+ph)+"L"+pts[0][0].toFixed(1)+","+(T+ph)+"Z";
-  g+="<path d='"+area+"' fill='url(#qftArea)'/>";
-  g+="<path d='"+path+"' fill='none' stroke='#00a870' stroke-width='2' stroke-linecap='round'/>";
+  /* 不铺折线下方的色块：柱已经占满了同一片面积，再叠一层淡蓝会把柱染成两截 */
+  g+="<path d='"+path+"' fill='none' stroke='#1677FF' stroke-width='2' stroke-linecap='round'/>";
   for(i=0;i<n;i++){
-    g+="<circle cx='"+pts[i][0].toFixed(1)+"' cy='"+pts[i][1].toFixed(1)+"' r='3.4' fill='#ffffff' stroke='#00a870' stroke-width='2'/>";
+    g+="<circle cx='"+pts[i][0].toFixed(1)+"' cy='"+pts[i][1].toFixed(1)+"' r='3.4' fill='#ffffff' stroke='#1677FF' stroke-width='2'/>";
   }
   var step=Math.ceil(n/8);
   for(i=0;i<n;i++){
     if(i%step!==0&&i!==n-1)continue;
-    g+="<text x='"+(L+i*band+band/2).toFixed(1)+"' y='"+(T+ph+18)+"' text-anchor='middle' fill='#999999' font-size='11'>"+qfMd(view[i].start)+"</text>";
+    g+="<text x='"+(L+i*band+band/2).toFixed(1)+"' y='"+(T+ph+18)+"' text-anchor='middle' fill='#8F959E' font-size='11'>"+qfMd(view[i].start)+"</text>";
   }
   for(i=0;i<n;i++){
     g+="<rect class='qft-band' data-qft-i='"+i+"' x='"+(L+i*band).toFixed(1)+"' y='"+T+"' width='"+band.toFixed(1)+"' height='"+ph+"' fill='transparent'/>";
   }
   box.innerHTML="<svg viewBox='0 0 "+w+" "+h+"' width='"+w+"' height='"+h+"' role='img' aria-label='群发好友回复率周趋势'>"
-    +"<defs><linearGradient id='qftGrad' x1='0' y1='0' x2='0' y2='1'>"
-    +"<stop offset='0%' stop-color='#8ee6c8'/><stop offset='100%' stop-color='#d8f7ec'/></linearGradient>"
-    +"<linearGradient id='qftArea' x1='0' y1='0' x2='0' y2='1'>"
-    +"<stop offset='0%' stop-color='rgba(0,168,112,.20)'/><stop offset='100%' stop-color='rgba(0,168,112,0)'/></linearGradient>"
-    +"</defs><g>"+g+"</g></svg>";
+    +"<g>"+g+"</g></svg>";
   var tip=document.createElement("div");
   tip.className="rea-qft-tip";
   box.appendChild(tip);
@@ -10851,6 +10952,23 @@ window.addEventListener("resize",function(){
     '    else es[i].textContent=v;',
     '  }',
     '}',
+    '/* 三卡底部同一条三段健康条：宽度按原始人次分，每张卡只点实自己那一段。',
+    '   逾期为 0 时第三段宽度为 0，不做任何补偿——0 就该看不见。 */',
+    'function paintKpiBar(t){',
+    '  var pend=t.left-t.over;if(pend<0)pend=0;',
+    '  var vals={d:t.done,l:pend,o:t.over},total=vals.d+vals.l+vals.o;',
+    '  var bars=document.querySelectorAll("[data-bd-kpibar]"),i,j,k,own,segs;',
+    '  for(i=0;i<bars.length;i++){',
+    '    own=bars[i].getAttribute("data-bd-kpibar");',
+    '    if(own==="left")own="l";else if(own==="done")own="d";else if(own==="over")own="o";',
+    '    segs=bars[i].children;',
+    '    for(j=0;j<segs.length;j++){',
+    '      k=j===0?"d":(j===1?"l":"o");',
+    '      segs[j].style.flex=(total?vals[k]:0)+" 1 0";',
+    '      segs[j].className=k+(k===own?" on":"");',
+    '    }',
+    '  }',
+    '}',
 
     '/* 逐行自检——这份数据集最容易漂的一处口径，守在这条路上：',
     '   逾期未做 ＝ 有效期已过 ∩ 仍未执行：逾期数与有效期必须一起变。 */',
@@ -10971,7 +11089,7 @@ window.addEventListener("resize",function(){
     '      a.left+=+rs[j].getAttribute("data-bd-left");',
     '      a.over+=+rs[j].getAttribute("data-bd-over");',
     '    }',
-    '    h+="<div class=\\"rea-bd-type"+(CURT===t?" on":"")+"\\" data-bd-type-row=\\""+esc(t)+"\\">"',
+    '    h+="<div class=\\"rea-bd-type"+(CURT===t?" on":"")+"\\" role=\\"button\\" tabindex=\\"0\\" aria-pressed=\\""+(CURT===t?"true":"false")+"\\" data-bd-type-row=\\""+esc(t)+"\\">"',
     '      +"<span class=\\"nm\\">"+esc(t)+"</span>"',
     '      +"<span class=\\"track\\">"+(a.need?seg(a.need,a.done,a.left,a.over,false):"")+"</span>"',
     '      +"<span class=\\"rate\\">"+(a.need?(a.done/a.need*100).toFixed(1)+"%":"—")+"</span>"',
@@ -11059,12 +11177,12 @@ window.addEventListener("resize",function(){
     '      return d1||(+y.getAttribute("data-bd-left")-+x.getAttribute("data-bd-left"));',
     '    });',
     '    rate=a.need?a.done/a.need*100:0;',
-    '    h+="<div class=\\"rea-bd-org-row"+(ORG_OPEN[o]?" on":"")+"\\" data-bd-org-row=\\""+esc(o)+"\\">"',
+    '    h+="<div class=\\"rea-bd-org-row"+(ORG_OPEN[o]?" on":"")+"\\" role=\\"button\\" tabindex=\\"0\\" aria-expanded=\\""+(ORG_OPEN[o]?"true":"false")+"\\" data-bd-org-row=\\""+esc(o)+"\\">"',
     '      +"<span class=\\"nm\\">"+esc(o)+"</span>"',
     '      +"<span class=\\"track\\">"+(a.need?seg(a.need,a.done,a.left,a.over,false):"")+"</span>"',
     '      +"<span class=\\"qty\\">"+(a.need?a.done+" / "+a.need+" 人次 · 逾期 <b"+(a.over?"":" class=\\"zero\\"")+">"+a.over+"</b>":"—")+"</span>"',
     '      +"<span class=\\"rate\\">"+(a.need?rate.toFixed(1)+"%":"—")+"</span>"',
-    '      +"<span class=\\"more\\">"+(ORG_OPEN[o]?"\\u25be":"\\u25b8")+"</span>"',
+    '      +"<span class=\\"more\\" aria-hidden=\\"true\\">\\u203a</span>"',
     '      +"</div>";',
     '    if(ORG_OPEN[o]){',
     '      h+="<div class=\\"rea-bd-org-list\\">";',
@@ -11113,6 +11231,13 @@ window.addEventListener("resize",function(){
     '    }',
     '    n=n.parentNode;',
     '  }',
+    '});',
+    '/* 键盘可达：类型行与大区行都是 role=button，Enter / 空格等同点击。 */',
+    'document.addEventListener("keydown",function(e){',
+    '  if(e.key!=="Enter"&&e.key!==" ")return;',
+    '  var n=e.target;',
+    '  if(!n||!n.getAttribute)return;',
+    '  if(n.getAttribute("data-bd-type-row")||n.getAttribute("data-bd-org-row")){e.preventDefault();n.click();}',
     '});',
 
     '/* 自检：7 类合计必须等于窗口合计；欠账清单条数必须等于没做满的行数。 */',
@@ -11226,14 +11351,16 @@ window.addEventListener("resize",function(){
     '   三卡是唯一的例外——它们固定看「今日」，不跟这个窗口走（PRD §2.2）。 */',
     'function applyWin(w){',
     '  CURW=w;',
-    '  fill(document.getElementById("rea-bd-cards"),tally(winRows("today")),true);',
+    '  var tc=tally(winRows("today"));',
+    '  fill(document.getElementById("rea-bd-cards"),tc,true);',
+    '  paintKpiBar(tc);',
     '  renderTypes(w);renderFollow(w);renderOrg(w);',
     '  typesCheck(w);',
     '}',
     reaQfTrendJs(),
-    '/* 时间窗的点击：接数的档照常走（点选态仍交给 REA_FX），没接数的档在捕获阶段',
-    '   拦掉这次点选、**页上不给任何说明**——那六档本来就没有对应的演示集，',
-    '   点上去静默不动就是如实（docs/11 §8.3）；拦得住是因为 REA_FX 挂在 document 的冒泡阶段。 */',
+    '/* 时间窗的点击：接数的两档照常走（点选态仍交给 REA_FX）。其余六档与日期区间',
+    '   本来就没有对应的演示集，页上已置灰并挂「演示数据未接入」，这里再在捕获阶段',
+    '   拦掉点选、保证数字完全不动（docs/11 §8.3）；拦得住是因为 REA_FX 挂在 document 的冒泡阶段。 */',
     'var wg=document.querySelector(".rea-bd-window");',
     'if(wg)wg.addEventListener("click",function(e){',
     '  var n=e.target,id=null;',
@@ -11367,7 +11494,7 @@ window.addEventListener("resize",function(){
     '  for(i=0;i<ps.length;i++){',
     '    p=ps[i];need+=p.need;done+=p.done;left+=p.left;over+=p.over;',
     '    r=rate(p);',
-    '    h+="<tr class=\\"ant-table-row ant-table-row-level-0 rea-bd-prow\\" data-dtl-person=\\""+esc(p.n)+"\\">"',
+    '    h+="<tr class=\\"ant-table-row ant-table-row-level-0 rea-bd-prow\\" tabindex=\\"0\\" aria-expanded=\\""+(OPEN[p.n]?"true":"false")+"\\" data-dtl-person=\\""+esc(p.n)+"\\">"',
     '      +"<td class=\\"ant-table-cell\\"><span class=\\"rea-bd-caret"+(OPEN[p.n]?" on":"")+"\\"></span><span class=\\"ant-typography css-vgijab\\">"+esc(p.n)+"</span></td>"',
     '      +"<td class=\\"ant-table-cell\\">"+esc(p.o)+"</td>"',
     '      +"<td class=\\"ant-table-cell\\">"+p.tasks.length+"</td>"',
@@ -11442,6 +11569,11 @@ window.addEventListener("resize",function(){
     '    }',
     '    n=n.parentNode;',
     '  }',
+    '});',
+    'if(tb)tb.addEventListener("keydown",function(e){',
+    '  if(e.key!=="Enter"&&e.key!==" ")return;',
+    '  var n=e.target;',
+    '  if(n&&n.getAttribute&&n.getAttribute("data-dtl-person")){e.preventDefault();n.click();}',
     '});',
     'function setWinUi(){',
     '  var ls=document.querySelectorAll("[data-dtl-win]"),i,on;',
