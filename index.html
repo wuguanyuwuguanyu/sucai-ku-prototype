@@ -1650,6 +1650,11 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .tk-seg-inp input::placeholder{color:#B3A7F2;font-weight:600}
 .tk-seg-inp .u{flex:none;font-size:12px;font-weight:600;color:#8B7CD8}
 .tk-seg-inp:focus-within{box-shadow:inset 0 0 0 1.5px rgba(123,91,255,.45)}
+/* 校验不通过时：那一格转 error 色，提示行同步转红（.bad 写在 :focus-within 之后，同权重靠后取胜） */
+.tk-seg-inp.bad{box-shadow:inset 0 0 0 1.5px var(--error)}
+.tk-seg-inp.bad input,.tk-seg-inp.bad .u{color:var(--error)}
+.hva-freq-note{padding-top:10px;font-size:12px;line-height:1.6;color:#93A3BC}
+.hva-freq-note.bad{color:var(--error)}
 .hva-form-h{display:flex;align-items:center;gap:5px;padding:14px 15px 2px;font-size:13.5px;font-weight:700;color:#2A4A7E}
 .hva-txt{padding:0 15px 15px;font-size:13.5px;line-height:1.72;color:#5B7099}
 .hva-txt.ph{color:#A9B6CD}
@@ -5953,16 +5958,55 @@ function hvaActMin(k){
    眼睛和光标却落在下一行，白多一步。选别的档时它还是普通按钮，输入框收起。
    **不并进 hvaActSegBox**：那是通用的互斥多档，AI智能回复的「更新时间」还用着它，且那边
    「选自定义分钟时下面出输入框」是 ADR-0051 写下的口径；这里只改自动打招呼这一屏。 */
+/* 自定义分钟的值域。上下限写在这两格，卡上那句提示与校验都从它们派生——改口径只改这里。
+   上限 1440＝24 小时：这是「多久执行一次」的间隔，超过一天就不该用这个能力了。 */
+var HVA_FREQ_MIN=1,HVA_FREQ_MAX=1440;
+var HVA_FREQ_HINT='填 '+HVA_FREQ_MIN+'–'+HVA_FREQ_MAX+' 分钟（最长 24 小时）';
+function hvaFreqOk(){
+  var s=String(hvaCurCfg().freqMin||'');
+  if(!/^\d+$/.test(s))return false;
+  var n=parseInt(s,10);
+  return n>=HVA_FREQ_MIN&&n<=HVA_FREQ_MAX;
+}
+/* 提示与报错共用同一行：平时是中性灰的「能填什么」，不合法时转成 error 色并换一句话。
+   不弹 toast——错在输入框里，提示就该贴着它；手机上居中弹一句、输入框还在屏外，等于没报。
+   红圈同时挂到那一格上（.bad），让人一眼看到是哪一格。 */
+function hvaFreqNote(bad){
+  var b=$('hvaActBody'),n=b.querySelector('#hvaFreqNote'),c=b.querySelector('.tk-seg-inp');
+  if(!n)return;
+  n.className='hva-freq-note'+(bad?' bad':'');
+  n.textContent=bad?'请输入 '+HVA_FREQ_MIN+'–'+HVA_FREQ_MAX+' 之间的分钟数':HVA_FREQ_HINT;
+  if(c){ if(bad)c.classList.add('bad'); else c.classList.remove('bad'); }
+}
+/* 输入时就地过滤：只留数字（inputmode 只换了键盘，粘贴/外接键盘仍能塞进别的字符）。
+   **不在这里判上下限**：打字打到一半的「14」也可能是「1440」的前半截，边打边红会一直闪；
+   离开这一格（失焦）或点保存时再判。 */
+function hvaFreqInput(el){
+  var v=el.value.replace(/\D+/g,'');
+  if(v!==el.value)el.value=v;
+  hvaCurCfg().freqMin=v;
+  hvaFreqNote(false);
+}
+/* 失焦：判一次。合法就把「007」这类前导零归一成「7」，让摘要里读到的是人填的那个数。 */
+function hvaFreqBlur(el){
+  hvaFreqInput(el);
+  if(!hvaFreqOk()){ hvaFreqNote(true); return; }
+  var v=String(parseInt(hvaCurCfg().freqMin,10));
+  hvaCurCfg().freqMin=v;
+  if(el.value!==v)el.value=v;
+}
 function hvaFreqSeg(){
   var c=hvaCurCfg(),o=hvaCurOpt().freq,h='<div class="tk-seg">',i,v;
   for(i=0;i<o.length;i++){
     v=o[i];
     if(v==='自定义分钟'&&c.freq===v){
       /* 用 label 包着：点这一格任意处都聚焦到框里（原生行为），不额外写 focus 逻辑。
-         框里只放数字，单位写在框外——一打字 placeholder 就没了，孤零零一个数读不出单位。 */
+         框里只放数字，单位写在框外——一打字 placeholder 就没了，孤零零一个数读不出单位。
+         enterkeyhint="done"：手机数字键盘右下角那枚键写「完成」，按一下收键盘（blur 即触发校验）。 */
       h+='<label class="tk-seg-inp on">'
-        +'<input inputmode="numeric" placeholder="0" value="'+esc(c.freqMin)+'"'
-        +' aria-label="自定义执行间隔（分钟）" oninput="hvaActText(\'freqMin\',this.value)">'
+        +'<input inputmode="numeric" pattern="[0-9]*" enterkeyhint="done" autocomplete="off"'
+        +' placeholder="0" value="'+esc(c.freqMin)+'" aria-label="自定义执行间隔，'+HVA_FREQ_MIN+' 到 '+HVA_FREQ_MAX+' 分钟"'
+        +' oninput="hvaFreqInput(this)" onblur="hvaFreqBlur(this)">'
         +'<span class="u">分钟</span></label>';
     }else{
       h+='<button class="'+(c.freq===v?'on':'')+'" onclick="hvaFreqPick(\''+v+'\')">'+v+'</button>';
@@ -6056,7 +6100,9 @@ REND['host-ai-act']=function(){
        默认 10 分钟是原型定的（现网没有这一项），待产品确认。 */
     h+='<div class="hva-form"><div class="hva-form-h">执行间隔</div>'
       +'<div class="hva-txt">托管状态下，每隔多久执行一次自动打招呼</div>'
-      +'<div class="hva-segpad">'+hvaFreqSeg()+'</div></div>';
+      +'<div class="hva-segpad">'+hvaFreqSeg()
+      +(c.freq==='自定义分钟'?'<div class="hva-freq-note" id="hvaFreqNote">'+HVA_FREQ_HINT+'</div>':'')
+      +'</div></div>';
   }
   /* 2026-10-20 产品：**AI智能回复那一屏撤掉页底这颗按钮**（它那颗写「保存方案」）。
      与设置页同理，这一屏也没有草稿态：平台勾选、更新时间都是点了就写回（hvaActSet），
@@ -6072,6 +6118,17 @@ REND['host-ai-act']=function(){
    四张页各有一句摘要，都按**人能读的口径**写（不把内部字段名摊出来）。 */
 function hvaActSave(){
   var c=hvaCurCfg(),i,n=0,s='',nm;
+  /* 自动打招呼 · 自定义间隔：**不合法就不让存**，并把焦点送回那一格（手机键盘跟着起来）。
+     不静默落到默认值，也不把「未填」存成一条规则——托管会按一个员工没选过的间隔去跑。 */
+  if(HVA_ACT==='自动打招呼'&&c.freq==='自定义分钟'){
+    if(!hvaFreqOk()){
+      hvaFreqNote(true);
+      var fe=$('hvaActBody').querySelector('.tk-seg-inp input');
+      if(fe){ try{ fe.focus(); if(fe.select)fe.select(); }catch(e){} }
+      return;
+    }
+    c.freqMin=String(parseInt(c.freqMin,10));
+  }
   if(HVA_ACT==='朋友圈互动'){
     for(i in c.skip)if(c.skip[i])n++;
     s=c.like+' · 每次 '+c.num+' 条 · '+c.span+' · 不回复 '+n+' 类';
