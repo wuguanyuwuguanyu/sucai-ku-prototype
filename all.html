@@ -9687,6 +9687,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 
   <!-- 第 1 层 · 执行健康度三卡：固定看「今日」，不跟下方任务执行板块的时间窗走。
        三张卡都由任务台账里今日那几行算出来（见注入脚本的自检），不另写一份数。
+       单位是**任务条数**（2026-10-23 定）：做满的条数 / 没做满的条数 / 到期没做满的条数。
        原来的第四张「异常 · 失败」已撤（PRD §5.1）：失败在后端就归「进行中」，不是一种独立状态，
        单列一张卡等于拿我们的口径去解释现网的分桶；页上不再出现这个数。 -->
   <div class="rea-bd-sechead">
@@ -9697,23 +9698,23 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     <div class="ant-col ant-col-8 css-vgijab">
       <div class="rea-bd-kpi">
         <div class="rea-bd-kpi-top"><span class="lab">待执行</span></div>
-        <div class="rea-bd-kpi-main"><b data-rea-sum="left">18</b><span>人次</span></div>
-        <div class="rea-bd-kpi-sub"><span data-rea-sum="left-of-need">43.9%</span><span>占应执行</span></div>
+        <div class="rea-bd-kpi-main"><b data-rea-sum="left">7</b><span>条</span></div>
+        <div class="rea-bd-kpi-sub"><span data-rea-sum="left-of-need">100.0%</span><span>占应执行</span></div>
         <span class="rea-bd-kpi-bar" data-bd-kpibar="left" aria-hidden="true"><i class="d"></i><i class="l"></i><i class="o"></i></span>
       </div>
     </div>
     <div class="ant-col ant-col-8 css-vgijab">
       <div class="rea-bd-kpi">
         <div class="rea-bd-kpi-top"><span class="lab">已完成</span></div>
-        <div class="rea-bd-kpi-main"><b data-rea-sum="done">23</b><span>人次</span></div>
-        <div class="rea-bd-kpi-sub"><span data-rea-sum="rate">56.1%</span><span>完成率</span></div>
+        <div class="rea-bd-kpi-main"><b data-rea-sum="done">0</b><span>条</span></div>
+        <div class="rea-bd-kpi-sub"><span data-rea-sum="rate">0.0%</span><span>做满占比</span></div>
         <span class="rea-bd-kpi-bar" data-bd-kpibar="done" aria-hidden="true"><i class="d"></i><i class="l"></i><i class="o"></i></span>
       </div>
     </div>
     <div class="ant-col ant-col-8 css-vgijab">
       <div class="rea-bd-kpi">
         <div class="rea-bd-kpi-top"><span class="lab">逾期未做</span></div>
-        <div class="rea-bd-kpi-main"><b data-rea-sum="over">0</b><span>人次</span></div>
+        <div class="rea-bd-kpi-main"><b data-rea-sum="over">0</b><span>条</span></div>
         <div class="rea-bd-kpi-sub"><span data-rea-sum="over-of-left">0.0%</span><span>占待执行</span></div>
         <span class="rea-bd-kpi-bar" data-bd-kpibar="over" aria-hidden="true"><i class="d"></i><i class="l"></i><i class="o"></i></span>
       </div>
@@ -11074,27 +11075,32 @@ window.addEventListener("resize",function(){
     'function bad(s){BAD.push(s)}',
     'function rows(){return document.querySelectorAll("[data-bd-row]")}',
     'function tally(rs){',
-    '  var t={need:0,done:0,over:0,org:{}},i,r,o,n,d,a;',
+    '  var t={need:0,done:0,over:0,full:0,miss:0,org:{}},i,r,o,n,d,a;',
     '  for(i=0;i<rs.length;i++){',
     '    r=rs[i];o=r.getAttribute("data-bd-org");',
     '    n=+r.getAttribute("data-bd-need");d=+r.getAttribute("data-bd-done");',
     '    t.need+=n;t.done+=d;',
     '    t.over+=+r.getAttribute("data-bd-over");',
+    '    /* 任务级的那两个数：做满（已执行达应执行）与逾期（还有过期未执行的人次） */',
+    '    if(d>=n)t.full++;',
+    '    if(+r.getAttribute("data-bd-over")>0)t.miss++;',
     '    a=t.org[o]||(t.org[o]={need:0,done:0});a.need+=n;a.done+=d;',
     '  }',
     '  t.left=t.need-t.done;t.n=rs.length;return t;',
     '}',
 
-    '/* 三张卡与合计行的取值——全部由那九行算出来，一个都不另写。',
-    '   每条都能被别的数算回来，是这份演示数据集的第一条自律（docs/11 §1）。 */',
+    '/* 三张卡的取值——全部由那九行算出来，一个都不另写。',
+    '   单位是**任务条数**（2026-10-23 定）：做满的条数、没做满的条数、到期没做满的条数。',
+    '   任务数是二值的（一条要么全员做完、要么还差人），所以今日三卡常是',
+    '   「待执行＝应执行、已完成 0」——那是当天的实情；干了多少人次看下方各类任务完成度。 */',
     'var SUM={',
-    '  need:function(t){return String(t.need)},',
-    '  done:function(t){return String(t.done)},',
-    '  left:function(t){return String(t.left)},',
-    '  over:function(t){return String(t.over)},',
-    '  rate:function(t){return (t.need?t.done/t.need*100:0).toFixed(1)+"%"},',
-    '  "left-of-need":function(t){return (t.need?t.left/t.need*100:0).toFixed(1)+"%"},',
-    '  "over-of-left":function(t){return (t.left?t.over/t.left*100:0).toFixed(1)+"%"}',
+    '  need:function(t){return String(t.n)},',
+    '  done:function(t){return String(t.full)},',
+    '  left:function(t){return String(t.n-t.full)},',
+    '  over:function(t){return String(t.miss)},',
+    '  rate:function(t){return (t.n?t.full/t.n*100:0).toFixed(1)+"%"},',
+    '  "left-of-need":function(t){return (t.n?(t.n-t.full)/t.n*100:0).toFixed(1)+"%"},',
+    '  "over-of-left":function(t){return ((t.n-t.full)?t.miss/(t.n-t.full)*100:0).toFixed(1)+"%"}',
     '};',
     '/* 三张卡静态正文里写的是**今日**那一份，跑起来跟算出来的对一遍。',
     '   换窗口换的就是同一个坑位，所以期望值必须在开跑前抄一份留底，',
@@ -11124,11 +11130,11 @@ window.addEventListener("resize",function(){
     '    else es[i].textContent=v;',
     '  }',
     '}',
-    '/* 三卡底部同一条三段健康条：宽度按原始人次分，每张卡只点实自己那一段。',
-    '   逾期为 0 时第三段宽度为 0，不做任何补偿——0 就该看不见。 */',
+    '/* 三卡底部同一条三段健康条：宽度按任务**条数**分（做满 / 没做满未逾期 / 逾期），',
+    '   每张卡只点实自己那一段。逾期为 0 时第三段宽度为 0，不做任何补偿——0 就该看不见。 */',
     'function paintKpiBar(t){',
-    '  var pend=t.left-t.over;if(pend<0)pend=0;',
-    '  var vals={d:t.done,l:pend,o:t.over},total=vals.d+vals.l+vals.o;',
+    '  var pend=t.n-t.full-t.miss;if(pend<0)pend=0;',
+    '  var vals={d:t.full,l:pend,o:t.miss},total=vals.d+vals.l+vals.o;',
     '  var bars=document.querySelectorAll("[data-bd-kpibar]"),i,j,k,own,segs;',
     '  for(i=0;i<bars.length;i++){',
     '    own=bars[i].getAttribute("data-bd-kpibar");',
