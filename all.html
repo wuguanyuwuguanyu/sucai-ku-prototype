@@ -12791,15 +12791,18 @@ tb.addEventListener("click",function(e){
      与参考原型口径一致。 */
   var REA_WXT_GROUPS = ['全部素材', '世界杯', '执业药师'];
   /* 当前工作域＝组织树；全公司是所有企业素材的并集，子部门只列本部门的。
-     计数按「该工作域下的企业素材条数」算，不随分组与搜索变。 */
+     计数按「该工作域下、本页可选的素材条数」算（发圈页只数发得了朋友圈的），不随分组与搜索变。 */
   var REA_WXT_DEPTS = {root:'全公司', children:['销售一部', '销售二部', '售后部']};
   var REA_WXT_MATS = [
     {id:'wm-1', title:'世界杯开幕倒计时', group:'世界杯', dept:'销售一部', text:'距开幕还剩 3 天，这份观赛指南请收好：赛程、看点、热门球员一次看全。', images:3, video:0},
     {id:'wm-2', title:'小组赛对阵表', group:'世界杯', dept:'销售一部', text:'小组赛完整对阵表已出，收藏这张图，开赛不迷路。', images:1, video:0},
     {id:'wm-3', title:'决赛门票福利', group:'世界杯', dept:'销售二部', text:'评论区留言支持你心中的冠军，抽 5 位送决赛门票。', images:0, video:0},
     {id:'wm-4', title:'执业药师报名提醒', group:'执业药师', dept:'售后部', text:'2026 年执业药师报名今天开始，报名入口和材料清单都在这里。', images:2, video:0},
-    {id:'wm-5', title:'药师考试冲刺资料', group:'执业药师', dept:'售后部', text:'考前 30 天冲刺资料包，重点章节和高频考点已整理。', images:0, video:1}
+    {id:'wm-5', title:'药师考试冲刺资料', group:'执业药师', dept:'售后部', text:'考前 30 天冲刺资料包，重点章节和高频考点已整理。', images:0, video:1},
+    {id:'wm-6', title:'世界杯观赛攻略长图', group:'世界杯', dept:'销售一部', text:'十张长图讲透小组赛到决赛的看点，整包发群正合适。', images:10, video:0}
   ];
+  /* wm-6 十张图发不了朋友圈：发圈页的素材库看不到它，群发页正常可选——
+     这条差异是故意留的，用来演示「为什么某个素材在这里搜不到」。 */
 
   /* 三页共用样式。只写新增件，色值全取自快照已出现的色（规则 B）：
      #1677ff / #e6f4ff / #f0f0f0 / #fafafa / #d9d9d9 / #999999 / #333333 / #ff4d4f。 */
@@ -12833,6 +12836,7 @@ tb.addEventListener("click",function(e){
     + '.rea-wxt-search{padding:14px 16px 10px}'
     + '.rea-wxt-search input{width:100%;height:32px;padding:4px 11px;border:1px solid #d9d9d9;border-radius:6px;font-size:14px;outline:none;box-sizing:border-box}'
     + '.rea-wxt-search input:focus{border-color:#1677ff;box-shadow:0 0 0 2px rgba(5,145,255,.1)}'
+    + '.rea-wxt-note{padding:0 16px 8px;font-size:12px;line-height:18px;color:#999999}'
     + '.rea-wxt-list{flex:1;min-height:0;overflow:auto;padding:0 8px 12px}'
     + '.rea-wxt-row{display:block;width:100%;text-align:left;border:1px solid transparent;background:transparent;border-radius:6px;padding:10px 12px;cursor:pointer;margin-bottom:4px}'
     + '.rea-wxt-row:hover{background:#fafafa}'
@@ -12911,9 +12915,15 @@ function shape(m){
   return '';
 }
 function sub(m){return m.text||shape(m)}
+/* 朋友圈能不能发：图片最多 9 张、图片与视频不混排、视频最多 1 条。
+   发圈页只列过得了这一关的素材——列表里没有的，不是没搜到，是发不了。 */
+function canMoment(m){return m.images<=9&&m.video<=1&&!(m.images&&m.video)}
+/* 本页可选的素材：群发页不设限，发圈页要过朋友圈那一关 */
+function avail(m){return PAGE!=='发圈 · 新建'||canMoment(m)}
 function pool(){
   var d=PICK.dept,g=PICK.group,qq=PICK.q,out=[],i;
   for(i=0;i<MATS.length;i++){
+    if(!avail(MATS[i]))continue;
     if(d!==DEPTS.root&&MATS[i].dept!==d)continue;
     if(g!=='全部素材'&&MATS[i].group!==g)continue;
     if(qq&&(MATS[i].title+' '+MATS[i].group+' '+MATS[i].text).indexOf(qq)<0)continue;
@@ -12921,10 +12931,10 @@ function pool(){
   }
   return out;
 }
-/* 工作域计数：该域下的企业素材条数（全公司＝并集），不随分组／搜索变 */
+/* 工作域计数：该域下、本页可选的素材条数（全公司＝并集），不随分组／搜索变 */
 function deptCount(name){
   var n=0,i;
-  for(i=0;i<MATS.length;i++)if(name===DEPTS.root||MATS[i].dept===name)n++;
+  for(i=0;i<MATS.length;i++)if(avail(MATS[i])&&(name===DEPTS.root||MATS[i].dept===name))n++;
   return n;
 }
 
@@ -12962,7 +12972,7 @@ function pickHtml(){
       +'<span class="rea-wxt-cnt">'+deptCount(dn)+'</span></button>';
   }
   var tip=PAGE==='发圈 · 新建'
-    ? '先选部门工作域，再选分组。只列出能发朋友圈的素材，个人素材不在可选范围内。'
+    ? '先选部门工作域，再选分组。个人素材不在可选范围内。'
     : '先选部门工作域，再选分组。只列出能作为群发内容的素材，个人素材不在可选范围内。';
   return '<div class="rea-wxt-modal" role="dialog" aria-modal="true" aria-label="从素材库选择">'
     +'<div class="rea-wxt-hd"><div class="rea-wxt-hdt"><span class="rea-wxt-title">从素材库选择</span>'
@@ -12972,6 +12982,7 @@ function pickHtml(){
     +'<div class="rea-wxt-left"><div class="rea-wxt-lh">当前工作域</div><div class="rea-wxt-depts">'+depts+'</div>'
     +'<div class="rea-wxt-lh rea-wxt-lh2">分组</div><div class="rea-wxt-groups">'+groups+'</div></div>'
     +'<div class="rea-wxt-mid"><div class="rea-wxt-search"><input type="text" placeholder="搜索素材（标题 / 关键词 / 正文）" aria-label="搜索素材" value="'+esc(PICK.q)+'"></div>'
+    +(PAGE==='发圈 · 新建'?'<div class="rea-wxt-note">已过滤掉不能发朋友圈的素材：图片超过 9 张、图片与视频混排、视频超过 1 条。</div>':'')
     +'<div class="rea-wxt-list"></div></div>'
     +'<div class="rea-wxt-pv"><div class="rea-wxt-pvt">内容预览</div><div class="rea-wxt-pvc"></div></div>'
     +'</div>'
