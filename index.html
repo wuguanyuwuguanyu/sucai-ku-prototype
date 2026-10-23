@@ -12893,7 +12893,6 @@ tb.addEventListener("click",function(e){
     + '.rea-wxt-search{padding:14px 16px 10px}'
     + '.rea-wxt-search input{width:100%;height:32px;padding:4px 11px;border:1px solid #d9d9d9;border-radius:6px;font-size:14px;outline:none;box-sizing:border-box}'
     + '.rea-wxt-search input:focus{border-color:#1677ff;box-shadow:0 0 0 2px rgba(5,145,255,.1)}'
-    + '.rea-wxt-note{padding:0 16px 8px;font-size:12px;line-height:18px;color:#999999}'
     + '.rea-wxt-list{flex:1;min-height:0;overflow:auto;padding:0 8px 12px}'
     + '.rea-wxt-row{display:block;width:100%;text-align:left;border:1px solid transparent;background:transparent;border-radius:6px;padding:10px 12px;cursor:pointer;margin-bottom:4px}'
     + '.rea-wxt-row:hover{background:#fafafa}'
@@ -13029,7 +13028,7 @@ function pickHtml(){
       +'<span class="rea-wxt-cnt">'+deptCount(dn)+'</span></button>';
   }
   var tip=PAGE==='发圈 · 新建'
-    ? '先选部门工作域，再选分组。个人素材不在可选范围内。'
+    ? '已过滤掉不能发朋友圈的素材：图片超过 9 张、图片与视频混排、视频超过 1 条。'
     : '先选部门工作域，再选分组。只列出能作为群发内容的素材，个人素材不在可选范围内。';
   return '<div class="rea-wxt-modal" role="dialog" aria-modal="true" aria-label="从素材库选择">'
     +'<div class="rea-wxt-hd"><div class="rea-wxt-hdt"><span class="rea-wxt-title">从素材库选择</span>'
@@ -13039,7 +13038,6 @@ function pickHtml(){
     +'<div class="rea-wxt-left"><div class="rea-wxt-lh">当前工作域</div><div class="rea-wxt-depts">'+depts+'</div>'
     +'<div class="rea-wxt-lh rea-wxt-lh2">分组</div><div class="rea-wxt-groups">'+groups+'</div></div>'
     +'<div class="rea-wxt-mid"><div class="rea-wxt-search"><input type="text" placeholder="搜索素材（标题 / 关键词 / 正文）" aria-label="搜索素材" value="'+esc(PICK.q)+'"></div>'
-    +(PAGE==='发圈 · 新建'?'<div class="rea-wxt-note">已过滤掉不能发朋友圈的素材：图片超过 9 张、图片与视频混排、视频超过 1 条。</div>':'')
     +'<div class="rea-wxt-list"></div></div>'
     +'<div class="rea-wxt-pv"><div class="rea-wxt-pvt">内容预览</div><div class="rea-wxt-pvc"></div></div>'
     +'</div>'
