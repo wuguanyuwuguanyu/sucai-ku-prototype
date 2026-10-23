@@ -12151,7 +12151,7 @@ window.addEventListener("resize",function(){
     '  fbSw.className=fbSw.className.replace(/\\s*ant-switch-checked/,"");',
     '  fbBox0.appendChild(fbSw);',
     '  lkRow.insertAdjacentElement("afterend",fbRow);',
-    '  fbTextRow=mkRow("兜底评论话术","例如：这里发不了文件，您私信我，我发您","只在私信确定没发出去时使用；不要写「已私信」，建议引导客户主动私信你，最多 50 字。");',
+    '  fbTextRow=mkRow("兜底评论话术","例如：这里发不了文件，您私信我，我发您");',
     '  var fbTa=fbTextRow.querySelector("textarea");if(fbTa)fbTa.maxLength=50;',
     '  fbRow.insertAdjacentElement("afterend",fbTextRow);',
     '  fbRow.style.display="none";fbTextRow.style.display="none";',
@@ -12331,7 +12331,6 @@ window.addEventListener("resize",function(){
     '  };',
     '  putCond("关键词","因为你选了「仅关键词」——只回包含这些词的评论");',
     '  putCond("私信内容","因为你选了「自定义」——客户回复评论后，立刻发出这段私信");',
-    '  putCond("话术流程","因为你选了「自定义话术流程」——客户下次回消息时，按节点顺序往下聊");',
     '  putCond("流程结束后AI接管","话术走完后，由 AI 按上下文接着聊");',
     '  putCond("兜底评论话术","私信确定没发出去时，用这句评论保住这次触达");',
     '  /* ①② 两组之间拉一条细线，替掉旧的分组小标题 */',
@@ -12778,8 +12777,10 @@ tb.addEventListener("click",function(e){
        ① 任务内容里加一枚「从素材库选择」，它本身就是打开素材库弹窗的入口
           （不另设「打开素材库」按钮，一次点击干一件事）；点弹窗的「确定」才落定来源，
           取消则表单原样不动；
-       ② 弹窗＝左边素材分组、中间素材列表、右边内容预览，单选；只列企业素材，
-          且只列能作为发送内容的（纯文本 / 图片 / 单条视频，不含文件与语音）；
+       ② 弹窗＝左边「当前工作域 ＋ 素材分组」、中间素材列表、右边内容预览，单选；
+          工作域是组织树里的部门（全公司 / 销售一部 / …），先选工作域再选分组，
+          两段都只筛列表、不改变已选；只列企业素材，且只列能作为发送内容的
+          （纯文本 / 图片 / 单条视频，不含文件与语音）；
        ③ 选定后回填一张「标题 ＋ 一行正文 ＋ ×」的卡，发圈页右栏效果预览同步；
           × 同时清掉来源，不留「选了来源、没有素材」的空档；
        ④ 群发好友页选中素材后收起「内容类型 / 描述文本」（来源互斥），切回临时创建再露出。
@@ -12789,12 +12790,15 @@ tb.addEventListener("click",function(e){
      素材是演示数据（企业素材，分组与素材库页的两组对齐）；个人素材不参与派发，
      与参考原型口径一致。 */
   var REA_WXT_GROUPS = ['全部素材', '世界杯', '执业药师'];
+  /* 当前工作域＝组织树；全公司是所有企业素材的并集，子部门只列本部门的。
+     计数按「该工作域下的企业素材条数」算，不随分组与搜索变。 */
+  var REA_WXT_DEPTS = {root:'全公司', children:['销售一部', '销售二部', '售后部']};
   var REA_WXT_MATS = [
-    {id:'wm-1', title:'世界杯开幕倒计时', group:'世界杯', text:'距开幕还剩 3 天，这份观赛指南请收好：赛程、看点、热门球员一次看全。', images:3, video:0},
-    {id:'wm-2', title:'小组赛对阵表', group:'世界杯', text:'小组赛完整对阵表已出，收藏这张图，开赛不迷路。', images:1, video:0},
-    {id:'wm-3', title:'决赛门票福利', group:'世界杯', text:'评论区留言支持你心中的冠军，抽 5 位送决赛门票。', images:0, video:0},
-    {id:'wm-4', title:'执业药师报名提醒', group:'执业药师', text:'2026 年执业药师报名今天开始，报名入口和材料清单都在这里。', images:2, video:0},
-    {id:'wm-5', title:'药师考试冲刺资料', group:'执业药师', text:'考前 30 天冲刺资料包，重点章节和高频考点已整理。', images:0, video:1}
+    {id:'wm-1', title:'世界杯开幕倒计时', group:'世界杯', dept:'销售一部', text:'距开幕还剩 3 天，这份观赛指南请收好：赛程、看点、热门球员一次看全。', images:3, video:0},
+    {id:'wm-2', title:'小组赛对阵表', group:'世界杯', dept:'销售一部', text:'小组赛完整对阵表已出，收藏这张图，开赛不迷路。', images:1, video:0},
+    {id:'wm-3', title:'决赛门票福利', group:'世界杯', dept:'销售二部', text:'评论区留言支持你心中的冠军，抽 5 位送决赛门票。', images:0, video:0},
+    {id:'wm-4', title:'执业药师报名提醒', group:'执业药师', dept:'售后部', text:'2026 年执业药师报名今天开始，报名入口和材料清单都在这里。', images:2, video:0},
+    {id:'wm-5', title:'药师考试冲刺资料', group:'执业药师', dept:'售后部', text:'考前 30 天冲刺资料包，重点章节和高频考点已整理。', images:0, video:1}
   ];
 
   /* 三页共用样式。只写新增件，色值全取自快照已出现的色（规则 B）：
@@ -12803,13 +12807,25 @@ tb.addEventListener("click",function(e){
       /* ---- 素材库弹窗 ---- */
       '.rea-wxt-mask{position:fixed;inset:0;z-index:2200;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center}'
     + '.rea-wxt-modal{width:920px;max-width:calc(100% - 48px);height:560px;max-height:calc(100% - 64px);background:#fff;border-radius:8px;box-shadow:0 6px 16px rgba(0,0,0,.12);display:flex;flex-direction:column;overflow:hidden}'
-    + '.rea-wxt-hd{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid #f0f0f0}'
-    + '.rea-wxt-title{font-size:16px;font-weight:500;color:rgba(0,0,0,.88)}'
+    + '.rea-wxt-hd{display:flex;align-items:flex-start;justify-content:space-between;padding:16px 24px 12px;border-bottom:1px solid #f0f0f0}'
+    + '.rea-wxt-hdt{min-width:0;padding-right:16px}'
+    + '.rea-wxt-title{display:block;font-size:16px;font-weight:500;color:rgba(0,0,0,.88)}'
+    + '.rea-wxt-sub{margin-top:4px;font-size:12px;line-height:18px;color:#999999}'
     + '.rea-wxt-x{border:0;background:transparent;font-size:20px;line-height:1;color:#999999;cursor:pointer;padding:0 4px}'
     + '.rea-wxt-x:hover{color:#333333}'
     + '.rea-wxt-bd{flex:1;min-height:0;display:flex}'
-    + '.rea-wxt-left{width:180px;flex:none;border-right:1px solid #f0f0f0;padding:14px 8px;overflow:auto}'
+    + '.rea-wxt-left{width:200px;flex:none;border-right:1px solid #f0f0f0;padding:14px 8px;overflow:auto}'
     + '.rea-wxt-lh{padding:0 12px 8px;font-size:12px;color:#999999}'
+    + '.rea-wxt-lh2{margin-top:12px}'
+    /* 当前工作域：两级树，父行带展开箭头，子行缩进；计数贴右 */
+    + '.rea-wxt-dep{display:flex;align-items:center;width:100%;text-align:left;border:0;background:transparent;padding:8px 12px;border-radius:6px;font-size:14px;color:rgba(0,0,0,.88);cursor:pointer;margin-bottom:2px}'
+    + '.rea-wxt-dep:hover{background:#fafafa}'
+    + '.rea-wxt-dep.on{background:#e6f4ff;color:#1677ff}'
+    + '.rea-wxt-dep1{padding-left:32px}'
+    + '.rea-wxt-care{display:inline-block;width:16px;flex:none;font-size:10px;color:#999999}'
+    + '.rea-wxt-dname{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
+    + '.rea-wxt-cnt{flex:none;margin-left:8px;font-size:12px;color:#999999}'
+    + '.rea-wxt-dep.on .rea-wxt-cnt{color:#1677ff}'
     + '.rea-wxt-g{display:block;width:100%;text-align:left;border:0;background:transparent;padding:8px 12px;border-radius:6px;font-size:14px;color:rgba(0,0,0,.88);cursor:pointer;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
     + '.rea-wxt-g:hover{background:#fafafa}'
     + '.rea-wxt-g.on{background:#e6f4ff;color:#1677ff}'
@@ -12881,6 +12897,7 @@ tb.addEventListener("click",function(e){
 var PAGE=${reaJson(page)};
 var MATS=${reaJson(REA_WXT_MATS)};
 var GROUPS=${reaJson(REA_WXT_GROUPS)};
+var DEPTS=${reaJson(REA_WXT_DEPTS)};
 function norm(s){return String(s==null?'':s).replace(/\\s+/g,'')}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function q(s,r){return (r||document).querySelector(s)}
@@ -12895,13 +12912,20 @@ function shape(m){
 }
 function sub(m){return m.text||shape(m)}
 function pool(){
-  var g=PICK.group,qq=PICK.q,out=[],i;
+  var d=PICK.dept,g=PICK.group,qq=PICK.q,out=[],i;
   for(i=0;i<MATS.length;i++){
+    if(d!==DEPTS.root&&MATS[i].dept!==d)continue;
     if(g!=='全部素材'&&MATS[i].group!==g)continue;
     if(qq&&(MATS[i].title+' '+MATS[i].group+' '+MATS[i].text).indexOf(qq)<0)continue;
     out.push(MATS[i]);
   }
   return out;
+}
+/* 工作域计数：该域下的企业素材条数（全公司＝并集），不随分组／搜索变 */
+function deptCount(name){
+  var n=0,i;
+  for(i=0;i<MATS.length;i++)if(name===DEPTS.root||MATS[i].dept===name)n++;
+  return n;
 }
 
 /* ---------- 已选素材卡 ---------- */
@@ -12916,22 +12940,37 @@ function showCard(host,m,onClear){
 }
 
 /* ---------- 素材库弹窗 ---------- */
-var PICK={open:false,group:'全部素材',q:'',sel:null};
+var PICK={open:false,dept:'全公司',group:'全部素材',q:'',sel:null};
 var MASK=null;
 function closePick(){
   if(MASK&&MASK.parentNode)MASK.parentNode.removeChild(MASK);
   MASK=null;PICK.open=false;
 }
 function pickHtml(){
-  var groups='',i;
+  var groups='',depts='',i;
   for(i=0;i<GROUPS.length;i++){
     groups+='<button type="button" class="rea-wxt-g'+(PICK.group===GROUPS[i]?' on':'')+'" data-group="'+esc(GROUPS[i])+'">'+esc(GROUPS[i])+'</button>';
   }
+  /* 工作域是两级：全公司（父）＋ 各部门（子，始终展开，照参考原型的树形） */
+  depts+='<button type="button" class="rea-wxt-dep rea-wxt-dep0'+(PICK.dept===DEPTS.root?' on':'')+'" data-dept="'+esc(DEPTS.root)+'">'
+    +'<span class="rea-wxt-care" aria-hidden="true">▾</span><span class="rea-wxt-dname">'+esc(DEPTS.root)+'</span>'
+    +'<span class="rea-wxt-cnt">'+deptCount(DEPTS.root)+'</span></button>';
+  for(i=0;i<DEPTS.children.length;i++){
+    var dn=DEPTS.children[i];
+    depts+='<button type="button" class="rea-wxt-dep rea-wxt-dep1'+(PICK.dept===dn?' on':'')+'" data-dept="'+esc(dn)+'">'
+      +'<span class="rea-wxt-dname">'+esc(dn)+'</span>'
+      +'<span class="rea-wxt-cnt">'+deptCount(dn)+'</span></button>';
+  }
+  var tip=PAGE==='发圈 · 新建'
+    ? '先选部门工作域，再选分组。只列出能发朋友圈的素材，个人素材不在可选范围内。'
+    : '先选部门工作域，再选分组。只列出能作为群发内容的素材，个人素材不在可选范围内。';
   return '<div class="rea-wxt-modal" role="dialog" aria-modal="true" aria-label="从素材库选择">'
-    +'<div class="rea-wxt-hd"><span class="rea-wxt-title">从素材库选择</span>'
+    +'<div class="rea-wxt-hd"><div class="rea-wxt-hdt"><span class="rea-wxt-title">从素材库选择</span>'
+    +'<div class="rea-wxt-sub">'+tip+'</div></div>'
     +'<button type="button" class="rea-wxt-x" aria-label="关闭">×</button></div>'
     +'<div class="rea-wxt-bd">'
-    +'<div class="rea-wxt-left"><div class="rea-wxt-lh">素材分组</div><div class="rea-wxt-groups">'+groups+'</div></div>'
+    +'<div class="rea-wxt-left"><div class="rea-wxt-lh">当前工作域</div><div class="rea-wxt-depts">'+depts+'</div>'
+    +'<div class="rea-wxt-lh rea-wxt-lh2">分组</div><div class="rea-wxt-groups">'+groups+'</div></div>'
     +'<div class="rea-wxt-mid"><div class="rea-wxt-search"><input type="text" placeholder="搜索素材（标题 / 关键词 / 正文）" aria-label="搜索素材" value="'+esc(PICK.q)+'"></div>'
     +'<div class="rea-wxt-list"></div></div>'
     +'<div class="rea-wxt-pv"><div class="rea-wxt-pvt">内容预览</div><div class="rea-wxt-pvc"></div></div>'
@@ -12950,9 +12989,10 @@ function renderPick(){
       +'<span class="rea-wxt-rt">'+esc(m.title)+'</span>'
       +(sub(m)?'<span class="rea-wxt-rs">'+esc(sub(m))+'</span>':'')+'</button>';
   }
-  if(!rows.length)h='<div class="rea-wxt-empty">该分组下没有可发送的素材</div>';
+  if(!rows.length)h='<div class="rea-wxt-empty">该工作域 / 分组下没有可发送的素材</div>';
   q('.rea-wxt-list',MASK).innerHTML=h;
   qa('.rea-wxt-g',MASK).forEach(function(b){b.classList.toggle('on',b.getAttribute('data-group')===PICK.group)});
+  qa('.rea-wxt-dep',MASK).forEach(function(b){b.classList.toggle('on',b.getAttribute('data-dept')===PICK.dept)});
   var cur=byId(PICK.sel),pv=q('.rea-wxt-pvc',MASK);
   if(!cur){
     pv.innerHTML='<div class="rea-wxt-pvempty">点左侧任意一条素材，这里显示它发出去的样子。</div>';
@@ -12965,7 +13005,7 @@ function renderPick(){
       media+='</div>';
     }
     pv.innerHTML='<div class="rea-wxt-pvname">素材预览</div><div class="rea-wxt-pvtext">'+esc(cur.text)+'</div>'+media
-      +'<div class="rea-wxt-pvmeta">'+esc(cur.group)+' · '+esc(cur.title)+'</div>';
+      +'<div class="rea-wxt-pvmeta">'+esc(cur.dept)+' · '+esc(cur.group)+' · '+esc(cur.title)+'</div>';
   }
   q('.rea-wxt-sel',MASK).textContent=cur?('已选：'+cur.title):'尚未选择';
   q('.rea-wxt-ok',MASK).disabled=!cur;
@@ -12973,7 +13013,7 @@ function renderPick(){
 function openPick(onOk,curId){
   closePick();
   var cur=byId(curId);
-  PICK.open=true;PICK.q='';PICK.sel=cur?cur.id:null;PICK.group=cur?cur.group:'全部素材';
+  PICK.open=true;PICK.q='';PICK.sel=cur?cur.id:null;PICK.group=cur?cur.group:'全部素材';PICK.dept=cur?cur.dept:DEPTS.root;
   MASK=document.createElement('div');
   MASK.className='rea-wxt-mask';
   MASK.innerHTML=pickHtml();
@@ -12981,6 +13021,8 @@ function openPick(onOk,curId){
   MASK.addEventListener('click',function(e){
     var t=e.target;
     if(t===MASK)return closePick();
+    var d=t.closest?t.closest('.rea-wxt-dep'):null;
+    if(d){PICK.dept=d.getAttribute('data-dept');renderPick();return}
     var g=t.closest?t.closest('.rea-wxt-g'):null;
     if(g){PICK.group=g.getAttribute('data-group');renderPick();return}
     var row=t.closest?t.closest('.rea-wxt-row'):null;
