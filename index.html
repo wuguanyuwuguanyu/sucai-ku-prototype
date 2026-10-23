@@ -13262,11 +13262,451 @@ else if(PAGE==='群发群组 · 新建')initQs();
 })();`;
   }
 
+  /* ---------- 微信营销任务 · 自动打招呼：「新建欢迎语模版」的回复内容流（2026-10-23） ----------
+     覆盖页『自动打招呼 · 新建』。快照已经把模版弹窗抓下来了（模版名称 ＋ 回复内容表 ＋ 右侧手机
+     预览 ＋ 底部取消/确定），但「添加回复内容」点下去什么都没有：二级弹窗是加载后才挂上 body 的，
+     抓存件里没有它的 DOM。本段照产品给的线上截图把这一层补上——
+       ① 二级弹窗『添加回复内容』：类型五档（文本／图片／视频／小程序／文件），文本档带
+          「支持插入变量」六枚词条，点词条按光标位置插进正文；
+       ② 确定后落成回复内容表的一行（类型／内容／编辑·删除），右侧手机预览同步长出一枚绿气泡；
+       ③ 编辑＝带着原值重开二级弹窗，删除＝直接移除该行并重画预览；
+       ④ 模版弹窗的「确定」只做校验与提示（模版名称必填、至少一条回复内容），**不写列表页**——
+          自动打招呼的列表页仍是快照，没有登记『保存回列表』那条破例（素材库那条见 ADR-0047）。
+     与 REA_FX 的边界：模版弹窗是页面加载时就有的，REA_FX 认它当 MR（取消／遮罩都会收掉它）；
+     本段造的二级弹窗挂在 body 上、比它晚，所以**在二级弹窗根上拦掉冒泡**——否则点它的「取 消」
+     会被 REA_FX 当成模版弹窗的取消，把底下那层一起关了。 */
+  var REA_ZD_VARS = [['员工姓名', '王小明'], ['员工手机', '138****8000'], ['部门名称', '销售一部'],
+                     ['企业名称', '云小助'], ['员工岗位', '销售顾问'], ['当前时间', '']];
+  var REA_ZD_TYPES = [['text', '文本'], ['image', '图片'], ['video', '视频'],
+                      ['miniapp', '小程序'], ['file', '文件']];
+
+  /* 预览与缩略图用的占位图：内联 SVG，不走网络（快照里没有这些图）。
+     色取 #f0f0f2 / #d9d9d9 / #8c8c8c——三个都在快照里出现过。 */
+  var REA_ZD_PIC = reaMnSvg(320, 320,
+    "<rect width='320' height='320' fill='#f0f0f2'/>"
+    + "<circle cx='160' cy='132' r='62' fill='#d9d9d9'/>"
+    + "<rect x='118' y='100' width='84' height='56' rx='14' fill='#ffffff'/>"
+    + "<circle cx='142' cy='128' r='9' fill='#8c8c8c'/><circle cx='178' cy='128' r='9' fill='#8c8c8c'/>"
+    + "<rect x='96' y='206' width='128' height='66' rx='18' fill='#d9d9d9'/>");
+  var REA_ZD_VPOSTER = reaMnSvg(320, 180,
+    "<rect width='320' height='180' fill='#f0f0f2'/>"
+    + "<path d='M132 58l60 32-60 32z' fill='#d9d9d9'/>");
+  var REA_ZD_DEMO = {
+    image: { name: '欢迎语配图.png', src: REA_ZD_PIC },
+    video: { name: '产品介绍.mp4', src: REA_ZD_VPOSTER },
+    file:  { name: '产品手册.pdf', size: '2.4 MB' }
+  };
+
+  /* 页签图标：快照里没有 picture／video-camera／file-text／appstore 这几支（那个弹窗没抓下来），
+     所以按同一套线框风格自画；只用 currentColor，不引新色。 */
+  function reaZdIc(inner){
+    return '<span class="anticon rea-zd-ic"><svg viewBox="0 0 24 24" width="1em" height="1em"'
+      + ' fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"'
+      + ' stroke-linejoin="round">' + inner + '</svg></span>';
+  }
+  var REA_ZD_ICON = {
+    text: reaZdIc("<path d='M5 6h14M12 6v13M9 19h6'/>"),
+    image: reaZdIc("<rect x='3.5' y='5' width='17' height='14' rx='2'/><circle cx='8.5' cy='10' r='1.4'/>"
+      + "<path d='M4.5 16.5l4.6-4.6 3.4 3.4 3-3 4 4'/>"),
+    video: reaZdIc("<rect x='3' y='6' width='12.5' height='12' rx='2'/><path d='M15.5 10.2l5-3.2v10l-5-3.2z'/>"),
+    miniapp: reaZdIc("<rect x='4' y='4' width='6' height='6' rx='1.4'/><rect x='14' y='4' width='6' height='6' rx='1.4'/>"
+      + "<rect x='4' y='14' width='6' height='6' rx='1.4'/><rect x='14' y='14' width='6' height='6' rx='1.4'/>"),
+    file: reaZdIc("<path d='M7 3.5h7l4 4V20.5H7z'/><path d='M14 3.5v4h4'/>"),
+    close: reaZdIc("<path d='M6 6l12 12M18 6L6 18'/>"),
+    plus: reaZdIc("<path d='M12 5v14M5 12h14'/>")
+  };
+
+  /* 本页专用样式。只写新增件，色值全取自快照已出现的色（规则 B）；
+     绿气泡那枚 #95ec69 也是快照里的（素材库预览用同一枚，微信绿归「微信场景」，两份规范都不管它）。 */
+  var REA_ZD_CSS =
+      '.rea-zd-sub .ant-modal-body{padding:20px 24px 4px}'
+    + '.rea-zd-lbl{font-size:14px;line-height:22px;color:rgba(0,0,0,.88);margin-bottom:6px}'
+    + '.rea-zd-req{color:#ff4d4f;margin-right:4px}'
+    + '.rea-zd-tabs{margin-bottom:14px}'
+    + '.rea-zd-tabs .ant-tabs-nav{margin-bottom:0}'
+    + '.rea-zd-tic{display:inline-flex;align-items:center;margin-right:6px;font-size:14px;vertical-align:-2px}'
+    + '.rea-zd-box{border:1px solid #d9d9d9;border-radius:8px;padding:16px}'
+    + '.rea-zd-ta{width:100%;height:196px;min-height:120px;resize:vertical;box-sizing:border-box;'
+    +   'padding:8px 11px;font-size:14px;line-height:22px}'
+    + '.rea-zd-vars{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px;'
+    +   'font-size:13px;line-height:20px;color:#999999}'
+    + '.rea-zd-vars .ant-tag{margin:0;background:#ffffff;font-size:13px;cursor:pointer;'
+    +   'color:rgba(0,0,0,.88);user-select:none}'
+    + '.rea-zd-vars .ant-tag:hover{border-color:#1677ff;color:#1677ff}'
+    + '.rea-zd-field{display:flex;align-items:flex-start;margin-top:14px}'
+    + '.rea-zd-box .rea-zd-field:first-of-type{margin-top:0}'
+    + '.rea-zd-flbl{flex:none;width:110px;text-align:right;padding-right:12px;font-size:14px;'
+    +   'line-height:32px;color:rgba(0,0,0,.88)}'
+    + '.rea-zd-fctl{flex:1;min-width:0}'
+    + '.rea-zd-drop{display:flex;align-items:center;justify-content:center;gap:8px;min-height:96px;'
+    +   'border:1px dashed #d9d9d9;border-radius:8px;background:#fafafa;color:#999999;'
+    +   'font-size:14px;cursor:pointer}'
+    + '.rea-zd-drop:hover{border-color:#1677ff;color:#1677ff}'
+    + '.rea-zd-drop-sm{min-height:64px}'
+    + '.rea-zd-file{display:flex;align-items:center;gap:10px;padding:8px 12px;border:1px solid #d9d9d9;'
+    +   'border-radius:8px;background:#ffffff}'
+    + '.rea-zd-file img{width:40px;height:40px;border-radius:4px;object-fit:cover;background:#f0f0f2}'
+    + '.rea-zd-file-ic{display:flex;width:40px;height:40px;border-radius:4px;background:#f0f0f0;'
+    +   'color:#8c8c8c;align-items:center;justify-content:center;font-size:20px}'
+    + '.rea-zd-filemain{flex:1;min-width:0;font-size:14px;color:rgba(0,0,0,.88);'
+    +   'overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
+    + '.rea-zd-filex{border:0;background:transparent;color:#999999;cursor:pointer;font-size:13px;padding:0 2px}'
+    + '.rea-zd-filex:hover{color:#ff4d4f}'
+    /* 模版弹窗里那张回复内容表 */
+    + '.rea-zd-cell-txt{vertical-align:middle}'
+    + '.rea-zd-thumb{width:24px;height:24px;border-radius:4px;object-fit:cover;background:#f0f0f2;'
+    +   'vertical-align:-7px;margin-right:8px}'
+    + '.rea-zd-thumb-ic{display:inline-flex;width:24px;height:24px;margin-right:8px;border-radius:4px;'
+    +   'background:#f0f0f0;color:#8c8c8c;align-items:center;justify-content:center;vertical-align:-7px}'
+    + '.rea-zd-ops .ant-btn{padding:0;height:22px;line-height:22px}'
+    + '.rea-zd-ops .ant-btn+.ant-btn{margin-left:12px}'
+    /* 右侧手机预览：绿气泡照微信自己那一套 */
+    + '.rea-zd-pv{display:flex;flex-direction:column;align-items:flex-start;gap:10px}'
+    + '.rea-zd-bub{max-width:210px;padding:8px 10px;border-radius:4px;background:#95ec69;'
+    +   'font-size:13px;line-height:20px;color:#333333;white-space:pre-wrap;word-break:break-word;'
+    +   'box-sizing:border-box}'
+    + '.rea-zd-bub-media{padding:0;overflow:hidden;width:210px}'
+    + '.rea-zd-bub-media img{display:block;width:100%;height:auto}'
+    + '.rea-zd-bub-video{position:relative}'
+    + '.rea-zd-play{position:absolute;left:50%;top:50%;width:40px;height:40px;margin:-20px 0 0 -20px;'
+    +   'border-radius:50%;background:rgba(0,0,0,.45);color:#ffffff;display:flex;align-items:center;'
+    +   'justify-content:center;font-size:14px}'
+    /* 文件／小程序在微信里是白卡片，不套绿底（绿底只留给文字与图片） */
+    + '.rea-zd-bub-file,.rea-zd-bub-miniapp{background:#ffffff;border:1px solid #e5e5e5}'
+    + '.rea-zd-bub-file{padding:10px}'
+    + '.rea-zd-fcard{display:flex;align-items:center;gap:8px;padding:10px;border-radius:4px;background:#ffffff}'
+    + '.rea-zd-fcard .anticon{font-size:22px;color:#8c8c8c}'
+    + '.rea-zd-fmeta{min-width:0}'
+    + '.rea-zd-fname{font-size:13px;line-height:18px;color:#333333;overflow:hidden;'
+    +   'text-overflow:ellipsis;white-space:nowrap;max-width:130px}'
+    + '.rea-zd-fsize{font-size:12px;line-height:16px;color:#999999}'
+    + '.rea-zd-mp{display:flex;flex-direction:column;width:100%}'
+    + '.rea-zd-mp img{display:block;width:100%;height:auto}'
+    + '.rea-zd-mptitle{padding:8px 10px;font-size:13px;line-height:18px;color:#333333;'
+    +   'overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
+    + '.rea-zd-mpfoot{padding:0 10px 8px;font-size:12px;line-height:16px;color:#6b6b6b}';
+
+  /* 注入脚本。**不动 _online-admin.js、不重跑构建**：模版弹窗的 DOM 是快照自带的，
+     这一笔只补它缺的二级弹窗、表格行与预览。 */
+  function reaZdJs(){
+   return [
+    '(function(){',
+    'var VARS=' + reaJson(REA_ZD_VARS) + ',TYPES=' + reaJson(REA_ZD_TYPES) + ',',
+    '    DEMO=' + reaJson(REA_ZD_DEMO) + ',ICON=' + reaJson(REA_ZD_ICON) + ',',
+    '    PIC=' + reaJson(REA_ZD_PIC) + ',MAX=10;',
+    'var MRS=document.querySelectorAll(".ant-modal-root");',
+    'if(!MRS.length)return;',
+    'var MR=MRS[MRS.length-1];',
+    'var BD=MR.querySelector(".ant-modal-body");if(!BD)return;',
+    'var NAME=BD.querySelector(\'input[placeholder="请输入模版名称"]\');',
+    'var TBL=BD.querySelector(".ant-table"),TB=TBL?TBL.querySelector(".ant-table-tbody"):null;',
+    'var PH=TB?TB.querySelector("tr.ant-table-placeholder"):null,PHH=PH?PH.outerHTML:"";',
+    'var PV=BD.querySelector(\'div[style*="border-radius: 30px"]\'),PVC=PV?PV.firstElementChild:null;',
+    'var fbs=MR.querySelectorAll(".ant-modal-footer button.ant-btn"),OK=null,fi,tmp;',
+    'for(fi=0;fi<fbs.length;fi++){tmp=(fbs[fi].textContent||"").replace(/\\s+/g,"");if(tmp==="确定")OK=fbs[fi]}',
+    'var ADDB=null,abs=BD.querySelectorAll("button.ant-btn");',
+    'for(fi=0;fi<abs.length;fi++)if((abs[fi].textContent||"").replace(/\\s+/g,"")==="添加回复内容")ADDB=abs[fi];',
+    'if(!ADDB||!TB)return;',
+    '',
+    'function q(s,r){return (r||document).querySelector(s)}',
+    'function up(n,c){while(n&&n.nodeType===1){if(n.classList&&n.classList.contains(c))return n;n=n.parentNode}return null}',
+    'function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;")',
+    '  .replace(/>/g,"&gt;").replace(/"/g,"&quot;")}',
+    'function pad(n){return (n<10?"0":"")+n}',
+    'function nowT(){var d=new Date();return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())',
+    '  +" "+pad(d.getHours())+":"+pad(d.getMinutes())}',
+    'function nameOf(t){for(var i=0;i<TYPES.length;i++)if(TYPES[i][0]===t)return TYPES[i][1];return "文本"}',
+    'function copyOf(o){var r={},k;for(k in o)if(Object.prototype.hasOwnProperty.call(o,k))r[k]=o[k];return r}',
+    '',
+    '/* 提示条：与素材库新建页同一套——`.ant-message*` 只在 css-mncuj7 底下有规则 */',
+    'var MW=null;',
+    'function msg(t){',
+    '  if(!MW){MW=document.createElement("div");MW.className="ant-message css-mncuj7";document.body.appendChild(MW)}',
+    '  var d=document.createElement("div");d.className="ant-message-notice-wrapper";',
+    '  d.innerHTML=\'<div class="ant-message-notice"><div class="ant-message-notice-content">\'',
+    '    +\'<div class="ant-message-custom-content ant-message-info"><span></span></div></div></div>\';',
+    '  d.querySelector("span").textContent=t;',
+    '  MW.appendChild(d);setTimeout(function(){if(d.parentNode)d.parentNode.removeChild(d)},2400);',
+    '}',
+    '',
+    'var ST={name:"",msgs:[]};',
+    'if(NAME){NAME.value=ST.name;NAME.addEventListener("input",function(){ST.name=NAME.value})}',
+    '',
+    '/* ---- 回复内容表：行是运行时造的，快照那行空表态留着来回换 ---- */',
+    'function hover(tr){',
+    '  function on(){for(var j=0;j<tr.children.length;j++)tr.children[j].classList.add("ant-table-cell-row-hover")}',
+    '  function off(){for(var j=0;j<tr.children.length;j++)tr.children[j].classList.remove("ant-table-cell-row-hover")}',
+    '  tr.addEventListener("mouseenter",on);tr.addEventListener("mouseleave",off);',
+    '}',
+    'function cellText(m){',
+    '  if(m.t==="text")return m.c;',
+    '  if(m.t==="miniapp")return m.title||"";',
+    '  return m.c||"";',
+    '}',
+    'function rowThumb(m){',
+    '  if(m.t==="image")return \'<img class="rea-zd-thumb" src="\'+m.src+\'" alt="">\';',
+    '  if(m.t==="video"||m.t==="file"||m.t==="miniapp")',
+    '    return \'<span class="rea-zd-thumb-ic">\'+ICON[m.t]+"</span>";',
+    '  return "";',
+    '}',
+    'function rowHtml(m,i){',
+    '  return \'<td class="ant-table-cell">\'+nameOf(m.t)+"</td>"',
+    '    +\'<td class="ant-table-cell" title="\'+esc(cellText(m))+\'">\'+rowThumb(m)',
+    '    +\'<span class="rea-zd-cell-txt">\'+esc(cellText(m))+"</span></td>"',
+    '    +\'<td class="ant-table-cell"><div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center rea-zd-ops">\'',
+    '    +\'<div class="ant-space-item"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-zd-edit="\'+i+\'"><span>编辑</span></button></div>\'',
+    '    +\'<div class="ant-space-item"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-link" data-zd-del="\'+i+\'"><span>删除</span></button></div>\'',
+    '    +"</div></td>";',
+    '}',
+    'function drawMsgs(){',
+    '  if(!TB)return;',
+    '  var old=TB.querySelectorAll("tr[data-zd]"),j;',
+    '  for(j=0;j<old.length;j++)TB.removeChild(old[j]);',
+    '  if(!ST.msgs.length){',
+    '    if(!PH&&PHH){var t2=document.createElement("tbody");t2.innerHTML=PHH;PH=t2.firstChild}',
+    '    if(PH&&!PH.parentNode)TB.appendChild(PH);',
+    '    if(TBL)TBL.classList.add("ant-table-empty");',
+    '    return;',
+    '  }',
+    '  if(PH&&PH.parentNode)TB.removeChild(PH);',
+    '  if(TBL)TBL.classList.remove("ant-table-empty");',
+    '  for(var k=0;k<ST.msgs.length;k++){',
+    '    var tr=document.createElement("tr");',
+    '    tr.className="ant-table-row ant-table-row-level-0";',
+    '    tr.setAttribute("data-row-key","rea-zd-"+k);tr.setAttribute("data-zd","1");',
+    '    tr.innerHTML=rowHtml(ST.msgs[k],k);',
+    '    hover(tr);TB.appendChild(tr);',
+    '  }',
+    '}',
+    '',
+    '/* ---- 右侧手机预览：变量换成示例值，预览才像一条发得出去的话 ---- */',
+    'function fillVars(s){',
+    '  for(var i=0;i<VARS.length;i++)s=s.split("{"+VARS[i][0]+"}").join(VARS[i][1]||nowT());',
+    '  return s;',
+    '}',
+    'function bub(m){',
+    '  if(m.t==="text")return \'<div class="rea-zd-bub">\'+esc(fillVars(m.c))+"</div>";',
+    '  if(m.t==="image")return \'<div class="rea-zd-bub rea-zd-bub-media"><img src="\'+m.src+\'" alt=""></div>\';',
+    '  if(m.t==="video")return \'<div class="rea-zd-bub rea-zd-bub-media rea-zd-bub-video"><img src="\'',
+    '    +(m.src||PIC)+\'" alt=""><span class="rea-zd-play">▶</span></div>\';',
+    '  if(m.t==="miniapp")return \'<div class="rea-zd-bub rea-zd-bub-media rea-zd-bub-miniapp"><div class="rea-zd-mp">\'',
+    '    +\'<img src="\'+(m.src||PIC)+\'" alt="">\'',
+    '    +\'<div class="rea-zd-mptitle">\'+esc(m.title||"")+"</div>"',
+    '    +\'<div class="rea-zd-mpfoot">小程序</div></div></div>\';',
+    '  return \'<div class="rea-zd-bub rea-zd-bub-file"><div class="rea-zd-fcard">\'',
+    '    +\'<span class="anticon">\'+ICON.file+"</span>"',
+    '    +\'<div class="rea-zd-fmeta"><div class="rea-zd-fname">\'+esc(m.c||"")+"</div>"',
+    '    +\'<div class="rea-zd-fsize">\'+esc(m.size||DEMO.file.size)+"</div></div></div></div>";',
+    '}',
+    'function drawPreview(){',
+    '  if(!PVC)return;',
+    '  if(!ST.msgs.length){PVC.innerHTML="";return}',
+    '  var h=\'<div class="rea-zd-pv">\';',
+    '  for(var i=0;i<ST.msgs.length;i++)h+=bub(ST.msgs[i]);',
+    '  PVC.innerHTML=h+"</div>";',
+    '}',
+    '',
+    '/* ---- 二级弹窗『添加回复内容』 ----',
+    '   两枚 hash 必须挂在 .ant-modal-root 与 .ant-modal 上：遮罩/居中的定位规则写成',
+    '   `:where(.css-vgijab).ant-modal-root …`，缺了它整座弹窗没有任何样式，',
+    '   会以 static 流内块落在页面最底下，看着像「点了没反应」。 */',
+    'var ED=null,E=null,DR={};',
+    'function openEditor(i){',
+    '  if(i<0&&ST.msgs.length>=MAX){msg("最多添加 "+MAX+" 条回复内容");return}',
+    '  E=i>=0?copyOf(ST.msgs[i]):{t:"text",c:"",src:"",title:"",path:"",size:""};',
+    '  E.i=i;',
+    '  DR={};DR[E.t]={c:E.c,src:E.src,title:E.title,path:E.path,size:E.size||""};',
+    '  paintEditor();',
+    '}',
+    'function closeEditor(){if(ED&&ED.parentNode)ED.parentNode.removeChild(ED);ED=null;E=null}',
+    'function paintEditor(){',
+    '  if(!E)return;',
+    '  if(!ED){',
+    '    var w=document.createElement("div");',
+    '    w.className="ant-modal-root css-vgijab rea-zd-sub";',
+    '    w.innerHTML=\'<div class="ant-modal-mask"></div><div class="ant-modal-wrap ant-modal-centered">\'',
+    '      +\'<div class="ant-modal css-vgijab" role="dialog" aria-modal="true" style="width: 680px;">\'',
+    '      +\'<div class="ant-modal-content"><button type="button" class="ant-modal-close" aria-label="Close">\'',
+    '      +\'<span class="ant-modal-close-x">\'+ICON.close+"</span></button>"',
+    '      +\'<div class="ant-modal-header"><div class="ant-modal-title" id="rea-zd-title">添加回复内容</div></div>\'',
+    '      +\'<div class="ant-modal-body" id="rea-zd-body"></div>\'',
+    '      +\'<div class="ant-modal-footer"><div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center">\'',
+    '      +\'<div class="ant-space-item"><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-zd-cancel><span>取 消</span></button></div>\'',
+    '      +\'<div class="ant-space-item"><button type="button" class="ant-btn css-vgijab ant-btn-primary ant-btn-color-primary ant-btn-variant-solid" data-zd-ok><span>确 定</span></button></div>\'',
+    '      +"</div></div></div></div></div></div>";',
+    '    document.body.appendChild(w);ED=w;',
+    '    w.addEventListener("click",function(e){e.stopPropagation()});',
+    '    q(".ant-modal-close",w).addEventListener("click",closeEditor);',
+    '    q(".ant-modal-wrap",w).addEventListener("click",function(e){if(e.target===this)closeEditor()});',
+    '    q("[data-zd-cancel]",w).addEventListener("click",closeEditor);',
+    '    q("[data-zd-ok]",w).addEventListener("click",saveEditor);',
+    '  }',
+    '  var ti=q("#rea-zd-title",ED);if(ti)ti.textContent=E.i>=0?"编辑回复内容":"添加回复内容";',
+    '  q("#rea-zd-body",ED).innerHTML=editorHtml();',
+    '  bindEditor();',
+    '}',
+    'function editorHtml(){',
+    '  var tabs="",i;',
+    '  for(i=0;i<TYPES.length;i++){var on=TYPES[i][0]===E.t;',
+    '    tabs+=\'<div class="ant-tabs-tab\'+(on?" ant-tabs-tab-active":"")+\'" data-zd-t="\'+TYPES[i][0]+\'">\'',
+    '      +\'<div class="ant-tabs-tab-btn" role="tab" aria-selected="\'+(on?"true":"false")+\'">\'',
+    '      +\'<span class="rea-zd-tic">\'+ICON[TYPES[i][0]]+"</span>"+TYPES[i][1]+"</div></div>";',
+    '  }',
+    '  tabs=\'<div class="ant-tabs ant-tabs-top css-vgijab rea-zd-tabs"><div class="ant-tabs-nav">\'',
+    '    +\'<div class="ant-tabs-nav-wrap"><div class="ant-tabs-nav-list">\'+tabs',
+    '    +\'<div class="ant-tabs-ink-bar ant-tabs-ink-bar-animated"></div></div></div></div></div>\';',
+    '  return \'<div class="rea-zd-lbl"><span class="rea-zd-req">*</span>类型</div>\'+tabs',
+    '    +\'<div class="rea-zd-box">\'+ctype()+"</div>";',
+    '}',
+    'function ctype(){',
+    '  if(E.t==="text")return \'<div class="rea-zd-lbl"><span class="rea-zd-req">*</span>文本内容</div>\'',
+    '    +\'<textarea id="rea-zd-ta" class="ant-input css-vgijab ant-input-outlined rea-zd-ta"\'',
+    '    +\' maxlength="600" placeholder="请输入文本内容，可插入变量...">\'+esc(E.c)+"</textarea>"',
+    '    +\'<div class="rea-zd-vars"><span>支持插入变量：</span>\'+varTags()+"</div>";',
+    '  if(E.t==="miniapp")return \'<div class="rea-zd-lbl"><span class="rea-zd-req">*</span>小程序内容</div>\'+mpForm();',
+    '  return \'<div class="rea-zd-lbl"><span class="rea-zd-req">*</span>\'+nameOf(E.t)+"内容</div>"+uploadBox();',
+    '}',
+    'function varTags(){',
+    '  var h="",i;for(i=0;i<VARS.length;i++)',
+    '    h+=\'<span class="ant-tag css-vgijab rea-zd-var" data-zd-var="\'+i+\'">\'+VARS[i][0]+"</span>";',
+    '  return h;',
+    '}',
+    'function filePreview(){',
+    '  if(E.src)return \'<img src="\'+E.src+\'" alt="">\';',
+    '  return \'<span class="rea-zd-file-ic">\'+ICON[E.t]+"</span>";',
+    '}',
+    'function uploadBox(){',
+    '  var d=DEMO[E.t];if(!d)return "";',
+    '  if(!E.c)return \'<div class="rea-zd-drop" data-zd-pick>\'+ICON.plus+"<span>点击上传"+nameOf(E.t)+"</span></div>";',
+    '  return \'<div class="rea-zd-file">\'+filePreview()+\'<div class="rea-zd-filemain">\'+esc(E.c)+"</div>"',
+    '    +\'<button type="button" class="rea-zd-filex" data-zd-repick>重新选择</button>\'',
+    '    +\'<button type="button" class="rea-zd-filex" data-zd-unpick aria-label="移除">×</button></div>\';',
+    '}',
+    'function mpForm(){',
+    '  return \'<div class="rea-zd-field"><span class="rea-zd-flbl"><span class="rea-zd-req">*</span>小程序标题</span>\'',
+    '    +\'<div class="rea-zd-fctl"><input id="rea-zd-mptitle" class="ant-input css-vgijab ant-input-outlined"\'',
+    '    +\' placeholder="请输入小程序标题" value="\'+esc(E.title||"")+\'"></div></div>\'',
+    '    +\'<div class="rea-zd-field"><span class="rea-zd-flbl"><span class="rea-zd-req">*</span>小程序封面</span>\'',
+    '    +\'<div class="rea-zd-fctl">\'+(E.src?\'<div class="rea-zd-file"><img src="\'+E.src+\'" alt="">\'',
+    '    +\'<div class="rea-zd-filemain">封面已上传</div><button type="button" class="rea-zd-filex" data-zd-unpick aria-label="移除">×</button></div>\'',
+    '    :\'<div class="rea-zd-drop rea-zd-drop-sm" data-zd-mpcover>\'+ICON.plus+"<span>点击上传封面</span></div>")+"</div></div>"',
+    '    +\'<div class="rea-zd-field"><span class="rea-zd-flbl">页面路径</span>\'',
+    '    +\'<div class="rea-zd-fctl"><input id="rea-zd-mppath" class="ant-input css-vgijab ant-input-outlined"\'',
+    '    +\' placeholder="请输入页面路径，如 pages/index/index" value="\'+esc(E.path||"")+\'"></div></div>\';',
+    '}',
+    'function readEditor(){',
+    '  if(!ED||!E)return;',
+    '  var ta=q("#rea-zd-ta",ED);if(ta)E.c=ta.value;',
+    '  var mt=q("#rea-zd-mptitle",ED);if(mt)E.title=mt.value;',
+    '  var mp=q("#rea-zd-mppath",ED);if(mp)E.path=mp.value;',
+    '}',
+    'function bindEditor(){',
+    '  var ts=ED.querySelectorAll(".ant-tabs-tab"),i;',
+    '  for(i=0;i<ts.length;i++)(function(t){',
+    '    t.addEventListener("click",function(e){',
+    '      e.preventDefault();readEditor();',
+    '      DR[E.t]={c:E.c,src:E.src,title:E.title,path:E.path,size:E.size||""};',
+    '      var nx=t.getAttribute("data-zd-t");',
+    '      var d=DR[nx]||{c:"",src:"",title:"",path:"",size:""};',
+    '      E={t:nx,c:d.c,src:d.src,title:d.title,path:d.path,size:d.size,i:E.i};',
+    '      paintEditor();',
+    '    });',
+    '  })(ts[i]);',
+    '  var ta=q("#rea-zd-ta",ED);',
+    '  if(ta){ta.value=E.c;ta.addEventListener("input",function(){E.c=ta.value});}',
+    '  var vs=ED.querySelectorAll("[data-zd-var]");',
+    '  for(i=0;i<vs.length;i++)(function(v){',
+    '    v.addEventListener("click",function(){insertVar(v.getAttribute("data-zd-var"))});',
+    '  })(vs[i]);',
+    '  var pk=q("[data-zd-pick]",ED)||q("[data-zd-repick]",ED);',
+    '  if(pk)pk.addEventListener("click",pick);',
+    '  var un=q("[data-zd-unpick]",ED);',
+    '  if(un)un.addEventListener("click",function(){E.c="";E.src="";paintEditor()});',
+    '  var mc=q("[data-zd-mpcover]",ED);',
+    '  if(mc)mc.addEventListener("click",function(){E.src=PIC;paintEditor()});',
+    '  var mt=q("#rea-zd-mptitle",ED);if(mt)mt.addEventListener("input",function(){E.title=mt.value});',
+    '  var mp=q("#rea-zd-mppath",ED);if(mp)mp.addEventListener("input",function(){E.path=mp.value});',
+    '  paintInk();',
+    '}',
+    'function paintInk(){',
+    '  var t=ED.querySelector(".ant-tabs-tab-active"),bar=ED.querySelector(".ant-tabs-ink-bar");',
+    '  if(!t||!bar)return;',
+    '  bar.style.width=t.offsetWidth+"px";',
+    '  bar.style.transform="translate("+t.offsetLeft+"px, 0px)";',
+    '}',
+    'function insertVar(i){',
+    '  var ta=q("#rea-zd-ta",ED);if(!ta)return;',
+    '  var tok="{"+VARS[Number(i)][0]+"}";',
+    '  var s=ta.selectionStart||0,e=ta.selectionEnd||0,v=ta.value;',
+    '  ta.value=v.slice(0,s)+tok+v.slice(e);',
+    '  ta.selectionStart=ta.selectionEnd=s+tok.length;',
+    '  ta.focus();E.c=ta.value;',
+    '}',
+    'function pick(){',
+    '  var d=DEMO[E.t];if(!d)return;',
+    '  E.c=d.name;if(d.src)E.src=d.src;if(d.size)E.size=d.size;',
+    '  paintEditor();',
+    '}',
+    'function saveEditor(){',
+    '  readEditor();if(!E)return;',
+    '  if(E.t==="text"){',
+    '    if(!E.c.trim()){msg("请填写文本内容");return}',
+    '  }else if(E.t==="miniapp"){',
+    '    if(!(E.title||"").trim()){msg("请填写小程序标题");return}',
+    '    if(!E.src){msg("请先上传小程序封面");return}',
+    '  }else if(!E.c){msg("请先选择"+nameOf(E.t));return}',
+    '  var it={t:E.t,c:(E.c||"").trim(),src:E.src||"",title:(E.title||"").trim(),',
+    '    path:(E.path||"").trim(),size:E.size||""};',
+    '  if(E.i>=0)ST.msgs.splice(E.i,1,it);else ST.msgs.push(it);',
+    '  closeEditor();drawMsgs();drawPreview();',
+    '}',
+    '',
+    'ADDB.addEventListener("click",function(e){e.preventDefault();openEditor(-1)});',
+    'if(TB)TB.addEventListener("click",function(e){',
+    '  var n=up(e.target,"ant-btn");if(!n)return;',
+    '  var ed=n.getAttribute("data-zd-edit"),dl=n.getAttribute("data-zd-del");',
+    '  if(ed!=null){e.preventDefault();openEditor(Number(ed));return}',
+    '  if(dl!=null){e.preventDefault();ST.msgs.splice(Number(dl),1);drawMsgs();drawPreview();',
+    '    msg("已删除第 "+(Number(dl)+1)+" 条回复内容")}',
+    '});',
+    'document.addEventListener("keydown",function(e){',
+    '  if(e.key==="Escape"&&ED){e.stopPropagation();closeEditor()}',
+    '},true);',
+    '',
+    '/* 每次重新打开都是「新建」：关掉（取消／X）或保存后清空，别让上一次的稿子留在里头 */',
+    'function reset(){',
+    '  ST.name="";ST.msgs=[];if(NAME)NAME.value="";',
+    '  closeEditor();drawMsgs();drawPreview();',
+    '}',
+    /* 用委托而不是按元素绑：列表页那枚「新建模版」在快照里带图标、是模板按钮，
+       直接抓元素容易抓岔（抓到了事件却听不到），委托只认点击时那一刻的 DOM。 */
+    'document.addEventListener("click",function(e){',
+    '  var x=e.target,cl=x&&x.closest?x.closest(".ant-modal-close"):null;',
+    '  if(cl&&MR.contains(cl)){reset();return}',
+    '  var n=up(x,"ant-btn"),t=n?(n.textContent||"").replace(/\\s+/g,""):"";',
+    '  if(n&&t==="新建模版"){reset();return}',
+    '  if(n&&t==="取消"&&MR.contains(n))reset();',
+    '});',
+    '',
+    '/* 模版弹窗的「确定」只校验与提示，不写列表页（列表仍是快照） */',
+    'if(OK)OK.addEventListener("click",function(e){',
+    '  e.preventDefault();',
+    '  if(!ST.name.trim()){msg("请填写模版名称");return}',
+    '  if(!ST.msgs.length){msg("请至少添加一条回复内容");return}',
+    '  msg("模版「"+ST.name.trim()+"」已保存（演示）");',
+    '  MR.style.display="none";',
+    '});',
+    '',
+    'drawMsgs();drawPreview();',
+    '})();'
+   ].join('\n');
+  }
+
   /* 覆盖登记表（ADR-0043）：页名 → 该页的覆盖块。与 docs/09 §2.3 那张表一一对应，加页两处一起加。
        html  该页正文段的载体块 id（省略＝正文仍用快照那一段，只补交互）
        css   该页专用样式（只在这页注入；未覆盖页拿不到，这是「逐页覆盖」的底线）
        js    该页自己的注入脚本（在 REA_FX **之后**跑，见 reaDoc）
-     十一张覆盖页，六种形态：
+     十二张覆盖页，六种形态：
        微小助看板          换稿——正文整段换成 srcBoard，配 REA_BOARD_CSS ＋ reaBoardJs
        微小助看板 · 执行人明细  合成页——页名与 shell 由 reaSynthPages() 克隆看板页得到，正文换 srcBoardTask；
                             补的是现网 board/wxz/task 这条**不在快照里**的路由
@@ -13285,6 +13725,8 @@ else if(PAGE==='群发群组 · 新建')initQs();
                             收起「内容类型 / 描述文本」（来源互斥）
        群发群组 · 新建      另造表单——快照抓到的其实是列表页（新建弹窗没抓到），
                             脚本整页另造一张完整新建表单，任务内容同样挂素材库入口
+       自动打招呼 · 新建    补弹窗与预览——**没有 html**，正文就是快照那一段；模版弹窗里补
+                            「添加回复内容」二级弹窗、回复内容表格行与右侧手机预览（配 REA_ZD_CSS）
      没有 html 的页，reaSplice 原样放过；这不是省事，是刻意：正文抄一份进来就成了会过期的副本，
      重抓源目录后静默与线上脱钩，而这一页的正文本来就不该变。 */
 
@@ -13342,7 +13784,9 @@ else if(PAGE==='群发群组 · 新建')initQs();
     /* 微信营销任务 · 任务内容「从素材库选择」（2026-10-23）：三页共用一份弹窗与选材逻辑 */
     '发圈 · 新建': { css: REA_WXT_CSS, js: function(){ return reaWxtJs('发圈 · 新建'); } },
     '群发好友 · 新建': { css: REA_WXT_CSS, js: function(){ return reaWxtJs('群发好友 · 新建'); } },
-    '群发群组 · 新建': { css: REA_WXT_CSS, js: function(){ return reaWxtJs('群发群组 · 新建'); } }
+    '群发群组 · 新建': { css: REA_WXT_CSS, js: function(){ return reaWxtJs('群发群组 · 新建'); } },
+    /* 自动打招呼 · 新建：欢迎语模版的「添加回复内容」流（2026-10-23） */
+    '自动打招呼 · 新建': { css: REA_ZD_CSS, js: reaZdJs }
   };
 
   /* 把被覆盖页的正文区（contentStart..contentEnd，构建脚本给出的那道缝）换成它登记表里那个载体的内容。
