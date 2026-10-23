@@ -10145,7 +10145,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
         <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">评论固定话术</span><div style="flex: 1 1 0%; white-space: pre-wrap;">沃尔沃</div></div>
         <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">回复后同时私信</span><div style="flex: 1 1 0%; white-space: pre-wrap;">开</div></div>
         <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">私信内容（联动主动发起）</span><div style="flex: 1 1 0%; white-space: pre-wrap;">固定话术 · 这里好像发不了文件，您发我微信我加您。</div></div>
-        <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">私信发不出去时</span><div style="flex: 1 1 0%; white-space: pre-wrap;">回一条兜底评论</div></div>
+        <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">私信失败时兜底评论</span><div style="flex: 1 1 0%; white-space: pre-wrap;">开</div></div>
         <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">兜底评论话术</span><div style="flex: 1 1 0%; white-space: pre-wrap;">这里发不了文件，您私信我，我发您</div></div>
         <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">② 私信承接</span><div style="flex: 1 1 0%; white-space: pre-wrap;">关</div></div>
         <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">承接模式</span><div style="flex: 1 1 0%; white-space: pre-wrap;"><span style="color: rgb(153, 153, 153);">—（未开启）</span></div></div>
@@ -12140,10 +12140,10 @@ window.addEventListener("resize",function(){
     '  lkBox.appendChild(lkHint);',
     '  var lkSw=lkBox.querySelector("button[role=switch]");',
     '  rFixed.insertAdjacentElement("afterend",lkRow);',
-    '  /* 私信发不出去时：改成开关（2026-10-23）——开＝改发下面的兜底评论，关＝仍按上面的评论回复方式回复；',
+    '  /* 私信失败时兜底评论（原名「私信发不出去时」）：开关——开＝改发下面的兜底评论，关＝仍按上面的评论回复方式回复；',
     '     只在联动开关开着时显示。开关直接克隆现成的 ant-switch，样式与交互都跟快照一致。 */',
     '  fbRow=rMode.cloneNode(true);',
-    '  fbRow.querySelector("span[class*=\\"_must_\\"]").textContent="私信发不出去时";',
+    '  fbRow.querySelector("span[class*=\\"_must_\\"]").textContent="私信失败时兜底评论";',
     '  var fbBox0=fbRow.querySelector("div[class*=\\"_upload_box\\"]");',
     '  var fbGrp=fbBox0.querySelector(".ant-radio-group");if(fbGrp)fbBox0.removeChild(fbGrp);',
     '  var fbSw=lkSw.cloneNode(true);',
@@ -12255,10 +12255,6 @@ window.addEventListener("resize",function(){
     '    }',
     '    opGrid.appendChild(opWrap);',
     '    opBox.appendChild(opGrid);',
-    '    var opHint=document.createElement("span");',
-    '    opHint.style.cssText="display: block; margin-top: 8px; color: rgb(153, 153, 153); font-size: 12px;";',
-    '    opHint.textContent="仅 ① 评论承接联动主动发起时使用；不计入回复轮次，客户回复后从节点 1 开始";',
-    '    opBox.appendChild(opHint);',
     '    lkRow.insertAdjacentElement("afterend",opRow);',
     '  }',
     '  /* 承接模式切换与「私信承接」开关都走同一套收放（见 syncShow） */',
@@ -12300,7 +12296,7 @@ window.addEventListener("resize",function(){
     '    {title:"找谁",sub:"搜什么，在哪些笔记和评论里找",rows:["关键词类型","录入方式","搜索关键词","笔记发布时间","筛选词","评论发布时间","拓客所属地","客户年龄段","客户性别","客户粉丝数量"]},',
     '    {title:"不找谁",sub:"排除掉这些人，避免重复打扰",rows:["跳过笔记作者","过滤已执行客户","过滤赞助笔记"]},',
     '    {title:"第一句话",sub:"第一次接触，发私信还是回评论",rows:["首次触达方式","消息生成类型","沟通身份","沟通风格"]},',
-    '    {title:"回复消息",sub:"任务执行期间收到的评论和私信，都按这套规则处理",rows:["用户回复后自动承接","① 评论承接","承接条件","关键词","评论回复方式","固定话术","回复后同时私信","私信内容","私信发不出去时","兜底评论话术","② 私信承接","承接模式","话术流程","流程结束后AI接管"]},',
+    '    {title:"回复消息",sub:"任务执行期间收到的评论和私信，都按这套规则处理",rows:["用户回复后自动承接","① 评论承接","承接条件","关键词","评论回复方式","固定话术","回复后同时私信","私信内容","私信失败时兜底评论","兜底评论话术","② 私信承接","承接模式","话术流程","流程结束后AI接管"]},',
     '    {title:"执行节奏",rows:["单次执行上限","执行频率","查看评论、私信回复频率"]}',
     '  ];',
     '  var cardRefs={};',
@@ -12337,7 +12333,6 @@ window.addEventListener("resize",function(){
     '  putCond("私信内容","因为你选了「自定义」——客户回复评论后，立刻发出这段私信");',
     '  putCond("话术流程","因为你选了「自定义话术流程」——客户下次回消息时，按节点顺序往下聊");',
     '  putCond("流程结束后AI接管","话术走完后，由 AI 按上下文接着聊");',
-    '  putCond("私信发不出去时","开了就改发下面的兜底评论；关着仍按上面的评论回复方式回复");',
     '  putCond("兜底评论话术","私信确定没发出去时，用这句评论保住这次触达");',
     '  /* ①② 两组之间拉一条细线，替掉旧的分组小标题 */',
     '  var sepBefore=function(name){',
@@ -12374,7 +12369,7 @@ window.addEventListener("resize",function(){
     '    var mlab=masterRow.querySelector("span[class*=_must_]");if(mlab)mlab.textContent="自动回复客户消息";',
     '  }',
     '  ["① 评论承接","承接条件","关键词","评论回复方式","固定话术","回复后同时私信","私信内容",',
-    '   "私信发不出去时","兜底评论话术","② 私信承接","承接模式","话术流程","流程结束后AI接管"].forEach(function(nm){',
+    '   "私信失败时兜底评论","兜底评论话术","② 私信承接","承接模式","话术流程","流程结束后AI接管"].forEach(function(nm){',
     '    var r=byLabel[nm];if(r)r.setAttribute("data-rea-grp","1");',
     '  });',
     '  var card5=cardRefs["回复消息"];',
@@ -12442,10 +12437,10 @@ window.addEventListener("resize",function(){
     '    if(master&&onOf("② 私信承接")&&mode==="自定义话术流程"&&!valOf("话术流程"))list.push({k:"miss",t:"私信承接选了「自定义话术流程」，但话术流程还没有内容",row:"话术流程"});',
     '    if(master&&onOf("回复后同时私信")&&!onOf("② 私信承接"))list.push({k:"conflict",t:"「回复后同时私信」开着，但「② 私信承接」是关的——客户回私信后没人接",row:"② 私信承接"});',
     '    if(master&&onOf("回复后同时私信")&&mode==="自定义话术流程"&&!valOf("私信内容"))list.push({k:"miss",t:"「回复后同时私信」开着，但私信内容是空的",row:"私信内容"});',
-    '    /* 「私信发不出去时」是开关：开着才要兜底话术；它只在这行露出时才校验（承接模式 direct 时整行收起） */',
+    '    /* 「私信失败时兜底评论」是开关：开着才要兜底话术；它只在这行露出时才校验（承接模式 direct 时整行收起） */',
     '    var fbShown=!!(fbRow&&fbRow.offsetParent!==null);',
-    '    if(fbShown&&onOf("私信发不出去时")&&!valOf("兜底评论话术"))list.push({k:"miss",t:"「私信发不出去时」开着，但兜底评论话术是空的",row:"兜底评论话术"});',
-    '    var fbt=(fbShown&&onOf("私信发不出去时"))?valOf("兜底评论话术"):"",bad=["已私信","私你了","已私","私信你了","已经私信","私了"],bi;',
+    '    if(fbShown&&onOf("私信失败时兜底评论")&&!valOf("兜底评论话术"))list.push({k:"miss",t:"「私信失败时兜底评论」开着，但兜底评论话术是空的",row:"兜底评论话术"});',
+    '    var fbt=(fbShown&&onOf("私信失败时兜底评论"))?valOf("兜底评论话术"):"",bad=["已私信","私你了","已私","私信你了","已经私信","私了"],bi;',
     '    for(bi=0;bi<bad.length;bi++){',
     '      if(fbt&&fbt.indexOf(bad[bi])>=0){',
     '        list.push({k:"suggest",t:"兜底评论话术里别写「"+bad[bi]+"」——私信其实没发出去",row:"兜底评论话术"});',
