@@ -12856,9 +12856,10 @@ tb.addEventListener("click",function(e){
     {id:'wm-3', title:'决赛门票福利', group:'世界杯', dept:'销售二部', text:'评论区留言支持你心中的冠军，抽 5 位送决赛门票。', images:0, video:0},
     {id:'wm-4', title:'执业药师报名提醒', group:'执业药师', dept:'售后部', text:'2026 年执业药师报名今天开始，报名入口和材料清单都在这里。', images:2, video:0},
     {id:'wm-5', title:'药师考试冲刺资料', group:'执业药师', dept:'售后部', text:'考前 30 天冲刺资料包，重点章节和高频考点已整理。', images:0, video:1},
-    {id:'wm-6', title:'世界杯观赛攻略长图', group:'世界杯', dept:'销售一部', text:'十张长图讲透小组赛到决赛的看点，整包发群正合适。', images:10, video:0}
+    {id:'wm-6', title:'世界杯观赛攻略长图', group:'世界杯', dept:'销售一部', text:'十张长图讲透小组赛到决赛的看点，整包发群正合适。', images:10, video:0},
+    {id:'wm-7', title:'世界杯报名表', group:'世界杯', dept:'销售二部', text:'参赛报名的表格模板，填好回传即可。', images:0, video:0, files:1}
   ];
-  /* wm-6 十张图发不了朋友圈：发圈页的素材库看不到它，群发页正常可选——
+  /* wm-6（10 张图）、wm-7（含文件）发不了朋友圈：发圈页的素材库看不到它们，群发页正常可选——
      这条差异是故意留的，用来演示「为什么某个素材在这里搜不到」。 */
 
   /* 三页共用样式。只写新增件，色值全取自快照已出现的色（规则 B）：
@@ -12909,6 +12910,8 @@ tb.addEventListener("click",function(e){
     + '.rea-wxt-pvgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:8px}'
     + '.rea-wxt-pvcell{display:block;padding-top:100%;background:#f0f0f0;border-radius:2px}'
     + '.rea-wxt-pvvideo{display:flex;align-items:center;justify-content:center;gap:6px;height:120px;margin-top:8px;background:#f0f0f0;border-radius:2px;color:#666666;font-size:13px}'
+    + '.rea-wxt-pvfile{display:flex;align-items:center;gap:8px;margin-top:8px;padding:10px 12px;background:#fafafa;border:1px solid #f0f0f0;border-radius:6px;color:#333333;font-size:13px}'
+    + '.rea-wxt-pvfic{width:16px;height:16px;flex:none;color:#999999}'
     + '.rea-wxt-ft{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;border-top:1px solid #f0f0f0}'
     + '.rea-wxt-sel{font-size:13px;color:#999999}'
     + '.rea-wxt-btn{height:32px;padding:0 15px;margin-left:8px;border:1px solid #d9d9d9;background:#fff;border-radius:6px;font-size:14px;cursor:pointer;color:rgba(0,0,0,.88)}'
@@ -12968,12 +12971,15 @@ function byId(id){for(var i=0;i<MATS.length;i++)if(MATS[i].id===id)return MATS[i
 function shape(m){
   if(m.video)return m.video>1?(m.video+' 条视频'):'1 条视频';
   if(m.images)return m.images+' 张图片';
+  if(m.files)return m.files>1?(m.files+' 个文件'):'1 个文件';
   return '';
 }
 function sub(m){return m.text||shape(m)}
-/* 朋友圈能不能发：图片最多 9 张、图片与视频不混排、视频最多 1 条。
+/* 朋友圈能不能发：只认文本 / 图片 / 视频三种消息（白名单，与 App 的 canMoments 同一口径），
+   且图片最多 9 张、图片与视频不混排、视频最多 1 条。**含文件的素材发不了朋友圈**——
+   文件照样能发群，发圈页只是不列。
    发圈页只列过得了这一关的素材——列表里没有的，不是没搜到，是发不了。 */
-function canMoment(m){return m.images<=9&&m.video<=1&&!(m.images&&m.video)}
+function canMoment(m){return !m.files&&m.images<=9&&m.video<=1&&!(m.images&&m.video)}
 /* 本页可选的素材：群发页不设限，发圈页要过朋友圈那一关 */
 function avail(m){return PAGE!=='发圈 · 新建'||canMoment(m)}
 function pool(){
@@ -13028,7 +13034,7 @@ function pickHtml(){
       +'<span class="rea-wxt-cnt">'+deptCount(dn)+'</span></button>';
   }
   var tip=PAGE==='发圈 · 新建'
-    ? '已过滤掉不能发朋友圈的素材：图片超过 9 张、图片与视频混排、视频超过 1 条。'
+    ? '已过滤掉不能发朋友圈的素材：含文件、图片超过 9 张、图片与视频混排、视频超过 1 条。'
     : '先选部门工作域，再选分组。只列出能作为群发内容的素材，个人素材不在可选范围内。';
   return '<div class="rea-wxt-modal" role="dialog" aria-modal="true" aria-label="从素材库选择">'
     +'<div class="rea-wxt-hd"><div class="rea-wxt-hdt"><span class="rea-wxt-title">从素材库选择</span>'
@@ -13065,6 +13071,7 @@ function renderPick(){
   }else{
     var media='';
     if(cur.video)media='<div class="rea-wxt-pvvideo">▶<span>'+esc(shape(cur))+'</span></div>';
+    else if(cur.files)media='<div class="rea-wxt-pvfile"><svg class="rea-wxt-pvfic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M9.5 1.5H4a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V5z"/><path d="M9.5 1.5V5H13"/></svg><span>'+esc(shape(cur))+'</span></div>';
     else if(cur.images){
       media='<div class="rea-wxt-pvgrid">';
       for(i=0;i<cur.images;i++)media+='<span class="rea-wxt-pvcell"></span>';
