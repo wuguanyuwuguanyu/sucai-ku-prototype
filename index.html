@@ -878,7 +878,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
      所以条的上下位置要它自己按 offsetTop 算——sbMount/sbOffset 本来就这么干，不用改。
    ★ #hvaBody 这个 id 必须留在共同祖先上：REND['host-ai'] 按 id 取件，冒烟也按 '#hvaBody …' 当作用域。 */
 .hva-scroll{position:relative;z-index:1;flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden}
-.hva-head{flex:none;height:259px;padding:0}
+.hva-head{flex:none;height:214px;padding:0}
 .hva-pane{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;
   padding:0 15px 22px}
 .hva-pane::-webkit-scrollbar{display:none}
@@ -1104,64 +1104,99 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
    z-index:1 是为了压过卡片那团柔光（.hva-hero::after，它是伪元素、默认画在子元素之上）。
    名字走 quick 不走 act：工作日志里那条动作清单（hvaLogHtml 的 .hva-acts）已经占了 acts 这个词，
    再叫 hva-act* 会让「日志条目里那排动作标签」和「卡片上这排圆钮」在样式表里撞成一条规则。 */
-/* 头部的件全按稿子坐标绝对摆（x 直接 ×0.5493，y 再减 34）：标题在 36,96、切换图标 242,101、
-   齿轮 664,90、工作时段 38,164、形象 226,129、CTA 190,419、状态胶囊 38,212。 */
-.hva-hero{position:relative;height:259px}
+/* 头部（2026-10-23 照 Figma「AI托管（已托管）」节点 1438:1327 重排）：
+   标题「AI托管」在左上，右上只有一颗齿轮；下面一张 688×250 的浅蓝紫渐变卡，卡里四件——
+   状态点＋状态词、工作时段、闲置条件、白胶囊「停止/开始托管＋开关」；形象从卡右侧探出。
+   坐标仍是「设计px × 0.5493，y 再减掉 34 状态栏」：标题 36,103、齿轮心 695,121、卡 29,181（高 246）、
+   形象 455,172、日历 467,332。卡高 135.4 ＝ 246×0.5493；头卡舞台 214（卡底 200.6 ＋ 13.4 缝到日志卡）。
+   ★ 这一版一开始把「减 34」漏了，整段头卡比稿子低 16px；2026-10-23 用像素比对重新量了一遍才对上——
+     量的时候别只信节点坐标，拿稿子截图逐条扫边（卡顶 170px／卡底 403px @706 宽那张）更稳。 */
+.hva-hero{position:relative;height:214px}
 .hva-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
-.hva-title{position:absolute;left:19.8px;top:15.4px;z-index:1;font-size:26.4px;font-weight:500;line-height:26.4px;
+.hva-title{position:absolute;left:19.2px;top:23px;z-index:3;font-size:26.4px;font-weight:500;line-height:30px;
   letter-spacing:.01em;white-space:nowrap;
   /* 标题这支渐变（#245BB9→#102953 80%）与全站 .hv-gn（96deg #0F2A58→#2A62B4）不是同一支，
-     所以这里自己写死，不挂 hv-gn——挂上去两处都设 background-image，读的人会以为是同一支 */
+     所以这里自己写死，不挂 hv-gn——挂上去两处都设 background-image，读的人会以为是同一支。
+     稿子上「AI」比「托管」大一号（54 vs 48 设计px），所以 AI 单独一档字号。 */
   background-image:linear-gradient(90deg,#245BB9,#102953 80%);
   -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
-/* 换人／设置两颗仍叫 .hva-quick/.hva-qk（冒烟钉着它们）：稿子上它们不再并排挂在一张卡里，
-   而是各归各位——⇄ 贴着标题，齿轮浮在右上角。小字只留给读屏，稿子上没有。 */
+.hva-title .ai{font-size:29.7px}
+/* 页头右上那颗齿轮：稿子是一枚 62px 的白色 60% 圆（2.4 白描边），圆里一枚六边形齿轮。
+   换人那枚 ⇄ 随这版稿子撤了——稿子上只有齿轮；换人仍在设置页「AI智能回复」那一行。 */
 .hva-quick{position:absolute;inset:0;z-index:3;pointer-events:none}
 .hva-qk{position:absolute;display:flex;align-items:center;justify-content:center;
   background:none;border:0;padding:0;cursor:pointer;font:inherit;color:#173E73;pointer-events:auto}
-.hva-qk:nth-child(1){left:131px;top:19.3px;width:18px;height:18px}
-/* 齿轮那颗 2026-10-20 改成带字药丸：产品说光一颗齿轮认不出来。白 62% 底＋齿轮＋「设置」，
-   高 28 与标题的视觉中线对齐；宽度交给内容，不再定死 34.1。
-   小字从「只给读屏」改成**看得见**——.hva-qk small 的 display:none 随之删掉。 */
-.hva-qk:nth-child(2){right:13px;top:15.4px;height:28px;padding:0 10px 0 7px;gap:3px;
-  border-radius:14px;background:rgba(255,255,255,.62);color:#3D63B4;
-  box-shadow:0 8px 18px -14px rgba(70,80,170,.9);backdrop-filter:blur(4px)}
-.hva-qk:nth-child(2) small{font-size:12.5px;line-height:1;font-weight:500;letter-spacing:.02em;white-space:nowrap}
-.hva-qk:nth-child(1) small{display:none} /* ⇄ 那枚仍只留图标：它贴着标题，带字会把「智能小助」挤开 */
+.hva-qk:nth-child(1){right:13.3px;top:15.5px;width:34.1px;height:34.1px;border-radius:50%;
+  background:rgba(255,255,255,.6);box-shadow:inset 0 0 0 1.3px rgba(255,255,255,.9),
+    0 8px 18px -14px rgba(70,80,170,.9);backdrop-filter:blur(4px)}
 .hva-qkcir{display:flex;align-items:center;justify-content:center;background:none;border-radius:0;
   box-shadow:none;color:inherit}
-.hva-work{position:absolute;left:20.9px;top:56.1px;display:flex;align-items:center;gap:2.7px;
-  font-size:13.2px;line-height:13.2px;color:#4777BB}
-.hva-work svg{flex:none;color:#5989CE}
-/* 「工作3小时」只在托管开着时出现（稿子 1321:2106，y=212）：白 30% 胶囊＋1px 白半描边＋绿点＋渐变字 */
-.hva-tag3{position:absolute;left:20.9px;top:82.4px;display:flex;align-items:center;gap:3.3px;height:24.2px;
-  padding:0 7.1px;border-radius:999px;background:rgba(255,255,255,.42);
-  border:1px solid rgba(255,255,255,.55);font-size:12.1px;line-height:12.1px;white-space:nowrap}
-.hva-tag3 i{flex:none;width:4.4px;height:4.4px;border-radius:50%;background:#28C76F;
-  box-shadow:0 0 0 1px rgba(40,199,111,.2)}
-.hva-tag3 span{background-image:linear-gradient(90deg,#1677FE,#9452FF);
+/* 头卡：688×250 的浅蓝→蓝紫渐变块，左下压一层淡紫、右上压一片白，中间一道斜的白光带。
+   稿子的底是一张位图（ADR-0042 不嵌位图），这里用三层渐变近似。 */
+.hva-card-a{position:absolute;left:15.9px;top:65.2px;width:378px;height:135.4px;z-index:0;
+  border-radius:20px;box-shadow:0 12px 26px -22px rgba(76,86,180,.95),inset 0 0 0 1px rgba(255,255,255,.72);
+  background:
+    linear-gradient(38deg,rgba(255,255,255,0) 26%,rgba(255,255,255,.42) 41%,rgba(255,255,255,0) 56%),
+    radial-gradient(90% 130% at 88% 18%,rgba(255,255,255,.92),rgba(255,255,255,0) 58%),
+    radial-gradient(78% 120% at 0% 100%,rgba(194,178,255,.62),rgba(194,178,255,0) 62%),
+    linear-gradient(112deg,#E6F3FE 0%,#DFEEFE 32%,#D3E2FF 62%,#C4D4FF 100%)}
+/* 状态行：绿点（#00D991 ＋ 白 60% 外环）＋ 蓝→紫渐变字。关态的点与字都退成灰。 */
+.hva-st{position:absolute;left:19.8px;top:15.3px;display:flex;align-items:center;gap:8.8px;height:13.2px}
+.hva-st i{flex:none;width:7.7px;height:7.7px;border-radius:50%;background:#00D991;
+  box-shadow:0 0 0 2.2px rgba(255,255,255,.6)}
+.hva-st b{font-size:15.4px;font-weight:600;line-height:13.2px;white-space:nowrap;
+  background-image:linear-gradient(90deg,#1677FE,#9452FF);
   -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
-/* 形象：稿子上是一张 3D 人物位图。原先按 ADR-0042 用纯 SVG 画；2026-10-20 产品直接给了
-   这张透明底人像原图，本屏改用位图（零位图的唯一例外，见 hvaPortrait 上那条注释）。
-   坐标 226,129 尺寸 320×371（折算后 124,37 176×204）。 */
-.hva-portrait{position:absolute;left:124px;top:37px;width:176px;height:204px;z-index:0;pointer-events:none}
-.hva-portrait img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 8%}
-/* 机器人形象（选「文案手」时出场，占人像那个位置；两者只会有一个在 DOM 里，见 hvaHeroArt）。
-   盒子按原图 482×543 的比例给（184×207），中心与 176×204 的人像对齐。
-   眼睛叠在面罩上（见 hvaEyes），所以盒子**不能**设 overflow:hidden——闭眼时 zzz 要飘出头。 */
-.hva-robot{position:absolute;left:118px;top:30px;width:184px;height:207px;z-index:1;pointer-events:none}
-.hva-robot img{display:block;width:100%;height:100%;object-fit:contain}
+.hva-card-a.off .hva-st i{background:#AEB6C8;box-shadow:0 0 0 2.2px rgba(255,255,255,.6)}
+.hva-card-a.off .hva-st b{background-image:linear-gradient(90deg,#8A93AB,#6E7891)}
+/* 两行托管条件：13.2/13.2，字 #5780C7；图标是稿子那两枚 #5F8BD7 的实心图形 */
+.hva-cond{position:absolute;left:16px;display:flex;align-items:center;gap:7.4px;
+  font-size:13.2px;line-height:13.2px;color:#5780C7;white-space:nowrap}
+.hva-cond.c1{top:43.9px}
+.hva-cond.c2{top:69.1px}
+.hva-cond .ic{flex:none;width:12.9px;height:12.9px;display:flex;align-items:center;justify-content:center}
+.hva-cond .ic svg{display:block}
+/* 形象：选「文案手」时是机器人（原图 482×543）；选「小助」时是产品给的人像。
+   盒子用稿子的 238×280 折算成 130.7×153.8，从卡右上探出卡外，所以卡不能裁它（art 是卡的兄弟）。
+   人像用 contain 贴底——它是透明底的人像，不该像旧版那样裁成一张证件照。 */
+.hva-portrait{position:absolute;left:262.4px;top:46.8px;width:130.7px;height:153.8px;z-index:1;pointer-events:none}
+.hva-portrait img{display:block;width:100%;height:100%;object-fit:contain;object-position:50% 100%}
+/* 机器人形象（盒子与稿子同框，image 拉伸填满，眼睛坐标按这个框量）：
+   眼睛叠在面罩上（见 hvaEyes），所以盒子**不能**设 overflow:hidden——闭眼时 zzz 要飘出头。
+   眼睛从旧版的横椭圆改成稿子那两枚竖的白胶囊（3.3% × 8.4%），位置按 1438:1327 实测。 */
+.hva-robot{position:absolute;left:262.4px;top:46.8px;width:130.7px;height:153.8px;z-index:1;pointer-events:none}
+.hva-robot img{display:block;width:100%;height:100%;object-fit:fill}
 .hva-robot .eyes{position:absolute;inset:0}
-.hva-robot .eye{position:absolute;width:8%;height:6.2%;border-radius:50%}
-.hva-robot .eye.op1{left:35.4%;top:34.6%}
-.hva-robot .eye.op2{left:51.5%;top:34.6%}
-.hva-robot.on .eye{background:radial-gradient(circle at 50% 42%,#fff 0 46%,#DEF5FF 72%,#7FD9FF 100%);
-  box-shadow:0 0 9px 2px rgba(126,217,255,.7)}
+.hva-robot .eye{position:absolute;width:3.3%;height:8.4%;border-radius:999px}
+.hva-robot .eye.op1{left:35.6%;top:33.8%}
+.hva-robot .eye.op2{left:48.2%;top:33.8%}
+.hva-robot.on .eye{background:#fff;box-shadow:0 0 6px 1px rgba(126,217,255,.55)}
 /* 睡眼＝一条向下的弧（border-bottom 画半圆底边），比睁眼矮一截、略微下移 */
-.hva-robot .eye.cl1{left:35.4%;top:37.2%;width:8%;height:2.6%;border-radius:0 0 999px 999px;
+.hva-robot .eye.cl1{left:35.6%;top:36.6%;width:3.3%;height:1.4%;border-radius:0 0 999px 999px;
   border-bottom:2px solid #BEE7FF}
-.hva-robot .eye.cl2{left:51.5%;top:37.2%;width:8%;height:2.6%;border-radius:0 0 999px 999px;
+.hva-robot .eye.cl2{left:48.2%;top:36.6%;width:3.3%;height:1.4%;border-radius:0 0 999px 999px;
   border-bottom:2px solid #BEE7FF}
+/* 日历：稿子上是一台翻开的 3D 台历（93×88 设计px），这里按既有画法用 CSS 还原——
+   白卡、蓝紫顶栏、两枚环、格子里一枚打勾；右下角压一枚时钟徽。整体略向左倾，跟稿子同角度。 */
+.hva-cal{position:absolute;left:256.3px;top:148.4px;width:51.1px;height:48.3px;z-index:2;
+  transform:rotate(-7deg);pointer-events:none;filter:drop-shadow(0 6px 10px rgba(90,80,180,.30))}
+.hva-cal-c{position:absolute;inset:0;border-radius:8px;overflow:hidden;
+  background:linear-gradient(168deg,#FFFFFF 0%,#F3F1FF 100%);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.9)}
+.hva-cal-c::before{content:"";position:absolute;left:0;right:0;top:0;height:10px;
+  background:linear-gradient(90deg,#7C86FF,#5563F5)}
+.hva-cal-g{position:absolute;left:4px;right:4px;top:13.5px;bottom:6px;display:grid;
+  grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(2,1fr);gap:3px}
+.hva-cal-g i{border-radius:2.5px;background:#E4E9FF}
+.hva-cal-g i.on{background:#6F86FF;display:flex;align-items:center;justify-content:center;color:#fff}
+.hva-cal-b{position:absolute;top:-3px;width:5px;height:8px;border-radius:3px;background:#A9D6FF;
+  box-shadow:inset 0 0 0 .6px rgba(255,255,255,.85)}
+.hva-cal-b.l{left:10px}
+.hva-cal-b.r{right:10px}
+.hva-cal-ck{position:absolute;right:-7px;bottom:-6px;width:19px;height:19px;border-radius:50%;
+  background:radial-gradient(circle at 38% 32%,#EAF3FF,#C9D8FF 70%,#8FA6FF);
+  box-shadow:0 0 0 2px #fff,0 4px 8px -4px rgba(80,80,180,.6);
+  display:flex;align-items:center;justify-content:center;color:#5A69FF}
 .hva-robot .zzz{position:absolute;left:66%;top:3%;display:flex;align-items:flex-end;
   transform:rotate(-8deg)}
 .hva-robot .zzz i{font-style:normal;font-weight:700;line-height:1;color:#8E6CFF;
@@ -1169,24 +1204,24 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .hva-robot .zzz i:nth-child(1){font-size:11px;opacity:.7}
 .hva-robot .zzz i:nth-child(2){font-size:14px;opacity:.85;margin-bottom:8px}
 .hva-robot .zzz i:nth-child(3){font-size:18px;margin-bottom:16px}
-/* CTA（2026-10-20 产品给的截图改版）：白胶囊＋蓝→紫渐变字＋右端一枚开关。
-   截图那颗白芯在左＝关态（文案「一键开启托管」）；开态把开关填成主色渐变、白芯滑到右，
-   文案也随之变「一键关闭托管」——状态只从这两处读，胶囊底色不跟着变。
+/* CTA（2026-10-23 照 1438:1327）：白胶囊＋蓝→紫渐变字＋右端一枚开关。
+   白芯在左＝关态（文案「开始托管」）；开态把开关填成主色渐变、白芯滑到右，文案变「停止托管」——
+   状态只从这两处读，胶囊底色不跟着变。尺寸按稿子 190×58 折算成 104.4×31.9，开关 70×40 → 38.5×22。
    渐变字是**文字**不是按钮填充，不在 M3 禁止清单上（同 .hw-add 的先例）。 */
-.hva-cta{position:absolute;left:104px;top:196.2px;width:203.3px;height:51.6px;z-index:2;border:0;
-  border-radius:25.8px;display:flex;align-items:center;justify-content:space-between;
-  padding:0 20px 0 30px;cursor:pointer;background:#fff;color:#2E86FF;
-  font-size:16px;font-weight:500;letter-spacing:.01em;
-  box-shadow:0 14px 28px -18px rgba(102,86,255,.55),0 2px 10px -5px rgba(120,110,220,.2)}
+.hva-cta{position:absolute;left:16.5px;top:94.5px;width:104.4px;height:31.9px;z-index:2;border:0;
+  border-radius:16px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 4.3px 0 9.3px;cursor:pointer;background:#fff;color:#2E86FF;
+  font-size:12.1px;font-weight:500;letter-spacing:.01em;
+  box-shadow:0 4px 10px rgba(22,119,255,.05),0 2px 8px -5px rgba(120,110,220,.25)}
 .hva-cta .tx{white-space:nowrap;background-image:linear-gradient(90deg,#2E86FF,#9452FF);
   -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
-.hva-sw{flex:none;position:relative;width:46px;height:26px;border-radius:13px;
+.hva-sw{flex:none;position:relative;width:38.5px;height:22px;border-radius:11px;
   background:linear-gradient(90deg,#F4F4FE,#DCDBFD);
-  box-shadow:inset 0 0 0 1.5px #C6D8FA;transition:background .22s,box-shadow .22s}
-.hva-sw i{position:absolute;left:2px;top:2px;width:22px;height:22px;border-radius:50%;background:#fff;
+  box-shadow:inset 0 0 0 1.4px #C6D8FA;transition:background .22s,box-shadow .22s}
+.hva-sw i{position:absolute;left:2px;top:2px;width:18px;height:18px;border-radius:50%;background:#fff;
   box-shadow:0 2px 6px -1px rgba(94,86,190,.38);transition:left .22s}
 .hva-cta.on .hva-sw{background:linear-gradient(90deg,#2E86FF,#9452FF);box-shadow:none}
-.hva-cta.on .hva-sw i{left:22px}
+.hva-cta.on .hva-sw i{left:18.5px}
 /* ---------------- 头卡 · 方案二（「形象在左，右侧竖排」2026-10-21 废弃）----------------
    产品同日改口：**直接废弃旧方案二，这个位置换成并卡那一版**（下面「方案四」那段）。
    所以代号仍是 HVA_LAYOUT='b'——别再按「四」去找活着的分支，那是过程名。
@@ -1347,13 +1382,14 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
        时间字样也从浅蓝改成 #333；
      · 一天一张卡改成**整段一张卡**（稿子的「模块」只画了一张，标题也在卡里）。
    卡内左边距 17.6（标题与日期带起跑线），条目再缩进 26.9：让出 13.2 的圆钟与 1.1 的虚线轴。 */
-.hva-logcard{border-radius:16.5px;padding:9.3px 21.4px 22px 17.6px;
-  background:linear-gradient(180deg,rgba(248,246,255,.9),rgba(255,255,255,.9))}
+.hva-logcard{border-radius:18.7px;padding:9.3px 21.4px 22px 17.6px;
+  background:linear-gradient(180deg,rgba(248,246,255,.96),rgba(255,255,255,.96))}
 /* 卡头：17.6 的渐变字＋右边一枚双星（稿子 1336:6412 的「ai」，图形见 hvaLogSpk）。
+   2026-10-23 照 1438:1327 把字改成**蓝→藏青**（与标题同一支），星仍是蓝→紫。
    星比字低一点点（稿子星心在 x 基线上），所以 gap 之后还要往下推 2.2。 */
 .hva-lhd{display:flex;align-items:center;gap:4px;height:19.8px;margin:0 0 9.3px;
   font-size:17.6px;font-weight:600;line-height:19.8px;letter-spacing:.01em;
-  background-image:linear-gradient(90deg,#1677FE,#9452FF);
+  background-image:linear-gradient(90deg,#245BB9,#102953 80%);
   -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
 .hva-lhd svg{flex:none;margin-top:4.4px}
 /* 日期带：日大月小居中对齐，两侧细线 flex 平分。线在徽的 05月 那一行高度上（稿子 y=641），
@@ -5257,49 +5293,70 @@ var HVA_ACT_P={
   forward:'M25.9 4.1 2.9 12.8c-.8.3-.8 1.5 0 1.8l6.4 2.2 2.3 6.8c.3.9 1.5 1 2 .2l3.4-5.1 6.3 4.6c.8.6 1.9.2 2.1-.8l2.7-17.3c.2-1.1-.9-1.9-1.9-1.5Z'
 };
 function hvaActIcon(n,s){ return '<svg width="'+s+'" height="'+s+'" viewBox="0 0 28 28" aria-hidden="true"><path d="'+HVA_ACT_P[n]+'" fill="url(#hvuGrad)"/></svg>'; }
-/* 页头右上那两枚：换人（稿子是一枚左右换向的箭头）与齿轮。两枚都还是 .hva-qk——
-   冒烟用 #host-ai .hva-quick .hva-qk 数它俩并核对 onclick。<small> 原先只留给读屏，
-   2026-10-20 起齿轮那枚的小字**显示出来**（产品说光一颗齿轮认不出来）。
-   ★ 2026-10-20 产品：紧挨「智能小助」的那枚左右箭头**点了直接进数智员工选择页**
-     （原先它是托管总开关）。开关仍有落点——底下那颗「一键开启托管／一键关闭托管」，
-     所以这里换成语义更贴箭头的「换人」：⇄ 本来就是「换一位」的意思。 */
+/* 右上那颗齿轮（2026-10-23 照 1438:1327）：稿子是「六边形外框＋中间一枚圆环」的渐变图形，
+   不是 I('gear') 那枚带齿的齿轮——形状不一样，别拿后者顶替。路径照 Figma 原样内嵌，
+   渐变由 #1677FF 到 #9452FF（左蓝右紫）。 */
+function hvaGearHex(){
+  return '<svg width="17" height="15.8" viewBox="0 0 30.5106 28.3" aria-hidden="true">'
+    +'<defs><linearGradient id="hvaGearGrad" x1="30.36" y1="14.15" x2="0.15" y2="14.15" gradientUnits="userSpaceOnUse">'
+      +'<stop stop-color="#9452FF"/><stop offset="1" stop-color="#1677FF"/></linearGradient></defs>'
+    +'<path fill-rule="evenodd" clip-rule="evenodd" fill="url(#hvaGearGrad)" d="M23.7393 26.8263L30.0378 15.4052C30.4682 14.6237 30.4682 13.6763 30.0378 12.8948L23.7393 1.47374C23.2928 0.659025 22.4383 0.151822 21.5092 0.15H9.00134C8.07228 0.151822 7.21781 0.659025 6.77128 1.47374L0.472756 12.8948C0.0424146 13.6763 0.0424146 14.6237 0.472756 15.4052L6.77128 26.8263C7.21781 27.641 8.07228 28.1482 9.00134 28.15H21.5092C22.4383 28.1482 23.2928 27.641 23.7393 26.8263ZM28.104 13.9711C28.1654 14.0827 28.1654 14.2179 28.104 14.3295L21.8165 25.7506C21.753 25.8669 21.6311 25.9393 21.4986 25.9396H9.01207C8.87955 25.9393 8.7577 25.8669 8.69412 25.7506L2.40665 14.3295C2.3453 14.2179 2.3453 14.0827 2.40665 13.9711L8.69412 2.55001C8.7576 2.43358 8.87947 2.361 9.01207 2.36064H21.4986C21.6312 2.361 21.7531 2.43358 21.8165 2.55001L28.104 13.9711ZM15.1607 19.9023C11.905 19.9023 9.26599 17.2633 9.26599 14.0076C9.26599 10.7518 11.905 8.11282 15.1607 8.11282C18.4161 8.11282 21.0555 10.7518 21.0555 14.0076C21.0555 17.2633 18.4161 19.9023 15.1607 19.9023ZM18.845 14.0077C18.845 16.0425 17.1956 17.6919 15.1608 17.6919C13.126 17.6919 11.4766 16.0425 11.4766 14.0077C11.4766 11.9729 13.126 10.3235 15.1608 10.3235C17.1956 10.3235 18.845 11.9729 18.845 14.0077Z"/></svg>';
+}
+/* 页头右上只剩一颗齿轮（稿子 1438:1327 只有它）。换人那枚 ⇄ 随这版稿子撤了——
+   换人的路仍在「AI托管全局设置 → AI智能回复 → 更换」，没丢。
+   冒烟原本按两颗 .hva-qk 数，这一版改成一颗，断言已同步（见 tools/smoke.js）。 */
 function hvaActsHtml(){
   return '<div class="hva-quick">'
-    +'<button class="hva-qk" onclick="hvaPickHost()" title="选择数智员工">'
-      +'<span class="hva-qkcir">'+HVA_SWITCH+'</span>'
-      +'<small>选择员工</small></button>'
-    +'<button class="hva-qk" onclick="go(\'host-ai-set\')" title="设置">'
-      +'<span class="hva-qkcir">'+I('gear',15,2)+'</span>'
-      +'<small>设置</small></button>'
+    +'<button class="hva-qk" onclick="go(\'host-ai-set\')" title="设置" aria-label="AI托管设置">'
+      +'<span class="hva-qkcir">'+hvaGearHex()+'</span><span class="hva-sr">设置</span></button>'
   +'</div>';
 }
-/* 页头（稿子 1321:1758／1321:2001 那一整块）：一幅人像打底，左上标题「智能小助」，
-   标题下是工作时段的读数（开态再多一枚「工作 N 小时」胶囊），右上两枚动作，底下是主 CTA。
-   状态不再另起一张卡：开／关读在 CTA 上（一键开启托管／一键关闭托管），
-   工作条件那两句（工作时间、闲置多久）收进 .hva-sr 给读屏——视觉上稿子没画这两行，
-   但口径还在，冒烟也从这里读（见 .hva-sr 的定义）。
-   ★ 人像旁边那行名字（原「智能托管伙伴 · ××」）随旧状态卡一起撤了（2026-10-20）：
-     稿子的页头只有标题「智能小助」；托管由哪位数智员工执行，仍可在 AI托管 设置里换。 */
+/* 稿子右下那台翻开的台历（93×88 设计px）：白卡＋蓝紫顶栏＋两枚环＋一格打勾，右下压一枚时钟徽。
+   稿子上它是一张 3D 位图；按 ADR-0042 用 CSS 还原（与升级页 .hvu-cal 同一套画法，尺寸缩到 51×48）。
+   它只跟机器人搭（机器人那张原图里本来就捧着稿纸）；人像那一路不带它。 */
+function hvaCalArt(){
+  var g='',i;
+  for(i=0;i<8;i++) g+='<i'+(i===5?' class="on"':'' )+'>'+(i===5?I('check',7,2.4):'')+'</i>';
+  return '<div class="hva-cal" aria-hidden="true">'
+    +'<div class="hva-cal-c"><span class="hva-cal-b l"></span><span class="hva-cal-b r"></span>'
+      +'<div class="hva-cal-g">'+g+'</div></div>'
+    +'<span class="hva-cal-ck">'+I('clock',10,1.7)+'</span>'
+  +'</div>';
+}
+/* 页头（2026-10-23 照 Figma「AI托管（已托管）」节点 1438:1327 重排）：
+   左上标题「AI托管」，右上齿轮，下面一张状态卡（状态点＋状态词／工作时间／闲置条件／
+   「停止托管」白胶囊＋开关），形象从卡右侧探出，机器人那一路再带一台台历。
+   ★ 状态词与 CTA 是同一件事的两面：开＝正在托管中／停止托管，关＝托管已暂停／开始托管。
+   ★ 卡上那两行是**托管条件的现值**（HVA_WORK／HVA_IDLE），不是装饰文案；改条件时它会跟着重画
+     （hvaIdle 等入口会调 REND['host-ai']）。
+   ★ 「托管由哪位数智员工执行」不再摆在页头上（稿子上没有名字）：只留在读屏里（.hva-kicker），
+     以及设置页那一行；形象仍跟人走（见 hvaHeroArt）。 */
 function hvaHeroHtml(){
-  /* 三套排法（见 HVA_LAYOUT）：'a' 是稿子那一版，件全部绝对定位、铺满整张 259 高的舞台；
+  /* 三套排法（见 HVA_LAYOUT）：'a' 是稿子那一版，件全部绝对定位、铺满整张 230 高的舞台；
      'b'＝并卡（原名「方案四」，2026-10-21 顶掉旧的「形象在左、右侧竖排」）；
      'c'＝两张卡并列。
      **只有 'a' 是稿子坐标**——b／c 的件跟它都不是同一批（b 多一枚名胶囊、c 少一件），
      硬塞进这段只会变成三岔，所以它们各自一个函数，在下面。 */
   if(HVA_LAYOUT==='c') return hvaHeroC();
   if(HVA_LAYOUT==='b') return hvaHeroB();
+  var isRobot=HVA_HERO_ART[HVA_HOST_AGENT]==='robot';
   return '<div class="hva-hero">'
+    +'<div class="hva-card-a'+(HVA_ON?'':' off')+'">'
+      +'<div class="hva-st"><i></i><b>'+(HVA_ON?'正在托管中':'托管已暂停')+'</b></div>'
+      +'<div class="hva-cond c1"><span class="ic">'+I('clock',12.9,1.9)+'</span><span>工作时间'+HVA_WORK+'</span></div>'
+      +'<div class="hva-cond c2"><span class="ic">'+I('send',12.9,1.9)+'</span><span>闲置'+HVA_IDLE+'分钟后自动执行</span></div>'
+      +'<button class="hva-cta'+(HVA_ON?' on':'')+'" onclick="hvaToggle()" role="switch" aria-checked="'+(HVA_ON?'true':'false')+'">'
+        +'<span class="tx">'+(HVA_ON?'停止托管':'开始托管')+'</span>'
+        +'<span class="hva-sw" aria-hidden="true"><i></i></span>'
+      +'</button>'
+    +'</div>'
     +hvaHeroArt()
-    +'<div class="hva-title">智能小助</div>'
-    +'<div class="hva-work">'+I('clock',13,2.2)+'<span>工作'+HVA_WORK+'</span></div>'
-    +(HVA_ON?'<div class="hva-tag3"><i></i><span>工作'+HVA_WORKED+'小时</span></div>':'')
+    +(isRobot?hvaCalArt():'')
+    +'<div class="hva-title"><span class="ai">AI</span>托管</div>'
     +hvaActsHtml()
-    +'<button class="hva-cta'+(HVA_ON?' on':'')+'" onclick="hvaToggle()" role="switch" aria-checked="'+(HVA_ON?'true':'false')+'">'
-      +'<span class="tx">'+(HVA_ON?'一键关闭托管':'一键开启托管')+'</span>'
-      +'<span class="hva-sw" aria-hidden="true"><i></i></span>'
-    +'</button>'
     +'<span class="hva-sr">'+(HVA_ON?'托管已开启。':'托管已关闭，不会自动执行。')
       +'工作时间 '+HVA_WORK+' · 闲置 '+HVA_IDLE+' 分钟</span>'
+    +'<span class="hva-sr hva-kicker">托管执行者 '+esc(HVA_HOST_AGENT)+'</span>'
   +'</div>';
 }
 /* 方案二（并卡，2026-10-21 定稿；原名「方案四」，同日顶掉旧的「形象在左、右侧竖排」那一套）：
