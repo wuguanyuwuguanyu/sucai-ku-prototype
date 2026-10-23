@@ -1641,6 +1641,15 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
   background:#F2F4FA;color:#93A3BC}
 .hva-form .tk-seg{margin:0}
 .hva-segpad{padding:0 15px 15px}
+/* 分段器里的「就地输入」格（自动打招呼 · 执行间隔的自定义档）：外观仍是选中那一格，
+   里面换成输入框＋单位，点哪都能聚焦。高度、圆角、配色跟着 .tk-seg button.on 走。 */
+.tk-seg-inp{flex:1.3;display:flex;align-items:center;justify-content:center;gap:2px;height:36px;
+  border-radius:999px;background:#EFEBFF;color:#7B5BFF;font-size:14px;font-weight:700;cursor:text}
+.tk-seg-inp input{flex:none;width:3.4em;min-width:0;padding:0;border:0;outline:0;background:transparent;
+  font:inherit;color:inherit;text-align:right;caret-color:#7B5BFF}
+.tk-seg-inp input::placeholder{color:#B3A7F2;font-weight:600}
+.tk-seg-inp .u{flex:none;font-size:12px;font-weight:600;color:#8B7CD8}
+.tk-seg-inp:focus-within{box-shadow:inset 0 0 0 1.5px rgba(123,91,255,.45)}
 .hva-form-h{display:flex;align-items:center;gap:5px;padding:14px 15px 2px;font-size:13.5px;font-weight:700;color:#2A4A7E}
 .hva-txt{padding:0 15px 15px;font-size:13.5px;line-height:1.72;color:#5B7099}
 .hva-txt.ph{color:#A9B6CD}
@@ -5939,6 +5948,37 @@ function hvaActMin(k){
     +' value="'+esc(hvaCurCfg()[k])+'" oninput="hvaActText(\''+k+'\',this.value)">'
     +'<span class="unit">分钟</span></div>';
 }
+/* 「执行间隔」的分段器（2026-10-23 产品定）：点「自定义分钟」时**那一格当场变成输入框并聚焦**，
+   键盘直接弹起来在这格上填，不再在分段器下面另起一行输入框——另起一行时，手指点的是上面那格、
+   眼睛和光标却落在下一行，白多一步。选别的档时它还是普通按钮，输入框收起。
+   **不并进 hvaActSegBox**：那是通用的互斥多档，AI智能回复的「更新时间」还用着它，且那边
+   「选自定义分钟时下面出输入框」是 ADR-0051 写下的口径；这里只改自动打招呼这一屏。 */
+function hvaFreqSeg(){
+  var c=hvaCurCfg(),o=hvaCurOpt().freq,h='<div class="tk-seg">',i,v;
+  for(i=0;i<o.length;i++){
+    v=o[i];
+    if(v==='自定义分钟'&&c.freq===v){
+      /* 用 label 包着：点这一格任意处都聚焦到框里（原生行为），不额外写 focus 逻辑。
+         框里只放数字，单位写在框外——一打字 placeholder 就没了，孤零零一个数读不出单位。 */
+      h+='<label class="tk-seg-inp on">'
+        +'<input inputmode="numeric" placeholder="0" value="'+esc(c.freqMin)+'"'
+        +' aria-label="自定义执行间隔（分钟）" oninput="hvaActText(\'freqMin\',this.value)">'
+        +'<span class="u">分钟</span></label>';
+    }else{
+      h+='<button class="'+(c.freq===v?'on':'')+'" onclick="hvaFreqPick(\''+v+'\')">'+v+'</button>';
+    }
+  }
+  return h+'</div>';
+}
+/* 选档后**同步**聚焦：焦点若拖到下一帧，就出了这次点击的手势上下文，移动端键盘不会弹。 */
+function hvaFreqPick(v){
+  hvaCurCfg().freq=v;
+  REND['host-ai-act']();
+  if(v==='自定义分钟'){
+    var el=$('hvaActBody').querySelector('.tk-seg-inp input');
+    if(el){ try{ el.focus(); if(el.select)el.select(); }catch(e){} }
+  }
+}
 /* 从全局设置那一行进来。走 HVA_ACT 这个"打开的是哪一屏"的开关，与三张能力页同一个渲染器；
    路由从清单那边撤掉之后，这里就是 'AI智能回复' 唯一的入口。 */
 function hvaOpenReply(){ HVA_ACT='AI智能回复'; go('host-ai-act'); }
@@ -6010,14 +6050,13 @@ REND['host-ai-act']=function(){
     h+='<div class="hva-form">'+hvaActSwRow('hello','','通过后自动打招呼',c.hello)
       +'<div class="hva-acthint">长按消息进行其他操作，支持编辑</div></div>';
     /* 「执行间隔」（2026-10-23 产品加）：员工自己定托管多久跑一次自动打招呼。
-       控件照「更新时间」那张卡（分段档＋自定义分钟），两屏问的是同一类事——多久去办一次；
+       分段档照「更新时间」那张卡（两屏问的是同一类事——多久去办一次），但**自定义档是段内输入**：
+       点那一格就地变输入框并聚焦，不另起一行（见 hvaFreqSeg）。
        卡序放在最后：先定「怎么加好友、怎么备注、要不要打招呼」，最后才是「多久做一次」。
        默认 10 分钟是原型定的（现网没有这一项），待产品确认。 */
     h+='<div class="hva-form"><div class="hva-form-h">执行间隔</div>'
       +'<div class="hva-txt">托管状态下，每隔多久执行一次自动打招呼</div>'
-      +'<div class="hva-segpad">'+hvaActSegBox('freq')
-      +(c.freq==='自定义分钟'?hvaActMin('freqMin'):'')
-      +'</div></div>';
+      +'<div class="hva-segpad">'+hvaFreqSeg()+'</div></div>';
   }
   /* 2026-10-20 产品：**AI智能回复那一屏撤掉页底这颗按钮**（它那颗写「保存方案」）。
      与设置页同理，这一屏也没有草稿态：平台勾选、更新时间都是点了就写回（hvaActSet），
