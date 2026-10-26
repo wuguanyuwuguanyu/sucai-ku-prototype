@@ -11222,6 +11222,9 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-ch .th.rea-bd-sort i{font-style:normal;font-size:11px;line-height:1}
 .rea-bd-ch .th.rea-bd-sort:hover{color:#1677FF}
 .rea-bd-ch .th.rea-bd-sort:focus-visible{outline:2px solid #4096FF;outline-offset:2px;border-radius:3px}
+/* 两张趋势图的按日／按周也停在卡头右端（与「员工完成情况」的排序控件同一位置），
+   不再掉到标题下面单占一行——卡头一行说清"这是什么 ＋ 怎么切"。 */
+.rea-bd-ch>.rea-tr-win,.rea-bd-ch>.rea-qft-win{margin-left:auto}
 /* 视口 1280 以下内容区不足 770px，两列会把环形和图例挤在一起，回落到单列 */
 @media (max-width:1279px){
   .rea-bd-card--w7,.rea-bd-card--w5{grid-column:span 12}
