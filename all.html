@@ -7,7 +7,7 @@
      故**不内嵌**而外挂在同级 _online-admin.js（由 tools/build_online_admin.py 生成），首次切到该视图才按需加载（另一视图不受拖累）。
      其中若干页按 ADR-0043 被**逐页覆盖**（微小助看板换新稿、素材库 · 新建加交互、
      小红书运营四页改配置口径并补「任务配置快照」页）：
-     覆盖块的正文另有三块载体（srcBoard / srcBoardTask / srcXhsSnapshot，见 REA_COVER），
+     覆盖块的正文另有四块载体（srcBoard / srcBoardTasks / srcBoardTask / srcXhsSnapshot，见 REA_COVER），
      注入的样式与脚本写在 reaBoardJs/reaMatJs/reaXhs*.js 里。
      编辑规则：载体块内即普通 HTML/CSS/JS，唯闭标签须写作转义形态 <\/script>（防载体块被提前终止）；
      改完跑 python3 tools/check_all.py 校验完整性（--extract app 可单端导出还原文本）。 -->
@@ -9685,90 +9685,27 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
        窗口的选中态自己就说清是哪一档，页顶还挨着一条「数据更新时间」；
        再挂一条 T+1／准实时的常驻文案，就是把同一个意思说两遍。 -->
 
-  <!-- 第 1 层 · 执行健康度三卡：固定看「今日」，不跟下方任务执行板块的时间窗走。
-       三张卡都由任务台账里今日那几行算出来（见注入脚本的自检），不另写一份数。
+  <!-- 第 1 层 · 执行健康度三卡：**随板块顶部的时间窗走**（2026-10-26 起），
+       不再固定看今日——窗口把三卡、各大区完成率与二级页任务列表收在同一段时间里。
+       三张卡都由任务台账里当窗那几行算出来（见注入脚本的自检），不另写一份数。
        单位是**任务条数**（2026-10-23 定）：做满的条数 / 没做满的条数 / 到期没做满的条数。
+       默认窗口是昨天，静态正文写的也是昨天那一份（9 条：待执行 8 / 已完成 1 / 逾期 4）。
        原来的第四张「异常 · 失败」已撤（PRD §5.1）：失败在后端就归「进行中」，不是一种独立状态，
        单列一张卡等于拿我们的口径去解释现网的分桶；页上不再出现这个数。 -->
   <div class="rea-bd-sechead">
     <h6>执行健康度</h6>
+    <span class="rea-bd-links">
+      <a href="#" data-bd-tasks>任务列表<span class="rea-bd-chev" aria-hidden="true">›</span></a>
+      <a href="#" data-bd-detail="task">执行人明细<span class="rea-bd-chev" aria-hidden="true">›</span></a>
+    </span>
   </div>
 
-  <div class="ant-row css-vgijab" id="rea-bd-cards">
-    <div class="ant-col ant-col-8 css-vgijab">
-      <div class="rea-bd-kpi">
-        <div class="rea-bd-kpi-top"><span class="lab">待执行</span></div>
-        <div class="rea-bd-kpi-main"><b data-rea-sum="left">7</b><span>条</span></div>
-        <div class="rea-bd-kpi-sub"><span data-rea-sum="left-of-need">100.0%</span><span>占应执行</span></div>
-        <span class="rea-bd-kpi-bar" data-bd-kpibar="left" aria-hidden="true"><i class="d"></i><i class="l"></i><i class="o"></i></span>
-      </div>
-    </div>
-    <div class="ant-col ant-col-8 css-vgijab">
-      <div class="rea-bd-kpi">
-        <div class="rea-bd-kpi-top"><span class="lab">已完成</span></div>
-        <div class="rea-bd-kpi-main"><b data-rea-sum="done">0</b><span>条</span></div>
-        <div class="rea-bd-kpi-sub"><span data-rea-sum="rate">0.0%</span><span>做满占比</span></div>
-        <span class="rea-bd-kpi-bar" data-bd-kpibar="done" aria-hidden="true"><i class="d"></i><i class="l"></i><i class="o"></i></span>
-      </div>
-    </div>
-    <div class="ant-col ant-col-8 css-vgijab">
-      <div class="rea-bd-kpi">
-        <div class="rea-bd-kpi-top"><span class="lab">逾期未做</span></div>
-        <div class="rea-bd-kpi-main"><b data-rea-sum="over">0</b><span>条</span></div>
-        <div class="rea-bd-kpi-sub"><span data-rea-sum="over-of-left">0.0%</span><span>占待执行</span></div>
-        <span class="rea-bd-kpi-bar" data-bd-kpibar="over" aria-hidden="true"><i class="d"></i><i class="l"></i><i class="o"></i></span>
-      </div>
-    </div>
-  </div>
-
-  <div class="rea-bd-bad" id="rea-bd-bad" hidden></div>
-</div>
-
-<!-- 执行趋势 · **独立板块**（第 2 层 · 过程）。
-     任务执行回答「这批活做没做」，这一块回答「这些天是越干越顺、还是越拖越多」——
-     每周做满了多少条任务、又有多少条到期没做满。原来看板只给欠账的**快照**（选一段窗口知道欠多少），
-     看不出是月初就堆着、还是上周才崩的。
-     口径是**任务条数**（不是人次）：一条派给 15 人与派给 2 人都算 1 条；好处是两条线同单位、
-     量级接近，能画在一张图、共用一根纵轴里。按周汇总——一天才 7–9 条任务、做满 0–1 条，
-     按天画几乎贴着零线。
-     它有自己的时间窗（近 12 周 / 近 26 周），**不跟下方任务执行的时间窗联动**：
-     那边筛的是「哪一批任务」，这里看的是「任务有没有落地」。 -->
-<div class="_board_gf4go_1 rea-bd-sec" id="rea-tr">
-  <div class="rea-tr-hd">
-    <h6>执行趋势</h6>
-    <div class="ant-radio-group ant-radio-group-solid css-vgijab rea-tr-win" id="rea-tr-win">
-      <div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small">
-        <div class="ant-space-item">
-          <label class="ant-radio-button-wrapper ant-radio-button-wrapper-checked css-vgijab" data-tr-win="12">
-            <span class="ant-radio-button ant-radio-button-checked"><input name="rea-tr-win" class="ant-radio-button-input" type="radio" value="12" checked=""><span class="ant-radio-button-inner"></span></span>
-            <span class="ant-radio-button-label">近 12 周</span>
-          </label>
-        </div>
-        <div class="ant-space-item">
-          <label class="ant-radio-button-wrapper css-vgijab" data-tr-win="26">
-            <span class="ant-radio-button"><input name="rea-tr-win" class="ant-radio-button-input" type="radio" value="26"><span class="ant-radio-button-inner"></span></span>
-            <span class="ant-radio-button-label">近 26 周</span>
-          </label>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="rea-tr-chart" id="rea-tr-chart"></div>
-</div>
-
-<div class="_board_gf4go_1 rea-bd-sec">
-  <div class="_title_gf4go_8 rea-bd-sec-title">
-    <h6>任务执行</h6>
-    <a href="#" data-bd-detail="task">执行人明细<span role="img" aria-label="right" class="anticon anticon-right"><svg viewBox="64 64 896 896" focusable="false" data-icon="right" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"></path></svg></span></a>
-  </div>
-
-  <!-- 时间窗（PRD §2.2／§4.4）：它现在归「任务执行」板块，筛的是这张任务台账，
-       本板块里的「各大区完成率」（文档里叫组织范围）也吃这个窗口；下方「群发好友回复」按周汇总，不跟这个窗口走。
-       业务域三枚标签已撤：企业微信／悬浮窗两张看板走侧栏进，不在本页顶部再挂一个切换器。
-       本板块上方的执行健康度三卡固定看今日，不跟这个窗口走。 -->
-  <div class="rea-bd-row">
+  <!-- 时间窗归「执行健康度」：三卡、各大区完成率、以及二级页「任务列表」共用这一个窗口。
+       默认仍是「昨天」——那是数据齐、口径稳的一档；「今日」是主动去看进度时才切过去的一档。
+       群发好友回复按周汇总、执行趋势带自己的近 12／26 周，都不跟这个窗口走。 -->
+  <div class="rea-bd-row" id="rea-bd-window-row">
     <span class="rea-bd-lab">时间窗</span>
-    <div class="ant-radio-group ant-radio-group-solid css-vgijab rea-bd-window">
+    <div class="ant-radio-group ant-radio-group-solid css-vgijab rea-bd-window" id="rea-bd-window">
       <div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small">
         <div class="ant-space-item">
           <label class="ant-radio-button-wrapper css-vgijab" data-bd-win="today">
@@ -9829,310 +9766,329 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     </div>
   </div>
 
-  <!-- 任务执行不再抄一份全量任务台账：那是「微信营销任务」各模块列表的活——
-       同粒度、还少了类型专属字段（素材分类／发布方式／群发内容），等于把同一张表看两遍。
-       这里只回答两个问题：**哪类任务欠得多**（7 类完成度，跨类型可比）、
-       **哪些任务该催**（只列没做满的，按逾期排），中间夹一眼**哪个大区欠得多**。
-       全量任务回模块列表看。 -->
-  <div class="rea-bd-exec" id="rea-bd-exec">
-    <div class="rea-bd-sub">
-      <h6>各类任务完成度</h6>
+  <div class="ant-row css-vgijab" id="rea-bd-cards">
+    <div class="ant-col ant-col-8 css-vgijab">
+      <div class="rea-bd-kpi">
+        <div class="rea-bd-kpi-top"><span class="lab">待执行</span></div>
+        <div class="rea-bd-kpi-main"><b data-rea-sum="left">8</b><span>条</span></div>
+        <div class="rea-bd-kpi-sub"><span data-rea-sum="left-of-need">88.9%</span><span>占应执行</span></div>
+        <span class="rea-bd-kpi-bar" data-bd-kpibar="left" aria-hidden="true"><i class="d"></i><i class="l"></i><i class="o"></i></span>
+      </div>
     </div>
-    <div class="rea-bd-legend">
-      <span><i class="rea-bd-key d"></i>已执行</span>
-      <span><i class="rea-bd-key l"></i>待执行 · 未逾期</span>
-      <span><i class="rea-bd-key o"></i>逾期未做</span>
+    <div class="ant-col ant-col-8 css-vgijab">
+      <div class="rea-bd-kpi">
+        <div class="rea-bd-kpi-top"><span class="lab">已完成</span></div>
+        <div class="rea-bd-kpi-main"><b data-rea-sum="done">1</b><span>条</span></div>
+        <div class="rea-bd-kpi-sub"><span data-rea-sum="rate">11.1%</span><span>做满占比</span></div>
+        <span class="rea-bd-kpi-bar" data-bd-kpibar="done" aria-hidden="true"><i class="d"></i><i class="l"></i><i class="o"></i></span>
+      </div>
     </div>
-
-    <!-- 7 类固定顺序、一行一类：条长＝占「应执行」的比例，三段与三张卡同义
-         （绿＝已执行 · 浅蓝＝待执行未逾期 · 橙＝逾期）。某类在当前窗口为 0 也保留空行，
-         不跳位——跨窗口、跨类型才比得起来。 -->
-    <div class="rea-bd-types" id="rea-bd-types"></div>
-
-    <!-- 大区完成率（文档里叫「组织范围」）：和上面的类型完成度吃同一个窗口，只是换了切法
-         ——按任务的**创建人**所属大区归拢。放在欠账清单之前：先看「哪类欠」再「哪个大区欠」，
-         最后才是逐条催办。 -->
-    <div class="rea-bd-sub">
-      <h6>各大区完成率</h6>
-    </div>
-    <div class="rea-bd-org" id="rea-bd-org"></div>
-
-    <div class="rea-bd-sub">
-      <h6>需要跟进的任务</h6>
-      <a href="#" class="rea-bd-clear" id="rea-bd-follow-clear" hidden>清除类型筛选</a>
-      <span class="rea-bd-lab" id="rea-bd-follow-count">共 8 条</span>
-    </div>
-
-    <div class="ant-table-wrapper css-vgijab rea-bd-table" style="margin-top: 12px;">
-      <div class="ant-spin-nested-loading css-vgijab"><div class="ant-spin-container">
-        <div class="ant-table ant-table-middle css-vgijab">
-          <div class="ant-table-container"><div class="ant-table-content">
-            <table class="rea-bd-follow" style="table-layout: fixed;">
-              <colgroup><col style="width: 18%"><col style="width: 14%"><col style="width: 6%"><col style="width: 11%"><col style="width: 21%"><col style="width: 11%"><col style="width: 6%"><col style="width: 7%"><col style="width: 6%"></colgroup>
-              <thead class="ant-table-thead"><tr>
-                <th scope="col" class="ant-table-cell">任务名称</th>
-                <th scope="col" class="ant-table-cell">任务类型</th>
-                <th scope="col" class="ant-table-cell">创建人</th>
-                <th scope="col" class="ant-table-cell" title="该任务的执行人员人数；执行人员可跨大区（「各大区完成率」按创建人所属大区聚合，两种口径不同）">执行人员</th>
-                <th scope="col" class="ant-table-cell">任务有效期</th>
-                <th scope="col" class="ant-table-cell">进度</th>
-                <th scope="col" class="ant-table-cell" title="有效期已过且仍未执行">逾期</th>
-                <th scope="col" class="ant-table-cell">状态</th>
-                <th scope="col" class="ant-table-cell">操作</th>
-              </tr></thead>
-              <tbody class="ant-table-tbody" id="rea-bd-follow-body"></tbody>
-            </table>
-          </div></div>
-        </div>
-      </div></div>
-    </div>
-
-    <!-- 全量任务台账不再上板，但仍是这一块与执行人明细子页的**唯一数据源**：
-         7 类完成度、大区完成率、欠账清单、执行人明细全部从这 16 行派生。
-         藏起来是为了不再把模块列表抄一遍，不是为了删数——行上的 data-bd-* 与
-         相对日期（data-rea-d）照旧受自检保护。 -->
-    <div id="rea-bd-src" hidden>
-          <div class="ant-spin-nested-loading css-vgijab"><div class="ant-spin-container">
-            <div class="ant-table ant-table-middle css-vgijab">
-              <div class="ant-table-container">
-                <div class="ant-table-content">
-                  <table style="table-layout: fixed;">
-                    <colgroup><col style="width: 13.29%"><col style="width: 9.37%"><col style="width: 6.25%"><col style="width: 8.60%"><col style="width: 20.29%"><col style="width: 6.25%"><col style="width: 6.25%"><col style="width: 8.60%"><col style="width: 6.25%"><col style="width: 6.25%"><col style="width: 8.60%"></colgroup>
-                    <thead class="ant-table-thead"><tr>
-                      <th scope="col" class="ant-table-cell">任务名称</th>
-                      <th scope="col" class="ant-table-cell">任务类型</th>
-                      <th scope="col" class="ant-table-cell">创建人</th>
-                      <th scope="col" class="ant-table-cell" title="该任务的执行人员人数；执行人员可跨大区（「各大区完成率」按创建人所属大区聚合，两种口径不同）">执行人员</th>
-                      <th scope="col" class="ant-table-cell">任务有效期</th>
-                      <th scope="col" class="ant-table-cell">应执行</th>
-                      <th scope="col" class="ant-table-cell">已执行</th>
-                      <th scope="col" class="ant-table-cell">完成率</th>
-                      <th scope="col" class="ant-table-cell" title="有效期已过且仍未执行">逾期数</th>
-                      <th scope="col" class="ant-table-cell">状态</th>
-                      <th scope="col" class="ant-table-cell">操作</th>
-                    </tr></thead>
-                    <tbody class="ant-table-tbody">
-                      <tr class="ant-table-row ant-table-row-level-0" data-bd-row="1" data-bd-day="-1" data-bd-type="发圈" data-bd-org="华东大区" data-bd-need="8" data-bd-done="7" data-bd-left="1" data-bd-over="1">
-                        <td class="ant-table-cell ant-table-cell-ellipsis" title="秋季新品主推"><span class="ant-typography ant-typography-ellipsis ant-typography-ellipsis-single-line css-vgijab" title="秋季新品主推" style="width: 100%; margin: 0px; padding: 0px;">秋季新品主推</span></td>
-                        <td class="ant-table-cell">发圈</td>
-                        <td class="ant-table-cell">张伟</td>
-                        <td class="ant-table-cell">张伟 等 8 人</td>
-                        <td class="ant-table-cell"><span data-rea-d="d-1@09:00"></span> ~ <span data-bd-end data-rea-d="d-1@23:59"></span></td>
-                        <td class="ant-table-cell">8</td>
-                        <td class="ant-table-cell">7</td>
-                        <td class="ant-table-cell" data-rea-rate><span data-rea-rate-num>87.5%</span><span class="rea-bd-bar"><i></i></span></td>
-                        <td class="ant-table-cell" data-rea-over>1</td>
-                        <td class="ant-table-cell" data-rea-state><span class="ant-tag css-vgijab">已结束</span></td>
-                        <td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-rea="发圈 · 详情"><span>详情</span></button></td>
-                      </tr>
-                      <tr class="ant-table-row ant-table-row-level-0" data-bd-row="2" data-bd-day="-1" data-bd-type="发圈" data-bd-org="华东大区" data-bd-need="10" data-bd-done="8" data-bd-left="2" data-bd-over="2">
-                        <td class="ant-table-cell ant-table-cell-ellipsis" title="国庆活动预告"><span class="ant-typography ant-typography-ellipsis ant-typography-ellipsis-single-line css-vgijab" title="国庆活动预告" style="width: 100%; margin: 0px; padding: 0px;">国庆活动预告</span></td>
-                        <td class="ant-table-cell">发圈</td>
-                        <td class="ant-table-cell">张伟</td>
-                        <td class="ant-table-cell">张伟 等 10 人</td>
-                        <td class="ant-table-cell"><span data-rea-d="d-1@09:00"></span> ~ <span data-bd-end data-rea-d="d-1@23:59"></span></td>
-                        <td class="ant-table-cell">10</td>
-                        <td class="ant-table-cell">8</td>
-                        <td class="ant-table-cell" data-rea-rate><span data-rea-rate-num>80.0%</span><span class="rea-bd-bar"><i></i></span></td>
-                        <td class="ant-table-cell" data-rea-over>2</td>
-                        <td class="ant-table-cell" data-rea-state><span class="ant-tag css-vgijab">已结束</span></td>
-                        <td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-rea="发圈 · 详情"><span>详情</span></button></td>
-                      </tr>
-                      <tr class="ant-table-row ant-table-row-level-0" data-bd-row="3" data-bd-day="-1" data-bd-type="群发好友" data-bd-org="华北大区" data-bd-need="6" data-bd-done="5" data-bd-left="1" data-bd-over="0">
-                        <td class="ant-table-cell ant-table-cell-ellipsis" title="老客户回访语"><span class="ant-typography ant-typography-ellipsis ant-typography-ellipsis-single-line css-vgijab" title="老客户回访语" style="width: 100%; margin: 0px; padding: 0px;">老客户回访语</span></td>
-                        <td class="ant-table-cell">群发好友</td>
-                        <td class="ant-table-cell">王强</td>
-                        <td class="ant-table-cell">王强 等 6 人</td>
-                        <td class="ant-table-cell"><span data-rea-d="d-1@09:00"></span> ~ <span data-bd-end data-rea-d="d+5@23:59"></span></td>
-                        <td class="ant-table-cell">6</td>
-                        <td class="ant-table-cell">5</td>
-                        <td class="ant-table-cell" data-rea-rate><span data-rea-rate-num>83.3%</span><span class="rea-bd-bar"><i></i></span></td>
-                        <td class="ant-table-cell" data-rea-over>0</td>
-                        <td class="ant-table-cell" data-rea-state><span class="ant-tag ant-tag-blue css-vgijab">进行中</span></td>
-                        <td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-rea="群发好友 · 详情"><span>详情</span></button></td>
-                      </tr>
-                      <tr class="ant-table-row ant-table-row-level-0" data-bd-row="4" data-bd-day="-1" data-bd-type="群发好友" data-bd-org="华北大区" data-bd-need="12" data-bd-done="9" data-bd-left="3" data-bd-over="0">
-                        <td class="ant-table-cell ant-table-cell-ellipsis" title="双十一预热"><span class="ant-typography ant-typography-ellipsis ant-typography-ellipsis-single-line css-vgijab" title="双十一预热" style="width: 100%; margin: 0px; padding: 0px;">双十一预热</span></td>
-                        <td class="ant-table-cell">群发好友</td>
-                        <td class="ant-table-cell">王强</td>
-                        <td class="ant-table-cell">王强 等 12 人</td>
-                        <td class="ant-table-cell"><span data-rea-d="d-1@09:00"></span> ~ <span data-bd-end data-rea-d="d+5@23:59"></span></td>
-                        <td class="ant-table-cell">12</td>
-                        <td class="ant-table-cell">9</td>
-                        <td class="ant-table-cell" data-rea-rate><span data-rea-rate-num>75.0%</span><span class="rea-bd-bar"><i></i></span></td>
-                        <td class="ant-table-cell" data-rea-over>0</td>
-                        <td class="ant-table-cell" data-rea-state><span class="ant-tag ant-tag-blue css-vgijab">进行中</span></td>
-                        <td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-rea="群发好友 · 详情"><span>详情</span></button></td>
-                      </tr>
-                      <tr class="ant-table-row ant-table-row-level-0" data-bd-row="5" data-bd-day="-1" data-bd-type="群发群组" data-bd-org="华东大区" data-bd-need="5" data-bd-done="5" data-bd-left="0" data-bd-over="0">
-                        <td class="ant-table-cell ant-table-cell-ellipsis" title="行业群早报"><span class="ant-typography ant-typography-ellipsis ant-typography-ellipsis-single-line css-vgijab" title="行业群早报" style="width: 100%; margin: 0px; padding: 0px;">行业群早报</span></td>
-                        <td class="ant-table-cell">群发群组</td>
-                        <td class="ant-table-cell">张伟</td>
-                        <td class="ant-table-cell">张伟 等 5 人</td>
-                        <td class="ant-table-cell"><span data-rea-d="d-1@09:00"></span> ~ <span data-bd-end data-rea-d="d+2@23:59"></span></td>
-                        <td class="ant-table-cell">5</td>
-                        <td class="ant-table-cell">5</td>
-                        <td class="ant-table-cell" data-rea-rate><span data-rea-rate-num>100.0%</span><span class="rea-bd-bar"><i></i></span></td>
-                        <td class="ant-table-cell" data-rea-over>0</td>
-                        <td class="ant-table-cell" data-rea-state><span class="ant-tag ant-tag-green css-vgijab">已完成</span></td>
-                        <td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-rea="群发群组 · 详情"><span>详情</span></button></td>
-                      </tr>
-                      <tr class="ant-table-row ant-table-row-level-0" data-bd-row="6" data-bd-day="-1" data-bd-type="批量加好友" data-bd-org="华南大区" data-bd-need="15" data-bd-done="11" data-bd-left="4" data-bd-over="4">
-                        <td class="ant-table-cell ant-table-cell-ellipsis" title="抖音获客名单"><span class="ant-typography ant-typography-ellipsis ant-typography-ellipsis-single-line css-vgijab" title="抖音获客名单" style="width: 100%; margin: 0px; padding: 0px;">抖音获客名单</span></td>
-                        <td class="ant-table-cell">批量加好友</td>
-                        <td class="ant-table-cell">李娜</td>
-                        <td class="ant-table-cell">李娜 等 15 人</td>
-                        <td class="ant-table-cell"><span data-rea-d="d-1@09:00"></span> ~ <span data-bd-end data-rea-d="d-1@23:59"></span></td>
-                        <td class="ant-table-cell">15</td>
-                        <td class="ant-table-cell">11</td>
-                        <td class="ant-table-cell" data-rea-rate><span data-rea-rate-num>73.3%</span><span class="rea-bd-bar"><i></i></span></td>
-                        <td class="ant-table-cell" data-rea-over>4</td>
-                        <td class="ant-table-cell" data-rea-state><span class="ant-tag css-vgijab">已结束</span></td>
-                        <td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-rea="批量加好友 · 详情"><span>详情</span></button></td>
-                      </tr>
-                      <tr class="ant-table-row ant-table-row-level-0" data-bd-row="7" data-bd-day="-1" data-bd-type="关联好友" data-bd-org="华南大区" data-bd-need="7" data-bd-done="4" data-bd-left="3" data-bd-over="3">
-                        <td class="ant-table-cell ant-table-cell-ellipsis" title="展会名单关联"><span class="ant-typography ant-typography-ellipsis ant-typography-ellipsis-single-line css-vgijab" title="展会名单关联" style="width: 100%; margin: 0px; padding: 0px;">展会名单关联</span></td>
-                        <td class="ant-table-cell">关联好友</td>
-                        <td class="ant-table-cell">李娜</td>
-                        <td class="ant-table-cell">李娜 等 7 人</td>
-                        <td class="ant-table-cell"><span data-rea-d="d-1@09:00"></span> ~ <span data-bd-end data-rea-d="d-1@23:59"></span></td>
-                        <td class="ant-table-cell">7</td>
-                        <td class="ant-table-cell">4</td>
-                        <td class="ant-table-cell" data-rea-rate><span data-rea-rate-num>57.1%</span><span class="rea-bd-bar"><i></i></span></td>
-                        <td class="ant-table-cell" data-rea-over>3</td>
-                        <td class="ant-table-cell" data-rea-state><span class="ant-tag css-vgijab">已结束</span></td>
-                        <td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-rea="关联好友 · 详情"><span>详情</span></button></td>
-                      </tr>
-                      <tr class="ant-table-row ant-table-row-level-0" data-bd-row="8" data-bd-day="-1" data-bd-type="视频号发布任务" data-bd-org="华北大区" data-bd-need="6" data-bd-done="3" data-bd-left="3" data-bd-over="0">
-                        <td class="ant-table-cell ant-table-cell-ellipsis" title="视频号新品发布"><span class="ant-typography ant-typography-ellipsis ant-typography-ellipsis-single-line css-vgijab" title="视频号新品发布" style="width: 100%; margin: 0px; padding: 0px;">视频号新品发布</span></td>
-                        <td class="ant-table-cell">视频号发布任务</td>
-                        <td class="ant-table-cell">王强</td>
-                        <td class="ant-table-cell">王强 等 6 人</td>
-                        <td class="ant-table-cell"><span data-rea-d="d-1@09:00"></span> ~ <span data-bd-end data-rea-d="d+3@23:59"></span></td>
-                        <td class="ant-table-cell">6</td>
-                        <td class="ant-table-cell">3</td>
-                        <td class="ant-table-cell" data-rea-rate><span data-rea-rate-num>50.0%</span><span class="rea-bd-bar"><i></i></span></td>
-                        <td class="ant-table-cell" data-rea-over>0</td>
-                        <td class="ant-table-cell" data-rea-state><span class="ant-tag ant-tag-blue css-vgijab">进行中</span></td>
-                        <td class="ant-table-cell"><span class="rea-bd-dim" title="这一模块在现网没有详情页">—</span></td>
-                      </tr>
-                      <tr class="ant-table-row ant-table-row-level-0" data-bd-row="9" data-bd-day="-1" data-bd-type="客户唤醒" data-bd-org="华东大区" data-bd-need="9" data-bd-done="6" data-bd-left="3" data-bd-over="0">
-                        <td class="ant-table-cell ant-table-cell-ellipsis" title="沉睡客户唤醒（90 天）"><span class="ant-typography ant-typography-ellipsis ant-typography-ellipsis-single-line css-vgijab" title="沉睡客户唤醒（90 天）" style="width: 100%; margin: 0px; padding: 0px;">沉睡客户唤醒（90 天）</span></td>
-                        <td class="ant-table-cell">客户唤醒</td>
-                        <td class="ant-table-cell">张伟</td>
-                        <td class="ant-table-cell">张伟 等 9 人</td>
-                        <td class="ant-table-cell"><span data-rea-d="d-1@09:00"></span> ~ <span data-bd-end data-rea-d="d+7@23:59"></span></td>
-                        <td class="ant-table-cell">9</td>
-                        <td class="ant-table-cell">6</td>
-                        <td class="ant-table-cell" data-rea-rate><span data-rea-rate-num>66.7%</span><span class="rea-bd-bar"><i></i></span></td>
-                        <td class="ant-table-cell" data-rea-over>0</td>
-                        <td class="ant-table-cell" data-rea-state><span class="ant-tag ant-tag-blue css-vgijab">进行中</span></td>
-                        <td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-rea="客户唤醒 · 详情"><span>详情</span></button></td>
-                      </tr>
-                      <tr class="ant-table-row ant-table-row-level-0" data-bd-row="10" data-bd-day="0" data-bd-type="发圈" data-bd-org="华东大区" data-bd-need="8" data-bd-done="5" data-bd-left="3" data-bd-over="0">
-                        <td class="ant-table-cell ant-table-cell-ellipsis" title="新品直播预告"><span class="ant-typography ant-typography-ellipsis ant-typography-ellipsis-single-line css-vgijab" title="新品直播预告" style="width: 100%; margin: 0px; padding: 0px;">新品直播预告</span></td>
-                        <td class="ant-table-cell">发圈</td>
-                        <td class="ant-table-cell">张伟</td>
-                        <td class="ant-table-cell">张伟 等 8 人</td>
-                        <td class="ant-table-cell"><span data-rea-d="d@09:00"></span> ~ <span data-bd-end data-rea-d="d+3@23:59"></span></td>
-                        <td class="ant-table-cell">8</td>
-                        <td class="ant-table-cell">5</td>
-                        <td class="ant-table-cell" data-rea-rate><span data-rea-rate-num>62.5%</span><span class="rea-bd-bar"><i></i></span></td>
-                        <td class="ant-table-cell" data-rea-over>0</td>
-                        <td class="ant-table-cell" data-rea-state><span class="ant-tag ant-tag-blue css-vgijab">进行中</span></td>
-                        <td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-rea="发圈 · 详情"><span>详情</span></button></td>
-                      </tr>
-                      <tr class="ant-table-row ant-table-row-level-0" data-bd-row="11" data-bd-day="0" data-bd-type="群发好友" data-bd-org="华北大区" data-bd-need="7" data-bd-done="5" data-bd-left="2" data-bd-over="0">
-                        <td class="ant-table-cell ant-table-cell-ellipsis" title="客户节祝福"><span class="ant-typography ant-typography-ellipsis ant-typography-ellipsis-single-line css-vgijab" title="客户节祝福" style="width: 100%; margin: 0px; padding: 0px;">客户节祝福</span></td>
-                        <td class="ant-table-cell">群发好友</td>
-                        <td class="ant-table-cell">王强</td>
-                        <td class="ant-table-cell">王强 等 7 人</td>
-                        <td class="ant-table-cell"><span data-rea-d="d@09:00"></span> ~ <span data-bd-end data-rea-d="d+5@23:59"></span></td>
-                        <td class="ant-table-cell">7</td>
-                        <td class="ant-table-cell">5</td>
-                        <td class="ant-table-cell" data-rea-rate><span data-rea-rate-num>71.4%</span><span class="rea-bd-bar"><i></i></span></td>
-                        <td class="ant-table-cell" data-rea-over>0</td>
-                        <td class="ant-table-cell" data-rea-state><span class="ant-tag ant-tag-blue css-vgijab">进行中</span></td>
-                        <td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-rea="群发好友 · 详情"><span>详情</span></button></td>
-                      </tr>
-                      <tr class="ant-table-row ant-table-row-level-0" data-bd-row="12" data-bd-day="0" data-bd-type="群发群组" data-bd-org="华东大区" data-bd-need="5" data-bd-done="3" data-bd-left="2" data-bd-over="0">
-                        <td class="ant-table-cell ant-table-cell-ellipsis" title="行业群午报"><span class="ant-typography ant-typography-ellipsis ant-typography-ellipsis-single-line css-vgijab" title="行业群午报" style="width: 100%; margin: 0px; padding: 0px;">行业群午报</span></td>
-                        <td class="ant-table-cell">群发群组</td>
-                        <td class="ant-table-cell">张伟</td>
-                        <td class="ant-table-cell">张伟 等 5 人</td>
-                        <td class="ant-table-cell"><span data-rea-d="d@09:00"></span> ~ <span data-bd-end data-rea-d="d+2@23:59"></span></td>
-                        <td class="ant-table-cell">5</td>
-                        <td class="ant-table-cell">3</td>
-                        <td class="ant-table-cell" data-rea-rate><span data-rea-rate-num>60.0%</span><span class="rea-bd-bar"><i></i></span></td>
-                        <td class="ant-table-cell" data-rea-over>0</td>
-                        <td class="ant-table-cell" data-rea-state><span class="ant-tag ant-tag-blue css-vgijab">进行中</span></td>
-                        <td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-rea="群发群组 · 详情"><span>详情</span></button></td>
-                      </tr>
-                      <tr class="ant-table-row ant-table-row-level-0" data-bd-row="13" data-bd-day="0" data-bd-type="批量加好友" data-bd-org="华南大区" data-bd-need="8" data-bd-done="4" data-bd-left="4" data-bd-over="0">
-                        <td class="ant-table-cell ant-table-cell-ellipsis" title="招商名单加好友"><span class="ant-typography ant-typography-ellipsis ant-typography-ellipsis-single-line css-vgijab" title="招商名单加好友" style="width: 100%; margin: 0px; padding: 0px;">招商名单加好友</span></td>
-                        <td class="ant-table-cell">批量加好友</td>
-                        <td class="ant-table-cell">李娜</td>
-                        <td class="ant-table-cell">李娜 等 8 人</td>
-                        <td class="ant-table-cell"><span data-rea-d="d@09:00"></span> ~ <span data-bd-end data-rea-d="d+7@23:59"></span></td>
-                        <td class="ant-table-cell">8</td>
-                        <td class="ant-table-cell">4</td>
-                        <td class="ant-table-cell" data-rea-rate><span data-rea-rate-num>50.0%</span><span class="rea-bd-bar"><i></i></span></td>
-                        <td class="ant-table-cell" data-rea-over>0</td>
-                        <td class="ant-table-cell" data-rea-state><span class="ant-tag ant-tag-blue css-vgijab">进行中</span></td>
-                        <td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-rea="批量加好友 · 详情"><span>详情</span></button></td>
-                      </tr>
-                      <tr class="ant-table-row ant-table-row-level-0" data-bd-row="14" data-bd-day="0" data-bd-type="关联好友" data-bd-org="华南大区" data-bd-need="5" data-bd-done="3" data-bd-left="2" data-bd-over="0">
-                        <td class="ant-table-cell ant-table-cell-ellipsis" title="会员名单关联"><span class="ant-typography ant-typography-ellipsis ant-typography-ellipsis-single-line css-vgijab" title="会员名单关联" style="width: 100%; margin: 0px; padding: 0px;">会员名单关联</span></td>
-                        <td class="ant-table-cell">关联好友</td>
-                        <td class="ant-table-cell">李娜</td>
-                        <td class="ant-table-cell">李娜 等 5 人</td>
-                        <td class="ant-table-cell"><span data-rea-d="d@09:00"></span> ~ <span data-bd-end data-rea-d="d+7@23:59"></span></td>
-                        <td class="ant-table-cell">5</td>
-                        <td class="ant-table-cell">3</td>
-                        <td class="ant-table-cell" data-rea-rate><span data-rea-rate-num>60.0%</span><span class="rea-bd-bar"><i></i></span></td>
-                        <td class="ant-table-cell" data-rea-over>0</td>
-                        <td class="ant-table-cell" data-rea-state><span class="ant-tag ant-tag-blue css-vgijab">进行中</span></td>
-                        <td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-rea="关联好友 · 详情"><span>详情</span></button></td>
-                      </tr>
-                      <tr class="ant-table-row ant-table-row-level-0" data-bd-row="15" data-bd-day="0" data-bd-type="视频号发布任务" data-bd-org="华北大区" data-bd-need="4" data-bd-done="2" data-bd-left="2" data-bd-over="0">
-                        <td class="ant-table-cell ant-table-cell-ellipsis" title="视频号新品预热"><span class="ant-typography ant-typography-ellipsis ant-typography-ellipsis-single-line css-vgijab" title="视频号新品预热" style="width: 100%; margin: 0px; padding: 0px;">视频号新品预热</span></td>
-                        <td class="ant-table-cell">视频号发布任务</td>
-                        <td class="ant-table-cell">王强</td>
-                        <td class="ant-table-cell">王强 等 4 人</td>
-                        <td class="ant-table-cell"><span data-rea-d="d@09:00"></span> ~ <span data-bd-end data-rea-d="d+4@23:59"></span></td>
-                        <td class="ant-table-cell">4</td>
-                        <td class="ant-table-cell">2</td>
-                        <td class="ant-table-cell" data-rea-rate><span data-rea-rate-num>50.0%</span><span class="rea-bd-bar"><i></i></span></td>
-                        <td class="ant-table-cell" data-rea-over>0</td>
-                        <td class="ant-table-cell" data-rea-state><span class="ant-tag ant-tag-blue css-vgijab">进行中</span></td>
-                        <td class="ant-table-cell"><span class="rea-bd-dim" title="这一模块在现网没有详情页">—</span></td>
-                      </tr>
-                      <tr class="ant-table-row ant-table-row-level-0" data-bd-row="16" data-bd-day="0" data-bd-type="客户唤醒" data-bd-org="华东大区" data-bd-need="4" data-bd-done="1" data-bd-left="3" data-bd-over="0">
-                        <td class="ant-table-cell ant-table-cell-ellipsis" title="老客唤醒（30 天）"><span class="ant-typography ant-typography-ellipsis ant-typography-ellipsis-single-line css-vgijab" title="老客唤醒（30 天）" style="width: 100%; margin: 0px; padding: 0px;">老客唤醒（30 天）</span></td>
-                        <td class="ant-table-cell">客户唤醒</td>
-                        <td class="ant-table-cell">张伟</td>
-                        <td class="ant-table-cell">张伟 等 4 人</td>
-                        <td class="ant-table-cell"><span data-rea-d="d@09:00"></span> ~ <span data-bd-end data-rea-d="d+14@23:59"></span></td>
-                        <td class="ant-table-cell">4</td>
-                        <td class="ant-table-cell">1</td>
-                        <td class="ant-table-cell" data-rea-rate><span data-rea-rate-num>25.0%</span><span class="rea-bd-bar"><i></i></span></td>
-                        <td class="ant-table-cell" data-rea-over>0</td>
-                        <td class="ant-table-cell" data-rea-state><span class="ant-tag ant-tag-blue css-vgijab">进行中</span></td>
-                        <td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-rea="客户唤醒 · 详情"><span>详情</span></button></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div></div>
-        </div>
+    <div class="ant-col ant-col-8 css-vgijab">
+      <div class="rea-bd-kpi">
+        <div class="rea-bd-kpi-top"><span class="lab">逾期未做</span></div>
+        <div class="rea-bd-kpi-main"><b data-rea-sum="over">4</b><span>条</span></div>
+        <div class="rea-bd-kpi-sub"><span data-rea-sum="over-of-left">50.0%</span><span>占待执行</span></div>
+        <span class="rea-bd-kpi-bar" data-bd-kpibar="over" aria-hidden="true"><i class="d"></i><i class="l"></i><i class="o"></i></span>
+      </div>
     </div>
   </div>
+
+  <!-- 各大区完成率（组织范围）· 2026-10-26 从「任务执行」并进执行健康度：
+       与三卡同一时间窗、同一单位（**任务条数**），不再是人次——否则同一板块里
+       会并排出现两段时间、两种单位、两种完成率，读的人得先猜哪个是哪个。
+       点一行去二级页「任务列表」，按这个大区筛——下钻不再是本页就地展开，
+       因为任务明细已经整体搬进那一页了。 -->
+  <div class="rea-bd-sub rea-bd-orgsub">
+    <h6>各大区完成率</h6>
+    <span class="rea-bd-legend">
+      <span><i class="rea-bd-key d"></i>做满</span>
+      <span><i class="rea-bd-key l"></i>未做满</span>
+      <span><i class="rea-bd-key o"></i>逾期</span>
+    </span>
+  </div>
+  <div class="rea-bd-org" id="rea-bd-org"></div>
+
+  <!-- 全量任务台账不上板，但仍是本页三卡、各大区完成率、任务列表与执行人明细
+       这四处的**唯一数据源**：全部从这 16 行派生，不另编一份数。
+       藏起来是为了不再把模块列表抄一遍，不是为了删数——行上的 data-bd-* 与
+       相对日期（data-rea-d）照旧受自检保护。 -->
+  <div id="rea-bd-src" hidden>
+        <div class="ant-spin-nested-loading css-vgijab"><div class="ant-spin-container">
+          <div class="ant-table ant-table-middle css-vgijab">
+            <div class="ant-table-container">
+              <div class="ant-table-content">
+                <table style="table-layout: fixed;">
+                  <colgroup><col style="width: 13.29%"><col style="width: 9.37%"><col style="width: 6.25%"><col style="width: 8.60%"><col style="width: 20.29%"><col style="width: 6.25%"><col style="width: 6.25%"><col style="width: 8.60%"><col style="width: 6.25%"><col style="width: 6.25%"><col style="width: 8.60%"></colgroup>
+                  <thead class="ant-table-thead"><tr>
+                    <th scope="col" class="ant-table-cell">任务名称</th>
+                    <th scope="col" class="ant-table-cell">任务类型</th>
+                    <th scope="col" class="ant-table-cell">创建人</th>
+                    <th scope="col" class="ant-table-cell" title="该任务的执行人员人数；执行人员可跨大区（「各大区完成率」按创建人所属大区聚合，两种口径不同）">执行人员</th>
+                    <th scope="col" class="ant-table-cell">任务有效期</th>
+                    <th scope="col" class="ant-table-cell">应执行</th>
+                    <th scope="col" class="ant-table-cell">已执行</th>
+                    <th scope="col" class="ant-table-cell">完成率</th>
+                    <th scope="col" class="ant-table-cell" title="有效期已过且仍未执行">逾期数</th>
+                    <th scope="col" class="ant-table-cell">状态</th>
+                    <th scope="col" class="ant-table-cell">操作</th>
+                  </tr></thead>
+                  <tbody class="ant-table-tbody">
+                    <tr class="ant-table-row ant-table-row-level-0" data-bd-row="1" data-bd-day="-1" data-bd-type="发圈" data-bd-org="华东大区" data-bd-need="8" data-bd-done="7" data-bd-left="1" data-bd-over="1">
+                      <td class="ant-table-cell ant-table-cell-ellipsis" title="秋季新品主推"><span class="ant-typography ant-typography-ellipsis ant-typography-ellipsis-single-line css-vgijab" title="秋季新品主推" style="width: 100%; margin: 0px; padding: 0px;">秋季新品主推</span></td>
+                      <td class="ant-table-cell">发圈</td>
+                      <td class="ant-table-cell">张伟</td>
+                      <td class="ant-table-cell">张伟 等 8 人</td>
+                      <td class="ant-table-cell"><span data-rea-d="d-1@09:00"></span> ~ <span data-bd-end data-rea-d="d-1@23:59"></span></td>
+                      <td class="ant-table-cell">8</td>
+                      <td class="ant-table-cell">7</td>
+                      <td class="ant-table-cell" data-rea-rate><span data-rea-rate-num>87.5%</span><span class="rea-bd-bar"><i></i></span></td>
+                      <td class="ant-table-cell" data-rea-over>1</td>
+                      <td class="ant-table-cell" data-rea-state><span class="ant-tag css-vgijab">已结束</span></td>
+                      <td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-rea="发圈 · 详情"><span>详情</span></button></td>
+                    </tr>
+                    <tr class="ant-table-row ant-table-row-level-0" data-bd-row="2" data-bd-day="-1" data-bd-type="发圈" data-bd-org="华东大区" data-bd-need="10" data-bd-done="8" data-bd-left="2" data-bd-over="2">
+                      <td class="ant-table-cell ant-table-cell-ellipsis" title="国庆活动预告"><span class="ant-typography ant-typography-ellipsis ant-typography-ellipsis-single-line css-vgijab" title="国庆活动预告" style="width: 100%; margin: 0px; padding: 0px;">国庆活动预告</span></td>
+                      <td class="ant-table-cell">发圈</td>
+                      <td class="ant-table-cell">张伟</td>
+                      <td class="ant-table-cell">张伟 等 10 人</td>
+                      <td class="ant-table-cell"><span data-rea-d="d-1@09:00"></span> ~ <span data-bd-end data-rea-d="d-1@23:59"></span></td>
+                      <td class="ant-table-cell">10</td>
+                      <td class="ant-table-cell">8</td>
+                      <td class="ant-table-cell" data-rea-rate><span data-rea-rate-num>80.0%</span><span class="rea-bd-bar"><i></i></span></td>
+                      <td class="ant-table-cell" data-rea-over>2</td>
+                      <td class="ant-table-cell" data-rea-state><span class="ant-tag css-vgijab">已结束</span></td>
+                      <td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-rea="发圈 · 详情"><span>详情</span></button></td>
+                    </tr>
+                    <tr class="ant-table-row ant-table-row-level-0" data-bd-row="3" data-bd-day="-1" data-bd-type="群发好友" data-bd-org="华北大区" data-bd-need="6" data-bd-done="5" data-bd-left="1" data-bd-over="0">
+                      <td class="ant-table-cell ant-table-cell-ellipsis" title="老客户回访语"><span class="ant-typography ant-typography-ellipsis ant-typography-ellipsis-single-line css-vgijab" title="老客户回访语" style="width: 100%; margin: 0px; padding: 0px;">老客户回访语</span></td>
+                      <td class="ant-table-cell">群发好友</td>
+                      <td class="ant-table-cell">王强</td>
+                      <td class="ant-table-cell">王强 等 6 人</td>
+                      <td class="ant-table-cell"><span data-rea-d="d-1@09:00"></span> ~ <span data-bd-end data-rea-d="d+5@23:59"></span></td>
+                      <td class="ant-table-cell">6</td>
+                      <td class="ant-table-cell">5</td>
+                      <td class="ant-table-cell" data-rea-rate><span data-rea-rate-num>83.3%</span><span class="rea-bd-bar"><i></i></span></td>
+                      <td class="ant-table-cell" data-rea-over>0</td>
+                      <td class="ant-table-cell" data-rea-state><span class="ant-tag ant-tag-blue css-vgijab">进行中</span></td>
+                      <td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-rea="群发好友 · 详情"><span>详情</span></button></td>
+                    </tr>
+                    <tr class="ant-table-row ant-table-row-level-0" data-bd-row="4" data-bd-day="-1" data-bd-type="群发好友" data-bd-org="华北大区" data-bd-need="12" data-bd-done="9" data-bd-left="3" data-bd-over="0">
+                      <td class="ant-table-cell ant-table-cell-ellipsis" title="双十一预热"><span class="ant-typography ant-typography-ellipsis ant-typography-ellipsis-single-line css-vgijab" title="双十一预热" style="width: 100%; margin: 0px; padding: 0px;">双十一预热</span></td>
+                      <td class="ant-table-cell">群发好友</td>
+                      <td class="ant-table-cell">王强</td>
+                      <td class="ant-table-cell">王强 等 12 人</td>
+                      <td class="ant-table-cell"><span data-rea-d="d-1@09:00"></span> ~ <span data-bd-end data-rea-d="d+5@23:59"></span></td>
+                      <td class="ant-table-cell">12</td>
+                      <td class="ant-table-cell">9</td>
+                      <td class="ant-table-cell" data-rea-rate><span data-rea-rate-num>75.0%</span><span class="rea-bd-bar"><i></i></span></td>
+                      <td class="ant-table-cell" data-rea-over>0</td>
+                      <td class="ant-table-cell" data-rea-state><span class="ant-tag ant-tag-blue css-vgijab">进行中</span></td>
+                      <td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-rea="群发好友 · 详情"><span>详情</span></button></td>
+                    </tr>
+                    <tr class="ant-table-row ant-table-row-level-0" data-bd-row="5" data-bd-day="-1" data-bd-type="群发群组" data-bd-org="华东大区" data-bd-need="5" data-bd-done="5" data-bd-left="0" data-bd-over="0">
+                      <td class="ant-table-cell ant-table-cell-ellipsis" title="行业群早报"><span class="ant-typography ant-typography-ellipsis ant-typography-ellipsis-single-line css-vgijab" title="行业群早报" style="width: 100%; margin: 0px; padding: 0px;">行业群早报</span></td>
+                      <td class="ant-table-cell">群发群组</td>
+                      <td class="ant-table-cell">张伟</td>
+                      <td class="ant-table-cell">张伟 等 5 人</td>
+                      <td class="ant-table-cell"><span data-rea-d="d-1@09:00"></span> ~ <span data-bd-end data-rea-d="d+2@23:59"></span></td>
+                      <td class="ant-table-cell">5</td>
+                      <td class="ant-table-cell">5</td>
+                      <td class="ant-table-cell" data-rea-rate><span data-rea-rate-num>100.0%</span><span class="rea-bd-bar"><i></i></span></td>
+                      <td class="ant-table-cell" data-rea-over>0</td>
+                      <td class="ant-table-cell" data-rea-state><span class="ant-tag ant-tag-green css-vgijab">已完成</span></td>
+                      <td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-rea="群发群组 · 详情"><span>详情</span></button></td>
+                    </tr>
+                    <tr class="ant-table-row ant-table-row-level-0" data-bd-row="6" data-bd-day="-1" data-bd-type="批量加好友" data-bd-org="华南大区" data-bd-need="15" data-bd-done="11" data-bd-left="4" data-bd-over="4">
+                      <td class="ant-table-cell ant-table-cell-ellipsis" title="抖音获客名单"><span class="ant-typography ant-typography-ellipsis ant-typography-ellipsis-single-line css-vgijab" title="抖音获客名单" style="width: 100%; margin: 0px; padding: 0px;">抖音获客名单</span></td>
+                      <td class="ant-table-cell">批量加好友</td>
+                      <td class="ant-table-cell">李娜</td>
+                      <td class="ant-table-cell">李娜 等 15 人</td>
+                      <td class="ant-table-cell"><span data-rea-d="d-1@09:00"></span> ~ <span data-bd-end data-rea-d="d-1@23:59"></span></td>
+                      <td class="ant-table-cell">15</td>
+                      <td class="ant-table-cell">11</td>
+                      <td class="ant-table-cell" data-rea-rate><span data-rea-rate-num>73.3%</span><span class="rea-bd-bar"><i></i></span></td>
+                      <td class="ant-table-cell" data-rea-over>4</td>
+                      <td class="ant-table-cell" data-rea-state><span class="ant-tag css-vgijab">已结束</span></td>
+                      <td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-rea="批量加好友 · 详情"><span>详情</span></button></td>
+                    </tr>
+                    <tr class="ant-table-row ant-table-row-level-0" data-bd-row="7" data-bd-day="-1" data-bd-type="关联好友" data-bd-org="华南大区" data-bd-need="7" data-bd-done="4" data-bd-left="3" data-bd-over="3">
+                      <td class="ant-table-cell ant-table-cell-ellipsis" title="展会名单关联"><span class="ant-typography ant-typography-ellipsis ant-typography-ellipsis-single-line css-vgijab" title="展会名单关联" style="width: 100%; margin: 0px; padding: 0px;">展会名单关联</span></td>
+                      <td class="ant-table-cell">关联好友</td>
+                      <td class="ant-table-cell">李娜</td>
+                      <td class="ant-table-cell">李娜 等 7 人</td>
+                      <td class="ant-table-cell"><span data-rea-d="d-1@09:00"></span> ~ <span data-bd-end data-rea-d="d-1@23:59"></span></td>
+                      <td class="ant-table-cell">7</td>
+                      <td class="ant-table-cell">4</td>
+                      <td class="ant-table-cell" data-rea-rate><span data-rea-rate-num>57.1%</span><span class="rea-bd-bar"><i></i></span></td>
+                      <td class="ant-table-cell" data-rea-over>3</td>
+                      <td class="ant-table-cell" data-rea-state><span class="ant-tag css-vgijab">已结束</span></td>
+                      <td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-rea="关联好友 · 详情"><span>详情</span></button></td>
+                    </tr>
+                    <tr class="ant-table-row ant-table-row-level-0" data-bd-row="8" data-bd-day="-1" data-bd-type="视频号发布任务" data-bd-org="华北大区" data-bd-need="6" data-bd-done="3" data-bd-left="3" data-bd-over="0">
+                      <td class="ant-table-cell ant-table-cell-ellipsis" title="视频号新品发布"><span class="ant-typography ant-typography-ellipsis ant-typography-ellipsis-single-line css-vgijab" title="视频号新品发布" style="width: 100%; margin: 0px; padding: 0px;">视频号新品发布</span></td>
+                      <td class="ant-table-cell">视频号发布任务</td>
+                      <td class="ant-table-cell">王强</td>
+                      <td class="ant-table-cell">王强 等 6 人</td>
+                      <td class="ant-table-cell"><span data-rea-d="d-1@09:00"></span> ~ <span data-bd-end data-rea-d="d+3@23:59"></span></td>
+                      <td class="ant-table-cell">6</td>
+                      <td class="ant-table-cell">3</td>
+                      <td class="ant-table-cell" data-rea-rate><span data-rea-rate-num>50.0%</span><span class="rea-bd-bar"><i></i></span></td>
+                      <td class="ant-table-cell" data-rea-over>0</td>
+                      <td class="ant-table-cell" data-rea-state><span class="ant-tag ant-tag-blue css-vgijab">进行中</span></td>
+                      <td class="ant-table-cell"><span class="rea-bd-dim" title="这一模块在现网没有详情页">—</span></td>
+                    </tr>
+                    <tr class="ant-table-row ant-table-row-level-0" data-bd-row="9" data-bd-day="-1" data-bd-type="客户唤醒" data-bd-org="华东大区" data-bd-need="9" data-bd-done="6" data-bd-left="3" data-bd-over="0">
+                      <td class="ant-table-cell ant-table-cell-ellipsis" title="沉睡客户唤醒（90 天）"><span class="ant-typography ant-typography-ellipsis ant-typography-ellipsis-single-line css-vgijab" title="沉睡客户唤醒（90 天）" style="width: 100%; margin: 0px; padding: 0px;">沉睡客户唤醒（90 天）</span></td>
+                      <td class="ant-table-cell">客户唤醒</td>
+                      <td class="ant-table-cell">张伟</td>
+                      <td class="ant-table-cell">张伟 等 9 人</td>
+                      <td class="ant-table-cell"><span data-rea-d="d-1@09:00"></span> ~ <span data-bd-end data-rea-d="d+7@23:59"></span></td>
+                      <td class="ant-table-cell">9</td>
+                      <td class="ant-table-cell">6</td>
+                      <td class="ant-table-cell" data-rea-rate><span data-rea-rate-num>66.7%</span><span class="rea-bd-bar"><i></i></span></td>
+                      <td class="ant-table-cell" data-rea-over>0</td>
+                      <td class="ant-table-cell" data-rea-state><span class="ant-tag ant-tag-blue css-vgijab">进行中</span></td>
+                      <td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-rea="客户唤醒 · 详情"><span>详情</span></button></td>
+                    </tr>
+                    <tr class="ant-table-row ant-table-row-level-0" data-bd-row="10" data-bd-day="0" data-bd-type="发圈" data-bd-org="华东大区" data-bd-need="8" data-bd-done="5" data-bd-left="3" data-bd-over="0">
+                      <td class="ant-table-cell ant-table-cell-ellipsis" title="新品直播预告"><span class="ant-typography ant-typography-ellipsis ant-typography-ellipsis-single-line css-vgijab" title="新品直播预告" style="width: 100%; margin: 0px; padding: 0px;">新品直播预告</span></td>
+                      <td class="ant-table-cell">发圈</td>
+                      <td class="ant-table-cell">张伟</td>
+                      <td class="ant-table-cell">张伟 等 8 人</td>
+                      <td class="ant-table-cell"><span data-rea-d="d@09:00"></span> ~ <span data-bd-end data-rea-d="d+3@23:59"></span></td>
+                      <td class="ant-table-cell">8</td>
+                      <td class="ant-table-cell">5</td>
+                      <td class="ant-table-cell" data-rea-rate><span data-rea-rate-num>62.5%</span><span class="rea-bd-bar"><i></i></span></td>
+                      <td class="ant-table-cell" data-rea-over>0</td>
+                      <td class="ant-table-cell" data-rea-state><span class="ant-tag ant-tag-blue css-vgijab">进行中</span></td>
+                      <td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-rea="发圈 · 详情"><span>详情</span></button></td>
+                    </tr>
+                    <tr class="ant-table-row ant-table-row-level-0" data-bd-row="11" data-bd-day="0" data-bd-type="群发好友" data-bd-org="华北大区" data-bd-need="7" data-bd-done="5" data-bd-left="2" data-bd-over="0">
+                      <td class="ant-table-cell ant-table-cell-ellipsis" title="客户节祝福"><span class="ant-typography ant-typography-ellipsis ant-typography-ellipsis-single-line css-vgijab" title="客户节祝福" style="width: 100%; margin: 0px; padding: 0px;">客户节祝福</span></td>
+                      <td class="ant-table-cell">群发好友</td>
+                      <td class="ant-table-cell">王强</td>
+                      <td class="ant-table-cell">王强 等 7 人</td>
+                      <td class="ant-table-cell"><span data-rea-d="d@09:00"></span> ~ <span data-bd-end data-rea-d="d+5@23:59"></span></td>
+                      <td class="ant-table-cell">7</td>
+                      <td class="ant-table-cell">5</td>
+                      <td class="ant-table-cell" data-rea-rate><span data-rea-rate-num>71.4%</span><span class="rea-bd-bar"><i></i></span></td>
+                      <td class="ant-table-cell" data-rea-over>0</td>
+                      <td class="ant-table-cell" data-rea-state><span class="ant-tag ant-tag-blue css-vgijab">进行中</span></td>
+                      <td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-rea="群发好友 · 详情"><span>详情</span></button></td>
+                    </tr>
+                    <tr class="ant-table-row ant-table-row-level-0" data-bd-row="12" data-bd-day="0" data-bd-type="群发群组" data-bd-org="华东大区" data-bd-need="5" data-bd-done="3" data-bd-left="2" data-bd-over="0">
+                      <td class="ant-table-cell ant-table-cell-ellipsis" title="行业群午报"><span class="ant-typography ant-typography-ellipsis ant-typography-ellipsis-single-line css-vgijab" title="行业群午报" style="width: 100%; margin: 0px; padding: 0px;">行业群午报</span></td>
+                      <td class="ant-table-cell">群发群组</td>
+                      <td class="ant-table-cell">张伟</td>
+                      <td class="ant-table-cell">张伟 等 5 人</td>
+                      <td class="ant-table-cell"><span data-rea-d="d@09:00"></span> ~ <span data-bd-end data-rea-d="d+2@23:59"></span></td>
+                      <td class="ant-table-cell">5</td>
+                      <td class="ant-table-cell">3</td>
+                      <td class="ant-table-cell" data-rea-rate><span data-rea-rate-num>60.0%</span><span class="rea-bd-bar"><i></i></span></td>
+                      <td class="ant-table-cell" data-rea-over>0</td>
+                      <td class="ant-table-cell" data-rea-state><span class="ant-tag ant-tag-blue css-vgijab">进行中</span></td>
+                      <td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-rea="群发群组 · 详情"><span>详情</span></button></td>
+                    </tr>
+                    <tr class="ant-table-row ant-table-row-level-0" data-bd-row="13" data-bd-day="0" data-bd-type="批量加好友" data-bd-org="华南大区" data-bd-need="8" data-bd-done="4" data-bd-left="4" data-bd-over="0">
+                      <td class="ant-table-cell ant-table-cell-ellipsis" title="招商名单加好友"><span class="ant-typography ant-typography-ellipsis ant-typography-ellipsis-single-line css-vgijab" title="招商名单加好友" style="width: 100%; margin: 0px; padding: 0px;">招商名单加好友</span></td>
+                      <td class="ant-table-cell">批量加好友</td>
+                      <td class="ant-table-cell">李娜</td>
+                      <td class="ant-table-cell">李娜 等 8 人</td>
+                      <td class="ant-table-cell"><span data-rea-d="d@09:00"></span> ~ <span data-bd-end data-rea-d="d+7@23:59"></span></td>
+                      <td class="ant-table-cell">8</td>
+                      <td class="ant-table-cell">4</td>
+                      <td class="ant-table-cell" data-rea-rate><span data-rea-rate-num>50.0%</span><span class="rea-bd-bar"><i></i></span></td>
+                      <td class="ant-table-cell" data-rea-over>0</td>
+                      <td class="ant-table-cell" data-rea-state><span class="ant-tag ant-tag-blue css-vgijab">进行中</span></td>
+                      <td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-rea="批量加好友 · 详情"><span>详情</span></button></td>
+                    </tr>
+                    <tr class="ant-table-row ant-table-row-level-0" data-bd-row="14" data-bd-day="0" data-bd-type="关联好友" data-bd-org="华南大区" data-bd-need="5" data-bd-done="3" data-bd-left="2" data-bd-over="0">
+                      <td class="ant-table-cell ant-table-cell-ellipsis" title="会员名单关联"><span class="ant-typography ant-typography-ellipsis ant-typography-ellipsis-single-line css-vgijab" title="会员名单关联" style="width: 100%; margin: 0px; padding: 0px;">会员名单关联</span></td>
+                      <td class="ant-table-cell">关联好友</td>
+                      <td class="ant-table-cell">李娜</td>
+                      <td class="ant-table-cell">李娜 等 5 人</td>
+                      <td class="ant-table-cell"><span data-rea-d="d@09:00"></span> ~ <span data-bd-end data-rea-d="d+7@23:59"></span></td>
+                      <td class="ant-table-cell">5</td>
+                      <td class="ant-table-cell">3</td>
+                      <td class="ant-table-cell" data-rea-rate><span data-rea-rate-num>60.0%</span><span class="rea-bd-bar"><i></i></span></td>
+                      <td class="ant-table-cell" data-rea-over>0</td>
+                      <td class="ant-table-cell" data-rea-state><span class="ant-tag ant-tag-blue css-vgijab">进行中</span></td>
+                      <td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-rea="关联好友 · 详情"><span>详情</span></button></td>
+                    </tr>
+                    <tr class="ant-table-row ant-table-row-level-0" data-bd-row="15" data-bd-day="0" data-bd-type="视频号发布任务" data-bd-org="华北大区" data-bd-need="4" data-bd-done="2" data-bd-left="2" data-bd-over="0">
+                      <td class="ant-table-cell ant-table-cell-ellipsis" title="视频号新品预热"><span class="ant-typography ant-typography-ellipsis ant-typography-ellipsis-single-line css-vgijab" title="视频号新品预热" style="width: 100%; margin: 0px; padding: 0px;">视频号新品预热</span></td>
+                      <td class="ant-table-cell">视频号发布任务</td>
+                      <td class="ant-table-cell">王强</td>
+                      <td class="ant-table-cell">王强 等 4 人</td>
+                      <td class="ant-table-cell"><span data-rea-d="d@09:00"></span> ~ <span data-bd-end data-rea-d="d+4@23:59"></span></td>
+                      <td class="ant-table-cell">4</td>
+                      <td class="ant-table-cell">2</td>
+                      <td class="ant-table-cell" data-rea-rate><span data-rea-rate-num>50.0%</span><span class="rea-bd-bar"><i></i></span></td>
+                      <td class="ant-table-cell" data-rea-over>0</td>
+                      <td class="ant-table-cell" data-rea-state><span class="ant-tag ant-tag-blue css-vgijab">进行中</span></td>
+                      <td class="ant-table-cell"><span class="rea-bd-dim" title="这一模块在现网没有详情页">—</span></td>
+                    </tr>
+                    <tr class="ant-table-row ant-table-row-level-0" data-bd-row="16" data-bd-day="0" data-bd-type="客户唤醒" data-bd-org="华东大区" data-bd-need="4" data-bd-done="1" data-bd-left="3" data-bd-over="0">
+                      <td class="ant-table-cell ant-table-cell-ellipsis" title="老客唤醒（30 天）"><span class="ant-typography ant-typography-ellipsis ant-typography-ellipsis-single-line css-vgijab" title="老客唤醒（30 天）" style="width: 100%; margin: 0px; padding: 0px;">老客唤醒（30 天）</span></td>
+                      <td class="ant-table-cell">客户唤醒</td>
+                      <td class="ant-table-cell">张伟</td>
+                      <td class="ant-table-cell">张伟 等 4 人</td>
+                      <td class="ant-table-cell"><span data-rea-d="d@09:00"></span> ~ <span data-bd-end data-rea-d="d+14@23:59"></span></td>
+                      <td class="ant-table-cell">4</td>
+                      <td class="ant-table-cell">1</td>
+                      <td class="ant-table-cell" data-rea-rate><span data-rea-rate-num>25.0%</span><span class="rea-bd-bar"><i></i></span></td>
+                      <td class="ant-table-cell" data-rea-over>0</td>
+                      <td class="ant-table-cell" data-rea-state><span class="ant-tag ant-tag-blue css-vgijab">进行中</span></td>
+                      <td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-rea="客户唤醒 · 详情"><span>详情</span></button></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div></div>
+      </div>
+
+  <div class="rea-bd-bad" id="rea-bd-bad" hidden></div>
+</div>
+
+<!-- 执行趋势 · **独立板块**（第 2 层 · 过程）。
+     执行健康度回答「这批活做没做」，这一块回答「这些天是越干越顺、还是越拖越多」——
+     每周做满了多少条任务、又有多少条到期没做满。原来看板只给欠账的**快照**（选一段窗口知道欠多少），
+     看不出是月初就堆着、还是上周才崩的。
+     口径是**任务条数**（不是人次）：一条派给 15 人与派给 2 人都算 1 条；好处是两条线同单位、
+     量级接近，能画在一张图、共用一根纵轴里。按周汇总——一天才 7–9 条任务、做满 0–1 条，
+     按天画几乎贴着零线。
+     它有自己的时间窗（近 12 周 / 近 26 周），**不跟上方执行健康度的时间窗联动**：
+     那边筛的是「哪一批任务」，这里看的是「任务有没有落地」。 -->
+<div class="_board_gf4go_1 rea-bd-sec" id="rea-tr">
+  <div class="rea-tr-hd">
+    <h6>执行趋势</h6>
+    <div class="ant-radio-group ant-radio-group-solid css-vgijab rea-tr-win" id="rea-tr-win">
+      <div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small">
+        <div class="ant-space-item">
+          <label class="ant-radio-button-wrapper ant-radio-button-wrapper-checked css-vgijab" data-tr-win="12">
+            <span class="ant-radio-button ant-radio-button-checked"><input name="rea-tr-win" class="ant-radio-button-input" type="radio" value="12" checked=""><span class="ant-radio-button-inner"></span></span>
+            <span class="ant-radio-button-label">近 12 周</span>
+          </label>
+        </div>
+        <div class="ant-space-item">
+          <label class="ant-radio-button-wrapper css-vgijab" data-tr-win="26">
+            <span class="ant-radio-button"><input name="rea-tr-win" class="ant-radio-button-input" type="radio" value="26"><span class="ant-radio-button-inner"></span></span>
+            <span class="ant-radio-button-label">近 26 周</span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="rea-tr-chart" id="rea-tr-chart"></div>
+</div>
+
+
 </div>
 
 <!-- 群发好友回复 · **独立板块**（第 3 层 · 效果）。
-     任务执行回答「做没做」，这一块回答「做了以后好友回没回」——好友回没回是端侧能回传的，
+     执行健康度回答「做没做」，这一块回答「做了以后好友回没回」——好友回没回是端侧能回传的，
      所以它是看板上唯一一项有反馈的效果数据。按周汇总：日粒度太碎（一天的群发任务数不固定，
      曲线全是锯齿），月粒度又把运营动作抹平（PRD §2.7 / §3.4）。
      周窗口与上方任务时间窗无关：时间窗筛的是「哪一段任务」，这里看的是「哪几周的回信」。 -->
@@ -10160,10 +10116,10 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   <div class="rea-qft-chart" id="rea-qft-chart"></div>
 </div>
 
-<!-- 配置 / 资产 · **独立板块**（不与任务执行共用 tabs，也不共用指标）。
+<!-- 配置 / 资产 · **独立板块**（不与执行健康度共用指标，也不跟时间窗走）。
      这 3 个模块没有「完成率」这个概念：智能回复是规则，自动打招呼是模版，
      微信群管理是资产台账。指标各自带周期（近 7 日 / 群总数 / 模版数），**不随时间窗变**——
-     窗口从昨天切到今天，这一块一个字不动（PRD §2.4 / §3.3）。 -->
+     窗口从昨天切到今天，这一块一个字不动（PRD §2.5a / §3.3）。 -->
 <div class="_board_gf4go_1 rea-bd-sec">
   <div class="_title_gf4go_8 rea-bd-sec-title">
     <h6>配置 / 资产</h6>
@@ -10261,6 +10217,97 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
               <th scope="col" class="ant-table-cell">完成率</th>
             </tr></thead>
             <tbody class="ant-table-tbody" id="rea-dtl-body"></tbody>
+          </table>
+        </div></div>
+      </div>
+    </div></div>
+  </div>
+</div>
+</script>
+
+<!-- ============ 微小助看板 · 任务列表（执行健康度的二级页） ============
+     「任务列表」原先摊在看板「任务执行」板块里，现在收成执行健康度的二级页：
+     三卡与各大区回答「整体／哪个大区欠」，这一页回答「具体是哪几条」。
+     筛选三轴——任务类型、状态、大区——外加与看板共用的时间窗；
+     数据由看板页在点进来时随 postMessage 带过来（dumpRows），不另编一份。 -->
+<script type="text/plain" id="srcBoardTasks">
+<div class="_board_gf4go_1 rea-bd-page rea-bd-sec">
+  <div class="_title_gf4go_8 rea-bd-pagehead">
+    <h6>任务列表</h6>
+    <a href="#" data-rea="微小助看板" class="rea-bd-back">← 返回看板</a>
+  </div>
+  <div class="ant-divider css-vgijab ant-divider-horizontal" role="separator" style="margin: 0px;"></div>
+  <div class="rea-bd-row rea-bd-filters">
+    <span class="rea-bd-lab">时间窗</span>
+    <div class="ant-radio-group ant-radio-group-solid css-vgijab rea-bd-window" id="rea-tasks-win">
+      <div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small">
+        <div class="ant-space-item">
+          <label class="ant-radio-button-wrapper css-vgijab" data-tasks-win="today">
+            <span class="ant-radio-button"><input name="rea-tasks-win" class="ant-radio-button-input" type="radio" value="0"><span class="ant-radio-button-inner"></span></span>
+            <span class="ant-radio-button-label">今日</span>
+          </label>
+        </div>
+        <div class="ant-space-item">
+          <label class="ant-radio-button-wrapper ant-radio-button-wrapper-checked css-vgijab" data-tasks-win="d1">
+            <span class="ant-radio-button ant-radio-button-checked"><input name="rea-tasks-win" class="ant-radio-button-input" type="radio" value="1" checked=""><span class="ant-radio-button-inner"></span></span>
+            <span class="ant-radio-button-label">昨天</span>
+          </label>
+        </div>
+      </div>
+    </div>
+    <span class="rea-bd-sep"></span>
+    <label class="rea-bd-filter">
+      <span class="rea-bd-lab">任务类型</span>
+      <select class="rea-bd-sel" id="rea-tasks-type">
+        <option value="all">全部</option>
+        <option value="发圈">发圈</option>
+        <option value="群发好友">群发好友</option>
+        <option value="群发群组">群发群组</option>
+        <option value="批量加好友">批量加好友</option>
+        <option value="关联好友">关联好友</option>
+        <option value="视频号发布任务">视频号发布任务</option>
+        <option value="客户唤醒">客户唤醒</option>
+      </select>
+    </label>
+    <label class="rea-bd-filter">
+      <span class="rea-bd-lab">状态</span>
+      <select class="rea-bd-sel" id="rea-tasks-state">
+        <option value="all">全部</option>
+        <option value="已完成">已完成</option>
+        <option value="进行中">进行中</option>
+        <option value="已结束">已结束</option>
+      </select>
+    </label>
+    <label class="rea-bd-filter">
+      <span class="rea-bd-lab">大区</span>
+      <select class="rea-bd-sel" id="rea-tasks-org">
+        <option value="all">全部</option>
+        <option value="华东大区">华东大区</option>
+        <option value="华北大区">华北大区</option>
+        <option value="华南大区">华南大区</option>
+      </select>
+    </label>
+    <span class="rea-bd-count" id="rea-tasks-count">共 9 条</span>
+  </div>
+  <div id="rea-tasks-bad" class="rea-bd-bad" hidden></div>
+  <div class="ant-table-wrapper css-vgijab rea-bd-table" style="margin-top: 12px;">
+    <div class="ant-spin-nested-loading css-vgijab"><div class="ant-spin-container">
+      <div class="ant-table ant-table-middle css-vgijab">
+        <div class="ant-table-container"><div class="ant-table-content">
+          <table class="rea-bd-follow" style="table-layout: fixed;">
+            <colgroup><col style="width: 18%"><col style="width: 11%"><col style="width: 10%"><col style="width: 13%"><col style="width: 17%"><col style="width: 13%"><col style="width: 6%"><col style="width: 7%"><col style="width: 5%"></colgroup>
+            <thead class="ant-table-thead"><tr>
+              <th scope="col" class="ant-table-cell">任务名称</th>
+              <th scope="col" class="ant-table-cell">任务类型</th>
+              <th scope="col" class="ant-table-cell">创建人</th>
+              <th scope="col" class="ant-table-cell" title="该任务的执行人员人数；执行人员可跨大区（「各大区完成率」按创建人所属大区聚合，两种口径不同）">执行人员</th>
+              <th scope="col" class="ant-table-cell">任务有效期</th>
+              <th scope="col" class="ant-table-cell" title="该任务已执行人数 / 应执行人数（人次）；三卡与各大区按任务条数算">进度</th>
+              <th scope="col" class="ant-table-cell" title="有效期已过且仍未执行">逾期</th>
+              <th scope="col" class="ant-table-cell">状态</th>
+              <th scope="col" class="ant-table-cell">操作</th>
+            </tr></thead>
+            <tbody class="ant-table-tbody" id="rea-tasks-body"></tbody>
           </table>
         </div></div>
       </div>
@@ -10462,6 +10509,9 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   /* 「详细数据」子页：现网路由 board/wxz/task 不在 36 页快照里，
      由 reaSynthPages() 在运行时克隆看板页外壳合成，正文来自下面那个载体块。 */
   var REA_DETAIL_TASK = '微小助看板 · 执行人明细';
+  /* 执行健康度的二级页「任务列表」：同样由 reaSynthPages() 克隆看板外壳合成，
+     正文来自载体块 srcBoardTasks。筛任务类型／状态／大区，时间窗与看板共用。 */
+  var REA_TASKS_PAGE = '微小助看板 · 任务列表';
 
   /* 覆盖块的正文只取一次：那边是一整块静态 HTML，每换一次页都重取没意义 */
   var REA_HTML_CACHE = {};
@@ -10495,6 +10545,11 @@ body .subapp{background:#fff!important}
 .rea-bd-page .ant-divider{margin:0!important;border-color:#E5E8EF!important}
 .rea-bd-sechead{display:flex;align-items:baseline;gap:12px;margin:24px 0 0}
 .rea-bd-sechead h6{margin:0;font-size:16px;line-height:24px;font-weight:600;color:#1F2329}
+.rea-bd-links{display:flex;align-items:baseline;gap:16px;margin-left:auto}
+.rea-bd-links a{display:inline-flex;align-items:center;gap:2px;color:#1677FF;font-size:13px;text-decoration:none}
+.rea-bd-links a:hover{color:#4096FF}
+.rea-bd-chev{color:#8F959E;font-size:16px;line-height:1}
+.rea-bd-links a:hover .rea-bd-chev{color:#4096FF}
 
 /* ---------- 通用文字与工具行 ---------- */
 .rea-bd-row{display:flex;align-items:center;flex-wrap:wrap;gap:10px 12px;padding:20px 0 0}
@@ -10536,52 +10591,32 @@ body .subapp{background:#fff!important}
 .rea-bd-track>i.l{background:#1677FF}
 .rea-bd-track>i.o{background:#FAAD14}
 
-/* ---------- 7 类完成度 ---------- */
-.rea-bd-types{margin-top:12px;border-top:1px solid #E5E8EF;border-bottom:1px solid #E5E8EF}
-.rea-bd-type{display:flex;align-items:center;gap:16px;min-height:44px;padding:8px 12px;cursor:pointer;border-top:1px solid #F0F2F5}
-.rea-bd-type:first-child{border-top:0}
-.rea-bd-type:hover{background:#F7F8FA}
-.rea-bd-type.on{background:#E6F4FF;box-shadow:inset 2px 0 0 #1677FF}
-.rea-bd-type .nm{flex:0 0 108px;color:#1F2329;font-size:14px}
-.rea-bd-type .track{flex:1 1 auto;min-width:80px}
-.rea-bd-type .rate{flex:0 0 56px;text-align:right;color:#1F2329;font-size:14px;font-weight:600}
-.rea-bd-type .qty{flex:0 0 112px;text-align:right;color:#646A73;font-size:12px;white-space:nowrap}
-.rea-bd-type .od{flex:0 0 48px;text-align:right;font-size:12px;white-space:nowrap;color:#8F959E}
-.rea-bd-type .od b{color:#FAAD14;font-weight:600}
-.rea-bd-type-head{cursor:default;background:#F7F8FA;min-height:36px}
-.rea-bd-type-head:hover{background:#F7F8FA}
-.rea-bd-type-head .nm,.rea-bd-type-head .rate,.rea-bd-type-head .qty,.rea-bd-type-head .od{color:#8F959E;font-size:12px;font-weight:400}
-
 /* ---------- 各大区完成率 ---------- */
+.rea-bd-orgsub{margin-top:24px;padding-top:20px}
+.rea-bd-orgsub .rea-bd-legend{margin:0 0 0 auto}
 .rea-bd-org{margin-top:12px;border-top:1px solid #E5E8EF;border-bottom:1px solid #E5E8EF}
 .rea-bd-org-row{display:flex;align-items:center;gap:16px;min-height:48px;padding:8px 12px;cursor:pointer;border-top:1px solid #F0F2F5}
 .rea-bd-org-row:first-child{border-top:0}
 .rea-bd-org-row:hover{background:#F7F8FA}
-.rea-bd-org-row.on{background:#E6F4FF;box-shadow:inset 2px 0 0 #1677FF}
 .rea-bd-org-row .nm{flex:0 0 96px;color:#1F2329;font-size:14px}
 .rea-bd-org-row .track{flex:1 1 auto;min-width:80px}
-.rea-bd-org-row .qty{flex:0 0 170px;text-align:right;color:#646A73;font-size:12px;white-space:nowrap}
+.rea-bd-org-row .qty{flex:0 0 200px;text-align:right;color:#646A73;font-size:12px;white-space:nowrap}
 .rea-bd-org-row .qty b{color:#FAAD14;font-weight:600}
 .rea-bd-org-row .qty b.zero{color:#8F959E}
 .rea-bd-org-row .rate{flex:0 0 60px;text-align:right;color:#1F2329;font-size:14px;font-weight:600}
-.rea-bd-org-row .more{display:inline-block;flex:0 0 12px;color:#8F959E;font-size:16px;line-height:1;text-align:right;transition:transform .15s,color .15s}
+.rea-bd-org-row .more{display:inline-block;flex:0 0 12px;color:#8F959E;font-size:16px;line-height:1;text-align:right;transition:color .15s}
 .rea-bd-org-row:hover .more{color:#1677FF}
-.rea-bd-org-row.on .more{transform:rotate(90deg);color:#1677FF}
-.rea-bd-org-list{padding:4px 16px 12px 44px;background:#FAFBFC;border-top:1px solid #F0F2F5}
-.rea-bd-org-item{display:flex;align-items:baseline;gap:12px;padding:8px 0;font-size:12px;color:#1F2329;border-top:1px solid #F0F2F5}
-.rea-bd-org-item:first-child{border-top:0}
-.rea-bd-org-item .t{flex:0 0 36%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.rea-bd-org-item .y{flex:0 0 96px;color:#646A73}
-.rea-bd-org-item .m{flex:0 0 74px;text-align:right;color:#646A73;white-space:nowrap}
-.rea-bd-org-item .o{flex:0 0 58px;text-align:right;color:#FAAD14;white-space:nowrap}
-.rea-bd-org-item .o.zero{color:#8F959E}
-.rea-bd-org-item .c{flex:0 0 56px;color:#8F959E}
-.rea-bd-org-item .t .rea-bd-dim{color:#8F959E}
 
 /* ---------- 小节标题 ---------- */
 .rea-bd-sub{display:flex;align-items:baseline;gap:12px;margin:32px 0 0;padding-top:24px;border-top:1px solid #E5E8EF}
 .rea-bd-sub h6{margin:0;color:#1F2329;font-size:14px;font-weight:600}
 .rea-bd-sub .rea-bd-lab{margin-left:auto}
+.rea-bd-filters{padding-top:16px}
+.rea-bd-filter{display:inline-flex;align-items:center;gap:6px}
+.rea-bd-sel{appearance:none;-webkit-appearance:none;height:32px;padding:0 28px 0 10px;border:1px solid #E5E8EF;border-radius:6px;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%238F959E' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 10px center;font-size:13px;color:#1F2329;cursor:pointer;outline:none}
+.rea-bd-sel:hover{border-color:#1677FF}
+.rea-bd-sel:focus{border-color:#1677FF;box-shadow:0 0 0 2px #E6F4FF}
+.rea-bd-count{margin-left:auto;color:#8F959E;font-size:12px}
 .rea-bd-clear{font-size:12px;color:#1677FF;text-decoration:none;margin-left:auto}
 .rea-bd-clear:hover{color:#4096FF}
 .rea-bd-clear[hidden]{display:none}
@@ -10600,6 +10635,8 @@ body .subapp{background:#fff!important}
 .rea-bd-people-table th:nth-child(n+3),.rea-bd-people-table td:nth-child(n+3){text-align:right}
 .rea-bd-people-table th:first-child,.rea-bd-people-table td:first-child{text-align:left}
 .rea-bd-people,.rea-bd-span{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.rea-bd-creator{display:block;line-height:1.35}
+.rea-bd-creator em{display:block;font-style:normal;font-size:12px;color:#8F959E}
 .rea-bd-table .ant-table-cell{white-space:nowrap}
 .rea-bd-table .ant-table-cell-ellipsis{overflow:hidden;text-overflow:ellipsis}
 .rea-bd-table [data-rea-d]{white-space:nowrap}
@@ -10621,7 +10658,7 @@ body .subapp{background:#fff!important}
 .rea-bd-page .rea-bd-table .rea-bd-follow>tbody>tr>td{padding-left:10px;padding-right:10px}
 .rea-bd-page .rea-bd-table .rea-bd-follow>tbody>tr>td:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
-/* 欠账清单的进度格：数字一行，细条一行 */
+/* 任务列表的进度格：数字一行，细条一行 */
 .rea-bd-pg .n{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:#1F2329;font-variant-numeric:tabular-nums}
 .rea-bd-pg .n em{font-style:normal;color:#8F959E}
 
@@ -10896,7 +10933,7 @@ window.addEventListener("resize",function(){
      所以整块按周汇总——演示集一天 7–9 条任务、做满 0–1 条，按天画几乎贴着零线。
      两条线同单位、同量级，共用一根纵轴画在一张图里；折线用直线段、不做平滑曲线：
      条数是整数，平滑会把 0 → 3 连成一段不存在的缓坡。
-     本周的两条数直接数台账的行（与下方欠账清单同一批），其余周是确定性演示序列。 */
+     本周的两条数直接数台账的行（与任务列表同一批），其余周是确定性演示序列。 */
   function reaTrendJs(){
     return `
 /* ---- 执行趋势（周） ---- */
@@ -11092,7 +11129,8 @@ window.addEventListener("resize",function(){
     '/* 三张卡的取值——全部由那九行算出来，一个都不另写。',
     '   单位是**任务条数**（2026-10-23 定）：做满的条数、没做满的条数、到期没做满的条数。',
     '   任务数是二值的（一条要么全员做完、要么还差人），所以今日三卡常是',
-    '   「待执行＝应执行、已完成 0」——那是当天的实情；干了多少人次看下方各类任务完成度。 */',
+    '   「待执行＝应执行、已完成 0」——那是当天的实情，不是算错；',
+    '   干了多少人次看二级页任务列表的逐条进度与执行人明细。 */',
     'var SUM={',
     '  need:function(t){return String(t.n)},',
     '  done:function(t){return String(t.full)},',
@@ -11191,20 +11229,6 @@ window.addEventListener("resize",function(){
     '}',
 
     'function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}',
-    'function tag(s){',
-    '  var c=s==="已完成"?"ant-tag ant-tag-green css-vgijab":(s==="进行中"?"ant-tag ant-tag-blue css-vgijab":"ant-tag css-vgijab");',
-    '  return "<span class=\\""+c+"\\">"+esc(s)+"</span>";',
-    '}',
-    '/* 六类有「· 详情」页，视频号发布任务没有；点详情照旧走 reaNavJs 的 data-rea 委托 */',
-    'var HAS={"发圈":1,"群发好友":1,"群发群组":1,"批量加好友":1,"关联好友":1,"客户唤醒":1};',
-    'function op(t){',
-    '  if(!HAS[t])return "<span class=\\"rea-bd-dim\\">—</span>";',
-    '  return "<button type=\\"button\\" class=\\"ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link\\" data-rea=\\""+esc(t)+" · 详情\\"><span>详情</span></button>";',
-    '}',
-
-    '/* 7 类执行型任务，固定顺序——跨窗口、跨类型都要能按同一个位置比。',
-    '   某类当前窗口为 0 也保留空行，不跳位。 */',
-    'var TYPES=["发圈","群发好友","群发群组","批量加好友","关联好友","视频号发布任务","客户唤醒"];',
     '/* 24 人名单与组织树一致（docs/11 §3）。它是**演示数据**的确定性分配表：',
     '   每条任务的执行人员由「创建人排第一，再按 (id×7) 偏移取人」生成，前 done 个记已完成——',
     '   这样执行人明细的应执行／逾期能逐条对回任务行，不用另编一份人维度的数。 */',
@@ -11244,194 +11268,74 @@ window.addEventListener("resize",function(){
     '  if(over>0)h+="<i class=\\"o\\" style=\\"flex:"+over+" 1 0\\"></i>";',
     '  return h+"</span>";',
     '}',
-    'function bindRowHover(sel){',
-    '  var trs=document.querySelectorAll(sel),i;',
-    '  for(i=0;i<trs.length;i++)(function(tr){',
-    '    function on(){for(var j=0;j<tr.children.length;j++)tr.children[j].classList.add("ant-table-cell-row-hover")}',
-    '    function off(){for(var j=0;j<tr.children.length;j++)tr.children[j].classList.remove("ant-table-cell-row-hover")}',
-    '    tr.addEventListener("mouseenter",on);tr.addEventListener("mouseleave",off);',
-    '  })(trs[i]);',
-    '}',
-
-    '/* ① 7 类完成度：条长看比例，右侧看绝对量。点一行只看这一类的欠账（再点取消）。 */',
-    'function renderTypes(w){',
-    '  var rs=winRows(w),box=document.getElementById("rea-bd-types"),h="",i,j,t,a;',
-    '  if(!box)return;',
-    '  h="<div class=\\"rea-bd-type rea-bd-type-head\\"><span class=\\"nm\\">任务类型</span><span class=\\"track\\"></span><span class=\\"rate\\">完成率</span><span class=\\"qty\\">已执行 / 应执行</span><span class=\\"od\\">逾期</span></div>";',
-    '  for(i=0;i<TYPES.length;i++){',
-    '    t=TYPES[i];a={need:0,done:0,left:0,over:0};',
-    '    for(j=0;j<rs.length;j++){',
-    '      if(rs[j].getAttribute("data-bd-type")!==t)continue;',
-    '      a.need+=+rs[j].getAttribute("data-bd-need");',
-    '      a.done+=+rs[j].getAttribute("data-bd-done");',
-    '      a.left+=+rs[j].getAttribute("data-bd-left");',
-    '      a.over+=+rs[j].getAttribute("data-bd-over");',
-    '    }',
-    '    h+="<div class=\\"rea-bd-type"+(CURT===t?" on":"")+"\\" role=\\"button\\" tabindex=\\"0\\" aria-pressed=\\""+(CURT===t?"true":"false")+"\\" data-bd-type-row=\\""+esc(t)+"\\">"',
-    '      +"<span class=\\"nm\\">"+esc(t)+"</span>"',
-    '      +"<span class=\\"track\\">"+(a.need?seg(a.need,a.done,a.left,a.over,false):"")+"</span>"',
-    '      +"<span class=\\"rate\\">"+(a.need?(a.done/a.need*100).toFixed(1)+"%":"—")+"</span>"',
-    '      +"<span class=\\"qty\\">"+(a.need?a.done+" / "+a.need+" 人次":"—")+"</span>"',
-    '      +"<span class=\\"od\\">"+(a.over?"<b>"+a.over+"</b>":"—")+"</span>"',
-    '      +"</div>";',
-    '  }',
-    '  box.innerHTML=h;',
-    '}',
-
-    '/* 有效期在清单里占得最窄，年份全省（今年内不再重复写一遍当前年）：',
-    '   列宽只够「10-19 09:00 ~ 10-19 23:59」，完整值留在 title 里。 */',
-    'function shortSpan(s){',
-    '  var y=String(new Date().getFullYear());',
-    '  return String(s||"").replace(/\\d{4}-(\\d{2}-\\d{2})/g,function(m,md){return m.slice(0,4)===y?md:m});',
-    '}',
-    '/* ② 欠账清单：只列没做满的任务，按逾期 → 未执行 → 原行序排。',
-    '   做满的任务不进来——看板不重抄模块列表，它们回「微信营销任务」看。 */',
-    'function followRows(w){',
-    '  var rs=winRows(w),out=[],i;',
-    '  for(i=0;i<rs.length;i++){',
-    '    if(+rs[i].getAttribute("data-bd-left")<=0)continue;',
-    '    if(CURT!=="all"&&rs[i].getAttribute("data-bd-type")!==CURT)continue;',
-    '    out.push({r:rs[i],i:i});',
-    '  }',
-    '  out.sort(function(a,b){',
-    '    var oa=+a.r.getAttribute("data-bd-over"),ob=+b.r.getAttribute("data-bd-over");',
-    '    if(oa!==ob)return ob-oa;',
-    '    var la=+a.r.getAttribute("data-bd-left"),lb=+b.r.getAttribute("data-bd-left");',
-    '    if(la!==lb)return lb-la;',
-    '    return a.i-b.i;',
-    '  });',
-    '  return out;',
-    '}',
-    'function renderFollow(w){',
-    '  var fs=followRows(w),body=document.getElementById("rea-bd-follow-body"),h="",i,r,c,name,span,need,done,left,over,state;',
-    '  if(!body)return;',
-    '  for(i=0;i<fs.length;i++){',
-    '    r=fs[i].r;c=r.cells;',
-    '    name=((c[0]&&(c[0].getAttribute("title")||c[0].textContent))||"").trim();',
-    '    span=(((c[4]&&c[4].textContent)||"").replace(/\\s+/g," ").trim());',
-    '    need=+r.getAttribute("data-bd-need");done=+r.getAttribute("data-bd-done");',
-    '    left=+r.getAttribute("data-bd-left");over=+r.getAttribute("data-bd-over");',
-    '    state=over>0?"已结束":"进行中";',
-    '    h+="<tr class=\\"ant-table-row ant-table-row-level-0\\">"',
-    '      +"<td class=\\"ant-table-cell ant-table-cell-ellipsis\\" title=\\""+esc(name)+"\\"><span class=\\"ant-typography ant-typography-ellipsis ant-typography-ellipsis-single-line css-vgijab\\" title=\\""+esc(name)+"\\">"+esc(name)+"</span></td>"',
-    '      +"<td class=\\"ant-table-cell\\">"+esc(r.getAttribute("data-bd-type"))+"</td>"',
-    '      +"<td class=\\"ant-table-cell\\">"+esc((c[2]&&c[2].textContent)||"")+"</td>"',
-    '      +"<td class=\\"ant-table-cell\\"><span class=\\"rea-bd-people\\" title=\\""+esc((c[3]&&c[3].textContent)||"")+"\\">"+esc((c[3]&&c[3].textContent)||"")+"</span></td>"',
-    '      +"<td class=\\"ant-table-cell\\"><span class=\\"rea-bd-span\\" title=\\""+esc(span)+"\\">"+esc(shortSpan(span))+"</span></td>"',
-    '      +"<td class=\\"ant-table-cell\\"><div class=\\"rea-bd-pg\\"><span class=\\"n\\"><span>"+done+" / "+need+"</span><em>"+(need?Math.round(done/need*100)+"%":"")+"</em></span>"+seg(need,done,left,over,true)+"</div></td>"',
-    '      +"<td class=\\"ant-table-cell\\">"+(over?"<span class=\\"rea-bd-over\\">"+over+"</span>":"<span class=\\"rea-bd-dim\\">0</span>")+"</td>"',
-    '      +"<td class=\\"ant-table-cell\\">"+tag(state)+"</td>"',
-    '      +"<td class=\\"ant-table-cell\\">"+op(r.getAttribute("data-bd-type"))+"</td>"',
-    '      +"</tr>";',
-    '  }',
-    '  if(!fs.length)h="<tr class=\\"ant-table-row ant-table-row-level-0\\"><td class=\\"ant-table-cell\\" colspan=\\"9\\"><span class=\\"rea-bd-dim\\">"+(CURT==="all"?"该窗口没有欠账任务":"该窗口这一类没有欠账任务")+"</span></td></tr>";',
-    '  body.innerHTML=h;',
-    '  bindRowHover("#rea-bd-follow-body tr.ant-table-row");',
-    '  var n=document.getElementById("rea-bd-follow-count");',
-    '  if(n)n.textContent="共 "+fs.length+" 条";',
-    '  var cl=document.getElementById("rea-bd-follow-clear");',
-    '  if(cl)cl.hidden=(CURT==="all");',
-    '}',
-
-    '/* ③ 组织范围：固定顺序，每行给全「完成率 ＋ 分子分母 ＋ 逾期数」；',
-    '   点大区就地展开它没做满的任务——回答「这个数由哪几条任务构成」，不是「下钻到人」。',
+    '/* 各大区完成率：按任务**创建人**所属大区归拢，单位是**任务条数**——',
+    '   与三卡同一口径（做满／未做满／逾期），不再是人次。点一行去二级页',
+    '   「任务列表」按这个大区筛；任务明细整体搬进那一页，不在这里就地展开。',
     '   这里聚合的是**创建人**的大区；执行人员可能跨大区，人维度看执行人明细（PRD §5.4）。 */',
     'var ORGS=["华东大区","华北大区","华南大区"];',
-    'var ORG_OPEN={};',
     'function renderOrg(w){',
-    '  var rs=winRows(w),box=document.getElementById("rea-bd-org"),h="",i,j,k,o,a,need,done,left,over,rate,list;',
+    '  var rs=winRows(w),box=document.getElementById("rea-bd-org"),h="",i,j,o,a,n,d,ov,rate;',
     '  if(!box)return;',
     '  for(i=0;i<ORGS.length;i++){',
-    '    o=ORGS[i];a={need:0,done:0,left:0,over:0};list=[];',
+    '    o=ORGS[i];a={n:0,full:0,miss:0};',
     '    for(j=0;j<rs.length;j++){',
     '      if(rs[j].getAttribute("data-bd-org")!==o)continue;',
-    '      need=+rs[j].getAttribute("data-bd-need");done=+rs[j].getAttribute("data-bd-done");',
-    '      left=+rs[j].getAttribute("data-bd-left");over=+rs[j].getAttribute("data-bd-over");',
-    '      a.need+=need;a.done+=done;a.left+=left;a.over+=over;',
-    '      if(left>0)list.push(rs[j]);',
+    '      n=+rs[j].getAttribute("data-bd-need");d=+rs[j].getAttribute("data-bd-done");',
+    '      ov=+rs[j].getAttribute("data-bd-over");',
+    '      a.n++;',
+    '      if(d>=n)a.full++;',
+    '      if(ov>0)a.miss++;',
     '    }',
-    '    list.sort(function(x,y){',
-    '      var d1=+y.getAttribute("data-bd-over")-+x.getAttribute("data-bd-over");',
-    '      return d1||(+y.getAttribute("data-bd-left")-+x.getAttribute("data-bd-left"));',
-    '    });',
-    '    rate=a.need?a.done/a.need*100:0;',
-    '    h+="<div class=\\"rea-bd-org-row"+(ORG_OPEN[o]?" on":"")+"\\" role=\\"button\\" tabindex=\\"0\\" aria-expanded=\\""+(ORG_OPEN[o]?"true":"false")+"\\" data-bd-org-row=\\""+esc(o)+"\\">"',
+    '    rate=a.n?a.full/a.n*100:0;',
+    '    h+="<div class=\\"rea-bd-org-row\\" role=\\"button\\" tabindex=\\"0\\" data-bd-org-row=\\""+esc(o)+"\\">"',
     '      +"<span class=\\"nm\\">"+esc(o)+"</span>"',
-    '      +"<span class=\\"track\\">"+(a.need?seg(a.need,a.done,a.left,a.over,false):"")+"</span>"',
-    '      +"<span class=\\"qty\\">"+(a.need?a.done+" / "+a.need+" 人次 · 逾期 <b"+(a.over?"":" class=\\"zero\\"")+">"+a.over+"</b>":"—")+"</span>"',
-    '      +"<span class=\\"rate\\">"+(a.need?rate.toFixed(1)+"%":"—")+"</span>"',
+    '      +"<span class=\\"track\\">"+(a.n?seg(a.n,a.full,a.n-a.full,a.miss,false):"")+"</span>"',
+    '      +"<span class=\\"qty\\">"+(a.n?"做满 "+a.full+" / "+a.n+" 条 · 逾期 <b"+(a.miss?"":" class=\\"zero\\"")+">"+a.miss+"</b>":"—")+"</span>"',
+    '      +"<span class=\\"rate\\">"+(a.n?rate.toFixed(1)+"%":"—")+"</span>"',
     '      +"<span class=\\"more\\" aria-hidden=\\"true\\">\\u203a</span>"',
     '      +"</div>";',
-    '    if(ORG_OPEN[o]){',
-    '      h+="<div class=\\"rea-bd-org-list\\">";',
-    '      if(!list.length)h+="<div class=\\"rea-bd-org-item\\"><span class=\\"t\\"><span class=\\"rea-bd-dim\\">该大区没有欠账任务</span></span></div>";',
-    '      for(k=0;k<list.length;k++){',
-    '        h+="<div class=\\"rea-bd-org-item\\">"',
-    '          +"<span class=\\"t\\">"+esc(((list[k].cells[0]&&(list[k].cells[0].getAttribute("title")||list[k].cells[0].textContent))||"").trim())+"</span>"',
-    '          +"<span class=\\"y\\">"+esc(list[k].getAttribute("data-bd-type"))+"</span>"',
-    '          +"<span class=\\"c\\">"+esc(((list[k].cells[2]&&list[k].cells[2].textContent)||"").trim())+"</span>"',
-    '          +"<span class=\\"m\\">未执行 "+list[k].getAttribute("data-bd-left")+" 人次</span>"',
-    '          +"<span class=\\"o"+(+list[k].getAttribute("data-bd-over")?"":" zero")+"\\">逾期 "+list[k].getAttribute("data-bd-over")+"</span>"',
-    '          +"</div>";',
-    '      }',
-    '      h+="</div>";',
-    '    }',
     '  }',
     '  box.innerHTML=h;',
     '}',
-
-    '/* 类型行与大区行的点击：都只换本块的呈现，不换数据集、不跳页。 */',
-    'var tw=document.getElementById("rea-bd-types");',
-    'if(tw)tw.addEventListener("click",function(e){',
-    '  var n=e.target;',
-    '  while(n&&n!==tw&&n.nodeType===1){',
-    '    if(n.getAttribute&&n.getAttribute("data-bd-type-row")){',
-    '      var t=n.getAttribute("data-bd-type-row");',
-    '      CURT=(CURT===t)?"all":t;',
-    '      renderTypes(CURW);renderFollow(CURW);',
-    '      return;',
+    '',
+    '/* 自检：三个大区的条数、做满条数与逾期条数必须加得回窗口合计。',
+    '   大区聚合了一个正交的切法，最容易在「条数 vs 人次」换口径时漂。 */',
+    'function orgCheck(w){',
+    '  var rs=winRows(w),t=tally(rs),i,j,o,cnt=0,full=0,miss=0;',
+    '  for(i=0;i<ORGS.length;i++){',
+    '    o=ORGS[i];',
+    '    for(j=0;j<rs.length;j++){',
+    '      if(rs[j].getAttribute("data-bd-org")!==o)continue;',
+    '      cnt++;',
+    '      if(+rs[j].getAttribute("data-bd-done")>=+rs[j].getAttribute("data-bd-need"))full++;',
+    '      if(+rs[j].getAttribute("data-bd-over")>0)miss++;',
     '    }',
-    '    n=n.parentNode;',
     '  }',
-    '});',
-    'var fc=document.getElementById("rea-bd-follow-clear");',
-    'if(fc)fc.addEventListener("click",function(e){',
-    '  e.preventDefault();CURT="all";renderTypes(CURW);renderFollow(CURW);',
-    '});',
+    '  if(cnt!==t.n)bad("各大区任务条数 "+cnt+" ≠ 窗口任务条数 "+t.n);',
+    '  if(full!==t.full)bad("各大区做满条数 "+full+" ≠ 窗口做满条数 "+t.full);',
+    '  if(miss!==t.miss)bad("各大区逾期条数 "+miss+" ≠ 窗口逾期条数 "+t.miss);',
+    '}',
+    '',
+    '/* 大区行的点击：去二级页「任务列表」，带上当前窗口与大区筛选。 */',
     'var ow=document.getElementById("rea-bd-org");',
     'if(ow)ow.addEventListener("click",function(e){',
     '  var n=e.target;',
     '  while(n&&n!==ow&&n.nodeType===1){',
     '    if(n.getAttribute&&n.getAttribute("data-bd-org-row")){',
-    '      var o=n.getAttribute("data-bd-org-row");',
-    '      ORG_OPEN[o]=!ORG_OPEN[o];renderOrg(CURW);',
+    '      e.preventDefault();',
+    '      parent.postMessage({reaPage:' + reaJson(REA_TASKS_PAGE) + ',reaWin:CURW,reaRows:dumpRows(),reaOrg:n.getAttribute("data-bd-org-row")},"*");',
     '      return;',
     '    }',
     '    n=n.parentNode;',
     '  }',
     '});',
-    '/* 键盘可达：类型行与大区行都是 role=button，Enter / 空格等同点击。 */',
+    '/* 键盘可达：大区行是 role=button，Enter / 空格等同点击。 */',
     'document.addEventListener("keydown",function(e){',
     '  if(e.key!=="Enter"&&e.key!==" ")return;',
     '  var n=e.target;',
-    '  if(!n||!n.getAttribute)return;',
-    '  if(n.getAttribute("data-bd-type-row")||n.getAttribute("data-bd-org-row")){e.preventDefault();n.click();}',
+    '  if(n&&n.getAttribute&&n.getAttribute("data-bd-org-row")){e.preventDefault();n.click();}',
     '});',
-
-    '/* 自检：7 类合计必须等于窗口合计；欠账清单条数必须等于没做满的行数。 */',
-    'function typesCheck(w){',
-    '  var rs=winRows(w),t=tally(rs),i,j,tn=0,td=0,to=0,f=0,all=0;',
-    '  for(i=0;i<TYPES.length;i++){',
-    '    for(j=0;j<rs.length;j++){',
-    '      if(rs[j].getAttribute("data-bd-type")!==TYPES[i])continue;',
-    '      tn+=+rs[j].getAttribute("data-bd-need");td+=+rs[j].getAttribute("data-bd-done");to+=+rs[j].getAttribute("data-bd-over");',
-    '    }',
-    '  }',
-    '  if(tn!==t.need||td!==t.done||to!==t.over)bad("7 类合计 "+td+"/"+tn+"（逾期 "+to+"）与窗口合计 "+t.done+"/"+t.need+"（逾期 "+t.over+"）对不上");',
-    '  f=followRows(w).length;',
-    '  for(i=0;i<rs.length;i++)if(+rs[i].getAttribute("data-bd-left")>0)all++;',
-    '  if(CURT==="all"&&f!==all)bad("欠账清单 "+f+" 条，窗口里没做满的是 "+all+" 条");',
-    '}',
+    '',
     '/* 执行人分配自检：每条任务分到的人数必须正好等于应执行（且名单不重复）。 */',
     'function assignCheck(){',
     '  var rs=rows(),i,id,cr,n,ns;',
@@ -11480,7 +11384,7 @@ window.addEventListener("resize",function(){
     'var DAY={today:"0",d1:"-1"};   /* 行上的 data-bd-day：0＝今日下发的，-1＝昨天下的 */',
     'var WIRED={today:1,d1:1};       /* 只有这两档接上了数 */',
     'var DEFW="d1";                  /* 默认窗口——任务台账静态正文里那份数就是它那一份 */',
-    'var CURW=DEFW,CURT="all";       /* 当前窗口 ／ 当前类型筛选：两个正交的轴 */',
+    'var CURW=DEFW;                /* 当前窗口 */',
     'function winRows(w){',
     '  var rs=rows(),out=[],i,d=DAY[w];',
     '  for(i=0;i<rs.length;i++)if(rs[i].getAttribute("data-bd-day")===d)out.push(rs[i]);',
@@ -11524,23 +11428,29 @@ window.addEventListener("resize",function(){
     '  var to=' + reaJson(REA_DETAIL_TASK) + ';',
     '  parent.postMessage({reaPage:to,reaWin:CURW,reaRows:dumpRows()},"*");',
     '});',
+    'var tl=document.querySelectorAll("[data-bd-tasks]");',
+    'for(var ti=0;ti<tl.length;ti++)tl[ti].addEventListener("click",function(e){',
+    '  e.preventDefault();',
+    '  parent.postMessage({reaPage:' + reaJson(REA_TASKS_PAGE) + ',reaWin:CURW,reaRows:dumpRows()},"*");',
+    '});',
 
-    '/* 换窗口＝换一份数：三卡之外的三块（类型概览／欠账清单／组织范围）一起动。',
-    '   三卡是唯一的例外——它们固定看「今日」，不跟这个窗口走（PRD §2.2）。 */',
+    '/* 换窗口＝换一份数：三卡与各大区完成率一起动，单位都是任务条数。',
+    '   三卡静态正文抄的是默认窗口（昨天）那一份，所以只有回到 DEFW 时才做',
+    '   「手写值 vs 算出来」的比对——拿昨天的副本去校今天的数必然误报。 */',
     'function applyWin(w){',
     '  CURW=w;',
-    '  var tc=tally(winRows("today"));',
-    '  fill(document.getElementById("rea-bd-cards"),tc,true);',
+    '  var tc=tally(winRows(w));',
+    '  fill(document.getElementById("rea-bd-cards"),tc,w===DEFW);',
     '  paintKpiBar(tc);',
-    '  renderTypes(w);renderFollow(w);renderOrg(w);',
-    '  typesCheck(w);',
+    '  renderOrg(w);',
+    '  orgCheck(w);',
     '}',
     reaQfTrendJs(),
     reaTrendJs(),
     '/* 时间窗的点击：接数的两档照常走（点选态仍交给 REA_FX）。其余六档与日期区间',
     '   本来就没有对应的演示集，页上已置灰并挂「演示数据未接入」，这里再在捕获阶段',
     '   拦掉点选、保证数字完全不动（docs/11 §8.3）；拦得住是因为 REA_FX 挂在 document 的冒泡阶段。 */',
-    'var wg=document.querySelector(".rea-bd-window");',
+    'var wg=document.getElementById("rea-bd-window");',
     'if(wg)wg.addEventListener("click",function(e){',
     '  var n=e.target,id=null;',
     '  while(n&&n!==wg&&n.nodeType===1){',
@@ -11561,7 +11471,7 @@ window.addEventListener("resize",function(){
     'assignCheck();',
     'var gs=document.querySelectorAll(".rea-bd-tabs");',
     'for(var gi=0;gi<gs.length;gi++)tabs(gs[gi]);',
-    'applyWin(DEFW);',   /* 装完页签再按默认窗口铺一遍数（三卡照旧写今日） */
+    'applyWin(DEFW);',   /* 装完页签再按默认窗口铺一遍数（三卡与各大区同窗） */
     'renderQfTrend();',
     'renderTrTrend();',
 
@@ -11777,6 +11687,180 @@ window.addEventListener("resize",function(){
     '  if(!WIRED[id])return;',
     '  CURW=id;setWinUi();paint();',
     '},true);',
+    'stamp();setWinUi();paint();',
+    '})();'
+   ].join('\n');
+  }
+
+  /* ============================================================
+     执行健康度的二级页：任务列表
+     看板三卡与各大区完成率回答「整体／哪个大区欠」，这一页回答「具体是哪几条」。
+     三条筛选轴（任务类型／状态／大区）＋ 与看板共用的时间窗；
+     行数据由看板页点进来时随 postMessage 带过来（dumpRows），**不另编一份**。
+     ============================================================ */
+  function reaBoardTasksJs(){
+   return [
+    '(function(){',
+    'var PAD=function(n){return (n<10?"0":"")+n};',
+    'function when(d,t){',
+    '  var s=d.getFullYear()+"-"+PAD(d.getMonth()+1)+"-"+PAD(d.getDate());',
+    '  if(!t)return s;',
+    '  if(t==="now")return s+" "+PAD(d.getHours())+":"+PAD(d.getMinutes())+":"+PAD(d.getSeconds());',
+    '  if(t==="hhmm")return s+" "+PAD(d.getHours())+":"+PAD(d.getMinutes());',
+    '  return s+" "+t;',
+    '}',
+    'function stamp(){',
+    '  var es=document.querySelectorAll("[data-rea-d]"),i,m,d;',
+    '  for(i=0;i<es.length;i++){',
+    '    m=/^(now|d(?:[+-]\\d+)?)(?:@(now|hhmm|\\d{2}:\\d{2}(?::\\d{2})?))?$/.exec(es[i].getAttribute("data-rea-d"));',
+    '    if(!m)continue;',
+    '    d=new Date();',
+    '    if(m[1]!=="now")d.setDate(d.getDate()+(parseInt(m[1].slice(1),10)||0));',
+    '    es[i].textContent=when(d,m[2]);',
+    '  }',
+    '}',
+    'function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}',
+    'var ROWS=window.__REA_ROWS||[],WIN=window.__REA_WIN||"d1";',
+    'var DAY={today:"0",d1:"-1"},WIRED={today:1,d1:1};',
+    'var CURW=DAY[WIN]!==undefined?WIN:"d1";',
+    'var CURT=window.__REA_TYPE||"all",CURS=window.__REA_STATE||"all",CURO=window.__REA_ORG||"all";',
+    'function winRows(w){var d=DAY[w],o=[],i;for(i=0;i<ROWS.length;i++)if(ROWS[i].day===d)o.push(ROWS[i]);return o}',
+    'function stateOf(r){return r.left<=0?"已完成":(r.over>0?"已结束":"进行中")}',
+    '/* 有效期列在 9 列表格里最窄：先省掉今年，再把同一天的首尾并成「10-25 09:00 ~ 23:59」。',
+    '   完整值留在 title 里，列宽不够时不再截成半句。 */',
+    'function shortSpan(s){',
+    '  var y=String(new Date().getFullYear());',
+    '  var t=String(s||"").replace(/\\d{4}-(\\d{2}-\\d{2})/g,function(m,md){return m.slice(0,4)===y?md:m});',
+    '  var m=/^(\\d{2}-\\d{2}) (\\d{2}:\\d{2}) ~ \\1 (\\d{2}:\\d{2})$/.exec(t);',
+    '  return m?m[1]+" "+m[2]+" ~ "+m[3]:t;',
+    '}',
+    '/* 分段条与看板同色同义：绿＝已执行、浅蓝＝待执行未逾期、橙＝逾期（PRD §5.6）。 */',
+    'function seg(need,done,left,over){',
+    '  var pend=left-over;if(pend<0)pend=0;',
+    '  var h="<span class=\\"rea-bd-track sm\\">";',
+    '  if(done>0)h+="<i class=\\"d\\" style=\\"flex:"+done+" 1 0\\"></i>";',
+    '  if(pend>0)h+="<i class=\\"l\\" style=\\"flex:"+pend+" 1 0\\"></i>";',
+    '  if(over>0)h+="<i class=\\"o\\" style=\\"flex:"+over+" 1 0\\"></i>";',
+    '  return h+"</span>";',
+    '}',
+    'function tag(s){',
+    '  var c=s==="已完成"?"ant-tag ant-tag-green css-vgijab":(s==="进行中"?"ant-tag ant-tag-blue css-vgijab":"ant-tag css-vgijab");',
+    '  return "<span class=\\""+c+"\\">"+esc(s)+"</span>";',
+    '}',
+    '/* 六类有「· 详情」页，视频号发布任务没有；点详情照旧走 reaNavJs 的 data-rea 委托。 */',
+    'var HAS={"发圈":1,"群发好友":1,"群发群组":1,"批量加好友":1,"关联好友":1,"客户唤醒":1};',
+    'function op(t){',
+    '  if(!HAS[t])return "<span class=\\"rea-bd-dim\\">—</span>";',
+    '  return "<button type=\\"button\\" class=\\"ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link\\" data-rea=\\""+esc(t)+" · 详情\\"><span>详情</span></button>";',
+    '}',
+    'function bindRowHover(){',
+    '  var trs=document.querySelectorAll("#rea-tasks-body tr.ant-table-row"),i;',
+    '  for(i=0;i<trs.length;i++)(function(tr){',
+    '    function on(){for(var j=0;j<tr.children.length;j++)tr.children[j].classList.add("ant-table-cell-row-hover")}',
+    '    function off(){for(var j=0;j<tr.children.length;j++)tr.children[j].classList.remove("ant-table-cell-row-hover")}',
+    '    tr.addEventListener("mouseenter",on);tr.addEventListener("mouseleave",off);',
+    '  })(trs[i]);',
+    '}',
+    '',
+    '/* 三轴筛选之后排序：逾期多的、欠得多的先上来；做满的落到最后。',
+    '   同一批数据在看板上按大区聚合，这里逐条列出——两处口径不必相同，',
+    '   但每条的进度（人次）与大区的条数用的是同一张台账。 */',
+    'function filtered(){',
+    '  var rs=winRows(CURW),out=[],i,r;',
+    '  for(i=0;i<rs.length;i++){',
+    '    r=rs[i];',
+    '    if(CURT!=="all"&&r.type!==CURT)continue;',
+    '    if(CURS!=="all"&&stateOf(r)!==CURS)continue;',
+    '    if(CURO!=="all"&&r.org!==CURO)continue;',
+    '    out.push({r:r,i:i});',
+    '  }',
+    '  out.sort(function(a,b){',
+    '    if(a.r.over!==b.r.over)return b.r.over-a.r.over;',
+    '    if(a.r.left!==b.r.left)return b.r.left-a.r.left;',
+    '    return a.i-b.i;',
+    '  });',
+    '  return out;',
+    '}',
+    'function paint(){',
+    '  var fs=filtered(),body=document.getElementById("rea-tasks-body"),h="",i,x,r,state;',
+    '  if(!body)return;',
+    '  for(i=0;i<fs.length;i++){',
+    '    r=fs[i].r;state=stateOf(r);',
+    '    h+="<tr class=\\"ant-table-row ant-table-row-level-0\\">"',
+    '      +"<td class=\\"ant-table-cell ant-table-cell-ellipsis\\" title=\\""+esc(r.name)+"\\"><span class=\\"ant-typography ant-typography-ellipsis ant-typography-ellipsis-single-line css-vgijab\\" title=\\""+esc(r.name)+"\\">"+esc(r.name)+"</span></td>"',
+    '      +"<td class=\\"ant-table-cell\\">"+esc(r.type)+"</td>"',
+    '      +"<td class=\\"ant-table-cell\\"><span class=\\"rea-bd-creator\\">"+esc(r.creator)+"<em>"+esc(r.org)+"</em></span></td>"',
+    '      +"<td class=\\"ant-table-cell\\"><span class=\\"rea-bd-people\\" title=\\""+esc(r.people)+"\\">"+esc(r.people)+"</span></td>"',
+    '      +"<td class=\\"ant-table-cell\\"><span class=\\"rea-bd-span\\" title=\\""+esc(r.span)+"\\">"+esc(shortSpan(r.span))+"</span></td>"',
+    '      +"<td class=\\"ant-table-cell\\"><div class=\\"rea-bd-pg\\"><span class=\\"n\\"><span>"+r.done+" / "+r.need+"</span><em>"+(r.need?Math.round(r.done/r.need*100)+"%":"")+"</em></span>"+seg(r.need,r.done,r.left,r.over)+"</div></td>"',
+    '      +"<td class=\\"ant-table-cell\\">"+(r.over?"<span class=\\"rea-bd-over\\">"+r.over+"</span>":"<span class=\\"rea-bd-dim\\">0</span>")+"</td>"',
+    '      +"<td class=\\"ant-table-cell\\">"+tag(state)+"</td>"',
+    '      +"<td class=\\"ant-table-cell\\">"+op(r.type)+"</td>"',
+    '      +"</tr>";',
+    '  }',
+    '  if(!fs.length)h="<tr class=\\"ant-table-row ant-table-row-level-0\\"><td class=\\"ant-table-cell\\" colspan=\\"9\\"><span class=\\"rea-bd-dim\\">没有符合条件的任务</span></td></tr>";',
+    '  body.innerHTML=h;',
+    '  var n=document.getElementById("rea-tasks-count");',
+    '  if(n)n.textContent="共 "+fs.length+" 条";',
+    '  bindRowHover();',
+    '  selfCheck(fs);',
+    '}',
+    '',
+    '/* 自检：逐行的口径（已执行＋未执行＝应执行、逾期不超过未执行）之外，',
+    '   还要确认筛选没有多吃或漏掉行——筛选错了，页上的条数就会与看板对不上。 */',
+    'function selfCheck(fs){',
+    '  var msgs=[],i,j,r,w=winRows(CURW),expect=0,x;',
+    '  for(i=0;i<fs.length;i++){',
+    '    r=fs[i].r;',
+    '    if(r.done+r.left!==r.need)msgs.push("「"+r.name+"」已执行 "+r.done+" ＋ 未执行 "+r.left+" ≠ 应执行 "+r.need);',
+    '    if(r.over>r.left)msgs.push("「"+r.name+"」逾期 "+r.over+" 大于未执行 "+r.left);',
+    '  }',
+    '  for(j=0;j<w.length;j++){',
+    '    x=w[j];',
+    '    if(CURT!=="all"&&x.type!==CURT)continue;',
+    '    if(CURS!=="all"&&stateOf(x)!==CURS)continue;',
+    '    if(CURO!=="all"&&x.org!==CURO)continue;',
+    '    expect++;',
+    '  }',
+    '  if(fs.length!==expect)msgs.push("筛出 "+fs.length+" 条，按筛选条件应是 "+expect+" 条");',
+    '  var el=document.getElementById("rea-tasks-bad");',
+    '  if(!el)return;',
+    '  if(!msgs.length){el.hidden=true;el.innerHTML="";return}',
+    '  el.hidden=false;',
+    '  el.innerHTML="<b>任务列表自检未通过（"+msgs.length+" 处）</b><br>"+msgs.join("<br>");',
+    '}',
+    '',
+    'function setWinUi(){',
+    '  var ls=document.querySelectorAll("[data-tasks-win]"),i,on;',
+    '  for(i=0;i<ls.length;i++){',
+    '    on=ls[i].getAttribute("data-tasks-win")===CURW;',
+    '    ls[i].classList.toggle("ant-radio-button-wrapper-checked",on);',
+    '    var b=ls[i].querySelector(".ant-radio-button");',
+    '    if(b)b.classList.toggle("ant-radio-button-checked",on);',
+    '    var r=ls[i].querySelector("input");if(r)r.checked=on;',
+    '  }',
+    '}',
+    'var wg=document.getElementById("rea-tasks-win");',
+    'if(wg)wg.addEventListener("click",function(e){',
+    '  var n=e.target,id=null;',
+    '  while(n&&n!==wg&&n.nodeType===1){',
+    '    if(n.getAttribute&&n.getAttribute("data-tasks-win")){id=n.getAttribute("data-tasks-win");break}',
+    '    n=n.parentNode;',
+    '  }',
+    '  if(!id)return;',
+    '  e.preventDefault();e.stopPropagation();',
+    '  if(!WIRED[id])return;',
+    '  CURW=id;setWinUi();paint();',
+    '},true);',
+    'function seedSel(id,v){var el=document.getElementById(id);if(el)el.value=v}',
+    'seedSel("rea-tasks-type",CURT);seedSel("rea-tasks-state",CURS);seedSel("rea-tasks-org",CURO);',
+    'function bindSel(id,set){',
+    '  var el=document.getElementById(id);',
+    '  if(el)el.addEventListener("change",function(){set(this.value);paint()});',
+    '}',
+    'bindSel("rea-tasks-type",function(v){CURT=v});',
+    'bindSel("rea-tasks-state",function(v){CURS=v});',
+    'bindSel("rea-tasks-org",function(v){CURO=v});',
     'stamp();setWinUi();paint();',
     '})();'
    ].join('\n');
@@ -14384,6 +14468,7 @@ else if(PAGE==='群发群组 · 新建')initQs();
 
   var REA_COVER = {
     '微小助看板':    { html: 'srcBoard', css: REA_BOARD_CSS, js: reaBoardJs },
+    '微小助看板 · 任务列表': { html: 'srcBoardTasks', css: REA_BOARD_CSS, js: reaBoardTasksJs },
     '微小助看板 · 执行人明细': { html: 'srcBoardTask', css: REA_BOARD_CSS, js: reaBoardTaskJs },
     '素材库 · 新建': { css: REA_MAT_CSS, js: reaMatJs },
     '新小红书运营': { js: reaXhsListJs },
@@ -14438,7 +14523,7 @@ else if(PAGE==='群发群组 · 新建')initQs();
     }
     var board = find(REA_BOARD_PAGE);
     if (board){
-      var add = [REA_DETAIL_TASK];
+      var add = [REA_TASKS_PAGE, REA_DETAIL_TASK];
       for (i = 0; i < add.length; i++){
         P.pages.push({
           name: add[i],
@@ -14468,9 +14553,16 @@ else if(PAGE==='群发群组 · 新建')initQs();
   /* 子页要的那份数据（看不出页名的一律空串）：行由看板页带过来，窗口也跟着走。
      用 reaJson 转义尖括号——拼进 srcdoc 的 script 里不能出现字面闭标签。 */
   function reaDataJs(name){
-    if (name !== REA_DETAIL_TASK) return '';
-    return 'window.__REA_ROWS=' + reaJson(reaRows || []) + ';'
+    if (name !== REA_DETAIL_TASK && name !== REA_TASKS_PAGE) return '';
+    var js = 'window.__REA_ROWS=' + reaJson(reaRows || []) + ';'
       + 'window.__REA_WIN=' + reaJson(reaWinSel || 'd1') + ';';
+    if (name === REA_TASKS_PAGE){
+      /* 任务列表的三轴筛选：从大区行点进来时带一个预选值，其余从「任务列表」链接进来全是 all。 */
+      js += 'window.__REA_TYPE=' + reaJson(reaTypeSel || 'all') + ';'
+        + 'window.__REA_STATE=' + reaJson(reaStateSel || 'all') + ';'
+        + 'window.__REA_ORG=' + reaJson(reaOrgSel || 'all') + ';';
+    }
+    return js;
   }
 
 
@@ -14750,6 +14842,9 @@ else if(PAGE==='群发群组 · 新建')initQs();
   var reaGroupNames = []; // 素材库列表页侧栏分组树里的分组名（供新建页的「所属分组」下拉用）
   var reaRows = null;     // 看板点「详细数据」时带过来的任务行（子页用，不另存一份）
   var reaWinSel = 'd1';   // 同上：点进来时的当前窗口（today / d1）
+  var reaTypeSel = 'all'; // 任务列表的预选筛选：任务类型
+  var reaStateSel = 'all';// 同上：状态
+  var reaOrgSel = 'all';  // 同上：大区（从各大区完成率的一行点进来时有值）
   var reaSynthDone = false; // 合成子页（执行人明细／任务配置快照）跑过没有
 
   /* 从某页的 rest 里读出它侧栏当前的二级分类名（读不到就返回空串） */
@@ -15028,7 +15123,11 @@ else if(PAGE==='群发群组 · 新建')initQs();
     if (!d.reaPage && !d.reaSave) return;
     var P = window.__REAL_ADMIN__;
     /* 看板点的「详细数据」：先把行与窗口收下，子页 reaDoc 时会灌进 window（见 reaDataJs） */
-    if (d.reaRows){ reaRows = d.reaRows; reaWinSel = d.reaWin || 'd1'; }
+    if (d.reaRows){
+      reaRows = d.reaRows; reaWinSel = d.reaWin || 'd1';
+      /* 每次从看板进来都重设三轴筛选：从大区行进来带大区，从「任务列表」链接进来全 all。 */
+      reaTypeSel = d.reaType || 'all'; reaStateSel = d.reaState || 'all'; reaOrgSel = d.reaOrg || 'all';
+    }
     var name = d.reaPage;
     if (!name && d.reaSave){
       reaSaved.push(d.reaSave);
