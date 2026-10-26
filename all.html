@@ -9732,7 +9732,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 
   <!-- 卡片网格：上「健康度｜趋势」、中「部门｜员工」、下「群发回复｜配置资产」。
        分组靠卡边界，不再用小标题＋分割线（ADR-0083）。 -->
-  <div class="rea-bd-grid">
+  <div class="rea-bd-grid" id="rea-bd-grid">
 
     <!-- 执行健康度 · 第 1 层 · 结果（任务条数）。
          三段互斥：已完成（绿）→ 待完成（蓝）→ 逾期未做（橙），段间留一道细缝；
@@ -9792,8 +9792,9 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 
     <!-- 部门完成情况 · **人次**口径（与右侧员工完成情况同一把尺子，部门＝员工的汇总）。
          条长＝已执行 ÷ 应执行；右侧数字是该部门在这个窗口里的应执行人次。
-         点一行去「任务列表」按这个部门预筛。 -->
-    <div class="rea-bd-card rea-bd-card--w7">
+         点一行去「任务列表」按这个部门预筛。
+         当前范围**没有下级部门**（叶子部门）时整卡不出、网格重排——部门之间无从比较（PRD §2.4）。 -->
+    <div class="rea-bd-card rea-bd-card--w7" id="rea-bd-org-card">
       <div class="rea-bd-ch"><h6>部门完成情况</h6><span class="th">完成率</span></div>
       <div class="rea-bd-org" id="rea-bd-org"></div>
       <div class="rea-bd-org-foot" id="rea-bd-org-foot"></div>
@@ -9856,7 +9857,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 
     <!-- 配置 / 资产 · 这三个模块没有「完成率」这个概念（规则／模版／台账），
          指标各自带周期，窗口换了它一个字不动（PRD §2.5a / §3.3）。 -->
-    <div class="rea-bd-card rea-bd-card--w5">
+    <div class="rea-bd-card rea-bd-card--w5" id="rea-bd-cfg">
       <div class="rea-bd-ch"><h6>配置 / 资产</h6></div>
       <div class="ant-tabs ant-tabs-top css-vgijab rea-bd-tabs">
         <div role="tablist" aria-orientation="horizontal" class="ant-tabs-nav">
@@ -11208,6 +11209,10 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-card{display:flex;flex-direction:column;min-width:0;padding:16px 20px 18px;background:#fff;border:1px solid #E9EEF6;border-radius:12px;box-shadow:0 1px 2px rgba(19,44,82,.04)}
 .rea-bd-card--w7{grid-column:span 7}
 .rea-bd-card--w5{grid-column:span 5}
+/* 当前范围没有下级部门：部门卡整件不出（比不了），落单的「配置·资产」铺满最后一行。
+   有部门的范围里这条不生效，版式仍是 3 行 × 2 列（PRD §2.4）。 */
+.rea-bd-grid--nodept #rea-bd-org-card{display:none}
+.rea-bd-grid--nodept #rea-bd-cfg{grid-column:span 12}
 /* 卡头只有一种写法：标题 ＋ 自己的控件 ＋ 右侧的下钻链接／列名 */
 .rea-bd-ch{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:2px 0 14px}
 .rea-bd-ch h6{margin:0;color:#1F2329;font-size:15px;line-height:22px;font-weight:600;letter-spacing:-.2px}
@@ -12191,8 +12196,11 @@ setLdSortUi();
     '}',
     'function renderOrg(w){',
     '  var list=deptList(w),box=document.getElementById("rea-bd-org"),foot=document.getElementById("rea-bd-org-foot");',
-    '  var h="",i,r,sum=0;',
-    '  if(!box)return;',
+    '  var h="",i,r,sum=0,grid=document.getElementById("rea-bd-grid");',
+    '  /* 叶子部门：当前范围没有下级部门，部门之间无从比较——整卡不出、网格重排（PRD §2.4）。',
+    '     这里判的是范围里有没有部门，不是这一窗有没有数：窗口里 0 人次仍要留一行「—」。 */',
+    '  if(grid)grid.classList.toggle("rea-bd-grid--nodept",!DEPTS.length);',
+    '  if(!box||!DEPTS.length)return;',
     '  for(i=0;i<list.length;i++){',
     '    r=list[i];sum+=r.rate;',
     '    h+="<div class=\\"rea-bd-org-row\\" role=\\"button\\" tabindex=\\"0\\" data-bd-org-row=\\""+esc(r.o)+"\\">"',
@@ -12203,12 +12211,14 @@ setLdSortUi();
     '      +"</div>";',
     '  }',
     '  box.innerHTML=h;',
-    '  if(foot)foot.textContent="共 "+DEPTS.length+" 个部门 · 部门平均完成率 "+(list.length?(sum/list.length).toFixed(1)+"%":"—");',
+    '  /* 只有一个部门时不给「平均完成率」：均值就是那一行自己的数。 */',
+    '  if(foot)foot.textContent=DEPTS.length>1?"共 "+DEPTS.length+" 个部门 · 部门平均完成率 "+(sum/list.length).toFixed(1)+"%":"共 1 个部门";',
     '}',
     '/* 自检：8 个部门的应执行／已执行人次必须加得回窗口合计。',
     '   部门是一个正交的切法，最容易在「条数 vs 人次」换口径时漂。 */',
     'function orgCheck(w){',
     '  var t=tally(winRows(w)),i,dn=0,dd=0;',
+    '  if(!DEPTS.length)return; /* 叶子部门：范围里没有部门可比，台账也不按部门切，不做这条对账 */',
     '  for(i=0;i<DEPTS.length;i++){',
     '    var a=t.org[DEPTS[i]]||{need:0,done:0};',
     '    dn+=a.need;dd+=a.done;',
