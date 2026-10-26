@@ -9795,7 +9795,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
          点一行去「任务列表」按这个部门预筛。
          当前范围**没有下级部门**（叶子部门）时整卡不出、网格重排——部门之间无从比较（PRD §2.4）。 -->
     <div class="rea-bd-card rea-bd-card--w7" id="rea-bd-org-card">
-      <div class="rea-bd-ch"><h6>部门完成情况</h6><span class="th">完成率</span></div>
+      <div class="rea-bd-ch"><h6>部门完成情况</h6><span class="th rea-bd-sort" id="rea-bd-org-sort" role="button" tabindex="0" data-bd-org-sort="1" title="按完成率降序（点一下改升序）">完成率<i>↓</i></span></div>
       <div class="rea-bd-org" id="rea-bd-org"></div>
       <div class="rea-bd-org-foot" id="rea-bd-org-foot"></div>
     </div>
@@ -11217,6 +11217,11 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-ch{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:2px 0 14px}
 .rea-bd-ch h6{margin:0;color:#1F2329;font-size:15px;line-height:22px;font-weight:600;letter-spacing:-.2px}
 .rea-bd-ch .th{margin-left:auto;color:#8F959E;font-size:12px}
+/* 可点的列头（部门完成情况的「完成率」）：箭头表示当前方向，点一下翻面 */
+.rea-bd-ch .th.rea-bd-sort{display:inline-flex;align-items:center;gap:3px;cursor:pointer;user-select:none;-webkit-user-select:none}
+.rea-bd-ch .th.rea-bd-sort i{font-style:normal;font-size:11px;line-height:1}
+.rea-bd-ch .th.rea-bd-sort:hover{color:#1677FF}
+.rea-bd-ch .th.rea-bd-sort:focus-visible{outline:2px solid #4096FF;outline-offset:2px;border-radius:3px}
 /* 视口 1280 以下内容区不足 770px，两列会把环形和图例挤在一起，回落到单列 */
 @media (max-width:1279px){
   .rea-bd-card--w7,.rea-bd-card--w5{grid-column:span 12}
@@ -11276,7 +11281,12 @@ body .subapp{background:#F6F8FB!important}
 /* ---------- 部门完成情况（人次） ----------
    一条细长的蓝条 ＋ 右对齐的粗体百分比 ＋ 该部门的应执行人次。
    条只编码值，不按阈值换色（PRD §5.6）：8 行一列下来就是一把尺子。 */
-.rea-bd-org{display:flex;flex:1 1 auto;flex-direction:column;justify-content:center;margin-top:-2px}
+.rea-bd-org{display:flex;flex:1 1 auto;flex-direction:column;margin-top:-2px;max-height:320px;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:#D6DDE8 transparent}
+.rea-bd-org::-webkit-scrollbar{width:6px}
+.rea-bd-org::-webkit-scrollbar-thumb{background:#D6DDE8;border-radius:3px}
+.rea-bd-org::-webkit-scrollbar-track{background:transparent}
+/* 部门少时上下居中，部门多时从第一行开始滚（auto 外边距在溢出时归零，不会把顶部行滚不见） */
+.rea-bd-org-in{margin:auto 0}
 .rea-bd-org-row{display:flex;align-items:center;gap:14px;min-height:40px;padding:4px 8px;margin:0 -8px;border-radius:6px;cursor:pointer;border-top:1px solid #F4F6FA}
 .rea-bd-org-row:first-child{border-top:0}
 .rea-bd-org-row:hover{background:#F7F9FC}
@@ -12181,6 +12191,10 @@ setLdSortUi();
     '   按完成率降序排：一列下来就是一把尺子。点一行去「任务列表」按这个部门筛；',
     '   任务明细整体搬进那一页，不在这里就地展开。 */',
     'var DEPTS=["产品部","市场部","运营部","销售部","研发部","客户成功部","设计部","人力行政部"];',
+    '/* 部门的排序方向：-1 ＝ 完成率降序（默认，与参考稿一致），1 ＝ 升序。',
+    '   卡里只露 8 行、其余在卡内滚动，所以列头「完成率」可点翻面——',
+    '   部门上百个时，垫底的那几个在降序下要一路滚到底才看得见。 */',
+    'var ORGDIR=-1;',
     'function deptList(w){',
     '  var t=tally(winRows(w)),out=[],i,o,a;',
     '  for(i=0;i<DEPTS.length;i++){',
@@ -12188,7 +12202,7 @@ setLdSortUi();
     '    out.push({o:o,need:a.need,done:a.done,rate:a.need?a.done/a.need*100:0});',
     '  }',
     '  out.sort(function(x,y){',
-    '    if(y.rate!==x.rate)return y.rate-x.rate;',
+    '    if(x.rate!==y.rate)return (x.rate-y.rate)*ORGDIR;',
     '    if(y.need!==x.need)return y.need-x.need;',
     '    return DEPTS.indexOf(x.o)-DEPTS.indexOf(y.o);',
     '  });',
@@ -12210,7 +12224,13 @@ setLdSortUi();
     '      +"<span class=\\"qty\\">"+(r.need?r.need+" 人次":"—")+"</span>"',
     '      +"</div>";',
     '  }',
-    '  box.innerHTML=h;',
+    '  box.innerHTML="<div class=\\"rea-bd-org-in\\">"+h+"</div>";',
+    '  var srt=document.getElementById("rea-bd-org-sort");',
+    '  if(srt){',
+    '    srt.setAttribute("data-bd-org-dir",String(ORGDIR));',
+    '    var ar=srt.querySelector("i");if(ar)ar.textContent=ORGDIR<0?"↓":"↑";',
+    '    srt.title=ORGDIR<0?"按完成率降序（点一下改升序）":"按完成率升序（点一下改降序）";',
+    '  }',
     '  /* 只有一个部门时不给「平均完成率」：均值就是那一行自己的数。 */',
     '  if(foot)foot.textContent=DEPTS.length>1?"共 "+DEPTS.length+" 个部门 · 部门平均完成率 "+(sum/list.length).toFixed(1)+"%":"共 1 个部门";',
     '}',
@@ -12239,6 +12259,14 @@ setLdSortUi();
     '    n=n.parentNode;',
     '  }',
     '});',
+    '/* 列头「完成率」：翻排序方向，并把卡内滚动条拉回顶部——',
+    '   翻面后最关心的那一头永远在第一位，不用先滚回上面再找。 */',
+    'var osrt=document.getElementById("rea-bd-org-sort");',
+    'if(osrt)osrt.addEventListener("click",function(e){',
+    '  e.preventDefault();e.stopPropagation();',
+    '  ORGDIR=-ORGDIR;renderOrg(CURW);',
+    '  var o=document.getElementById("rea-bd-org");if(o)o.scrollTop=0;',
+    '});',
     '/* 占比图图例的点击：同样去任务列表，预筛的是**状态**——',
     '   已完成→「已完成」、待完成→「进行中」、逾期未做→「已结束」，',
     '   与任务列表状态列同一套词；点完看到的行数应与图例上的条数相等。 */',
@@ -12254,11 +12282,11 @@ setLdSortUi();
     '    n=n.parentNode;',
     '  }',
     '});',
-    '/* 键盘可达：部门行与图例三行都是 role=button，Enter / 空格等同点击。 */',
+    '/* 键盘可达：部门行、图例三行与列头「完成率」都是 role=button，Enter / 空格等同点击。 */',
     'document.addEventListener("keydown",function(e){',
     '  if(e.key!=="Enter"&&e.key!==" ")return;',
     '  var n=e.target;',
-    '  if(n&&n.getAttribute&&(n.getAttribute("data-bd-org-row")||n.getAttribute("data-bd-state"))){e.preventDefault();n.click();}',
+    '  if(n&&n.getAttribute&&(n.getAttribute("data-bd-org-row")||n.getAttribute("data-bd-state")||n.getAttribute("data-bd-org-sort"))){e.preventDefault();n.click();}',
     '});',
     '',
     '/* 执行人分配自检：每条任务分到的人数必须正好等于应执行（且名单不重复）。 */',
