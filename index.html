@@ -9696,78 +9696,73 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
        默认窗口是昨天，静态正文写的也是昨天那一份（9 条：已完成 1 / 待完成 4 / 逾期 4）。
        原来的第四张「异常 · 失败」已撤（PRD §5.1）：失败在后端就归「进行中」，不是一种独立状态，
        单列一张卡等于拿我们的口径去解释现网的分桶；页上不再出现这个数。 -->
-  <div class="rea-bd-sechead">
+  <!-- 时间窗归「执行健康度」：占比图、各大区完成率、以及二级页「任务列表」共用这一个窗口。
+       默认仍是「昨天」——那是数据齐、口径稳的一档；「今日」是主动去看进度时才切过去的一档。
+       群发好友回复按周汇总、执行趋势带自己的近 12／26 周，都不跟这个窗口走。
+       2026-10-26 排版收口：8 档从独占一整行收进标题行，没接演示数据的 6 档弱化为灰字，
+       自定义区间收成一枚同行入口（演示里禁用），不再让两个禁用的日期框横在首屏。 -->
+  <div class="rea-bd-sechead rea-bd-sechead--health">
     <h6>执行健康度</h6>
+    <div class="rea-bd-winbar" id="rea-bd-window-row">
+      <span class="rea-bd-lab">时间窗</span>
+      <div class="ant-radio-group ant-radio-group-solid css-vgijab rea-bd-window" id="rea-bd-window">
+        <div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small">
+          <div class="ant-space-item">
+            <label class="ant-radio-button-wrapper css-vgijab" data-bd-win="today">
+              <span class="ant-radio-button"><input name="rea-bd-win" class="ant-radio-button-input" type="radio" value="0"><span class="ant-radio-button-inner"></span></span>
+              <span class="ant-radio-button-label">今日</span>
+            </label>
+          </div>
+          <div class="ant-space-item">
+            <label class="ant-radio-button-wrapper ant-radio-button-wrapper-checked css-vgijab" data-bd-win="d1">
+              <span class="ant-radio-button ant-radio-button-checked"><input name="rea-bd-win" class="ant-radio-button-input" type="radio" value="1" checked=""><span class="ant-radio-button-inner"></span></span>
+              <span class="ant-radio-button-label">昨天</span>
+            </label>
+          </div>
+          <div class="ant-space-item">
+            <label class="ant-radio-button-wrapper css-vgijab rea-bd-win-off" data-bd-win="d2" title="演示数据未接入">
+              <span class="ant-radio-button"><input name="rea-bd-win" class="ant-radio-button-input" type="radio" value="2"><span class="ant-radio-button-inner"></span></span>
+              <span class="ant-radio-button-label">前天</span>
+            </label>
+          </div>
+          <div class="ant-space-item">
+            <label class="ant-radio-button-wrapper css-vgijab rea-bd-win-off" data-bd-win="w7" title="演示数据未接入">
+              <span class="ant-radio-button"><input name="rea-bd-win" class="ant-radio-button-input" type="radio" value="3"><span class="ant-radio-button-inner"></span></span>
+              <span class="ant-radio-button-label">近一周</span>
+            </label>
+          </div>
+          <div class="ant-space-item">
+            <label class="ant-radio-button-wrapper css-vgijab rea-bd-win-off" data-bd-win="m1" title="演示数据未接入">
+              <span class="ant-radio-button"><input name="rea-bd-win" class="ant-radio-button-input" type="radio" value="4"><span class="ant-radio-button-inner"></span></span>
+              <span class="ant-radio-button-label">近一月</span>
+            </label>
+          </div>
+          <div class="ant-space-item">
+            <label class="ant-radio-button-wrapper css-vgijab rea-bd-win-off" data-bd-win="m3" title="演示数据未接入">
+              <span class="ant-radio-button"><input name="rea-bd-win" class="ant-radio-button-input" type="radio" value="5"><span class="ant-radio-button-inner"></span></span>
+              <span class="ant-radio-button-label">近三月</span>
+            </label>
+          </div>
+          <div class="ant-space-item">
+            <label class="ant-radio-button-wrapper css-vgijab rea-bd-win-off" data-bd-win="m6" title="演示数据未接入">
+              <span class="ant-radio-button"><input name="rea-bd-win" class="ant-radio-button-input" type="radio" value="6"><span class="ant-radio-button-inner"></span></span>
+              <span class="ant-radio-button-label">近半年</span>
+            </label>
+          </div>
+          <div class="ant-space-item">
+            <label class="ant-radio-button-wrapper css-vgijab rea-bd-win-off" data-bd-win="y1" title="演示数据未接入">
+              <span class="ant-radio-button"><input name="rea-bd-win" class="ant-radio-button-input" type="radio" value="7"><span class="ant-radio-button-inner"></span></span>
+              <span class="ant-radio-button-label">近一年</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <span class="rea-bd-custom" aria-disabled="true" title="演示数据未接入">自定义区间</span>
+    </div>
     <span class="rea-bd-links">
       <a href="#" data-bd-tasks>任务列表<span class="rea-bd-chev" aria-hidden="true">›</span></a>
       <a href="#" data-bd-detail="task">执行人明细<span class="rea-bd-chev" aria-hidden="true">›</span></a>
     </span>
-  </div>
-
-  <!-- 时间窗归「执行健康度」：占比图、各大区完成率、以及二级页「任务列表」共用这一个窗口。
-       默认仍是「昨天」——那是数据齐、口径稳的一档；「今日」是主动去看进度时才切过去的一档。
-       群发好友回复按周汇总、执行趋势带自己的近 12／26 周，都不跟这个窗口走。 -->
-  <div class="rea-bd-row" id="rea-bd-window-row">
-    <span class="rea-bd-lab">时间窗</span>
-    <div class="ant-radio-group ant-radio-group-solid css-vgijab rea-bd-window" id="rea-bd-window">
-      <div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small">
-        <div class="ant-space-item">
-          <label class="ant-radio-button-wrapper css-vgijab" data-bd-win="today">
-            <span class="ant-radio-button"><input name="rea-bd-win" class="ant-radio-button-input" type="radio" value="0"><span class="ant-radio-button-inner"></span></span>
-            <span class="ant-radio-button-label">今日</span>
-          </label>
-        </div>
-        <div class="ant-space-item">
-          <label class="ant-radio-button-wrapper ant-radio-button-wrapper-checked css-vgijab" data-bd-win="d1">
-            <span class="ant-radio-button ant-radio-button-checked"><input name="rea-bd-win" class="ant-radio-button-input" type="radio" value="1" checked=""><span class="ant-radio-button-inner"></span></span>
-            <span class="ant-radio-button-label">昨天</span>
-          </label>
-        </div>
-        <div class="ant-space-item">
-          <label class="ant-radio-button-wrapper css-vgijab rea-bd-win-off" data-bd-win="d2" title="演示数据未接入">
-            <span class="ant-radio-button"><input name="rea-bd-win" class="ant-radio-button-input" type="radio" value="2"><span class="ant-radio-button-inner"></span></span>
-            <span class="ant-radio-button-label">前天</span>
-          </label>
-        </div>
-        <div class="ant-space-item">
-          <label class="ant-radio-button-wrapper css-vgijab rea-bd-win-off" data-bd-win="w7" title="演示数据未接入">
-            <span class="ant-radio-button"><input name="rea-bd-win" class="ant-radio-button-input" type="radio" value="3"><span class="ant-radio-button-inner"></span></span>
-            <span class="ant-radio-button-label">近一周</span>
-          </label>
-        </div>
-        <div class="ant-space-item">
-          <label class="ant-radio-button-wrapper css-vgijab rea-bd-win-off" data-bd-win="m1" title="演示数据未接入">
-            <span class="ant-radio-button"><input name="rea-bd-win" class="ant-radio-button-input" type="radio" value="4"><span class="ant-radio-button-inner"></span></span>
-            <span class="ant-radio-button-label">近一月</span>
-          </label>
-        </div>
-        <div class="ant-space-item">
-          <label class="ant-radio-button-wrapper css-vgijab rea-bd-win-off" data-bd-win="m3" title="演示数据未接入">
-            <span class="ant-radio-button"><input name="rea-bd-win" class="ant-radio-button-input" type="radio" value="5"><span class="ant-radio-button-inner"></span></span>
-            <span class="ant-radio-button-label">近三月</span>
-          </label>
-        </div>
-        <div class="ant-space-item">
-          <label class="ant-radio-button-wrapper css-vgijab rea-bd-win-off" data-bd-win="m6" title="演示数据未接入">
-            <span class="ant-radio-button"><input name="rea-bd-win" class="ant-radio-button-input" type="radio" value="6"><span class="ant-radio-button-inner"></span></span>
-            <span class="ant-radio-button-label">近半年</span>
-          </label>
-        </div>
-        <div class="ant-space-item">
-          <label class="ant-radio-button-wrapper css-vgijab rea-bd-win-off" data-bd-win="y1" title="演示数据未接入">
-            <span class="ant-radio-button"><input name="rea-bd-win" class="ant-radio-button-input" type="radio" value="7"><span class="ant-radio-button-inner"></span></span>
-            <span class="ant-radio-button-label">近一年</span>
-          </label>
-        </div>
-      </div>
-    </div>
-    <div class="ant-picker ant-picker-range ant-picker-outlined css-vgijab rea-bd-off" title="演示数据未接入" aria-disabled="true">
-      <div class="ant-picker-input"><input aria-invalid="false" autocomplete="off" size="12" placeholder="开始日期" date-range="start" value="" disabled></div>
-      <div class="ant-picker-range-separator"><span aria-label="to" class="ant-picker-separator"><span role="img" aria-label="swap-right" class="anticon anticon-swap-right"><svg viewBox="64 64 896 896" focusable="false" data-icon="swap-right" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M873.1 596.2l-164-208A32 32 0 00684 376h-64.8c-6.7 0-10.4 7.7-6.3 13l144.3 183H152c-4.4 0-8 3.6-8 8v60c0 4.4 3.6 8 8 8h695.9c26.8 0 41.7-30.8 25.2-51.8z"></path></svg></span></span></div>
-      <div class="ant-picker-input"><input aria-invalid="false" autocomplete="off" size="12" placeholder="结束日期" date-range="end" value="" disabled></div>
-      <div class="ant-picker-active-bar" style="position: absolute; width: 0px;"></div>
-      <span class="ant-picker-suffix"><span role="img" aria-label="calendar" class="anticon anticon-calendar"><svg viewBox="64 64 896 896" focusable="false" data-icon="calendar" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M880 184H712v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H384v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H144c-17.7 0-32 14.3-32 32v664c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V216c0-17.7-14.3-32-32-32zm-40 656H184V460h656v380zM184 392V256h128v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h256v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h128v136H184z"></path></svg></span></span>
-    </div>
   </div>
 
   <!-- 一张环形占比替代原来并排的三张卡（2026-10-26）：三段互斥，顺时针
@@ -9776,6 +9771,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
        图例三行都可点：点一行进二级页「任务列表」，按对应状态预筛——
        与大区行点进去预筛大区同一个手势，下钻不改口径。
        条只编码状态，不做「低于多少算差」的阈值判读（PRD §5.6）。 -->
+  <div class="rea-bd-healthgrid">
   <div class="rea-bd-ring" id="rea-bd-cards">
     <div class="rea-bd-ring-fig">
       <svg viewBox="0 0 120 120" role="img" aria-label="窗口内任务的完成构成：已完成、待完成、逾期未做">
@@ -9804,15 +9800,11 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
        会并排出现两段时间、两种单位、两种完成率，读的人得先猜哪个是哪个。
        点一行去二级页「任务列表」，按这个大区筛——下钻不再是本页就地展开，
        因为任务明细已经整体搬进那一页了。 -->
-  <div class="rea-bd-sub rea-bd-orgsub">
-    <h6>各大区完成率</h6>
-    <span class="rea-bd-legend">
-      <span><i class="rea-bd-key d"></i>已完成</span>
-      <span><i class="rea-bd-key l"></i>待完成</span>
-      <span><i class="rea-bd-key o"></i>逾期未做</span>
-    </span>
+  <div class="rea-bd-orgblock">
+    <div class="rea-bd-orghead"><h6>各大区完成率</h6><span class="rea-bd-lab">完成率</span></div>
+    <div class="rea-bd-org" id="rea-bd-org"></div>
   </div>
-  <div class="rea-bd-org" id="rea-bd-org"></div>
+  </div>
 
   <!-- 全量任务台账不上板，但仍是本页占比图、各大区完成率、任务列表与执行人明细
        这四处的**唯一数据源**：全部从这 16 行派生，不另编一份数。
@@ -10099,32 +10091,30 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
      所以完成率只作备选，且分母（应执行）始终跟着显示；不做奖牌／等级／综合分，
      也不做跨期名次变化（PRD §5.6）。 -->
 <div class="_board_gf4go_1 rea-bd-sec" id="rea-ld">
-  <div class="rea-bd-sechead">
+  <!-- 2026-10-26 排版收口：排序切换从标题下方的一整行提到标题行，
+       与窗口切换（执行趋势／群发好友回复）统一成「标题 ＋ 右侧控件」一种写法。 -->
+  <div class="rea-bd-sechead rea-bd-sechead--rank">
     <h6>执行人完成排行</h6>
+    <div class="ant-radio-group ant-radio-group-solid css-vgijab rea-bd-window" id="rea-bd-ld-sort">
+        <div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small">
+          <div class="ant-space-item">
+            <label class="ant-radio-button-wrapper ant-radio-button-wrapper-checked css-vgijab" data-bd-ld-sort="done">
+              <span class="ant-radio-button ant-radio-button-checked"><input name="rea-bd-ld-sort" class="ant-radio-button-input" type="radio" value="done" checked=""><span class="ant-radio-button-inner"></span></span>
+              <span class="ant-radio-button-label">完成人次</span>
+            </label>
+          </div>
+          <div class="ant-space-item">
+            <label class="ant-radio-button-wrapper css-vgijab" data-bd-ld-sort="rate">
+              <span class="ant-radio-button"><input name="rea-bd-ld-sort" class="ant-radio-button-input" type="radio" value="rate"><span class="ant-radio-button-inner"></span></span>
+              <span class="ant-radio-button-label">完成率</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    <span class="rea-bd-lab rea-bd-rankmeta" id="rea-bd-ld-meta">昨天 · 24 位执行人 · 完成 58 / 应执行 78 人次</span>
     <span class="rea-bd-links">
       <a href="#" data-bd-rank-all>查看全部<span class="rea-bd-chev" aria-hidden="true">›</span></a>
     </span>
-  </div>
-  <div class="rea-bd-row">
-    <span class="rea-bd-lab">排序</span>
-    <div class="ant-radio-group ant-radio-group-solid css-vgijab rea-bd-window" id="rea-bd-ld-sort">
-      <div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small">
-        <div class="ant-space-item">
-          <label class="ant-radio-button-wrapper ant-radio-button-wrapper-checked css-vgijab" data-bd-ld-sort="done">
-            <span class="ant-radio-button ant-radio-button-checked"><input name="rea-bd-ld-sort" class="ant-radio-button-input" type="radio" value="done" checked=""><span class="ant-radio-button-inner"></span></span>
-            <span class="ant-radio-button-label">完成人次</span>
-          </label>
-        </div>
-        <div class="ant-space-item">
-          <label class="ant-radio-button-wrapper css-vgijab" data-bd-ld-sort="rate">
-            <span class="ant-radio-button"><input name="rea-bd-ld-sort" class="ant-radio-button-input" type="radio" value="rate"><span class="ant-radio-button-inner"></span></span>
-            <span class="ant-radio-button-label">完成率</span>
-          </label>
-        </div>
-      </div>
-    </div>
-    <span class="rea-bd-sep"></span>
-    <span class="rea-bd-lab" id="rea-bd-ld-meta">昨天 · 24 位执行人 · 完成 58 / 应执行 78 人次</span>
   </div>
   <div class="rea-bd-ld" id="rea-bd-ld-body"></div>
   <div class="rea-bd-ld-note" id="rea-bd-ld-note" hidden>完成率 = 已执行 ÷ 应执行；应执行 1 人次的 100% 与 6 人次的 100% 不是一回事，请连同分母一起看。</div>
@@ -10608,15 +10598,25 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 html,body{background:#fff}
 body .subapp{background:#fff!important}
 /* 覆盖页去掉现网那张卡片外壳：留白、小标题、分割线来分组 */
-.rea-bd-sec{border:0!important;border-radius:0!important;background:transparent!important;padding-bottom:32px!important}
-.rea-bd-sec+.rea-bd-sec{margin-top:32px}
+.rea-bd-sec{border:0!important;border-radius:0!important;background:transparent!important;padding-bottom:0!important}
+.rea-bd-sec+.rea-bd-sec{margin-top:40px}
 .rea-bd-page ._board_gf4go_1{padding-left:20px;padding-right:20px}
 .rea-bd-page ._title_gf4go_8{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 0;padding:0 0 16px}
 .rea-bd-page ._title_gf4go_8.rea-bd-pagehead h6{font-size:20px;line-height:28px;font-weight:600;color:#1F2329}
 .rea-bd-page ._title_gf4go_8.rea-bd-sec-title h6{font-size:16px;line-height:24px;font-weight:600;color:#1F2329}
 .rea-bd-page ._title_gf4go_8>span{font-size:12px;color:#8F959E}
 .rea-bd-page .ant-divider{margin:0!important;border-color:#E5E8EF!important}
-.rea-bd-sechead{display:flex;align-items:baseline;gap:12px;margin:24px 0 0}
+.rea-bd-sechead{display:flex;align-items:baseline;flex-wrap:wrap;gap:12px;margin:32px 0 0}
+.rea-bd-sechead--health,.rea-bd-sechead--rank{align-items:center;gap:16px}
+/* 标题行里三件按 标题 → 时间窗 → 链接 排；窄屏改由时间窗整行落到第二行，链接留在右上是操作位 */
+.rea-bd-sechead--health h6{order:0}
+.rea-bd-sechead--health .rea-bd-winbar{order:1}
+.rea-bd-sechead--health .rea-bd-links{order:2}
+/* 时间窗：8 档压成一行塞进标题行，没接数据的 6 档只留灰字（不画按钮框），不再是一堵灰按钮墙 */
+.rea-bd-winbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.rea-bd-custom{display:inline-flex;align-items:center;height:28px;padding:0 10px;border-radius:6px;color:#8F959E;font-size:12px;cursor:not-allowed}
+.rea-bd-custom:hover{background:#F7F8FA}
+.rea-bd-rankmeta{margin-left:4px}
 .rea-bd-sechead h6{margin:0;font-size:16px;line-height:24px;font-weight:600;color:#1F2329}
 .rea-bd-links{display:flex;align-items:baseline;gap:16px;margin-left:auto}
 .rea-bd-links a{display:inline-flex;align-items:center;gap:2px;color:#1677FF;font-size:13px;text-decoration:none}
@@ -10633,7 +10633,10 @@ body .subapp{background:#fff!important}
 /* ---------- 执行健康度 · 环形占比（2026-10-26 起替代三张卡） ----------
    环只画三段互斥的状态，段间留 2.5px 缝（在 SVG 里按弧长扣，见 paintDonut）；
    圆心写窗口内全部任务条数，图例三行的百分比分母都是它。 */
-#rea-bd-cards{display:flex;align-items:center;gap:48px;margin:8px -16px 0;padding:16px 16px 0;border-top:1px solid #E5E8EF}
+/* 首屏两栏（2026-10-26）：左环形占比、右各大区完成率——同一时间窗、同一套颜色，
+   环与各大区共用左栏那三行图例，各大区不再自带一份。 */
+.rea-bd-healthgrid{display:grid;grid-template-columns:336px minmax(0,1fr);gap:36px;align-items:start;margin-top:20px}
+#rea-bd-cards{display:flex;align-items:center;gap:20px;margin:0;padding:0}
 .rea-bd-ring-fig{position:relative;flex:none;width:132px;height:132px}
 .rea-bd-ring-fig svg{display:block;width:100%;height:100%;transform:rotate(-90deg)}
 .rea-bd-ring-fig circle{fill:none;stroke-width:13}
@@ -10644,7 +10647,7 @@ body .subapp{background:#fff!important}
 .rea-bd-ring-mid{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;pointer-events:none}
 .rea-bd-ring-mid b{font-size:32px;line-height:1.05;font-weight:600;color:#1F2329;letter-spacing:-.5px}
 .rea-bd-ring-mid span{font-size:12px;color:#8F959E}
-.rea-bd-ring-key{list-style:none;margin:-2px -6px;padding:0;display:flex;flex-direction:column;gap:10px;min-width:0}
+.rea-bd-ring-key{list-style:none;margin:0 -6px;padding:0;display:flex;flex-direction:column;gap:6px;min-width:0}
 /* 图例行可点：整行进任务列表并按这一行预筛状态；焦点环与大区行同色 */
 .rea-bd-ring-key li{display:flex;align-items:baseline;gap:8px;padding:2px 6px;border-radius:6px;font-size:13px;color:#646A73;cursor:pointer;transition:background .12s}
 .rea-bd-ring-key li:hover,.rea-bd-ring-key li:focus-visible{background:#F7F8FA}
@@ -10654,19 +10657,20 @@ body .subapp{background:#fff!important}
 .rea-bd-ring-key i.d{background:#52C41A}
 .rea-bd-ring-key i.l{background:#1677FF}
 .rea-bd-ring-key i.o{background:#FAAD14}
-.rea-bd-ring-key .lb{width:64px;color:#1F2329;font-weight:500}
+.rea-bd-ring-key .lb{width:56px;color:#1F2329;font-weight:500}
 .rea-bd-ring-key b{min-width:18px;font-size:16px;font-weight:600;color:#1F2329;font-variant-numeric:tabular-nums}
 .rea-bd-ring-key .u{color:#8F959E}
-.rea-bd-ring-key .pc{min-width:56px;margin-left:8px;color:#646A73;font-variant-numeric:tabular-nums}
+.rea-bd-ring-key .pc{min-width:52px;margin-left:auto;padding-left:8px;text-align:right;color:#646A73;font-variant-numeric:tabular-nums}
+/* 视口 1440 时内容区约 900px，两栏刚够；再窄（1366 及以下）回落到单栏 */
+@media (max-width:1399px){
+  .rea-bd-healthgrid{grid-template-columns:minmax(0,1fr);gap:28px}
+  .rea-bd-sechead--health .rea-bd-winbar{order:3;width:100%;margin-top:2px}
+}
 @media (max-width:991px){
-  #rea-bd-cards{flex-direction:column;align-items:flex-start;gap:20px}
+  #rea-bd-cards{flex-direction:column;align-items:flex-start;gap:16px}
 }
 
 /* ---------- 图例与三段条 ---------- */
-.rea-bd-legend{display:flex;flex-wrap:wrap;gap:20px;margin:14px 0 0;color:#646A73;font-size:12px}
-.rea-bd-legend>span{display:inline-flex;align-items:center;gap:6px}
-.rea-bd-key{display:inline-block;width:8px;height:8px;border-radius:50%}
-.rea-bd-key.d{background:#52C41A}.rea-bd-key.l{background:#1677FF}.rea-bd-key.o{background:#FAAD14}
 .rea-bd-track{display:flex;height:8px;border-radius:4px;background:#F0F2F5;overflow:hidden}
 .rea-bd-track.sm{height:6px;border-radius:3px;margin-top:6px}
 .rea-bd-track>i{display:block;height:100%}
@@ -10676,25 +10680,25 @@ body .subapp{background:#fff!important}
 .rea-bd-track>i.o{background:#FAAD14}
 
 /* ---------- 各大区完成率 ---------- */
-.rea-bd-orgsub{margin-top:24px;padding-top:20px}
-.rea-bd-orgsub .rea-bd-legend{margin:0 0 0 auto}
-.rea-bd-org{margin-top:12px;border-top:1px solid #E5E8EF;border-bottom:1px solid #E5E8EF}
-.rea-bd-org-row{display:flex;align-items:center;gap:16px;min-height:48px;padding:8px 12px;cursor:pointer;border-top:1px solid #F0F2F5}
+.rea-bd-orgblock{min-width:0}
+.rea-bd-orghead{display:flex;align-items:baseline;gap:12px;padding:0 8px}
+.rea-bd-orghead h6{margin:0;color:#1F2329;font-size:14px;font-weight:600}
+.rea-bd-orghead .rea-bd-lab{margin-left:auto;padding-right:24px}
+.rea-bd-org{margin-top:6px}
+.rea-bd-org-row{display:flex;align-items:center;gap:12px;min-height:44px;padding:6px 8px;cursor:pointer;border-top:1px solid #F0F2F5}
+.rea-bd-org-row .track .rea-bd-track,.rea-bd-ld .track .rea-bd-track{height:6px;border-radius:3px;margin-top:0}
 .rea-bd-org-row:first-child{border-top:0}
 .rea-bd-org-row:hover{background:#F7F8FA}
-.rea-bd-org-row .nm{flex:0 0 96px;color:#1F2329;font-size:14px}
+.rea-bd-org-row .nm{flex:0 0 88px;color:#1F2329;font-size:14px}
 .rea-bd-org-row .track{flex:1 1 auto;min-width:80px}
-.rea-bd-org-row .qty{flex:0 0 200px;text-align:right;color:#646A73;font-size:12px;white-space:nowrap}
+.rea-bd-org-row .qty{flex:0 0 auto;text-align:left;color:#646A73;font-size:12px;white-space:nowrap}
 .rea-bd-org-row .qty b{color:#FAAD14;font-weight:600}
 .rea-bd-org-row .qty b.zero{color:#8F959E}
-.rea-bd-org-row .rate{flex:0 0 60px;text-align:right;color:#1F2329;font-size:14px;font-weight:600}
+.rea-bd-org-row .rate{flex:0 0 56px;margin-left:auto;text-align:right;color:#1F2329;font-size:14px;font-weight:600}
 .rea-bd-org-row .more{display:inline-block;flex:0 0 12px;color:#8F959E;font-size:16px;line-height:1;text-align:right;transition:color .15s}
 .rea-bd-org-row:hover .more{color:#1677FF}
 
 /* ---------- 小节标题 ---------- */
-.rea-bd-sub{display:flex;align-items:baseline;gap:12px;margin:32px 0 0;padding-top:24px;border-top:1px solid #E5E8EF}
-.rea-bd-sub h6{margin:0;color:#1F2329;font-size:14px;font-weight:600}
-.rea-bd-sub .rea-bd-lab{margin-left:auto}
 .rea-bd-filters{padding-top:16px}
 .rea-bd-filter{display:inline-flex;align-items:center;gap:6px}
 .rea-bd-sel{appearance:none;-webkit-appearance:none;height:32px;padding:0 28px 0 10px;border:1px solid #E5E8EF;border-radius:6px;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%238F959E' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 10px center;font-size:13px;color:#1F2329;cursor:pointer;outline:none}
@@ -10776,21 +10780,22 @@ body .subapp{background:#fff!important}
 .rea-bd-bad[hidden]{display:none}
 
 /* ---------- 时间窗：接通的两档可点，其余六档与日期区间置灰 ---------- */
-.rea-bd-window .ant-radio-button-wrapper,.rea-qft-win .ant-radio-button-wrapper,.rea-tr-win .ant-radio-button-wrapper{height:32px;line-height:30px;padding:0 12px;font-size:12px;color:#646A73;border-color:#E5E8EF;background:#fff}
+.rea-bd-window .ant-radio-button-wrapper,.rea-qft-win .ant-radio-button-wrapper,.rea-tr-win .ant-radio-button-wrapper{height:28px;line-height:26px;padding:0 10px;font-size:12px;color:#646A73;border-color:#E5E8EF;background:#fff}
 .rea-bd-window .ant-radio-button-wrapper:not(:first-child)::before,.rea-qft-win .ant-radio-button-wrapper:not(:first-child)::before,.rea-tr-win .ant-radio-button-wrapper:not(:first-child)::before{background-color:#E5E8EF}
 .rea-bd-window .ant-radio-button-wrapper-checked,.rea-qft-win .ant-radio-button-wrapper-checked,.rea-tr-win .ant-radio-button-wrapper-checked{background:#E6F4FF!important;border-color:#1677FF!important;color:#1677FF!important;box-shadow:none}
 .rea-bd-window .ant-radio-button-wrapper-checked::before,.rea-qft-win .ant-radio-button-wrapper-checked::before,.rea-tr-win .ant-radio-button-wrapper-checked::before{background-color:#1677FF!important}
 .rea-bd-window .ant-radio-button-wrapper:hover,.rea-qft-win .ant-radio-button-wrapper:hover,.rea-tr-win .ant-radio-button-wrapper:hover{color:#1677FF}
-.rea-bd-win-off{opacity:.42;cursor:not-allowed}
-.rea-bd-win-off:hover{color:#646A73!important}
-.rea-bd-off{opacity:.42;cursor:not-allowed}
-.rea-bd-off input{pointer-events:none}
+/* 没接演示数据的 6 档：不画按钮框，只留一行灰字——它们仍然可见（用户要知道有这些窗口），
+   但不参与「一排按钮」的视觉竞争。 */
+.rea-bd-win-off{color:#B7BCC4!important;border-color:transparent!important;background:transparent!important;box-shadow:none!important;cursor:not-allowed}
+.rea-bd-win-off::before{background-color:transparent!important}
+.rea-bd-win-off:hover{color:#B7BCC4!important;background:transparent!important}
 
 /* ---------- 群发好友回复 ---------- */
 .rea-qft-hd{display:flex;align-items:baseline;flex-wrap:wrap;gap:8px 12px;padding:0}
 .rea-qft-hd h6{margin:0;color:#1F2329;font-size:16px;line-height:24px;font-weight:600}
 .rea-qft-hd .rea-qft-win{margin-left:auto}
-.rea-qft-kpis{display:flex;flex-wrap:wrap;gap:16px 48px;margin:0;padding:20px 0 0;border-top:1px solid #E5E8EF}
+.rea-qft-kpis{display:flex;flex-wrap:wrap;gap:16px 48px;margin:0;padding:20px 0 0}
 .rea-qft-kpi{display:flex;flex-direction:column;gap:4px;margin:0}
 .rea-qft-kpi .k{color:#8F959E;font-size:12px}
 .rea-qft-kpi b{color:#1F2329;font-size:20px;font-weight:600;line-height:1.3}
@@ -10820,8 +10825,7 @@ body .subapp{background:#fff!important}
 .rea-tr-tip .r.over i{background:#FAAD14}
 
 /* ---------- 执行人完成排行 ---------- */
-#rea-ld .rea-bd-sechead{margin-top:0}
-.rea-bd-ld{margin-top:12px;border-top:1px solid #E5E8EF;border-bottom:1px solid #E5E8EF}
+.rea-bd-ld{margin-top:16px;border-top:1px solid #E5E8EF;border-bottom:1px solid #E5E8EF}
 .rea-bd-ld-head,.rea-bd-ld-row{display:flex;align-items:center;gap:16px;padding:0 12px}
 .rea-bd-ld-head{min-height:36px;color:#8F959E;font-size:12px;border-bottom:1px solid #E5E8EF}
 .rea-bd-ld-head .rate{color:#8F959E;font-size:12px;font-weight:400}
