@@ -9685,11 +9685,15 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
        窗口的选中态自己就说清是哪一档，页顶还挨着一条「数据更新时间」；
        再挂一条 T+1／准实时的常驻文案，就是把同一个意思说两遍。 -->
 
-  <!-- 第 1 层 · 执行健康度三卡：**随板块顶部的时间窗走**（2026-10-26 起），
-       不再固定看今日——窗口把三卡、各大区完成率与二级页任务列表收在同一段时间里。
-       三张卡都由任务台账里当窗那几行算出来（见注入脚本的自检），不另写一份数。
-       单位是**任务条数**（2026-10-23 定）：做满的条数 / 没做满的条数 / 到期没做满的条数。
-       默认窗口是昨天，静态正文写的也是昨天那一份（9 条：待执行 8 / 已完成 1 / 逾期 4）。
+  <!-- 第 1 层 · 执行健康度占比图：**随板块顶部的时间窗走**（2026-10-26 起），
+       不再固定看今日——窗口把占比图、各大区完成率与二级页任务列表收在同一段时间里。
+       图上的数全部由任务台账里当窗那几行算出来（见注入脚本的自检），不另写一份数。
+       单位是**任务条数**（2026-10-23 定），三段**互斥**（2026-10-26 定）：
+       已完成（做满）／待完成（没做满、有效期未过，还能做）／逾期未做（有效期已过，终态）。
+       逾期之后任务就做不了了，所以它不是待完成的一部分——三者相加恒等于窗口内任务条数，
+       整个圆就是「这批任务」的 100%，三个百分比同一分母。原先并排的三张卡给不出这个读法，
+       而且「待执行 8」和卡底那根绿 1／蓝 4／橙 4 的条自己就打架，已合成一张图。
+       默认窗口是昨天，静态正文写的也是昨天那一份（9 条：已完成 1 / 待完成 4 / 逾期 4）。
        原来的第四张「异常 · 失败」已撤（PRD §5.1）：失败在后端就归「进行中」，不是一种独立状态，
        单列一张卡等于拿我们的口径去解释现网的分桶；页上不再出现这个数。 -->
   <div class="rea-bd-sechead">
@@ -9700,7 +9704,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     </span>
   </div>
 
-  <!-- 时间窗归「执行健康度」：三卡、各大区完成率、以及二级页「任务列表」共用这一个窗口。
+  <!-- 时间窗归「执行健康度」：占比图、各大区完成率、以及二级页「任务列表」共用这一个窗口。
        默认仍是「昨天」——那是数据齐、口径稳的一档；「今日」是主动去看进度时才切过去的一档。
        群发好友回复按周汇总、执行趋势带自己的近 12／26 周，都不跟这个窗口走。 -->
   <div class="rea-bd-row" id="rea-bd-window-row">
@@ -9766,49 +9770,51 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     </div>
   </div>
 
-  <div class="ant-row css-vgijab" id="rea-bd-cards">
-    <div class="ant-col ant-col-8 css-vgijab">
-      <div class="rea-bd-kpi">
-        <div class="rea-bd-kpi-top"><span class="lab">待执行</span></div>
-        <div class="rea-bd-kpi-main"><b data-rea-sum="left">8</b><span>条</span></div>
-        <div class="rea-bd-kpi-sub"><span data-rea-sum="left-of-need">88.9%</span><span>占应执行</span></div>
-        <span class="rea-bd-kpi-bar" data-bd-kpibar="left" aria-hidden="true"><i class="d"></i><i class="l"></i><i class="o"></i></span>
-      </div>
+  <!-- 一张环形占比替代原来并排的三张卡（2026-10-26）：三段互斥，顺时针
+       已完成（绿）→ 待完成（蓝）→ 逾期未做（橙），段与段之间留一道细缝；
+       圆心是窗口内全部任务条数，右侧三行图例的百分比**分母都是它**。
+       图例三行都可点：点一行进二级页「任务列表」，按对应状态预筛——
+       与大区行点进去预筛大区同一个手势，下钻不改口径。
+       条只编码状态，不做「低于多少算差」的阈值判读（PRD §5.6）。 -->
+  <div class="rea-bd-ring" id="rea-bd-cards">
+    <div class="rea-bd-ring-fig">
+      <svg viewBox="0 0 120 120" role="img" aria-label="窗口内任务的完成构成：已完成、待完成、逾期未做">
+        <circle class="track" cx="60" cy="60" r="50"></circle>
+        <circle class="arc d" data-bd-arc="d" cx="60" cy="60" r="50"></circle>
+        <circle class="arc l" data-bd-arc="l" cx="60" cy="60" r="50"></circle>
+        <circle class="arc o" data-bd-arc="o" cx="60" cy="60" r="50"></circle>
+      </svg>
+      <span class="rea-bd-ring-mid"><b data-rea-sum="need">9</b><span>条任务</span></span>
     </div>
-    <div class="ant-col ant-col-8 css-vgijab">
-      <div class="rea-bd-kpi">
-        <div class="rea-bd-kpi-top"><span class="lab">已完成</span></div>
-        <div class="rea-bd-kpi-main"><b data-rea-sum="done">1</b><span>条</span></div>
-        <div class="rea-bd-kpi-sub"><span data-rea-sum="rate">11.1%</span><span>做满占比</span></div>
-        <span class="rea-bd-kpi-bar" data-bd-kpibar="done" aria-hidden="true"><i class="d"></i><i class="l"></i><i class="o"></i></span>
-      </div>
-    </div>
-    <div class="ant-col ant-col-8 css-vgijab">
-      <div class="rea-bd-kpi">
-        <div class="rea-bd-kpi-top"><span class="lab">逾期未做</span></div>
-        <div class="rea-bd-kpi-main"><b data-rea-sum="over">4</b><span>条</span></div>
-        <div class="rea-bd-kpi-sub"><span data-rea-sum="over-of-left">50.0%</span><span>占待执行</span></div>
-        <span class="rea-bd-kpi-bar" data-bd-kpibar="over" aria-hidden="true"><i class="d"></i><i class="l"></i><i class="o"></i></span>
-      </div>
-    </div>
+    <ul class="rea-bd-ring-key">
+      <li role="button" tabindex="0" data-bd-state="已完成" title="进任务列表，只看已完成的">
+        <i class="d" aria-hidden="true"></i><span class="lb">已完成</span><b data-rea-sum="done">1</b><span class="u">条</span><span class="pc" data-rea-sum="rate">11.1%</span>
+      </li>
+      <li role="button" tabindex="0" data-bd-state="进行中" title="进任务列表，只看待完成的">
+        <i class="l" aria-hidden="true"></i><span class="lb">待完成</span><b data-rea-sum="pend">4</b><span class="u">条</span><span class="pc" data-rea-sum="pend-of-need">44.4%</span>
+      </li>
+      <li role="button" tabindex="0" data-bd-state="已结束" title="进任务列表，只看逾期未做的">
+        <i class="o" aria-hidden="true"></i><span class="lb">逾期未做</span><b data-rea-sum="over">4</b><span class="u">条</span><span class="pc" data-rea-sum="over-of-need">44.4%</span>
+      </li>
+    </ul>
   </div>
 
   <!-- 各大区完成率（组织范围）· 2026-10-26 从「任务执行」并进执行健康度：
-       与三卡同一时间窗、同一单位（**任务条数**），不再是人次——否则同一板块里
+       与占比图同一时间窗、同一单位（**任务条数**），不再是人次——否则同一板块里
        会并排出现两段时间、两种单位、两种完成率，读的人得先猜哪个是哪个。
        点一行去二级页「任务列表」，按这个大区筛——下钻不再是本页就地展开，
        因为任务明细已经整体搬进那一页了。 -->
   <div class="rea-bd-sub rea-bd-orgsub">
     <h6>各大区完成率</h6>
     <span class="rea-bd-legend">
-      <span><i class="rea-bd-key d"></i>做满</span>
-      <span><i class="rea-bd-key l"></i>未做满</span>
-      <span><i class="rea-bd-key o"></i>逾期</span>
+      <span><i class="rea-bd-key d"></i>已完成</span>
+      <span><i class="rea-bd-key l"></i>待完成</span>
+      <span><i class="rea-bd-key o"></i>逾期未做</span>
     </span>
   </div>
   <div class="rea-bd-org" id="rea-bd-org"></div>
 
-  <!-- 全量任务台账不上板，但仍是本页三卡、各大区完成率、任务列表与执行人明细
+  <!-- 全量任务台账不上板，但仍是本页占比图、各大区完成率、任务列表与执行人明细
        这四处的**唯一数据源**：全部从这 16 行派生，不另编一份数。
        藏起来是为了不再把模块列表抄一遍，不是为了删数——行上的 data-bd-* 与
        相对日期（data-rea-d）照旧受自检保护。 -->
@@ -10279,7 +10285,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
               <th scope="col" class="ant-table-cell" title="该执行人在这个窗口里被派到的任务条数">参与任务</th>
               <th scope="col" class="ant-table-cell" title="这个人被派到的任务人次之和">应执行</th>
               <th scope="col" class="ant-table-cell">已执行</th>
-              <th scope="col" class="ant-table-cell">未执行</th>
+              <th scope="col" class="ant-table-cell" title="应执行 − 已执行；含已过期、做不了的那部分人次">未执行</th>
               <th scope="col" class="ant-table-cell" title="有效期已过且他仍未执行的人次">逾期</th>
               <th scope="col" class="ant-table-cell">完成率</th>
             </tr></thead>
@@ -10294,7 +10300,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 
 <!-- ============ 微小助看板 · 任务列表（执行健康度的二级页） ============
      「任务列表」原先摊在看板「任务执行」板块里，现在收成执行健康度的二级页：
-     三卡与各大区回答「整体／哪个大区欠」，这一页回答「具体是哪几条」。
+     占比图与各大区回答「整体／哪个大区欠」，这一页回答「具体是哪几条」。
      筛选三轴——任务类型、状态、大区——外加与看板共用的时间窗；
      数据由看板页在点进来时随 postMessage 带过来（dumpRows），不另编一份。 -->
 <script type="text/plain" id="srcBoardTasks">
@@ -10369,7 +10375,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
               <th scope="col" class="ant-table-cell">创建人</th>
               <th scope="col" class="ant-table-cell" title="该任务的执行人员人数；执行人员可跨大区（「各大区完成率」按创建人所属大区聚合，两种口径不同）">执行人员</th>
               <th scope="col" class="ant-table-cell">任务有效期</th>
-              <th scope="col" class="ant-table-cell" title="该任务已执行人数 / 应执行人数（人次）；三卡与各大区按任务条数算">进度</th>
+              <th scope="col" class="ant-table-cell" title="该任务已执行人数 / 应执行人数（人次）；占比图与各大区按任务条数算">进度</th>
               <th scope="col" class="ant-table-cell" title="有效期已过且仍未执行">逾期</th>
               <th scope="col" class="ant-table-cell">状态</th>
               <th scope="col" class="ant-table-cell">操作</th>
@@ -10624,26 +10630,37 @@ body .subapp{background:#fff!important}
 .rea-bd-sep{width:1px;height:16px;background:#E5E8EF;margin:0 4px}
 .rea-bd-dim{color:#8F959E}
 
-/* ---------- 执行健康度三卡 ---------- */
-#rea-bd-cards{margin:8px -16px 0;row-gap:24px;padding-top:8px;border-top:1px solid #E5E8EF}
-#rea-bd-cards>.ant-col{padding-left:16px;padding-right:16px}
-.rea-bd-kpi{display:flex;flex-direction:column;height:100%;padding:16px 0 0}
-.rea-bd-kpi-top{display:flex;align-items:center;gap:8px}
-.rea-bd-kpi-top .lab{font-size:14px;font-weight:500;color:#646A73}
-.rea-bd-kpi-main{display:flex;align-items:baseline;gap:6px;margin-top:8px}
-.rea-bd-kpi-main b{font-size:40px;line-height:1.1;font-weight:600;color:#1F2329;letter-spacing:-.5px}
-.rea-bd-kpi-main span{font-size:12px;color:#8F959E}
-.rea-bd-kpi-sub{display:flex;align-items:baseline;gap:6px;margin-top:6px}
-.rea-bd-kpi-sub span:first-child{font-size:14px;font-weight:600;color:#1F2329}
-.rea-bd-kpi-sub span:last-child{font-size:12px;color:#8F959E}
-/* 三卡底部共一条三段健康条；每张卡只把自己那一段点实，其余两段退后 */
-.rea-bd-kpi-bar{display:flex;height:6px;margin-top:18px;border-radius:3px;background:#F0F2F5;overflow:hidden}
-.rea-bd-kpi-bar i{display:block;height:100%;min-width:0;opacity:.22}
-.rea-bd-kpi-bar i+i{box-shadow:inset 2px 0 0 #fff}
-.rea-bd-kpi-bar i.d{background:#52C41A}
-.rea-bd-kpi-bar i.l{background:#1677FF}
-.rea-bd-kpi-bar i.o{background:#FAAD14}
-.rea-bd-kpi-bar i.on{opacity:1}
+/* ---------- 执行健康度 · 环形占比（2026-10-26 起替代三张卡） ----------
+   环只画三段互斥的状态，段间留 2.5px 缝（在 SVG 里按弧长扣，见 paintDonut）；
+   圆心写窗口内全部任务条数，图例三行的百分比分母都是它。 */
+#rea-bd-cards{display:flex;align-items:center;gap:48px;margin:8px -16px 0;padding:16px 16px 0;border-top:1px solid #E5E8EF}
+.rea-bd-ring-fig{position:relative;flex:none;width:132px;height:132px}
+.rea-bd-ring-fig svg{display:block;width:100%;height:100%;transform:rotate(-90deg)}
+.rea-bd-ring-fig circle{fill:none;stroke-width:13}
+.rea-bd-ring-fig circle.track{stroke:#F0F2F5}
+.rea-bd-ring-fig circle.d{stroke:#52C41A}
+.rea-bd-ring-fig circle.l{stroke:#1677FF}
+.rea-bd-ring-fig circle.o{stroke:#FAAD14}
+.rea-bd-ring-mid{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;pointer-events:none}
+.rea-bd-ring-mid b{font-size:32px;line-height:1.05;font-weight:600;color:#1F2329;letter-spacing:-.5px}
+.rea-bd-ring-mid span{font-size:12px;color:#8F959E}
+.rea-bd-ring-key{list-style:none;margin:-2px -6px;padding:0;display:flex;flex-direction:column;gap:10px;min-width:0}
+/* 图例行可点：整行进任务列表并按这一行预筛状态；焦点环与大区行同色 */
+.rea-bd-ring-key li{display:flex;align-items:baseline;gap:8px;padding:2px 6px;border-radius:6px;font-size:13px;color:#646A73;cursor:pointer;transition:background .12s}
+.rea-bd-ring-key li:hover,.rea-bd-ring-key li:focus-visible{background:#F7F8FA}
+.rea-bd-ring-key li:focus-visible{outline:2px solid #1677FF;outline-offset:0}
+.rea-bd-ring-key li:hover .lb{color:#1677FF}
+.rea-bd-ring-key i{flex:none;width:8px;height:8px;border-radius:2px;transform:translateY(-1px)}
+.rea-bd-ring-key i.d{background:#52C41A}
+.rea-bd-ring-key i.l{background:#1677FF}
+.rea-bd-ring-key i.o{background:#FAAD14}
+.rea-bd-ring-key .lb{width:64px;color:#1F2329;font-weight:500}
+.rea-bd-ring-key b{min-width:18px;font-size:16px;font-weight:600;color:#1F2329;font-variant-numeric:tabular-nums}
+.rea-bd-ring-key .u{color:#8F959E}
+.rea-bd-ring-key .pc{min-width:56px;margin-left:8px;color:#646A73;font-variant-numeric:tabular-nums}
+@media (max-width:991px){
+  #rea-bd-cards{flex-direction:column;align-items:flex-start;gap:20px}
+}
 
 /* ---------- 图例与三段条 ---------- */
 .rea-bd-legend{display:flex;flex-wrap:wrap;gap:20px;margin:14px 0 0;color:#646A73;font-size:12px}
@@ -11391,21 +11408,23 @@ setLdSortUi();
     '  t.left=t.need-t.done;t.n=rs.length;return t;',
     '}',
 
-    '/* 三张卡的取值——全部由那九行算出来，一个都不另写。',
-    '   单位是**任务条数**（2026-10-23 定）：做满的条数、没做满的条数、到期没做满的条数。',
-    '   任务数是二值的（一条要么全员做完、要么还差人），所以今日三卡常是',
-    '   「待执行＝应执行、已完成 0」——那是当天的实情，不是算错；',
+    '/* 占比图的取值——全部由那九行算出来，一个都不另写。',
+    '   单位是**任务条数**（2026-10-23 定），三段**互斥**（2026-10-26 定）：',
+    '   已完成（做满）／待完成（没做满且没过期）／逾期未做（过期了，做不了了）。',
+    '   三者相加恒等于窗口任务条数，所以每个百分比的分母都是「全部任务」，',
+    '   整个圆就是 100%；逾期不再算进待完成。任务数是二值的（一条要么全员做完、',
+    '   要么还差人），所以今天常是「待完成＝全部、已完成 0」——那是当天的实情，不是算错；',
     '   干了多少人次看二级页任务列表的逐条进度与执行人明细。 */',
     'var SUM={',
     '  need:function(t){return String(t.n)},',
     '  done:function(t){return String(t.full)},',
-    '  left:function(t){return String(t.n-t.full)},',
+    '  pend:function(t){return String(Math.max(0,t.n-t.full-t.miss))},',
     '  over:function(t){return String(t.miss)},',
     '  rate:function(t){return (t.n?t.full/t.n*100:0).toFixed(1)+"%"},',
-    '  "left-of-need":function(t){return (t.n?(t.n-t.full)/t.n*100:0).toFixed(1)+"%"},',
-    '  "over-of-left":function(t){return ((t.n-t.full)?t.miss/(t.n-t.full)*100:0).toFixed(1)+"%"}',
+    '  "pend-of-need":function(t){return (t.n?Math.max(0,t.n-t.full-t.miss)/t.n*100:0).toFixed(1)+"%"},',
+    '  "over-of-need":function(t){return (t.n?t.miss/t.n*100:0).toFixed(1)+"%"}',
     '};',
-    '/* 三张卡静态正文里写的是**今日**那一份，跑起来跟算出来的对一遍。',
+    '/* 占比图静态正文里写的是**默认窗口**（昨天）那一份，跑起来跟算出来的对一遍。',
     '   换窗口换的就是同一个坑位，所以期望值必须在开跑前抄一份留底，',
     '   不能拿元素当下的文本去比——那样第二次换窗口就会自己跟自己比、误报一片。',
     '   期望值挂在元素自己身上（__reaExp），不按 data-rea-sum 的键名存：',
@@ -11419,7 +11438,7 @@ setLdSortUi();
     '  var a=el.__reaExp;',
     '  if(a!==undefined&&a!==val)bad("「"+key+"」静态正文写的是 "+a+"，算出来是 "+val);',
     '}',
-    '/* chkOn 给 true ＝ 这一处有手写副本可比（只有三卡抄过底）；',
+    '/* chkOn 给 true ＝ 这一处有手写副本可比（只有占比图抄过底）；',
     '   合计行没有副本，即使传 true 也因 __reaExp 未设而跳过。 */',
     'function fill(scope,t,chkOn){',
     '  if(!scope)return;',
@@ -11433,21 +11452,24 @@ setLdSortUi();
     '    else es[i].textContent=v;',
     '  }',
     '}',
-    '/* 三卡底部同一条三段健康条：宽度按任务**条数**分（做满 / 没做满未逾期 / 逾期），',
-    '   每张卡只点实自己那一段。逾期为 0 时第三段宽度为 0，不做任何补偿——0 就该看不见。 */',
-    'function paintKpiBar(t){',
-    '  var pend=t.n-t.full-t.miss;if(pend<0)pend=0;',
-    '  var vals={d:t.full,l:pend,o:t.miss},total=vals.d+vals.l+vals.o;',
-    '  var bars=document.querySelectorAll("[data-bd-kpibar]"),i,j,k,own,segs;',
-    '  for(i=0;i<bars.length;i++){',
-    '    own=bars[i].getAttribute("data-bd-kpibar");',
-    '    if(own==="left")own="l";else if(own==="done")own="d";else if(own==="over")own="o";',
-    '    segs=bars[i].children;',
-    '    for(j=0;j<segs.length;j++){',
-    '      k=j===0?"d":(j===1?"l":"o");',
-    '      segs[j].style.flex=(total?vals[k]:0)+" 1 0";',
-    '      segs[j].className=k+(k===own?" on":"");',
-    '    }',
+    '/* 环形占比：三段**互斥**，弧长按任务条数分——已完成 / 待完成（未逾期）/ 逾期未做。',
+    '   圆周长按比例切段，段间留 2.5 的缝（缝从每段自己的弧长里扣，整圆仍是 100%）；',
+    '   某一段为 0 时不画、不留缝——0 就该看不见。半径 50 与 SVG 里的 r 对应。 */',
+    'function paintDonut(t){',
+    '  var C=2*Math.PI*50,total=t.n||0,',
+    '      vals={d:t.full,l:Math.max(0,t.n-t.full-t.miss),o:t.miss},',
+    '      arcs=document.querySelectorAll("[data-bd-arc]"),i,k,v,len,dash,acc=0,on=0;',
+    '  /* 只有一段非零时不扣缝——否则整圈会缺一个小口，看着像没画完/有第四种状态。 */',
+    '  if(vals.d>0)on++;if(vals.l>0)on++;if(vals.o>0)on++;',
+    '  var GAP=on>1?2.5:0;',
+    '  for(i=0;i<arcs.length;i++){',
+    '    k=arcs[i].getAttribute("data-bd-arc");v=vals[k]||0;',
+    '    len=total?v/total*C:0;',
+    '    dash=len>GAP*2?len-GAP:len;',
+    '    arcs[i].style.strokeDasharray=dash+" "+(C-dash);',
+    '    arcs[i].style.strokeDashoffset=-acc;',
+    '    arcs[i].style.opacity=len>0?1:0;',
+    '    acc+=len;',
     '  }',
     '}',
 
@@ -11534,7 +11556,7 @@ setLdSortUi();
     '  return h+"</span>";',
     '}',
     '/* 各大区完成率：按任务**创建人**所属大区归拢，单位是**任务条数**——',
-    '   与三卡同一口径（做满／未做满／逾期），不再是人次。点一行去二级页',
+    '   与占比图同一口径（已完成／待完成／逾期未做），不再是人次。点一行去二级页',
     '   「任务列表」按这个大区筛；任务明细整体搬进那一页，不在这里就地展开。',
     '   这里聚合的是**创建人**的大区；执行人员可能跨大区，人维度看执行人明细（PRD §5.4）。 */',
     'var ORGS=["华东大区","华北大区","华南大区"];',
@@ -11594,11 +11616,26 @@ setLdSortUi();
     '    n=n.parentNode;',
     '  }',
     '});',
-    '/* 键盘可达：大区行是 role=button，Enter / 空格等同点击。 */',
+    '/* 占比图图例的点击：同样去任务列表，预筛的是**状态**——',
+    '   已完成→「已完成」、待完成→「进行中」、逾期未做→「已结束」，',
+    '   与任务列表状态列同一套词；点完看到的行数应与图例上的条数相等。 */',
+    'var kw=document.getElementById("rea-bd-cards");',
+    'if(kw)kw.addEventListener("click",function(e){',
+    '  var n=e.target;',
+    '  while(n&&n!==kw&&n.nodeType===1){',
+    '    if(n.getAttribute&&n.getAttribute("data-bd-state")){',
+    '      e.preventDefault();',
+    '      parent.postMessage({reaPage:' + reaJson(REA_TASKS_PAGE) + ',reaWin:CURW,reaRows:dumpRows(),reaState:n.getAttribute("data-bd-state")},"*");',
+    '      return;',
+    '    }',
+    '    n=n.parentNode;',
+    '  }',
+    '});',
+    '/* 键盘可达：大区行与图例三行都是 role=button，Enter / 空格等同点击。 */',
     'document.addEventListener("keydown",function(e){',
     '  if(e.key!=="Enter"&&e.key!==" ")return;',
     '  var n=e.target;',
-    '  if(n&&n.getAttribute&&n.getAttribute("data-bd-org-row")){e.preventDefault();n.click();}',
+    '  if(n&&n.getAttribute&&(n.getAttribute("data-bd-org-row")||n.getAttribute("data-bd-state"))){e.preventDefault();n.click();}',
     '});',
     '',
     '/* 执行人分配自检：每条任务分到的人数必须正好等于应执行（且名单不重复）。 */',
@@ -11700,14 +11737,14 @@ setLdSortUi();
     '  parent.postMessage({reaPage:' + reaJson(REA_TASKS_PAGE) + ',reaWin:CURW,reaRows:dumpRows()},"*");',
     '});',
 
-    '/* 换窗口＝换一份数：三卡与各大区完成率一起动，单位都是任务条数。',
-    '   三卡静态正文抄的是默认窗口（昨天）那一份，所以只有回到 DEFW 时才做',
+    '/* 换窗口＝换一份数：占比图与各大区完成率一起动，单位都是任务条数。',
+    '   占比图静态正文抄的是默认窗口（昨天）那一份，所以只有回到 DEFW 时才做',
     '   「手写值 vs 算出来」的比对——拿昨天的副本去校今天的数必然误报。 */',
     'function applyWin(w){',
     '  CURW=w;',
     '  var tc=tally(winRows(w));',
     '  fill(document.getElementById("rea-bd-cards"),tc,w===DEFW);',
-    '  paintKpiBar(tc);',
+    '  paintDonut(tc);',
     '  renderOrg(w);',
     '  orgCheck(w);',
     '  renderLd(w);',
@@ -11738,7 +11775,7 @@ setLdSortUi();
     'assignCheck();',
     'var gs=document.querySelectorAll(".rea-bd-tabs");',
     'for(var gi=0;gi<gs.length;gi++)tabs(gs[gi]);',
-    'applyWin(DEFW);',   /* 装完页签再按默认窗口铺一遍数（三卡与各大区同窗） */
+    'applyWin(DEFW);',   /* 装完页签再按默认窗口铺一遍数（占比图与各大区同窗） */
     'renderQfTrend();',
     'renderTrTrend();',
 
@@ -12047,7 +12084,7 @@ setLdSortUi();
 
   /* ============================================================
      执行健康度的二级页：任务列表
-     看板三卡与各大区完成率回答「整体／哪个大区欠」，这一页回答「具体是哪几条」。
+     看板占比图与各大区完成率回答「整体／哪个大区欠」，这一页回答「具体是哪几条」。
      三条筛选轴（任务类型／状态／大区）＋ 与看板共用的时间窗；
      行数据由看板页点进来时随 postMessage 带过来（dumpRows），**不另编一份**。
      ============================================================ */
