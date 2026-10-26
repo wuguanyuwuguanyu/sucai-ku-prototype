@@ -11234,6 +11234,49 @@ body .subapp{background:#F6F8FB!important}
   .rea-bd-upd{margin-left:0}
 }
 
+/* ---------- 动效 ----------
+   只给「状态变了」做反馈：进页面、换时间窗、切粒度、翻排序、悬停。
+   一律 100–420ms 的 ease-out，无弹跳、无循环装饰（ADR-0082 的禁止清单照旧）。
+   系统开了「减少动态效果」时整段让位（本节末尾）：数照换、图照画，只是不再过渡。 */
+@keyframes reaIn{from{opacity:0}to{opacity:1}}
+@keyframes reaRiseIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes reaGrowX{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes reaGrowY{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+/* 进页面：六张卡自上而下依次浮起 6px，30ms 错位，整串 400ms 内收工。
+   不是「卡片在飞」，只给首屏一个阅读顺序。 */
+.rea-bd-grid>.rea-bd-card{animation:reaRiseIn .24s cubic-bezier(.2,.7,.3,1) both}
+.rea-bd-grid>.rea-bd-card:nth-child(2){animation-delay:.03s}
+.rea-bd-grid>.rea-bd-card:nth-child(3){animation-delay:.06s}
+.rea-bd-grid>.rea-bd-card:nth-child(4){animation-delay:.09s}
+.rea-bd-grid>.rea-bd-card:nth-child(5){animation-delay:.12s}
+.rea-bd-grid>.rea-bd-card:nth-child(6){animation-delay:.15s}
+/* 环形：换窗口时三段弧从旧比例滑到新比例（paintDonut 只改 dasharray／dashoffset） */
+.rea-bd-ring-fig circle.arc{transition:stroke-dasharray .34s cubic-bezier(.2,.7,.3,1),stroke-dashoffset .34s cubic-bezier(.2,.7,.3,1),opacity .2s linear}
+/* 部门条：行是整块重画的，宽度过渡接不上（新节点一出生就是终值），所以换窗口时走 scaleX；
+   翻排序（BDANIM=0）不重播，免得每点一下列头 8 条一起长一遍。 */
+.rea-bd-org.is-anim .rea-bd-org-bar>i{transform-origin:left center;animation:reaGrowX .36s cubic-bezier(.2,.7,.3,1) both}
+/* 图：柱子从基线长起来；折线由 JS 按路径长度画入（见 reaDraw）；圆点与末格底纹晚半拍淡入，
+   免得线还没走到点上，点先亮了一片。 */
+#rea-qft-chart svg rect.qf-bar{transform-box:fill-box;transform-origin:50% 100%;animation:reaGrowY .32s cubic-bezier(.2,.7,.3,1) both}
+.rea-dot{animation:reaIn .22s ease-out .26s both}
+.rea-shade{animation:reaIn .28s ease-out both}
+.rea-bd-ld-row{animation:reaIn .18s ease-out both}
+/* 悬停与提示框：底色 120ms 淡进来，提示框 100ms 浮上来，不是「啪」地出现。 */
+.rea-bd-org-row,.rea-bd-ld-row{transition:background .12s linear}
+.rea-qft-tip{animation:reaIn .1s ease-out}
+/* 页签下划线滑动：tabs() 在本页铺完第一遍之后才挂 .is-anim，
+   否则首帧会从 0 宽滑到目标位置。 */
+.rea-bd-tabs .ant-tabs-ink-bar.is-anim{transition:left .2s cubic-bezier(.2,.7,.3,1),top .2s cubic-bezier(.2,.7,.3,1),width .2s cubic-bezier(.2,.7,.3,1)}
+@media (prefers-reduced-motion:reduce){
+  .rea-bd-grid>.rea-bd-card,
+  .rea-bd-org.is-anim .rea-bd-org-bar>i,
+  #rea-qft-chart svg rect.qf-bar,
+  .rea-dot,.rea-shade,.rea-bd-ld-row,.rea-qft-tip{animation:none!important}
+  .rea-bd-ring-fig circle.arc,
+  .rea-bd-org-row,.rea-bd-ld-row,
+  .rea-bd-tabs .ant-tabs-ink-bar.is-anim{transition:none!important}
+}
+
 /* ---------- 通用文字与工具行 ---------- */
 .rea-bd-row{display:flex;align-items:center;flex-wrap:wrap;gap:10px 12px;padding:20px 0 0}
 .rea-bd-lab{color:#8F959E;font-size:12px}
@@ -11573,8 +11616,8 @@ function renderQfTrend(){
      只有一格时不画——整张图就是那一格，压满反而像画坏了。 */
   if(n>1){
     var cx0=L+(n-1)*band;
-    g+="<rect x='"+cx0.toFixed(1)+"' y='"+T+"' width='"+band.toFixed(1)+"' height='"+ph+"' fill='#F7F8FA'/>";
-    g+="<line x1='"+cx0.toFixed(1)+"' y1='"+T+"' x2='"+cx0.toFixed(1)+"' y2='"+(T+ph)+"' stroke='#D9D9D9' stroke-dasharray='4 3'/>";
+    g+="<rect class='rea-shade' x='"+cx0.toFixed(1)+"' y='"+T+"' width='"+band.toFixed(1)+"' height='"+ph+"' fill='#F7F8FA'/>";
+    g+="<line class='rea-shade' x1='"+cx0.toFixed(1)+"' y1='"+T+"' x2='"+cx0.toFixed(1)+"' y2='"+(T+ph)+"' stroke='#D9D9D9' stroke-dasharray='4 3'/>";
     g+="<text x='"+(cx0+band/2).toFixed(1)+"' y='"+(T+13)+"' text-anchor='middle' fill='#8F959E' font-size='11'>"+(QFMODE==="week"?"本周":"今日")+"</text>";
   }
   g+="<text x='"+L+"' y='"+(T-14)+"' fill='#8F959E' font-size='11'>人</text>";
@@ -11588,7 +11631,7 @@ function renderQfTrend(){
   for(i=0;i<n;i++){
     if(!view[i].sent)continue;
     var bx=L+i*band+(band-barW)/2,by=yS(view[i].sent),bh=T+ph-by;
-    g+="<rect x='"+bx.toFixed(1)+"' y='"+by.toFixed(1)+"' width='"+barW.toFixed(1)+"' height='"+Math.max(0,bh).toFixed(1)+"' rx='2' fill='#BAE0FF'/>";
+    g+="<rect class='qf-bar' x='"+bx.toFixed(1)+"' y='"+by.toFixed(1)+"' width='"+barW.toFixed(1)+"' height='"+Math.max(0,bh).toFixed(1)+"' rx='2' fill='#BAE0FF'/>";
   }
   /* 没有发送的那几段回复率是「无」，不是 0%：折线在那里断开，不画成掉到底 */
   var pts=[],path="",open=false,x,y;
@@ -11599,9 +11642,9 @@ function renderQfTrend(){
     open=true;
     pts.push([x,y]);
   }
-  if(path)g+="<path d='"+path+"' fill='none' stroke='#1677FF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/>";
+  if(path)g+="<path class='rea-draw' d='"+path+"' fill='none' stroke='#1677FF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/>";
   for(i=0;i<pts.length;i++){
-    g+="<circle cx='"+pts[i][0].toFixed(1)+"' cy='"+pts[i][1].toFixed(1)+"' r='3.4' fill='#ffffff' stroke='#1677FF' stroke-width='2'/>";
+    g+="<circle class='rea-dot' cx='"+pts[i][0].toFixed(1)+"' cy='"+pts[i][1].toFixed(1)+"' r='3.4' fill='#ffffff' stroke='#1677FF' stroke-width='2'/>";
   }
   var step=Math.ceil(n/8);
   for(i=0;i<n;i++){
@@ -11616,6 +11659,7 @@ function renderQfTrend(){
   var tip=document.createElement("div");
   tip.className="rea-qft-tip";
   box.appendChild(tip);
+  reaDraw(box);
   var bands=box.querySelectorAll("[data-qft-i]"),j;
   for(j=0;j<bands.length;j++){
     bands[j].addEventListener("mouseenter",function(){
@@ -11733,8 +11777,8 @@ function renderTrTrend(){
      反倒像画坏了——这一格不画。 */
   if(n>1){
     var cx0=L+(n-1)*band;
-    g+="<rect x='"+cx0.toFixed(1)+"' y='"+T+"' width='"+band.toFixed(1)+"' height='"+ph+"' fill='#F7F8FA'/>";
-    g+="<line x1='"+cx0.toFixed(1)+"' y1='"+T+"' x2='"+cx0.toFixed(1)+"' y2='"+(T+ph)+"' stroke='#D9D9D9' stroke-dasharray='4 3'/>";
+    g+="<rect class='rea-shade' x='"+cx0.toFixed(1)+"' y='"+T+"' width='"+band.toFixed(1)+"' height='"+ph+"' fill='#F7F8FA'/>";
+    g+="<line class='rea-shade' x1='"+cx0.toFixed(1)+"' y1='"+T+"' x2='"+cx0.toFixed(1)+"' y2='"+(T+ph)+"' stroke='#D9D9D9' stroke-dasharray='4 3'/>";
     g+="<text x='"+(cx0+band/2).toFixed(1)+"' y='"+(T+13)+"' text-anchor='middle' fill='#8F959E' font-size='11'>"+(TRMODE==="week"?"本周":"今日")+"</text>";
   }
   g+="<rect class='tr-hov' x='0' y='0' width='"+band.toFixed(1)+"' height='"+ph+"' fill='#1F2329' opacity='0'/>";
@@ -11746,9 +11790,9 @@ function renderTrTrend(){
     for(i=0;i<n;i++)pts.push([L+i*band+band/2+dx[si],yY(view[i][series[si].k])]);
     path="M"+pts[0][0].toFixed(1)+","+pts[0][1].toFixed(1);
     for(i=1;i<n;i++)path+="L"+pts[i][0].toFixed(1)+","+pts[i][1].toFixed(1);
-    g+="<path d='"+path+"' fill='none' stroke='"+series[si].c+"' stroke-width='2' stroke-linejoin='round' stroke-linecap='round'/>";
+    g+="<path class='rea-draw' d='"+path+"' fill='none' stroke='"+series[si].c+"' stroke-width='2' stroke-linejoin='round' stroke-linecap='round'/>";
     if(band>=14||n===1)for(i=0;i<n;i++){
-      g+="<circle cx='"+pts[i][0].toFixed(1)+"' cy='"+pts[i][1].toFixed(1)+"' r='3' fill='#ffffff' stroke='"+series[si].c+"' stroke-width='2'/>";
+      g+="<circle class='rea-dot' cx='"+pts[i][0].toFixed(1)+"' cy='"+pts[i][1].toFixed(1)+"' r='3' fill='#ffffff' stroke='"+series[si].c+"' stroke-width='2'/>";
     }
   }
   /* 日期标签按格宽抽稀；末格另有「今日／本周」压底，格子太窄时不强补 */
@@ -11766,6 +11810,7 @@ function renderTrTrend(){
   var tip=document.createElement("div");
   tip.className="rea-qft-tip rea-tr-tip";
   box.appendChild(tip);
+  reaDraw(box);
   var bands=box.querySelectorAll("[data-tr-i]"),hov=box.querySelector(".tr-hov"),j;
   for(j=0;j<bands.length;j++){
     bands[j].addEventListener("mouseenter",function(){
@@ -12018,6 +12063,10 @@ setLdSortUi();
     'var WIRED={today:1,w7:1,m1:1,m3:1};',
     'var DEFW="today";              /* 默认窗口——环形占比静态正文里抄的就是它那一份 */',
     'var CURW=DEFW;                 /* 当前窗口 */',
+    '/* 动效开关：系统「减少动态效果」开着就一律不播（CSS 末尾另有一份同样的让位）。',
+    '   BDANIM 只在换时间窗时为 1——翻排序不重播部门条，免得每点一下列头都长一遍。 */',
+    'var BDRM=!!(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches);',
+    'var BDANIM=0;',
     'function offOf(r){return parseInt(r.getAttribute("data-bd-day"),10)||0}',
     'function inWin(d,w){var r=WIN[w]||WIN[DEFW];return d>=r[0]&&d<=r[1]}',
     '/* 偏移量↔日期：台账只存「相对今天第几天」，画图时才换算成真实日期（今天永远是 0）。 */',
@@ -12218,6 +12267,8 @@ setLdSortUi();
     '     这里判的是范围里有没有部门，不是这一窗有没有数：窗口里 0 人次仍要留一行「—」。 */',
     '  if(grid)grid.classList.toggle("rea-bd-grid--nodept",!DEPTS.length);',
     '  if(!box||!DEPTS.length)return;',
+    '  /* 换窗口时条从 0 长到值（CSS 里 .is-anim 那一档）；翻排序不重播。 */',
+    '  box.classList.toggle("is-anim",!!BDANIM);',
     '  for(i=0;i<list.length;i++){',
     '    r=list[i];sum+=r.rate;',
     '    h+="<div class=\\"rea-bd-org-row\\" role=\\"button\\" tabindex=\\"0\\" data-bd-org-row=\\""+esc(r.o)+"\\">"',
@@ -12330,6 +12381,8 @@ setLdSortUi();
     '  }',
     '  for(i=0;i<ts.length;i++)ts[i].addEventListener("click",function(){show(this)});',
     '  show(g.querySelector(".ant-tabs-tab-active")||ts[0]);',
+    '  /* 下划线滑动只在首帧之后启用：先摆到位，再挂过渡，否则第一次定位会从 0 宽滑过来。 */',
+    '  if(ink)requestAnimationFrame(function(){ink.classList.add("is-anim")});',
     '}',
     '',
     '/* 「详细数据」子页不在 36 页快照里（现网那条 href 指向 board/wxz/task，',
@@ -12379,6 +12432,24 @@ setLdSortUi();
     '   占比（条数）、部门（人次）、员工（人次）、两张趋势图（条数／人次）。 */',
     '/* 两张图的粒度跟着窗口跨度走：31 天以内按日，更长按周——',
     '   近三月按日就是 91 根挤成一条，读不出走势。用户手动切过的档保留到下一次换窗口。 */',
+    '/* 折线画入：按路径长度铺满虚线，再把 dashoffset 从满拉到 0——线从左端长到右端。',
+    '   画完把虚线撤掉，否则下次 resize 重画会留一段看得见的缺口。',
+    '   减动效偏好下整段跳过：图直接就是画好的样子。 */',
+    'function reaDraw(box){',
+    '  if(BDRM||!box)return;',
+    '  var ps=box.querySelectorAll("path.rea-draw"),i,p,L;',
+    '  for(i=0;i<ps.length;i++){',
+    '    p=ps[i];if(!p.getTotalLength)continue;',
+    '    L=p.getTotalLength();if(!L)continue;',
+    '    p.style.strokeDasharray=L+" "+L;',
+    '    p.style.strokeDashoffset=L;',
+    '    /* 先把起点真正落进样式，再写终点；同一帧连写两次会被合并成「没有变化」 */',
+    '    p.getBoundingClientRect();',
+    '    p.style.transition="stroke-dashoffset 420ms cubic-bezier(.2,.7,.3,1)";',
+    '    p.style.strokeDashoffset="0";',
+    '    (function(el){setTimeout(function(){el.style.transition="";el.style.strokeDasharray="";el.style.strokeDashoffset="";},480)})(p);',
+    '  }',
+    '}',
     'function setGranUi(){',
     '  var sets=[["data-tr-gran",TRMODE],["data-qf-gran",QFMODE]],s,i,ls,on,b,r;',
     '  for(s=0;s<sets.length;s++){',
@@ -12400,11 +12471,13 @@ setLdSortUi();
     '  var tc=tally(winRows(w));',
     '  fill(document.getElementById("rea-bd-cards"),tc,w===DEFW);',
     '  paintDonut(tc);',
+    '  BDANIM=1;               /* 这一轮是「换窗口」：部门条跟着长一遍 */',
     '  renderOrg(w);',
     '  orgCheck(w);',
     '  renderLd(w);',
     '  renderTrTrend();',
     '  renderQfTrend();',
+    '  BDANIM=0;',
     '}',
     reaQfTrendJs(),
     reaTrendJs(),
