@@ -9738,7 +9738,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
          三段互斥：已完成（绿）→ 待完成（蓝）→ 逾期未做（橙），段间留一道细缝；
          图例三行可点：进「任务列表」并按状态预筛。图例带百分比（占窗口全部任务），
          2026-10-26 删掉指标带后，这三行是这一页唯一写状态占比的地方。 -->
-    <div class="rea-bd-card rea-bd-card--w5">
+    <div class="rea-bd-card rea-bd-card--w4">
       <div class="rea-bd-ch"><h6>执行健康度</h6></div>
       <div class="rea-bd-ring" id="rea-bd-cards">
         <div class="rea-bd-ring-fig">
@@ -9767,7 +9767,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     <!-- 执行趋势 · 第 2 层 · 过程（任务条数）。两条线同单位、同量级，共用一根纵轴；
          统计范围随页顶时间窗，卡内只切粒度（按日／按周）。折线用直线段：条数是整数，
          平滑会把 0 → 3 连成一段不存在的缓坡。 -->
-    <div class="rea-bd-card rea-bd-card--w7">
+    <div class="rea-bd-card rea-bd-card--w8">
       <div class="rea-bd-ch">
         <h6>执行趋势</h6>
         <div class="ant-radio-group ant-radio-group-solid css-vgijab rea-tr-win" id="rea-tr-win">
@@ -11212,8 +11212,12 @@ body .subapp{background:#F6F8FB!important}
 /* ---------- 卡片网格 ---------- */
 .rea-bd-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px;margin-top:16px}
 .rea-bd-card{display:flex;flex-direction:column;min-width:0;padding:16px 20px 18px;background:#fff;border:1px solid #E9EEF6;border-radius:12px;box-shadow:0 1px 2px rgba(19,44,82,.04)}
+.rea-bd-card--w8{grid-column:span 8}
 .rea-bd-card--w7{grid-column:span 7}
 .rea-bd-card--w5{grid-column:span 5}
+/* 第 1 行收窄：环形占比的正文就是「一个环 ＋ 三行图例」，span 5 时右侧空出一大块，
+   把那一列让给执行趋势（span 8）——它的横轴格数最多，宽一点才读得出走势。 */
+.rea-bd-card--w4{grid-column:span 4}
 /* 当前范围没有下级部门：部门卡整件不出（比不了），落单的「配置·资产」铺满最后一行。
    有部门的范围里这条不生效，版式仍是 3 行 × 2 列（PRD §2.4）。 */
 .rea-bd-grid--nodept #rea-bd-org-card{display:none}
@@ -11232,7 +11236,7 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-ch>.rea-tr-win,.rea-bd-ch>.rea-qft-win{margin-left:auto}
 /* 视口 1280 以下内容区不足 770px，两列会把环形和图例挤在一起，回落到单列 */
 @media (max-width:1279px){
-  .rea-bd-card--w7,.rea-bd-card--w5{grid-column:span 12}
+  .rea-bd-card--w8,.rea-bd-card--w7,.rea-bd-card--w5,.rea-bd-card--w4{grid-column:span 12}
 }
 @media (max-width:767px){
   .rea-bd-hero{flex-wrap:wrap}
@@ -11291,8 +11295,8 @@ body .subapp{background:#F6F8FB!important}
 /* ---------- 执行健康度 · 环形占比 ----------
    环只画三段互斥的状态，段间留 2.5px 缝（在 SVG 里按弧长扣，见 paintDonut）；
    圆心写窗口内全部任务条数——这一个圆就是「这批任务」的全部。 */
-#rea-bd-cards{display:flex;flex:1 1 auto;flex-wrap:wrap;align-items:center;justify-content:center;gap:16px 18px;margin:0;padding:6px 0 10px}
-.rea-bd-ring-fig{position:relative;flex:none;width:132px;height:132px}
+#rea-bd-cards{display:flex;flex:1 1 auto;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px 16px;margin:0;padding:4px 0 8px}
+.rea-bd-ring-fig{position:relative;flex:none;width:124px;height:124px}
 .rea-bd-ring-fig svg{display:block;width:100%;height:100%;transform:rotate(-90deg)}
 .rea-bd-ring-fig circle{fill:none;stroke-width:13}
 .rea-bd-ring-fig circle.track{stroke:#F0F2F5}
@@ -11302,7 +11306,7 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-ring-mid{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;pointer-events:none}
 .rea-bd-ring-mid b{font-size:32px;line-height:1.05;font-weight:600;color:#1F2329;letter-spacing:-.5px}
 .rea-bd-ring-mid span{font-size:12px;color:#8F959E}
-.rea-bd-ring-key{list-style:none;margin:0 -6px;padding:0;display:flex;flex-direction:column;gap:6px;flex:1 1 176px;min-width:176px}
+.rea-bd-ring-key{list-style:none;margin:0 -6px;padding:0;display:flex;flex-direction:column;gap:4px;flex:1 1 176px;min-width:176px;max-width:360px}
 /* 图例行可点：整行进任务列表并按这一行预筛状态 */
 .rea-bd-ring-key li{display:flex;align-items:baseline;gap:8px;padding:2px 6px;border-radius:6px;font-size:13px;color:#646A73;cursor:pointer;transition:background .12s}
 .rea-bd-ring-key li:hover,.rea-bd-ring-key li:focus-visible{background:#F7F8FA}
