@@ -11089,6 +11089,8 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
      这些类名对应的样式**早就随快照带过来了**，快照里缺的只是「什么时候挂哪个类」这只手。
      REA_FX 补的就是这只手：它只切换 AntD 自己的类名，不新写一条样式、不编一条数据，
      所以补出来的每个状态都是线上真实会出现的那个态。
+     唯一不叫 ant- 的那个类名是部门面板的 .yk-lefttree.close（应用自己的类，样式也在快照里；
+     收起时搜索框随 React 一起不渲染，那边跟着收一下，见 reaFxJs 的 treeSet）。
      反过来，快照里**根本没有 DOM** 的东西一律不接：
      下拉选项面板、日期面板、非首个页签的内容（tabpane 全是空壳）、
      折叠树的子节点（rc-tree 扁平渲染，没展开的节点不落 DOM）——硬做只能靠编，宁可不做。
@@ -11128,7 +11130,10 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     /* 顶部一级导航（快照自带那条）只给指针形态，**不给 hover 底色**：
        AntD 顶栏 hover 变的是字色不是底色，补个底色就不是现网观感了。 */
     + 'li.ant-menu-overflow-item.rea-nav{cursor:pointer}'
-    + 'li.ant-menu-overflow-item.rea-off{cursor:not-allowed}';
+    + 'li.ant-menu-overflow-item.rea-off{cursor:not-allowed}'
+    /* 部门选择面板收起后，那枚箭头翻成 › 指回去——面板已经收没了，这颗按钮是唯一的回程入口。
+       默认态不动：选择器只在 .close 下命中（收起是点出来的，不属于静置）。 */
+    + '.yk-lefttree.close .yk-ant-pro-sider-collapsed-button>svg{transform:rotate(-90deg)}';
 
   /* ============================================================
      逐页覆盖（ADR-0043）——未覆盖的页一个字节都不动；被覆盖的页换新稿或补交互，
@@ -15706,11 +15711,11 @@ else if(PAGE==='群发群组 · 新建')initQs();
      写成一行行的数组再 join，是为了让注入进去的那段代码保持可读——
      它最终会以字符串形式落进 iframe 的 srcdoc，出错只能靠肉眼比对。
      写成函数而不是常量：模块页那枚「新建」按钮得先知道自己是谁，才知道该跳哪个「· 新建」页。 */
-  function reaFxJs(curName){
+  function reaFxJs(curName, treeClosed){
    return [
     '(function(){',
     'var CUR=' + reaJson(curName) + ',NEWS=' + reaJson(reaNewOf)
-      + ',DETAILS=' + reaJson(reaDetailOf) + ';',
+      + ',DETAILS=' + reaJson(reaDetailOf) + ',TREE=' + (treeClosed ? 1 : 0) + ';',
     'var CE="ant-checkbox-checked",CIE="ant-checkbox-indeterminate";',
     'function up(n,c){while(n&&n.nodeType===1){if(n.classList&&n.classList.contains(c))return n;n=n.parentNode}return null}',
     'function isOn(n){return !!(n&&n.classList&&n.classList.contains(CE))}',
@@ -15756,9 +15761,32 @@ else if(PAGE==='群发群组 · 新建')initQs();
     'if(mrs.length)MR=mrs[mrs.length-1];',
     'function mShow(v){if(MR)MR.style.display=v?"":"none"}',
     '',
+    '/* 部门选择面板（微小助模块每页左侧那列）的收起／展开：面板右上那枚蓝色箭头。',
+    '   快照只带了 .yk-lefttree.close 的样式，没有挂这个类的那只手。真身是 React 条件渲染——',
+    '   收起时列表与搜索框整个不渲染，CSS 只管树和 pin，所以搜索框这边跟着一起收，',
+    '   否则 0 宽的面板里会漏出一个 200px 宽的输入框压在正文上。',
+    '   收起状态记在外壳（parent）上：换页重建 srcdoc 后还是收起的那一版，不然每跳一页都弹回来。 */',
+    'function treeSet(closed,quiet){',
+    '  var lt=document.querySelector(".yk-lefttree");if(!lt)return;',
+    '  lt.classList.toggle("close",closed);',
+    '  var si=lt.querySelector(".yk-select-tree-search-input");',
+    '  if(si)si.style.display=closed?"none":"";',
+    '  var cb=lt.querySelector(".yk-ant-pro-sider-collapsed-button");',
+    '  if(cb){cb.setAttribute("aria-expanded",closed?"false":"true");',
+    '    cb.setAttribute("title",closed?"展开部门选择":"收起部门选择");}',
+    '  if(!quiet)parent.postMessage({reaTree:closed?1:0},"*");',
+    '}',
+    'if(TREE)treeSet(true,1);',
+    '',
     'document.addEventListener("click",function(e){',
     '  var t=e.target;if(!t||t.nodeType!==1)return;',
     '  if(up(t,"ykMenuItemLi"))return;                 /* 侧栏归换页脚本管 */',
+    /* 面板箭头要在其它分支之前认：它既不是 ant-btn 也不是树节点，掉进后面就没人接了。
+       同一页上还有一枚位置相近的箭头（左侧菜单的 ykSideRoot），所以必须挂在 .yk-lefttree 里才算数。 */
+    '  if(up(t,"yk-ant-pro-sider-collapsed-button")&&up(t,"yk-lefttree")){',
+    '    e.preventDefault();',
+    '    treeSet(!up(t,"yk-lefttree").classList.contains("close"));return;',
+    '  }',
     '  var btn=up(t,"ant-btn"),sw=up(t,"ant-switch"),',
     '      rb=up(t,"ant-radio-button-wrapper"),rw=up(t,"ant-radio-wrapper"),',
     '      tn=up(t,"ant-tree-node-content-wrapper"),st=up(t,"ant-table-column-has-sorters");',
@@ -15982,6 +16010,7 @@ else if(PAGE==='群发群组 · 新建')initQs();
   var reaOrgSel = 'all';  // 同上：部门（从部门完成情况的一行点进来时有值）
   var reaSortSel = 'debt';// 执行人明细的排序：debt（欠账优先）/ done（完成人次）/ rate（完成率）
   var reaFocusSel = '';   // 从排行点某个人进来时要预展开的人名；空串＝不展开
+  var reaTreeClosed = false; // 微小助模块左侧「部门选择」面板收起了没有（面板是每页的 rest 各带一份，状态得存在外壳上）
   var reaSynthDone = false; // 合成子页（执行人明细／任务配置快照）跑过没有
 
   /* 从某页的 rest 里读出它侧栏当前的二级分类名（读不到就返回空串） */
@@ -16116,7 +16145,7 @@ else if(PAGE==='群发群组 · 新建')initQs();
       /* 补行（演示行 / 刚存的行）必须排在 REA_FX **前面**：它的行悬停是加载时逐行绑的 */
       + (sv ? '<script>' + sv + '<' + '/script>' : '')
       + '<script>' + reaDemoJs(p.name) + '<' + '/script>'
-      + '<script>' + reaFxJs(p.name) + '<' + '/script>'
+      + '<script>' + reaFxJs(p.name, reaTreeClosed) + '<' + '/script>'
       + (fl ? '<script>' + fl + '<' + '/script>' : '')
       + (cv && cv.js ? '<script>' + cv.js() + '<' + '/script>' : '')
       + '</body></html>';
@@ -16253,10 +16282,12 @@ else if(PAGE==='群发群组 · 新建')initQs();
     attempt();
   }
 
-  /* 页内侧栏点回来 → 换页；新建页点保存 → 收下这条素材、回列表页并报一条提示 */
+  /* 页内侧栏点回来 → 换页；新建页点保存 → 收下这条素材、回列表页并报一条提示；
+     左侧「部门选择」面板收起／展开 → 只记状态，下次重建这页的 srcdoc 时按它摆好 */
   window.addEventListener('message', function(e){
     var d = e.data;
     if (!d || !window.__REAL_ADMIN__) return;
+    if (typeof d.reaTree === 'number'){ reaTreeClosed = !!d.reaTree; return; }
     if (!d.reaPage && !d.reaSave) return;
     var P = window.__REAL_ADMIN__;
     /* 看板点的「详细数据」：先把行与窗口收下，子页 reaDoc 时会灌进 window（见 reaDataJs） */
