@@ -14436,6 +14436,35 @@ setLdSortUi();
    ].join('\n');
   }
 
+  /* 「发圈 · 详情」的覆盖脚本：任务信息补两行只读回显（所在位置／提醒谁看）。
+     正文仍是快照，脚本只插 <p><span>标签：</span><span>值</span></p>，不抄整页；
+     按「执行人员：」定位，不认行序——重抓快照后行序变了也不会插错。 */
+  function reaFqDetailJs(){
+   return [
+    '(function(){',
+    'var BODY=document.querySelector(\'[class*="_task_information_body_"]\');',
+    'if(!BODY)return;',
+    'if(BODY.querySelector("[data-rea-fq-loc]"))return;',
+    'var ps=BODY.querySelectorAll("p"),i,anchor=null;',
+    'for(i=0;i<ps.length;i++){',
+    '  var t=(ps[i].textContent||"").replace(/\\s+/g,"");',
+    '  if(t.indexOf("执行人员：")===0){anchor=ps[i];break}',
+    '}',
+    'if(!anchor)return;',
+    'function row(label,value,attr){',
+    '  var p=document.createElement("p");p.setAttribute(attr,"1");',
+    '  var a=document.createElement("span");a.textContent=label;',
+    '  var b=document.createElement("span");b.textContent=value;',
+    '  p.appendChild(a);p.appendChild(b);return p;',
+    '}',
+    'var loc=row("所在位置：","上海静安嘉里中心","data-rea-fq-loc");',
+    'var rem=row("提醒谁看：","重点客户、老客户","data-rea-fq-remind");',
+    'if(anchor.nextSibling){BODY.insertBefore(loc,anchor.nextSibling);BODY.insertBefore(rem,loc.nextSibling)}',
+    'else{BODY.appendChild(loc);BODY.appendChild(rem)}',
+    '})();'
+   ].join('\n');
+  }
+
   /* 「新小红书运营 · 详情」的覆盖脚本：把「查看任务配置快照」接回原型里的快照页。
      详情页正文来自快照（构建脚本按「线上详情页html」收进载体），这里不抄副本，只补一个跳转属性——
      REA_FX 的 document 级点击监听认 data-rea，会 postMessage 回外壳换页。 */
@@ -14869,7 +14898,40 @@ tb.addEventListener("click",function(e){
     + '.rea-wxt-src{display:flex;gap:8px;flex-wrap:wrap}'
     + '.rea-wxt-temp{margin-top:12px}'
     + '.rea-wxt-foot{display:flex;justify-content:flex-end;gap:8px;padding:20px 0 0;border-top:1px solid #f0f0f0;margin-top:8px}'
-    + '.rea-wxt-groupscope{max-width:560px;margin-top:8px}';
+    + '.rea-wxt-groupscope{max-width:560px;margin-top:8px}'
+    /* ---- 发圈 · 新建：所在位置与提醒谁看（2026-10-26） ---- */
+    /* 两行都插在现网表单里，行壳 clone 自「自动发送」那一行（_addtitle1_ 没有必填红星）；
+       这里只补控件与提示，不改整页版式。色值仍取快照已有的色。 */
+    + '.rea-wxt-loc{max-width:560px}'
+    + '.rea-wxt-hintline{margin:6px 0 0;max-width:560px;font-size:12px;line-height:20px;color:#999999}'
+    + '.rea-wxt-hintline.warn{color:#d46b08}'
+    + '.rea-wxt-tagbox{position:relative;display:flex;align-items:center;flex-wrap:wrap;gap:4px;box-sizing:border-box;max-width:560px;min-height:32px;padding:2px 28px 2px 8px;border:1px solid #d9d9d9;border-radius:6px;background:#ffffff;cursor:pointer;outline:none}'
+    + '.rea-wxt-tagbox:hover{border-color:#4096ff}'
+    + '.rea-wxt-tagbox.on{border-color:#1677ff;box-shadow:0 0 0 2px rgba(5,145,255,.1)}'
+    + '.rea-wxt-tagbox:focus-visible{border-color:#1677ff;box-shadow:0 0 0 2px rgba(5,145,255,.1)}'
+    + '.rea-wxt-tagph{font-size:14px;line-height:24px;color:#bfbfbf}'
+    + '.rea-wxt-tagchip{display:inline-flex;align-items:center;gap:2px;max-width:180px;height:24px;padding:0 4px 0 8px;border-radius:4px;background:#f5f5f5;font-size:12px;line-height:24px;color:rgba(0,0,0,.88)}'
+    + '.rea-wxt-tagchip>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
+    + '.rea-wxt-tagx{border:0;background:transparent;padding:0 2px;font-size:14px;line-height:16px;color:#999999;cursor:pointer}'
+    + '.rea-wxt-tagx:hover{color:#ff4d4f}'
+    + '.rea-wxt-tagcaret{position:absolute;right:10px;top:50%;margin-top:-6px;font-size:10px;line-height:12px;color:#999999;pointer-events:none}'
+    + '.rea-wxt-tagdd{position:fixed;z-index:2400;box-sizing:border-box;width:360px;max-width:calc(100vw - 32px);padding:8px;border-radius:8px;background:#ffffff;box-shadow:0 6px 16px rgba(0,0,0,.12)}'
+    + '.rea-wxt-tagsearch input{box-sizing:border-box;width:100%;height:32px;padding:4px 11px;border:1px solid #d9d9d9;border-radius:6px;font-size:14px;outline:none}'
+    + '.rea-wxt-tagsearch input:focus{border-color:#1677ff;box-shadow:0 0 0 2px rgba(5,145,255,.1)}'
+    + '.rea-wxt-taglist{max-height:240px;margin-top:6px;overflow:auto}'
+    + '.rea-wxt-tagopt{display:flex;align-items:center;width:100%;padding:8px 10px;border:0;border-radius:4px;background:transparent;font-size:14px;line-height:20px;color:rgba(0,0,0,.88);text-align:left;cursor:pointer}'
+    + '.rea-wxt-tagopt:hover{background:#fafafa}'
+    + '.rea-wxt-tagopt.on{background:#e6f4ff;color:#1677ff}'
+    + '.rea-wxt-tagcheck{flex:none;width:16px;margin-right:8px;font-size:12px;color:#1677ff}'
+    + '.rea-wxt-tagname{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
+    + '.rea-wxt-tagcnt{flex:none;margin-left:8px;font-size:12px;color:#999999}'
+    + '.rea-wxt-tagempty{padding:24px 8px;text-align:center;font-size:13px;color:#999999}'
+    + '.rea-wxt-tagft{display:flex;align-items:center;justify-content:space-between;margin-top:6px;padding:6px 4px 0;border-top:1px solid #f0f0f0;font-size:12px;color:#999999}'
+    + '.rea-wxt-tagclear{border:0;background:transparent;padding:0;font-size:12px;color:#1677ff;cursor:pointer}'
+    + '.rea-wxt-tagclear:hover{color:#4096ff}'
+    /* 右栏效果预览里的地点行：位置不属于正文，挂在媒体区之后 */
+    + '.rea-wxt-pvloc{display:flex;align-items:center;gap:4px;margin-top:8px;font-size:12px;line-height:18px;color:#2e448f}'
+    + '.rea-wxt-pvloc svg{flex:none;width:12px;height:12px}';
 
   /* 素材库弹窗的注入脚本（四页共用一份，别各页再抄一遍）。各页只传三枚口径参数：
        tip      弹窗标题下那句说明（各页口径不同，照实说清自己列的是什么）
@@ -15131,6 +15193,7 @@ function toast(t){
 
 /* ---------- 发圈 · 新建 ---------- */
 function initFq(){
+  if(document.querySelector('.rea-wxt-loc'))return;
   var lab=findLabel('任务内容');if(!lab)return;
   /* 发圈页的「任务内容」标题与右栏是同级的两个 div（_addgroup_ 下 _addtitle_ ＋ _addright_），
      标题不在 _addright_ 里面——先找同级右栏，再退回祖先链兜底。 */
@@ -15152,7 +15215,7 @@ function initFq(){
     if(ts)ts.textContent=m?m.text:'';
     var old=document.querySelector('.rea-wxt-pvmedia');
     if(old&&old.parentNode)old.parentNode.removeChild(old);
-    if(!m||!(m.images||m.video))return;
+    if(!m||!(m.images||m.video)){drawLoc();return}
     var d=document.createElement('div');d.className='rea-wxt-pvmedia';
     if(m.video)d.innerHTML='<div class="rea-wxt-pvvideo">▶<span>'+esc(shape(m))+'</span></div>';
     else{
@@ -15161,6 +15224,7 @@ function initFq(){
     }
     var right=document.querySelector('[class*="preview-module_previewRight"]');
     if(right)right.appendChild(d);
+    drawLoc();
   }
   function apply(m){
     picked=m;
@@ -15174,6 +15238,224 @@ function initFq(){
   /* 新克隆的那枚带着「临时创建」的按钮样式（克隆是整颗拷的），初始态得自己扳回来：
      默认来源是临时创建，素材库那枚先按次要按钮画。 */
   setPrimary(btn,false);setPrimary(tempBtn,true);
+
+  /* ---- 所在位置 / 提醒谁看（2026-10-26）：只给发圈 · 新建补两行，群发两页不碰 ---- */
+  var FQ_TAGS=[
+    {id:'vip',name:'重点客户',friends:[1,2,3,4,5,6,7,8]},
+    {id:'old',name:'老客户',friends:[5,6,7,8,9,10,11]},
+    {id:'high',name:'高意向',friends:[12,13,14,15,16]},
+    {id:'follow',name:'待跟进',friends:[9,10,11,12,13,14,15,16,17]},
+    {id:'new',name:'新客户',friends:[18,19,20,21]},
+    {id:'done',name:'已成交',friends:[1,2,3]}
+  ];
+  function fqTag(id){for(var k=0;k<FQ_TAGS.length;k++)if(FQ_TAGS[k].id===id)return FQ_TAGS[k];return null}
+  function fqUnion(ids){
+    var seen={},n=0,k,j,t;
+    for(k=0;k<ids.length;k++){
+      t=fqTag(ids[k]);if(!t)continue;
+      for(j=0;j<t.friends.length;j++)if(!seen[t.friends[j]]){seen[t.friends[j]]=1;n++}
+    }
+    return n;
+  }
+  /* 行壳 clone 自「自动发送」那一行：_addtitle1_ 没有必填红星，_addright_ 的列向布局也够用。 */
+  function fqRow(afterText,labelText){
+    var a=findLabel(afterText);if(!a)return null;
+    var g=upClass(a,'_addgroup_');if(!g)return null;
+    var t=findLabel('自动发送');if(!t)return null;
+    var tg=upClass(t,'_addgroup_');if(!tg)return null;
+    var row=tg.cloneNode(true);
+    row.style.cssText='margin-bottom: 10px; align-items: flex-start;';
+    var lb=row.querySelector('[class*="_addtitle1_"]');if(lb)lb.textContent=labelText;
+    var rt=row.querySelector('[class*="_addright_"]');if(!rt)return null;
+    rt.innerHTML='';
+    g.parentNode.insertBefore(row,g.nextSibling);
+    return rt;
+  }
+
+  var locRight=fqRow('任务内容','所在位置'),locInput=null;
+  if(locRight){
+    locInput=document.createElement('input');
+    locInput.type='text';locInput.maxLength=30;
+    locInput.className='ant-input css-vgijab ant-input-outlined rea-wxt-loc';
+    locInput.placeholder='请输入微信地点名称（最多 30 字），不填则不显示位置';
+    locRight.appendChild(locInput);
+    var locHint=document.createElement('p');
+    locHint.className='rea-wxt-hintline';
+    locHint.textContent='按名称在微信「所在位置」里精确匹配；匹配不到就跳过位置，不影响发布。';
+    locRight.appendChild(locHint);
+  }
+  function drawLoc(){
+    var pr=document.querySelector('[class*="preview-module_previewRight"]');
+    if(!pr)return;
+    var old=pr.querySelector('.rea-wxt-pvloc');
+    if(old&&old.parentNode)old.parentNode.removeChild(old);
+    if(!locInput)return;
+    var v=String(locInput.value||'').replace(/^\\s+|\\s+$/g,'');
+    if(!v)return;
+    var d=document.createElement('div');d.className='rea-wxt-pvloc';
+    d.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg><span></span>';
+    d.querySelector('span').textContent=v;
+    var media=pr.querySelector('.rea-wxt-pvmedia');
+    if(media&&media.parentNode===pr)pr.insertBefore(d,media.nextSibling);
+    else pr.appendChild(d);
+  }
+
+  var remRight=fqRow('选择可见好友','提醒谁看');
+  var tagBox=null,tagHint=null,selected=[],tagDD=null,tagQ='',fqTagOutside=null,fqTagKey=null;
+  if(remRight){
+    tagBox=document.createElement('div');
+    tagBox.className='rea-wxt-tagbox';tagBox.tabIndex=0;
+    tagBox.setAttribute('role','combobox');
+    tagBox.setAttribute('aria-haspopup','listbox');
+    tagBox.setAttribute('aria-expanded','false');
+    remRight.appendChild(tagBox);
+    tagHint=document.createElement('p');
+    tagHint.className='rea-wxt-hintline rea-wxt-taghint';
+    remRight.appendChild(tagHint);
+    var tagRule=document.createElement('p');
+    tagRule.className='rea-wxt-hintline';
+    tagRule.textContent='提醒对象只从「选择可见好友」的可见范围里取；发布后给好友发「提醒你看」，客户看不到提醒名单。';
+    remRight.appendChild(tagRule);
+  }
+  function fqUpdateHint(){
+    if(!tagHint)return;
+    var n=fqUnion(selected);
+    if(!selected.length){
+      tagHint.className='rea-wxt-hintline rea-wxt-taghint';
+      tagHint.textContent='不提醒任何人；可见范围由「选择可见好友」决定。';
+    }else if(n>10){
+      tagHint.className='rea-wxt-hintline rea-wxt-taghint warn';
+      tagHint.textContent='预计提醒 '+n+' 人，超过微信上限 10 人；执行时按好友列表顺序取前 10 人，任务仍可保存。';
+    }else{
+      tagHint.className='rea-wxt-hintline rea-wxt-taghint';
+      tagHint.textContent='预计提醒 '+n+' 人；每个执行人员最多提醒 10 人。';
+    }
+  }
+  function fqDrawTags(){
+    if(!tagBox)return;
+    var h='',k;
+    if(!selected.length)h+='<span class="rea-wxt-tagph">请选择要提醒的微信标签（可多选）</span>';
+    for(k=0;k<selected.length;k++){
+      var t=fqTag(selected[k]);if(!t)continue;
+      h+='<span class="rea-wxt-tagchip"><span>'+esc(t.name)+'</span>'
+        +'<button type="button" class="rea-wxt-tagx" data-tag="'+t.id+'" aria-label="移除'+esc(t.name)+'">×</button></span>';
+    }
+    h+='<span class="rea-wxt-tagcaret">▾</span>';
+    tagBox.innerHTML=h;
+    tagBox.setAttribute('aria-expanded',tagDD?'true':'false');
+    fqUpdateHint();
+  }
+  function fqRenderList(){
+    if(!tagDD)return;
+    var list=tagDD.querySelector('.rea-wxt-taglist');if(!list)return;
+    var q=tagQ.toLowerCase(),items=[],k;
+    for(k=0;k<FQ_TAGS.length;k++)if(!q||FQ_TAGS[k].name.toLowerCase().indexOf(q)>=0)items.push(FQ_TAGS[k]);
+    if(!items.length){list.innerHTML='<div class="rea-wxt-tagempty">没有匹配的标签</div>';return}
+    var h='';
+    for(k=0;k<items.length;k++){
+      var t=items[k],on=selected.indexOf(t.id)>=0;
+      h+='<button type="button" class="rea-wxt-tagopt'+(on?' on':'')+'" data-tag="'+t.id+'" role="option" aria-selected="'+(on?'true':'false')+'">'
+        +'<span class="rea-wxt-tagcheck">'+(on?'✓':'')+'</span>'
+        +'<span class="rea-wxt-tagname">'+esc(t.name)+'</span>'
+        +'<span class="rea-wxt-tagcnt">最多 '+t.friends.length+' 人</span></button>';
+    }
+    list.innerHTML=h;
+    var opts=list.querySelectorAll('.rea-wxt-tagopt');
+    for(k=0;k<opts.length;k++){
+      opts[k].addEventListener('click',function(e){
+        e.preventDefault();
+        var id=this.getAttribute('data-tag');
+        var at=selected.indexOf(id);
+        if(at>=0)selected.splice(at,1);else selected.push(id);
+        fqDrawTags();fqRenderDD();
+      });
+    }
+  }
+  function fqRenderDD(){
+    if(!tagDD)return;
+    tagDD.innerHTML='<div class="rea-wxt-tagsearch"><input type="text" placeholder="搜索标签" value="'+esc(tagQ)+'"></div>'
+      +'<div class="rea-wxt-taglist"></div>'
+      +'<div class="rea-wxt-tagft"><span>已选 '+selected.length+' 个标签</span><button type="button" class="rea-wxt-tagclear">清空</button></div>';
+    var inp=tagDD.querySelector('input');
+    if(inp)inp.addEventListener('input',function(){tagQ=inp.value;fqRenderList()});
+    var clr=tagDD.querySelector('.rea-wxt-tagclear');
+    if(clr)clr.addEventListener('click',function(e){e.preventDefault();selected=[];fqDrawTags();fqRenderDD()});
+    fqRenderList();
+    if(inp)setTimeout(function(){try{inp.focus()}catch(e){}},0);
+  }
+  function fqCloseTags(){
+    if(tagDD&&tagDD.parentNode)tagDD.parentNode.removeChild(tagDD);
+    tagDD=null;
+    if(tagBox){tagBox.classList.remove('on');tagBox.setAttribute('aria-expanded','false')}
+    if(fqTagOutside){document.removeEventListener('mousedown',fqTagOutside,true);fqTagOutside=null}
+    if(fqTagKey){document.removeEventListener('keydown',fqTagKey,true);fqTagKey=null}
+    window.removeEventListener('resize',fqCloseTags);
+  }
+  function fqOpenTags(){
+    if(!tagBox)return;
+    if(tagDD){fqCloseTags();return}
+    tagDD=document.createElement('div');tagDD.className='rea-wxt-tagdd';
+    var r=tagBox.getBoundingClientRect();
+    /* 落到提示行下方：否则下拉会压住「预计提醒 N 人／超 10 人」两行，
+       右半截提示从面板边上露出来，像是排版坏了。 */
+    var rb=remRight?remRight.getBoundingClientRect():r;
+    var w=Math.max(340,Math.min(Math.round(r.width),window.innerWidth-16));
+    var left=Math.max(8,Math.min(r.left,window.innerWidth-w-8));
+    var top=rb.bottom+4;
+    if(top+324>window.innerHeight)top=Math.max(8,r.top-328);
+    tagDD.style.left=left+'px';tagDD.style.top=top+'px';tagDD.style.width=w+'px';
+    document.body.appendChild(tagDD);
+    tagBox.classList.add('on');tagBox.setAttribute('aria-expanded','true');
+    fqRenderDD();
+    fqTagOutside=function(e){
+      if(tagDD&&tagDD.contains(e.target))return;
+      if(tagBox&&tagBox.contains(e.target))return;
+      fqCloseTags();
+    };
+    fqTagKey=function(e){if(e.key==='Escape'||e.keyCode===27){e.preventDefault();fqCloseTags()}};
+    setTimeout(function(){document.addEventListener('mousedown',fqTagOutside,true)},0);
+    document.addEventListener('keydown',fqTagKey,true);
+    window.addEventListener('resize',fqCloseTags);
+  }
+  if(tagBox){
+    tagBox.addEventListener('click',function(e){
+      var x=e.target.closest?e.target.closest('.rea-wxt-tagx'):null;
+      if(x){
+        e.preventDefault();e.stopPropagation();
+        var id=x.getAttribute('data-tag');
+        var at=selected.indexOf(id);
+        if(at>=0)selected.splice(at,1);
+        fqDrawTags();
+        if(tagDD)fqRenderDD();
+        return;
+      }
+      fqOpenTags();
+    });
+    tagBox.addEventListener('keydown',function(e){
+      if(e.key==='Enter'||e.key===' '||e.keyCode===13||e.keyCode===32){e.preventDefault();fqOpenTags()}
+      if(e.key==='Escape'||e.keyCode===27)fqCloseTags();
+    });
+  }
+
+  /* 保存只提示、不拦截：超过 10 人时再提醒一次，按钮照常走现网流程。 */
+  qa('button.ant-btn').forEach(function(b){
+    var t=norm(b.textContent);
+    if(t==='保存'||t==='保存草稿箱'){
+      b.addEventListener('click',function(){
+        if(fqUnion(selected)>10)toast('提醒人数超过 10 人，执行时按好友列表顺序取前 10 人；任务仍可保存');
+      });
+    }
+  });
+  /* 自动发送说明补上位置与提醒对象；只换文案，不动开关。 */
+  qa('p').forEach(function(p){
+    if(norm(p.textContent)==='销售转发至朋友圈编辑页面后不可手动修改内容，自动完成发布操作'){
+      p.textContent='销售转发至朋友圈编辑页面后不可手动修改内容、所在位置与提醒对象，自动完成发布操作';
+    }
+  });
+
+  if(locInput)locInput.addEventListener('input',drawLoc);
+  fqDrawTags();
+  drawLoc();
 }
 
 /* ---------- 群发好友 · 新建 ---------- */
@@ -15809,7 +16091,7 @@ else if(PAGE==='群发群组 · 新建')initQs();
        html  该页正文段的载体块 id（省略＝正文仍用快照那一段，只补交互）
        css   该页专用样式（只在这页注入；未覆盖页拿不到，这是「逐页覆盖」的底线）
        js    该页自己的注入脚本（在 REA_FX **之后**跑，见 reaDoc）
-     十二张覆盖页，六种形态：
+     十四张覆盖页，按形态分组：
        微小助看板          换稿——正文整段换成 srcBoard，配 REA_BOARD_CSS ＋ reaBoardJs
        微小助看板 · 执行人明细  合成页——页名与 shell 由 reaSynthPages() 克隆看板页得到，正文换 srcBoardTask；
                             补的是现网 board/wxz/task 这条**不在快照里**的路由
@@ -15823,6 +16105,8 @@ else if(PAGE==='群发群组 · 新建')initQs();
                             现网 /snapshotTasks 不在 36 页快照里，也没有源目录
        群发好友 · 详情      补弹窗——**没有 html**，正文就是快照那一段；脚本给「群发好友数」补好友明细弹窗，
                             行为与样式见 reaQfDetailJs 上方注释
+       发圈 · 详情          只读回显——**没有 html**，正文就是快照那一段；脚本在「任务信息」的
+                            「执行人员」行后补「所在位置／提醒谁看」两行只读值
        发圈 · 新建          补选材——**没有 html**，正文就是快照那一段；任务内容加「从素材库选择」，
        群发好友 · 新建      弹窗与选材逻辑共用 reaPickJs()／REA_PICK_CSS（还在 reaWxtJs 里接线）；
                             群发好友那页选中素材后收起「内容类型 / 描述文本」（来源互斥）
@@ -15887,6 +16171,7 @@ else if(PAGE==='群发群组 · 新建')initQs();
     '新小红书运营 · 详情': { js: reaXhsDetailJs },
     '新小红书运营 · 任务配置快照': { js: reaXhsSnapshotJs },
     '群发好友 · 详情': { css: REA_QF_CSS, js: reaQfDetailJs },
+    '发圈 · 详情': { js: reaFqDetailJs },
     /* 微信营销任务 · 任务内容「从素材库选择」（2026-10-23）：三页共用一份弹窗与选材逻辑 */
     '发圈 · 新建': { css: REA_WXT_CSS, js: function(){ return reaWxtJs('发圈 · 新建'); } },
     '群发好友 · 新建': { css: REA_WXT_CSS, js: function(){ return reaWxtJs('群发好友 · 新建'); } },
