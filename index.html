@@ -14938,46 +14938,49 @@ tb.addEventListener("click",function(e){
      标签/输入框/间距不重定义。色值全部取自快照已出现过的 #1677ff / #e6f4ff / #d9d9d9 /
      #f0f0f0 / #fafafa / #999999 / #ff4d4f。 */
   var REA_BD_CSS = ''
-    + '.rea-bd-wrap{position:relative;max-width:560px}'
-    + '.rea-bd-tagbox{display:flex;align-items:center;flex-wrap:wrap;gap:4px;box-sizing:border-box;'
+    + '.rea-baf-wrap{position:relative;max-width:560px}'
+    + '.rea-baf-tagbox{display:flex;align-items:center;flex-wrap:wrap;gap:4px;box-sizing:border-box;'
     +   'width:100%;min-height:32px;padding:2px 28px 2px 8px;border:1px solid #d9d9d9;border-radius:6px;'
     +   'background:#fff;cursor:pointer;outline:none}'
-    + '.rea-bd-tagbox:hover{border-color:#4096ff}'
-    + '.rea-bd-wrap.on .rea-bd-tagbox{border-color:#1677ff;box-shadow:0 0 0 2px rgba(5,145,255,.1)}'
-    + '.rea-bd-ph{font-size:14px;line-height:24px;color:#bfbfbf}'
-    + '.rea-bd-chip{display:inline-flex;align-items:center;gap:2px;max-width:220px;height:24px;'
+    + '.rea-baf-tagbox:hover{border-color:#4096ff}'
+    + '.rea-baf-wrap.on .rea-baf-tagbox{border-color:#1677ff;box-shadow:0 0 0 2px rgba(5,145,255,.1)}'
+    + '.rea-baf-ph{font-size:14px;line-height:24px;color:#bfbfbf}'
+    + '.rea-baf-chip{display:inline-flex;align-items:center;gap:2px;max-width:220px;height:24px;'
     +   'padding:0 4px 0 8px;border-radius:4px;background:#f5f5f5;font-size:12px;line-height:24px;color:rgba(0,0,0,.88)}'
-    + '.rea-bd-chip>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
-    + '.rea-bd-chipx{border:0;background:transparent;padding:0 2px;font-size:14px;line-height:16px;color:#999;cursor:pointer}'
-    + '.rea-bd-chipx:hover{color:#ff4d4f}'
-    + '.rea-bd-caret{position:absolute;right:10px;top:9px;font-size:10px;line-height:12px;color:#999;pointer-events:none}'
-    + '.rea-bd-dd{position:absolute;z-index:40;top:calc(100% + 4px);left:0;box-sizing:border-box;width:400px;'
+    + '.rea-baf-chip>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
+    + '.rea-baf-chipx{border:0;background:transparent;padding:0 2px;font-size:14px;line-height:16px;color:#999;cursor:pointer}'
+    + '.rea-baf-chipx:hover{color:#ff4d4f}'
+    + '.rea-baf-caret{position:absolute;right:10px;top:9px;font-size:10px;line-height:12px;color:#999;pointer-events:none}'
+    + '.rea-baf-dd{position:absolute;z-index:40;top:calc(100% + 4px);left:0;box-sizing:border-box;width:100%;'
     +   'max-width:calc(100vw - 32px);padding:8px;border-radius:8px;background:#fff;'
     +   'box-shadow:0 6px 16px rgba(0,0,0,.12);border:1px solid #f0f0f0}'
-    + '.rea-bd-search input{box-sizing:border-box;width:100%;height:32px;padding:4px 11px;border:1px solid #d9d9d9;'
+    + '.rea-baf-search input{box-sizing:border-box;width:100%;height:32px;padding:4px 11px;border:1px solid #d9d9d9;'
     +   'border-radius:6px;font-size:14px;outline:none}'
-    + '.rea-bd-search input:focus{border-color:#1677ff;box-shadow:0 0 0 2px rgba(5,145,255,.1)}'
-    + '.rea-bd-opts{max-height:240px;margin-top:6px;overflow:auto}'
-    + '.rea-bd-opt{display:flex;align-items:center;width:100%;padding:8px 10px;border:0;border-radius:4px;'
+    + '.rea-baf-search input:focus{border-color:#1677ff;box-shadow:0 0 0 2px rgba(5,145,255,.1)}'
+    + '.rea-baf-opts{max-height:240px;margin-top:6px;overflow:auto}'
+    + '.rea-baf-opt{display:flex;align-items:center;width:100%;padding:8px 10px;border:0;border-radius:4px;'
     +   'background:transparent;font-size:14px;line-height:20px;color:rgba(0,0,0,.88);text-align:left;cursor:pointer}'
-    + '.rea-bd-opt:hover{background:#fafafa}'
-    + '.rea-bd-opt.on{background:#e6f4ff;color:#1677ff}'
-    + '.rea-bd-check{flex:none;width:16px;margin-right:6px;font-size:12px;color:#1677ff}'
-    + '.rea-bd-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
-    + '.rea-bd-meta{flex:none;margin-left:8px;font-size:12px;color:#999}'
-    + '.rea-bd-empty{padding:24px 8px;text-align:center;font-size:13px;color:#999}'
-    + '.rea-bd-ft{display:flex;align-items:center;justify-content:space-between;margin-top:6px;padding:6px 4px 0;'
+    + '.rea-baf-opt:hover{background:#fafafa}'
+    + '.rea-baf-opt.on{background:#e6f4ff;color:#1677ff}'
+    + '.rea-baf-check{flex:none;width:16px;margin-right:6px;font-size:12px;color:#1677ff}'
+    + '.rea-baf-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
+    + '.rea-baf-meta{flex:none;margin-left:8px;font-size:12px;color:#999}'
+    + '.rea-baf-empty{padding:24px 8px;text-align:center;font-size:13px;color:#999}'
+    + '.rea-baf-ft{display:flex;align-items:center;justify-content:space-between;margin-top:6px;padding:6px 4px 0;'
     +   'border-top:1px solid #f0f0f0;font-size:12px;color:#999}'
-    + '.rea-bd-clear{border:0;background:transparent;padding:0;font-size:12px;color:#1677ff;cursor:pointer}'
-    + '.rea-bd-clear:hover{color:#4096ff}'
-    + '.rea-bd-mode{display:flex;align-items:center;flex-wrap:wrap}'
-    + '.rea-bd-val{margin-top:8px}'
-    + '.rea-bd-inp{max-width:360px}'
-    + '.rea-bd-gap{display:flex;align-items:center;gap:8px;font-size:14px;color:rgba(0,0,0,.88)}'
-    + '.rea-bd-gap .rea-bd-num{width:96px;text-align:center}'
-    + '.rea-bd-hint{margin:6px 0 0;max-width:560px;font-size:12px;line-height:20px;color:#999}'
-    + '.rea-bd-err{display:none;margin:4px 0 0;max-width:560px;font-size:12px;line-height:20px;color:#ff4d4f}'
-    + '.rea-bd-err.on{display:block}';
+    + '.rea-baf-clear{border:0;background:transparent;padding:0;font-size:12px;color:#1677ff;cursor:pointer}'
+    + '.rea-baf-clear:hover{color:#4096ff}'
+    + '.rea-baf-mode{display:flex;align-items:center;flex-wrap:wrap}'
+    + '.rea-baf-val{margin-top:8px}'
+    + '.rea-baf-inp{max-width:360px}'
+    + '.rea-baf-gap{display:flex;align-items:center;gap:8px;font-size:14px;color:rgba(0,0,0,.88)}'
+    + '.rea-baf-gap .rea-baf-num{width:96px;text-align:center}'
+    + '.rea-baf-hint{margin:6px 0 0;max-width:560px;font-size:12px;line-height:20px;color:#999}'
+    /* 快照把「温馨提示：」放在内容盒的 flex 里，窄视口下会被后面的长文挤成「温馨提/示：」两行；
+       只给这行加，别动快照的正文 */
+    + '.rea-baf-tip-label{flex:none;white-space:nowrap}'
+    + '.rea-baf-err{display:none;margin:4px 0 0;max-width:560px;font-size:12px;line-height:20px;color:#ff4d4f}'
+    + '.rea-baf-err.on{display:block}';
 
   /* 素材库弹窗的注入脚本（四页共用一份，别各页再抄一遍）。各页只传三枚口径参数：
        tip      弹窗标题下那句说明（各页口径不同，照实说清自己列的是什么）
@@ -16263,15 +16266,17 @@ else if(PAGE==='群发群组 · 新建')initQs();
 function norm(s){return String(s==null?'':s).replace(/\s+/g,'')}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 
+/* 与「微信群管理」演示台账对齐：只取状态「正常」的 8 个群（「wogf」被踢出群，不列）；
+   台账里「二组测试号培养互动」有两条（36 人 / 102 人），按两条群记录保留，靠人数区分。 */
 var GROUPS=[
-  {id:'g1',name:'北方华创集团及所属公司入职通知群',owner:'张猛',count:397},
-  {id:'g2',name:'客户资源群 · 华东',owner:'李娜',count:186},
-  {id:'g3',name:'客户资源群 · 华南',owner:'王强',count:142},
-  {id:'g4',name:'老客户福利群',owner:'吴静',count:231},
-  {id:'g5',name:'新品体验群',owner:'周杰',count:76},
-  {id:'g6',name:'招商加盟群',owner:'罗鹏',count:64},
-  {id:'g7',name:'行业交流群',owner:'梁雪',count:98},
-  {id:'g8',name:'二组测试号培养互动',owner:'张猛',count:102}
+  {id:'g1',name:'测试功能',owner:'张猛',count:38},
+  {id:'g2',name:'趣销销测试专用小分队',owner:'张猛',count:57},
+  {id:'g3',name:'北方华创集团及所属公司入职通知群',owner:'张猛',count:397},
+  {id:'g4',name:'二组测试号培养互动',owner:'张猛',count:36},
+  {id:'g5',name:'微管控发包群',owner:'张猛',count:8},
+  {id:'g6',name:'二组测试号培养互动',owner:'张猛',count:102},
+  {id:'g7',name:'测试使用',owner:'张猛',count:33},
+  {id:'g8',name:'我的鸿蒙',owner:'张猛',count:5}
 ];
 var REGIONS=['北京','上海','天津','重庆','河北','山西','辽宁','吉林','黑龙江','江苏','浙江','安徽','福建','江西','山东','河南','湖北','湖南','广东','海南','四川','贵州','云南','陕西','甘肃','青海','内蒙古','广西','西藏','宁夏','新疆','香港','澳门','台湾','海外'];
 
@@ -16294,9 +16299,17 @@ if(!METHOD_ROW)return;
 var ROW_NAME=rowOf('任务名称'),ROW_OPT=rowOf('备注名'),
     PHONE_ROW=rowOf('手机号'),TYPE_ROW=rowOf('类型'),
     TIP_ROW=METHOD_ROW.nextElementSibling;
+if(TIP_ROW&&TIP_ROW.textContent.indexOf('温馨提示')>=0){
+  TIP_ROW.classList.add('rea-baf-tip');
+  var tipTxt=TIP_ROW.querySelector('[class*="_upload_box_"] > div > div');
+  if(tipTxt)tipTxt.classList.add('rea-baf-tip-label');
+}
 
 function cloneRow(label,required){
-  var tpl=required?ROW_NAME:ROW_OPT;
+  /* 用「备注名」那行当壳：它的内容盒是 div（_upload_box_），能清空再装控件。
+     「任务名称」那行的内容盒直接是个 <input>（void 元素），照它克隆出来的行装不进新控件，
+     所以只作兜底——真落到兜底时，把 input 换成普通 div。 */
+  var tpl=ROW_OPT||ROW_NAME;
   if(!tpl)return null;
   var row=tpl.cloneNode(true);
   row.style.cssText='';
@@ -16308,7 +16321,14 @@ function cloneRow(label,required){
   else lab.className=lab.className.replace(/_must_white_/,'_must_white1_');
   var box=lab.nextElementSibling;
   if(!box)return null;
-  box.innerHTML='';
+  if(box.tagName==='INPUT'||box.tagName==='TEXTAREA'||box.tagName==='SELECT'){
+    var d=document.createElement('div');
+    d.style.width='100%';
+    if(box.parentNode)box.parentNode.replaceChild(d,box);
+    box=d;
+  } else {
+    box.innerHTML='';
+  }
   return {row:row,box:box};
 }
 function setRadio(l,on){
@@ -16324,7 +16344,7 @@ function modeRadios(name,labels,initial){
   var tpl=tpls.length>1?tpls[1]:tpls[0];
   if(!tpl)return null;
   var g=document.createElement('div');
-  g.className='ant-radio-group ant-radio-group-outline css-vgijab rea-bd-mode';
+  g.className='ant-radio-group ant-radio-group-outline css-vgijab rea-baf-mode';
   for(var i=0;i<labels.length;i++){
     var l=tpl.cloneNode(true);
     l.className='ant-radio-wrapper css-vgijab';
@@ -16364,56 +16384,56 @@ function modeOf(row){
 
 function makePicker(opts){
   var wrap=document.createElement('div');
-  wrap.className='rea-bd-wrap';
+  wrap.className='rea-baf-wrap';
   var box=document.createElement('div');
-  box.className='rea-bd-tagbox';box.tabIndex=0;
+  box.className='rea-baf-tagbox';box.tabIndex=0;
   box.setAttribute('role','combobox');
   wrap.appendChild(box);
   var sel=opts.value?opts.value.slice():[],kw='',dd=null;
   function byId(id){for(var i=0;i<opts.items.length;i++)if(opts.items[i].id===id)return opts.items[i];return null}
   function drawBox(){
     var h='',i,it;
-    if(!sel.length)h+='<span class="rea-bd-ph">'+esc(opts.placeholder)+'</span>';
+    if(!sel.length)h+='<span class="rea-baf-ph">'+esc(opts.placeholder)+'</span>';
     for(i=0;i<sel.length;i++){
       it=byId(sel[i]);if(!it)continue;
-      h+='<span class="rea-bd-chip"><span>'+esc(it.name)+'</span>'
-        +'<button type="button" class="rea-bd-chipx" data-x="'+esc(it.id)+'" aria-label="移除'+esc(it.name)+'">×</button></span>';
+      h+='<span class="rea-baf-chip"><span>'+esc(it.name)+'</span>'
+        +'<button type="button" class="rea-baf-chipx" data-x="'+esc(it.id)+'" aria-label="移除'+esc(it.name)+'">×</button></span>';
     }
-    h+='<span class="rea-bd-caret">▾</span>';
+    h+='<span class="rea-baf-caret">▾</span>';
     box.innerHTML=h;
   }
   function drawDD(){
     if(!dd)return;
-    var list=dd.querySelector('.rea-bd-opts'),q=kw.toLowerCase(),items=[],i,it,on,h='';
+    var list=dd.querySelector('.rea-baf-opts'),q=kw.toLowerCase(),items=[],i,it,on,h='';
     for(i=0;i<opts.items.length;i++){
       it=opts.items[i];
       if(q&&it.name.toLowerCase().indexOf(q)<0)continue;
       items.push(it);
     }
-    if(!items.length)list.innerHTML='<div class="rea-bd-empty">没有匹配的'+opts.kind+'</div>';
+    if(!items.length)list.innerHTML='<div class="rea-baf-empty">没有匹配的'+opts.kind+'</div>';
     else{
       for(i=0;i<items.length;i++){
         it=items[i];on=sel.indexOf(it.id)>=0;
-        h+='<button type="button" class="rea-bd-opt'+(on?' on':'')+'" data-id="'+esc(it.id)+'">'
-          +'<span class="rea-bd-check">'+(on?'✓':'')+'</span>'
-          +'<span class="rea-bd-name">'+esc(it.name)+'</span>'
-          +(it.meta?'<span class="rea-bd-meta">'+esc(it.meta)+'</span>':'')+'</button>';
+        h+='<button type="button" class="rea-baf-opt'+(on?' on':'')+'" data-id="'+esc(it.id)+'">'
+          +'<span class="rea-baf-check">'+(on?'✓':'')+'</span>'
+          +'<span class="rea-baf-name">'+esc(it.name)+'</span>'
+          +(it.meta?'<span class="rea-baf-meta">'+esc(it.meta)+'</span>':'')+'</button>';
       }
       list.innerHTML=h;
     }
-    var ft=dd.querySelector('.rea-bd-ftn');
+    var ft=dd.querySelector('.rea-baf-ftn');
     if(ft)ft.textContent=opts.footer(sel.length);
-    var si=dd.querySelector('.rea-bd-search input');
+    var si=dd.querySelector('.rea-baf-search input');
     if(si&&si.value!==kw)si.value=kw;
   }
   function openDD(){
     if(dd)return;
-    dd=document.createElement('div');dd.className='rea-bd-dd';
-    dd.innerHTML='<div class="rea-bd-search"><input type="text" placeholder="搜索'+esc(opts.kind)+'" aria-label="搜索'+esc(opts.kind)+'"></div>'
-      +'<div class="rea-bd-opts"></div>'
-      +'<div class="rea-bd-ft"><span class="rea-bd-ftn"></span><button type="button" class="rea-bd-clear">清空</button></div>';
+    dd=document.createElement('div');dd.className='rea-baf-dd';
+    dd.innerHTML='<div class="rea-baf-search"><input type="text" placeholder="搜索'+esc(opts.kind)+'" aria-label="搜索'+esc(opts.kind)+'"></div>'
+      +'<div class="rea-baf-opts"></div>'
+      +'<div class="rea-baf-ft"><span class="rea-baf-ftn"></span><button type="button" class="rea-baf-clear">清空</button></div>';
     wrap.appendChild(dd);wrap.classList.add('on');drawDD();
-    var si=dd.querySelector('.rea-bd-search input');
+    var si=dd.querySelector('.rea-baf-search input');
     if(si){si.addEventListener('input',function(){kw=si.value.trim();drawDD()});si.focus();}
   }
   function closeDD(){
@@ -16421,7 +16441,7 @@ function makePicker(opts){
     dd=null;wrap.classList.remove('on');
   }
   box.addEventListener('click',function(e){
-    var x=e.target.closest?e.target.closest('.rea-bd-chipx'):null;
+    var x=e.target.closest?e.target.closest('.rea-baf-chipx'):null;
     if(x){
       e.preventDefault();e.stopPropagation();
       var id=x.getAttribute('data-x'),out=[],i;
@@ -16433,7 +16453,7 @@ function makePicker(opts){
     if(dd)closeDD();else openDD();
   });
   wrap.addEventListener('click',function(e){
-    var opt=e.target.closest?e.target.closest('.rea-bd-opt'):null;
+    var opt=e.target.closest?e.target.closest('.rea-baf-opt'):null;
     if(opt){
       /* 必须拦住冒泡：选项列表是 innerHTML 重画的，冒到 document 时 e.target 已经脱离文档，
          wrap.contains 判 false，会把刚打开的弹层误关掉 */
@@ -16442,7 +16462,7 @@ function makePicker(opts){
       if(i>=0)sel.splice(i,1);else sel.push(id);
       drawBox();drawDD();return;
     }
-    if(e.target.closest&&e.target.closest('.rea-bd-clear')){
+    if(e.target.closest&&e.target.closest('.rea-baf-clear')){
       e.preventDefault();e.stopPropagation();sel=[];drawBox();drawDD();
     }
   });
@@ -16455,10 +16475,10 @@ function makePicker(opts){
 
 function show(el,on){if(el)el.style.display=on?'':'none'}
 function setErr(row,msg){
-  var e=row.querySelector('.rea-bd-err');
+  var e=row.querySelector('.rea-baf-err');
   if(!e)return;
   e.textContent=msg||'';
-  e.className='rea-bd-err'+(msg?' on':'');
+  e.className='rea-baf-err'+(msg?' on':'');
 }
 
 /* ---- 第三枚单选钮 ---- */
@@ -16483,6 +16503,11 @@ var anchor=PHONE_ROW||(TIP_ROW&&TIP_ROW.nextElementSibling)||METHOD_ROW.nextSibl
 [gRow,nRow,rRow,iRow].forEach(function(o){
   if(!o)return;
   o.row.style.display='none';
+  /* 带说明文字的行照快照「验证消息」那行的排法：去掉上下 24px 留白、标签顶对齐第一件控件。
+     不这么写就落回行类的默认居中＋大留白，四行撑得比整张表都松。 */
+  o.row.style.paddingTop='0px';
+  o.row.style.paddingBottom='0px';
+  o.row.style.alignItems='flex-start';
   if(anchor&&anchor.parentNode)anchor.parentNode.insertBefore(o.row,anchor);
   else METHOD_ROW.parentNode.appendChild(o.row);
 });
@@ -16495,33 +16520,33 @@ var groupPicker=makePicker({
 });
 if(gRow){
   gRow.box.appendChild(groupPicker.el);
-  var gh=document.createElement('p');gh.className='rea-bd-hint';
+  var gh=document.createElement('p');gh.className='rea-baf-hint';
   gh.textContent='只列出「微信群管理」里状态正常的群；每个群由它的所属员工执行，所选群的所属员工必须在执行人员里。';
   gRow.box.appendChild(gh);
-  var ge=document.createElement('p');ge.className='rea-bd-err';gRow.box.appendChild(ge);
+  var ge=document.createElement('p');ge.className='rea-baf-err';gRow.box.appendChild(ge);
 }
 
 var nRadios=null,nVal=null,nInput=null;
 if(nRow){
-  nRadios=modeRadios('rea-bd-nick',['不限','只加','不加'],0);
+  nRadios=modeRadios('rea-baf-nick',['不限','只加','不加'],0);
   if(nRadios)nRow.box.appendChild(nRadios);
-  nVal=document.createElement('div');nVal.className='rea-bd-val';
+  nVal=document.createElement('div');nVal.className='rea-baf-val';
   nInput=document.createElement('input');
   nInput.type='text';nInput.maxLength=60;
-  nInput.className='ant-input css-vgijab ant-input-outlined rea-bd-inp';
+  nInput.className='ant-input css-vgijab ant-input-outlined rea-baf-inp';
   nInput.placeholder='输入昵称关键词，多个用逗号分隔';
   nVal.appendChild(nInput);nRow.box.appendChild(nVal);
-  var nh=document.createElement('p');nh.className='rea-bd-hint';
+  var nh=document.createElement('p');nh.className='rea-baf-hint';
   nh.textContent='按群里显示的名字匹配（群昵称优先，其次微信昵称）；多个关键词用逗号分隔，命中任一即算。';
   nRow.box.appendChild(nh);
-  var ne=document.createElement('p');ne.className='rea-bd-err';nRow.box.appendChild(ne);
+  var ne=document.createElement('p');ne.className='rea-baf-err';nRow.box.appendChild(ne);
 }
 
 var rRadios=null,rVal=null,regionPicker=null;
 if(rRow){
-  rRadios=modeRadios('rea-bd-region',['不限','只加','不加'],0);
+  rRadios=modeRadios('rea-baf-region',['不限','只加','不加'],0);
   if(rRadios)rRow.box.appendChild(rRadios);
-  rVal=document.createElement('div');rVal.className='rea-bd-val';
+  rVal=document.createElement('div');rVal.className='rea-baf-val';
   regionPicker=makePicker({
     items:REGIONS.map(function(n){return {id:n,name:n}}),
     placeholder:'请选择地区（可多选）',
@@ -16529,29 +16554,29 @@ if(rRow){
     footer:function(n){return '已选 '+n+' 个地区'}
   });
   rVal.appendChild(regionPicker.el);rRow.box.appendChild(rVal);
-  var rh=document.createElement('p');rh.className='rea-bd-hint';
+  var rh=document.createElement('p');rh.className='rea-baf-hint';
   rh.textContent='按成员资料页的地区匹配；资料未填地区时，「只加」跳过、「不加」保留。';
   rRow.box.appendChild(rh);
-  var re=document.createElement('p');re.className='rea-bd-err';rRow.box.appendChild(re);
+  var re=document.createElement('p');re.className='rea-baf-err';rRow.box.appendChild(re);
 }
 
 var gmin=null,gmax=null;
 if(iRow){
-  var gap=document.createElement('div');gap.className='rea-bd-gap';
+  var gap=document.createElement('div');gap.className='rea-baf-gap';
   gmin=document.createElement('input');gmin.type='number';gmin.min='30';gmin.max='600';gmin.value='60';
-  gmin.className='ant-input css-vgijab ant-input-outlined rea-bd-num';
+  gmin.className='ant-input css-vgijab ant-input-outlined rea-baf-num';
   gmin.setAttribute('aria-label','最短间隔（秒）');
   var dash=document.createElement('span');dash.textContent='—';
   gmax=document.createElement('input');gmax.type='number';gmax.min='30';gmax.max='600';gmax.value='120';
-  gmax.className='ant-input css-vgijab ant-input-outlined rea-bd-num';
+  gmax.className='ant-input css-vgijab ant-input-outlined rea-baf-num';
   gmax.setAttribute('aria-label','最长间隔（秒）');
   var sec=document.createElement('span');sec.textContent='秒';
   gap.appendChild(gmin);gap.appendChild(dash);gap.appendChild(gmax);gap.appendChild(sec);
   iRow.box.appendChild(gap);
-  var ih=document.createElement('p');ih.className='rea-bd-hint';
-  ih.textContent='每条好友申请之间随机等待；建议不低于 60 秒，间隔越短越容易被微信限制。';
+  var ih=document.createElement('p');ih.className='rea-baf-hint';
+  ih.textContent='每条好友申请之间随机等待；建议不低于 60 秒，间隔越短越容易被微信限制。间隔越长任务耗时越久，请给任务留足有效期。';
   iRow.box.appendChild(ih);
-  var ie=document.createElement('p');ie.className='rea-bd-err';iRow.box.appendChild(ie);
+  var ie=document.createElement('p');ie.className='rea-baf-err';iRow.box.appendChild(ie);
 }
 
 function isGroup(){
@@ -16566,10 +16591,19 @@ function syncMethod(){
   if(iRow)show(iRow.row,g);
   if(PHONE_ROW)PHONE_ROW.style.display=g?'none':phoneDisp;
   if(TYPE_ROW)TYPE_ROW.style.display=g?'none':typeDisp;
+  /* 整行收起时把开着的下拉一并关掉，免得切回来还是一副开着的样 */
+  if(!g){
+    groupPicker.close();
+    if(regionPicker)regionPicker.close();
+  }
 }
 function syncModes(){
   if(nRow)show(nVal,modeOf(nRow.row)!=='不限');
-  if(rRow)show(rVal,modeOf(rRow.row)!=='不限');
+  if(rRow){
+    var m=modeOf(rRow.row);
+    show(rVal,m!=='不限');
+    if(m==='不限'&&regionPicker)regionPicker.close();
+  }
 }
 syncMethod();syncModes();
 document.addEventListener('click',function(e){
@@ -16614,7 +16648,7 @@ for(var k=0;k<btns.length;k++){
     if(!isGroup())return;
     e.preventDefault();
     if(!validate()){
-      var bad=document.querySelector('.rea-bd-err.on');
+      var bad=document.querySelector('.rea-baf-err.on');
       if(bad&&bad.scrollIntoView){try{bad.scrollIntoView({block:'center',behavior:'smooth'})}catch(_){}}
       toast('请先补全群内好友配置');
       return;
@@ -16643,7 +16677,7 @@ var rows=[
   ['群组名称','—（手动输入方式不涉及）'],
   ['昵称筛选','—（手动输入方式不涉及）'],
   ['地区筛选','—（手动输入方式不涉及）'],
-  ['添加间隔','—（该版本未配置）']
+  ['添加间隔','—（手动输入方式不涉及）']
 ];
 var ref=anchor;
 for(i=0;i<rows.length;i++){
