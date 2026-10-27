@@ -15492,7 +15492,7 @@ function initQf(){
   setPrimary(btn,false);setPrimary(tempBtn,true);
   /* 现网「发送类型」只有群发助手／搜索发送，这里补第三枚「文件传输助手转发」。
      克隆同组未选中的那枚，选中态仍归 REA_FX 按整组 .ant-radio-wrapper 翻转，
-     不另写点击逻辑（见 群发任务-发送类型与提速-PRD §3.1、§8）。 */
+     不另写点击逻辑（见 群发任务-发送类型与提速-PRD §2.1、§7）。 */
   (function(){
     var lab=findLabel('发送类型');if(!lab)return;
     var row=upClass(lab,'_form_input_');if(!row)return;
@@ -15608,7 +15608,7 @@ function initQs(){
     });
   });
   /* 发送类型：选「文件传输助手转发」才露出说明。同上，radio 的翻转归 REA_FX，异步读。
-     两页同口径，见 群发任务-发送类型与提速-PRD §3.2、§8。 */
+     两页同口径，见 群发任务-发送类型与提速-PRD §2.2、§7。 */
   var stHint=q('.rea-wxt-sthint',form);
   if(stHint){
     form.addEventListener('click',function(){
