@@ -1612,6 +1612,29 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .hva-cell .cv{flex:none;color:#B6C2D6;display:flex}
 .hva-lock{flex:none;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;
   background:#F2F4FA;color:#93A3BC}
+/* ---------- 企业锁定态（2026-10-27）：管理员把后台那枚「是否允许修改」关掉 ----------
+   口径：锁的是**管理员配得到的那几项**（工作时间／闲置时长／AI智能回复），多开托管与托管范围
+   后台没有对应项，照旧可改。呈现**不整页置灰**——值照常读得清，收走的是控件；
+   每个被锁的卡上留一枚锁，说明卡滚出视野后仍看得出为什么动不了。 */
+.hva-locknote{background:#F4F7FD}
+.hva-locknote-hd{display:flex;align-items:center;gap:9px;padding:13px 15px 0}
+.hva-locknote-hd b{font-size:13.5px;font-weight:700;color:#2A4A7E}
+.hva-locknote .hva-lock{background:#fff;color:#7C8DA8}
+.hva-locknote .hva-txt{padding:3px 15px 14px}
+.hva-form-h .hva-lock{margin-left:auto}
+/* 只读卡整张可点（点了回一句为什么），但卡里没有勾、没有分段、没有输入框 */
+.hva-lockcard{display:block;width:100%;padding:0;border:0;background:none;font:inherit;
+  color:inherit;text-align:left;position:relative;overflow:hidden}
+.hva-lockcard .hva-txt{display:block}
+/* 已选平台只列选中的，且不带勾：一排勾看起来还像能勾 */
+.hva-lockplats{display:flex;flex-wrap:wrap;gap:10px 18px;padding:10px 15px 15px}
+.hva-lockplats.ph{display:block;font-size:13.5px;color:#A9B6CD}
+.hva-lockplat{display:inline-flex;align-items:center;gap:7px}
+.hva-lockplat .lg{flex:none;width:28px;height:28px;border-radius:9px;display:flex;align-items:center;
+  justify-content:center;color:#fff;font-size:8px;font-weight:700;letter-spacing:-.3px}
+.hva-lockplat .lb{font-size:13.5px;font-weight:600;color:#2A4A7E}
+/* 「更换」锁定时只降透明度、保留点击：入口不消失，点下去回一句为什么 */
+.hva-host-sw.locked{opacity:.38}
 .hva-form .tk-seg{margin:0}
 .hva-segpad{padding:0 15px 15px}
 /* 分段器里的「就地输入」格（自动打招呼 · 执行间隔的自定义档）：外观仍是选中那一格，
@@ -3707,7 +3730,9 @@ var ICONS = {
   /* 宿主 App 我的页（Figma 461:945）专用：上传日志／版本更新借 upload，注销账户借 logout。
      两枚都是通用语义，没打上「我的页」的私章——它们本来就该在这儿，只是此前没人用过 */
   upload:'<path d="M20.8 15.4v3.8a2 2 0 0 1-2 2H5.2a2 2 0 0 1-2-2v-3.8"/><polyline points="7.2 8.2 12 3.4 16.8 8.2"/><line x1="12" y1="3.4" x2="12" y2="15.4"/>',
-  logout:'<path d="M9.4 20.8H5.2a2 2 0 0 1-2-2V5.2a2 2 0 0 1 2-2h4.2"/><polyline points="15.8 16.4 20.4 12 15.8 7.6"/><line x1="20.4" y1="12" x2="9.4" y2="12"/>'
+  logout:'<path d="M9.4 20.8H5.2a2 2 0 0 1-2-2V5.2a2 2 0 0 1 2-2h4.2"/><polyline points="15.8 16.4 20.4 12 15.8 7.6"/><line x1="20.4" y1="12" x2="9.4" y2="12"/>',
+  /* 企业锁定态（2026-10-27）：后台「是否允许修改」关掉时，设置页与 AI智能回复页上那枚锁 */
+  lock:'<rect x="4.6" y="10.2" width="14.8" height="10.4" rx="2.4"/><path d="M8.4 10.2V7.4a3.6 3.6 0 0 1 7.2 0v2.8"/>'
 };
 /* 设计稿里反复出现的「✦」大星：稿上是蓝紫渐变实体，I() 只出描边单色，故单独出一枚吃 url(#hvGrad) 的实心星。
    渐变 defs 只在外壳里挂一次（见 #host-home 静态段），此处只引用——避免每行各带一份 defs 生成重复 id。 */
@@ -4128,7 +4153,7 @@ function syncNav(id,params){
 }
 
 /* ---------- Material ripple（统一按压反馈，替代缩放） ---------- */
-var RIP_SEL='.btn,.chip,.iconbtn,.cell,.wk-card,.p-card,.pc-btn,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.rah-b,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.hv-msg,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close,.hw-add';
+var RIP_SEL='.btn,.chip,.iconbtn,.cell,.wk-card,.p-card,.pc-btn,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.rah-b,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.hv-msg,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.hva-lockcard,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close,.hw-add';
 function ripInit(){
   document.addEventListener('pointerdown',function(e){
     var t=e.target.closest ? e.target.closest(RIP_SEL) : null;
@@ -4172,7 +4197,11 @@ function buildNav(){
       h+='<button class="nav-i" data-vid="'+it.id+'" onclick="navGo(this)"><span class="dot"></span>'+it.n+'</button>';
     }
   }
-  h+='<div class="nav-g">操作</div><button class="nav-i" onclick="resetDemo()"><span class="dot"></span>重置演示数据</button>';
+  /* 「切换企业锁定态」是演示件，不是产品里的一屏：后台那枚「是否允许修改」关掉之后，
+     App 的设置页与 AI智能回复页长什么样，用这一枚切着对稿。 */
+  h+='<div class="nav-g">操作</div>'
+    +'<button class="nav-i" onclick="hvaLockToggle()"><span class="dot"></span>切换企业锁定态（演示）</button>'
+    +'<button class="nav-i" onclick="resetDemo()"><span class="dot"></span>重置演示数据</button>';
   $('navList').innerHTML=h;
 }
 function navPs(){ /* 直达 库首页 · 个人素材 */
@@ -4243,6 +4272,7 @@ function resetDemo(){
   S.floatOn=true; S.pMom=false; S.pRec=true; S.pGrp='全部'; S.pSrc='全部'; S.pFltOpen=false; S.pExpId=null; S.libScroll=null;
   S.hostExp={};
   pendingHits.length=0; pQ=''; pHitNew=0;
+  HVA_ADMIN_LOCKED=false;   /* 演示开关也回默认（「允许修改」），免得重置后两屏还停在只读态 */
   closePanel(); closeAiPanel(); closeHpPanel(); aiBallReset(); hpHits=[]; hpMsg=''; S.aiTipsSeen=false; closeBallMenu(); raRounds=[]; raExpId=null; raStreamStop(); S.raPaused=false; wxRebuildChat(); updateBall(); ballBadge(); dkRefresh();
   render(cur,{}); toast('演示数据已重置');
 }
@@ -4944,6 +4974,10 @@ var HVA_ACTCFG={
      回复那一屏的首卡都读它；数智员工详情上那枚「参与托管」开关 2026-10-15 一并撤掉
      （它答的是同一个问题，且能答出"两位都参与"这种与单选语义矛盾的状态）。 */
 var HVA_HOST_AGENT='小助';
+/* 企业管理员那枚「是否允许修改」的演示开关（2026-10-27）：false＝员工照旧能改（现状）；
+   true＝只锁**管理员配得到的那几项**——工作时间、闲置时长、AI智能回复（谁回／在哪回／多久）。
+   多开托管与托管范围后台没有对应项，**不锁**。侧栏「操作」里那枚演示按钮切它。 */
+var HVA_ADMIN_LOCKED=false;
 
 /* 可托管任务类型＝后台能派的任务里，手机端托管**碰得到的全部**，共 **12 类**（口径见 docs/prd/CONTEXT-托管.md）。
    这份清单是**唯一事实源**：任务页与托管清单里的「类型」字样都出自它。两屏同名，才看得出是同一条活；
@@ -5681,6 +5715,41 @@ var HVA_CFG_PICK='';
 function hvaSrc(v){ HVA_SRCV=v; REND['host-ai-cfg'](HVA_CFG_PICK?{pick:HVA_CFG_PICK}:undefined); }
 function hvaOwn(v){ HVA_OWNV=v; REND['host-ai-cfg'](HVA_CFG_PICK?{pick:HVA_CFG_PICK}:undefined); }
 function hvaToast(x){ toast('「'+x+'」在正式版是可编辑控件，原型不接输入法／选择器'); }
+/* ---------- 企业锁定态（2026-10-27）----------
+   两屏共用：说明卡、点只读项时那一句、侧栏那枚演示开关。
+   **只锁管理员配得到的那几项**（见 HVA_ADMIN_LOCKED 的注释），不是整页。 */
+function hvaLockNote(){ toast('由企业统一设置，无法修改'); }
+function hvaLockNoteHtml(){
+  return '<div class="hva-form hva-locknote">'
+    +'<div class="hva-locknote-hd"><span class="hva-lock">'+I('lock',14,2.2)+'</span><b>由企业统一设置</b></div>'
+    +'<div class="hva-txt">如需修改，请联系企业管理员。</div>'
+  +'</div>';
+}
+/* 回复平台在锁定时只列已选的，不带勾：一排勾看起来还能勾。一个没选也不能空着——
+   「未选择平台」是个真实状态（照现网那张多选可以一个都不勾）。 */
+function hvaLockedPlats(){
+  var c=HVA_REPLY.plat,h='',i,p,n=0;
+  for(i=0;i<HVA_REPLY_PLATS.length;i++){
+    p=HVA_REPLY_PLATS[i];if(!c[p.n])continue;n++;
+    h+='<span class="hva-lockplat"><span class="lg" style="background:'+p.bg+'">'
+      +(p.tx?p.tx:I(p.ic,17,2.2))+'</span><span class="lb">'+p.n+'</span></span>';
+  }
+  return '<span class="hva-lockplats'+(n?'':' ph')+'">'+(n?h:'未选择平台')+'</span>';
+}
+/* 锁定时「更新时间」只剩一句把值嵌进去的话：分段器撤掉，不拿一排灰按钮再补一句解释。
+   自定义档填了数就报分钟数，没填就如实说未填，不静默当 5 分钟。 */
+function hvaLockUpdText(){
+  var v=HVA_REPLY.upd,min=String(HVA_REPLY.updMin||'').replace(/\s/g,'');
+  if(v==='自定义分钟')return min?'每隔 '+min+' 分钟看一次有没有未回复的消息':'按自定义间隔查看未回复消息';
+  return '每隔 '+v.replace('分钟',' 分钟')+'看一次有没有未回复的消息';
+}
+/* 演示开关：侧栏「操作」里那一条。切完把当前那两屏重画一次；其它屏不用动。 */
+function hvaLockToggle(){
+  HVA_ADMIN_LOCKED=!HVA_ADMIN_LOCKED;
+  if(cur==='host-ai-set')REND['host-ai-set']();
+  if(cur==='host-ai-act'&&HVA_ACT==='AI智能回复')REND['host-ai-act']();
+  toast('企业锁定态：'+(HVA_ADMIN_LOCKED?'开':'关'));
+}
 /* pick＝选择模式（ADR-0053）：整卡的动作由「看这位的详情」换成「就要这一位」，当前那一位挂一枚对勾。
    卡面（头像／名／摘要／来源标签）一个字不改——选人的那一屏就是 AI配置 那一屏，
    两种进入方式差的是点下去落到哪儿。
@@ -5840,7 +5909,10 @@ function hvaSave(){
    设置页再摆一枚，两枚就是同一个问题的两个答案，谁先读、谁的算数都说不清。 */
 REND['host-ai-set']=function(){
   $('hvaSetBack').innerHTML=I('back',24,2);
-  var h='',i,pick=hvaAcctPicked();
+  var h='',i,pick=hvaAcctPicked(),lk=HVA_ADMIN_LOCKED;
+  /* 管理员关掉「是否允许修改」时，最上面先放说明卡：员工仍要看得见这台手机会怎么跑，
+     所以页面照常进、值照常显示——收走的只是控件，不是整页。 */
+  if(lk)h+=hvaLockNoteHtml();
   /* 「AI智能回复」这一行的落点（2026-10-15，ADR-0062）。它原来是托管清单里的一条可挂动作，
      现在读作**托管级的一项设置**，入口就挂在本屏——和「工作时间」「多开托管」同一层，
      不再是一条"我加的活"。右侧写值摘要而不是只给个 ›：这一行是"谁来干托管里那些事"的唯一入口，
@@ -5861,18 +5933,35 @@ REND['host-ai-set']=function(){
     +'<button class="'+(HVA_DOING_EMPTY_DEMO?'':'on')+'" onclick="hvaDoingDemo(false)"><b>正常范围</b><small>按真实设置</small></button>'
     +'<button class="'+(HVA_DOING_EMPTY_DEMO?'on':'')+'" onclick="hvaDoingDemo(true)"><b>模拟空范围</b><small>只看主页空态</small></button>'
     +'</div></div></div>';
+  /* AI智能回复锁定时**仍可下钻**：这一行是导航不是控件，员工还得看得见谁回、在哪回、多久看一次；
+     只把行尾的 › 换成锁，下钻那一屏同样是只读（见 REND['host-ai-act']）。 */
   h+='<div class="hva-form">'
     +'<button class="hva-cell" onclick="hvaOpenReply()"><span class="lb">AI智能回复</span>'
-      +'<span class="vl">由 '+esc(HVA_HOST_AGENT)+' 负责</span><span class="cv">'+I('chev',16,2.4)+'</span></button>'
+      +'<span class="vl">由 '+esc(HVA_HOST_AGENT)+' 负责</span>'
+      +(lk?'<span class="hva-lock">'+I('lock',14,2.2)+'</span>':'<span class="cv">'+I('chev',16,2.4)+'</span>')
+    +'</button>'
   +'</div>';
+  /* 工作时间与闲置时长：锁定时值照正常对比度显示，只把值的入口收走；整行/整卡仍可点，
+     点了回一句「由企业统一设置」。**不置灰**——值必须读得清，收的是控件不是内容。 */
   h+='<div class="hva-form">'
-    +'<button class="hva-cell" onclick="hvaToast(\'工作时间\')"><span class="lb">工作时间</span><span class="vl">'+HVA_WORK+'</span><span class="cv">'+I('chev',16,2.4)+'</span></button>'
+    +(lk
+      ?'<button class="hva-cell" onclick="hvaLockNote()"><span class="lb">工作时间</span><span class="vl">'+HVA_WORK+'</span><span class="hva-lock">'+I('lock',14,2.2)+'</span></button>'
+      :'<button class="hva-cell" onclick="hvaToast(\'工作时间\')"><span class="lb">工作时间</span><span class="vl">'+HVA_WORK+'</span><span class="cv">'+I('chev',16,2.4)+'</span></button>')
   +'</div>';
-  h+='<div class="hva-form"><div class="hva-form-h">闲置时长</div>'
-    +'<div class="hva-txt">手机闲置多少分钟后，托管开始自动执行</div>'
-    +'<div class="hva-segpad"><div class="tk-seg">';
-  for(i=0;i<HVA_IDLES.length;i++)h+='<button class="'+(HVA_IDLE===HVA_IDLES[i]?'on':'')+'" onclick="hvaIdle('+HVA_IDLES[i]+')">'+HVA_IDLES[i]+' 分钟</button>';
-  h+='</div></div></div>';
+  h+='<div class="hva-form">';
+  if(lk){
+    h+='<button class="hva-lockcard" onclick="hvaLockNote()">'
+      +'<span class="hva-form-h">闲置时长<span class="hva-lock">'+I('lock',14,2.2)+'</span></span>'
+      +'<span class="hva-txt">手机闲置 '+HVA_IDLE+' 分钟后，托管开始自动执行</span>'
+    +'</button>';
+  }else{
+    h+='<div class="hva-form-h">闲置时长</div>'
+      +'<div class="hva-txt">手机闲置多少分钟后，托管开始自动执行</div>'
+      +'<div class="hva-segpad"><div class="tk-seg">';
+    for(i=0;i<HVA_IDLES.length;i++)h+='<button class="'+(HVA_IDLE===HVA_IDLES[i]?'on':'')+'" onclick="hvaIdle('+HVA_IDLES[i]+')">'+HVA_IDLES[i]+' 分钟</button>';
+    h+='</div></div>';
+  }
+  h+='</div>';
   /* 多开托管：放在**托管范围上方**（2026-10-19 产品点名；上一版按「使用频率最低」垫在整屏最底）。
      照线上那屏的两行——标题（带必设星号）＋「设置 ⚙」，下面一句话说明；第三行的已选摘要是本原型补的：
      开关没了，这一格就成了「托管跑在哪几个账号上」的唯一入口，不把已选的说出来，员工回来看这一屏读不到自己选过什么。
@@ -6110,27 +6199,45 @@ REND['host-ai-act']=function(){
          托管的头卡（hvaHeroHtml）、AI配置 列表上那枚标记读的都是同一份状态 HVA_HOST_AGENT。
        ★ 头像／名字取的是员工表里那一条（hvaAgent），不是自己写一份——写死的话换人之后
          头像还是旧的，而页面上每个字都对，只查文案的断言看不出来。 */
-    var ha=hvaAgent(HVA_HOST_AGENT)||HVA_AGENTS[0];
+    var ha=hvaAgent(HVA_HOST_AGENT)||HVA_AGENTS[0],lk=HVA_ADMIN_LOCKED;
+    /* 锁定时这一屏也是只读：后台那一页把「谁回／回复平台／平台更新时间」都配了，
+       所以三张卡一起锁，不拆成逐字段权限。 */
+    if(lk)h+=hvaLockNoteHtml();
     h+='<div class="hva-form"><div class="hva-host">'
       +'<span class="av" style="background:linear-gradient(150deg,'+ha.pa[0]+','+ha.pa[1]+');box-shadow:0 10px 20px -13px '+ha.pa[1]+'">'+I(ha.ic,22,2)+'</span>'
       +'<span class="tx"><b class="hv-gn">'+esc(ha.n)+'</b><span class="ds">'+esc(ha.ds)+'</span></span>'
-      +'<button class="hva-host-sw" onclick="hvaPickHost()">更换</button>'
+      +(lk
+        ?'<button class="hva-host-sw locked" onclick="hvaLockNote()" aria-disabled="true">更换</button>'
+        :'<button class="hva-host-sw" onclick="hvaPickHost()">更换</button>')
     +'</div>'
     /* 副行写「托管的所有动作都由这位执行」——不写这一句，这一卡在页面上跟「设置一位默认员工」
        没区别，读的人会以为只管回复（这正是它从清单里搬出来的理由，得在卡上说出来）。 */
     +'<div class="hva-acthint">托管的所有动作都由这位执行</div></div>';
-    /* 「选择回复平台」：照现网那张截图——一列平台、行尾一枚勾、只勾了抖音。
-       现网标题后还跟着一枚 ⓘ、卡右上角还有一枚「设置」（进「回复顺序和间隔时间」），**两枚都不画**：
-       前者那点说明在本原型里没有浮层承载，画一枚点了没反应的图标是假控件；后者那一层里
-       「回复顺序」没有任何依据，而「间隔时间」已经落在下面那张「更新时间」卡上（见 ADR-0051 五）。 */
-    h+='<div class="hva-form"><div class="hva-form-h">选择回复平台</div>'+hvaActPlats('plat')+'</div>';
-    /* 「更新时间」＝**现网截图里没有的一项**，2026-10-14 由产品新加：托管状态下隔多久去翻一次
-       有没有没回的消息。四档＋自定义分钟；默认 5 分钟是原型定的（截图里没有可抄的默认值，待产品确认）。 */
-    h+='<div class="hva-form"><div class="hva-form-h">更新时间</div>'
-      +'<div class="hva-txt">托管状态下，每隔多久看一次有没有未回复的消息</div>'
-      +'<div class="hva-segpad">'+hvaActSegBox('upd')
-      +(c.upd==='自定义分钟'?hvaActMin('updMin'):'')
-      +'</div></div>';
+    if(lk){
+      /* 平台：只列已选的、不带勾。更新时间：把值嵌进一句话，分段器和自定义输入一起收走。
+         两张卡整卡可点，点了回一句为什么——入口不消失，只是不再能改。 */
+      h+='<div class="hva-form"><button class="hva-lockcard" onclick="hvaLockNote()">'
+        +'<span class="hva-form-h">选择回复平台<span class="hva-lock">'+I('lock',14,2.2)+'</span></span>'
+        +hvaLockedPlats()
+      +'</button></div>';
+      h+='<div class="hva-form"><button class="hva-lockcard" onclick="hvaLockNote()">'
+        +'<span class="hva-form-h">更新时间<span class="hva-lock">'+I('lock',14,2.2)+'</span></span>'
+        +'<span class="hva-txt">'+hvaLockUpdText()+'</span>'
+      +'</button></div>';
+    }else{
+      /* 「选择回复平台」：照现网那张截图——一列平台、行尾一枚勾、只勾了抖音。
+         现网标题后还跟着一枚 ⓘ、卡右上角还有一枚「设置」（进「回复顺序和间隔时间」），**两枚都不画**：
+         前者那点说明在本原型里没有浮层承载，画一枚点了没反应的图标是假控件；后者那一层里
+         「回复顺序」没有任何依据，而「间隔时间」已经落在下面那张「更新时间」卡上（见 ADR-0051 五）。 */
+      h+='<div class="hva-form"><div class="hva-form-h">选择回复平台</div>'+hvaActPlats('plat')+'</div>';
+      /* 「更新时间」＝**现网截图里没有的一项**，2026-10-14 由产品新加：托管状态下隔多久去翻一次
+         有没有没回的消息。四档＋自定义分钟；默认 5 分钟是原型定的（截图里没有可抄的默认值，待产品确认）。 */
+      h+='<div class="hva-form"><div class="hva-form-h">更新时间</div>'
+        +'<div class="hva-txt">托管状态下，每隔多久看一次有没有未回复的消息</div>'
+        +'<div class="hva-segpad">'+hvaActSegBox('upd')
+        +(c.upd==='自定义分钟'?hvaActMin('updMin'):'')
+        +'</div></div>';
+    }
   }else{
     h+='<div class="hva-form"><div class="hva-form-h">好友验证方式</div>'+hvaActRadios('verify')+'</div>';
     h+='<div class="hva-form"><div class="hva-form-h">设置标签</div>'+hvaActInp('tag','','请输入')+'</div>';
