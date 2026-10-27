@@ -9948,7 +9948,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 <div class="_board_gf4go_1 rea-bd-sec rea-bd-shell">
 
   <div class="rea-bd-hero">
-    <h1>微小助看板</h1>
+    <h1>任务看板</h1>
     <span class="rea-bd-upd">数据更新于 <span data-rea-d="now@hhmm"></span></span>
   </div>
 
@@ -9959,14 +9959,14 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     <div class="ant-radio-group ant-radio-group-solid css-vgijab rea-bd-window" id="rea-bd-window">
         <div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small">
           <div class="ant-space-item">
-            <label class="ant-radio-button-wrapper ant-radio-button-wrapper-checked css-vgijab" data-bd-win="today">
-              <span class="ant-radio-button ant-radio-button-checked"><input name="rea-bd-win" class="ant-radio-button-input" type="radio" value="0" checked=""><span class="ant-radio-button-inner"></span></span>
+            <label class="ant-radio-button-wrapper css-vgijab" data-bd-win="today">
+              <span class="ant-radio-button"><input name="rea-bd-win" class="ant-radio-button-input" type="radio" value="0"><span class="ant-radio-button-inner"></span></span>
               <span class="ant-radio-button-label">今日</span>
             </label>
           </div>
           <div class="ant-space-item">
-            <label class="ant-radio-button-wrapper css-vgijab" data-bd-win="w7">
-              <span class="ant-radio-button"><input name="rea-bd-win" class="ant-radio-button-input" type="radio" value="1"><span class="ant-radio-button-inner"></span></span>
+            <label class="ant-radio-button-wrapper ant-radio-button-wrapper-checked css-vgijab" data-bd-win="w7">
+              <span class="ant-radio-button ant-radio-button-checked"><input name="rea-bd-win" class="ant-radio-button-input" type="radio" value="1" checked=""><span class="ant-radio-button-inner"></span></span>
               <span class="ant-radio-button-label">近一周</span>
             </label>
           </div>
@@ -10020,19 +10020,25 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
             <circle class="arc l" data-bd-arc="l" cx="60" cy="60" r="50"></circle>
             <circle class="arc o" data-bd-arc="o" cx="60" cy="60" r="50"></circle>
           </svg>
-          <span class="rea-bd-ring-mid"><b data-rea-sum="need">24</b><span>条任务</span></span>
+          <span class="rea-bd-ring-mid"><b data-rea-sum="need">75</b><span>条任务</span></span>
         </div>
         <ul class="rea-bd-ring-key">
           <li role="button" tabindex="0" data-bd-state="已完成" title="进任务列表，只看已完成的">
-            <i class="d" aria-hidden="true"></i><span class="lb">已完成</span><b data-rea-sum="done">8</b><span class="u">条</span><span class="pct" data-rea-sum="rate">33.3%</span>
+            <i class="d" aria-hidden="true"></i><span class="lb">已完成</span><b data-rea-sum="done">25</b><span class="u">条</span><span class="pct" data-rea-sum="rate">33.3%</span>
           </li>
           <li role="button" tabindex="0" data-bd-state="进行中" title="进任务列表，只看待完成的">
-            <i class="l" aria-hidden="true"></i><span class="lb">待完成</span><b data-rea-sum="pend">16</b><span class="u">条</span><span class="pct" data-rea-sum="pend-rate">66.7%</span>
+            <i class="l" aria-hidden="true"></i><span class="lb">待完成</span><b data-rea-sum="pend">33</b><span class="u">条</span><span class="pct" data-rea-sum="pend-rate">44.0%</span>
           </li>
           <li role="button" tabindex="0" data-bd-state="已结束" title="进任务列表，只看逾期未做的">
-            <i class="o" aria-hidden="true"></i><span class="lb">逾期未做</span><b data-rea-sum="over">0</b><span class="u">条</span><span class="pct" data-rea-sum="over-rate">0.0%</span>
+            <i class="o" aria-hidden="true"></i><span class="lb">逾期未做</span><b data-rea-sum="over">17</b><span class="u">条</span><span class="pct" data-rea-sum="over-rate">22.7%</span>
           </li>
         </ul>
+      </div>
+      <!-- 任务类型的第二把切法：与环共用同一窗任务，只把「待完成」按类型拆开。
+           数字读作「待完成 / 全部」，点一行进任务列表并按该类型预筛（PRD §2.3）。 -->
+      <div class="rea-bd-types" id="rea-bd-types">
+        <div class="rea-bd-types-h"><span>按任务类型</span><span>待完成 · 逾期 / 全部</span></div>
+        <ul class="rea-bd-types-list" id="rea-bd-types-list"></ul>
       </div>
     </div>
 
@@ -10062,43 +10068,63 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
       <div class="rea-tr-chart" id="rea-tr-chart"></div>
     </div>
 
-    <!-- 部门完成情况 · **人次**口径（与右侧员工完成情况同一把尺子，部门＝员工的汇总）。
-         条长＝已执行 ÷ 应执行；右侧数字是该部门在这个窗口里的应执行人次。
-         点一行去「任务列表」按这个部门预筛。
-         当前范围**没有下级部门**（叶子部门）时整卡不出、网格重排——部门之间无从比较（PRD §2.4）。 -->
-    <div class="rea-bd-card rea-bd-card--w7" id="rea-bd-org-card">
-      <div class="rea-bd-ch"><h6>部门完成情况</h6><span class="th rea-bd-sort" id="rea-bd-org-sort" role="button" tabindex="0" data-bd-org-sort="1" title="按完成率降序（点一下改升序）">完成率<i>↓</i></span></div>
-      <div class="rea-bd-org" id="rea-bd-org"></div>
-      <div class="rea-bd-org-foot" id="rea-bd-org-foot"></div>
-    </div>
-
-    <!-- 员工完成情况 · 第 2 层 · 过程 · **人次**。默认按完成人次排；
-         完成率只作备选且分母（完成 x / y）常显；不做奖牌／等级／综合分（PRD §5.6）。 -->
-    <div class="rea-bd-card rea-bd-card--w5" id="rea-ld">
+    <!-- 部门 / 员工完成情况 · 第 1–2 层 · **人次**。
+         两个切法合到一张卡：卡头「部门 / 员工」切换，列表整幅替换，不并排。
+         部门按创建人所属部门聚合，员工按执行人聚合；同一个单位、两个切法，
+         总计相等、逐行不等（执行人员可跨部门）。点行分别去任务列表／执行人明细。
+         当前范围**没有下级部门**（叶子部门）时只剩员工视图，切换器不出（PRD §2.4）。 -->
+    <div class="rea-bd-card rea-bd-card--w12" id="rea-bd-cmp">
       <div class="rea-bd-ch">
-        <h6>员工完成情况</h6>
-        <div class="ant-radio-group ant-radio-group-solid css-vgijab rea-bd-window" id="rea-bd-ld-sort">
-        <div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small">
-          <div class="ant-space-item">
-            <label class="ant-radio-button-wrapper ant-radio-button-wrapper-checked css-vgijab" data-bd-ld-sort="done">
-              <span class="ant-radio-button ant-radio-button-checked"><input name="rea-bd-ld-sort" class="ant-radio-button-input" type="radio" value="done" checked=""><span class="ant-radio-button-inner"></span></span>
-              <span class="ant-radio-button-label">完成人次</span>
-            </label>
-          </div>
-          <div class="ant-space-item">
-            <label class="ant-radio-button-wrapper css-vgijab" data-bd-ld-sort="rate">
-              <span class="ant-radio-button"><input name="rea-bd-ld-sort" class="ant-radio-button-input" type="radio" value="rate"><span class="ant-radio-button-inner"></span></span>
-              <span class="ant-radio-button-label">完成率</span>
-            </label>
+        <h6>完成情况</h6>
+        <div class="ant-radio-group ant-radio-group-solid css-vgijab rea-bd-cmp-switch" id="rea-bd-cmp-switch">
+          <div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small">
+            <div class="ant-space-item">
+              <label class="ant-radio-button-wrapper ant-radio-button-wrapper-checked css-vgijab" data-bd-cmp="org">
+                <span class="ant-radio-button ant-radio-button-checked"><input name="rea-bd-cmp" class="ant-radio-button-input" type="radio" value="org" checked=""><span class="ant-radio-button-inner"></span></span>
+                <span class="ant-radio-button-label">部门</span>
+              </label>
+            </div>
+            <div class="ant-space-item">
+              <label class="ant-radio-button-wrapper css-vgijab" data-bd-cmp="ld">
+                <span class="ant-radio-button"><input name="rea-bd-cmp" class="ant-radio-button-input" type="radio" value="ld"><span class="ant-radio-button-inner"></span></span>
+                <span class="ant-radio-button-label">员工</span>
+              </label>
+            </div>
           </div>
         </div>
-        </div>
-        <span class="rea-bd-links">
-          <a href="#" data-bd-rank-all>查看全部<span class="rea-bd-chev" aria-hidden="true">›</span></a>
+        <span class="rea-bd-cmp-tools">
+          <span class="th rea-bd-sort" id="rea-bd-org-sort" role="button" tabindex="0" data-bd-org-sort="1" title="按完成率降序（点一下改升序）">完成率<i>↓</i></span>
+          <div class="ant-radio-group ant-radio-group-solid css-vgijab rea-bd-window" id="rea-bd-ld-sort" hidden>
+          <div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small">
+            <div class="ant-space-item">
+              <label class="ant-radio-button-wrapper ant-radio-button-wrapper-checked css-vgijab" data-bd-ld-sort="done">
+                <span class="ant-radio-button ant-radio-button-checked"><input name="rea-bd-ld-sort" class="ant-radio-button-input" type="radio" value="done" checked=""><span class="ant-radio-button-inner"></span></span>
+                <span class="ant-radio-button-label">完成人次</span>
+              </label>
+            </div>
+            <div class="ant-space-item">
+              <label class="ant-radio-button-wrapper css-vgijab" data-bd-ld-sort="rate">
+                <span class="ant-radio-button"><input name="rea-bd-ld-sort" class="ant-radio-button-input" type="radio" value="rate"><span class="ant-radio-button-inner"></span></span>
+                <span class="ant-radio-button-label">完成率</span>
+              </label>
+            </div>
+          </div>
+          </div>
+          <span class="rea-bd-links" id="rea-bd-ld-all" hidden>
+            <a href="#" data-bd-rank-all>查看全部<span class="rea-bd-chev" aria-hidden="true">›</span></a>
+          </span>
         </span>
       </div>
-      <div class="rea-bd-ld" id="rea-bd-ld-body"></div>
-      <div class="rea-bd-ld-note" id="rea-bd-ld-note" hidden>完成率 = 已执行 ÷ 应执行；应执行 1 人次的 100% 与 6 人次的 100% 不是一回事，请连同分母一起看。</div>
+      <div class="rea-bd-cmp-body">
+        <div class="rea-bd-cmp-pane" data-cmp-pane="org">
+          <div class="rea-bd-org" id="rea-bd-org"></div>
+          <div class="rea-bd-org-foot" id="rea-bd-org-foot"></div>
+        </div>
+        <div class="rea-bd-cmp-pane" data-cmp-pane="ld" hidden>
+          <div class="rea-bd-ld" id="rea-bd-ld-body"></div>
+          <div class="rea-bd-ld-note" id="rea-bd-ld-note" hidden>完成率 = 已执行 ÷ 应执行；应执行 1 人次的 100% 与 6 人次的 100% 不是一回事，请连同分母一起看。</div>
+        </div>
+      </div>
     </div>
 
     <!-- 群发好友回复 · 第 3 层 · 效果。数据来自台账里「群发好友」那些行；
@@ -11434,6 +11460,15 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
      正文来自载体块 srcBoardTasks。筛任务类型／状态／部门，时间窗与看板共用。 */
   var REA_TASKS_PAGE = '微小助看板 · 任务列表';
 
+  /* 侧栏「数据看板」一组改叫三块看板（2026-10-26 与产品经理对齐）：任务看板／悬浮窗看板／素材看板。
+     页名是注册表主键（REA_COVER、子页、落地页都按它查），一个字节都不能改；
+     只在显示层换名——侧栏文字、页内 h6、浏览器标题。名字表放这儿，nav 与 reaDoc 共用。 */
+  var REA_NAME = { '微小助看板': '任务看板', '企业微信看板': '素材看板' };
+  function reaName(n){
+    var m = /^([^ ]+)/.exec(n || '');
+    return m && REA_NAME[m[1]] ? REA_NAME[m[1]] + n.slice(m[1].length) : n;
+  }
+
   /* 覆盖块的正文只取一次：那边是一整块静态 HTML，每换一次页都重取没意义 */
   var REA_HTML_CACHE = {};
   function reaCoverHtml(id){
@@ -11487,13 +11522,20 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-card--w8{grid-column:span 8}
 .rea-bd-card--w7{grid-column:span 7}
 .rea-bd-card--w5{grid-column:span 5}
+.rea-bd-card--w12{grid-column:span 12}
 /* 第 1 行收窄：环形占比的正文就是「一个环 ＋ 三行图例」，span 5 时右侧空出一大块，
    把那一列让给执行趋势（span 8）——它的横轴格数最多，宽一点才读得出走势。 */
 .rea-bd-card--w4{grid-column:span 4}
-/* 当前范围没有下级部门：部门卡整件不出（比不了），落单的「配置·资产」铺满最后一行。
-   有部门的范围里这条不生效，版式仍是 3 行 × 2 列（PRD §2.4）。 */
-.rea-bd-grid--nodept #rea-bd-org-card{display:none}
-.rea-bd-grid--nodept #rea-bd-cfg{grid-column:span 12}
+/* 当前范围没有下级部门：合并卡只剩员工视图，切换器不出；其余版式不变（PRD §2.4）。 */
+.rea-bd-grid--nodept #rea-bd-cmp-switch{display:none}
+/* 合并卡：卡头「部门 / 员工」＋ 当前模式自己的排序与入口，右侧一组工具右对齐。 */
+.rea-bd-cmp-switch{margin-left:2px}
+.rea-bd-cmp-tools{margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.rea-bd-cmp-tools .th{margin-left:0}
+.rea-bd-cmp-tools .rea-bd-links{margin-left:0}
+.rea-bd-cmp [hidden]{display:none!important}
+.rea-bd-cmp-body{display:flex;flex:1 1 auto;flex-direction:column;min-height:340px}
+.rea-bd-cmp-pane{display:flex;flex:1 1 auto;flex-direction:column;min-height:0}
 /* 卡头只有一种写法：标题 ＋ 自己的控件 ＋ 右侧的下钻链接／列名 */
 .rea-bd-ch{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:2px 0 14px}
 .rea-bd-ch h6{margin:0;color:#1F2329;font-size:15px;line-height:22px;font-weight:600;letter-spacing:-.2px}
@@ -11592,6 +11634,22 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-ring-key b{min-width:18px;font-size:16px;font-weight:600;color:#1F2329;font-variant-numeric:tabular-nums;text-align:right}
 .rea-bd-ring-key .u{margin-right:auto;color:#8F959E}
 .rea-bd-ring-key .pct{flex:none;min-width:44px;color:#8F959E;font-size:12px;text-align:right;font-variant-numeric:tabular-nums}
+/* ---------- 任务类型分布（环形图下方） ----------
+   与环共用同一窗任务，只把「待完成」按类型拆开；数字读作「待完成 / 全部」。
+   两列小字台账，不另起颜色——环的颜色只表示状态，类型靠文字区分。 */
+.rea-bd-types{margin-top:12px;padding-top:10px;border-top:1px solid #F0F2F5}
+.rea-bd-types-h{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px;color:#8F959E;font-size:11px}
+.rea-bd-types-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:2px 14px}
+.rea-bd-types-list li{display:flex;align-items:baseline;gap:5px;min-width:0;padding:2px 4px;margin:0 -4px;border-radius:4px;font-size:12px;color:#646A73;cursor:pointer}
+.rea-bd-types-list li:hover{background:#F7F8FA}
+.rea-bd-types-list li:hover .nm{color:#1677FF}
+.rea-bd-types-list li:focus-visible{outline:2px solid rgba(22,119,255,.45);outline-offset:0}
+.rea-bd-types-list .nm{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#1F2329}
+.rea-bd-types-list b{font-size:13px;font-weight:600;color:#1F2329;font-variant-numeric:tabular-nums}
+/* 逾期那一位：有就橙色示警，没有就退成浅灰的 0，不抢眼但列位不晃 */
+.rea-bd-types-list .ov{color:#D46B08;font-size:12px;font-variant-numeric:tabular-nums}
+.rea-bd-types-list .ov.z{color:#C4C8CF}
+.rea-bd-types-list .tot{color:#8F959E;font-size:11px;font-variant-numeric:tabular-nums}
 @media (max-width:767px){
   #rea-bd-cards{flex-direction:column;align-items:flex-start;gap:14px}
 }
@@ -12342,7 +12400,7 @@ setLdSortUi();
     '   （docs/11 §1 第一条自律：指不回来源的指标不许出现）。 */',
     'var WIN={today:[0,0],w7:[-6,0],m1:[-29,0],m3:[-89,0]};',
     'var WIRED={today:1,w7:1,m1:1,m3:1};',
-    'var DEFW="today";              /* 默认窗口——环形占比静态正文里抄的就是它那一份 */',
+    'var DEFW="w7";                 /* 默认窗口——环形占比静态正文里抄的就是它那一份 */',
     'var CURW=DEFW;                 /* 当前窗口 */',
     '/* 动效开关：系统「减少动态效果」开着就一律不播（CSS 末尾另有一份同样的让位）。',
     '   BDANIM 只在换时间窗时为 1——翻排序不重播部门条，免得每点一下列头都长一遍。 */',
@@ -12400,7 +12458,7 @@ setLdSortUi();
     '  "pend-rate":function(t){return (t.n?Math.max(0,t.n-t.full-t.miss)/t.n*100:0).toFixed(1)+"%"},',
     '  "over-rate":function(t){return (t.n?t.miss/t.n*100:0).toFixed(1)+"%"}',
     '};',
-    '/* 占比图静态正文里写的是**默认窗口**（今日）那一份，跑起来跟算出来的对一遍。',
+    '/* 占比图静态正文里写的是**默认窗口**（近一周）那一份，跑起来跟算出来的对一遍。',
     '   换窗口换的就是同一个坑位，所以期望值必须在开跑前抄一份留底，',
     '   不能拿元素当下的文本去比——那样第二次换窗口就会自己跟自己比、误报一片。',
     '   期望值挂在元素自己身上（__reaExp），不按 data-rea-sum 的键名存：',
@@ -12621,7 +12679,7 @@ setLdSortUi();
     'document.addEventListener("keydown",function(e){',
     '  if(e.key!=="Enter"&&e.key!==" ")return;',
     '  var n=e.target;',
-    '  if(n&&n.getAttribute&&(n.getAttribute("data-bd-org-row")||n.getAttribute("data-bd-state")||n.getAttribute("data-bd-org-sort"))){e.preventDefault();n.click();}',
+    '  if(n&&n.getAttribute&&(n.getAttribute("data-bd-org-row")||n.getAttribute("data-bd-state")||n.getAttribute("data-bd-org-sort")||n.getAttribute("data-bd-type-row"))){e.preventDefault();n.click();}',
     '});',
     '',
     '/* 执行人分配自检：每条任务分到的人数必须正好等于应执行（且名单不重复）。 */',
@@ -12697,7 +12755,94 @@ setLdSortUi();
     '  }',
     '  return out;',
     '}',
+    '/* 任务类型分布：与环共用同一窗任务，按类型把「待完成／逾期未做」拆开。',
+    '   一行读作「类型 · 待完成 N · 逾期 M / 全部 K」，三个数分别加总＝环上那三段；',
+    '   按未完成（待完成＋逾期）降序，欠得最多的类型排最上面。点一行进任务列表并按该类型预筛（PRD §2.3）。 */',
+    'var TYPE_ORDER=["群发好友","发圈","群发群组","批量加好友","关联好友","客户唤醒","视频号发布任务"];',
+    'function typeList(w){',
+    '  var rs=winRows(w),m={},out=[],seen={},i,r,t,a,need,done,over;',
+    '  for(i=0;i<rs.length;i++){',
+    '    r=rs[i];t=r.getAttribute("data-bd-type");',
+    '    a=m[t]||(m[t]={all:0,pend:0,over:0});a.all++;',
+    '    need=+r.getAttribute("data-bd-need");done=+r.getAttribute("data-bd-done");over=+r.getAttribute("data-bd-over");',
+    '    if(done<need){if(over>0)a.over++;else a.pend++;}',
+    '  }',
+    '  for(i=0;i<TYPE_ORDER.length;i++){t=TYPE_ORDER[i];if(m[t]){out.push({t:t,all:m[t].all,pend:m[t].pend,over:m[t].over});seen[t]=1;}}',
+    '  for(t in m)if(!seen[t])out.push({t:t,all:m[t].all,pend:m[t].pend,over:m[t].over});',
+    '  out.sort(function(x,y){',
+    '    var xd=x.pend+x.over,yd=y.pend+y.over;',
+    '    if(yd!==xd)return yd-xd;',
+    '    return TYPE_ORDER.indexOf(x.t)-TYPE_ORDER.indexOf(y.t);',
+    '  });',
+    '  return out;',
+    '}',
+    'function renderTypes(w){',
+    '  var box=document.getElementById("rea-bd-types-list");if(!box)return;',
+    '  var list=typeList(w),h="",i,r;',
+    '  for(i=0;i<list.length;i++){',
+    '    r=list[i];',
+    '    h+="<li role=\\"button\\" tabindex=\\"0\\" data-bd-type-row=\\""+esc(r.t)+"\\" title=\\"进任务列表，只看「"+esc(r.t)+"」：待完成 "+r.pend+" 条 · 逾期 "+r.over+" 条 / 全部 "+r.all+" 条\\">"',
+    '      +"<span class=\\"nm\\">"+esc(r.t)+"</span><b>"+r.pend+"</b>"',
+    '      +"<span class=\\"ov"+(r.over?"":" z")+"\\">· "+r.over+"</span>"',
+    '      +"<span class=\\"tot\\">/ "+r.all+"</span></li>";',
+    '  }',
+    '  box.innerHTML=h;',
+    '}',
+    'function typeCheck(w){',
+    '  var t=tally(winRows(w)),list=typeList(w),sa=0,sp=0,so=0,i;',
+    '  for(i=0;i<list.length;i++){sa+=list[i].all;sp+=list[i].pend;so+=list[i].over;}',
+    '  if(sa!==t.n)bad("任务类型合计 "+sa+" ≠ 窗口任务数 "+t.n);',
+    '  if(sp!==t.n-t.full-t.miss)bad("类型待完成合计 "+sp+" ≠ 环上待完成 "+(t.n-t.full-t.miss));',
+    '  if(so!==t.miss)bad("类型逾期合计 "+so+" ≠ 环上逾期 "+t.miss);',
+    '}',
+    'var tb=document.getElementById("rea-bd-types-list");',
+    'if(tb)tb.addEventListener("click",function(e){',
+    '  var n=e.target;',
+    '  while(n&&n!==tb&&n.nodeType===1){',
+    '    if(n.getAttribute&&n.getAttribute("data-bd-type-row")){',
+    '      e.preventDefault();',
+    '      parent.postMessage({reaPage:' + reaJson(REA_TASKS_PAGE) + ',reaWin:CURW,reaRows:dumpRows(),reaType:n.getAttribute("data-bd-type-row")},"*");',
+    '      return;',
+    '    }',
+    '    n=n.parentNode;',
+    '  }',
+    '});',
     reaLdJs(),
+    '/* 合并卡：部门 / 员工两个切法，切换只换列表，不并排。',
+    '   叶子部门没有部门可比，切换器不出、固定员工视图（PRD §2.4）。 */',
+    'var CMP="org";',
+    'function setCmpUi(){',
+    '  var showOrg=CMP==="org"&&DEPTS.length>0;',
+    '  var panes=document.querySelectorAll("[data-cmp-pane]"),i,p;',
+    '  for(i=0;i<panes.length;i++){p=panes[i];p.hidden=(p.getAttribute("data-cmp-pane")==="org")!==showOrg;}',
+    '  var sw=document.getElementById("rea-bd-cmp-switch");if(sw)sw.hidden=!DEPTS.length;',
+    '  var os=document.getElementById("rea-bd-org-sort");if(os)os.hidden=!showOrg;',
+    '  var lgs=document.getElementById("rea-bd-ld-sort");if(lgs)lgs.hidden=showOrg;',
+    '  var all=document.getElementById("rea-bd-ld-all");if(all)all.hidden=showOrg;',
+    '  var ls=document.querySelectorAll("[data-bd-cmp]");',
+    '  for(i=0;i<ls.length;i++){',
+    '    var on=ls[i].getAttribute("data-bd-cmp")===CMP,b=ls[i].querySelector(".ant-radio-button"),r=ls[i].querySelector("input");',
+    '    ls[i].classList.toggle("ant-radio-button-wrapper-checked",on);',
+    '    if(b)b.classList.toggle("ant-radio-button-checked",on);',
+    '    if(r)r.checked=on;',
+    '  }',
+    '}',
+    'function cmpPick(id){',
+    '  if(!id||id===CMP)return;if(id==="org"&&!DEPTS.length)return;',
+    '  CMP=id;setCmpUi();BDANIM=0;',
+    '  if(CMP==="org")renderOrg(CURW);else renderLd(CURW);',
+    '}',
+    'var cg=document.getElementById("rea-bd-cmp-switch");',
+    'if(cg)cg.addEventListener("click",function(e){',
+    '  var n=e.target,id=null;',
+    '  while(n&&n!==cg&&n.nodeType===1){',
+    '    if(n.getAttribute&&n.getAttribute("data-bd-cmp")){id=n.getAttribute("data-bd-cmp");break}',
+    '    n=n.parentNode;',
+    '  }',
+    '  if(!id)return;e.preventDefault();e.stopPropagation();cmpPick(id);',
+    '},true);',
+    '/* 键盘：radio 用方向键换选时不发 click，只发 change；也接到同一个入口 */',
+    'if(cg)cg.addEventListener("change",function(e){var r=e.target;if(r&&r.getAttribute&&r.getAttribute("value"))cmpPick(r.getAttribute("value"));},true);',
     'var dl=document.querySelectorAll("[data-bd-detail]");',
     'for(var di=0;di<dl.length;di++)dl[di].addEventListener("click",function(e){',
     '  e.preventDefault();',
@@ -12752,10 +12897,14 @@ setLdSortUi();
     '  var tc=tally(winRows(w));',
     '  fill(document.getElementById("rea-bd-cards"),tc,w===DEFW);',
     '  paintDonut(tc);',
+    '  renderTypes(w);',
+    '  typeCheck(w);',
     '  BDANIM=1;               /* 这一轮是「换窗口」：部门条跟着长一遍 */',
     '  renderOrg(w);',
     '  orgCheck(w);',
     '  renderLd(w);',
+    '  if(!DEPTS.length)CMP="ld";   /* 叶子部门：没有部门可比，固定员工视图 */',
+    '  setCmpUi();',
     '  renderTrTrend();',
     '  renderQfTrend();',
     '  BDANIM=0;',
@@ -16784,7 +16933,7 @@ for(i=0;i<rows.length;i++){
   function reaDataJs(name){
     if (name !== REA_DETAIL_TASK && name !== REA_TASKS_PAGE) return '';
     var js = 'window.__REA_ROWS=' + reaJson(reaRows || []) + ';'
-      + 'window.__REA_WIN=' + reaJson(reaWinSel || 'today') + ';';
+      + 'window.__REA_WIN=' + reaJson(reaWinSel || 'w7') + ';';
     if (name === REA_TASKS_PAGE){
       /* 任务列表的三轴筛选：从部门行点进来时带一个预选值，其余从「任务列表」链接进来全是 all。 */
       js += 'window.__REA_TYPE=' + reaJson(reaTypeSel || 'all') + ';'
@@ -17098,7 +17247,7 @@ for(i=0;i<rows.length;i++){
   var reaIdx = -1;        // 当前已渲染的模块页序号
   var reaGroupNames = []; // 素材库列表页侧栏分组树里的分组名（供新建页的「所属分组」下拉用）
   var reaRows = null;     // 看板点「详细数据」时带过来的任务行（子页用，不另存一份）
-  var reaWinSel = 'today'; // 同上：点进来时的当前窗口（today / w7 / m1 / m3）
+  var reaWinSel = 'w7'; // 同上：点进来时的当前窗口（看板默认近一周，子页跟着开在近一周）
   var reaTypeSel = 'all'; // 任务列表的预选筛选：任务类型
   var reaStateSel = 'all';// 同上：状态
   var reaOrgSel = 'all';  // 同上：部门（从部门完成情况的一行点进来时有值）
@@ -17157,7 +17306,10 @@ for(i=0;i<rows.length;i++){
       + 'var TOP=' + reaJson(reaTopFirst) + ';'
       + 'var COVERED=' + reaJson(Object.keys(REA_COVER)) + ';'
       + 'var CUR=' + reaJson(curName) + ';'
-      + 'function page(t){for(var i=0;i<NAMES.length;i++){if(NAMES[i]===t)return NAMES[i];}return null;}'
+      + 'var ALIAS=' + reaJson(REA_NAME) + ';'
+      /* 显示名 → 页名：侧栏换名之后点回去还得落到注册表那一条上 */
+      + 'var REV={};for(var ak in ALIAS)REV[ALIAS[ak]]=ak;'
+      + 'function page(t){t=REV[t]||t;for(var i=0;i<NAMES.length;i++){if(NAMES[i]===t)return NAMES[i];}return null;}'
       /* 面包屑里的名字可能少了后缀（「视频号发布」→「视频号发布任务」）：精确匹配不到时，
          按「模块页名以它开头」找唯一的一个。子页名（带「 · 」）不参与，免得跳到自己或兄弟页。 */
       + 'function modOf(t){'
@@ -17168,6 +17320,36 @@ for(i=0;i<rows.length;i++){
           + 'if(NAMES[i].indexOf(t)===0){if(last)return null;last=NAMES[i];}'
         + '}'
         + 'return last;'
+      + '}'
+      /* 侧栏「数据看板」一组：显示名换成三块看板，并按 任务 / 悬浮窗 / 素材 重排。
+         改的只是 <span> 的文本与 title，li 的出入口仍归下面的 wire 管。 */
+      + '(function(){'
+        + 'var ul=document.querySelector("ul.ykSideTwoColSecondaryList");if(!ul)return;'
+        + 'var lis=ul.querySelectorAll("li.ykMenuItemLi"),order={},i,sp,t,to,keep=[];'
+        + 'for(i=0;i<lis.length;i++){'
+          + 'sp=lis[i].querySelector(".ykMenuText");if(!sp)continue;'
+          + 't=(sp.getAttribute("title")||sp.textContent||"").trim();'
+          + 'to=ALIAS[t]||t;'
+          + 'if(to!==t){sp.textContent=to;sp.setAttribute("title",to);}'
+          + 'order[to]=lis[i];'
+        + '}'
+        + 'var want=["任务看板","悬浮窗看板","素材看板"],frag=document.createDocumentFragment(),used={},j,li;'
+        + 'for(j=0;j<want.length;j++){li=order[want[j]];if(li){used[want[j]]=1;frag.appendChild(li);}}'
+        + 'for(i=0;i<lis.length;i++){'
+          + 'sp=lis[i].querySelector(".ykMenuText");'
+          + 't=sp?((sp.getAttribute("title")||sp.textContent||"").trim()):"";'
+          + 'if(!used[t])frag.appendChild(lis[i]);'      /* 组里还有别的项：原样跟在后面 */
+        + '}'
+        + 'ul.appendChild(frag);'
+        + 'var hd=document.querySelector(".ykSideTwoColSecondaryHeader");'
+        + 'if(hd&&(hd.textContent||"").trim()==="数据看板")hd.textContent="看板";'
+      + '})();'
+      /* 页内标题：未覆盖页的 h6 还写旧名，跟上侧栏 */
+      + 'if(ALIAS[CUR]){'
+        + 'var hs=document.querySelectorAll("h6");'
+        + 'for(var hi=0;hi<hs.length;hi++){'
+          + 'if((hs[hi].textContent||"").trim()===CUR){hs[hi].textContent=ALIAS[CUR];break;}'
+        + '}'
       + '}'
       /* 一段通用接线：sel=要接的 li，txt=取文本的选择器，map=名称 → 页名的表 */
       + 'function wire(sel,txt,map){'
@@ -17229,7 +17411,7 @@ for(i=0;i<rows.length;i++){
     var sv = reaSavedJs(p.name), fl = reaFlashJs(p.name);
     return '<!DOCTYPE html>\n<html lang="zh-CN" data-theme="default"><head>'
       + '<meta charset="utf-8">'
-      + '<title>' + p.name + ' · 线上后台复刻</title>'
+      + '<title>' + reaName(p.name) + ' · 线上后台复刻</title>'
       + '<style>' + P.css + '</style>'
       + '<style>' + REA_CSS + (cv && cv.css ? cv.css : '') + '</style>'
       + '</head><body>' + P.shell + reaSplice(p, p.rest)
@@ -17386,7 +17568,7 @@ for(i=0;i<rows.length;i++){
     var P = window.__REAL_ADMIN__;
     /* 看板点的「详细数据」：先把行与窗口收下，子页 reaDoc 时会灌进 window（见 reaDataJs） */
     if (d.reaRows){
-      reaRows = d.reaRows; reaWinSel = d.reaWin || 'today';
+      reaRows = d.reaRows; reaWinSel = d.reaWin || 'w7';
       /* 每次从看板进来都重设三轴筛选与排序：从部门行进来带部门，从「任务列表」链接进来全 all；
          从排行进来带 done/rate + 预展开的人，从「执行人明细」链接进来回到 debt。 */
       reaTypeSel = d.reaType || 'all'; reaStateSel = d.reaState || 'all'; reaOrgSel = d.reaOrg || 'all';
