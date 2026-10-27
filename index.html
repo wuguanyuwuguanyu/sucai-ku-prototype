@@ -1156,12 +1156,9 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .hva-cond.c2{top:69.1px}
 .hva-cond .ic{flex:none;width:12.9px;height:12.9px;display:flex;align-items:center;justify-content:center}
 .hva-cond .ic svg{display:block}
-/* 形象：选「文案手」时是机器人（原图 482×543）；选「小助」时是产品给的人像。
+/* 形象固定为机器人（2026-10-27 产品定稿：不再按所选数智员工换图，头卡恒出机器人）。
    盒子用稿子的 238×280 折算成 130.7×153.8，从卡右上探出卡外，所以卡不能裁它（art 是卡的兄弟）。
-   人像用 contain 贴底——它是透明底的人像，不该像旧版那样裁成一张证件照。 */
-.hva-portrait{position:absolute;left:262.4px;top:46.8px;width:130.7px;height:153.8px;z-index:1;pointer-events:none}
-.hva-portrait img{display:block;width:100%;height:100%;object-fit:contain;object-position:50% 100%}
-/* 机器人形象（盒子与稿子同框，image 拉伸填满，眼睛坐标按这个框量）：
+   机器人形象（盒子与稿子同框，image 拉伸填满，眼睛坐标按这个框量）：
    眼睛叠在面罩上（见 hvaEyes），所以盒子**不能**设 overflow:hidden——闭眼时 zzz 要飘出头。
    眼睛从旧版的横椭圆改成稿子那两枚竖的白胶囊（3.3% × 8.4%），位置按 1438:1327 实测。 */
 .hva-robot{position:absolute;left:262.4px;top:46.8px;width:130.7px;height:153.8px;z-index:1;pointer-events:none}
@@ -1222,123 +1219,12 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
   box-shadow:0 2px 6px -1px rgba(94,86,190,.38);transition:left .22s}
 .hva-cta.on .hva-sw{background:linear-gradient(90deg,#2E86FF,#9452FF);box-shadow:none}
 .hva-cta.on .hva-sw i{left:18.5px}
-/* ---------------- 头卡 · 方案二（「形象在左，右侧竖排」2026-10-21 废弃）----------------
-   产品同日改口：**直接废弃旧方案二，这个位置换成并卡那一版**（下面「方案四」那段）。
-   所以代号仍是 HVA_LAYOUT='b'——别再按「四」去找活着的分支，那是过程名。
-   旧那套的类（.hva-head-b 216 高／.hva-bside flex 竖排／放大版设置胶囊）连同 DOM 一起撤了，
-   只留这几行说明；留着空规则只会让下一个读代码的人以为还有一条活着的分支（同 ADR-0057 的口径）。 */
-/* ---------------- 头卡 · 方案三（两张卡并列，照产品 2026-10-21 给的参考图）----------------
-   骨架：左边一张**状态卡**（状态点＋状态词、副行、按钮、形象，整卡一层底色），
-   右边一张**白卡**（一枚大圆＋「设置」＋托管条件的现值）。与前两套走同一个开关（HVA_LAYOUT='c'）。
-   ★ 与前两套最要紧的差别：**件不是同一批**。产品点名首页不要「切换员工」，所以 .hva-quick 里只剩
-     「设置」一枚（换人的路仍在设置页，没丢）。加件时别照着 a／b 两边都摆一份，先问这一套要不要它。
-   ★ 产品另一条：**闲置多久会自动执行**得摆在首页——它原先是设置页「闲置时长」那一格的值，
-     这里抄在右卡底部，读的仍是同一个 HVA_IDLE（hvaIdle 改完会连主页一起重画），不另存一份。
-   ★ 左卡 .hva-ca 是 position:relative ＋ overflow:hidden：形象贴卡底、被 22 圆角裁一刀，照参考图那股劲儿。
-   尺寸：14 + 224 + 12 + 148 + 14 = 412；两卡同高 120（比例 224:120 ≈ 1.87，比参考图更扁，
-   是产品 2026-10-21 手调出来的），头卡舞台＝上 14＋卡 120＋下 11＝145。 */
-.hva-head-c{height:145px}
-.hva-hero-c{height:145px}
-.hva-hero-c .hva-ca{position:absolute;left:14px;top:14px;width:224px;height:120px;border-radius:22px;
-  overflow:hidden;background:linear-gradient(155deg,#EAECF1,#D5DAE3)}
-.hva-hero-c .hva-ca.on{background:linear-gradient(155deg,#EAF2FF,#E8DFFF)}
-.hva-ca-h{position:absolute;left:14px;top:12px;display:flex;align-items:center;gap:7px}
-.hva-ca-dot{width:7px;height:7px;border-radius:50%;background:#98A2B3;
-  box-shadow:0 0 0 3px rgba(152,162,179,.16)}
-.hva-hero-c .hva-ca.on .hva-ca-dot{background:#28C76F;box-shadow:0 0 0 3px rgba(40,199,111,.18)}
-.hva-ca-st{font-size:16.5px;line-height:21px;font-weight:600;color:#3F4858;letter-spacing:.01em;white-space:nowrap}
-.hva-hero-c .hva-ca.on .hva-ca-st{color:#24406F}
-.hva-ca-sub{position:absolute;left:14px;top:39px;font-size:11.5px;line-height:15px;color:#6E7889;white-space:nowrap}
-.hva-hero-c .hva-ca.on .hva-ca-sub{color:#5A6C90}
-/* 形象贴卡底靠右，84 宽；高度按各自原图比例给（人像 176×204、机器人 482×543）——
-   这两个盒子**必须保持原图比例**：机器人的眼睛是按盒子百分比摆的，拉扁了会从面罩上滑下来。 */
-.hva-hero-c .hva-portrait{left:auto;top:auto;right:8px;bottom:0;width:84px;height:97px}
-.hva-hero-c .hva-robot{left:auto;top:auto;right:8px;bottom:0;width:84px;height:94.6px}
-/* CTA 缩到左卡左下：110×40。右缘 124，形象左缘 132——中间留 8，两件不叠。
-   文案也短一档（「开始托管／停止托管」）：110 宽装不下原来那六个字＋开关。 */
-.hva-hero-c .hva-cta{left:14px;top:auto;bottom:14px;width:110px;height:40px;border-radius:20px;
-  padding:0 8px 0 11px;font-size:12.5px;
-  box-shadow:0 10px 20px -14px rgba(102,86,255,.65),0 2px 8px -6px rgba(120,110,220,.3)}
-.hva-hero-c .hva-sw{width:36px;height:20px;border-radius:10px}
-.hva-hero-c .hva-sw i{left:2px;top:2px;width:16px;height:16px}
-.hva-hero-c .hva-cta.on .hva-sw i{left:18px}
-/* 右卡：白底，上面一枚大圆「设置」，底下两行是托管条件的现值（工作时间／闲置多久自动执行）。
-   .hva-quick 在这一套里回到流里（前两套是绝对定位／display:contents），里面只剩一枚 .hva-qk。 */
-.hva-hero-c .hva-cb{position:absolute;left:250px;top:14px;width:148px;height:120px;border-radius:22px;
-  background:#fff;padding:14px;display:flex;flex-direction:column;justify-content:space-between;
-  box-shadow:0 12px 26px -20px rgba(60,80,130,.85),0 2px 8px -6px rgba(70,90,150,.22)}
-.hva-hero-c .hva-quick{position:static;inset:auto;pointer-events:auto}
-/* justify-content 必须显式写 flex-start：基类 .hva-qk 是居中排的（前两套就一枚图标／一枚胶囊，居中看不出），
-   这一套「圆＋字」整行居中后圆会离卡左缘 19.5px，跟下面两行现值（贴左缘）错开一截。 */
-.hva-hero-c .hva-qk{position:static;left:auto;top:auto;right:auto;width:100%;height:auto;
-  display:flex;align-items:center;justify-content:flex-start;gap:9px;padding:0;color:#3D4A63}
-.hva-hero-c .hva-qkcir{flex:none;width:38px;height:38px;border-radius:50%;color:#fff;
-  background:linear-gradient(135deg,#2E86FF,#9452FF);box-shadow:0 8px 16px -11px rgba(80,90,220,.95)}
-.hva-cb-tx{display:flex;align-items:center;gap:3px;font-size:15px;line-height:20px;font-weight:600;color:#3D4A63;white-space:nowrap}
-.hva-cb-tx i{font-style:normal;font-weight:400;color:#A9B3C5}
-/* 右卡底部那两行「现值」：11px，比卡上别的字小一档但不至于要看第二眼；
-   一条淡分隔线把它和上面的入口分开——上面是「去做」，下面是「现在是」。 */
-.hva-cb-info{display:flex;flex-direction:column;gap:4px;padding-top:9px;border-top:1px solid #EDF0F6;
-  font-size:11px;line-height:16px;color:#64748C}
-/* ---------------- 头卡 · 方案二（并卡：形象在左，右列一路排到底 · 原「方案四」）----------------
-   2026-10-21 产品在方案三的基础上定稿（原名「方案四」，同日顶掉旧方案二）：左边两张卡并成一张，形象挪到最左；右边一列从上往下
-   状态 → 副行 → 两行现值（左）／托管开关（右），**中间不留空**。方案三右卡用 space-between
-   把现值压在卡底，中间那段空就是它顶出来的——这一套用绝对坐标把三档钉在一起，不再有缝。
-   卡高 108：14 + 108 + 11 = 133 的舞台，比方案三的 145 还矮 12。
-   ★ 件又换了一批：方案三点名撤掉的「切换员工」在这里**回来了**，但换了样子——不占一行，
-     是卡右上那枚名胶囊（「智能」+ HVA_HOST_AGENT ＋ ⇄），点了直接进数智员工选择页。
-     所以这一套仍是单独一个 hvaHeroB()，硬塞回 hvaHeroHtml 的分支只会把那段变成四岔。
-   ★ 右缘一条线：托管开关的右缘 ＝ 设置块的右缘（各自离卡右缘 14）。
-     改其中一件的宽度时另一件跟着挪，别让这条线断掉。
-   ★ 卡宽**不许写死**（2026-10-21 真机修的 bug）：原先进原型时按 412 画布写成 `left:14px;width:384px`，
-     桌面壳里正好、装进 APK 就露馅——真机 WebView 的布局宽是设备宽（393/360 都有），
-     卡却仍是 384 宽，右缘被顶到 398 直接切在屏幕外，跟下面 15 内边距的「工作日志」对不齐。
-     所以左右都用 15（**与 .hva-pane 的 padding 同一个数**，卡和日志卡才共用一条竖线），
-     宽度交给 right 撑开，卡内坐标仍是相对卡自身的。 */
-.hva-head-b{height:133px}
-.hva-hero-b{height:133px}
-.hva-hero-b .hva-card{position:absolute;left:15px;right:15px;top:14px;height:108px;border-radius:22px;
-  overflow:hidden;background:linear-gradient(155deg,#EAECF1,#D5DAE3)}
-.hva-hero-b .hva-card.on{background:linear-gradient(155deg,#EAF2FF,#E8DFFF)}
-/* 形象挪到卡左、贴卡底；盒子仍按各自原图比例给（人像 176×204／机器人 482×543）——
-   机器人的眼睛是按盒子百分比摆的，拉扁了会从面罩上滑下来。 */
-.hva-hero-b .hva-portrait{left:8px;top:auto;right:auto;bottom:0;width:84px;height:97px}
-.hva-hero-b .hva-robot{left:8px;top:auto;right:auto;bottom:0;width:84px;height:94.6px}
-/* 内容列从 104 起（形象 8–92，留 12）：状态行、副行、两行现值都贴着这条线。
-   .hva-ca-h／.hva-ca-dot／.hva-ca-st／.hva-ca-sub 本名带「ca」（方案三左卡），2026-10-21 起
-   两套卡都用，只在各自 .hva-hero-b／.hva-hero-c 下改坐标与色——别再往基规则里塞某一套的数值。 */
-.hva-hero-b .hva-ca-h{left:104px;top:12px;gap:7px}
-.hva-hero-b .hva-ca-sub{left:104px;top:38px}
-.hva-hero-b .hva-card.on .hva-ca-dot{background:#28C76F;box-shadow:0 0 0 3px rgba(40,199,111,.18)}
-.hva-hero-b .hva-card.on .hva-ca-st{color:#24406F}
-.hva-hero-b .hva-card.on .hva-ca-sub{color:#5A6C90}
-/* 右上两枚：名胶囊（换人）与「齿轮＋设置」。
-   名胶囊是这一套新增的件——白底＋1.5 描边＋13 圆角，看得出可点，但不抢状态行的视线。 */
-.hva-hero-b .hva-qk:nth-child(1){left:auto;right:81px;top:9px;width:auto;height:26px;
-  padding:0 8px 0 10px;gap:5px;border-radius:13px;color:#3E4A5F;background:#fff;
-  box-shadow:0 0 0 1.5px #C6D0E0,0 2px 6px -4px rgba(60,80,130,.28)}
-.hva-card-who{font-size:12.5px;line-height:1;font-weight:600;color:#3E4A5F;white-space:nowrap}
-.hva-card-sw{display:flex;color:#6B7A93}
-.hva-card-sw svg{display:block;width:12px;height:12px}
-/* 设置那颗（2026-10-21 产品：改成胶囊）：跟名胶囊同一副壳——白底＋1.5 描边＋13 圆角，
-   齿轮退回图标本身、不再自带圆底；右缘仍与下面那枚开关同一条线（370）。 */
-.hva-hero-b .hva-qk:nth-child(2){right:14px;top:9px;height:26px;padding:0 9px 0 8px;gap:4px;
-  border-radius:13px;background:#fff;color:#5D6B84;
-  box-shadow:0 0 0 1.5px #C6D0E0,0 2px 6px -4px rgba(60,80,130,.28)}
-.hva-hero-b .hva-qk:nth-child(2) .hva-qkcir{width:auto;height:auto;border-radius:0;color:#5D6B84;
-  background:none;box-shadow:none}
-.hva-hero-b .hva-qk:nth-child(2) .hva-qkcir svg{display:block}
-/* 两行现值：紧接副行（y=59），不再贴卡底——这是这一套跟方案三最直观的那处差别 */
-.hva-card-info{position:absolute;left:104px;top:59px;display:flex;flex-direction:column;gap:4px;
-  font-size:11px;line-height:16px;color:#64748C;white-space:nowrap}
-.hva-hero-b .hva-card.on .hva-card-info{color:#5A6C90}
-/* CTA 靠右压卡底：右缘 370 与设置同线，底边 96 与左边两行现值的末行齐平 */
-.hva-hero-b .hva-cta{left:auto;right:14px;top:auto;bottom:13px;width:110px;height:40px;border-radius:20px;
-  padding:0 8px 0 11px;font-size:12.5px;
-  box-shadow:0 10px 20px -14px rgba(102,86,255,.65),0 2px 8px -6px rgba(120,110,220,.3)}
-.hva-hero-b .hva-sw{width:36px;height:20px;border-radius:10px}
-.hva-hero-b .hva-sw i{left:2px;top:2px;width:16px;height:16px}
-.hva-hero-b .hva-cta.on .hva-sw i{left:18px}
+/* ---------------- 头卡 · 方案二／方案三（2026-10-27 撤）----------------
+   产品 2026-10-27 定稿：页头布局固定为方案一（形象居中、标题左上、CTA 压底），
+   方案二（并卡）与方案三（两张卡并列）连同那枚「页头布局」对比开关一并下线。
+   它们的类（.hva-head-b／.hva-head-c／.hva-hero-b／.hva-hero-c／.hva-card／.hva-ca-*／
+   .hva-cb*／.hva-card-info 等）与 DOM 一起删；留着空规则只会让下一个读代码的人
+   以为还有一条活着的分支（同 ADR-0057 的口径）。 */
 .hva-sub{margin:2px 0 14px} /* 员工列表那两层筛选用的是同一个 .tk-seg，只在这里统一修上下距 */
 /* 托管清单那一整族的版式（栏头 .hva-grp／计数 .hva-n／视图分段器 .hva-view／清单 .hva-list／
    清单卡 .hva-card…／来源角标 .hva-ctl .hva-when .hva-min／图标层 .hva-cic 及其 22px 缩版）
@@ -1745,7 +1631,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .hva-form-h{display:flex;align-items:center;gap:5px;padding:14px 15px 2px;font-size:13.5px;font-weight:700;color:#2A4A7E}
 .hva-txt{padding:0 15px 15px;font-size:13.5px;line-height:1.72;color:#5B7099}
 .hva-txt.ph{color:#A9B6CD}
-/* 页头布局那枚两档（2026-10-21，**原型对比用**的控件）：两格竖排「方案名＋一句排法」，
+/* 设置页「托管回显」那组对比控件（2026-10-21，**原型对比用**）：竖排「方案名＋一句说明」，
    选中的那格吃淡蓝→淡紫底＋一圈内描边。**别改用 .tk-seg**——冒烟按 #hvaSetBody 里 .tk-seg button
    的枚数核对「闲置时长」那三档，这里多两枚会把那条断言读成 5。 */
 .hva-layseg{display:flex;gap:8px}
@@ -4957,12 +4843,8 @@ REND['host-task']=function(){
    一份状态管三屏：主页面那张托管状态卡、全局设置屏、员工详情屏改的都是下面这几个变量。
    分头各存一份，迟早出现「设置里开着、回主页还写着已关闭」——自相矛盾比少一个开关更伤。 */
 var HVA_ON=false;              /* 托管总开关。默认关：先让人看清「开着之后它会替我做什么」，再看怎么开 */
-/* 头卡排法（2026-10-21，产品要看实物对比）：'a'＝稿子那套（形象居中打底、标题左上、CTA 压底），
-   'b'＝并卡（形象在左、右侧一列排到底；原名「方案四」，同日顶掉旧的「形象在左、右侧竖排」），
-   'c'＝两张卡并列（左状态卡＋右设置卡，照产品给的参考图）。
-   切换的入口在全局设置首卡「页头布局」。默认 'a'——线上走稿子那一版；
-   b／c 只是同一份状态的另一种摆法，读的还是同一批变量（但**件不是同一批**，见各自那个函数）。 */
-var HVA_LAYOUT='a';
+/* 头卡布局固定为方案一（2026-10-27 产品定稿）：形象居中打底、标题左上、CTA 压底。
+   方案二／方案三连同那枚对比开关一并下线，别再按旧注释去找分支。 */
 /* 托管回显（2026-10-26 原型对比）：主页用哪种方式讲「托管开启后手机会做什么」。
    a＝卡可关、b＝问号浮层、c＝一行展开、d＝日志卡头入口；四版共用正文与空态。
    默认 c：这是低频信息，主页先给一行、点开才展开。定稿后删掉对比开关、只留一套。 */
@@ -4977,7 +4859,6 @@ var HVA_DOING_C_OPEN=null;       /* C 的展开态；null＝按空态自动（�
 var HVA_WORK='09:00-18:00';     /* 托管条件之一：工作时间（稿子上是半角连字符，别再改回破折号） */
 var HVA_IDLE=10;               /* 托管条件之二：闲置门槛（分钟） */
 var HVA_IDLES=[5,10,15,30];
-var HVA_WORKED=3;              /* 开态胶囊「工作3小时」里的累计时长。原型是静态演示值，不接真时长 */
 var HVA_SWITCH='<svg width="14.2" height="14.2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5h15.5M15 4l3.5 3.5L15 11"/><path d="M21 16.5H5.5M9 13l-3.5 3.5L9 20"/></svg>';
 /* 多开托管：托管跑在哪几个账号上。**只读得到微信与企业微信两族**——抖音／小红书那些不在
    托管范围内，扫也不扫、列也不列，所以这份 App 表就是它的边界（别再往里加平台）。
@@ -5305,11 +5186,6 @@ function hvaMark(s){return esc(s).split('[[').join('<em class="hv-gb">').split('
 /* 视图／档位／开关都落在同一份状态上，改完立刻重画这一屏：三处各存一份就会互相打架 */
 function hvaToggle(){ HVA_ON=!HVA_ON; REND['host-ai']();
   toast(HVA_ON?'托管已开启：工作时间＋闲置条件满足后自动执行':'托管已关闭：下方动作都不会自动执行'); }
-/* 头卡排法（2026-10-21）：切完主页面与设置页各重画一次——主页面换摆法，设置页那两格换选中态。
-   两屏都在 DOM 里（设置页只是没显示），所以这一屏点下去，返回时主页已经是新排法。 */
-function hvaLayout(v){ HVA_LAYOUT=v; REND['host-ai'](); REND['host-ai-set']();
-  toast(v==='a'?'页头已切回方案一：形象居中'
-    :(v==='b'?'页头已切成方案二：形象在左、右侧竖排':'页头已切成方案三：两张卡并列')); }
 /* 悬浮球那颗「＋」与「加入托管清单」浮窗 2026-10-16 一并撤掉（见 ADR-0065）。
    它们整族（hvaAdd／hvaTask／hvaSheet／hvaSheetHtml／hvaOptCard／hvaPick／hvaRemove
    ＋ 静态骨架里那两颗挂点）存在的前提是**托管清单这一屏**：
@@ -5366,7 +5242,7 @@ function hvaOpen(t){
    ★ 另一颗齿轮仍进托管全局设置（host-ai-set）。
    ★ 「AI配置」那枚第三颗 2026-10-15 已撤；如今 ⇄ 直接落到同一张列表的 pick 模式，
      进详情／新建仍可从员工卡与右上「＋」走。 */
-/* 托管页那幅人像（稿子 1321:1758 顶上那张，320×371）。
+/* 数智员工列表里小助那张头像（原托管页人像，稿子 1321:1758 顶上那张，320×371）。
    ★ 2026-10-20 产品直接给了透明底人像原图（752af0e3….png），这一幅改用位图——**零位图
      （ADR-0042）在本仓的唯一例外**：图不是画的，是产品指定的形象本身。原图 1132×1440，
      这里压到 353×448（2× 于 176×204 的显示尺寸）后转 WebP（q82，18KB；同图 PNG 要 206KB）
@@ -5374,11 +5250,9 @@ function hvaOpen(t){
      其余界面照旧不嵌图，别拿这一条当先例去铺别的位图。
    头像（选择页里小助那一张）复用同一个串，别另存一份——改图时只该改一处。 */
 var HVA_PORTRAIT_SRC='data:image/webp;base64,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';
-function hvaPortrait(){
-  return '<div class="hva-portrait" aria-hidden="true"><img src="'+HVA_PORTRAIT_SRC+'" alt=""></div>';
-}
-/* 机器人形象（产品 2026-10-20 给的 机器人形象.png，482×543）——**托管选的是「文案手」时**出场，
-   替掉人像的位置（见 hvaHeroArt）。同属零位图的例外（与上面那张人像同一口径）：
+/* 机器人形象（产品 2026-10-20 给的 机器人形象.png，482×543）——**头卡恒用它**
+   （2026-10-27 产品定稿：形象固定为机器人，不按所选数智员工切换）。
+   同属零位图的例外（与上面那张头像同一口径）：
    形象是产品给的，不是画的。原图压成 WebP（q86，22KB）内嵌，显示盒 184×207。
    ★ 眼睛**不在位图里**：原图面罩那块是空的，眼睛由 DOM 叠上去（见 hvaEyes），
      因为它得跟着托管开关换样子——开着睁眼、关着闭眼并飘三枚 z，位图做不到这件事。
@@ -5395,13 +5269,6 @@ function hvaRobot(){
     +'<img src="'+HVA_ROBOT_SRC+'" alt="">'
     +'<span class="eyes">'+hvaEyes()+'</span>'
   +'</div>';
-}
-/* 头卡那幅形象＝**当前托管的那位数智员工**（2026-10-20 产品：选小助出人像，选文案手出机器人）。
-   现有产品给的图只有这两张（ADR-0042 的零位图例外只认产品给的），其余员工先回落到人像；
-   以后再多给几张，往这张表里加一行即可，别在 hvaHeroHtml 里写 if。 */
-var HVA_HERO_ART={'小助':'portrait','文案手':'robot'};
-function hvaHeroArt(){
-  return HVA_HERO_ART[HVA_HOST_AGENT]==='robot' ? hvaRobot() : hvaPortrait();
 }
 /* 互动动作那四枚图标（AI关注／AI点赞／AI收藏／AI转发）：稿子是实心、吃 #1677FF→#9452FF 这支渐变
    （hvuGrad，与升级页同一支）。I() 那套是描边线性图标，形状对不上，所以这里单独一份实心 path，
@@ -5583,7 +5450,7 @@ function hvaActsHtml(){
 }
 /* 稿子右下那台翻开的台历（93×88 设计px）：白卡＋蓝紫顶栏＋两枚环＋一格打勾，右下压一枚时钟徽。
    稿子上它是一张 3D 位图；按 ADR-0042 用 CSS 还原（与升级页 .hvu-cal 同一套画法，尺寸缩到 51×48）。
-   它只跟机器人搭（机器人那张原图里本来就捧着稿纸）；人像那一路不带它。 */
+   形象固定为机器人之后它恒出场（机器人那张原图里本来就捧着稿纸）。 */
 function hvaCalArt(){
   var g='',i;
   for(i=0;i<8;i++) g+='<i'+(i===5?' class="on"':'' )+'>'+(i===5?I('check',7,2.4):'')+'</i>';
@@ -5593,23 +5460,15 @@ function hvaCalArt(){
     +'<span class="hva-cal-ck">'+I('clock',10,1.7)+'</span>'
   +'</div>';
 }
-/* 页头（2026-10-23 照 Figma「AI托管（已托管）」节点 1438:1327 重排）：
+/* 页头（2026-10-23 照 Figma「AI托管（已托管）」节点 1438:1327 重排；2026-10-27 定稿只留这一套）：
    左上标题「AI托管」，右上齿轮，下面一张状态卡（状态点＋状态词／工作时间／闲置条件／
-   「停止托管」白胶囊＋开关），形象从卡右侧探出，机器人那一路再带一台台历。
+   「停止托管」白胶囊＋开关），形象从卡右侧探出，恒带一台台历。
    ★ 状态词与 CTA 是同一件事的两面：开＝正在托管中／停止托管，关＝托管已暂停／开始托管。
    ★ 卡上那两行是**托管条件的现值**（HVA_WORK／HVA_IDLE），不是装饰文案；改条件时它会跟着重画
      （hvaIdle 等入口会调 REND['host-ai']）。
    ★ 「托管由哪位数智员工执行」不再摆在页头上（稿子上没有名字）：只留在读屏里（.hva-kicker），
-     以及设置页那一行；形象仍跟人走（见 hvaHeroArt）。 */
+     以及设置页那一行；**形象固定为机器人**，不跟所选数智员工换。 */
 function hvaHeroHtml(){
-  /* 三套排法（见 HVA_LAYOUT）：'a' 是稿子那一版，件全部绝对定位、铺满整张 230 高的舞台；
-     'b'＝并卡（原名「方案四」，2026-10-21 顶掉旧的「形象在左、右侧竖排」）；
-     'c'＝两张卡并列。
-     **只有 'a' 是稿子坐标**——b／c 的件跟它都不是同一批（b 多一枚名胶囊、c 少一件），
-     硬塞进这段只会变成三岔，所以它们各自一个函数，在下面。 */
-  if(HVA_LAYOUT==='c') return hvaHeroC();
-  if(HVA_LAYOUT==='b') return hvaHeroB();
-  var isRobot=HVA_HERO_ART[HVA_HOST_AGENT]==='robot';
   return '<div class="hva-hero">'
     +'<div class="hva-card-a'+(HVA_ON?'':' off')+'">'
       +'<div class="hva-st"><i></i><b>'+(HVA_ON?'正在托管中':'托管已暂停')+'</b></div>'
@@ -5620,8 +5479,8 @@ function hvaHeroHtml(){
         +'<span class="hva-sw" aria-hidden="true"><i></i></span>'
       +'</button>'
     +'</div>'
-    +hvaHeroArt()
-    +(isRobot?hvaCalArt():'')
+    +hvaRobot()
+    +hvaCalArt()
     +'<div class="hva-title"><span class="ai">AI</span>托管</div>'
     +hvaActsHtml()
     +'<span class="hva-sr">'+(HVA_ON?'托管已开启。':'托管已关闭，不会自动执行。')
@@ -5629,76 +5488,9 @@ function hvaHeroHtml(){
     +'<span class="hva-sr hva-kicker">托管执行者 '+esc(HVA_HOST_AGENT)+'</span>'
   +'</div>';
 }
-/* 方案二（并卡，2026-10-21 定稿；原名「方案四」，同日顶掉旧的「形象在左、右侧竖排」那一套）：
-   一张卡里从左到右＝形象 ∣ 内容列。内容列自上而下：状态点＋状态词 → 副行 →
-   两行现值（左）／托管开关（右）。三档首尾相接，**中间不留空**——方案三右卡用 space-between
-   把现值压在卡底，中间那段空就是这么来的。
-   ★ 这一套把「托管给谁」摆回了首页：右上那枚名胶囊读「智能」+ HVA_HOST_AGENT ＋ ⇄，
-     **整枚可点** → hvaPickHost() → 数智员工选择页（方案三点名撤掉的入口，这里换了个样子回来）。
-   ★ 副行两态各说各的：关＝「不会自动执行」（后果）／开＝「今日已工作 N 小时」（读数）。
-     状态词与 CTA 文案是同一件事的两面，别把其中一面改单了。 */
-function hvaHeroB(){
-  return '<div class="hva-hero hva-hero-b">'
-    +'<div class="hva-card'+(HVA_ON?' on':'')+'">'
-      +hvaHeroArt()
-      +'<div class="hva-ca-h"><i class="hva-ca-dot"></i><span class="hva-ca-st">'+(HVA_ON?'托管中':'关闭中')+'</span></div>'
-      +'<div class="hva-ca-sub">'+(HVA_ON?'今日已工作 '+HVA_WORKED+' 小时':'不会自动执行')+'</div>'
-      +'<div class="hva-quick">'
-        +'<button class="hva-qk" onclick="hvaPickHost()" title="选择数智员工">'
-          +'<span class="hva-card-who">智能'+esc(HVA_HOST_AGENT)+'</span>'
-          +'<span class="hva-card-sw">'+HVA_SWITCH+'</span></button>'
-        +'<button class="hva-qk" onclick="go(\'host-ai-set\')" title="设置">'
-          +'<span class="hva-qkcir">'+I('gear',15,2.2)+'</span>'
-          +'<small>设置</small></button>'
-      +'</div>'
-      +'<div class="hva-card-info">'
-        +'<div>工作 '+HVA_WORK+'</div>'
-        +'<div>闲置 '+HVA_IDLE+' 分钟自动执行</div>'
-      +'</div>'
-      +'<button class="hva-cta'+(HVA_ON?' on':'')+'" onclick="hvaToggle()" role="switch" aria-checked="'+(HVA_ON?'true':'false')+'">'
-        +'<span class="tx">'+(HVA_ON?'停止托管':'开始托管')+'</span>'
-        +'<span class="hva-sw" aria-hidden="true"><i></i></span>'
-      +'</button>'
-    +'</div>'
-    +'<span class="hva-sr">'+(HVA_ON?'托管已开启。':'托管已关闭，不会自动执行。')
-      +'工作时间 '+HVA_WORK+' · 闲置 '+HVA_IDLE+' 分钟</span>'
-  +'</div>';
-}
-/* 方案三（2026-10-21，照产品给的那张参考图）：两张卡并列。
-   左卡＝状态卡：状态点＋状态词（关闭中／托管中）、副行（一句后果或读数）、CTA、形象；
-   右卡＝设置卡：一枚大圆「设置」，底下两行是托管条件的**现值**（工作时间／闲置多久自动执行）。
-   ★ 首页**不放「切换员工」**（产品 2026-10-21 点名撤掉）：换人的路在设置页「AI智能回复」那一行，
-     点进去就是数智员工选择（hvaOpenReply → …），能力没丢，只是首页不再多一个入口。
-   ★ 副行两态各说各的：关着说「不会自动执行」（后果），开着说「今日已工作 N 小时」（读数）。
-     **工作时间与闲置时长不在这行**——它们在右卡，两态都在，不用跟着状态换。
-   ★ 状态词与 CTA 文案是同一件事的两面（关闭中↔开始托管、托管中↔停止托管），别把其中一面改单了。 */
-function hvaHeroC(){
-  return '<div class="hva-hero hva-hero-c">'
-    +'<div class="hva-ca'+(HVA_ON?' on':'')+'">'
-      +'<div class="hva-ca-h"><i class="hva-ca-dot"></i><span class="hva-ca-st">'+(HVA_ON?'托管中':'关闭中')+'</span></div>'
-      +'<div class="hva-ca-sub">'+(HVA_ON?'今日已工作 '+HVA_WORKED+' 小时':'不会自动执行')+'</div>'
-      +hvaHeroArt()
-      +'<button class="hva-cta'+(HVA_ON?' on':'')+'" onclick="hvaToggle()" role="switch" aria-checked="'+(HVA_ON?'true':'false')+'">'
-        +'<span class="tx">'+(HVA_ON?'停止托管':'开始托管')+'</span>'
-        +'<span class="hva-sw" aria-hidden="true"><i></i></span>'
-      +'</button>'
-    +'</div>'
-    +'<div class="hva-cb">'
-      +'<div class="hva-quick">'
-        +'<button class="hva-qk" onclick="go(\'host-ai-set\')" title="设置">'
-          +'<span class="hva-qkcir">'+I('gear',17,2.2)+'</span>'
-          +'<span class="hva-cb-tx">设置<i>›</i></span>'
-        +'</button>'
-      +'</div>'
-      +'<div class="hva-cb-info">'
-        +'<div>工作 '+HVA_WORK+'</div>'
-        +'<div>闲置 '+HVA_IDLE+' 分钟自动执行</div>'
-      +'</div>'
-    +'</div>'
-    +'<span class="hva-sr">'+(HVA_ON?'托管已开启。':'托管已关闭，不会自动执行。')
-      +'工作时间 '+HVA_WORK+' · 闲置 '+HVA_IDLE+' 分钟</span>'
-  +'</div>';
-}
+/* 方案二（并卡）与方案三（两张卡并列）2026-10-27 随「页头布局固定为方案一」一并下线：
+   hvaHeroB／hvaHeroC 两个函数连同它们那批只有自己用的类（.hva-card／.hva-ca-*／.hva-cb*／
+   .hva-card-info 等）都删了。同一份状态仍由上面 hvaHeroHtml 那套读，只是不再有第二种摆法。 */
 /* 清单那一整族的渲染件（hvaQueueCard／hvaSrcTag／hvaTier／hvaPastDue／hvaAdminVisible／
    hvaQueueAll／hvaQueueHtml／hvaAddBtn／hvaGrpHtml／hvaListHtml）随托管清单一起删，见 ADR-0065。
    连带走掉的几条口径（都是"失去读者就删"，同 ADR-0057 的 tag、0058 的 st、0060 的 sm）：
@@ -5783,10 +5575,9 @@ REND['host-ai']=function(){
      从前这一屏还有「托管清单｜工作日志」那道分段器，切栏时 **#hvaPane 这个元素本身不动**、
      只换它的内容，所以滚动位置照旧；现在没有可切的第二栏，那两格仍是分开的两个元素——
      拆了就得让日志跟着头卡一起滚，「头卡钉住」这件事就没了落点。 */
-  /* 头卡舞台的高度跟着排法走：'a' 259（稿子坐标），'b' 133（并卡 108＋上 14＋下 11），
-     'c' 145（两卡 120＋上下各 14 上下 11）。
-     只改 .hva-head 这一处，.hva-hero 自己也有高度——两者同高才不会在日志卡前留一道空当。 */
-  $('hvaHead').className='hva-head'+(HVA_LAYOUT==='b'?' hva-head-b':(HVA_LAYOUT==='c'?' hva-head-c':''));
+  /* 头卡舞台高度＝方案一那套稿子坐标 214（卡底 200.6 ＋ 13.4 缝到日志卡）。
+     .hva-head 与 .hva-hero 同高，才不会在日志卡前留一道空当。 */
+  $('hvaHead').className='hva-head';
   $('hvaHead').innerHTML=hvaHeroHtml();
   /* 回显卡／收起行是**滚动层里的第一件**（不是钉在头卡下面）：头卡已经占了 214 高，
      再往 #hvaHead 里塞一张卡，工作日志就被挤没了；这里跟着日志一起滚。 */
@@ -6055,21 +5846,9 @@ REND['host-ai-set']=function(){
      不再是一条"我加的活"。右侧写值摘要而不是只给个 ›：这一行是"谁来干托管里那些事"的唯一入口，
      不把当前那位说出来，员工得点进去才知道。
      放在首卡（本屏第一眼），照的是线上后台「数智员工托管」那一屏——那边也是先答"选了谁"再答其余。 */
-  /* 页头布局（2026-10-21）：**原型对比用的开关**，不是一条托管设置——只换主页头卡的排法，
-     托管那几项（工作时间／闲置／多开／范围）一个不动，所以它不写进下面的设置卡群，
-     自己一张卡、一句说明讲清「对比用」。放首卡是因为它是本屏唯一的「看东西」入口，
-     垫在范围卡后面得先滚一段才摸得到。
-     两处刻意避开：**不用 .hva-cell**——设置页首行是「AI智能回复」，冒烟按 .hva-cell 认那一行；
-     **不用 .tk-seg**——冒烟按 #hvaSetBody 里 .tk-seg button 的枚数核对闲置时长那三档。 */
-  h+='<div class="hva-form"><div class="hva-form-h">页头布局</div>'
-    +'<div class="hva-txt">原型对比用：切换 AI托管 主页头卡的三套排法，托管设置不受影响</div>'
-    +'<div class="hva-segpad"><div class="hva-layseg">'
-    +'<button class="'+(HVA_LAYOUT==='a'?'on':'')+'" onclick="hvaLayout(\'a\')"><b>方案一</b><small>形象居中</small></button>'
-    +'<button class="'+(HVA_LAYOUT==='b'?'on':'')+'" onclick="hvaLayout(\'b\')"><b>方案二</b><small>并成一张</small></button>'
-    +'<button class="'+(HVA_LAYOUT==='c'?'on':'')+'" onclick="hvaLayout(\'c\')"><b>方案三</b><small>两卡并列</small></button>'
-    +'</div></div></div>';
-  /* 托管回显（2026-10-26 原型对比）：A/B/C/D 四版 + 空态模拟，跟上面的页头布局同一类卡——
-     原型对比用，不是托管设置；同样避开 .hva-cell 与 .tk-seg（理由见上面那张卡的注释）。 */
+  /* 托管回显（2026-10-26 原型对比）：A/B/C/D 四版 + 空态模拟，原型对比用，不是托管设置。
+     刻意避开 **.hva-cell**（设置页首行是「AI智能回复」，冒烟按 .hva-cell 认那一行）
+     与 **.tk-seg**（冒烟按 #hvaSetBody 里 .tk-seg button 的枚数核对闲置时长那三档）。 */
   h+='<div class="hva-form"><div class="hva-form-h">托管回显</div>'
     +'<div class="hva-txt">原型对比用：主页用哪种方式告诉员工「托管开启后手机会做什么」；只影响主页表达，不改托管设置</div>'
     +'<div class="hva-segpad"><div class="hva-layseg">'
@@ -6133,7 +5912,7 @@ REND['host-ai-set']=function(){
      返回用页头左侧箭头。 */
   $('hvaSetBody').innerHTML=h;
 };
-/* 闲置时长改完，设置页与主页一起重画：2026-10-21 起主页右卡也写着这枚值（方案三），
+/* 闲置时长改完，设置页与主页一起重画：主页头卡上也写着这枚值（方案一 c2 那行），
    只画设置页就会出现「设置里 15 分钟、主页还写着 10 分钟」——同 hvaIdle 上面那段「两处各存一份」的反面。 */
 function hvaIdle(v){ HVA_IDLE=v; REND['host-ai-set'](); REND['host-ai'](); }
 
