@@ -15490,6 +15490,32 @@ function initQf(){
   btn.addEventListener('click',function(e){e.preventDefault();openPick(function(m){apply(m)},picked?picked.id:null)});
   tempBtn.addEventListener('click',function(e){e.preventDefault();apply(null)});
   setPrimary(btn,false);setPrimary(tempBtn,true);
+  /* 现网「发送类型」只有群发助手／搜索发送，这里补第三枚「文件传输助手转发」。
+     克隆同组未选中的那枚，选中态仍归 REA_FX 按整组 .ant-radio-wrapper 翻转，
+     不另写点击逻辑（见 群发任务-发送类型与提速-PRD §3.1、§8）。 */
+  (function(){
+    var lab=findLabel('发送类型');if(!lab)return;
+    var row=upClass(lab,'_form_input_');if(!row)return;
+    var grp=row.querySelector('.ant-radio-group');if(!grp)return;
+    if(grp.querySelector('[data-rea-sendtype="file_transfer"]'))return;
+    var wraps=grp.querySelectorAll('.ant-radio-wrapper'),tpl=wraps[wraps.length-1];
+    if(!tpl)return;
+    var nb=tpl.cloneNode(true);
+    nb.setAttribute('data-rea-sendtype','file_transfer');
+    nb.classList.remove('ant-radio-wrapper-checked');
+    var inp=nb.querySelector('input');
+    if(inp){inp.checked=false;inp.removeAttribute('checked');inp.value='3';}
+    var dot=nb.querySelector('.ant-radio');if(dot)dot.classList.remove('ant-radio-checked');
+    var txt=nb.querySelector('.ant-radio-label');if(txt)txt.textContent='文件传输助手转发';
+    grp.appendChild(nb);
+    var hint=document.createElement('div');
+    hint.className='rea-wxt-hintline';
+    hint.style.display='none';
+    hint.textContent='先把内容发到文件传输助手，再按批转发；每批最多 9 个好友。适合小批量、指定标签，或群发助手发不了的内容。';
+    grp.parentNode.appendChild(hint);
+    function sync(){hint.style.display=(inp&&inp.checked)?'':'none'}
+    grp.addEventListener('click',function(){setTimeout(sync,0)});
+  })();
 }
 
 /* ---------- 群发群组 · 新建（快照里没有表单，这一页整页另造） ---------- */
@@ -15528,6 +15554,10 @@ function initQs(){
   form.innerHTML=
     frow('任务名称',1,'<input type="text" class="ant-input css-vgijab ant-input-outlined rea-wxt-inp" id="rea-wxt-name" placeholder="请输入任务名称">')
     +frow('执行人员',1,'<input type="text" class="ant-input css-vgijab ant-input-outlined rea-wxt-inp" id="rea-wxt-exec" placeholder="请选择组织架构">')
+    +frow('发送类型',1,'<div class="ant-radio-group ant-radio-group-outline css-vgijab">'
+        +radio('rea-wxt-sendtype','per_group','逐群发送',true)+radio('rea-wxt-sendtype','file_transfer','文件传输助手转发',false)
+        +'</div>'
+        +'<div class="rea-wxt-hintline rea-wxt-sthint" style="display:none">先把内容发到文件传输助手，再按批转发；每批最多 9 个群。建议把「群发哪些群」写成能覆盖一批的群名关键词。</div>')
     +frow('任务内容',1,'<div class="rea-wxt-src">'
         +'<button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined rea-wxt-srcbtn">从素材库选择</button>'
         +'<button type="button" class="ant-btn css-vgijab ant-btn-primary ant-btn-color-primary ant-btn-variant-solid rea-wxt-tempbtn">临时创建</button></div>'
@@ -15577,6 +15607,17 @@ function initQs(){
       },0);
     });
   });
+  /* 发送类型：选「文件传输助手转发」才露出说明。同上，radio 的翻转归 REA_FX，异步读。
+     两页同口径，见 群发任务-发送类型与提速-PRD §3.2、§8。 */
+  var stHint=q('.rea-wxt-sthint',form);
+  if(stHint){
+    form.addEventListener('click',function(){
+      setTimeout(function(){
+        var on=q('input[name="rea-wxt-sendtype"]:checked',form);
+        stHint.style.display=(on&&on.value==='file_transfer')?'':'none';
+      },0);
+    });
+  }
   function setErr(el,msg){
     var ctl=el.closest('.rea-wxt-fctl');
     var e=ctl?ctl.querySelector('.rea-wxt-ferr'):null;
