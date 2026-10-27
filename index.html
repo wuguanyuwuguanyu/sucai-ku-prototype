@@ -9883,9 +9883,8 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
         </div>
     </div>
     <span class="rea-bd-custom" aria-disabled="true" title="演示数据未接入">自定义区间</span>
-    <span class="rea-bd-links">
-      <a href="#" data-bd-tasks>任务列表<span class="rea-bd-chev" aria-hidden="true">›</span></a>
-    </span>
+    <!-- 右边不再挂「任务列表 ›」：全量逐条任务改由「完成情况」卡部门视图右下角的「查看全部」进，
+         一个入口一个去处——筛选栏只留时间窗与自定义区间（PRD §2.1）。 -->
   </div>
 
   <!-- 卡片网格：上「健康度｜趋势」、中「部门｜员工」、下「群发回复｜配置资产」。
@@ -9980,35 +9979,22 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
         </div>
         <span class="rea-bd-cmp-tools">
           <span class="th rea-bd-sort" id="rea-bd-org-sort" role="button" tabindex="0" data-bd-org-sort="1" title="按完成率降序（点一下改升序）">完成率<i>↓</i></span>
-          <div class="ant-radio-group ant-radio-group-solid css-vgijab rea-bd-window" id="rea-bd-ld-sort" hidden>
-          <div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small">
-            <div class="ant-space-item">
-              <label class="ant-radio-button-wrapper ant-radio-button-wrapper-checked css-vgijab" data-bd-ld-sort="done">
-                <span class="ant-radio-button ant-radio-button-checked"><input name="rea-bd-ld-sort" class="ant-radio-button-input" type="radio" value="done" checked=""><span class="ant-radio-button-inner"></span></span>
-                <span class="ant-radio-button-label">完成人次</span>
-              </label>
-            </div>
-            <div class="ant-space-item">
-              <label class="ant-radio-button-wrapper css-vgijab" data-bd-ld-sort="rate">
-                <span class="ant-radio-button"><input name="rea-bd-ld-sort" class="ant-radio-button-input" type="radio" value="rate"><span class="ant-radio-button-inner"></span></span>
-                <span class="ant-radio-button-label">完成率</span>
-              </label>
-            </div>
-          </div>
-          </div>
-          <span class="rea-bd-links" id="rea-bd-ld-all" hidden>
-            <a href="#" data-bd-rank-all>查看全部<span class="rea-bd-chev" aria-hidden="true">›</span></a>
-          </span>
         </span>
       </div>
       <div class="rea-bd-cmp-body">
         <div class="rea-bd-cmp-pane" data-cmp-pane="org">
           <div class="rea-bd-org" id="rea-bd-org"></div>
-          <div class="rea-bd-org-foot" id="rea-bd-org-foot"></div>
+          <div class="rea-bd-org-foot" id="rea-bd-org-foot">
+            <span id="rea-bd-org-foot-text"></span>
+            <span class="rea-bd-links"><a href="#" data-bd-org-all>查看全部<span class="rea-bd-chev" aria-hidden="true">›</span></a></span>
+          </div>
         </div>
         <div class="rea-bd-cmp-pane" data-cmp-pane="ld" hidden>
           <div class="rea-bd-ld" id="rea-bd-ld-body"></div>
-          <div class="rea-bd-ld-note" id="rea-bd-ld-note" hidden>完成率 = 已执行 ÷ 应执行；应执行 1 人次的 100% 与 6 人次的 100% 不是一回事，请连同分母一起看。</div>
+          <div class="rea-bd-ld-foot">
+            <div class="rea-bd-ld-note" id="rea-bd-ld-note" hidden>完成率 = 已执行 ÷ 应执行；应执行 1 人次的 100% 与 6 人次的 100% 不是一回事，请连同分母一起看。</div>
+            <span class="rea-bd-links"><a href="#" data-bd-rank-all>查看全部<span class="rea-bd-chev" aria-hidden="true">›</span></a></span>
+          </div>
         </div>
       </div>
     </div>
@@ -11568,7 +11554,7 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-org-bar>i{display:block;height:100%;border-radius:4px;background:#1677FF;transition:width .2s ease}
 .rea-bd-org-row .rate{flex:0 0 52px;text-align:right;color:#1F2329;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums}
 .rea-bd-org-row .qty{flex:0 0 64px;text-align:right;color:#8F959E;font-size:12px;white-space:nowrap;font-variant-numeric:tabular-nums}
-.rea-bd-org-foot{margin-top:10px;padding-top:10px;border-top:1px solid #F0F2F5;color:#8F959E;font-size:12px}
+.rea-bd-org-foot{display:flex;align-items:center;gap:12px;margin-top:10px;padding-top:10px;border-top:1px solid #F0F2F5;color:#8F959E;font-size:12px}
 
 /* ---------- 小节标题 ---------- */
 .rea-bd-filters{padding-top:16px}
@@ -11694,6 +11680,11 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-ld{display:flex;flex:1 1 auto;flex-direction:column;justify-content:center}
 .rea-bd-ld-head,.rea-bd-ld-row{display:flex;align-items:center;gap:12px;padding:0 8px;margin:0 -8px}
 .rea-bd-ld-head{min-height:30px;color:#8F959E;font-size:12px;border-bottom:1px solid #F0F2F5}
+/* 员工面的两枚列头可点：与卡头那枚「完成率」同一套观感（灰字＋箭头，悬停变蓝） */
+.rea-bd-ld-head .rea-bd-sort{display:inline-flex;align-items:center;justify-content:flex-end;gap:3px;cursor:pointer;user-select:none;-webkit-user-select:none}
+.rea-bd-ld-head .rea-bd-sort i{font-style:normal;font-size:11px;line-height:1}
+.rea-bd-ld-head .rea-bd-sort:hover{color:#1677FF}
+.rea-bd-ld-head .rea-bd-sort:focus-visible{outline:2px solid #4096FF;outline-offset:2px;border-radius:3px}
 .rea-bd-ld-head .rate{color:#8F959E;font-size:12px;font-weight:400;text-align:right}
 .rea-bd-ld-row{min-height:48px;border-top:1px solid #F7F8FA;border-radius:6px;cursor:pointer}
 .rea-bd-ld-row:first-of-type{border-top:0}
@@ -11708,6 +11699,8 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-ld .rate{flex:0 0 52px;text-align:right;color:#1F2329;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums}
 .rea-bd-ld .more{flex:0 0 10px;color:#B7BCC4;font-size:15px;line-height:1;text-align:right}
 .rea-bd-ld-row:hover .more{color:#1677FF}
+.rea-bd-ld-foot{display:flex;align-items:flex-end;gap:12px;margin-top:10px;padding-top:10px;border-top:1px solid #F0F2F5}
+.rea-bd-ld-foot .rea-bd-ld-note{flex:1 1 auto;margin-top:0;color:#8F959E;font-size:12px;line-height:1.6}
 .rea-bd-ld-note{margin-top:10px;color:#8F959E;font-size:12px;line-height:1.6}
 .rea-bd-ld-note[hidden]{display:none}
 .rea-bd-ld-empty{padding:24px 12px;color:#8F959E;font-size:12px}
@@ -12087,7 +12080,9 @@ window.addEventListener("resize",function(){
   function reaLdJs(){
     return `
 /* ---- 员工完成情况（人次） ---- */
-var LDSORT="done";
+/* 员工面的排序与部门面同一个交互：表头「完成」「完成率」各是一枚列头，
+   点没选中的那枚＝按它排（默认降序），点已选中的那枚＝翻方向，箭头跟着走。 */
+var LDSORT="done", LDDIR=-1;
 /* 窗口里谁参与过——排行要的是 assignees，不是 DOM 行。 */
 function ldRows(w){
   var all=dumpRows(),out=[],i;
@@ -12125,33 +12120,36 @@ function rateKey(p){
 }
 /* 排序键与名次键分开：名次只认主指标（完成人次或完成率），并列就同名次；
    其余键只决定同一名次里谁先显示，不改变名次。 */
-function ldOrder(ps,m){
-  var out=ps.slice();
+/* dir 只翻**主指标**；次指标（逾期、应执行、名册序）固定，翻面后同一名次里
+   谁先显示不跟着倒过来——与部门面翻「完成率」同理。 */
+function ldOrder(ps,m,dir){
+  var out=ps.slice(),g=dir||-1;
   out.sort(function(x,y){
     if(m==="rate"){
-      var c=ldCmp(y,x);if(c)return c;
+      var c=ldCmp(y,x)*g;if(c)return c;
       if(y.need!==x.need)return y.need-x.need;
       if(y.done!==x.done)return y.done-x.done;
       if(x.over!==y.over)return x.over-y.over;
       return x.idx-y.idx;
     }
-    if(y.done!==x.done)return y.done-x.done;
+    if(y.done!==x.done)return (y.done-x.done)*g;
     if(x.over!==y.over)return x.over-y.over;
     if(y.need!==x.need)return y.need-x.need;
     return x.idx-y.idx;
   });
   return out;
 }
-/* 密集名次：只数「有几个**不同**的主指标值比它高」，不是数几个人比它高。 */
-function ldRanks(ps,m){
-  var r={},i,j,seen,cnt,key;
+/* 密集名次：只数「有几个**不同**的主指标值比它高」，不是数几个人比它高。
+   升序时「更高」变成「更低」：dir 一并传进来，名次跟着方向重算。 */
+function ldRanks(ps,m,dir){
+  var r={},i,j,seen,cnt,key,g=dir||-1;
   for(i=0;i<ps.length;i++){
     seen={};cnt=0;
     for(j=0;j<ps.length;j++){
       if(j===i)continue;
       if(m==="rate"){
-        if(ldCmp(ps[j],ps[i])>0){key=rateKey(ps[j]);if(!seen[key]){seen[key]=1;cnt++}}
-      } else if(ps[j].done>ps[i].done){
+        if(ldCmp(ps[j],ps[i])*g>0){key=rateKey(ps[j]);if(!seen[key]){seen[key]=1;cnt++}}
+      } else if((ps[j].done-ps[i].done)*g>0){
         key=ps[j].done;if(!seen[key]){seen[key]=1;cnt++}
       }
     }
@@ -12166,8 +12164,17 @@ function ldCheck(ps,t){
   if(pn!==t.need)bad("排行按人合计的应执行 "+pn+" ≠ 窗口按任务合计的应执行 "+t.need);
   if(po!==t.over)bad("排行按人合计的逾期 "+po+" ≠ 窗口按任务合计的逾期 "+t.over);
 }
+/* 列头：和部门面那枚「完成率」同一套交互——选中的那枚带方向箭头，
+   点它翻面；没选中的那枚不带箭头，点它＝换按它排（回到降序）。 */
+function ldSortCell(cls,key,label,tip){
+  var on=LDSORT===key;
+  return '<span class="'+cls+' rea-bd-sort'+(on?' is-on':'')+'" role="button" tabindex="0"'
+    +' data-bd-ld-sortby="'+key+'"'
+    +' title="'+tip+'；'+(on?"点一下改"+(LDDIR<0?"升序":"降序"):"点一下按它排")+'">'
+    +label+(on?'<i>'+(LDDIR<0?"↓":"↑")+'</i>':'')+'</span>';
+}
 function renderLd(w){
-  var t=tally(winRows(w)),ps=peopleOf(ldRows(w)),sorted=ldOrder(ps,LDSORT),ranks=ldRanks(ps,LDSORT);
+  var t=tally(winRows(w)),ps=peopleOf(ldRows(w)),sorted=ldOrder(ps,LDSORT,LDDIR),ranks=ldRanks(ps,LDSORT,LDDIR);
   var box=document.getElementById("rea-bd-ld-body"),note=document.getElementById("rea-bd-ld-note");
   if(note)note.hidden=LDSORT!=="rate";
   if(!box)return;
@@ -12176,8 +12183,8 @@ function renderLd(w){
     h+='<div class="rea-bd-ld-head">'
       +'<span class="rk">名次</span>'
       +'<span class="nm">员工</span>'
-      +'<span class="qty" title="完成 / 应执行（单位：人次）">完成</span>'
-      +'<span class="rate">完成率</span>'
+      +ldSortCell("qty","done","完成","完成 / 应执行（单位：人次）")
+      +ldSortCell("rate","rate","完成率","完成率 ＝ 已执行 ÷ 应执行")
       +'<span class="more"></span>'
       +'</div>';
     for(i=0;i<sorted.length&&i<5;i++){
@@ -12196,33 +12203,18 @@ function renderLd(w){
   box.innerHTML=h;
   ldCheck(ps,t);
 }
-function setLdSortUi(){
-  var ls=document.querySelectorAll("[data-bd-ld-sort]"),i,on,b,r;
-  for(i=0;i<ls.length;i++){
-    on=ls[i].getAttribute("data-bd-ld-sort")===LDSORT;
-    ls[i].classList.toggle("ant-radio-button-wrapper-checked",on);
-    b=ls[i].querySelector(".ant-radio-button");if(b)b.classList.toggle("ant-radio-button-checked",on);
-    r=ls[i].querySelector("input");if(r)r.checked=on;
-  }
-}
-/* 捕获阶段拦掉 REA_FX 对单选钮的默认切换，排序状态由这里说了算。 */
-var lsg=document.getElementById("rea-bd-ld-sort");
-if(lsg)lsg.addEventListener("click",function(e){
-  var n=e.target,id=null;
-  while(n&&n!==lsg&&n.nodeType===1){
-    if(n.getAttribute&&n.getAttribute("data-bd-ld-sort")){id=n.getAttribute("data-bd-ld-sort");break}
-    n=n.parentNode;
-  }
-  if(!id)return;
-  e.preventDefault();e.stopPropagation();
-  if(id===LDSORT)return;
-  LDSORT=id;setLdSortUi();renderLd(CURW);
-},true);
-/* 点一行 → 执行人明细的排行模式，并展开这个人。 */
+/* 列头与行共用一个委托：列头换排序（含翻面），行去执行人明细。 */
 var ldb=document.getElementById("rea-bd-ld-body");
 if(ldb)ldb.addEventListener("click",function(e){
   var n=e.target;
   while(n&&n!==ldb&&n.nodeType===1){
+    if(n.getAttribute&&n.getAttribute("data-bd-ld-sortby")){
+      e.preventDefault();
+      var k=n.getAttribute("data-bd-ld-sortby");
+      if(k===LDSORT)LDDIR=-LDDIR;else{LDSORT=k;LDDIR=-1;}
+      renderLd(CURW);
+      return;
+    }
     if(n.getAttribute&&n.getAttribute("data-bd-ld-person")){
       e.preventDefault();
       parent.postMessage({reaPage:${reaJson(REA_DETAIL_TASK)},reaWin:CURW,reaRows:dumpRows(),reaSort:LDSORT,reaFocus:n.getAttribute("data-bd-ld-person")},"*");
@@ -12234,7 +12226,7 @@ if(ldb)ldb.addEventListener("click",function(e){
 if(ldb)ldb.addEventListener("keydown",function(e){
   if(e.key!=="Enter"&&e.key!==" ")return;
   var n=e.target;
-  if(n&&n.getAttribute&&n.getAttribute("data-bd-ld-person")){e.preventDefault();n.click();}
+  if(n&&n.getAttribute&&(n.getAttribute("data-bd-ld-person")||n.getAttribute("data-bd-ld-sortby"))){e.preventDefault();n.click();}
 });
 /* 「查看全部」→ 执行人明细的排行榜（当前排序、不预展开）。 */
 var las=document.querySelectorAll("[data-bd-rank-all]");
@@ -12242,7 +12234,6 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
   e.preventDefault();
   parent.postMessage({reaPage:${reaJson(REA_DETAIL_TASK)},reaWin:CURW,reaRows:dumpRows(),reaSort:LDSORT},"*");
 });
-setLdSortUi();
 `;
   }
 
@@ -12486,7 +12477,7 @@ setLdSortUi();
     '  return out;',
     '}',
     'function renderOrg(w){',
-    '  var list=deptList(w),box=document.getElementById("rea-bd-org"),foot=document.getElementById("rea-bd-org-foot");',
+    '  var list=deptList(w),box=document.getElementById("rea-bd-org"),foot=document.getElementById("rea-bd-org-foot-text");',
     '  var h="",i,r,sum=0,grid=document.getElementById("rea-bd-grid");',
     '  /* 叶子部门：当前范围没有下级部门，部门之间无从比较——整卡不出、网格重排（PRD §2.4）。',
     '     这里判的是范围里有没有部门，不是这一窗有没有数：窗口里 0 人次仍要留一行「—」。 */',
@@ -12545,6 +12536,13 @@ setLdSortUi();
     '  e.preventDefault();e.stopPropagation();',
     '  ORGDIR=-ORGDIR;renderOrg(CURW);',
     '  var o=document.getElementById("rea-bd-org");if(o)o.scrollTop=0;',
+    '});',
+    '/* 部门视图右下角的「查看全部」：进任务列表看全量逐条任务，不带任何筛选。',
+    '   页顶筛选栏那枚「任务列表 ›」撤掉后，看全部任务就从这里进（PRD §2.1）。 */',
+    'var oa=document.querySelectorAll("[data-bd-org-all]");',
+    'for(var oi=0;oi<oa.length;oi++)oa[oi].addEventListener("click",function(e){',
+    '  e.preventDefault();',
+    '  parent.postMessage({reaPage:' + reaJson(REA_TASKS_PAGE) + ',reaWin:CURW,reaRows:dumpRows()},"*");',
     '});',
     '/* 占比图图例的点击：同样去任务列表，预筛的是**状态**——',
     '   已完成→「已完成」、待完成→「进行中」、逾期未做→「已结束」，',
@@ -12703,8 +12701,7 @@ setLdSortUi();
     '  for(i=0;i<panes.length;i++){p=panes[i];p.hidden=(p.getAttribute("data-cmp-pane")==="org")!==showOrg;}',
     '  var sw=document.getElementById("rea-bd-cmp-switch");if(sw)sw.hidden=!DEPTS.length;',
     '  var os=document.getElementById("rea-bd-org-sort");if(os)os.hidden=!showOrg;',
-    '  var lgs=document.getElementById("rea-bd-ld-sort");if(lgs)lgs.hidden=showOrg;',
-    '  var all=document.getElementById("rea-bd-ld-all");if(all)all.hidden=showOrg;',
+    '  /* 员工面的排序是表头那两枚列头，跟着列表一起换，不在这里显隐。 */',
     '  var ls=document.querySelectorAll("[data-bd-cmp]");',
     '  for(i=0;i<ls.length;i++){',
     '    var on=ls[i].getAttribute("data-bd-cmp")===CMP,b=ls[i].querySelector(".ant-radio-button"),r=ls[i].querySelector("input");',
@@ -12733,11 +12730,6 @@ setLdSortUi();
     'for(var di=0;di<dl.length;di++)dl[di].addEventListener("click",function(e){',
     '  e.preventDefault();',
     '  parent.postMessage({reaPage:' + reaJson(REA_DETAIL_TASK) + ',reaWin:CURW,reaRows:dumpRows()},"*");',
-    '});',
-    'var tl=document.querySelectorAll("[data-bd-tasks]");',
-    'for(var ti=0;ti<tl.length;ti++)tl[ti].addEventListener("click",function(e){',
-    '  e.preventDefault();',
-    '  parent.postMessage({reaPage:' + reaJson(REA_TASKS_PAGE) + ',reaWin:CURW,reaRows:dumpRows()},"*");',
     '});',
     '',
     '/* 换窗口＝换一份数：这一页上所有跟着时间窗走的块一起重画——',
