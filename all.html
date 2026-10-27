@@ -14933,6 +14933,52 @@ tb.addEventListener("click",function(e){
     + '.rea-wxt-pvloc{display:flex;align-items:center;gap:4px;margin-top:8px;font-size:12px;line-height:18px;color:#2e448f}'
     + '.rea-wxt-pvloc svg{flex:none;width:12px;height:12px}';
 
+  /* 批量加好友 · 新建专用样式（2026-10-27「添加群内好友」）。
+     只写新增件：多选标签控件、下拉、模式单选后的值区、间隔数字框；行壳仍 clone 快照现成的行，
+     标签/输入框/间距不重定义。色值全部取自快照已出现过的 #1677ff / #e6f4ff / #d9d9d9 /
+     #f0f0f0 / #fafafa / #999999 / #ff4d4f。 */
+  var REA_BD_CSS = ''
+    + '.rea-bd-wrap{position:relative;max-width:560px}'
+    + '.rea-bd-tagbox{display:flex;align-items:center;flex-wrap:wrap;gap:4px;box-sizing:border-box;'
+    +   'width:100%;min-height:32px;padding:2px 28px 2px 8px;border:1px solid #d9d9d9;border-radius:6px;'
+    +   'background:#fff;cursor:pointer;outline:none}'
+    + '.rea-bd-tagbox:hover{border-color:#4096ff}'
+    + '.rea-bd-wrap.on .rea-bd-tagbox{border-color:#1677ff;box-shadow:0 0 0 2px rgba(5,145,255,.1)}'
+    + '.rea-bd-ph{font-size:14px;line-height:24px;color:#bfbfbf}'
+    + '.rea-bd-chip{display:inline-flex;align-items:center;gap:2px;max-width:220px;height:24px;'
+    +   'padding:0 4px 0 8px;border-radius:4px;background:#f5f5f5;font-size:12px;line-height:24px;color:rgba(0,0,0,.88)}'
+    + '.rea-bd-chip>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
+    + '.rea-bd-chipx{border:0;background:transparent;padding:0 2px;font-size:14px;line-height:16px;color:#999;cursor:pointer}'
+    + '.rea-bd-chipx:hover{color:#ff4d4f}'
+    + '.rea-bd-caret{position:absolute;right:10px;top:9px;font-size:10px;line-height:12px;color:#999;pointer-events:none}'
+    + '.rea-bd-dd{position:absolute;z-index:40;top:calc(100% + 4px);left:0;box-sizing:border-box;width:400px;'
+    +   'max-width:calc(100vw - 32px);padding:8px;border-radius:8px;background:#fff;'
+    +   'box-shadow:0 6px 16px rgba(0,0,0,.12);border:1px solid #f0f0f0}'
+    + '.rea-bd-search input{box-sizing:border-box;width:100%;height:32px;padding:4px 11px;border:1px solid #d9d9d9;'
+    +   'border-radius:6px;font-size:14px;outline:none}'
+    + '.rea-bd-search input:focus{border-color:#1677ff;box-shadow:0 0 0 2px rgba(5,145,255,.1)}'
+    + '.rea-bd-opts{max-height:240px;margin-top:6px;overflow:auto}'
+    + '.rea-bd-opt{display:flex;align-items:center;width:100%;padding:8px 10px;border:0;border-radius:4px;'
+    +   'background:transparent;font-size:14px;line-height:20px;color:rgba(0,0,0,.88);text-align:left;cursor:pointer}'
+    + '.rea-bd-opt:hover{background:#fafafa}'
+    + '.rea-bd-opt.on{background:#e6f4ff;color:#1677ff}'
+    + '.rea-bd-check{flex:none;width:16px;margin-right:6px;font-size:12px;color:#1677ff}'
+    + '.rea-bd-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
+    + '.rea-bd-meta{flex:none;margin-left:8px;font-size:12px;color:#999}'
+    + '.rea-bd-empty{padding:24px 8px;text-align:center;font-size:13px;color:#999}'
+    + '.rea-bd-ft{display:flex;align-items:center;justify-content:space-between;margin-top:6px;padding:6px 4px 0;'
+    +   'border-top:1px solid #f0f0f0;font-size:12px;color:#999}'
+    + '.rea-bd-clear{border:0;background:transparent;padding:0;font-size:12px;color:#1677ff;cursor:pointer}'
+    + '.rea-bd-clear:hover{color:#4096ff}'
+    + '.rea-bd-mode{display:flex;align-items:center;flex-wrap:wrap}'
+    + '.rea-bd-val{margin-top:8px}'
+    + '.rea-bd-inp{max-width:360px}'
+    + '.rea-bd-gap{display:flex;align-items:center;gap:8px;font-size:14px;color:rgba(0,0,0,.88)}'
+    + '.rea-bd-gap .rea-bd-num{width:96px;text-align:center}'
+    + '.rea-bd-hint{margin:6px 0 0;max-width:560px;font-size:12px;line-height:20px;color:#999}'
+    + '.rea-bd-err{display:none;margin:4px 0 0;max-width:560px;font-size:12px;line-height:20px;color:#ff4d4f}'
+    + '.rea-bd-err.on{display:block}';
+
   /* 素材库弹窗的注入脚本（四页共用一份，别各页再抄一遍）。各页只传三枚口径参数：
        tip      弹窗标题下那句说明（各页口径不同，照实说清自己列的是什么）
        moments  是否按朋友圈可发口径过滤（只有发圈 · 新建为 true）
@@ -16132,7 +16178,7 @@ else if(PAGE==='群发群组 · 新建')initQs();
        html  该页正文段的载体块 id（省略＝正文仍用快照那一段，只补交互）
        css   该页专用样式（只在这页注入；未覆盖页拿不到，这是「逐页覆盖」的底线）
        js    该页自己的注入脚本（在 REA_FX **之后**跑，见 reaDoc）
-     十四张覆盖页，按形态分组：
+     十六张覆盖页，按形态分组：
        微小助看板          换稿——正文整段换成 srcBoard，配 REA_BOARD_CSS ＋ reaBoardJs
        微小助看板 · 执行人明细  合成页——页名与 shell 由 reaSynthPages() 克隆看板页得到，正文换 srcBoardTask；
                             补的是现网 board/wxz/task 这条**不在快照里**的路由
@@ -16157,6 +16203,11 @@ else if(PAGE==='群发群组 · 新建')initQs();
                             「添加回复内容」二级弹窗、回复内容表格行与右侧手机预览；
                             「从素材库选择」把一条素材的消息按顺序铺成回复内容行
                             （同一套弹窗，配 REA_PICK_CSS ＋ REA_ZD_CSS）
+       批量加好友 · 新建    补配置——**没有 html**，正文就是快照那一段；添加好友方式补第三项
+                            「添加群内好友」，并补群组名称／昵称筛选／地区筛选／添加间隔四行
+                            （配 REA_BD_CSS）
+       批量加好友 · 详情    只读回显——**没有 html**，正文就是快照那一段；在「任务类型」后补
+                            添加好友方式／群组名称／昵称筛选／地区筛选／添加间隔五行只读值
      没有 html 的页，reaSplice 原样放过；这不是省事，是刻意：正文抄一份进来就成了会过期的副本，
      重抓源目录后静默与线上脱钩，而这一页的正文本来就不该变。 */
 
@@ -16202,6 +16253,410 @@ else if(PAGE==='群发群组 · 新建')initQs();
     + '.rea-xhs-flash{animation:rea-xhs-flash 1.2s ease}'
     + '@keyframes rea-xhs-flash{0%,100%{background:transparent}20%,60%{background:#fff1f0}}';
 
+  /* 批量加好友 · 新建：添加好友方式新增「添加群内好友」（2026-10-27）。
+     正文仍是快照那一页，脚本只补交互与新增件：第三枚单选钮、四行配置（群组名称 / 昵称筛选 /
+     地区筛选 / 添加间隔）、按方式与筛选模式联动显隐、点保存时的演示校验。
+     行位置靠快照的 `_form_input_` 类名定位；重抓后类名若变，找不到行就整体退回，不会硬拼。 */
+  function reaBdJs(){
+    return String.raw`(function(){
+'use strict';
+function norm(s){return String(s==null?'':s).replace(/\s+/g,'')}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+
+var GROUPS=[
+  {id:'g1',name:'北方华创集团及所属公司入职通知群',owner:'张猛',count:397},
+  {id:'g2',name:'客户资源群 · 华东',owner:'李娜',count:186},
+  {id:'g3',name:'客户资源群 · 华南',owner:'王强',count:142},
+  {id:'g4',name:'老客户福利群',owner:'吴静',count:231},
+  {id:'g5',name:'新品体验群',owner:'周杰',count:76},
+  {id:'g6',name:'招商加盟群',owner:'罗鹏',count:64},
+  {id:'g7',name:'行业交流群',owner:'梁雪',count:98},
+  {id:'g8',name:'二组测试号培养互动',owner:'张猛',count:102}
+];
+var REGIONS=['北京','上海','天津','重庆','河北','山西','辽宁','吉林','黑龙江','江苏','浙江','安徽','福建','江西','山东','河南','湖北','湖南','广东','海南','四川','贵州','云南','陕西','甘肃','青海','内蒙古','广西','西藏','宁夏','新疆','香港','澳门','台湾','海外'];
+
+function rowOf(label){
+  var all=document.querySelectorAll('span'),i,n;
+  for(i=0;i<all.length;i++){
+    var sp=all[i];
+    if(sp.children.length)continue;
+    if(norm(sp.textContent)!==label)continue;
+    n=sp;
+    while(n&&n!==document.body){
+      if(n.className&&String(n.className).indexOf('_form_input_')>=0)return n;
+      n=n.parentNode;
+    }
+  }
+  return null;
+}
+var METHOD_ROW=rowOf('添加好友方式');
+if(!METHOD_ROW)return;
+var ROW_NAME=rowOf('任务名称'),ROW_OPT=rowOf('备注名'),
+    PHONE_ROW=rowOf('手机号'),TYPE_ROW=rowOf('类型'),
+    TIP_ROW=METHOD_ROW.nextElementSibling;
+
+function cloneRow(label,required){
+  var tpl=required?ROW_NAME:ROW_OPT;
+  if(!tpl)return null;
+  var row=tpl.cloneNode(true);
+  row.style.cssText='';
+  var lab=row.querySelector('span[class*="_must_"]');
+  if(!lab)return null;
+  lab.textContent=label;
+  lab.style.cssText='';
+  if(required)lab.className=lab.className.replace(/_must_white1_/,'_must_white_');
+  else lab.className=lab.className.replace(/_must_white_/,'_must_white1_');
+  var box=lab.nextElementSibling;
+  if(!box)return null;
+  box.innerHTML='';
+  return {row:row,box:box};
+}
+function setRadio(l,on){
+  l.classList.toggle('ant-radio-wrapper-checked',on);
+  var a=l.querySelector('.ant-radio');
+  if(a)a.classList.toggle('ant-radio-checked',on);
+  var i=l.querySelector('input');
+  if(i){i.checked=on;if(on)i.setAttribute('checked','');else i.removeAttribute('checked');}
+}
+function modeRadios(name,labels,initial){
+  var src=METHOD_ROW.querySelector('.ant-radio-group');
+  var tpls=src?src.querySelectorAll('.ant-radio-wrapper'):[];
+  var tpl=tpls.length>1?tpls[1]:tpls[0];
+  if(!tpl)return null;
+  var g=document.createElement('div');
+  g.className='ant-radio-group ant-radio-group-outline css-vgijab rea-bd-mode';
+  for(var i=0;i<labels.length;i++){
+    var l=tpl.cloneNode(true);
+    l.className='ant-radio-wrapper css-vgijab';
+    var rad=l.querySelector('.ant-radio');
+    if(rad)rad.className='ant-radio ant-wave-target';
+    var inp=l.querySelector('input');
+    if(inp){inp.name=name;inp.value=String(i);inp.checked=false;inp.removeAttribute('checked');}
+    var tx=l.querySelector('.ant-radio-label');
+    if(tx)tx.textContent=labels[i];
+    if(i===initial)setRadio(l,true);
+    g.appendChild(l);
+  }
+  return g;
+}
+/* 快照的 REA_FX 点单选时只挪里面的 .ant-radio-checked 与 input.checked，
+   不维护外层的 .ant-radio-wrapper-checked——所以判断选中一律看里面的圆点，
+   顺手把外层类补齐，免得样式与状态两套。 */
+function syncWrap(g){
+  if(!g)return;
+  var ws=g.querySelectorAll('.ant-radio-wrapper'),i,on;
+  for(i=0;i<ws.length;i++){
+    on=!!ws[i].querySelector('.ant-radio.ant-radio-checked');
+    ws[i].classList.toggle('ant-radio-wrapper-checked',on);
+  }
+}
+function selectedLabel(row){
+  var g=row?row.querySelector('.ant-radio-group'):null;
+  if(!g)return '';
+  syncWrap(g);
+  var w=g.querySelector('.ant-radio-wrapper-checked');
+  var t=w?w.querySelector('.ant-radio-label'):null;
+  return t?norm(t.textContent):'';
+}
+function modeOf(row){
+  return selectedLabel(row)||'不限';
+}
+
+function makePicker(opts){
+  var wrap=document.createElement('div');
+  wrap.className='rea-bd-wrap';
+  var box=document.createElement('div');
+  box.className='rea-bd-tagbox';box.tabIndex=0;
+  box.setAttribute('role','combobox');
+  wrap.appendChild(box);
+  var sel=opts.value?opts.value.slice():[],kw='',dd=null;
+  function byId(id){for(var i=0;i<opts.items.length;i++)if(opts.items[i].id===id)return opts.items[i];return null}
+  function drawBox(){
+    var h='',i,it;
+    if(!sel.length)h+='<span class="rea-bd-ph">'+esc(opts.placeholder)+'</span>';
+    for(i=0;i<sel.length;i++){
+      it=byId(sel[i]);if(!it)continue;
+      h+='<span class="rea-bd-chip"><span>'+esc(it.name)+'</span>'
+        +'<button type="button" class="rea-bd-chipx" data-x="'+esc(it.id)+'" aria-label="移除'+esc(it.name)+'">×</button></span>';
+    }
+    h+='<span class="rea-bd-caret">▾</span>';
+    box.innerHTML=h;
+  }
+  function drawDD(){
+    if(!dd)return;
+    var list=dd.querySelector('.rea-bd-opts'),q=kw.toLowerCase(),items=[],i,it,on,h='';
+    for(i=0;i<opts.items.length;i++){
+      it=opts.items[i];
+      if(q&&it.name.toLowerCase().indexOf(q)<0)continue;
+      items.push(it);
+    }
+    if(!items.length)list.innerHTML='<div class="rea-bd-empty">没有匹配的'+opts.kind+'</div>';
+    else{
+      for(i=0;i<items.length;i++){
+        it=items[i];on=sel.indexOf(it.id)>=0;
+        h+='<button type="button" class="rea-bd-opt'+(on?' on':'')+'" data-id="'+esc(it.id)+'">'
+          +'<span class="rea-bd-check">'+(on?'✓':'')+'</span>'
+          +'<span class="rea-bd-name">'+esc(it.name)+'</span>'
+          +(it.meta?'<span class="rea-bd-meta">'+esc(it.meta)+'</span>':'')+'</button>';
+      }
+      list.innerHTML=h;
+    }
+    var ft=dd.querySelector('.rea-bd-ftn');
+    if(ft)ft.textContent=opts.footer(sel.length);
+    var si=dd.querySelector('.rea-bd-search input');
+    if(si&&si.value!==kw)si.value=kw;
+  }
+  function openDD(){
+    if(dd)return;
+    dd=document.createElement('div');dd.className='rea-bd-dd';
+    dd.innerHTML='<div class="rea-bd-search"><input type="text" placeholder="搜索'+esc(opts.kind)+'" aria-label="搜索'+esc(opts.kind)+'"></div>'
+      +'<div class="rea-bd-opts"></div>'
+      +'<div class="rea-bd-ft"><span class="rea-bd-ftn"></span><button type="button" class="rea-bd-clear">清空</button></div>';
+    wrap.appendChild(dd);wrap.classList.add('on');drawDD();
+    var si=dd.querySelector('.rea-bd-search input');
+    if(si){si.addEventListener('input',function(){kw=si.value.trim();drawDD()});si.focus();}
+  }
+  function closeDD(){
+    if(dd&&dd.parentNode)dd.parentNode.removeChild(dd);
+    dd=null;wrap.classList.remove('on');
+  }
+  box.addEventListener('click',function(e){
+    var x=e.target.closest?e.target.closest('.rea-bd-chipx'):null;
+    if(x){
+      e.preventDefault();e.stopPropagation();
+      var id=x.getAttribute('data-x'),out=[],i;
+      for(i=0;i<sel.length;i++)if(sel[i]!==id)out.push(sel[i]);
+      sel=out;drawBox();drawDD();
+      return;
+    }
+    e.preventDefault();
+    if(dd)closeDD();else openDD();
+  });
+  wrap.addEventListener('click',function(e){
+    var opt=e.target.closest?e.target.closest('.rea-bd-opt'):null;
+    if(opt){
+      /* 必须拦住冒泡：选项列表是 innerHTML 重画的，冒到 document 时 e.target 已经脱离文档，
+         wrap.contains 判 false，会把刚打开的弹层误关掉 */
+      e.preventDefault();e.stopPropagation();
+      var id=opt.getAttribute('data-id'),i=sel.indexOf(id);
+      if(i>=0)sel.splice(i,1);else sel.push(id);
+      drawBox();drawDD();return;
+    }
+    if(e.target.closest&&e.target.closest('.rea-bd-clear')){
+      e.preventDefault();e.stopPropagation();sel=[];drawBox();drawDD();
+    }
+  });
+  document.addEventListener('click',function(e){
+    if(dd&&!wrap.contains(e.target))closeDD();
+  });
+  drawBox();
+  return {el:wrap,get:function(){return sel.slice()},close:closeDD};
+}
+
+function show(el,on){if(el)el.style.display=on?'':'none'}
+function setErr(row,msg){
+  var e=row.querySelector('.rea-bd-err');
+  if(!e)return;
+  e.textContent=msg||'';
+  e.className='rea-bd-err'+(msg?' on':'');
+}
+
+/* ---- 第三枚单选钮 ---- */
+var mg=METHOD_ROW.querySelector('.ant-radio-group');
+var mls=mg?mg.querySelectorAll('.ant-radio-wrapper'):[];
+if(mg&&mls.length>=2){
+  var third=mls[1].cloneNode(true);
+  third.className='ant-radio-wrapper css-vgijab';
+  var thrad=third.querySelector('.ant-radio');
+  if(thrad)thrad.className='ant-radio ant-wave-target';
+  var thin=third.querySelector('input');
+  if(thin){thin.name=mls[0].querySelector('input').name;thin.value='2';thin.checked=false;thin.removeAttribute('checked');}
+  var thtx=third.querySelector('.ant-radio-label');
+  if(thtx)thtx.textContent='添加群内好友';
+  mg.appendChild(third);
+}
+
+/* ---- 四行配置：群组名称 / 昵称筛选 / 地区筛选 / 添加间隔 ---- */
+var gRow=cloneRow('群组名称',true),nRow=cloneRow('昵称筛选',false),
+    rRow=cloneRow('地区筛选',false),iRow=cloneRow('添加间隔',false);
+var anchor=PHONE_ROW||(TIP_ROW&&TIP_ROW.nextElementSibling)||METHOD_ROW.nextSibling;
+[gRow,nRow,rRow,iRow].forEach(function(o){
+  if(!o)return;
+  o.row.style.display='none';
+  if(anchor&&anchor.parentNode)anchor.parentNode.insertBefore(o.row,anchor);
+  else METHOD_ROW.parentNode.appendChild(o.row);
+});
+
+var groupPicker=makePicker({
+  items:GROUPS.map(function(g){return {id:g.id,name:g.name,meta:g.owner+' · '+g.count+' 人'}}),
+  placeholder:'请选择要执行任务的微信群',
+  kind:'群组',
+  footer:function(n){return '已选 '+n+' 个群'}
+});
+if(gRow){
+  gRow.box.appendChild(groupPicker.el);
+  var gh=document.createElement('p');gh.className='rea-bd-hint';
+  gh.textContent='只列出「微信群管理」里状态正常的群；每个群由它的所属员工执行，所选群的所属员工必须在执行人员里。';
+  gRow.box.appendChild(gh);
+  var ge=document.createElement('p');ge.className='rea-bd-err';gRow.box.appendChild(ge);
+}
+
+var nRadios=null,nVal=null,nInput=null;
+if(nRow){
+  nRadios=modeRadios('rea-bd-nick',['不限','只加','不加'],0);
+  if(nRadios)nRow.box.appendChild(nRadios);
+  nVal=document.createElement('div');nVal.className='rea-bd-val';
+  nInput=document.createElement('input');
+  nInput.type='text';nInput.maxLength=60;
+  nInput.className='ant-input css-vgijab ant-input-outlined rea-bd-inp';
+  nInput.placeholder='输入昵称关键词，多个用逗号分隔';
+  nVal.appendChild(nInput);nRow.box.appendChild(nVal);
+  var nh=document.createElement('p');nh.className='rea-bd-hint';
+  nh.textContent='按群里显示的名字匹配（群昵称优先，其次微信昵称）；多个关键词用逗号分隔，命中任一即算。';
+  nRow.box.appendChild(nh);
+  var ne=document.createElement('p');ne.className='rea-bd-err';nRow.box.appendChild(ne);
+}
+
+var rRadios=null,rVal=null,regionPicker=null;
+if(rRow){
+  rRadios=modeRadios('rea-bd-region',['不限','只加','不加'],0);
+  if(rRadios)rRow.box.appendChild(rRadios);
+  rVal=document.createElement('div');rVal.className='rea-bd-val';
+  regionPicker=makePicker({
+    items:REGIONS.map(function(n){return {id:n,name:n}}),
+    placeholder:'请选择地区（可多选）',
+    kind:'地区',
+    footer:function(n){return '已选 '+n+' 个地区'}
+  });
+  rVal.appendChild(regionPicker.el);rRow.box.appendChild(rVal);
+  var rh=document.createElement('p');rh.className='rea-bd-hint';
+  rh.textContent='按成员资料页的地区匹配；资料未填地区时，「只加」跳过、「不加」保留。';
+  rRow.box.appendChild(rh);
+  var re=document.createElement('p');re.className='rea-bd-err';rRow.box.appendChild(re);
+}
+
+var gmin=null,gmax=null;
+if(iRow){
+  var gap=document.createElement('div');gap.className='rea-bd-gap';
+  gmin=document.createElement('input');gmin.type='number';gmin.min='30';gmin.max='600';gmin.value='60';
+  gmin.className='ant-input css-vgijab ant-input-outlined rea-bd-num';
+  gmin.setAttribute('aria-label','最短间隔（秒）');
+  var dash=document.createElement('span');dash.textContent='—';
+  gmax=document.createElement('input');gmax.type='number';gmax.min='30';gmax.max='600';gmax.value='120';
+  gmax.className='ant-input css-vgijab ant-input-outlined rea-bd-num';
+  gmax.setAttribute('aria-label','最长间隔（秒）');
+  var sec=document.createElement('span');sec.textContent='秒';
+  gap.appendChild(gmin);gap.appendChild(dash);gap.appendChild(gmax);gap.appendChild(sec);
+  iRow.box.appendChild(gap);
+  var ih=document.createElement('p');ih.className='rea-bd-hint';
+  ih.textContent='每条好友申请之间随机等待；建议不低于 60 秒，间隔越短越容易被微信限制。';
+  iRow.box.appendChild(ih);
+  var ie=document.createElement('p');ie.className='rea-bd-err';iRow.box.appendChild(ie);
+}
+
+function isGroup(){
+  return selectedLabel(METHOD_ROW)==='添加群内好友';
+}
+var phoneDisp=PHONE_ROW?PHONE_ROW.style.display:'',typeDisp=TYPE_ROW?TYPE_ROW.style.display:'';
+function syncMethod(){
+  var g=isGroup();
+  if(gRow)show(gRow.row,g);
+  if(nRow)show(nRow.row,g);
+  if(rRow)show(rRow.row,g);
+  if(iRow)show(iRow.row,g);
+  if(PHONE_ROW)PHONE_ROW.style.display=g?'none':phoneDisp;
+  if(TYPE_ROW)TYPE_ROW.style.display=g?'none':typeDisp;
+}
+function syncModes(){
+  if(nRow)show(nVal,modeOf(nRow.row)!=='不限');
+  if(rRow)show(rVal,modeOf(rRow.row)!=='不限');
+}
+syncMethod();syncModes();
+document.addEventListener('click',function(e){
+  if(METHOD_ROW.contains(e.target)&&e.target.closest&&e.target.closest('.ant-radio-wrapper'))setTimeout(syncMethod,0);
+  if((nRow&&nRow.row.contains(e.target)||rRow&&rRow.row.contains(e.target))
+     &&e.target.closest&&e.target.closest('.ant-radio-wrapper'))setTimeout(syncModes,0);
+},false);
+
+function toast(t){
+  var w=document.createElement('div');
+  w.className='ant-message css-mncuj7';
+  w.innerHTML='<div class="ant-message-notice-wrapper"><div class="ant-message-notice">'
+    +'<div class="ant-message-notice-content"><div class="ant-message-custom-content ant-message-info"><span></span></div></div>'
+    +'</div></div>';
+  w.querySelector('span').textContent=t;
+  document.body.appendChild(w);
+  setTimeout(function(){if(w.parentNode)w.parentNode.removeChild(w)},2400);
+}
+function back(){parent.postMessage({reaPage:'批量加好友'},'*')}
+function validate(){
+  if(gRow)setErr(gRow.row,'');
+  if(nRow)setErr(nRow.row,'');
+  if(rRow)setErr(rRow.row,'');
+  if(iRow)setErr(iRow.row,'');
+  var ok=true;
+  if(gRow&&!groupPicker.get().length){setErr(gRow.row,'请至少选择一个群');ok=false}
+  if(nRow&&modeOf(nRow.row)!=='不限'&&!nInput.value.replace(/\s+/g,'')){setErr(nRow.row,'请填写昵称关键词');ok=false}
+  if(rRow&&modeOf(rRow.row)!=='不限'&&!regionPicker.get().length){setErr(rRow.row,'请选择地区');ok=false}
+  if(iRow){
+    var a=Number(gmin.value),b=Number(gmax.value);
+    if(!isFinite(a)||!isFinite(b)||Math.floor(a)!==a||Math.floor(b)!==b||a<30||b>600||a>b){
+      setErr(iRow.row,'间隔需为整数秒，30 ≤ 最短 ≤ 最长 ≤ 600');ok=false;
+    }
+  }
+  return ok;
+}
+var btns=document.querySelectorAll('button.ant-btn');
+for(var k=0;k<btns.length;k++){
+  var bt=norm(btns[k].textContent);
+  if(bt==='取消')btns[k].addEventListener('click',function(e){e.preventDefault();back()});
+  if(bt==='保存')btns[k].addEventListener('click',function(e){
+    if(!isGroup())return;
+    e.preventDefault();
+    if(!validate()){
+      var bad=document.querySelector('.rea-bd-err.on');
+      if(bad&&bad.scrollIntoView){try{bad.scrollIntoView({block:'center',behavior:'smooth'})}catch(_){}}
+      toast('请先补全群内好友配置');
+      return;
+    }
+    toast('批量加好友任务已保存（演示）');
+    setTimeout(back,900);
+  });
+}
+})();`;
+  }
+
+  /* 批量加好友 · 详情：补只读回显（2026-10-27）。
+     快照里的演示任务都是手动输入口径，新增行按「不涉及 / 未配置」回显；
+     拿到真实任务数据后，这里换成读任务字段即可，行序与详情页其它字段保持一致。 */
+  function reaBdDetailJs(){
+    return String.raw`(function(){
+'use strict';
+function norm(s){return String(s==null?'':s).replace(/\s+/g,'')}
+var ps=document.querySelectorAll('p'),anchor=null,i;
+for(i=0;i<ps.length;i++){
+  if(norm(ps[i].textContent).indexOf('任务类型：')===0){anchor=ps[i];break}
+}
+if(!anchor||!anchor.parentNode)return;
+var rows=[
+  ['添加好友方式','手动输入'],
+  ['群组名称','—（手动输入方式不涉及）'],
+  ['昵称筛选','—（手动输入方式不涉及）'],
+  ['地区筛选','—（手动输入方式不涉及）'],
+  ['添加间隔','—（该版本未配置）']
+];
+var ref=anchor;
+for(i=0;i<rows.length;i++){
+  var p=document.createElement('p');
+  var a=document.createElement('span');a.textContent=rows[i][0]+'：';
+  var b=document.createElement('span');b.textContent=rows[i][1];
+  p.appendChild(a);p.appendChild(b);
+  ref.parentNode.insertBefore(p,ref.nextSibling);
+  ref=p;
+}
+})();`;
+  }
+
   var REA_COVER = {
     '微小助看板':    { html: 'srcBoard', css: REA_BOARD_CSS, js: reaBoardJs },
     '微小助看板 · 任务列表': { html: 'srcBoardTasks', css: REA_BOARD_CSS, js: reaBoardTasksJs },
@@ -16218,7 +16673,10 @@ else if(PAGE==='群发群组 · 新建')initQs();
     '群发好友 · 新建': { css: REA_WXT_CSS, js: function(){ return reaWxtJs('群发好友 · 新建'); } },
     '群发群组 · 新建': { css: REA_WXT_CSS, js: function(){ return reaWxtJs('群发群组 · 新建'); } },
     /* 自动打招呼 · 新建：欢迎语模版的「添加回复内容」流（2026-10-23） */
-    '自动打招呼 · 新建': { css: REA_PICK_CSS + REA_ZD_CSS, js: reaZdJs }
+    '自动打招呼 · 新建': { css: REA_PICK_CSS + REA_ZD_CSS, js: reaZdJs },
+    /* 批量加好友（2026-10-27）：新建页补「添加群内好友」与四行配置；详情页补只读回显 */
+    '批量加好友 · 新建': { css: REA_BD_CSS, js: reaBdJs },
+    '批量加好友 · 详情': { js: reaBdDetailJs }
   };
 
   /* 把被覆盖页的正文区（contentStart..contentEnd，构建脚本给出的那道缝）换成它登记表里那个载体的内容。
