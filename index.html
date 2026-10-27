@@ -9979,6 +9979,10 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
         </div>
         <span class="rea-bd-cmp-tools">
           <span class="th rea-bd-sort" id="rea-bd-org-sort" role="button" tabindex="0" data-bd-org-sort="1" title="按完成率降序（点一下改升序）">完成率<i>↓</i></span>
+          <span class="rea-bd-ld-tools" id="rea-bd-ld-tools" hidden>
+            <span class="th rea-bd-sort is-on" role="button" tabindex="0" data-bd-ld-sortby="done" title="按完成降序（点一下改升序）">完成<i>↓</i></span>
+            <span class="th rea-bd-sort" role="button" tabindex="0" data-bd-ld-sortby="rate" title="按完成率排（点一下切过来）">完成率</span>
+          </span>
         </span>
       </div>
       <div class="rea-bd-cmp-body">
@@ -11417,6 +11421,10 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-ch .th.rea-bd-sort i{font-style:normal;font-size:11px;line-height:1}
 .rea-bd-ch .th.rea-bd-sort:hover{color:#1677FF}
 .rea-bd-ch .th.rea-bd-sort:focus-visible{outline:2px solid #4096FF;outline-offset:2px;border-radius:3px}
+/* 员工视图的排序也停在卡头右端：两枚列名并排，选中的那枚带方向箭头、字色加深 */
+.rea-bd-ld-tools{display:inline-flex;align-items:center;gap:14px}
+.rea-bd-ld-tools[hidden]{display:none}
+.rea-bd-cmp-tools .rea-bd-sort.is-on{color:#1F2329}
 /* 两张趋势图的按日／按周也停在卡头右端（与「员工完成情况」的排序控件同一位置），
    不再掉到标题下面单占一行——卡头一行说清"这是什么 ＋ 怎么切"。 */
 .rea-bd-ch>.rea-tr-win,.rea-bd-ch>.rea-qft-win{margin-left:auto}
@@ -11678,15 +11686,7 @@ body .subapp{background:#F6F8FB!important}
 
 /* ---------- 员工完成情况 ---------- */
 .rea-bd-ld{display:flex;flex:1 1 auto;flex-direction:column;justify-content:center}
-.rea-bd-ld-head,.rea-bd-ld-row{display:flex;align-items:center;gap:12px;padding:0 8px;margin:0 -8px}
-.rea-bd-ld-head{min-height:30px;color:#8F959E;font-size:12px;border-bottom:1px solid #F0F2F5}
-/* 员工面的两枚列头可点：与卡头那枚「完成率」同一套观感（灰字＋箭头，悬停变蓝） */
-.rea-bd-ld-head .rea-bd-sort{display:inline-flex;align-items:center;justify-content:flex-end;gap:3px;cursor:pointer;user-select:none;-webkit-user-select:none}
-.rea-bd-ld-head .rea-bd-sort i{font-style:normal;font-size:11px;line-height:1}
-.rea-bd-ld-head .rea-bd-sort:hover{color:#1677FF}
-.rea-bd-ld-head .rea-bd-sort:focus-visible{outline:2px solid #4096FF;outline-offset:2px;border-radius:3px}
-.rea-bd-ld-head .rate{color:#8F959E;font-size:12px;font-weight:400;text-align:right}
-.rea-bd-ld-row{min-height:48px;border-top:1px solid #F7F8FA;border-radius:6px;cursor:pointer}
+.rea-bd-ld-row{display:flex;align-items:center;gap:12px;padding:0 8px;margin:0 -8px;min-height:48px;border-top:1px solid #F7F8FA;border-radius:6px;cursor:pointer}
 .rea-bd-ld-row:first-of-type{border-top:0}
 .rea-bd-ld-row:hover{background:#F7F9FC}
 .rea-bd-ld .rk{flex:0 0 26px}
@@ -12126,13 +12126,13 @@ function ldOrder(ps,m,dir){
   var out=ps.slice(),g=dir||-1;
   out.sort(function(x,y){
     if(m==="rate"){
-      var c=ldCmp(y,x)*g;if(c)return c;
+      var c=ldCmp(x,y)*g;if(c)return c;
       if(y.need!==x.need)return y.need-x.need;
       if(y.done!==x.done)return y.done-x.done;
       if(x.over!==y.over)return x.over-y.over;
       return x.idx-y.idx;
     }
-    if(y.done!==x.done)return (y.done-x.done)*g;
+    if(y.done!==x.done)return (x.done-y.done)*g;
     if(x.over!==y.over)return x.over-y.over;
     if(y.need!==x.need)return y.need-x.need;
     return x.idx-y.idx;
@@ -12164,14 +12164,23 @@ function ldCheck(ps,t){
   if(pn!==t.need)bad("排行按人合计的应执行 "+pn+" ≠ 窗口按任务合计的应执行 "+t.need);
   if(po!==t.over)bad("排行按人合计的逾期 "+po+" ≠ 窗口按任务合计的逾期 "+t.over);
 }
-/* 列头：和部门面那枚「完成率」同一套交互——选中的那枚带方向箭头，
-   点它翻面；没选中的那枚不带箭头，点它＝换按它排（回到降序）。 */
-function ldSortCell(cls,key,label,tip){
-  var on=LDSORT===key;
-  return '<span class="'+cls+' rea-bd-sort'+(on?' is-on':'')+'" role="button" tabindex="0"'
-    +' data-bd-ld-sortby="'+key+'"'
-    +' title="'+tip+'；'+(on?"点一下改"+(LDDIR<0?"升序":"降序"):"点一下按它排")+'">'
-    +label+(on?'<i>'+(LDDIR<0?"↓":"↑")+'</i>':'')+'</span>';
+/* 卡头右端的两枚列名（完成 / 完成率）：选中的那枚带方向箭头、字色加深；
+   点它翻面，点另一枚＝换按它排（回到降序）。 */
+function setLdSortUi(){
+  var box=document.getElementById("rea-bd-ld-tools");if(!box)return;
+  var ls=box.querySelectorAll("[data-bd-ld-sortby]"),i;
+  for(i=0;i<ls.length;i++){
+    var k=ls[i].getAttribute("data-bd-ld-sortby"),on=k===LDSORT;
+    ls[i].classList.toggle("is-on",on);
+    var ar=ls[i].querySelector("i");
+    if(on&&!ar){ar=document.createElement("i");ls[i].appendChild(ar)}
+    if(ar){
+      if(on)ar.textContent=LDDIR<0?"↓":"↑";
+      else ar.parentNode.removeChild(ar);
+    }
+    ls[i].title=(k==="done"?"完成 / 应执行（单位：人次）":"完成率 ＝ 已执行 ÷ 应执行")
+      +"；"+(on?"点一下改"+(LDDIR<0?"升序":"降序"):"点一下按它排");
+  }
 }
 function renderLd(w){
   var t=tally(winRows(w)),ps=peopleOf(ldRows(w)),sorted=ldOrder(ps,LDSORT,LDDIR),ranks=ldRanks(ps,LDSORT,LDDIR);
@@ -12180,13 +12189,6 @@ function renderLd(w){
   if(!box)return;
   var h="",i,p;
   if(sorted.length){
-    h+='<div class="rea-bd-ld-head">'
-      +'<span class="rk">名次</span>'
-      +'<span class="nm">员工</span>'
-      +ldSortCell("qty","done","完成","完成 / 应执行（单位：人次）")
-      +ldSortCell("rate","rate","完成率","完成率 ＝ 已执行 ÷ 应执行")
-      +'<span class="more"></span>'
-      +'</div>';
     for(i=0;i<sorted.length&&i<5;i++){
       p=sorted[i];
       h+='<div class="rea-bd-ld-row" role="button" tabindex="0" data-bd-ld-person="'+esc(p.n)+'">'
@@ -12203,18 +12205,11 @@ function renderLd(w){
   box.innerHTML=h;
   ldCheck(ps,t);
 }
-/* 列头与行共用一个委托：列头换排序（含翻面），行去执行人明细。 */
+/* 行：进执行人明细的排行模式，预展开该人。 */
 var ldb=document.getElementById("rea-bd-ld-body");
 if(ldb)ldb.addEventListener("click",function(e){
   var n=e.target;
   while(n&&n!==ldb&&n.nodeType===1){
-    if(n.getAttribute&&n.getAttribute("data-bd-ld-sortby")){
-      e.preventDefault();
-      var k=n.getAttribute("data-bd-ld-sortby");
-      if(k===LDSORT)LDDIR=-LDDIR;else{LDSORT=k;LDDIR=-1;}
-      renderLd(CURW);
-      return;
-    }
     if(n.getAttribute&&n.getAttribute("data-bd-ld-person")){
       e.preventDefault();
       parent.postMessage({reaPage:${reaJson(REA_DETAIL_TASK)},reaWin:CURW,reaRows:dumpRows(),reaSort:LDSORT,reaFocus:n.getAttribute("data-bd-ld-person")},"*");
@@ -12226,7 +12221,28 @@ if(ldb)ldb.addEventListener("click",function(e){
 if(ldb)ldb.addEventListener("keydown",function(e){
   if(e.key!=="Enter"&&e.key!==" ")return;
   var n=e.target;
-  if(n&&n.getAttribute&&(n.getAttribute("data-bd-ld-person")||n.getAttribute("data-bd-ld-sortby"))){e.preventDefault();n.click();}
+  if(n&&n.getAttribute&&n.getAttribute("data-bd-ld-person")){e.preventDefault();n.click();}
+});
+/* 卡头右端的两枚列名：换指标（回到降序）或翻方向，箭头跟着走。 */
+var ldt=document.getElementById("rea-bd-ld-tools");
+if(ldt)ldt.addEventListener("click",function(e){
+  var n=e.target;
+  while(n&&n!==ldt&&n.nodeType===1){
+    if(n.getAttribute&&n.getAttribute("data-bd-ld-sortby")){
+      e.preventDefault();
+      var k=n.getAttribute("data-bd-ld-sortby");
+      if(k===LDSORT)LDDIR=-LDDIR;else{LDSORT=k;LDDIR=-1;}
+      setLdSortUi();renderLd(CURW);
+      var box=document.getElementById("rea-bd-ld-body");if(box)box.scrollTop=0;
+      return;
+    }
+    n=n.parentNode;
+  }
+});
+if(ldt)ldt.addEventListener("keydown",function(e){
+  if(e.key!=="Enter"&&e.key!==" ")return;
+  var n=e.target;
+  if(n&&n.getAttribute&&n.getAttribute("data-bd-ld-sortby")){e.preventDefault();n.click();}
 });
 /* 「查看全部」→ 执行人明细的排行榜（当前排序、不预展开）。 */
 var las=document.querySelectorAll("[data-bd-rank-all]");
@@ -12701,7 +12717,8 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '  for(i=0;i<panes.length;i++){p=panes[i];p.hidden=(p.getAttribute("data-cmp-pane")==="org")!==showOrg;}',
     '  var sw=document.getElementById("rea-bd-cmp-switch");if(sw)sw.hidden=!DEPTS.length;',
     '  var os=document.getElementById("rea-bd-org-sort");if(os)os.hidden=!showOrg;',
-    '  /* 员工面的排序是表头那两枚列头，跟着列表一起换，不在这里显隐。 */',
+    '  var lt=document.getElementById("rea-bd-ld-tools");if(lt)lt.hidden=showOrg;',
+    '  setLdSortUi();',
     '  var ls=document.querySelectorAll("[data-bd-cmp]");',
     '  for(i=0;i<ls.length;i++){',
     '    var on=ls[i].getAttribute("data-bd-cmp")===CMP,b=ls[i].querySelector(".ant-radio-button"),r=ls[i].querySelector("input");',
