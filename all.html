@@ -11025,28 +11025,12 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     </div>
 
     <!-- 取用趋势 · 通栏（PRD §2.3）。用了几次、是发出去还是只备料。
-         两条线同一时间范围、同一根纵轴；粒度默认跟跨度，卡头右上角可切。 -->
+         柱是两条线之和（合计），两条线压在上面看构成；粒度跟跨度自动定，31 天以内按日，更长按周。 -->
     <div class="rea-bd-card rea-bd-card--w12">
       <div class="rea-bd-ch">
         <h6>取用趋势</h6>
-        <div class="ant-radio-group ant-radio-group-solid css-vgijab rea-tr-win" id="rea-mb-gran">
-          <div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small">
-            <div class="ant-space-item">
-              <label class="ant-radio-button-wrapper ant-radio-button-wrapper-checked css-vgijab" data-mb-gran="day">
-                <span class="ant-radio-button ant-radio-button-checked"><input name="rea-mb-gran" class="ant-radio-button-input" type="radio" value="day" checked=""><span class="ant-radio-button-inner"></span></span>
-                <span class="ant-radio-button-label">按日</span>
-              </label>
-            </div>
-            <div class="ant-space-item">
-              <label class="ant-radio-button-wrapper css-vgijab" data-mb-gran="week">
-                <span class="ant-radio-button"><input name="rea-mb-gran" class="ant-radio-button-input" type="radio" value="week"><span class="ant-radio-button-inner"></span></span>
-                <span class="ant-radio-button-label">按周</span>
-              </label>
-            </div>
-          </div>
-        </div>
       </div>
-      <div class="rea-mb-legend"><span class="lg"><i></i>发出去</span><span class="lg"><i class="g"></i>备料</span></div>
+      <div class="rea-mb-legend"><span class="lg"><i class="b"></i>合计</span><span class="lg"><i></i>发出去</span><span class="lg"><i class="g"></i>备料</span></div>
       <div class="rea-mb-chart" id="rea-mb-chart"></div>
     </div>
 
@@ -12073,6 +12057,7 @@ body .subapp{background:#F6F8FB!important}
 .rea-mb-legend .lg{display:inline-flex;align-items:center;gap:6px}
 .rea-mb-legend .lg i{width:14px;height:2px;border-radius:1px;background:#1677FF}
 .rea-mb-legend .lg i.g{background:#8F959E}
+.rea-mb-legend .lg i.b{height:9px;border-radius:2px;background:#E8F1FF;border:1px solid #D6E6FF}
 .rea-mb-chart{position:relative;flex:1 1 auto;min-height:214px}
 .rea-mb-chart svg{display:block;overflow:visible}
 .rea-mb-chart .mb-line{transition:opacity .12s linear}
@@ -12081,6 +12066,7 @@ body .subapp{background:#F6F8FB!important}
 .mb-tip .r{display:flex;align-items:center;gap:6px}
 .mb-tip .r i{width:8px;height:8px;border-radius:2px;background:#1677FF}
 .mb-tip .r i.g{background:#8F959E}
+.mb-tip .r i.b{background:#E8F1FF;border:1px solid #D6E6FF}
 .mb-tip .r b{margin-left:auto;padding-left:16px;font-weight:600;font-variant-numeric:tabular-nums}
 
 /* ---------- 表（素材使用与素材明细共用） ---------- */
@@ -17683,7 +17669,7 @@ if(window.ResizeObserver){
 }
 
 /* ================= 取用趋势 ================= */
-var GRAN="day",GRAN_MANUAL=0;
+var GRAN="day";
 function niceMax(v,steps){
   steps=steps||4;
   if(!(v>0))return steps;
@@ -17730,11 +17716,11 @@ function paintTrend(w){
   var box=document.getElementById("rea-mb-chart");if(!box)return;
   var bs=trendData(w,GRAN),W=box.clientWidth||600,H=214,
       L=44,R=16,T=14,B=30,pw=Math.max(60,W-L-R),ph=H-T-B,k;
-  var max=0;for(k=0;k<bs.length;k++)max=Math.max(max,bs[k].send,bs[k].copy);
+  var max=0;for(k=0;k<bs.length;k++)max=Math.max(max,bs[k].send+bs[k].copy);
   var top=niceMax(max,4);
   function x(i){return bs.length>1?L+pw*i/(bs.length-1):L+pw/2}
   function y(v){return T+ph-(top?Math.min(v,top)/top:0)*ph}
-  var h='<svg width="'+W+'" height="'+H+'" role="img" aria-label="取用趋势：发出去与备料两条线">';
+  var h='<svg width="'+W+'" height="'+H+'" role="img" aria-label="取用趋势：合计柱与发出去、备料两条线">';
   var g,k2;
   for(k=0;k<=4;k++){
     var gy=T+ph-ph*k/4,lab=Math.round(top*k/4);
@@ -17745,6 +17731,12 @@ function paintTrend(w){
     var last=bs[bs.length-1];
     var lx=bs.length>1?x(bs.length-1):L;
     h+='<rect x="'+(lx-(bs.length>1?(pw/(bs.length-1))/2:8))+'" y="'+T+'" width="'+(bs.length>1?(pw/(bs.length-1)):16)+'" height="'+ph+'" fill="#F7F9FC"/>';
+  }
+  /* 合计柱：柱高＝发出去＋备料，浅蓝铺底，两条线压在上面读构成。 */
+  var gap=bs.length>1?pw/(bs.length-1):pw,bw=Math.max(4,Math.min(40,gap*0.5));
+  for(k=0;k<bs.length;k++){
+    var tot=bs[k].send+bs[k].copy,by=y(tot);
+    if(tot>0)h+='<rect class="mb-bar" x="'+(x(k)-bw/2).toFixed(1)+'" y="'+by.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+(ph-(by-T)).toFixed(1)+'" rx="3" fill="#E8F1FF"/>';
   }
   function line(key,color,cls){
     var pts=[],d2,i2;
@@ -17784,6 +17776,7 @@ function bindHover(box,bs,W,L,R,xfn,yfn,T,ph){
       if(tip){
         var t=(i2===bs.length-1)?(GRAN==="day"?"今日":"本周"):b.label;
         tip.innerHTML='<div class="d">'+esc(t)+'</div>'
+          +'<div class="r"><i class="b"></i>合计<b>'+(b.send+b.copy)+'</b></div>'
           +'<div class="r"><i></i>发出去<b>'+b.send+'</b></div>'
           +'<div class="r"><i class="g"></i>备料<b>'+b.copy+'</b></div>';
         tip.style.display="block";
@@ -18001,20 +17994,10 @@ function renderAll(){
 }
 function applyWin(w){
   CURW=w;
-  /* 粒度默认跟跨度走；用户手动切过的档保留到下一次换时间范围（PRD §2.3）。 */
+  /* 粒度跟跨度自动定：31 天以内按日，更长按周（PRD §2.3）。 */
   var span=(WIN[w][1]-WIN[w][0])+1;
-  if(!GRAN_MANUAL)GRAN=span>31?"week":"day";
-  setGranUi();
+  GRAN=span>31?"week":"day";
   renderAll();
-}
-function setGranUi(){
-  var ls=document.querySelectorAll("[data-mb-gran]"),i2,on,b,ip;
-  for(i2=0;i2<ls.length;i2++){
-    on=ls[i2].getAttribute("data-mb-gran")===GRAN;
-    ls[i2].classList.toggle("ant-radio-button-wrapper-checked",on);
-    b=ls[i2].querySelector(".ant-radio-button");if(b)b.classList.toggle("ant-radio-button-checked",on);
-    ip=ls[i2].querySelector("input");if(ip)ip.checked=on;
-  }
 }
 
 /* 时间范围：接数的四档照常走，另外三档在捕获阶段拦掉，数字完全不动。 */
@@ -18036,17 +18019,6 @@ if(ds)ds.addEventListener("change",function(){
   CURD=ds.value||"all";
   paintTrend(CURW);renderUse(CURW);renderGroups(CURW);renderDepts(CURW);
 });
-/* 粒度：手动切过就保留，不被换时间范围时的默认值盖掉。 */
-var gg=document.getElementById("rea-mb-gran");
-if(gg)gg.addEventListener("click",function(e){
-  var n=e.target,id=null;
-  while(n&&n!==gg&&n.nodeType===1){
-    if(n.getAttribute&&n.getAttribute("data-mb-gran")){id=n.getAttribute("data-mb-gran");break}
-    n=n.parentNode;
-  }
-  if(!id||id===GRAN)return;
-  e.preventDefault();GRAN=id;GRAN_MANUAL=1;setGranUi();paintTrend(CURW);
-},true);
 /* 素材使用：三列排序，同一时间只有一列生效。 */
 var uh=document.querySelector("table.rea-mb-use");
 if(uh)uh.addEventListener("click",function(e){
@@ -18126,12 +18098,12 @@ if(dl)dl.addEventListener("click",function(e){
     n=n.parentNode;
   }
 });
-/* 键盘：行、列头、页签都是 role=button，Enter / 空格等同点击。 */
+/* 键盘：行与列头是 role=button，Enter / 空格等同点击。 */
 document.addEventListener("keydown",function(e){
   if(e.key!=="Enter"&&e.key!==" ")return;
   var n=e.target;
   if(!n||!n.getAttribute)return;
-  if(n.getAttribute("data-mb-sort")||n.getAttribute("data-mb-mat")||n.getAttribute("data-mb-group")||n.getAttribute("data-mb-dept")||n.getAttribute("data-mb-seg")||n.getAttribute("data-mb-win")||n.getAttribute("data-mb-gran")){
+  if(n.getAttribute("data-mb-sort")||n.getAttribute("data-mb-mat")||n.getAttribute("data-mb-group")||n.getAttribute("data-mb-dept")||n.getAttribute("data-mb-seg")||n.getAttribute("data-mb-win")){
     e.preventDefault();n.click();
   }
 });
