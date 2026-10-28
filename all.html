@@ -9993,9 +9993,11 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
         </div>
         <div class="rea-bd-cmp-pane" data-cmp-pane="ld" hidden>
           <div class="rea-bd-lhead rea-bd-lhead--ld" id="rea-bd-ld-tools">
-            <span class="rk"></span>
+            <span class="rk">名次</span>
             <span class="nm">员工</span>
-            <span class="qty"><span class="sortc is-on" role="button" tabindex="0" data-bd-ld-sortby="done" title="按完成降序（点一下改升序）">完成<i>↓</i></span></span>
+            <span class="dept">部门</span>
+            <span class="track"></span>
+            <span class="qty"><span class="sortc is-on" role="button" tabindex="0" data-bd-ld-sortby="done" title="按完成数降序（点一下改升序）">完成数<i>↓</i></span></span>
             <span class="rate"><span class="sortc" role="button" tabindex="0" data-bd-ld-sortby="rate" title="按完成率排（点一下切过来）">完成率<i>↕</i></span></span>
             <span class="more"></span>
           </div>
@@ -11037,7 +11039,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     </div>
 
     <!-- 分组使用 · 第 4 行左格（PRD §2.5）。哪些组用得多、多少人用过；默认取用次数降序。
-         列名压在列表上方，两列都可点翻方向；每格带一根横条，长＝该列最大值里的占比。 -->
+         列名压在列表上方，两列都可点翻方向；行里只画当前选中那一列的横条，长＝该列最大值里的占比。 -->
     <div class="rea-bd-card rea-bd-card--w6">
       <div class="rea-bd-ch">
         <h6>分组使用</h6>
@@ -11052,7 +11054,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     </div>
 
     <!-- 部门使用 · 第 4 行右格（PRD §2.5）。哪个部门在横向用、哪个一条没碰；默认取用次数降序。
-         列名与分组使用同一套，两列都可点翻方向；每格一根横条，部门之间横向比。 -->
+         列名与分组使用同一套，两列都可点翻方向；一样只画当前选中那一列的横条，部门之间横向比。 -->
     <div class="rea-bd-card rea-bd-card--w6">
       <div class="rea-bd-ch">
         <h6>部门使用</h6>
@@ -11723,9 +11725,10 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-grid>.rea-bd-card:nth-child(6){animation-delay:.15s}
 /* 环形：换窗口时三段弧从旧比例滑到新比例（paintDonut 只改 dasharray／dashoffset） */
 .rea-bd-ring-fig circle.arc{transition:stroke-dasharray .34s cubic-bezier(.2,.7,.3,1),stroke-dashoffset .34s cubic-bezier(.2,.7,.3,1),opacity .2s linear}
-/* 部门条：行是整块重画的，宽度过渡接不上（新节点一出生就是终值），所以换窗口时走 scaleX；
-   翻排序（BDANIM=0）不重播，免得每点一下列头 8 条一起长一遍。 */
-.rea-bd-org.is-anim .rea-bd-org-bar>i{transform-origin:left center;animation:reaGrowX .36s cubic-bezier(.2,.7,.3,1) both}
+/* 完成情况的条（部门面、员工面同一套）：行是整块重画的，宽度过渡接不上（新节点一出生就是终值），
+   所以换窗口时走 scaleX；翻排序（BDANIM=0）不重播，免得每点一下列头 8 条一起长一遍。 */
+.rea-bd-org.is-anim .rea-bd-cmp-bar>i,
+.rea-bd-ld.is-anim .rea-bd-cmp-bar>i{transform-origin:left center;animation:reaGrowX .36s cubic-bezier(.2,.7,.3,1) both}
 /* 图：柱子从基线长起来；折线由 JS 按路径长度画入（见 reaDraw）；圆点与末格底纹晚半拍淡入，
    免得线还没走到点上，点先亮了一片。 */
 #rea-qft-chart svg rect.qf-bar{transform-box:fill-box;transform-origin:50% 100%;animation:reaGrowY .32s cubic-bezier(.2,.7,.3,1) both}
@@ -11740,7 +11743,8 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-tabs .ant-tabs-ink-bar.is-anim{transition:left .2s cubic-bezier(.2,.7,.3,1),top .2s cubic-bezier(.2,.7,.3,1),width .2s cubic-bezier(.2,.7,.3,1)}
 @media (prefers-reduced-motion:reduce){
   .rea-bd-grid>.rea-bd-card,
-  .rea-bd-org.is-anim .rea-bd-org-bar>i,
+  .rea-bd-org.is-anim .rea-bd-cmp-bar>i,
+  .rea-bd-ld.is-anim .rea-bd-cmp-bar>i,
   #rea-qft-chart svg rect.qf-bar,
   .rea-dot,.rea-shade,.rea-bd-ld-row,.rea-qft-tip{animation:none!important}
   .rea-bd-ring-fig circle.arc,
@@ -11844,10 +11848,13 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-lhead--org{gap:14px}
 .rea-bd-lhead--org .nm{flex:0 0 84px}
 .rea-bd-lhead--org .track{flex:1 1 auto;min-width:60px}
+.rea-bd-lhead--org .rate{flex:0 0 52px}
 .rea-bd-lhead--org .qty{flex:0 0 64px}
 .rea-bd-lhead--ld{gap:12px}
-.rea-bd-lhead--ld .rk{flex:0 0 26px}
-.rea-bd-lhead--ld .nm{flex:1 1 auto;min-width:0}
+.rea-bd-lhead--ld .rk{flex:0 0 34px}
+.rea-bd-lhead--ld .nm{flex:0 0 88px}
+.rea-bd-lhead--ld .dept{flex:0 0 92px}
+.rea-bd-lhead--ld .track{flex:1 1 auto;min-width:60px}
 .rea-bd-lhead--ld .qty{flex:0 0 62px}
 .rea-bd-lhead--ld .rate{flex:0 0 52px}
 .rea-bd-lhead--ld .more{flex:0 0 10px}
@@ -11867,8 +11874,9 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-org-row:hover .nm{color:#1677FF}
 .rea-bd-org-row .nm{flex:0 0 84px;color:#1F2329;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rea-bd-org-row .track{flex:1 1 auto;min-width:60px}
-.rea-bd-org-bar{display:block;height:8px;border-radius:4px;background:#EEF2F9;overflow:hidden}
-.rea-bd-org-bar>i{display:block;height:100%;border-radius:4px;background:#1677FF;transition:width .2s ease}
+/* 条：部门面画完成率，员工面画当前排序口径（完成数按最大值比、完成率按自身比例），两边同一套长相。 */
+.rea-bd-cmp-bar{display:block;height:8px;border-radius:4px;background:#EEF2F9;overflow:hidden}
+.rea-bd-cmp-bar>i{display:block;height:100%;border-radius:4px;background:#1677FF;transition:width .2s ease}
 .rea-bd-org-row .rate{flex:0 0 52px;text-align:right;color:#1F2329;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums}
 .rea-bd-org-row .qty{flex:0 0 64px;text-align:right;color:#8F959E;font-size:12px;white-space:nowrap;font-variant-numeric:tabular-nums}
 .rea-bd-org-foot{display:flex;align-items:center;gap:12px;margin-top:10px;padding-top:10px;border-top:1px solid #F0F2F5;color:#8F959E;font-size:12px}
@@ -11998,11 +12006,12 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-ld-row{display:flex;align-items:center;gap:12px;padding:0 8px;margin:0 -8px;min-height:48px;border-top:1px solid #F7F8FA;border-radius:6px;cursor:pointer}
 .rea-bd-ld-row:first-of-type{border-top:0}
 .rea-bd-ld-row:hover{background:#F7F9FC}
-.rea-bd-ld .rk{flex:0 0 26px}
+.rea-bd-ld .rk{flex:0 0 34px}
 .rea-bd-ld .rk b,.rea-bd-rk{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 5px;border-radius:6px;background:#E6F4FF;color:#1677FF;font-size:12px;font-weight:600;font-variant-numeric:tabular-nums}
 .rea-bd-rk{margin-right:8px;vertical-align:middle}
-.rea-bd-ld .nm{flex:1 1 auto;min-width:0;color:#1F2329;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.rea-bd-ld .nm em{font-style:normal;margin-left:6px;color:#8F959E;font-size:12px}
+.rea-bd-ld .nm{flex:0 0 88px;color:#1F2329;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rea-bd-ld .dept{flex:0 0 92px;color:#8F959E;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rea-bd-ld .track{flex:1 1 auto;min-width:60px}
 .rea-bd-ld .qty{flex:0 0 62px;text-align:right;color:#8F959E;font-size:12px;font-variant-numeric:tabular-nums;white-space:nowrap}
 .rea-bd-ld .qty b{color:#1F2329;font-size:13px;font-weight:600}
 .rea-bd-ld .rate{flex:0 0 52px;text-align:right;color:#1F2329;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums}
@@ -12137,10 +12146,9 @@ body .subapp{background:#F6F8FB!important}
 .rea-mb-grp-row:hover .nm,.rea-mb-dep-row:hover .nm{color:#1677FF}
 .rea-mb-grp-row .nm,.rea-mb-dep-row .nm{flex:0 0 120px;color:#1F2329;font-size:13px;line-height:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rea-mb-grp-row .nm em{display:block;font-style:normal;font-size:11px;color:#8F959E;line-height:14px;margin-top:1px}
-.rea-mb-grp-row .mv,.rea-mb-dep-row .mv{flex:1 1 0;display:flex;align-items:center;gap:8px;min-width:0}
+.rea-mb-grp-row .mv,.rea-mb-dep-row .mv{flex:1 1 0;display:flex;align-items:center;justify-content:flex-end;gap:8px;min-width:0}
 .rea-mb-rowbar{flex:1 1 auto;display:block;height:8px;border-radius:4px;background:#EEF2F9;overflow:hidden;min-width:20px}
 .rea-mb-rowbar>i{display:block;height:100%;border-radius:4px;background:#1677FF;transition:width .2s ease}
-.rea-mb-rowbar>i.p{background:#9FC0EA}
 .rea-mb-grp-row .n,.rea-mb-dep-row .n{flex:0 0 32px;text-align:right;color:#1F2329;font-size:13px;font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap}
 
 /* ---------- 群发好友回复 ---------- */
@@ -12537,8 +12545,9 @@ window.addEventListener("resize",function(){
   function reaLdJs(){
     return `
 /* ---- 员工完成情况（人次） ---- */
-/* 员工面的排序与部门面同一个交互：表头「完成」「完成率」各是一枚列头，
-   点没选中的那枚＝按它排（默认降序），点已选中的那枚＝翻方向，箭头跟着走。 */
+/* 员工面的排序与部门面同一个交互：列名行里「完成数」「完成率」各是一枚可点的列名，
+   点没选中的那枚＝按它排（默认降序），点已选中的那枚＝翻方向，箭头跟着走。条也跟着它走：
+   按完成数排是「相对榜上最多的人」，按完成率排是「这个人自己的比例」。 */
 var LDSORT="done", LDDIR=-1;
 /* 窗口里谁参与过——排行要的是 assignees，不是 DOM 行。 */
 function ldRows(w){
@@ -12631,7 +12640,7 @@ function setLdSortUi(){
     ls[i].classList.toggle("is-on",on);
     var ar=ls[i].querySelector("i");
     if(ar)ar.textContent=on?(LDDIR<0?"↓":"↑"):"↕";
-    ls[i].title=(k==="done"?"完成 / 应执行（单位：人次）":"完成率 ＝ 已执行 ÷ 应执行")
+    ls[i].title=(k==="done"?"完成数 ＝ 已执行人次（应执行见表内 x / y）":"完成率 ＝ 已执行 ÷ 应执行")
       +"；"+(on?"点一下改"+(LDDIR<0?"升序":"降序"):"点一下按它排（降序）");
   }
 }
@@ -12640,13 +12649,20 @@ function renderLd(w){
   var box=document.getElementById("rea-bd-ld-body"),note=document.getElementById("rea-bd-ld-note");
   if(note)note.hidden=LDSORT!=="rate";
   if(!box)return;
-  var h="",i,p;
+  /* 条的尺子跟着当前排序口径走：按完成数排，满格是榜上做得最多的那个人（绝对量之间才可比，
+     按应执行除会变成完成率）；按完成率排，条长就是这个人自己的比例。同一行数没变，变的只是条读哪把尺子。 */
+  var h="",i,p,bw,maxDone=1;
+  for(i=0;i<ps.length;i++)if(ps[i].done>maxDone)maxDone=ps[i].done;
+  box.classList.toggle("is-anim",!!BDANIM);
   if(sorted.length){
     for(i=0;i<sorted.length&&i<5;i++){
       p=sorted[i];
+      bw=LDSORT==="rate"?ldRate(p):p.done/maxDone*100;
       h+='<div class="rea-bd-ld-row" role="button" tabindex="0" data-bd-ld-person="'+esc(p.n)+'">'
         +'<span class="rk"><b>'+ranks[p.n]+'</b></span>'
-        +'<span class="nm" title="'+esc(p.n)+' · '+esc(p.o)+'">'+esc(p.n)+'<em>'+esc(p.o)+'</em></span>'
+        +'<span class="nm" title="'+esc(p.n)+'">'+esc(p.n)+'</span>'
+        +'<span class="dept" title="'+esc(p.o)+'">'+esc(p.o)+'</span>'
+        +'<span class="track"><span class="rea-bd-cmp-bar"><i style="width:'+bw.toFixed(1)+'%"></i></span></span>'
         +'<span class="qty"><b>'+p.done+'</b> / '+p.need+'</span>'
         +'<span class="rate">'+ldRate(p).toFixed(1)+'%</span>'
         +'<span class="more" aria-hidden="true">›</span>'
@@ -13018,7 +13034,7 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '    r=list[i];sum+=r.rate;',
     '    h+="<div class=\\"rea-bd-org-row\\" role=\\"button\\" tabindex=\\"0\\" data-bd-org-row=\\""+esc(r.o)+"\\">"',
     '      +"<span class=\\"nm\\">"+esc(r.o)+"</span>"',
-    '      +"<span class=\\"track\\"><span class=\\"rea-bd-org-bar\\"><i style=\\"width:"+r.rate.toFixed(1)+"%\\"></i></span></span>"',
+    '      +"<span class=\\"track\\"><span class=\\"rea-bd-cmp-bar\\"><i style=\\"width:"+r.rate.toFixed(1)+"%\\"></i></span></span>"',
     '      +"<span class=\\"rate\\">"+(r.need?r.rate.toFixed(1)+"%":"—")+"</span>"',
     '      +"<span class=\\"qty\\">"+(r.need?r.need+" 人次":"—")+"</span>"',
     '      +"</div>";',
@@ -17883,10 +17899,12 @@ function deptRows(w){
   });
   return out;
 }
-/* 一格 ＝ 横条 ＋ 数字；横条长度按这一列的最大值取比例，两张卡各自归一。 */
-function barCell(v,max,cls){
+/* 一格 ＝ 横条 ＋ 数字；横条长度按这一列的最大值取比例，两张卡各自归一。
+   同一时刻只画一根：只有当前选中排序列的格子带横条，另一列只出数字。 */
+function barCell(v,max,on){
+  if(!on)return '<span class="mv"><span class="n">'+v+'</span></span>';
   var pct=max?Math.round(v/max*100):0;
-  return '<span class="mv"><span class="rea-mb-rowbar"><i'+(cls?' class="'+cls+'"':'')+' style="width:'+pct+'%"></i></span><span class="n">'+v+'</span></span>';
+  return '<span class="mv"><span class="rea-mb-rowbar"><i style="width:'+pct+'%"></i></span><span class="n">'+v+'</span></span>';
 }
 function syncSort(sel,attr,k,dir){
   var cs=document.querySelectorAll(sel),i,key,on,ic;
@@ -17906,7 +17924,7 @@ function renderGroups(w){
     r=gs[k];if(!r.n)zero++;
     h+='<div class="rea-mb-grp-row" role="button" tabindex="0" data-mb-group="'+esc(r.dept)+"|"+esc(r.group)+'">'
       +'<span class="nm">'+esc(r.group)+'<em>'+esc(r.dept)+'</em></span>'
-      +barCell(r.n,maxN,"")+barCell(r.people,maxP,"p")+'</div>';
+      +barCell(r.n,maxN,GSK==="count")+barCell(r.people,maxP,GSK==="people")+'</div>';
   }
   if(grp)grp.innerHTML=h;
   if(gf)gf.textContent="共 "+gs.length+" 个分组 · "+zero+" 个分组这段时间零取用";
@@ -17920,7 +17938,7 @@ function renderDepts(w){
     r2=ds[k2];if(!r2.n)zero++;
     h2+='<div class="rea-mb-dep-row" role="button" tabindex="0" data-mb-dept="'+esc(r2.o)+'">'
       +'<span class="nm">'+esc(r2.o)+'</span>'
-      +barCell(r2.n,maxN,"")+barCell(r2.people,maxP,"p")+'</div>';
+      +barCell(r2.n,maxN,DSK==="count")+barCell(r2.people,maxP,DSK==="people")+'</div>';
   }
   if(dep)dep.innerHTML=h2;
   if(df)df.textContent="共 "+ds.length+" 个部门 · "+zero+" 个部门这段时间零取用";
