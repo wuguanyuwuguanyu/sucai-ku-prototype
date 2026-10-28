@@ -11039,30 +11039,32 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     </div>
 
     <!-- 分组使用 · 第 4 行左格（PRD §2.5）。哪些组用得多、多少人用过；默认取用次数降序。
-         列名压在列表上方，两列都可点翻方向；行里只画当前选中那一列的横条，长＝该列最大值里的占比。 -->
+         行＝组名 · 一根满宽横条 · 两个数字；条只画当前选中那一列，长＝该列最大值里的占比。 -->
     <div class="rea-bd-card rea-bd-card--w6">
       <div class="rea-bd-ch">
         <h6>分组使用</h6>
       </div>
       <div class="rea-mb-lhead rea-mb-lhead--grp">
         <span class="nm">分组</span>
-        <span class="mv"><span class="sortc on" role="button" tabindex="0" data-mb-gsort="count" title="按取用次数降序（点一下改升序）">取用次数 <i>↓</i></span></span>
-        <span class="mv"><span class="sortc" role="button" tabindex="0" data-mb-gsort="people" title="按使用人数排（点一下翻方向）">使用人数 <i>↕</i></span></span>
+        <span class="track"></span>
+        <span class="n"><span class="sortc on" role="button" tabindex="0" data-mb-gsort="count" title="按取用次数降序（点一下改升序）">取用次数 <i>↓</i></span></span>
+        <span class="n"><span class="sortc" role="button" tabindex="0" data-mb-gsort="people" title="按使用人数排（点一下翻方向）">使用人数 <i>↕</i></span></span>
       </div>
       <div class="rea-mb-list" id="rea-mb-grp-list"></div>
       <div class="rea-mb-foot"><span id="rea-mb-grp-foot"></span></div>
     </div>
 
     <!-- 部门使用 · 第 4 行右格（PRD §2.5）。哪个部门在横向用、哪个一条没碰；默认取用次数降序。
-         列名与分组使用同一套，两列都可点翻方向；一样只画当前选中那一列的横条，部门之间横向比。 -->
+         列名与分组使用同一套；一样是「名字 · 一根满宽横条 · 两个数字」，部门之间横向比。 -->
     <div class="rea-bd-card rea-bd-card--w6">
       <div class="rea-bd-ch">
         <h6>部门使用</h6>
       </div>
       <div class="rea-mb-lhead rea-mb-lhead--dep">
         <span class="nm">部门</span>
-        <span class="mv"><span class="sortc on" role="button" tabindex="0" data-mb-dsort="count" title="按取用次数降序（点一下改升序）">取用次数 <i>↓</i></span></span>
-        <span class="mv"><span class="sortc" role="button" tabindex="0" data-mb-dsort="people" title="按使用人数排（点一下翻方向）">使用人数 <i>↕</i></span></span>
+        <span class="track"></span>
+        <span class="n"><span class="sortc on" role="button" tabindex="0" data-mb-dsort="count" title="按取用次数降序（点一下改升序）">取用次数 <i>↓</i></span></span>
+        <span class="n"><span class="sortc" role="button" tabindex="0" data-mb-dsort="people" title="按使用人数排（点一下翻方向）">使用人数 <i>↕</i></span></span>
       </div>
       <div class="rea-mb-list" id="rea-mb-dep-list"></div>
       <div class="rea-mb-foot"><span id="rea-mb-dep-foot"></span></div>
@@ -12134,7 +12136,8 @@ body .subapp{background:#F6F8FB!important}
 /* 列名行：与下面的行同一套 flex 尺寸，列才对得齐；数值列靠右，落在数字上方。 */
 .rea-mb-lhead{display:flex;align-items:center;gap:14px;min-height:28px;padding:0 8px;margin:0 -8px 2px;border-bottom:1px solid #E5E8EF;color:#8F959E;font-size:12px;white-space:nowrap}
 .rea-mb-lhead .nm{flex:0 0 120px}
-.rea-mb-lhead .mv{flex:1 1 0;display:flex;justify-content:flex-end}
+.rea-mb-lhead .track{flex:1 1 auto;min-width:20px}
+.rea-mb-lhead .n{flex:0 0 64px;display:flex;justify-content:flex-end;white-space:nowrap}
 .rea-mb-lhead .sortc{display:inline-flex;align-items:center;gap:3px;cursor:pointer;user-select:none;-webkit-user-select:none;border-radius:3px}
 .rea-mb-lhead .sortc:hover{color:#1677FF}
 .rea-mb-lhead .sortc.on{color:#1F2329}
@@ -12146,10 +12149,10 @@ body .subapp{background:#F6F8FB!important}
 .rea-mb-grp-row:hover .nm,.rea-mb-dep-row:hover .nm{color:#1677FF}
 .rea-mb-grp-row .nm,.rea-mb-dep-row .nm{flex:0 0 120px;color:#1F2329;font-size:13px;line-height:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rea-mb-grp-row .nm em{display:block;font-style:normal;font-size:11px;color:#8F959E;line-height:14px;margin-top:1px}
-.rea-mb-grp-row .mv,.rea-mb-dep-row .mv{flex:1 1 0;display:flex;align-items:center;justify-content:flex-end;gap:8px;min-width:0}
-.rea-mb-rowbar{flex:1 1 auto;display:block;height:8px;border-radius:4px;background:#EEF2F9;overflow:hidden;min-width:20px}
-.rea-mb-rowbar>i{display:block;height:100%;border-radius:4px;background:#1677FF;transition:width .2s ease}
-.rea-mb-grp-row .n,.rea-mb-dep-row .n{flex:0 0 32px;text-align:right;color:#1F2329;font-size:13px;font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap}
+.rea-mb-grp-row .track,.rea-mb-dep-row .track{flex:1 1 auto;display:block;height:8px;border-radius:4px;background:#EEF2F9;overflow:hidden;min-width:20px}
+.rea-mb-grp-row .track>i,.rea-mb-dep-row .track>i{display:block;height:100%;border-radius:4px;background:#1677FF;transition:width .2s ease}
+.rea-mb-grp-row .n,.rea-mb-dep-row .n{flex:0 0 64px;text-align:right;color:#8F959E;font-size:12px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.rea-mb-grp-row .n.on,.rea-mb-dep-row .n.on{color:#1F2329;font-size:13px;font-weight:600}
 
 /* ---------- 群发好友回复 ---------- */
 .rea-mb-qf-hero{display:flex;align-items:baseline;gap:10px;padding:2px 0 4px}
@@ -12223,7 +12226,7 @@ body .subapp{background:#F6F8FB!important}
 .rea-mb-dw-b{flex:1 1 auto;overflow:auto;padding:0 20px}
 .rea-mb-dw .rea-mb-pg{padding:12px 20px 16px;border-top:1px solid #F0F2F5}
 @media (prefers-reduced-motion: reduce){
-  .rea-mb-dw,.rea-mb-rowbar>i,.rea-mb-tbl tbody tr{transition:none!important}
+  .rea-mb-dw,.rea-mb-grp-row .track>i,.rea-mb-dep-row .track>i,.rea-mb-tbl tbody tr{transition:none!important}
 }
 `;
 
@@ -17899,12 +17902,13 @@ function deptRows(w){
   });
   return out;
 }
-/* 一格 ＝ 横条 ＋ 数字；横条长度按这一列的最大值取比例，两张卡各自归一。
-   同一时刻只画一根：只有当前选中排序列的格子带横条，另一列只出数字。 */
-function barCell(v,max,on){
-  if(!on)return '<span class="mv"><span class="n">'+v+'</span></span>';
-  var pct=max?Math.round(v/max*100):0;
-  return '<span class="mv"><span class="rea-mb-rowbar"><i style="width:'+pct+'%"></i></span><span class="n">'+v+'</span></span>';
+/* 右边半行 ＝ 一根满宽横条 ＋ 两个数字（PRD §2.5）。
+   条只画当前选中排序列的口径，长度按该列最大值归一；选中的数字加深，另一列退成灰。 */
+function metricCells(r,k,maxN,maxP){
+  var v=k==="count"?r.n:r.people,max=k==="count"?maxN:maxP,pct=max?Math.round(v/max*100):0;
+  return '<span class="track"><i style="width:'+pct+'%"></i></span>'
+    +'<span class="n'+(k==="count"?" on":"")+'">'+r.n+'</span>'
+    +'<span class="n'+(k==="people"?" on":"")+'">'+r.people+'</span>';
 }
 function syncSort(sel,attr,k,dir){
   var cs=document.querySelectorAll(sel),i,key,on,ic;
@@ -17924,7 +17928,7 @@ function renderGroups(w){
     r=gs[k];if(!r.n)zero++;
     h+='<div class="rea-mb-grp-row" role="button" tabindex="0" data-mb-group="'+esc(r.dept)+"|"+esc(r.group)+'">'
       +'<span class="nm">'+esc(r.group)+'<em>'+esc(r.dept)+'</em></span>'
-      +barCell(r.n,maxN,GSK==="count")+barCell(r.people,maxP,GSK==="people")+'</div>';
+      +metricCells(r,GSK,maxN,maxP)+'</div>';
   }
   if(grp)grp.innerHTML=h;
   if(gf)gf.textContent="共 "+gs.length+" 个分组 · "+zero+" 个分组这段时间零取用";
@@ -17938,7 +17942,7 @@ function renderDepts(w){
     r2=ds[k2];if(!r2.n)zero++;
     h2+='<div class="rea-mb-dep-row" role="button" tabindex="0" data-mb-dept="'+esc(r2.o)+'">'
       +'<span class="nm">'+esc(r2.o)+'</span>'
-      +barCell(r2.n,maxN,DSK==="count")+barCell(r2.people,maxP,DSK==="people")+'</div>';
+      +metricCells(r2,DSK,maxN,maxP)+'</div>';
   }
   if(dep)dep.innerHTML=h2;
   if(df)df.textContent="共 "+ds.length+" 个部门 · "+zero+" 个部门这段时间零取用";
