@@ -17868,14 +17868,15 @@ function groupRows(w,dept){
   for(k=0;k<MATS.length;k++){
     m=MATS[k];
     if(dept!=="all"&&m.dept!==dept)continue;
-    a=map[m.dept+"|"+m.group]||(map[m.dept+"|"+m.group]={dept:m.dept,group:m.group,n:0,people:{},pc:0});
+    a=map[m.dept+"|"+m.group]||(map[m.dept+"|"+m.group]={dept:m.dept,group:m.group,k:0,m:0,n:0,people:{}});
+    a.k++;                                   /* 组内素材条数：自检要它加回全部素材 */
     mm=s.mat[m.id];
-    if(mm){a.n+=mm.c;for(nm in mm.users)a.people[nm]=1;}
+    if(mm){a.m++;a.n+=mm.c;for(nm in mm.users)a.people[nm]=1;}   /* m＝组内用过的条数 */
   }
   for(var key in map){
     a=map[key];
     var pc=0;for(nm in a.people)pc++;
-    out.push({dept:a.dept,group:a.group,n:a.n,people:pc});
+    out.push({dept:a.dept,group:a.group,k:a.k,m:a.m,n:a.n,people:pc});
   }
   out.sort(function(x,y){
     var c=sortCmp(x,y,GSK,GSD);if(c)return c;
