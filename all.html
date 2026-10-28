@@ -10988,9 +10988,9 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     </div>
 
     <!-- 群发好友回复 · 第 1 行右格（PRD §2.6）。本页唯一的客户侧信号：
-         引用素材的群发好友任务回了多少，再列出回复率最低的几条素材；发圈与群发群组没有客户回传。 -->
+         引用素材的群发好友任务回了多少，再逐条列出被引用的素材；发圈与群发群组没有客户回传。 -->
     <div class="rea-bd-card rea-bd-card--w8" id="rea-mb-qf-card">
-      <div class="rea-bd-ch"><h6>群发好友回复</h6></div>
+      <div class="rea-bd-ch"><h6>群发好友回复</h6><span class="rea-mb-sub">引用素材的群发好友任务</span></div>
       <div id="rea-mb-qf"></div>
     </div>
 
@@ -11976,25 +11976,32 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-win-off::before{background-color:transparent!important}
 .rea-bd-win-off:hover{color:#B7BCC4!important;background:transparent!important}
 
-/* ---------- 群发好友回复 ---------- */
-.rea-qft-kpis{display:flex;flex-wrap:wrap;gap:10px 22px;margin:0 0 4px;padding:0 0 2px}
-.rea-qft-kpi{display:flex;flex-direction:column;gap:3px;margin:0}
-.rea-qft-kpi .k{color:#8F959E;font-size:12px}
-.rea-qft-kpi b{color:#1F2329;font-size:17px;font-weight:600;line-height:1.3}
-.rea-qft-kpi.primary b{font-size:22px;line-height:1.2}
-.rea-qft-kpi b i{font-style:normal;font-size:12px;font-weight:400;color:#8F959E;margin-left:2px}
-.rea-qft-kpi b em{font-style:normal;font-size:12px;font-weight:500;margin-left:8px}
-.rea-qft-kpi b em.up{color:#52C41A}.rea-qft-kpi b em.down{color:#FAAD14}
-.rea-qft-kpi b em.flat{color:#8F959E}
-.rea-qft-chart{position:relative;margin-top:8px;min-height:200px}
-.rea-qft-chart svg{display:block;width:100%}
-.rea-qft-tip{position:absolute;z-index:5;display:none;pointer-events:none;padding:8px 10px;background:rgba(255,255,255,.98);border:1px solid #E5E8EF;border-radius:6px;box-shadow:0 6px 16px rgba(0,0,0,.08);color:#1F2329;font-size:12px;line-height:20px;white-space:nowrap}
-.rea-qft-tip .d{color:#8F959E;margin-bottom:2px}
-.rea-qft-tip .r{display:flex;align-items:center;gap:6px}
-.rea-qft-tip .r i{width:8px;height:8px;border-radius:2px;background:#BAE0FF}
-.rea-qft-tip .r.line i{height:2px;border-radius:1px;background:#1677FF}
-.rea-qft-tip .r b{margin-left:auto;padding-left:16px;font-weight:600;font-variant-numeric:tabular-nums}
-.rea-qft-empty{padding:36px 0 30px;text-align:center;color:#8F959E;font-size:12px}
+/* ---------- 群发好友回复 ----------
+   上一条：整组回复率、已回复／未回复的占比条、三个总数；下面逐条列被引用的素材。
+   只有引用素材的群发好友任务进本卡口径；素材默认按发送量排，也能改成按回复率排。 */
+.rea-mb-qf-hero{display:flex;align-items:baseline;gap:10px;padding:2px 0 8px}
+.rea-mb-qf-hero b{font-size:30px;line-height:1.1;font-weight:600;color:#1F2329;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
+.rea-mb-qf-hero span{color:#8F959E;font-size:12px}
+.rea-mb-qf-split{display:block;height:10px;border-radius:5px;background:#EEF2F9;overflow:hidden}
+.rea-mb-qf-split>i{display:block;height:100%;border-radius:5px;background:#1677FF}
+.rea-mb-qf-nums{display:flex;flex-wrap:wrap;gap:6px 18px;color:#646A73;font-size:12px;padding:10px 0 14px}
+.rea-mb-qf-nums b{color:#1F2329;font-weight:600;font-variant-numeric:tabular-nums}
+.rea-mb-qf-empty{padding:26px 0 18px;color:#8F959E;font-size:12px;line-height:20px}
+.rea-mb-lhead.rea-mb-lhead--qf{margin-top:2px}
+.rea-mb-lhead.rea-mb-lhead--qf .nm{flex:0 0 200px;min-width:0;color:#8F959E;font-size:12px}
+.rea-mb-lhead.rea-mb-lhead--qf .track{flex:1 1 auto;min-width:20px}
+.rea-mb-lhead.rea-mb-lhead--qf .n{flex:0 0 64px;justify-content:flex-end}
+.rea-mb-qf-rows{overflow-x:hidden}
+.rea-mb-qf-row{display:flex;align-items:center;gap:14px;min-height:38px;padding:0 8px;margin:0 -8px;border-radius:6px;border-top:1px solid #F4F6FA;cursor:pointer;transition:background .12s linear}
+.rea-mb-qf-row:first-child{border-top:0}
+.rea-mb-qf-row:hover{background:#F7F9FC}
+.rea-mb-qf-row:hover .nm{color:#1677FF}
+.rea-mb-qf-row .nm{flex:0 0 200px;min-width:0;color:#1F2329;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rea-mb-qf-row .track{flex:1 1 auto;min-width:20px;display:block;height:8px;border-radius:4px;background:#EEF2F9;overflow:hidden}
+.rea-mb-qf-row .track>i{display:block;height:100%;border-radius:4px;background:#1677FF;transition:width .2s ease}
+.rea-mb-qf-row .n{flex:0 0 64px;text-align:right;color:#8F959E;font-size:12px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.rea-mb-qf-row .n.on{color:#1F2329;font-size:13px;font-weight:600}
+.rea-mb-qf-foot{padding-top:8px;color:#8F959E;font-size:11px;line-height:18px}
 
 /* ---------- 执行趋势 ---------- */
 .rea-tr-chart{position:relative;margin-top:4px;min-height:200px}
@@ -12154,30 +12161,6 @@ body .subapp{background:#F6F8FB!important}
 .rea-mb-grp-row .n,.rea-mb-dep-row .n{flex:0 0 64px;text-align:right;color:#8F959E;font-size:12px;font-variant-numeric:tabular-nums;white-space:nowrap}
 .rea-mb-grp-row .n.on,.rea-mb-dep-row .n.on{color:#1F2329;font-size:13px;font-weight:600}
 
-/* ---------- 群发好友回复 ---------- */
-.rea-mb-qf-hero{display:flex;align-items:baseline;gap:10px;padding:2px 0 4px}
-.rea-mb-qf-hero b{font-size:30px;line-height:1.1;font-weight:600;color:#1F2329;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
-.rea-mb-qf-hero span{color:#8F959E;font-size:12px}
-.rea-mb-qf-nums{display:flex;flex-wrap:wrap;gap:6px 18px;color:#646A73;font-size:12px;padding-bottom:12px}
-.rea-mb-qf-nums b{color:#1F2329;font-weight:600;font-variant-numeric:tabular-nums}
-.rea-mb-qf-empty{padding:26px 0 18px;color:#8F959E;font-size:12px;line-height:20px}
-.rea-mb-qf-low{margin-top:auto;padding-top:10px;border-top:1px solid #F0F2F5}
-.rea-mb-qf-low .hd{color:#8F959E;font-size:11px;margin-bottom:4px}
-.rea-mb-qf-low ul{list-style:none;margin:0;padding:0}
-.rea-mb-qf-low li{display:flex;align-items:baseline;gap:10px;padding:5px 0;font-size:12px;color:#1F2329}
-.rea-mb-qf-low .t{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.rea-mb-qf-low .r{flex:none;color:#646A73;font-variant-numeric:tabular-nums}
-.rea-mb-qf-none{color:#8F959E;font-size:12px;line-height:20px;padding:2px 0}
-
-/* 群发好友回复是第 1 行右格（span 8）：左边回复率与人数，右边回复率最低的几条素材。 */
-.rea-mb-qf-wide{flex:1 1 auto;display:grid;grid-template-columns:minmax(210px,.9fr) minmax(260px,1.1fr);gap:0 26px;align-items:center}
-.rea-mb-qf-wide>div{min-width:0}
-.rea-mb-qf-wide .rea-mb-qf-low{margin:0;padding:0 0 0 26px;border-top:0;border-left:1px solid #F0F2F5}
-@media (max-width:1180px){
-  .rea-mb-qf-wide{grid-template-columns:1fr;gap:12px;align-items:start}
-  .rea-mb-qf-wide .rea-mb-qf-low{padding:10px 0 0;border-left:0;border-top:1px solid #F0F2F5}
-}
-
 /* 素材使用 · 操作列：与素材库列表同一组动作（预览／编辑／删除／移动分组）。 */
 .rea-mb-tbl td.op{white-space:nowrap}
 .rea-mb-tbl td.op a{color:#1677FF;font-size:12px;line-height:20px;margin-right:12px;text-decoration:none}
@@ -12219,7 +12202,7 @@ body .subapp{background:#F6F8FB!important}
 .rea-mb-dw-b{flex:1 1 auto;overflow:auto;padding:0 20px}
 .rea-mb-dw .rea-mb-pg{padding:12px 20px 16px;border-top:1px solid #F0F2F5}
 @media (prefers-reduced-motion: reduce){
-  .rea-mb-dw,.rea-mb-grp-row .track>i,.rea-mb-dep-row .track>i,.rea-mb-tbl tbody tr{transition:none!important}
+  .rea-mb-dw,.rea-mb-grp-row .track>i,.rea-mb-dep-row .track>i,.rea-mb-qf-row .track>i,.rea-mb-tbl tbody tr{transition:none!important}
 }
 `;
 
@@ -17901,14 +17884,14 @@ function metricCells(r,k,maxN,maxP){
     +'<span class="n'+(k==="count"?" on":"")+'">'+r.n+'</span>'
     +'<span class="n'+(k==="people"?" on":"")+'">'+r.people+'</span>';
 }
-function syncSort(sel,attr,k,dir){
+function syncSort(sel,attr,k,dir,labels){
   var cs=document.querySelectorAll(sel),i,key,on,ic;
   for(i=0;i<cs.length;i++){
     key=cs[i].getAttribute(attr);on=key===k;
     cs[i].className="sortc"+(on?" on":"");
     ic=cs[i].querySelector("i");
     if(ic)ic.textContent=on?(dir<0?"↓":"↑"):"↕";
-    cs[i].title=on?"点一下翻方向":"按"+(key==="count"?"取用次数":"使用人数")+"排";
+    cs[i].title=on?"点一下翻方向":"按"+(labels&&labels[key]?labels[key]:(key==="count"?"取用次数":"使用人数"))+"排";
   }
 }
 function renderGroups(w){
@@ -17942,40 +17925,48 @@ function renderDepts(w){
 
 /* ================= 群发好友回复 ================= */
 function pct(m,n){return n?(m/n*100).toFixed(1)+"%":"—"}
+/* 群发好友回复（PRD §2.6）：一条回复率 ＋ 逐条被引用的素材。
+   素材默认按发送量降序——样本大的先看，比率才有分量；也能点列名改按回复率排。
+   条只画当前选中那一列的口径：发送量按列内最大值归一，回复率按 0–100% 画。 */
+var QFSK="sent",QFSD=-1;
+function qfSortCmp(x,y,k,dir){
+  var a=k==="rate"?x.rate:x.sent,b=k==="rate"?y.rate:y.sent;
+  if(a!==b)return(a-b)*dir;
+  var a2=k==="rate"?x.sent:x.rate,b2=k==="rate"?y.sent:y.rate;
+  return(a2-b2)*dir;
+}
 function renderQf(w){
   var box=document.getElementById("rea-mb-qf");if(!box)return;
-  var o=qfAgg(w),rows=allRows(w,"all"),byId={},k;
+  var o=qfAgg(w),rows=allRows(w,"all"),byId={},k,id,mm,r;
   for(k=0;k<rows.length;k++)byId[rows[k].id]=rows[k];
-  var h='<div class="rea-mb-qf-wide"><div class="rea-mb-qf-main">';
-  if(o.ref.tasks){
-    h+='<div class="rea-mb-qf-hero"><b>'+pct(o.ref.replied,o.ref.sent)+'</b><span>回复率</span></div>'
-      +'<div class="rea-mb-qf-nums"><span>已发送 <b>'+o.ref.sent+'</b></span><span>已回复 <b>'+o.ref.replied+'</b></span><span>未回复 <b>'+(o.ref.sent-o.ref.replied)+'</b></span></div>';
-  }else{
-    h+='<div class="rea-mb-qf-empty">该时间段没有引用素材的群发好友任务</div>';
+  if(!o.ref.tasks){box.innerHTML='<div class="rea-mb-qf-empty">该时间段没有引用素材的群发好友任务</div>';return;}
+  var rate=o.ref.sent?o.ref.replied/o.ref.sent:0,list=[],maxS=0;
+  for(id in o.byMat){
+    mm=o.byMat[id];r=byId[id];if(!r)continue;
+    list.push({title:r.title,sent:mm.sent,replied:mm.replied,rate:mm.sent?mm.replied/mm.sent:0});
   }
-  h+='</div>';
-  h+='<div class="rea-mb-qf-low"><div class="hd">回复率最低的素材</div>';
-  if(o.ref.tasks){
-    var lows=[],id;
-    for(id in o.byMat){
-      var mm=o.byMat[id],r=byId[id];
-      if(r&&mm.sent>=30)lows.push({title:r.title,rate:mm.replied/mm.sent,sent:mm.sent,replied:mm.replied});
-    }
-    lows.sort(function(x,y){return x.rate-y.rate||(x.title<y.title?-1:1)});
-    if(lows.length){
-      h+='<ul>';
-      for(k=0;k<Math.min(3,lows.length);k++){
-        h+='<li title="已发送 '+lows[k].sent+' / 已回复 '+lows[k].replied+'"><span class="t">'+esc(lows[k].title)+'</span><span class="r">'+pct(lows[k].replied,lows[k].sent)+'</span></li>';
-      }
-      h+='</ul>';
-    }else{
-      h+='<div class="rea-mb-qf-none">这段时间没有发送量够 30 人的素材</div>';
-    }
-  }else{
-    h+='<div class="rea-mb-qf-none">该时间段没有数据</div>';
+  list.sort(function(x,y){var c=qfSortCmp(x,y,QFSK,QFSD);if(c)return c;return x.title<y.title?-1:1;});
+  for(k=0;k<list.length;k++)if(list[k].sent>maxS)maxS=list[k].sent;
+  var h='<div class="rea-mb-qf-hero"><b>'+(rate*100).toFixed(1)+'%</b><span>回复率</span></div>'
+    +'<span class="rea-mb-qf-split" role="img" aria-label="已回复 '+o.ref.replied+' 人，未回复 '+(o.ref.sent-o.ref.replied)+' 人"><i style="width:'+(rate*100).toFixed(1)+'%"></i></span>'
+    +'<div class="rea-mb-qf-nums"><span>已发送 <b>'+o.ref.sent+'</b></span><span>已回复 <b>'+o.ref.replied+'</b></span><span>未回复 <b>'+(o.ref.sent-o.ref.replied)+'</b></span></div>'
+    +'<div class="rea-mb-lhead rea-mb-lhead--qf"><span class="nm">素材</span><span class="track"></span>'
+    +'<span class="n"><span class="sortc" role="button" tabindex="0" data-mb-qfsort="sent">已发送 <i></i></span></span>'
+    +'<span class="n"><span class="sortc" role="button" tabindex="0" data-mb-qfsort="rate">回复率 <i></i></span></span>'
+    +'</div><div class="rea-mb-qf-rows" id="rea-mb-qf-rows">';
+  for(k=0;k<list.length;k++){
+    r=list[k];
+    var wd=QFSK==="rate"?r.rate*100:(maxS?r.sent/maxS*100:0);
+    h+='<div class="rea-mb-qf-row" role="button" tabindex="0" data-mb-qfmat="'+esc(r.title)+'" title="'+esc(r.title)+' · 已发送 '+r.sent+' 人 / 已回复 '+r.replied+' 人">'
+      +'<span class="nm">'+esc(r.title)+'</span>'
+      +'<span class="track"><i style="width:'+Math.round(wd)+'%"></i></span>'
+      +'<span class="n'+(QFSK==="sent"?" on":"")+'">'+r.sent+'</span>'
+      +'<span class="n'+(QFSK==="rate"?" on":"")+'">'+(r.rate*100).toFixed(1)+'%</span>'
+      +'</div>';
   }
-  h+='</div></div>';
+  h+='</div><div class="rea-mb-qf-foot">共 '+list.length+' 条素材被引用过 · 发送量少的排在下面，比率波动大</div>';
   box.innerHTML=h;
+  syncSort("[data-mb-qfsort]","data-mb-qfsort",QFSK,QFSD,{sent:"已发送",rate:"回复率"});
 }
 
 /* 素材操作：原型里只给反馈，真正的编辑／删除／移动分组在素材库列表。 */
@@ -18116,6 +18107,28 @@ for(i=0;i<dchips.length;i++)dchips[i].addEventListener("click",function(e){
   renderDepts(CURW);
   var b=document.getElementById("rea-mb-dep-list");if(b)b.scrollTop=0;
 });
+/* 群发好友回复：列名翻方向；行 → 素材明细，按标题搜。
+   卡片正文是每次渲染重画的，监听挂在容器上，不走逐节点绑定。 */
+var qfw=document.getElementById("rea-mb-qf");
+if(qfw)qfw.addEventListener("click",function(e){
+  var n=e.target,sk,mt;
+  while(n&&n!==qfw&&n.nodeType===1){
+    sk=n.getAttribute&&n.getAttribute("data-mb-qfsort");
+    if(sk){
+      e.preventDefault();
+      if(sk===QFSK)QFSD=-QFSD;else{QFSK=sk;QFSD=-1;}
+      renderQf(CURW);
+      var b=document.getElementById("rea-mb-qf-rows");if(b)b.scrollTop=0;
+      return;
+    }
+    mt=n.getAttribute&&n.getAttribute("data-mb-qfmat");
+    if(mt){
+      goDetail({q:mt,usage:"all",status:"all",group:"",type:"",dept:"all"});
+      return;
+    }
+    n=n.parentNode;
+  }
+});
 /* 分组行 / 部门行 → 素材明细，按分组、按部门预筛。 */
 var gl=document.getElementById("rea-mb-grp-list");
 if(gl)gl.addEventListener("click",function(e){
@@ -18144,7 +18157,7 @@ document.addEventListener("keydown",function(e){
   if(e.key!=="Enter"&&e.key!==" ")return;
   var n=e.target;
   if(!n||!n.getAttribute)return;
-  if(n.getAttribute("data-mb-sort")||n.getAttribute("data-mb-gsort")||n.getAttribute("data-mb-dsort")||n.getAttribute("data-mb-mat")||n.getAttribute("data-mb-group")||n.getAttribute("data-mb-dept")||n.getAttribute("data-mb-seg")||n.getAttribute("data-mb-win")){
+  if(n.getAttribute("data-mb-sort")||n.getAttribute("data-mb-gsort")||n.getAttribute("data-mb-dsort")||n.getAttribute("data-mb-qfsort")||n.getAttribute("data-mb-qfmat")||n.getAttribute("data-mb-mat")||n.getAttribute("data-mb-group")||n.getAttribute("data-mb-dept")||n.getAttribute("data-mb-seg")||n.getAttribute("data-mb-win")){
     e.preventDefault();n.click();
   }
 });
