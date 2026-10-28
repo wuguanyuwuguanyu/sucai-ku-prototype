@@ -11562,7 +11562,12 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   var reaMsg = document.getElementById('reaMsg');   // 只在载体加载失败时才有字（:empty 兜住显隐）
   function reaSay(t){ reaMsg.textContent = t; }
 
-  /* 页内注入样式：默认态零视觉改动（cursor 不进截图，:hover 只在悬停时生效） */
+  /* 页内注入样式：交互态只挂类名，静置时零视觉改动（cursor 不进截图，:hover 只在悬停时生效）。
+     **只有下面这组侧栏折叠态例外**（2026-10-28，登记在 docs/09 §5）：视图③的左侧菜单默认
+     收起成 88px 的一级栏，二级菜单不再常驻右列，改成一级项右侧的悬停浮层。
+     折叠态在快照里没有——现网它是 React 按状态渲染的，抓到的 36 页都停在双列——
+     所以宽度／定位／显隐只能写在这里。全部挂在 .rea-collapsed 下：去掉这个类
+     （点一级栏右缘那枚箭头）就逐像素回到快照的双列样子。 */
   var REA_CSS = 'li.ykMenuItemLi.rea-nav{cursor:pointer}'
     + 'li.ykMenuItemLi.rea-nav:hover .ykMenuItemRow{background:rgba(22,119,255,.08)}'
     + 'li.ykMenuItemLi.rea-off{cursor:not-allowed}'
@@ -11572,7 +11577,28 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     + 'li.ant-menu-overflow-item.rea-off{cursor:not-allowed}'
     /* 部门选择面板收起后，那枚箭头翻成 › 指回去——面板已经收没了，这颗按钮是唯一的回程入口。
        默认态不动：选择器只在 .close 下命中（收起是点出来的，不属于静置）。 */
-    + '.yk-lefttree.close .yk-ant-pro-sider-collapsed-button>svg{transform:rotate(-90deg)}';
+    + '.yk-lefttree.close .yk-ant-pro-sider-collapsed-button>svg{transform:rotate(-90deg)}'
+    /* ---- 侧栏折叠态 ---- */
+    + '.ykSideRoot.rea-collapsed .ykSidePh{width:88px!important;flex:0 0 88px!important}'
+    + '.ykSideRoot.rea-collapsed .ykSideAside{width:88px!important}'
+    /* 折叠态没有二级栏可放搜索框（现网这一档里搜索是一级栏里的一项，快照没抓到那一项），
+       留着会在 88px 里挤出一条 64px 宽的输入框。底部模式切换同理。 */
+    + '.ykSideRoot.rea-collapsed .ykSideSearch,.ykSideRoot.rea-collapsed .ykSideFooter{display:none}'
+    /* 一级栏右缘那枚箭头：位置原本按 240px 写死（227px），跟着折叠态挪到栏边并翻个向 */
+    + '.ykSideRoot.rea-collapsed>.yk-ant-pro-sider-collapsed-button{left:75px!important}'
+    + '.ykSideRoot.rea-collapsed>.yk-ant-pro-sider-collapsed-button>svg{transform:rotate(-90deg)!important}'
+    /* 右列整体改成挂在栏边的浮层：同一份 DOM、换摆放方式。z-index 101 压在正文与部门树之上 */
+    + '.ykSideRoot.rea-collapsed .ykSideTwoColRight{position:fixed;left:88px;top:58px;width:240px;'
+    +   'max-height:calc(100% - 70px);margin:0;padding:12px 8px;border-radius:0 10px 10px 0;'
+    +   'background:var(--yk-siderbar-bg,#fff);'
+    +   'box-shadow:0 6px 16px rgba(0,0,0,.08),0 3px 6px -4px rgba(0,0,0,.12),0 9px 28px 8px rgba(0,0,0,.05);'
+    +   'overflow-y:auto;opacity:0;visibility:hidden;transform:translateX(-6px);pointer-events:none;'
+    +   'transition:opacity .16s,transform .16s,visibility .16s;z-index:101}'
+    + '.ykSideRoot.rea-collapsed.rea-menu-open .ykSideTwoColRight{opacity:1;visibility:visible;transform:none;pointer-events:auto}'
+    /* 浮层里二级项竖排、一行一个（双列时那是 88px 的卡网格），字号跟现网折叠态的下拉一致 13px */
+    + '.ykSideRoot.rea-collapsed .ykSideTwoColRight .ykSideTwoColSecondaryList{display:flex;flex-direction:column;gap:2px}'
+    + '.ykSideRoot.rea-collapsed .ykSideTwoColRight .ykSideTwoColSecondaryList .ykMenuText{font-size:13px;line-height:16px}'
+    + '.ykSideRoot.rea-collapsed .ykSideTwoColRight .ykSideTwoColSecondaryHeader{padding:2px 8px 10px}';
 
   /* ============================================================
      逐页覆盖（ADR-0043）——未覆盖的页一个字节都不动；被覆盖的页换新稿或补交互，
@@ -11820,6 +11846,8 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-tip li span{color:#646A73}
 .rea-bd-tip li b{font-weight:600;font-variant-numeric:tabular-nums}
 .rea-bd-tip .emp{color:#8F959E;font-size:11px}
+/* 扇区小窗里那枚平台小标比列表里的小一号：小窗本身是 11–12px 的字，16px 的标会压过类型名 */
+.rea-bd-tip li .rea-plat{width:14px;height:14px;margin-right:5px;border-radius:3px;background-size:14px 14px;vertical-align:-2px}
 @media (max-width:767px){
   #rea-bd-cards{flex-direction:column;align-items:flex-start;gap:14px}
 }
@@ -13153,6 +13181,9 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '  var p=r&&r.getAttribute&&r.getAttribute("data-bd-plat");',
     '  return p||PLAT_BY_TYPE[r&&r.getAttribute("data-bd-type")]||"wx";',
     '}',
+    'function platTag(p){',
+    '  return "<i class=\\"rea-plat p-"+(p||"wx")+"\\" aria-hidden=\\"true\\"></i>";',
+    '}',
     'function dumpRows(){',
     '  var rs=rows(),out=[],i,r,c,id,cr,need,done,left,over;',
     '  for(i=0;i<rs.length;i++){',
@@ -13197,9 +13228,10 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '    r=rs[i];',
     '    if(segOf(r)!==seg)continue;',
     '    t=r.getAttribute("data-bd-type");',
-    '    m[t]=(m[t]||0)+1;',
+    '    if(!m[t])m[t]={n:0,p:platOf(r)};',
+    '    m[t].n++;',
     '  }',
-    '  for(t in m)out.push({t:t,n:m[t]});',
+    '  for(t in m)out.push({t:t,n:m[t].n,p:m[t].p});',
     '  out.sort(function(x,y){',
     '    if(y.n!==x.n)return y.n-x.n;',
     '    return TYPE_ORDER.indexOf(x.t)-TYPE_ORDER.indexOf(y.t);',
@@ -13223,7 +13255,7 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '  if(!list.length)h+="<div class=\\"emp\\">这一窗没有任务</div>";',
     '  else{',
     '    h+="<ul>";',
-    '    for(i=0;i<list.length;i++)h+="<li><span>"+esc(list[i].t)+"</span><b>"+list[i].n+"</b></li>";',
+    '    for(i=0;i<list.length;i++)h+="<li><span>"+platTag(list[i].p)+esc(list[i].t)+"</span><b>"+list[i].n+"</b></li>";',
     '    h+="</ul>";',
     '  }',
     '  TIP.innerHTML=h;TIP.className="rea-bd-tip on";',
@@ -18831,6 +18863,12 @@ renderTable();
 
   var REA_HDR = 'ykSideTwoColSecondaryHeader">';        // 侧栏二级列表的标题
   var REA_LIST = 'ykSideTwoColSecondaryList">';        // 侧栏二级列表本体
+  /* 侧栏一级项「数据看板」那一组按 任务／悬浮窗／素材 重排（2026-10-26 与产品经理对齐）；
+     不在表里的项原序跟在后面。组名「数据看板」在稿子里显示成「看板」。
+     这两条原先写在页内脚本里、只管当前这一页的右列；现在折叠态的悬停浮层也要用，
+     挪到 reaMenuIndex() 一处维护，两边共用同一份。 */
+  var REA_MENU_ORDER = { '数据看板': ['微小助看板', '悬浮窗看板', '企业微信看板'] };
+  var REA_MENU_TITLE = { '数据看板': '看板' };
   var REA_TOPBAR = 'ant-pro-top-nav-header-base-menu'; // 顶栏一级导航的本体
   var reaCatFirst = {};   // 一级分类名 → 该分类第一个模块页名（由数据推导，不写死）
   var reaTopFirst = {};   // 顶部一级导航名 → 该导航下第一个模块页名（同上）
@@ -18850,6 +18888,8 @@ renderTable();
   var reaMatPreset = {};    // 同上：入口带来的预筛（搜索词／分组／使用状态／状态／部门）
   var reaMbWin = '';        // 从素材明细返回看板时要恢复的时间范围
   var reaTreeClosed = false; // 微小助模块左侧「部门选择」面板收起了没有（面板是每页的 rest 各带一份，状态得存在外壳上）
+  var reaSideOpen = false;  // 左侧菜单是否展开成双列（默认折叠：只留一级栏，二级走悬停浮层；同样得存在外壳上）
+  var reaMenuGroups = {};   // 一级菜单名 → { title, items:[{t: 显示名, p: 页名|null}] }，见 reaMenuIndex()
   var reaSynthDone = false; // 合成子页（执行人明细／任务配置快照）跑过没有
 
   /* 从某页的 rest 里读出它侧栏当前的二级分类名（读不到就返回空串） */
@@ -18903,6 +18943,8 @@ renderTable();
       + 'var COVERED=' + reaJson(Object.keys(REA_COVER)) + ';'
       + 'var CUR=' + reaJson(curName) + ';'
       + 'var ALIAS=' + reaJson(REA_NAME) + ';'
+      + 'var MENU=' + reaJson(reaMenuGroups) + ';'
+      + 'var SIDE=' + (reaSideOpen ? 1 : 0) + ';'
       /* 显示名 → 页名：侧栏换名之后点回去还得落到注册表那一条上 */
       + 'var REV={};for(var ak in ALIAS)REV[ALIAS[ak]]=ak;'
       + 'function page(t){t=REV[t]||t;for(var i=0;i<NAMES.length;i++){if(NAMES[i]===t)return NAMES[i];}return null;}'
@@ -18917,29 +18959,76 @@ renderTable();
         + '}'
         + 'return last;'
       + '}'
-      /* 侧栏「数据看板」一组：显示名换成三块看板，并按 任务 / 悬浮窗 / 素材 重排。
-         改的只是 <span> 的文本与 title，li 的出入口仍归下面的 wire 管。 */
-      + '(function(){'
-        + 'var ul=document.querySelector("ul.ykSideTwoColSecondaryList");if(!ul)return;'
-        + 'var lis=ul.querySelectorAll("li.ykMenuItemLi"),order={},i,sp,t,to,keep=[];'
-        + 'for(i=0;i<lis.length;i++){'
-          + 'sp=lis[i].querySelector(".ykMenuText");if(!sp)continue;'
-          + 't=(sp.getAttribute("title")||sp.textContent||"").trim();'
-          + 'to=ALIAS[t]||t;'
-          + 'if(to!==t){sp.textContent=to;sp.setAttribute("title",to);}'
-          + 'order[to]=lis[i];'
+      /* ---- 侧栏两级菜单：默认折叠成一级栏，一级项悬停出二级浮层 ----
+         快照只带了「当前这一组」的二级 DOM，悬停别的一级项时没有现成节点，所以用外壳按
+         36 页快照推出来的 MENU（见 reaMenuIndex），显示名与次序也在那张表里定。
+         浮层就是右列那棵树换了摆放方式（样式在 REA_CSS 的 .rea-collapsed 下），内容按组重铺。 */
+      + 'var SIDER=document.querySelector(".ykSideRoot");'
+      + 'var SEC=document.querySelector("ul.ykSideTwoColSecondaryList");'
+      + 'var HDR=document.querySelector(".ykSideTwoColSecondaryHeader");'
+      + 'var RAIL=document.querySelector("ul.ykSideTwoColPrimaryList");'
+      + 'var COL=document.querySelector(".ykSideTwoColRight");'
+      + 'function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}'
+      /* 把某一组的二级项铺进右列；MENU 里没有这一组就返回 false，右列原样不动 */
+      + 'function drawMenu(n){'
+        + 'var g=MENU[n];if(!g||!SEC||!HDR)return false;'
+        + 'HDR.textContent=g.title;'
+        + 'var h="",i,it,on;'
+        + 'for(i=0;i<g.items.length;i++){'
+          + 'it=g.items[i];on=it.p===CUR;'
+          + 'h+="<li class=\\"ykMenuItemLi\\" data-level=\\"2\\"><div class=\\"ykMenuItemRow"+(on?" ykActive":"")+"\\""'
+            + '+(on?" aria-current=\\"page\\"":"")+"><span class=\\"ykMenuText\\" title=\\""+esc(it.t)+"\\">"+esc(it.t)+"</span></div></li>";'
         + '}'
-        + 'var want=["任务看板","悬浮窗看板","素材看板"],frag=document.createDocumentFragment(),used={},j,li;'
-        + 'for(j=0;j<want.length;j++){li=order[want[j]];if(li){used[want[j]]=1;frag.appendChild(li);}}'
-        + 'for(i=0;i<lis.length;i++){'
-          + 'sp=lis[i].querySelector(".ykMenuText");'
-          + 't=sp?((sp.getAttribute("title")||sp.textContent||"").trim()):"";'
-          + 'if(!used[t])frag.appendChild(lis[i]);'      /* 组里还有别的项：原样跟在后面 */
+        + 'SEC.innerHTML=h;'
+        + 'wire("li.ykMenuItemLi",".ykMenuText",CAT);'
+        + 'return true;'
+      + '}'
+      + 'if(SIDER){'
+        + 'if(!SIDE)SIDER.classList.add("rea-collapsed");'
+        + 'var cat=(HDR&&(HDR.textContent||"").trim())||"";'
+        + 'if(cat)drawMenu(cat);'
+        + 'var rlis=RAIL?RAIL.querySelectorAll("li[data-level=\\"1\\"]"):[],closer=null;'
+        + 'function closeMenu(){SIDER.classList.remove("rea-menu-open")}'
+        /* 浮层贴着悬停那一项的顶边，底边不出视口（项靠下时往上收一收） */
+        + 'function placeMenu(li){'
+          + 'if(!COL)return;'
+          + 'COL.style.top="";COL.style.maxHeight="";'
+          + 'var vh=window.innerHeight||900,r=li.getBoundingClientRect(),h=COL.offsetHeight||0,top;'
+          + 'top=Math.min(r.top,vh-h-8);if(top<58)top=58;'
+          + 'COL.style.top=top+"px";COL.style.maxHeight=(vh-top-8)+"px";'
         + '}'
-        + 'ul.appendChild(frag);'
-        + 'var hd=document.querySelector(".ykSideTwoColSecondaryHeader");'
-        + 'if(hd&&(hd.textContent||"").trim()==="数据看板")hd.textContent="看板";'
-      + '})();'
+        + 'function openMenu(li,n){'
+          + 'if(!SIDER.classList.contains("rea-collapsed"))return;'
+          + 'if(!drawMenu(n)){closeMenu();return}'
+          + 'SIDER.classList.add("rea-menu-open");placeMenu(li);'
+        + '}'
+        + 'for(var mi=0;mi<rlis.length;mi++){(function(li){'
+          + 'li.addEventListener("mouseenter",function(){'
+            + 'clearTimeout(closer);'
+            + 'var sp=li.querySelector(".ykMenuText"),t=sp?((sp.getAttribute("title")||sp.textContent||"").trim()):"";'
+            + 'if(MENU[t])openMenu(li,t);else closeMenu();'
+          + '})'
+        + '})(rlis[mi])}'
+        /* 离开侧栏才收（浮层挂在侧栏 DOM 里，进浮层不算离开），留 140ms 给「栏 → 浮层」这一跨 */
+        + 'SIDER.addEventListener("mouseleave",function(){closer=setTimeout(closeMenu,140)});'
+        + 'SIDER.addEventListener("mouseenter",function(){clearTimeout(closer)});'
+        /* 一级栏右缘那枚箭头：折叠 ↔ 双列。快照里它只是块位置写死（227px）的死 DOM，
+           这里接上真状态并报给外壳，换页重建 srcdoc 后不会自己弹回。 */
+        + 'var SBTN=null,ch=SIDER.children;'
+        + 'for(var si=0;si<ch.length;si++)if(ch[si].classList&&ch[si].classList.contains("yk-ant-pro-sider-collapsed-button"))SBTN=ch[si];'
+        + 'if(SBTN){'
+          + 'SBTN.setAttribute("title",SIDE?"收起菜单":"展开菜单");'
+          + 'SBTN.addEventListener("click",function(e){'
+            + 'e.preventDefault();e.stopPropagation();'
+            + 'var was=SIDER.classList.contains("rea-collapsed");'
+            + 'SIDER.classList.toggle("rea-collapsed",!was);'
+            + 'closeMenu();'
+            + 'if(was&&COL){COL.style.top="";COL.style.maxHeight="";}'
+            + 'SBTN.setAttribute("title",was?"收起菜单":"展开菜单");'
+            + 'parent.postMessage({reaSide:was?1:0},"*");'
+          + '})'
+        + '}'
+      + '}'
       /* 页内标题：未覆盖页的 h6 还写旧名，跟上侧栏 */
       + 'if(ALIAS[CUR]){'
         + 'var hs=document.querySelectorAll("h6");'
@@ -18947,19 +19036,23 @@ renderTable();
           + 'if((hs[hi].textContent||"").trim()===CUR){hs[hi].textContent=ALIAS[CUR];break;}'
         + '}'
       + '}'
-      /* 一段通用接线：sel=要接的 li，txt=取文本的选择器，map=名称 → 页名的表 */
+      /* 一段通用接线：sel=要接的 li，txt=取文本的选择器，map=名称 → 页名的表。
+         drawMenu 重铺浮层后也要再跑一遍，所以拆成「接一条」＋「接一批」，
+         并且类名只在没有时才加——否则来回悬停会把 rea-nav 叠成一串。 */
+      + 'function wireLi(li,txt,map){'
+        + 'var sp=li.querySelector(txt);'
+        + 'if(!sp)return;'                       /* AntD 顶栏溢出的「…」那项没有文本，不碰 */
+        + 'var t=(sp.getAttribute("title")||sp.textContent||"").trim();'
+        + 'if(!t)return;'
+        + 'var to=page(t)||map[t]||null;'
+        + 'if(to===CUR||t===CUR)return;'         /* 就是当前这一页／当前这一组：不接，也不标 off */
+        + 'if(!to){if(li.className.indexOf("rea-off")<0)li.className+=" rea-off";return;}'
+        + 'if(li.className.indexOf("rea-nav")<0)li.className+=" rea-nav";'
+        + 'li.setAttribute("data-rea",to);'
+      + '}'
       + 'function wire(sel,txt,map){'
         + 'var lis=document.querySelectorAll(sel);'
-        + 'for(var i=0;i<lis.length;i++){'
-          + 'var li=lis[i],sp=li.querySelector(txt);'
-          + 'if(!sp)continue;'                       /* AntD 顶栏溢出的「…」那项没有文本，不碰 */
-          + 'var t=(sp.getAttribute("title")||sp.textContent||"").trim();'
-          + 'if(!t)continue;'
-          + 'var to=page(t)||map[t]||null;'
-          + 'if(to===CUR||t===CUR)continue;'         /* 就是当前这一页／当前这一组：不接，也不标 off */
-          + 'if(!to){li.className+=" rea-off";continue;}'
-          + 'li.className+=" rea-nav";li.setAttribute("data-rea",to);'
-        + '}'
+        + 'for(var i=0;i<lis.length;i++)wireLi(lis[i],txt,map);'
       + '}'
       + 'wire("li.ykMenuItemLi",".ykMenuText",CAT);'
       + 'wire("li.ant-menu-overflow-item",".ant-pro-base-menu-horizontal-item-text",TOP);'
@@ -19096,7 +19189,37 @@ renderTable();
     for (i = 0; i < P.pages.length; i++){
       if (P.pages[i].name === REA_MAT_LIST){ reaGroupNames = reaGroupsOf(P.pages[i].rest); break; }
     }
+    reaMenuIndex();
     reaIndexed = true;
+  }
+
+  /* 一级菜单 → 它那一组二级项（折叠态悬停浮层的数据源，reaNavJs 以 MENU 传进页里）。
+     来源仍是快照：每页的侧栏只带「当前这一组」的二级列表，把 36 页扫一遍就凑齐所有组；
+     同一组取 pages[] 里最靠前那一页的那份，与 reaCatOf 判组、reaCatFirst 落地页同一条口径。
+     项里带两样东西：t＝显示名（微小助看板 → 任务看板），p＝注册表页名（不是收录页就是 null）。 */
+  function reaMenuIndex(){
+    var P = window.__REAL_ADMIN__, i, j, c, names, ord, items, byName = {};
+    for (i = 0; i < P.pages.length; i++) byName[P.pages[i].name] = 1;
+    var seen = {};
+    for (i = 0; i < P.pages.length; i++){
+      c = reaCatOf(P.pages[i].rest);
+      if (!c || seen[c]) continue;
+      seen[c] = 1;
+      names = reaSeqOf(P.pages[i].rest).slice();
+      ord = REA_MENU_ORDER[c];
+      if (ord){
+        /* 只在表里有的项之间换位；表里没提的项按原序排到后面（sort 在现代引擎里是稳定的） */
+        names.sort(function(a, b){
+          var ia = ord.indexOf(a), ib = ord.indexOf(b);
+          return (ia < 0 ? 1e3 : ia) - (ib < 0 ? 1e3 : ib);
+        });
+      }
+      items = [];
+      for (j = 0; j < names.length; j++){
+        items.push({ t: reaName(names[j]), p: byName[names[j]] ? names[j] : null });
+      }
+      reaMenuGroups[c] = { title: REA_MENU_TITLE[c] || reaName(c), items: items };
+    }
   }
 
   function reaRender(i){
@@ -19160,6 +19283,7 @@ renderTable();
     var d = e.data;
     if (!d || !window.__REAL_ADMIN__) return;
     if (typeof d.reaTree === 'number'){ reaTreeClosed = !!d.reaTree; return; }
+    if (typeof d.reaSide === 'number'){ reaSideOpen = !!d.reaSide; return; }
     if (!d.reaPage && !d.reaSave) return;
     var P = window.__REAL_ADMIN__;
     /* 看板点的「详细数据」：先把行与窗口收下，子页 reaDoc 时会灌进 window（见 reaDataJs） */
