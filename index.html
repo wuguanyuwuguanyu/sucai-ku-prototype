@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- 素材库 · 原型总览（唯一正本）：销售端 App ＋ 线上后台复刻两视图，
+<!-- 微小助 · 原型总览（唯一正本）：销售端 App ＋ 线上后台复刻两视图，
      切换 = 顶部分段按钮 / 快捷键 1·2 / URL #app·#real（认不出的 hash —— 含旧 #admin —— 落默认视图）。
      （原自研「管理后台原型」视图②已下线：素材库后台并入线上后台复刻的「素材库」列表页与「素材库 · 新建」页，ADR-0048。）
      销售端 App 以原文内嵌在下方 <script type="text/plain"> 载体块内（运行时还原写入 iframe srcdoc，文档级隔离，样式与 JS 互不可见）。
@@ -16,7 +16,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<title>素材库 · 原型总览（销售端 App ＋ 线上后台复刻）</title>
+<title>微小助 · 原型总览（销售端 App ＋ 线上后台复刻）</title>
 <style>
 /* 仅顶层演示外壳的样式；内嵌载体的样式在 srcdoc 文档内，互不可见 */
 :root{
@@ -106,7 +106,7 @@ body{font-family:var(--f);background:var(--surface);color:var(--on-surface);
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
   </div>
   <div class="bt">
-    <h1>素材库 · 原型总览</h1>
+    <h1>微小助 · 原型总览</h1>
     <div class="sub">销售端 App × 线上后台复刻 · 单文件切换演示</div>
   </div>
   <div class="seg" role="tablist" aria-label="原型视图切换">
@@ -9993,11 +9993,9 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
         </div>
         <div class="rea-bd-cmp-pane" data-cmp-pane="ld" hidden>
           <div class="rea-bd-lhead rea-bd-lhead--ld" id="rea-bd-ld-tools">
-            <span class="rk">排名</span>
+            <span class="rk"></span>
             <span class="nm">员工</span>
-            <span class="dept">部门</span>
-            <span class="track"></span>
-            <span class="qty"><span class="sortc is-on" role="button" tabindex="0" data-bd-ld-sortby="done" title="按完成数降序（点一下改升序）">完成数<i>↓</i></span></span>
+            <span class="qty"><span class="sortc is-on" role="button" tabindex="0" data-bd-ld-sortby="done" title="按完成降序（点一下改升序）">完成<i>↓</i></span></span>
             <span class="rate"><span class="sortc" role="button" tabindex="0" data-bd-ld-sortby="rate" title="按完成率排（点一下切过来）">完成率<i>↕</i></span></span>
             <span class="more"></span>
           </div>
@@ -11846,13 +11844,10 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-lhead--org{gap:14px}
 .rea-bd-lhead--org .nm{flex:0 0 84px}
 .rea-bd-lhead--org .track{flex:1 1 auto;min-width:60px}
-.rea-bd-lhead--org .rate{flex:0 0 52px}
 .rea-bd-lhead--org .qty{flex:0 0 64px}
 .rea-bd-lhead--ld{gap:12px}
-.rea-bd-lhead--ld .rk{flex:0 0 34px}
-.rea-bd-lhead--ld .nm{flex:0 0 88px}
-.rea-bd-lhead--ld .dept{flex:0 0 92px}
-.rea-bd-lhead--ld .track{flex:1 1 auto;min-width:60px}
+.rea-bd-lhead--ld .rk{flex:0 0 26px}
+.rea-bd-lhead--ld .nm{flex:1 1 auto;min-width:0}
 .rea-bd-lhead--ld .qty{flex:0 0 62px}
 .rea-bd-lhead--ld .rate{flex:0 0 52px}
 .rea-bd-lhead--ld .more{flex:0 0 10px}
@@ -11872,9 +11867,8 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-org-row:hover .nm{color:#1677FF}
 .rea-bd-org-row .nm{flex:0 0 84px;color:#1F2329;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rea-bd-org-row .track{flex:1 1 auto;min-width:60px}
-/* 条：部门面画完成率，员工面画当前排序口径（完成数按最大值比、完成率按自身比例），两边同一套长相。 */
-.rea-bd-cmp-bar{display:block;height:8px;border-radius:4px;background:#EEF2F9;overflow:hidden}
-.rea-bd-cmp-bar>i{display:block;height:100%;border-radius:4px;background:#1677FF;transition:width .2s ease}
+.rea-bd-org-bar{display:block;height:8px;border-radius:4px;background:#EEF2F9;overflow:hidden}
+.rea-bd-org-bar>i{display:block;height:100%;border-radius:4px;background:#1677FF;transition:width .2s ease}
 .rea-bd-org-row .rate{flex:0 0 52px;text-align:right;color:#1F2329;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums}
 .rea-bd-org-row .qty{flex:0 0 64px;text-align:right;color:#8F959E;font-size:12px;white-space:nowrap;font-variant-numeric:tabular-nums}
 .rea-bd-org-foot{display:flex;align-items:center;gap:12px;margin-top:10px;padding-top:10px;border-top:1px solid #F0F2F5;color:#8F959E;font-size:12px}
