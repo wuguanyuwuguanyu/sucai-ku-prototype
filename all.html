@@ -9976,10 +9976,13 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
       </div>
       <div class="rea-bd-cmp-body">
         <div class="rea-bd-cmp-pane" data-cmp-pane="org">
-          <!-- 列名行：与下面每行同一套 flex 尺寸，列才对得齐。两枚可点的列名就是这一面的排序控件。 -->
+          <!-- 列名行：与下面每行同一套 flex 尺寸，列才对得齐。两枚可点的列名就是这一面的排序控件。
+               「完成率」压在百分比那一列上，「应执行」压在人次那一列上；条那一列不写列名
+               ——条画的就是左边那枚列名说的比率，再标一遍只是把同一件事写两次。 -->
           <div class="rea-bd-lhead rea-bd-lhead--org">
             <span class="nm">部门</span>
-            <span class="track"><span class="sortc is-on" id="rea-bd-org-sort" role="button" tabindex="0" data-bd-org-sort="rate" title="按完成率降序（点一下改升序）">完成率<i>↓</i></span></span>
+            <span class="track"></span>
+            <span class="rate"><span class="sortc is-on" id="rea-bd-org-sort" role="button" tabindex="0" data-bd-org-sort="rate" title="按完成率降序（点一下改升序）">完成率<i>↓</i></span></span>
             <span class="qty"><span class="sortc" role="button" tabindex="0" data-bd-org-sort="need" title="按应执行人次降序（点一下改升序）">应执行<i>↕</i></span></span>
           </div>
           <div class="rea-bd-org" id="rea-bd-org"></div>
@@ -9990,9 +9993,11 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
         </div>
         <div class="rea-bd-cmp-pane" data-cmp-pane="ld" hidden>
           <div class="rea-bd-lhead rea-bd-lhead--ld" id="rea-bd-ld-tools">
-            <span class="rk"></span>
+            <span class="rk">排名</span>
             <span class="nm">员工</span>
-            <span class="qty"><span class="sortc is-on" role="button" tabindex="0" data-bd-ld-sortby="done" title="按完成降序（点一下改升序）">完成<i>↓</i></span></span>
+            <span class="dept">部门</span>
+            <span class="track"></span>
+            <span class="qty"><span class="sortc is-on" role="button" tabindex="0" data-bd-ld-sortby="done" title="按完成数降序（点一下改升序）">完成数<i>↓</i></span></span>
             <span class="rate"><span class="sortc" role="button" tabindex="0" data-bd-ld-sortby="rate" title="按完成率排（点一下切过来）">完成率<i>↕</i></span></span>
             <span class="more"></span>
           </div>
@@ -10899,8 +10904,9 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     <span class="rea-bd-upd">数据更新于 <span data-rea-d="now@hhmm"></span></span>
   </div>
 
-  <!-- 一条筛选栏管全页（PRD §2）：时间范围 6 档 ＋ 自定义区间，加一枚部门筛选。
-       部门收窄取用趋势、素材使用与分组页；使用覆盖是家底总量、部门页本来就要横向比，都不跟着收窄。
+  <!-- 一条筛选栏管全页（PRD §2）：只有时间范围 6 档 ＋ 自定义区间。
+       部门不在本页选，跟随左侧栏当前部门；它收窄取用趋势、素材使用与分组页，
+       使用覆盖是家底总量、部门页本来就要横向比，都不跟着收窄。
        近半年／近一年／自定义没有演示集，照任务看板的规矩置灰。 -->
   <div class="rea-bd-fbar">
     <span class="rea-bd-lab">时间范围</span>
@@ -10945,16 +10951,6 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
       </div>
     </div>
     <span class="rea-bd-custom" aria-disabled="true" title="演示数据未接入">自定义区间</span>
-    <span class="rea-bd-sep"></span>
-    <span class="rea-bd-lab">部门</span>
-    <select class="rea-bd-sel" id="rea-mb-dept" aria-label="部门">
-      <option value="all">全部</option>
-      <option value="销售一部">销售一部</option>
-      <option value="销售二部">销售二部</option>
-      <option value="市场部">市场部</option>
-      <option value="客户成功部">客户成功部</option>
-      <option value="运营部">运营部</option>
-    </select>
   </div>
 
   <!-- 卡片网格（PRD §2）：第 1 行 4／8，第 2 行通栏，第 3 行 8／4。 -->
@@ -11042,32 +11038,31 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
       </div>
     </div>
 
-    <!-- 分组使用 · 第 4 行左格（PRD §2.5）。有哪些组整组没人碰；默认覆盖率升序（垫底的组在上）。
-         列名压在列表上方；「覆盖」这一列可点，点一下改方向。 -->
+    <!-- 分组使用 · 第 4 行左格（PRD §2.5）。哪些组用得多、多少人用过；默认取用次数降序。
+         列名压在列表上方，两列都可点翻方向；每格带一根横条，长＝该列最大值里的占比。 -->
     <div class="rea-bd-card rea-bd-card--w6">
       <div class="rea-bd-ch">
         <h6>分组使用</h6>
       </div>
       <div class="rea-mb-lhead rea-mb-lhead--grp">
         <span class="nm">分组</span>
-        <span class="track"><span class="sortc" id="rea-mb-grp-sort" role="button" tabindex="0" title="按使用覆盖率升序（点一下改降序）">覆盖<i>↑</i></span></span>
-        <span class="v">用过 / 全部</span>
-        <span class="n">取用次数</span>
+        <span class="mv"><span class="sortc on" role="button" tabindex="0" data-mb-gsort="count" title="按取用次数降序（点一下改升序）">取用次数 <i>↓</i></span></span>
+        <span class="mv"><span class="sortc" role="button" tabindex="0" data-mb-gsort="people" title="按使用人数排（点一下翻方向）">使用人数 <i>↕</i></span></span>
       </div>
       <div class="rea-mb-list" id="rea-mb-grp-list"></div>
       <div class="rea-mb-foot"><span id="rea-mb-grp-foot"></span></div>
     </div>
 
     <!-- 部门使用 · 第 4 行右格（PRD §2.5）。哪个部门在横向用、哪个一条没碰；默认取用次数降序。
-         列名压在列表上方；「取用次数」这一列可点，点一下改方向。 -->
+         列名与分组使用同一套，两列都可点翻方向；每格一根横条，部门之间横向比。 -->
     <div class="rea-bd-card rea-bd-card--w6">
       <div class="rea-bd-ch">
         <h6>部门使用</h6>
       </div>
       <div class="rea-mb-lhead rea-mb-lhead--dep">
         <span class="nm">部门</span>
-        <span class="n"><span class="sortc" id="rea-mb-dep-sort" role="button" tabindex="0" title="按取用次数降序（点一下改升序）">取用次数<i>↓</i></span></span>
-        <span class="v">使用人数</span>
+        <span class="mv"><span class="sortc on" role="button" tabindex="0" data-mb-dsort="count" title="按取用次数降序（点一下改升序）">取用次数 <i>↓</i></span></span>
+        <span class="mv"><span class="sortc" role="button" tabindex="0" data-mb-dsort="people" title="按使用人数排（点一下翻方向）">使用人数 <i>↕</i></span></span>
       </div>
       <div class="rea-mb-list" id="rea-mb-dep-list"></div>
       <div class="rea-mb-foot"><span id="rea-mb-dep-foot"></span></div>
@@ -11851,10 +11846,13 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-lhead--org{gap:14px}
 .rea-bd-lhead--org .nm{flex:0 0 84px}
 .rea-bd-lhead--org .track{flex:1 1 auto;min-width:60px}
+.rea-bd-lhead--org .rate{flex:0 0 52px}
 .rea-bd-lhead--org .qty{flex:0 0 64px}
 .rea-bd-lhead--ld{gap:12px}
-.rea-bd-lhead--ld .rk{flex:0 0 26px}
-.rea-bd-lhead--ld .nm{flex:1 1 auto;min-width:0}
+.rea-bd-lhead--ld .rk{flex:0 0 34px}
+.rea-bd-lhead--ld .nm{flex:0 0 88px}
+.rea-bd-lhead--ld .dept{flex:0 0 92px}
+.rea-bd-lhead--ld .track{flex:1 1 auto;min-width:60px}
 .rea-bd-lhead--ld .qty{flex:0 0 62px}
 .rea-bd-lhead--ld .rate{flex:0 0 52px}
 .rea-bd-lhead--ld .more{flex:0 0 10px}
@@ -11874,8 +11872,9 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-org-row:hover .nm{color:#1677FF}
 .rea-bd-org-row .nm{flex:0 0 84px;color:#1F2329;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rea-bd-org-row .track{flex:1 1 auto;min-width:60px}
-.rea-bd-org-bar{display:block;height:8px;border-radius:4px;background:#EEF2F9;overflow:hidden}
-.rea-bd-org-bar>i{display:block;height:100%;border-radius:4px;background:#1677FF;transition:width .2s ease}
+/* 条：部门面画完成率，员工面画当前排序口径（完成数按最大值比、完成率按自身比例），两边同一套长相。 */
+.rea-bd-cmp-bar{display:block;height:8px;border-radius:4px;background:#EEF2F9;overflow:hidden}
+.rea-bd-cmp-bar>i{display:block;height:100%;border-radius:4px;background:#1677FF;transition:width .2s ease}
 .rea-bd-org-row .rate{flex:0 0 52px;text-align:right;color:#1F2329;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums}
 .rea-bd-org-row .qty{flex:0 0 64px;text-align:right;color:#8F959E;font-size:12px;white-space:nowrap;font-variant-numeric:tabular-nums}
 .rea-bd-org-foot{display:flex;align-items:center;gap:12px;margin-top:10px;padding-top:10px;border-top:1px solid #F0F2F5;color:#8F959E;font-size:12px}
@@ -12129,33 +12128,26 @@ body .subapp{background:#F6F8FB!important}
 
 /* ---------- 分组与部门 ---------- */
 .rea-mb-list{flex:1 1 auto;overflow-y:auto;overflow-x:hidden;max-height:344px;scrollbar-width:thin;scrollbar-color:#D6DDE8 transparent}
-/* 列名行：与下面的行同一套 flex 尺寸，列才对得齐。 */
+/* 列名行：与下面的行同一套 flex 尺寸，列才对得齐；数值列靠右，落在数字上方。 */
 .rea-mb-lhead{display:flex;align-items:center;gap:14px;min-height:28px;padding:0 8px;margin:0 -8px 2px;border-bottom:1px solid #E5E8EF;color:#8F959E;font-size:12px;white-space:nowrap}
-.rea-mb-lhead .n,.rea-mb-lhead .v{text-align:right}
-.rea-mb-lhead--grp .nm{flex:0 0 132px}
-.rea-mb-lhead--grp .track{flex:1 1 auto;min-width:60px}
-.rea-mb-lhead--grp .v{flex:0 0 84px}
-.rea-mb-lhead--grp .n{flex:0 0 74px}
-.rea-mb-lhead--dep .nm{flex:0 0 120px}
-.rea-mb-lhead--dep .n{flex:1 1 auto}
-.rea-mb-lhead--dep .v{flex:0 0 96px}
+.rea-mb-lhead .nm{flex:0 0 120px}
+.rea-mb-lhead .mv{flex:1 1 0;display:flex;justify-content:flex-end}
 .rea-mb-lhead .sortc{display:inline-flex;align-items:center;gap:3px;cursor:pointer;user-select:none;-webkit-user-select:none;border-radius:3px}
 .rea-mb-lhead .sortc:hover{color:#1677FF}
-.rea-mb-lhead .sortc i{font-style:normal;color:#1677FF;font-size:10px;line-height:1}
+.rea-mb-lhead .sortc.on{color:#1F2329}
+.rea-mb-lhead .sortc i{font-style:normal;color:#B7BCC4;font-size:10px;line-height:1}
+.rea-mb-lhead .sortc.on i{color:#1677FF}
 .rea-mb-grp-row,.rea-mb-dep-row{display:flex;align-items:center;gap:14px;min-height:42px;padding:4px 8px;margin:0 -8px;border-radius:6px;border-top:1px solid #F4F6FA;cursor:pointer;transition:background .12s linear}
 .rea-mb-grp-row:first-child,.rea-mb-dep-row:first-child{border-top:0}
 .rea-mb-grp-row:hover,.rea-mb-dep-row:hover{background:#F7F9FC}
 .rea-mb-grp-row:hover .nm,.rea-mb-dep-row:hover .nm{color:#1677FF}
-.rea-mb-grp-row .nm{flex:0 0 132px;color:#1F2329;font-size:13px;line-height:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rea-mb-grp-row .nm,.rea-mb-dep-row .nm{flex:0 0 120px;color:#1F2329;font-size:13px;line-height:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rea-mb-grp-row .nm em{display:block;font-style:normal;font-size:11px;color:#8F959E;line-height:14px;margin-top:1px}
-.rea-mb-grp-row .track{flex:1 1 auto;min-width:60px}
-.rea-mb-cover{display:block;height:8px;border-radius:4px;background:#EEF2F9;overflow:hidden}
-.rea-mb-cover>i{display:block;height:100%;border-radius:4px;background:#1677FF;transition:width .2s ease}
-.rea-mb-grp-row .v{flex:0 0 84px;text-align:right;color:#646A73;font-size:12px;font-variant-numeric:tabular-nums;white-space:nowrap}
-.rea-mb-grp-row .n{flex:0 0 74px;text-align:right;color:#1F2329;font-size:13px;font-variant-numeric:tabular-nums;white-space:nowrap}
-.rea-mb-dep-row .nm{flex:0 0 120px;color:#1F2329;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.rea-mb-dep-row .n{flex:1 1 auto;text-align:right;color:#1F2329;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums}
-.rea-mb-dep-row .v{flex:0 0 96px;text-align:right;color:#8F959E;font-size:12px;white-space:nowrap}
+.rea-mb-grp-row .mv,.rea-mb-dep-row .mv{flex:1 1 0;display:flex;align-items:center;gap:8px;min-width:0}
+.rea-mb-rowbar{flex:1 1 auto;display:block;height:8px;border-radius:4px;background:#EEF2F9;overflow:hidden;min-width:20px}
+.rea-mb-rowbar>i{display:block;height:100%;border-radius:4px;background:#1677FF;transition:width .2s ease}
+.rea-mb-rowbar>i.p{background:#9FC0EA}
+.rea-mb-grp-row .n,.rea-mb-dep-row .n{flex:0 0 32px;text-align:right;color:#1F2329;font-size:13px;font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap}
 
 /* ---------- 群发好友回复 ---------- */
 .rea-mb-qf-hero{display:flex;align-items:baseline;gap:10px;padding:2px 0 4px}
@@ -12229,7 +12221,7 @@ body .subapp{background:#F6F8FB!important}
 .rea-mb-dw-b{flex:1 1 auto;overflow:auto;padding:0 20px}
 .rea-mb-dw .rea-mb-pg{padding:12px 20px 16px;border-top:1px solid #F0F2F5}
 @media (prefers-reduced-motion: reduce){
-  .rea-mb-dw,.rea-mb-cover>i,.rea-mb-tbl tbody tr{transition:none!important}
+  .rea-mb-dw,.rea-mb-rowbar>i,.rea-mb-tbl tbody tr{transition:none!important}
 }
 `;
 
@@ -17849,22 +17841,31 @@ function renderUse(w){
 }
 
 /* ================= 分组与部门 ================= */
-var GRPDIR=1,DEPTDIR=-1;
+/* 两张卡同一套列：取用次数 / 使用人数。各自记自己的排序，默认次数降序。 */
+var GSK="count",GSD=-1,DSK="count",DSD=-1;
+function sortCmp(x,y,k,dir){
+  var a=k==="count"?x.n:x.people,b=k==="count"?y.n:y.people;
+  if(a!==b)return (a-b)*dir;
+  var a2=k==="count"?x.people:x.n,b2=k==="count"?y.people:y.n;
+  return (a2-b2)*dir;
+}
 function groupRows(w,dept){
   dept=dept||CURD;
-  var s=scan(w,dept),end=endOff(w),map={},k,m,a,out=[];
+  var s=scan(w,dept),map={},k,m,a,mm,nm,out=[];
   for(k=0;k<MATS.length;k++){
     m=MATS[k];
     if(dept!=="all"&&m.dept!==dept)continue;
-    a=map[m.dept+"|"+m.group]||(map[m.dept+"|"+m.group]={dept:m.dept,group:m.group,k:0,m:0,n:0});
-    a.k++;
-    if(s.mat[m.id]){a.m++;a.n+=s.mat[m.id].c;}
+    a=map[m.dept+"|"+m.group]||(map[m.dept+"|"+m.group]={dept:m.dept,group:m.group,n:0,people:{},pc:0});
+    mm=s.mat[m.id];
+    if(mm){a.n+=mm.c;for(nm in mm.users)a.people[nm]=1;}
   }
-  for(var key in map)out.push(map[key]);
+  for(var key in map){
+    a=map[key];
+    var pc=0;for(nm in a.people)pc++;
+    out.push({dept:a.dept,group:a.group,n:a.n,people:pc});
+  }
   out.sort(function(x,y){
-    var rx=x.k?x.m/x.k:0,ry=y.k?y.m/y.k:0;
-    if(rx!==ry)return (rx-ry)*GRPDIR;
-    if(x.k!==y.k)return y.k-x.k;
+    var c=sortCmp(x,y,GSK,GSD);if(c)return c;
     if(x.dept!==y.dept)return DEPTS.indexOf(x.dept)-DEPTS.indexOf(y.dept);
     return x.group<y.group?-1:1;
   });
@@ -17883,42 +17884,53 @@ function deptRows(w){
     out.push({o:a2.o,n:a2.n,people:pc});
   }
   out.sort(function(x,y){
-    if(x.n!==y.n)return (y.n-x.n)*(-DEPTDIR);
+    var c=sortCmp(x,y,DSK,DSD);if(c)return c;
     return DEPTS.indexOf(x.o)-DEPTS.indexOf(y.o);
   });
   return out;
 }
+/* 一格 ＝ 横条 ＋ 数字；横条长度按这一列的最大值取比例，两张卡各自归一。 */
+function barCell(v,max,cls){
+  var pct=max?Math.round(v/max*100):0;
+  return '<span class="mv"><span class="rea-mb-rowbar"><i'+(cls?' class="'+cls+'"':'')+' style="width:'+pct+'%"></i></span><span class="n">'+v+'</span></span>';
+}
+function syncSort(sel,attr,k,dir){
+  var cs=document.querySelectorAll(sel),i,key,on,ic;
+  for(i=0;i<cs.length;i++){
+    key=cs[i].getAttribute(attr);on=key===k;
+    cs[i].className="sortc"+(on?" on":"");
+    ic=cs[i].querySelector("i");
+    if(ic)ic.textContent=on?(dir<0?"↓":"↑"):"↕";
+    cs[i].title=on?"点一下翻方向":"按"+(key==="count"?"取用次数":"使用人数")+"排";
+  }
+}
 function renderGroups(w){
   var grp=document.getElementById("rea-mb-grp-list"),gf=document.getElementById("rea-mb-grp-foot");
-  var gs=groupRows(w),h="",k,r,pc=0;
+  var gs=groupRows(w),h="",k,r,zero=0,maxN=0,maxP=0;
+  for(k=0;k<gs.length;k++){maxN=Math.max(maxN,gs[k].n);maxP=Math.max(maxP,gs[k].people);}
   for(k=0;k<gs.length;k++){
-    r=gs[k];if(!r.m)pc++;
-    var rate=r.k?r.m/r.k*100:0;
+    r=gs[k];if(!r.n)zero++;
     h+='<div class="rea-mb-grp-row" role="button" tabindex="0" data-mb-group="'+esc(r.dept)+"|"+esc(r.group)+'">'
       +'<span class="nm">'+esc(r.group)+'<em>'+esc(r.dept)+'</em></span>'
-      +'<span class="track"><span class="rea-mb-cover"><i style="width:'+rate.toFixed(1)+'%"></i></span></span>'
-      +'<span class="v">'+r.m+' / '+r.k+'</span>'
-      +'<span class="n">'+r.n+'</span></div>';
+      +barCell(r.n,maxN,"")+barCell(r.people,maxP,"p")+'</div>';
   }
   if(grp)grp.innerHTML=h;
-  if(gf)gf.textContent="共 "+gs.length+" 个分组 · "+pc+" 个分组这段时间零取用";
-  var gs2=document.getElementById("rea-mb-grp-sort");
-  if(gs2){gs2.setAttribute("data-mb-grpdir",String(GRPDIR));var ai=gs2.querySelector("i");if(ai)ai.textContent=GRPDIR<0?"↓":"↑";}
+  if(gf)gf.textContent="共 "+gs.length+" 个分组 · "+zero+" 个分组这段时间零取用";
+  syncSort("[data-mb-gsort]","data-mb-gsort",GSK,GSD);
 }
 function renderDepts(w){
   var dep=document.getElementById("rea-mb-dep-list"),df=document.getElementById("rea-mb-dep-foot");
-  var ds=deptRows(w),h2="",k2,r2,zero=0;
+  var ds=deptRows(w),h2="",k2,r2,zero=0,maxN=0,maxP=0;
+  for(k2=0;k2<ds.length;k2++){maxN=Math.max(maxN,ds[k2].n);maxP=Math.max(maxP,ds[k2].people);}
   for(k2=0;k2<ds.length;k2++){
     r2=ds[k2];if(!r2.n)zero++;
     h2+='<div class="rea-mb-dep-row" role="button" tabindex="0" data-mb-dept="'+esc(r2.o)+'">'
       +'<span class="nm">'+esc(r2.o)+'</span>'
-      +'<span class="n">'+r2.n+'</span>'
-      +'<span class="v">'+r2.people+'</span></div>';
+      +barCell(r2.n,maxN,"")+barCell(r2.people,maxP,"p")+'</div>';
   }
   if(dep)dep.innerHTML=h2;
   if(df)df.textContent="共 "+ds.length+" 个部门 · "+zero+" 个部门这段时间零取用";
-  var ds2=document.getElementById("rea-mb-dep-sort");
-  if(ds2){ds2.setAttribute("data-mb-depdir",String(DEPTDIR));var ai2=ds2.querySelector("i");if(ai2)ai2.textContent=DEPTDIR<0?"↓":"↑";}
+  syncSort("[data-mb-dsort]","data-mb-dsort",DSK,DSD);
 }
 
 /* ================= 群发好友回复 ================= */
@@ -18037,12 +18049,6 @@ if(wg)wg.addEventListener("click",function(e){
   e.preventDefault();
   if(id!==CURW)applyWin(id);
 },true);
-/* 部门：收窄取用趋势、素材使用与分组页；使用覆盖与部门页不跟着收窄。 */
-var ds=document.getElementById("rea-mb-dept");
-if(ds)ds.addEventListener("change",function(){
-  CURD=ds.value||"all";
-  paintTrend(CURW);renderUse(CURW);renderGroups(CURW);renderDepts(CURW);
-});
 /* 素材使用：三列排序，同一时间只有一列生效。 */
 var uh=document.querySelector("table.rea-mb-use");
 if(uh)uh.addEventListener("click",function(e){
@@ -18089,14 +18095,21 @@ if(cv)cv.addEventListener("click",function(e){
     n=n.parentNode;
   }
 });
-var gsort=document.getElementById("rea-mb-grp-sort");
-if(gsort)gsort.addEventListener("click",function(e){
-  e.preventDefault();e.stopPropagation();GRPDIR=-GRPDIR;renderGroups(CURW);
+/* 两张卡的列头：同一列再点翻方向，换一列从降序起。 */
+var gchips=document.querySelectorAll("[data-mb-gsort]");
+for(i=0;i<gchips.length;i++)gchips[i].addEventListener("click",function(e){
+  e.preventDefault();e.stopPropagation();
+  var k=this.getAttribute("data-mb-gsort");
+  if(k===GSK)GSD=-GSD;else{GSK=k;GSD=-1;}
+  renderGroups(CURW);
   var b=document.getElementById("rea-mb-grp-list");if(b)b.scrollTop=0;
 });
-var dsort=document.getElementById("rea-mb-dep-sort");
-if(dsort)dsort.addEventListener("click",function(e){
-  e.preventDefault();e.stopPropagation();DEPTDIR=-DEPTDIR;renderDepts(CURW);
+var dchips=document.querySelectorAll("[data-mb-dsort]");
+for(i=0;i<dchips.length;i++)dchips[i].addEventListener("click",function(e){
+  e.preventDefault();e.stopPropagation();
+  var k=this.getAttribute("data-mb-dsort");
+  if(k===DSK)DSD=-DSD;else{DSK=k;DSD=-1;}
+  renderDepts(CURW);
   var b=document.getElementById("rea-mb-dep-list");if(b)b.scrollTop=0;
 });
 /* 分组行 / 部门行 → 素材明细，按分组、按部门预筛。 */
@@ -18127,7 +18140,7 @@ document.addEventListener("keydown",function(e){
   if(e.key!=="Enter"&&e.key!==" ")return;
   var n=e.target;
   if(!n||!n.getAttribute)return;
-  if(n.getAttribute("data-mb-sort")||n.getAttribute("data-mb-mat")||n.getAttribute("data-mb-group")||n.getAttribute("data-mb-dept")||n.getAttribute("data-mb-seg")||n.getAttribute("data-mb-win")){
+  if(n.getAttribute("data-mb-sort")||n.getAttribute("data-mb-gsort")||n.getAttribute("data-mb-dsort")||n.getAttribute("data-mb-mat")||n.getAttribute("data-mb-group")||n.getAttribute("data-mb-dept")||n.getAttribute("data-mb-seg")||n.getAttribute("data-mb-win")){
     e.preventDefault();n.click();
   }
 });
