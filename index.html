@@ -11774,6 +11774,20 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-lab{color:#8F959E;font-size:12px}
 .rea-bd-sep{width:1px;height:16px;background:#E5E8EF;margin:0 4px}
 .rea-bd-dim{color:#8F959E}
+/* ---------- 平台小标（任务名称前那一枚） ----------
+   图标按**任务大类**取：微信营销任务＝微信、企业微信任务＝企微、抖音营销任务＝抖音、
+   小红书营销任务＝小红书、WhatsApp 营销任务／商业版＝WhatsApp（PRD §2.5）。
+   同一类型名在几个大类下都有（批量加好友、群发好友、社媒互动），不能只按类型猜——
+   行上带了平台就用行上的，没带就回落到微信（演示集全是微信营销任务）。 */
+.rea-plat{display:inline-block;width:16px;height:16px;flex:0 0 auto;margin-right:6px;border-radius:4px;
+  vertical-align:-3px;background-repeat:no-repeat;background-position:center;background-size:16px 16px}
+.rea-plat.p-wx{background-color:#07C160;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23fff' d='M6.4 3.1C4.2 3.1 2.4 4.5 2.4 6.2c0 .9.5 1.8 1.4 2.4l-.4 1.3 1.5-.8c.4.1.8.2 1.4.2 2.2 0 4-1.4 4-3.1s-1.8-3.1-3.9-3.1z'/%3E%3Cpath fill='%23fff' d='M13.6 9.6c0-1.4-1.4-2.5-3.2-2.5-1.7 0-3.2 1.1-3.2 2.5s1.4 2.5 3.2 2.5c.4 0 .8-.1 1.1-.2l1.2.6-.3-1.1c.7-.4 1.2-1.1 1.2-1.8z'/%3E%3C/svg%3E")}
+.rea-plat.p-wecom{background-color:#2B7FF3;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23fff' d='M3.2 4.2h9.6c.6 0 1 .4 1 1v4.6c0 .6-.4 1-1 1H7.9l-2.9 2.1v-2.1H3.2c-.6 0-1-.4-1-1V5.2c0-.6.4-1 1-1z'/%3E%3Ccircle cx='5.9' cy='7.5' r='.85' fill='%232B7FF3'/%3E%3Ccircle cx='8' cy='7.5' r='.85' fill='%232B7FF3'/%3E%3Ccircle cx='10.1' cy='7.5' r='.85' fill='%232B7FF3'/%3E%3C/svg%3E")}
+.rea-plat.p-dy{background-color:#161823;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23fff' d='M9.3 2.6h1.6c.1 1.3.7 2.2 1.9 2.6v1.6c-.8 0-1.5-.2-2.1-.6v4.2a2.7 2.7 0 1 1-2.7-2.7c.2 0 .4 0 .6.1v1.7a1.1 1.1 0 1 0 .7 1V2.6z'/%3E%3C/svg%3E")}
+.rea-plat.p-xhs{background-color:#FF2442;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23fff' d='M3.3 4.5c1.5-.6 3.1-.5 4.7.4 1.6-.9 3.2-1 4.7-.4v7.4c-1.5-.6-3.1-.5-4.7.4-1.6-.9-3.2-1-4.7-.4z'/%3E%3Cpath stroke='%23FF2442' stroke-width='.9' d='M8 5.1v7'/%3E%3C/svg%3E")}
+.rea-plat.p-wa{background-color:#25D366;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23fff' d='M8 2.8a5.1 5.1 0 0 0-4.4 7.7l-.6 2.3 2.3-.6A5.1 5.1 0 1 0 8 2.8z'/%3E%3Cpath fill='%2325D366' d='M6.4 5.6c.2.1.3.1.4.3l.5.8c.1.2.1.3 0 .4l-.3.4c-.1.1-.1.3 0 .4.3.6.9 1.1 1.5 1.4.1.1.3.1.4 0l.4-.4c.1-.1.3-.1.4 0l.8.5c.2.1.2.2.3.4v.4c-.1.4-.4.7-.8.8-.4.1-.9 0-1.6-.3-.9-.4-1.7-1-2.3-1.8-.5-.6-.8-1.3-.7-1.8.1-.4.3-.7.6-.9.1-.1.3-.2.4-.2z'/%3E%3C/svg%3E")}
+.rea-bd-name{display:flex;align-items:center;min-width:0}
+.rea-bd-ptask .rea-plat{align-self:center;margin-right:0}
 
 /* ---------- 执行健康度 · 环形占比 ----------
    环只画三段互斥的状态，段间留 2.5px 缝（在 SVG 里按弧长扣，见 paintDonut）；
@@ -13139,6 +13153,20 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '   抓存件没抓这条路由，直接点会把 iframe 导航出去、在原型里表现为空白页）。',
     '   这里改成在原型内开子页，并把**当前窗口**与任务表整行一起带过去——',
     '   子页不另编一份数，看到的就是这一页此刻的同一张表。 */',
+    '/* 任务大类 → 平台小标。同一类型名在几个大类下都有（批量加好友、群发好友、社媒互动），',
+    '   所以**先看行上带的平台**（data-bd-plat），没带再按类型回落；演示集全是微信营销任务，',
+    '   回落就是微信。表里列全各平台的类型，接入其它大类时只补行上的平台即可。 */',
+    'var PLAT_BY_TYPE={',
+    '  "发圈":"wx","群发群组":"wx","关联好友":"wx","客户唤醒":"wx","视频号发布任务":"wx","视频号发布":"wx",',
+    '  "群发客户":"wecom","群发客户群":"wecom","批量加客户":"wecom","自动化群发":"wecom",',
+    '  "群成员":"wecom","群信息变更":"wecom","群设置":"wecom","新建群聊":"wecom",',
+    '  "发短视频":"dy","抖音运营":"dy","养号":"dy",',
+    '  "笔记发布":"xhs","小红书运营":"xhs","小红书评论互动":"xhs","新小红书运营":"xhs"',
+    '};',
+    'function platOf(r){',
+    '  var p=r&&r.getAttribute&&r.getAttribute("data-bd-plat");',
+    '  return p||PLAT_BY_TYPE[r&&r.getAttribute("data-bd-type")]||"wx";',
+    '}',
     'function dumpRows(){',
     '  var rs=rows(),out=[],i,r,c,id,cr,need,done,left,over;',
     '  for(i=0;i<rs.length;i++){',
@@ -13151,6 +13179,7 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '      id:id,',
     '      day:r.getAttribute("data-bd-day"),',
     '      type:r.getAttribute("data-bd-type"),',
+    '      plat:platOf(r),',
     '      org:r.getAttribute("data-bd-org"),',
     '      name:((c[0]&&c[0].getAttribute("title"))||(c[0]&&c[0].textContent)||"").trim(),',
     '      creator:cr,',
@@ -13519,7 +13548,7 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '      if(!map[a.n]){map[a.n]={n:a.n,o:a.o,need:0,done:0,left:0,over:0,tasks:[],idx:order.length};order.push(a.n)}',
     '      p=map[a.n];p.need++;',
     '      if(a.d)p.done++;else{p.left++;if(a.over)p.over++}',
-    '      p.tasks.push({name:rs[i].name,type:rs[i].type,span:rs[i].span,done:!!a.d,over:!!a.over});',
+    '      p.tasks.push({name:rs[i].name,type:rs[i].type,plat:rs[i].plat||"wx",span:rs[i].span,done:!!a.d,over:!!a.over});',
     '    }',
     '  }',
     '  for(i=0;i<order.length;i++){',
@@ -13561,6 +13590,7 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '      for(j=0;j<p.tasks.length;j++){',
     '        k=p.tasks[j];',
     '        h+="<div class=\\"rea-bd-ptask\\">"',
+    '          +"<i class=\\"rea-plat p-"+(k.plat||"wx")+"\\" aria-hidden=\\"true\\"></i>"',
     '          +"<span class=\\"t\\">"+esc(k.name)+"</span>"',
     '          +"<span class=\\"y\\">"+esc(k.type)+"</span>"',
     '          +"<span class=\\"d\\">"+esc(k.span)+"</span>"',
@@ -13745,6 +13775,15 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '  if(over>0)h+="<i class=\\"o\\" style=\\"flex:"+over+" 1 0\\"></i>";',
     '  return h+"</span>";',
     '}',
+    '/* 平台小标：行数据里带着 plat（看板 dumpRows 给的），没带就按看板那套表回落。 */',
+    'var PLAT_BY_TYPE={"发圈":"wx","群发群组":"wx","关联好友":"wx","客户唤醒":"wx","视频号发布任务":"wx","视频号发布":"wx",',
+    '  "群发客户":"wecom","群发客户群":"wecom","批量加客户":"wecom","自动化群发":"wecom",',
+    '  "群成员":"wecom","群信息变更":"wecom","群设置":"wecom","新建群聊":"wecom",',
+    '  "发短视频":"dy","抖音运营":"dy","养号":"dy",',
+    '  "笔记发布":"xhs","小红书运营":"xhs","小红书评论互动":"xhs","新小红书运营":"xhs"};',
+    'function platTag(p){',
+    '  return "<i class=\\"rea-plat p-"+(p||"wx")+"\\" aria-hidden=\\"true\\"></i>";',
+    '}',
     'function tag(s){',
     '  var c=s==="已完成"?"ant-tag ant-tag-green css-vgijab":(s==="进行中"?"ant-tag ant-tag-blue css-vgijab":"ant-tag css-vgijab");',
     '  return "<span class=\\""+c+"\\">"+esc(s)+"</span>";',
@@ -13789,7 +13828,7 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '  for(i=0;i<fs.length;i++){',
     '    r=fs[i].r;state=stateOf(r);',
     '    h+="<tr class=\\"ant-table-row ant-table-row-level-0\\">"',
-    '      +"<td class=\\"ant-table-cell ant-table-cell-ellipsis\\" title=\\""+esc(r.name)+"\\"><span class=\\"ant-typography ant-typography-ellipsis ant-typography-ellipsis-single-line css-vgijab\\" title=\\""+esc(r.name)+"\\">"+esc(r.name)+"</span></td>"',
+    '      +"<td class=\\"ant-table-cell ant-table-cell-ellipsis\\" title=\\""+esc(r.name)+"\\"><span class=\\"rea-bd-name\\">"+platTag(r.plat)+"<span class=\\"ant-typography ant-typography-ellipsis ant-typography-ellipsis-single-line css-vgijab\\" title=\\""+esc(r.name)+"\\">"+esc(r.name)+"</span></span></td>"',
     '      +"<td class=\\"ant-table-cell\\">"+esc(r.type)+"</td>"',
     '      +"<td class=\\"ant-table-cell\\"><span class=\\"rea-bd-creator\\">"+esc(r.creator)+"<em>"+esc(r.org)+"</em></span></td>"',
     '      +"<td class=\\"ant-table-cell\\"><span class=\\"rea-bd-people\\" title=\\""+esc(r.people)+"\\">"+esc(r.people)+"</span></td>"',
