@@ -17727,13 +17727,13 @@ function paintTrend(w){
     h+='<line x1="'+L+'" y1="'+gy+'" x2="'+(W-R)+'" y2="'+gy+'" stroke="'+((k===0)?"#E5E8EF":"#F0F2F5")+'" stroke-width="1"/>';
     h+='<text x="'+(L-8)+'" y="'+(gy+4)+'" text-anchor="end" fill="#8F959E" font-size="11">'+lab+'</text>';
   }
+  /* 合计柱与末格底纹共用同一个格宽：只有一格时柱居中，底纹也居中。 */
+  var gap=bs.length>1?pw/(bs.length-1):pw,bw=Math.max(4,Math.min(40,gap*0.5));
   if(bs.length){
-    var last=bs[bs.length-1];
-    var lx=bs.length>1?x(bs.length-1):L;
-    h+='<rect x="'+(lx-(bs.length>1?(pw/(bs.length-1))/2:8))+'" y="'+T+'" width="'+(bs.length>1?(pw/(bs.length-1)):16)+'" height="'+ph+'" fill="#F7F9FC"/>';
+    var hw=bs.length>1?gap:bw+16,lx=x(bs.length-1);
+    h+='<rect x="'+(lx-hw/2).toFixed(1)+'" y="'+T+'" width="'+hw.toFixed(1)+'" height="'+ph+'" fill="#F7F9FC"/>';
   }
   /* 合计柱：柱高＝发出去＋备料，浅蓝铺底，两条线压在上面读构成。 */
-  var gap=bs.length>1?pw/(bs.length-1):pw,bw=Math.max(4,Math.min(40,gap*0.5));
   for(k=0;k<bs.length;k++){
     var tot=bs[k].send+bs[k].copy,by=y(tot);
     if(tot>0)h+='<rect class="mb-bar" x="'+(x(k)-bw/2).toFixed(1)+'" y="'+by.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+(ph-(by-T)).toFixed(1)+'" rx="3" fill="#E8F1FF"/>';
