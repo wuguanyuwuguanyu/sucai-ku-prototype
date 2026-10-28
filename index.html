@@ -11024,33 +11024,39 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
       <div id="rea-mb-qf"></div>
     </div>
 
-    <!-- 取用趋势 · 通栏（PRD §2.3）。用了几次、是发出去还是只备料。
+    <!-- 取用趋势 · 通栏（PRD §2.3）。用了几次、是发送了还是只复制保存。
          柱是两条线之和（合计），两条线压在上面看构成；粒度跟跨度自动定，31 天以内按日，更长按周。 -->
     <div class="rea-bd-card rea-bd-card--w12">
       <div class="rea-bd-ch">
         <h6>取用趋势</h6>
+        <span class="rea-mb-sub">发送：一键发送＋一键发圈 · 复制保存：复制＋保存</span>
       </div>
-      <div class="rea-mb-legend"><span class="lg"><i class="b"></i>合计</span><span class="lg"><i></i>发出去</span><span class="lg"><i class="g"></i>备料</span></div>
+      <div class="rea-mb-legend"><span class="lg"><i class="b"></i>合计</span><span class="lg"><i></i>发送</span><span class="lg"><i class="g"></i>复制保存</span></div>
       <div class="rea-mb-chart" id="rea-mb-chart"></div>
     </div>
 
     <!-- 素材使用 · 通栏（PRD §2.4）。行范围与覆盖环同一个分母，一次没用过的也在表里；
-         三列可点排序，升序时零取用排最前；操作列与素材库列表的四个动作一致。 -->
+         三列可点排序，升序时零取用排最前。列跟素材库列表取并集：台账那几列（关键词、创建时间、
+         更新人、更新时间）照素材库列表给，再插入取用相关的三列；操作列与素材库列表的四个动作一致。 -->
     <div class="rea-bd-card rea-bd-card--w12">
       <div class="rea-bd-ch"><h6>素材使用</h6><span class="rea-mb-sub">点列头翻方向；升序时零取用排最前</span></div>
       <div class="rea-mb-scroll rea-mb-use-scroll">
         <table class="rea-mb-tbl rea-mb-use">
           <colgroup>
-            <col><col style="width:104px"><col style="width:78px"><col style="width:78px"><col style="width:100px"><col style="width:100px"><col style="width:72px"><col style="width:176px">
+            <col><col style="width:92px"><col style="width:92px"><col style="width:76px"><col style="width:76px"><col style="width:94px"><col style="width:94px"><col style="width:84px"><col style="width:94px"><col style="width:56px"><col style="width:94px"><col style="width:176px">
           </colgroup>
           <thead><tr>
             <th>素材标题</th>
-            <th>分组</th>
+            <th>关键词</th>
+            <th>所属分组</th>
             <th class="num"><span class="sortc on" role="button" tabindex="0" data-mb-sort="count">使用次数 <i>↓</i></span></th>
             <th class="num"><span class="sortc" role="button" tabindex="0" data-mb-sort="people">使用人数 <i>↕</i></span></th>
             <th><span class="sortc" role="button" tabindex="0" data-mb-sort="last">最近使用 <i>↕</i></span></th>
             <th>有效期</th>
             <th>状态</th>
+            <th>创建时间</th>
+            <th>更新人</th>
+            <th>更新时间</th>
             <th>操作</th>
           </tr></thead>
           <tbody id="rea-mb-use-body"></tbody>
@@ -11062,21 +11068,32 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
       </div>
     </div>
 
-    <!-- 分组使用 · 第 4 行左格（PRD §2.5）。有哪些组整组没人碰；默认覆盖率升序（垫底的组在上）。 -->
+    <!-- 分组使用 · 第 4 行左格（PRD §2.5）。有哪些组整组没人碰；默认覆盖率升序（垫底的组在上）。
+         列名压在列表上方；「覆盖」这一列可点，点一下改方向。 -->
     <div class="rea-bd-card rea-bd-card--w6">
       <div class="rea-bd-ch">
         <h6>分组使用</h6>
-        <span class="th rea-bd-sort" id="rea-mb-grp-sort" role="button" tabindex="0" title="按使用覆盖率升序（点一下改降序）">覆盖<i>↑</i></span>
+      </div>
+      <div class="rea-mb-lhead rea-mb-lhead--grp">
+        <span class="nm">分组</span>
+        <span class="track"><span class="sortc" id="rea-mb-grp-sort" role="button" tabindex="0" title="按使用覆盖率升序（点一下改降序）">覆盖<i>↑</i></span></span>
+        <span class="v">用过 / 全部</span>
+        <span class="n">取用次数</span>
       </div>
       <div class="rea-mb-list" id="rea-mb-grp-list"></div>
       <div class="rea-mb-foot"><span id="rea-mb-grp-foot"></span></div>
     </div>
 
-    <!-- 部门使用 · 第 4 行右格（PRD §2.5）。哪个部门在横向用、哪个一条没碰；默认取用次数降序。 -->
+    <!-- 部门使用 · 第 4 行右格（PRD §2.5）。哪个部门在横向用、哪个一条没碰；默认取用次数降序。
+         列名压在列表上方；「取用次数」这一列可点，点一下改方向。 -->
     <div class="rea-bd-card rea-bd-card--w6">
       <div class="rea-bd-ch">
         <h6>部门使用</h6>
-        <span class="th rea-bd-sort" id="rea-mb-dep-sort" role="button" tabindex="0" title="按取用次数降序（点一下改升序）">取用次数<i>↓</i></span>
+      </div>
+      <div class="rea-mb-lhead rea-mb-lhead--dep">
+        <span class="nm">部门</span>
+        <span class="n"><span class="sortc" id="rea-mb-dep-sort" role="button" tabindex="0" title="按取用次数降序（点一下改升序）">取用次数<i>↓</i></span></span>
+        <span class="v">使用人数</span>
       </div>
       <div class="rea-mb-list" id="rea-mb-dep-list"></div>
       <div class="rea-mb-foot"><span id="rea-mb-dep-foot"></span></div>
@@ -12100,9 +12117,11 @@ body .subapp{background:#F6F8FB!important}
 /* ---------- 表（素材使用与素材明细共用） ---------- */
 .rea-mb-scroll{overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#D6DDE8 transparent}
 .rea-mb-use-scroll{flex:1 1 auto;max-height:436px}
-.rea-mb-use{min-width:860px}
-.rea-mb-use td,.rea-mb-use th{padding-left:8px;padding-right:8px}
+.rea-mb-use{min-width:1140px}
+.rea-mb-use td{padding-left:8px;padding-right:8px}
+.rea-mb-tbl.rea-mb-use th{padding-left:8px;padding-right:8px}
 .rea-mb-use td.g{line-height:17px}
+.rea-mb-use td.kw{color:#646A73;font-size:12px}
 .rea-mb-use td.g em{display:block;font-style:normal;font-size:11px;color:#8F959E;line-height:14px;margin-top:1px}
 .rea-mb-tbl{width:100%;border-collapse:collapse;font-size:13px;color:#1F2329;table-layout:fixed}
 .rea-mb-tbl th{position:sticky;top:0;z-index:1;background:#F7F8FA;color:#646A73;font-size:12px;font-weight:500;text-align:left;padding:9px 10px;border-bottom:1px solid #E5E8EF;white-space:nowrap}
@@ -12129,6 +12148,19 @@ body .subapp{background:#F6F8FB!important}
 
 /* ---------- 分组与部门 ---------- */
 .rea-mb-list{flex:1 1 auto;overflow-y:auto;overflow-x:hidden;max-height:344px;scrollbar-width:thin;scrollbar-color:#D6DDE8 transparent}
+/* 列名行：与下面的行同一套 flex 尺寸，列才对得齐。 */
+.rea-mb-lhead{display:flex;align-items:center;gap:14px;min-height:28px;padding:0 8px;margin:0 -8px 2px;border-bottom:1px solid #E5E8EF;color:#8F959E;font-size:12px;white-space:nowrap}
+.rea-mb-lhead .n,.rea-mb-lhead .v{text-align:right}
+.rea-mb-lhead--grp .nm{flex:0 0 132px}
+.rea-mb-lhead--grp .track{flex:1 1 auto;min-width:60px}
+.rea-mb-lhead--grp .v{flex:0 0 84px}
+.rea-mb-lhead--grp .n{flex:0 0 74px}
+.rea-mb-lhead--dep .nm{flex:0 0 120px}
+.rea-mb-lhead--dep .n{flex:1 1 auto}
+.rea-mb-lhead--dep .v{flex:0 0 96px}
+.rea-mb-lhead .sortc{display:inline-flex;align-items:center;gap:3px;cursor:pointer;user-select:none;-webkit-user-select:none;border-radius:3px}
+.rea-mb-lhead .sortc:hover{color:#1677FF}
+.rea-mb-lhead .sortc i{font-style:normal;color:#1677FF;font-size:10px;line-height:1}
 .rea-mb-grp-row,.rea-mb-dep-row{display:flex;align-items:center;gap:14px;min-height:42px;padding:4px 8px;margin:0 -8px;border-radius:6px;border-top:1px solid #F4F6FA;cursor:pointer;transition:background .12s linear}
 .rea-mb-grp-row:first-child,.rea-mb-dep-row:first-child{border-top:0}
 .rea-mb-grp-row:hover,.rea-mb-dep-row:hover{background:#F7F9FC}
@@ -17401,6 +17433,14 @@ function namesOf(d){
   for(k=0;k<ROSTER.length;k++)if(ROSTER[k][1]===d)out.push(ROSTER[k][0]);
   return out;
 }
+/* 关键词按分组给：素材库列表里每条素材挂的那几个词，演示集按组取同一套。 */
+var KEYW={
+  "品牌资料":"品牌,介绍","产品介绍":"产品,白皮书","公司介绍":"公司,资质",
+  "新品推广":"新品,卖点","节日营销":"节日,活动","客户案例":"案例,行业",
+  "逼单话术":"话术,异议","品牌视频":"视频,品牌","活动物料":"物料,展会",
+  "海报组图":"海报,朋友圈","续费提醒":"续费,到期","服务案例":"服务,满意度",
+  "社群运营":"社群,运营","内容日历":"日历,排期","活动回顾":"回顾,活动"
+};
 var RAW=[
   ["云小助品牌介绍长图","全公司","品牌资料","图片",120,-200,34],
   ["云小助产品白皮书 2026","全公司","产品介绍","含文件",90,-180,12],
@@ -17449,7 +17489,7 @@ var RAW=[
   ["秋季活动回顾长图","设计部","活动回顾","图片",-5,-60,0],
   ["展会物料清单","设计部","活动回顾","含文件",30,-90,0]
 ];
-/* 动作构成按素材类型分：图片/视频更容易被发圈，含文件只能发送或备料。 */
+/* 动作构成按素材类型分：图片/视频更容易被发圈，含文件只能发送或复制保存。 */
 var ACTS={
   "纯文本":[["复制",.34],["一键发送",.46],["保存",.10],["一键发圈",.10]],
   "图片":[["复制",.15],["一键发送",.35],["保存",.25],["一键发圈",.25]],
@@ -17466,8 +17506,12 @@ function pickAct(type){
 }
 var MATS=[],EVENTS=[];
 for(i=0;i<RAW.length;i++){
-  var r=RAW[i],m={id:i+1,title:r[0],dept:r[1],group:r[2],type:r[3],exp:r[4],created:r[5],heat:r[6]};
+  var r=RAW[i],m={id:i+1,title:r[0],dept:r[1],group:r[2],type:r[3],exp:r[4],created:r[5],heat:r[6],
+    kw:KEYW[r[2]]||r[2]};
   m.pool=namesOf(m.dept);
+  /* 更新人与更新时间是台账字段（素材库列表那几列）：更新人取本部门的人，更新时间落在建档之后、今天之前。 */
+  m.owner=m.pool[(i*3)%m.pool.length];
+  m.upd=Math.min(0,r[5]+(i*7)%21);
   MATS.push(m);
   /* 用过的人：热素材人多，冷素材只有一两个；热素材的事件也落在这几个人身上，
      所以「使用人数 ≤ 使用次数」这条恒成立，不用另编一份人维度的数。 */
@@ -17556,6 +17600,7 @@ function matRow(m,s,dept,end){
   }
   var st=statusOf(m,end);
   return {id:m.id,title:m.title,dept:m.dept,group:m.group,type:m.type,exp:m.exp,
+    kw:m.kw,created:m.created,owner:m.owner,upd:m.upd,
     status:st,count:c,send:se,copy:cp,people:people,last:last,users:users};
 }
 function allRows(w,dept){
@@ -17752,7 +17797,7 @@ function paintTrend(w){
   var top=niceMax(max,4);
   function x(i){return bs.length>1?L+pw*i/(bs.length-1):L+pw/2}
   function y(v){return T+ph-(top?Math.min(v,top)/top:0)*ph}
-  var h='<svg width="'+W+'" height="'+H+'" role="img" aria-label="取用趋势：合计柱与发出去、备料两条线">';
+  var h='<svg width="'+W+'" height="'+H+'" role="img" aria-label="取用趋势：合计柱与发送、复制保存两条线">';
   var g,k2;
   for(k=0;k<=4;k++){
     var gy=T+ph-ph*k/4,lab=Math.round(top*k/4);
@@ -17765,7 +17810,7 @@ function paintTrend(w){
     var hw=bs.length>1?gap:bw+16,lx=x(bs.length-1);
     h+='<rect x="'+(lx-hw/2).toFixed(1)+'" y="'+T+'" width="'+hw.toFixed(1)+'" height="'+ph+'" fill="#F7F9FC"/>';
   }
-  /* 合计柱：柱高＝发出去＋备料，浅蓝铺底，两条线压在上面读构成。 */
+  /* 合计柱：柱高＝发送＋复制保存，浅蓝铺底，两条线压在上面读构成。 */
   for(k=0;k<bs.length;k++){
     var tot=bs[k].send+bs[k].copy,by=y(tot);
     if(tot>0)h+='<rect class="mb-bar" x="'+(x(k)-bw/2).toFixed(1)+'" y="'+by.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+(ph-(by-T)).toFixed(1)+'" rx="3" fill="#E8F1FF"/>';
@@ -17809,8 +17854,8 @@ function bindHover(box,bs,W,L,R,xfn,yfn,T,ph){
         var t=(i2===bs.length-1)?(GRAN==="day"?"今日":"本周"):b.label;
         tip.innerHTML='<div class="d">'+esc(t)+'</div>'
           +'<div class="r"><i class="b"></i>合计<b>'+(b.send+b.copy)+'</b></div>'
-          +'<div class="r"><i></i>发出去<b>'+b.send+'</b></div>'
-          +'<div class="r"><i class="g"></i>备料<b>'+b.copy+'</b></div>';
+          +'<div class="r"><i></i>发送<b>'+b.send+'</b></div>'
+          +'<div class="r"><i class="g"></i>复制保存<b>'+b.copy+'</b></div>';
         tip.style.display="block";
         var left=Math.min(W-140,xfn(i2)+10);
         tip.style.left=Math.max(0,left)+"px";tip.style.top=(T+8)+"px";
@@ -17832,15 +17877,19 @@ function renderUse(w){
     r=list[k];
     h+='<tr data-mb-mat="'+r.id+'" tabindex="0">'
       +'<td class="t" title="'+esc(r.title)+'">'+esc(r.title)+'</td>'
+      +'<td class="kw" title="'+esc(r.kw)+'">'+esc(r.kw)+'</td>'
       +'<td class="g">'+esc(r.group)+'<em>'+esc(r.dept)+'</em></td>'
       +'<td class="num">'+r.count+'</td>'
       +'<td class="num">'+(r.people?r.people:"—")+'</td>'
-      +'<td>'+(r.last>-999?fmtDate(r.last):"—")+'</td>'
-      +'<td>'+fmtDate(r.exp)+'</td>'
+      +'<td class="q">'+(r.last>-999?fmtDate(r.last):"—")+'</td>'
+      +'<td class="q">'+fmtDate(r.exp)+'</td>'
       +'<td><span class="st '+(r.status==="已发布"?"pub":"exp")+'">'+r.status+'</span></td>'
+      +'<td class="q">'+fmtDate(r.created)+'</td>'
+      +'<td>'+esc(r.owner)+'</td>'
+      +'<td class="q">'+fmtDate(r.upd)+'</td>'
       +'<td class="op"><a href="#" data-mb-op="预览">预览</a><a href="#" data-mb-op="编辑">编辑</a><a href="#" data-mb-op="删除">删除</a><a href="#" data-mb-op="移动分组">移动分组</a></td></tr>';
   }
-  if(!list.length)h='<tr><td colspan="8" class="empty">还没有企业素材</td></tr>';
+  if(!list.length)h='<tr><td colspan="12" class="empty">还没有企业素材</td></tr>';
   if(tb)tb.innerHTML=h;
   var sc=document.querySelectorAll("[data-mb-sort]"),i2;
   for(i2=0;i2<sc.length;i2++){
@@ -17906,7 +17955,7 @@ function renderGroups(w){
       +'<span class="nm">'+esc(r.group)+'<em>'+esc(r.dept)+'</em></span>'
       +'<span class="track"><span class="rea-mb-cover"><i style="width:'+rate.toFixed(1)+'%"></i></span></span>'
       +'<span class="v">'+r.m+' / '+r.k+'</span>'
-      +'<span class="n">'+r.n+' 次</span></div>';
+      +'<span class="n">'+r.n+'</span></div>';
   }
   if(grp)grp.innerHTML=h;
   if(gf)gf.textContent="共 "+gs.length+" 个分组 · "+pc+" 个分组这段时间零取用";
@@ -17920,8 +17969,8 @@ function renderDepts(w){
     r2=ds[k2];if(!r2.n)zero++;
     h2+='<div class="rea-mb-dep-row" role="button" tabindex="0" data-mb-dept="'+esc(r2.o)+'">'
       +'<span class="nm">'+esc(r2.o)+'</span>'
-      +'<span class="n">'+r2.n+' 次</span>'
-      +'<span class="v">'+r2.people+' 人用过</span></div>';
+      +'<span class="n">'+r2.n+'</span>'
+      +'<span class="v">'+r2.people+'</span></div>';
   }
   if(dep)dep.innerHTML=h2;
   if(df)df.textContent="共 "+ds.length+" 个部门 · "+zero+" 个部门这段时间零取用";
