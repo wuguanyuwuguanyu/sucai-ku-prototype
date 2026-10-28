@@ -10988,7 +10988,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     </div>
 
     <!-- 群发好友回复 · 第 1 行右格（PRD §2.6）。本页唯一的客户侧信号：
-         引用素材的群发好友任务与同一时间段的「其他来源」并排给，两组对照，不作因果。 -->
+         引用素材的群发好友任务回了多少，再列出回复率最低的几条素材；发圈与群发群组没有客户回传。 -->
     <div class="rea-bd-card rea-bd-card--w8" id="rea-mb-qf-card">
       <div class="rea-bd-ch"><h6>群发好友回复</h6></div>
       <div id="rea-mb-qf"></div>
@@ -12161,9 +12161,6 @@ body .subapp{background:#F6F8FB!important}
 .rea-mb-qf-nums{display:flex;flex-wrap:wrap;gap:6px 18px;color:#646A73;font-size:12px;padding-bottom:12px}
 .rea-mb-qf-nums b{color:#1F2329;font-weight:600;font-variant-numeric:tabular-nums}
 .rea-mb-qf-empty{padding:26px 0 18px;color:#8F959E;font-size:12px;line-height:20px}
-.rea-mb-qf-cmp{display:flex;align-items:baseline;gap:8px;padding:10px 0;border-top:1px solid #F0F2F5;font-size:12px;color:#8F959E}
-.rea-mb-qf-cmp .v{color:#646A73;font-weight:600;font-variant-numeric:tabular-nums}
-.rea-mb-qf-cmp .s{margin-left:auto;color:#8F959E;font-variant-numeric:tabular-nums}
 .rea-mb-qf-low{margin-top:auto;padding-top:10px;border-top:1px solid #F0F2F5}
 .rea-mb-qf-low .hd{color:#8F959E;font-size:11px;margin-bottom:4px}
 .rea-mb-qf-low ul{list-style:none;margin:0;padding:0}
@@ -12172,17 +12169,13 @@ body .subapp{background:#F6F8FB!important}
 .rea-mb-qf-low .r{flex:none;color:#646A73;font-variant-numeric:tabular-nums}
 .rea-mb-qf-none{color:#8F959E;font-size:12px;line-height:20px;padding:2px 0}
 
-/* 群发好友回复现在是第 1 行右格（span 8）：三块并排——回复率／其他来源／回复率最低的素材。 */
-.rea-mb-qf-wide{flex:1 1 auto;display:grid;grid-template-columns:minmax(190px,1fr) minmax(170px,.85fr) minmax(250px,1.3fr);gap:0 26px;align-items:center}
+/* 群发好友回复是第 1 行右格（span 8）：左边回复率与人数，右边回复率最低的几条素材。 */
+.rea-mb-qf-wide{flex:1 1 auto;display:grid;grid-template-columns:minmax(210px,.9fr) minmax(260px,1.1fr);gap:0 26px;align-items:center}
 .rea-mb-qf-wide>div{min-width:0}
-.rea-mb-qf-wide .rea-mb-qf-cmp{display:block;padding:2px 0 2px 26px;border-top:0;border-left:1px solid #F0F2F5}
-.rea-mb-qf-wide .rea-mb-qf-cmp .k{display:block}
-.rea-mb-qf-wide .rea-mb-qf-cmp .v{display:block;margin:4px 0;font-size:22px;line-height:28px;color:#1F2329}
-.rea-mb-qf-wide .rea-mb-qf-cmp .s{display:block;margin-left:0}
 .rea-mb-qf-wide .rea-mb-qf-low{margin:0;padding:0 0 0 26px;border-top:0;border-left:1px solid #F0F2F5}
 @media (max-width:1180px){
   .rea-mb-qf-wide{grid-template-columns:1fr;gap:12px;align-items:start}
-  .rea-mb-qf-wide .rea-mb-qf-cmp,.rea-mb-qf-wide .rea-mb-qf-low{padding:10px 0 0;border-left:0;border-top:1px solid #F0F2F5}
+  .rea-mb-qf-wide .rea-mb-qf-low{padding:10px 0 0;border-left:0;border-top:1px solid #F0F2F5}
 }
 
 /* 素材使用 · 操作列：与素材库列表同一组动作（预览／编辑／删除／移动分组）。 */
@@ -17479,13 +17472,13 @@ for(i=0;i<RAW.length;i++){
     EVENTS.push([m.id,who,day,pickAct(m.type)]);
   }
 }
-/* 群发好友任务：34 条摊在近 90 天，约三分之二引用了素材。
-   引用素材的那批回复率高一档——这是演示数据里刻意留的差，页面不据此下结论。 */
+/* 群发好友任务：34 条摊在近 90 天，约三分之二引用了素材；页上只出引用素材那一组的回复率，
+   不跟没引用素材的任务比。 */
 var HOT=[9,10,12,17,18,25,28,33,39];
 var TASKS=[];
 for(i=0;i<34;i++){
   var ref=(i%3!==0),mat=ref?HOT[i%HOT.length]:0;
-  var sent=80+(i*53)%320,rate=ref?(.22+((i*13)%9)/100):(.14+((i*7)%11)/100);
+  var sent=80+(i*53)%320,rate=ref?(.22+((i*13)%9)/100):(.14+((i*7)%11)/100);   /* 未引用的那批不进页面 */
   TASKS.push({day:-Math.round(i*2.6),ref:ref,mat:mat,sent:sent,replied:Math.round(sent*rate)});
 }
 
@@ -17558,16 +17551,13 @@ function allRows(w,dept){
 }
 /* 群发好友：这一窗里引用素材的任务与其对照项。 */
 function qfAgg(w){
-  var o={ref:{sent:0,replied:0,tasks:0},other:{sent:0,replied:0,tasks:0},byMat:{}},k,t;
+  var o={ref:{sent:0,replied:0,tasks:0},byMat:{}},k,t;
   for(k=0;k<TASKS.length;k++){
     t=TASKS[k];
-    if(!inWin(t.day,w))continue;
-    var g=t.ref?o.ref:o.other;
-    g.sent+=t.sent;g.replied+=t.replied;g.tasks++;
-    if(t.ref){
-      var m=o.byMat[t.mat]||(o.byMat[t.mat]={sent:0,replied:0});
-      m.sent+=t.sent;m.replied+=t.replied;
-    }
+    if(!t.ref||!inWin(t.day,w))continue;      /* 只看引用素材的群发好友任务 */
+    o.ref.sent+=t.sent;o.ref.replied+=t.replied;o.ref.tasks++;
+    var m=o.byMat[t.mat]||(o.byMat[t.mat]={sent:0,replied:0});
+    m.sent+=t.sent;m.replied+=t.replied;
   }
   return o;
 }
@@ -17963,10 +17953,7 @@ function renderQf(w){
   }else{
     h+='<div class="rea-mb-qf-empty">该时间段没有引用素材的群发好友任务</div>';
   }
-  h+='</div>'
-    +'<div class="rea-mb-qf-cmp"><span class="k">其他来源</span>'
-    +'<span class="v">'+pct(o.other.replied,o.other.sent)+'</span>'
-    +'<span class="s">已发送 '+o.other.sent+' / 已回复 '+o.other.replied+'</span></div>';
+  h+='</div>';
   h+='<div class="rea-mb-qf-low"><div class="hd">回复率最低的素材</div>';
   if(o.ref.tasks){
     var lows=[],id;
@@ -17982,7 +17969,7 @@ function renderQf(w){
       }
       h+='</ul>';
     }else{
-      h+='<div class="rea-mb-qf-none">这段时间没有发送量够对照的素材</div>';
+      h+='<div class="rea-mb-qf-none">这段时间没有发送量够 30 人的素材</div>';
     }
   }else{
     h+='<div class="rea-mb-qf-none">该时间段没有数据</div>';
