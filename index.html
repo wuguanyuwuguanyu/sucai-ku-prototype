@@ -9906,34 +9906,36 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 
     <!-- 执行健康度 · 第 1 层 · 结果（任务条数）。
          三段互斥：已完成（绿）→ 待完成（蓝）→ 逾期未做（橙），段间留一道细缝；
-         图例三行可点：进「任务列表」并按状态预筛。图例带百分比（占窗口全部任务），
-         2026-10-26 删掉指标带后，这三行是这一页唯一写状态占比的地方。 -->
-    <div class="rea-bd-card rea-bd-card--w4">
+         每段一根引线把标注带到环外，「名称：数量 (占比%)」——标注就是图例，环下不再单列三行。
+         扇区与标注都可点：进「任务列表」并按状态预筛。 -->
+    <div class="rea-bd-card rea-bd-card--w5">
       <div class="rea-bd-ch"><h6>执行健康度</h6></div>
       <div class="rea-bd-ring" id="rea-bd-cards">
-        <div class="rea-bd-ring-fig">
-          <svg viewBox="0 0 120 120" role="img" aria-label="窗口内任务的完成构成：已完成、待完成、逾期未做">
-            <circle class="track" cx="60" cy="60" r="50"></circle>
-            <circle class="arc d" data-bd-arc="d" cx="60" cy="60" r="50"></circle>
-            <circle class="arc l" data-bd-arc="l" cx="60" cy="60" r="50"></circle>
-            <circle class="arc o" data-bd-arc="o" cx="60" cy="60" r="50"></circle>
+        <div class="rea-bd-donut" id="rea-bd-donut">
+          <svg class="rea-bd-donut-lines" id="rea-bd-donut-lines" aria-hidden="true">
+            <polyline data-bd-leader="d"></polyline>
+            <polyline data-bd-leader="l"></polyline>
+            <polyline data-bd-leader="o"></polyline>
           </svg>
-          <span class="rea-bd-ring-mid"><b data-rea-sum="need">75</b><span>条任务</span></span>
+          <div class="rea-bd-ring-fig" id="rea-bd-ring-fig">
+            <svg viewBox="0 0 120 120" role="img" aria-label="窗口内任务的完成构成：已完成、待完成、逾期未做">
+              <circle class="track" cx="60" cy="60" r="50"></circle>
+              <circle class="arc d" data-bd-arc="d" data-bd-state="已完成" cx="60" cy="60" r="50"></circle>
+              <circle class="arc l" data-bd-arc="l" data-bd-state="进行中" cx="60" cy="60" r="50"></circle>
+              <circle class="arc o" data-bd-arc="o" data-bd-state="已结束" cx="60" cy="60" r="50"></circle>
+            </svg>
+            <span class="rea-bd-ring-mid"><b data-rea-sum="need">75</b><span>条任务</span></span>
+          </div>
+          <ul class="rea-bd-donut-lbls" id="rea-bd-donut-lbls">
+            <li data-bd-lbl="d" data-side="r" role="button" tabindex="0" data-bd-state="已完成" title="进任务列表，只看已完成的"><span class="nm">已完成</span>：<b data-rea-sum="done">25</b> <span class="pct">(<span data-rea-sum="rate">33.3%</span>)</span></li>
+            <li data-bd-lbl="l" data-side="l" role="button" tabindex="0" data-bd-state="进行中" title="进任务列表，只看待完成的"><span class="nm">待完成</span>：<b data-rea-sum="pend">33</b> <span class="pct">(<span data-rea-sum="pend-rate">44.0%</span>)</span></li>
+            <li data-bd-lbl="o" data-side="r" role="button" tabindex="0" data-bd-state="已结束" title="进任务列表，只看逾期未做的"><span class="nm">逾期未做</span>：<b data-rea-sum="over">17</b> <span class="pct">(<span data-rea-sum="over-rate">22.7%</span>)</span></li>
+          </ul>
         </div>
-        <ul class="rea-bd-ring-key">
-          <li role="button" tabindex="0" data-bd-state="已完成" title="进任务列表，只看已完成的">
-            <i class="d" aria-hidden="true"></i><span class="lb">已完成</span><b data-rea-sum="done">25</b><span class="u">条</span><span class="pct" data-rea-sum="rate">33.3%</span>
-          </li>
-          <li role="button" tabindex="0" data-bd-state="进行中" title="进任务列表，只看待完成的">
-            <i class="l" aria-hidden="true"></i><span class="lb">待完成</span><b data-rea-sum="pend">33</b><span class="u">条</span><span class="pct" data-rea-sum="pend-rate">44.0%</span>
-          </li>
-          <li role="button" tabindex="0" data-bd-state="已结束" title="进任务列表，只看逾期未做的">
-            <i class="o" aria-hidden="true"></i><span class="lb">逾期未做</span><b data-rea-sum="over">17</b><span class="u">条</span><span class="pct" data-rea-sum="over-rate">22.7%</span>
-          </li>
-        </ul>
       </div>
       <!-- 任务类型的第二把切法：与环共用同一窗任务，只把「待完成」按类型拆开。
-           数字读作「待完成 / 全部」，点一行进任务列表并按该类型预筛（PRD §2.3）。 -->
+           数字读作「待完成 / 全部」，点一行进任务列表并按该类型预筛（PRD §2.3）。
+           2026-10-28 起收起来：悬停这张卡才浮出，平时不占视线——位置先留着，免得一悬停卡片就长高。 -->
       <div class="rea-bd-types" id="rea-bd-types">
         <div class="rea-bd-types-h"><span>按任务类型</span><span>待完成 · 逾期 / 全部</span></div>
         <ul class="rea-bd-types-list" id="rea-bd-types-list"></ul>
@@ -9943,7 +9945,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     <!-- 执行趋势 · 第 2 层 · 过程（任务条数）。两条线同单位、同量级，共用一根纵轴；
          统计范围随页顶时间窗，卡内只切粒度（按日／按周）。折线用直线段：条数是整数，
          平滑会把 0 → 3 连成一段不存在的缓坡。 -->
-    <div class="rea-bd-card rea-bd-card--w8">
+    <div class="rea-bd-card rea-bd-card--w7">
       <div class="rea-bd-ch">
         <h6>执行趋势</h6>
         <div class="ant-radio-group ant-radio-group-solid css-vgijab rea-tr-win" id="rea-tr-win">
@@ -11412,8 +11414,8 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-card--w7{grid-column:span 7}
 .rea-bd-card--w5{grid-column:span 5}
 .rea-bd-card--w12{grid-column:span 12}
-/* 第 1 行收窄：环形占比的正文就是「一个环 ＋ 三行图例」，span 5 时右侧空出一大块，
-   把那一列让给执行趋势（span 8）——它的横轴格数最多，宽一点才读得出走势。 */
+/* 第 1 行 5／7：环形占比改由环外的引线标注（「名称：数量 (占比%)」）交代三段，
+   标注要左右各占一列，4 列放不下；执行趋势让出一列仍够读走势（2026-10-28）。 */
 .rea-bd-card--w4{grid-column:span 4}
 /* 当前范围没有下级部门：合并卡只剩员工视图，切换器不出；其余版式不变（PRD §2.4）。 */
 .rea-bd-grid--nodept #rea-bd-cmp-switch{display:none}
@@ -11489,7 +11491,7 @@ body .subapp{background:#F6F8FB!important}
   #rea-qft-chart svg rect.qf-bar,
   .rea-dot,.rea-shade,.rea-bd-ld-row,.rea-qft-tip{animation:none!important}
   .rea-bd-ring-fig circle.arc,
-  .rea-bd-org-row,.rea-bd-ld-row,
+  .rea-bd-org-row,.rea-bd-ld-row,.rea-bd-types,
   .rea-bd-tabs .ant-tabs-ink-bar.is-anim{transition:none!important}
 }
 
@@ -11502,35 +11504,41 @@ body .subapp{background:#F6F8FB!important}
 /* ---------- 执行健康度 · 环形占比 ----------
    环只画三段互斥的状态，段间留 2.5px 缝（在 SVG 里按弧长扣，见 paintDonut）；
    圆心写窗口内全部任务条数——这一个圆就是「这批任务」的全部。 */
-#rea-bd-cards{display:flex;flex:1 1 auto;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px 16px;margin:0;padding:4px 0 8px}
-.rea-bd-ring-fig{position:relative;flex:none;width:124px;height:124px}
+#rea-bd-cards{display:flex;flex:1 1 auto;align-items:center;justify-content:center;margin:0;padding:0}
+/* 环 ＋ 环外标注装在一个定高的框里：标注的位置由 paintRingLabels 按弧中点算，
+   引线画在同一层 SVG 上（没有 viewBox，坐标就是 px）。框高固定，换窗口不跳。 */
+.rea-bd-donut{position:relative;width:100%;height:150px}
+.rea-bd-ring-fig{position:absolute;left:50%;top:50%;width:124px;height:124px;margin:-62px 0 0 -62px}
 .rea-bd-ring-fig svg{display:block;width:100%;height:100%;transform:rotate(-90deg)}
 .rea-bd-ring-fig circle{fill:none;stroke-width:13}
 .rea-bd-ring-fig circle.track{stroke:#F0F2F5}
 .rea-bd-ring-fig circle.d{stroke:#52C41A}
 .rea-bd-ring-fig circle.l{stroke:#1677FF}
 .rea-bd-ring-fig circle.o{stroke:#FAAD14}
+/* 扇区本身可点：和标注去同一个去处（任务列表，按状态预筛） */
+.rea-bd-ring-fig circle.arc{cursor:pointer}
 .rea-bd-ring-mid{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;pointer-events:none}
 .rea-bd-ring-mid b{font-size:32px;line-height:1.05;font-weight:600;color:#1F2329;letter-spacing:-.5px}
 .rea-bd-ring-mid span{font-size:12px;color:#8F959E}
-.rea-bd-ring-key{list-style:none;margin:0 -6px;padding:0;display:flex;flex-direction:column;gap:4px;flex:1 1 176px;min-width:176px;max-width:360px}
-/* 图例行可点：整行进任务列表并按这一行预筛状态 */
-.rea-bd-ring-key li{display:flex;align-items:baseline;gap:8px;padding:2px 6px;border-radius:6px;font-size:13px;color:#646A73;cursor:pointer;transition:background .12s}
-.rea-bd-ring-key li:hover,.rea-bd-ring-key li:focus-visible{background:#F7F8FA}
-.rea-bd-ring-key li:focus-visible{outline:2px solid #1677FF;outline-offset:0}
-.rea-bd-ring-key li:hover .lb{color:#1677FF}
-.rea-bd-ring-key i{flex:none;width:8px;height:8px;border-radius:2px;transform:translateY(-1px)}
-.rea-bd-ring-key i.d{background:#52C41A}
-.rea-bd-ring-key i.l{background:#1677FF}
-.rea-bd-ring-key i.o{background:#FAAD14}
-.rea-bd-ring-key .lb{flex:0 0 56px;color:#1F2329;font-weight:500}
-.rea-bd-ring-key b{min-width:18px;font-size:16px;font-weight:600;color:#1F2329;font-variant-numeric:tabular-nums;text-align:right}
-.rea-bd-ring-key .u{margin-right:auto;color:#8F959E}
-.rea-bd-ring-key .pct{flex:none;min-width:44px;color:#8F959E;font-size:12px;text-align:right;font-variant-numeric:tabular-nums}
+.rea-bd-donut-lines{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.rea-bd-donut-lines polyline{fill:none;stroke:#D6DBE3;stroke-width:1;stroke-linecap:round;stroke-linejoin:round}
+/* 标注：环的两侧各一列，右列的左边、左列的右边都离圆心 84px——引线的落点就停在那儿 */
+.rea-bd-donut-lbls{list-style:none;margin:0;padding:0}
+.rea-bd-donut-lbls li{position:absolute;transform:translateY(-50%);font-size:12px;line-height:16px;color:#646A73;white-space:nowrap;cursor:pointer;border-radius:4px}
+.rea-bd-donut-lbls li[data-side="r"]{left:calc(50% + 84px);text-align:left}
+.rea-bd-donut-lbls li[data-side="l"]{right:calc(50% + 84px);text-align:right}
+.rea-bd-donut-lbls .nm{color:#1F2329;font-weight:500}
+.rea-bd-donut-lbls b{color:#1F2329;font-weight:600;font-variant-numeric:tabular-nums}
+.rea-bd-donut-lbls .pct{color:#8F959E;font-variant-numeric:tabular-nums}
+.rea-bd-donut-lbls li:hover .nm{color:#1677FF}
+.rea-bd-donut-lbls li:focus-visible{outline:2px solid #1677FF;outline-offset:1px}
 /* ---------- 任务类型分布（环形图下方） ----------
    与环共用同一窗任务，只把「待完成」按类型拆开；数字读作「待完成 / 全部」。
    两列小字台账，不另起颜色——环的颜色只表示状态，类型靠文字区分。 */
-.rea-bd-types{margin-top:12px;padding-top:10px;border-top:1px solid #F0F2F5}
+/* 收起态只留位置、不留东西：悬停这张卡（或键盘走进去）才浮出来。
+   位置一直占着，所以悬停时卡片不会长高、环不会跳。 */
+.rea-bd-types{margin-top:12px;padding-top:10px;border-top:1px solid #F0F2F5;opacity:0;pointer-events:none;transition:opacity .16s linear}
+.rea-bd-card:hover .rea-bd-types,.rea-bd-card:focus-within .rea-bd-types{opacity:1;pointer-events:auto}
 .rea-bd-types-h{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px;color:#8F959E;font-size:11px}
 .rea-bd-types-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:2px 14px}
 .rea-bd-types-list li{display:flex;align-items:baseline;gap:5px;min-width:0;padding:2px 4px;margin:0 -4px;border-radius:4px;font-size:12px;color:#646A73;cursor:pointer}
@@ -12409,6 +12417,53 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '    arcs[i].style.opacity=len>0?1:0;',
     '    acc+=len;',
     '  }',
+    '  paintRingLabels(t);',
+    '}',
+    '/* 环外标注与引线。三段各自从 12 点起顺时针排，扇区中点的角度决定标注落在环的哪一侧：',
+    '   (x,y) = 圆心 ± r·(sinθ, -cosθ)。同一侧的两枚标注先按自然高度排，再按最小行距往下推，',
+    '   免得小扇区（比如逾期 22.7%）的标注叠在一起。引线从弧外沿伸到标注的内边。',
+    '   尺寸全按盒子现算（没有 viewBox 的 SVG，坐标就是 px），所以换窗口、卡片宽窄变了都不必另调。 */',
+    'function paintRingLabels(t){',
+    '  var box=document.getElementById("rea-bd-donut");if(!box)return;',
+    '  var W=box.clientWidth,H=box.clientHeight;if(!W||!H)return;',
+    '  var cx=W/2,cy=H/2,total=t.n||0,GAP=22,',
+    '      vals={d:t.full,l:Math.max(0,t.n-t.full-t.miss),o:t.miss},',
+    '      order=["d","l","o"],groups={r:[],l:[]},acc=0,i,k,v,a0,a1,mid,el,pg,p,side,dir,j,prev;',
+    '  for(i=0;i<order.length;i++){',
+    '    k=order[i];v=vals[k]||0;',
+    '    el=box.querySelector(\'[data-bd-lbl="\'+k+\'"]\');',
+    '    pg=box.querySelector(\'[data-bd-leader="\'+k+\'"]\');',
+    '    if(!total||!v){',
+    '      if(el)el.style.display="none";',
+    '      if(pg)pg.setAttribute("points","");',
+    '      continue;',
+    '    }',
+    '    a0=acc/total*2*Math.PI;a1=(acc+v)/total*2*Math.PI;acc+=v;',
+    '    mid=(a0+a1)/2;',
+    '    if(el)el.style.display="";',
+    '    groups[Math.sin(mid)>=0?"r":"l"].push({k:k,a:mid,y:cy-60*Math.cos(mid),el:el,pg:pg});',
+    '  }',
+    '  for(side in groups){',
+    '    p=groups[side].sort(function(x,y){return x.y-y.y});',
+    '    prev=-1e9;dir=side==="r"?1:-1;',
+    '    for(j=0;j<p.length;j++){',
+    '      if(p[j].y<prev+GAP)p[j].y=prev+GAP;',
+    '      if(p[j].y>H-10)p[j].y=H-10;',
+    '      prev=p[j].y;',
+    '      if(p[j].el){p[j].el.setAttribute("data-side",side);p[j].el.style.top=p[j].y+"px";}',
+    '      if(p[j].pg){',
+    '        p[j].pg.setAttribute("points",',
+    '          (cx+62*Math.sin(p[j].a)).toFixed(1)+","+(cy-62*Math.cos(p[j].a)).toFixed(1)+" "+',
+    '          (cx+dir*70).toFixed(1)+","+p[j].y.toFixed(1)+" "+',
+    '          (cx+dir*80).toFixed(1)+","+p[j].y.toFixed(1));',
+    '      }',
+    '    }',
+    '  }',
+    '}',
+    '/* 框宽变了（侧栏收起、窗口缩放）就按当前窗口重排一次标注与引线。 */',
+    'if(window.ResizeObserver){',
+    '  var roBox=document.getElementById("rea-bd-donut");',
+    '  if(roBox)new ResizeObserver(function(){if(CURW)paintRingLabels(tally(winRows(CURW)))}).observe(roBox);',
     '}',
     '',
     '/* 完成率那一格是「数字 ＋ 细横条」：条长按百分比给，同色。',
