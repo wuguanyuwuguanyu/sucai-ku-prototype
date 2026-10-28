@@ -9940,27 +9940,11 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     </div>
 
     <!-- 执行趋势 · 第 2 层 · 过程（任务条数）。两条线同单位、同量级，共用一根纵轴；
-         统计范围随页顶时间窗，卡内只切粒度（按日／按周）。折线用直线段：条数是整数，
-         平滑会把 0 → 3 连成一段不存在的缓坡。 -->
+         统计范围与粒度都跟着页顶时间窗走（跨度 ≤ 31 天按日、更长按周），卡内没有粒度开关。
+         折线用直线段：条数是整数，平滑会把 0 → 3 连成一段不存在的缓坡。 -->
     <div class="rea-bd-card rea-bd-card--w7">
       <div class="rea-bd-ch">
         <h6>执行趋势</h6>
-        <div class="ant-radio-group ant-radio-group-solid css-vgijab rea-tr-win" id="rea-tr-win">
-        <div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small">
-          <div class="ant-space-item">
-            <label class="ant-radio-button-wrapper ant-radio-button-wrapper-checked css-vgijab" data-tr-gran="day">
-              <span class="ant-radio-button ant-radio-button-checked"><input name="rea-tr-gran" class="ant-radio-button-input" type="radio" value="day" checked=""><span class="ant-radio-button-inner"></span></span>
-              <span class="ant-radio-button-label">按日</span>
-            </label>
-          </div>
-          <div class="ant-space-item">
-            <label class="ant-radio-button-wrapper css-vgijab" data-tr-gran="week">
-              <span class="ant-radio-button"><input name="rea-tr-gran" class="ant-radio-button-input" type="radio" value="week"><span class="ant-radio-button-inner"></span></span>
-              <span class="ant-radio-button-label">按周</span>
-            </label>
-          </div>
-        </div>
-        </div>
       </div>
       <div class="rea-tr-chart" id="rea-tr-chart"></div>
     </div>
@@ -9989,16 +9973,15 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
             </div>
           </div>
         </div>
-        <span class="rea-bd-cmp-tools">
-          <span class="th rea-bd-sort" id="rea-bd-org-sort" role="button" tabindex="0" data-bd-org-sort="1" title="按完成率降序（点一下改升序）">完成率<i>↓</i></span>
-          <span class="rea-bd-ld-tools" id="rea-bd-ld-tools" hidden>
-            <span class="th rea-bd-sort is-on" role="button" tabindex="0" data-bd-ld-sortby="done" title="按完成降序（点一下改升序）">完成<i>↓</i></span>
-            <span class="th rea-bd-sort" role="button" tabindex="0" data-bd-ld-sortby="rate" title="按完成率排（点一下切过来）">完成率</span>
-          </span>
-        </span>
       </div>
       <div class="rea-bd-cmp-body">
         <div class="rea-bd-cmp-pane" data-cmp-pane="org">
+          <!-- 列名行：与下面每行同一套 flex 尺寸，列才对得齐。两枚可点的列名就是这一面的排序控件。 -->
+          <div class="rea-bd-lhead rea-bd-lhead--org">
+            <span class="nm">部门</span>
+            <span class="track"><span class="sortc is-on" id="rea-bd-org-sort" role="button" tabindex="0" data-bd-org-sort="rate" title="按完成率降序（点一下改升序）">完成率<i>↓</i></span></span>
+            <span class="qty"><span class="sortc" role="button" tabindex="0" data-bd-org-sort="need" title="按应执行人次降序（点一下改升序）">应执行<i>↕</i></span></span>
+          </div>
           <div class="rea-bd-org" id="rea-bd-org"></div>
           <div class="rea-bd-org-foot" id="rea-bd-org-foot">
             <span id="rea-bd-org-foot-text"></span>
@@ -10006,6 +9989,13 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
           </div>
         </div>
         <div class="rea-bd-cmp-pane" data-cmp-pane="ld" hidden>
+          <div class="rea-bd-lhead rea-bd-lhead--ld" id="rea-bd-ld-tools">
+            <span class="rk"></span>
+            <span class="nm">员工</span>
+            <span class="qty"><span class="sortc is-on" role="button" tabindex="0" data-bd-ld-sortby="done" title="按完成降序（点一下改升序）">完成<i>↓</i></span></span>
+            <span class="rate"><span class="sortc" role="button" tabindex="0" data-bd-ld-sortby="rate" title="按完成率排（点一下切过来）">完成率<i>↕</i></span></span>
+            <span class="more"></span>
+          </div>
           <div class="rea-bd-ld" id="rea-bd-ld-body"></div>
           <div class="rea-bd-ld-foot">
             <div class="rea-bd-ld-note" id="rea-bd-ld-note" hidden>完成率 = 已执行 ÷ 应执行；应执行 1 人次的 100% 与 6 人次的 100% 不是一回事，请连同分母一起看。</div>
@@ -10016,26 +10006,10 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     </div>
 
     <!-- 群发好友回复 · 第 3 层 · 效果。数据来自台账里「群发好友」那些行；
-         统计范围随页顶时间窗，卡内只切粒度（按日／按周）。 -->
+         统计范围与粒度都跟着页顶时间窗走（跨度 ≤ 31 天按日、更长按周）。 -->
     <div class="rea-bd-card rea-bd-card--w7">
       <div class="rea-bd-ch">
         <h6>群发好友回复</h6>
-        <div class="ant-radio-group ant-radio-group-solid css-vgijab rea-qft-win" id="rea-qft-win">
-        <div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small">
-          <div class="ant-space-item">
-            <label class="ant-radio-button-wrapper ant-radio-button-wrapper-checked css-vgijab" data-qf-gran="day">
-              <span class="ant-radio-button ant-radio-button-checked"><input name="rea-qf-gran" class="ant-radio-button-input" type="radio" value="day" checked=""><span class="ant-radio-button-inner"></span></span>
-              <span class="ant-radio-button-label">按日</span>
-            </label>
-          </div>
-          <div class="ant-space-item">
-            <label class="ant-radio-button-wrapper css-vgijab" data-qf-gran="week">
-              <span class="ant-radio-button"><input name="rea-qf-gran" class="ant-radio-button-input" type="radio" value="week"><span class="ant-radio-button-inner"></span></span>
-              <span class="ant-radio-button-label">按周</span>
-            </label>
-          </div>
-        </div>
-        </div>
       </div>
       <div class="rea-qft-kpis" id="rea-qft-kpis"></div>
       <div class="rea-qft-chart" id="rea-qft-chart"></div>
@@ -11720,11 +11694,8 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-card--w6{grid-column:span 6}
 /* 当前范围没有下级部门：合并卡只剩员工视图，切换器不出；其余版式不变（PRD §2.4）。 */
 .rea-bd-grid--nodept #rea-bd-cmp-switch{display:none}
-/* 合并卡：卡头「部门 / 员工」＋ 当前模式自己的排序与入口，右侧一组工具右对齐。 */
+/* 合并卡：卡头只留「部门 / 员工」切换器，排序控件下到列表的列名行里。 */
 .rea-bd-cmp-switch{margin-left:2px}
-.rea-bd-cmp-tools{margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.rea-bd-cmp-tools .th{margin-left:0}
-.rea-bd-cmp-tools .rea-bd-links{margin-left:0}
 .rea-bd-cmp [hidden]{display:none!important}
 .rea-bd-cmp-body{display:flex;flex:1 1 auto;flex-direction:column;min-height:340px}
 .rea-bd-cmp-pane{display:flex;flex:1 1 auto;flex-direction:column;min-height:0}
@@ -11732,18 +11703,6 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-ch{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:2px 0 14px}
 .rea-bd-ch h6{margin:0;color:#1F2329;font-size:15px;line-height:22px;font-weight:600;letter-spacing:-.2px}
 .rea-bd-ch .th{margin-left:auto;color:#8F959E;font-size:12px}
-/* 可点的列头（部门完成情况的「完成率」）：箭头表示当前方向，点一下翻面 */
-.rea-bd-ch .th.rea-bd-sort{display:inline-flex;align-items:center;gap:3px;cursor:pointer;user-select:none;-webkit-user-select:none}
-.rea-bd-ch .th.rea-bd-sort i{font-style:normal;font-size:11px;line-height:1}
-.rea-bd-ch .th.rea-bd-sort:hover{color:#1677FF}
-.rea-bd-ch .th.rea-bd-sort:focus-visible{outline:2px solid #4096FF;outline-offset:2px;border-radius:3px}
-/* 员工视图的排序也停在卡头右端：两枚列名并排，选中的那枚带方向箭头、字色加深 */
-.rea-bd-ld-tools{display:inline-flex;align-items:center;gap:14px}
-.rea-bd-ld-tools[hidden]{display:none}
-.rea-bd-cmp-tools .rea-bd-sort.is-on{color:#1F2329}
-/* 两张趋势图的按日／按周也停在卡头右端（与「员工完成情况」的排序控件同一位置），
-   不再掉到标题下面单占一行——卡头一行说清"这是什么 ＋ 怎么切"。 */
-.rea-bd-ch>.rea-tr-win,.rea-bd-ch>.rea-qft-win{margin-left:auto}
 /* 视口 1280 以下内容区不足 770px，两列会把环形和图例挤在一起，回落到单列 */
 @media (max-width:1279px){
   .rea-bd-card--w8,.rea-bd-card--w7,.rea-bd-card--w6,.rea-bd-card--w5,.rea-bd-card--w4{grid-column:span 12}
@@ -11878,6 +11837,28 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-track>i.l{background:#1677FF}
 .rea-bd-track>i.o{background:#FAAD14}
 
+/* ---------- 完成情况的列名行 ----------
+   与下面每一行同一套 flex 尺寸（宽度、gap 都照抄），列才对得齐。
+   可点的列名带一枚箭头：选中的那枚箭头带方向、字色加深，没选中的写 ↕。 */
+.rea-bd-lhead{display:flex;align-items:center;flex:none;min-height:28px;padding:0 8px;margin:0 -8px 2px;border-bottom:1px solid #E5E8EF;color:#8F959E;font-size:12px;white-space:nowrap}
+.rea-bd-lhead .qty,.rea-bd-lhead .rate{text-align:right}
+.rea-bd-lhead .sortc{display:inline-flex;align-items:center;gap:3px;cursor:pointer;user-select:none;-webkit-user-select:none;border-radius:3px}
+.rea-bd-lhead .sortc i{font-style:normal;color:#B7BCC4;font-size:10px;line-height:1}
+.rea-bd-lhead .sortc:hover{color:#1677FF}
+.rea-bd-lhead .sortc:focus-visible{outline:2px solid #4096FF;outline-offset:2px}
+.rea-bd-lhead .sortc.is-on{color:#1F2329}
+.rea-bd-lhead .sortc.is-on i{color:#1677FF}
+.rea-bd-lhead--org{gap:14px}
+.rea-bd-lhead--org .nm{flex:0 0 84px}
+.rea-bd-lhead--org .track{flex:1 1 auto;min-width:60px}
+.rea-bd-lhead--org .qty{flex:0 0 64px}
+.rea-bd-lhead--ld{gap:12px}
+.rea-bd-lhead--ld .rk{flex:0 0 26px}
+.rea-bd-lhead--ld .nm{flex:1 1 auto;min-width:0}
+.rea-bd-lhead--ld .qty{flex:0 0 62px}
+.rea-bd-lhead--ld .rate{flex:0 0 52px}
+.rea-bd-lhead--ld .more{flex:0 0 10px}
+
 /* ---------- 部门完成情况（人次） ----------
    一条细长的蓝条 ＋ 右对齐的粗体百分比 ＋ 该部门的应执行人次。
    条只编码值，不按阈值换色（PRD §5.6）：8 行一列下来就是一把尺子。 */
@@ -11885,8 +11866,8 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-org::-webkit-scrollbar{width:6px}
 .rea-bd-org::-webkit-scrollbar-thumb{background:#D6DDE8;border-radius:3px}
 .rea-bd-org::-webkit-scrollbar-track{background:transparent}
-/* 部门少时上下居中，部门多时从第一行开始滚（auto 外边距在溢出时归零，不会把顶部行滚不见） */
-.rea-bd-org-in{margin:auto 0}
+/* 列名行压在列表上方之后，列表从第一行起排：列名底下空一截会读成「这两块不是一回事」 */
+.rea-bd-org-in{margin:0}
 .rea-bd-org-row{display:flex;align-items:center;gap:14px;min-height:40px;padding:4px 8px;margin:0 -8px;border-radius:6px;cursor:pointer;border-top:1px solid #F4F6FA}
 .rea-bd-org-row:first-child{border-top:0}
 .rea-bd-org-row:hover{background:#F7F9FC}
@@ -11981,11 +11962,11 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-bad[hidden]{display:none}
 
 /* ---------- 时间窗与卡内控件：接通的可点，没接的置灰 ---------- */
-.rea-bd-window .ant-radio-button-wrapper,.rea-qft-win .ant-radio-button-wrapper,.rea-tr-win .ant-radio-button-wrapper{height:28px;line-height:26px;padding:0 10px;font-size:12px;color:#646A73;border-color:#E5E8EF;background:#fff}
-.rea-bd-window .ant-radio-button-wrapper:not(:first-child)::before,.rea-qft-win .ant-radio-button-wrapper:not(:first-child)::before,.rea-tr-win .ant-radio-button-wrapper:not(:first-child)::before{background-color:#E5E8EF}
-.rea-bd-window .ant-radio-button-wrapper-checked,.rea-qft-win .ant-radio-button-wrapper-checked,.rea-tr-win .ant-radio-button-wrapper-checked{background:#E6F4FF!important;border-color:#1677FF!important;color:#1677FF!important;box-shadow:none}
-.rea-bd-window .ant-radio-button-wrapper-checked::before,.rea-qft-win .ant-radio-button-wrapper-checked::before,.rea-tr-win .ant-radio-button-wrapper-checked::before{background-color:#1677FF!important}
-.rea-bd-window .ant-radio-button-wrapper:hover,.rea-qft-win .ant-radio-button-wrapper:hover,.rea-tr-win .ant-radio-button-wrapper:hover{color:#1677FF}
+.rea-bd-window .ant-radio-button-wrapper{height:28px;line-height:26px;padding:0 10px;font-size:12px;color:#646A73;border-color:#E5E8EF;background:#fff}
+.rea-bd-window .ant-radio-button-wrapper:not(:first-child)::before{background-color:#E5E8EF}
+.rea-bd-window .ant-radio-button-wrapper-checked{background:#E6F4FF!important;border-color:#1677FF!important;color:#1677FF!important;box-shadow:none}
+.rea-bd-window .ant-radio-button-wrapper-checked::before{background-color:#1677FF!important}
+.rea-bd-window .ant-radio-button-wrapper:hover{color:#1677FF}
 /* 没接演示数据的档：不画按钮框，只留一行灰字——它们仍然可见（用户要知道有这些窗口），
    但不参与「一排按钮」的视觉竞争。 */
 .rea-bd-win-off{color:#B7BCC4!important;border-color:transparent!important;background:transparent!important;box-shadow:none!important;cursor:not-allowed}
@@ -12020,7 +12001,7 @@ body .subapp{background:#F6F8FB!important}
 .rea-tr-tip .r.over i{background:#FAAD14}
 
 /* ---------- 员工完成情况 ---------- */
-.rea-bd-ld{display:flex;flex:1 1 auto;flex-direction:column;justify-content:center}
+.rea-bd-ld{display:flex;flex:1 1 auto;flex-direction:column;justify-content:flex-start}
 .rea-bd-ld-row{display:flex;align-items:center;gap:12px;padding:0 8px;margin:0 -8px;min-height:48px;border-top:1px solid #F7F8FA;border-radius:6px;cursor:pointer}
 .rea-bd-ld-row:first-of-type{border-top:0}
 .rea-bd-ld-row:hover{background:#F7F9FC}
@@ -12255,15 +12236,15 @@ body .subapp{background:#F6F8FB!important}
   /* 看板「群发好友回复」板块。手绘 SVG，不引任何图表库——
      观感照 ECharts 默认款（浅网格、柱＋折线双轴、左上图例、悬停浮窗），
      但节点、尺寸、配色都自己算，免得为一张图往 8MB 的载体里再塞一个库。
-     数据全部从台账的群发好友任务派生（qfSentOf），统计范围跟着页顶时间窗走，
-     卡内只切粒度（按日／按周）。2026-10-26 去掉「回补中」：效果层不再假设 T+1 只有半周数据，
+     数据全部从台账的群发好友任务派生（qfSentOf），统计范围与粒度都跟着页顶时间窗走
+     （跨度 ≤ 31 天按日、更长按周），卡内没有粒度开关。2026-10-26 去掉「回补中」：效果层不再假设 T+1 只有半周数据，
      最后一格用淡底＋「今日／本周」标记，与「执行趋势」同一套。 */
   function reaQfTrendJs(){
     return `
 /* ---- 群发好友回复（随页顶时间窗） ----
    数据只来自台账里「群发好友」那几行：已发送好友＝该条任务已执行人次 × 12（每人一批好友），
    已回复好友＝已发送 × 该条的回复率（确定性演示序列，同一页每次打开都是同一份）。
-   统计范围跟着页顶时间窗走，卡内只切粒度（按日／按周）。
+   统计范围与粒度都跟着页顶时间窗走（≤ 31 天按日、更长按周），卡内没有粒度开关。
    2026-10-26 删掉「回补中」：效果层不再假设 T+1 只有半周数据，最后一段就是最后一段。 */
 function qfSentOf(r){return (+r.getAttribute("data-bd-done"))*12}
 function qfRateOf(r){return 0.28+(((+r.getAttribute("data-bd-row"))*7)%13)/100}
@@ -12420,24 +12401,6 @@ function renderQfTrend(){
     bands[j].addEventListener("mouseleave",function(){tip.style.display="none"});
   }
 }
-var qfw=document.getElementById("rea-qft-win");
-if(qfw)qfw.addEventListener("click",function(e){
-  var n=e.target,id=null;
-  while(n&&n!==qfw&&n.nodeType===1){
-    if(n.getAttribute&&n.getAttribute("data-qf-gran")){id=n.getAttribute("data-qf-gran");break}
-    n=n.parentNode;
-  }
-  if(!id||id===QFMODE)return;
-  e.preventDefault();
-  var ls=qfw.querySelectorAll("[data-qf-gran]"),i,on,b;
-  for(i=0;i<ls.length;i++){
-    on=ls[i].getAttribute("data-qf-gran")===id;
-    ls[i].classList.toggle("ant-radio-button-wrapper-checked",on);
-    b=ls[i].querySelector(".ant-radio-button");
-    if(b)b.classList.toggle("ant-radio-button-checked",on);
-  }
-  QFMODE=id;renderQfTrend();
-},true);
 var qfrt=null;
 window.addEventListener("resize",function(){
   if(qfrt)clearTimeout(qfrt);
@@ -12461,7 +12424,9 @@ window.addEventListener("resize",function(){
    已逾期＝该条任务还有逾期未做的人次。两者互斥（有逾期就必然没做满），
    所以一条线各数各的，不相加也不互减。
    2026-10-26：「做满任务／到期没做满」改成「已完成／已逾期」，与环形占比的命名对齐；
-   卡内档位由「近 N 周」改成按日／按周，统计范围不再自带，跟着页顶时间窗走。 */
+   卡内档位由「近 N 周」改成按日／按周，统计范围不再自带，跟着页顶时间窗走。
+   2026-10-28：卡头的按日／按周开关撤掉——粒度随页顶时间窗的跨度自动定（≤ 31 天按日、更长按周），
+   与「素材看板」的取用趋势同一套。 */
 var TRMODE="day";
 function trBuckets(mode){
   var w=WIN[CURW]||WIN[DEFW],lo=w[0],hi=w[1],rs=winRows(CURW),map={},out=[],i,r,off,d,key,b;
@@ -12571,24 +12536,6 @@ function renderTrTrend(){
     bands[j].addEventListener("mouseleave",function(){tip.style.display="none";if(hov)hov.setAttribute("opacity","0")});
   }
 }
-var trw=document.getElementById("rea-tr-win");
-if(trw)trw.addEventListener("click",function(e){
-  var node=e.target,id=null;
-  while(node&&node!==trw&&node.nodeType===1){
-    if(node.getAttribute&&node.getAttribute("data-tr-gran")){id=node.getAttribute("data-tr-gran");break}
-    node=node.parentNode;
-  }
-  if(!id||id===TRMODE)return;
-  e.preventDefault();
-  var ls=trw.querySelectorAll("[data-tr-gran]"),i,on,b;
-  for(i=0;i<ls.length;i++){
-    on=ls[i].getAttribute("data-tr-gran")===id;
-    ls[i].classList.toggle("ant-radio-button-wrapper-checked",on);
-    b=ls[i].querySelector(".ant-radio-button");
-    if(b)b.classList.toggle("ant-radio-button-checked",on);
-  }
-  TRMODE=id;renderTrTrend();
-},true);
 var trrt=null;
 window.addEventListener("resize",function(){
   if(trrt)clearTimeout(trrt);
@@ -12688,8 +12635,8 @@ function ldCheck(ps,t){
   if(pn!==t.need)bad("排行按人合计的应执行 "+pn+" ≠ 窗口按任务合计的应执行 "+t.need);
   if(po!==t.over)bad("排行按人合计的逾期 "+po+" ≠ 窗口按任务合计的逾期 "+t.over);
 }
-/* 卡头右端的两枚列名（完成 / 完成率）：选中的那枚带方向箭头、字色加深；
-   点它翻面，点另一枚＝换按它排（回到降序）。 */
+/* 列名行里的两枚列名（完成 / 完成率）：选中的那枚带方向箭头、字色加深；
+   点它翻面，点另一枚＝换按它排（回到降序）；没选中的写 ↕，一眼看出还能点。 */
 function setLdSortUi(){
   var box=document.getElementById("rea-bd-ld-tools");if(!box)return;
   var ls=box.querySelectorAll("[data-bd-ld-sortby]"),i;
@@ -12697,13 +12644,9 @@ function setLdSortUi(){
     var k=ls[i].getAttribute("data-bd-ld-sortby"),on=k===LDSORT;
     ls[i].classList.toggle("is-on",on);
     var ar=ls[i].querySelector("i");
-    if(on&&!ar){ar=document.createElement("i");ls[i].appendChild(ar)}
-    if(ar){
-      if(on)ar.textContent=LDDIR<0?"↓":"↑";
-      else ar.parentNode.removeChild(ar);
-    }
+    if(ar)ar.textContent=on?(LDDIR<0?"↓":"↑"):"↕";
     ls[i].title=(k==="done"?"完成 / 应执行（单位：人次）":"完成率 ＝ 已执行 ÷ 应执行")
-      +"；"+(on?"点一下改"+(LDDIR<0?"升序":"降序"):"点一下按它排");
+      +"；"+(on?"点一下改"+(LDDIR<0?"升序":"降序"):"点一下按它排（降序）");
   }
 }
 function renderLd(w){
@@ -12747,7 +12690,7 @@ if(ldb)ldb.addEventListener("keydown",function(e){
   var n=e.target;
   if(n&&n.getAttribute&&n.getAttribute("data-bd-ld-person")){e.preventDefault();n.click();}
 });
-/* 卡头右端的两枚列名：换指标（回到降序）或翻方向，箭头跟着走。 */
+/* 列名行里的两枚列名：换指标（回到降序）或翻方向，箭头跟着走。 */
 var ldt=document.getElementById("rea-bd-ld-tools");
 if(ldt)ldt.addEventListener("click",function(e){
   var n=e.target;
@@ -13046,10 +12989,10 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '   按完成率降序排：一列下来就是一把尺子。点一行去「任务列表」按这个部门筛；',
     '   任务明细整体搬进那一页，不在这里就地展开。 */',
     'var DEPTS=["产品部","市场部","运营部","销售部","研发部","客户成功部","设计部","人力行政部"];',
-    '/* 部门的排序方向：-1 ＝ 完成率降序（默认，与参考稿一致），1 ＝ 升序。',
-    '   卡里只露 8 行、其余在卡内滚动，所以列头「完成率」可点翻面——',
-    '   部门上百个时，垫底的那几个在降序下要一路滚到底才看得见。 */',
-    'var ORGDIR=-1;',
+    '/* 部门面的排序：主指标 ORGK（rate 完成率／need 应执行人次）＋方向 ORGDIR（-1 ＝ 降序）＋兜底。',
+    '   列名行里两枚可点：点另一枚＝换成按它排（回到降序），点已选中的那枚＝翻方向。',
+    '   卡里只露 8 行、其余在卡内滚动，部门上百个时，垫底的那几个在降序下要一路滚到底才看得见。 */',
+    'var ORGK="rate", ORGDIR=-1;',
     'function deptList(w){',
     '  var t=tally(winRows(w)),out=[],i,o,a;',
     '  for(i=0;i<DEPTS.length;i++){',
@@ -13057,11 +13000,24 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '    out.push({o:o,need:a.need,done:a.done,rate:a.need?a.done/a.need*100:0});',
     '  }',
     '  out.sort(function(x,y){',
-    '    if(x.rate!==y.rate)return (x.rate-y.rate)*ORGDIR;',
-    '    if(y.need!==x.need)return y.need-x.need;',
+    '    var d=ORGK==="need"?(x.need-y.need):(x.rate-y.rate);',
+    '    if(d)return d*ORGDIR;',
+    '    /* 主指标并排时用另一枚指标兜底：同一条数上的部门，摊得多的在前 */',
+    '    if(ORGK==="need"){if(x.rate!==y.rate)return y.rate-x.rate;}',
+    '    else if(y.need!==x.need)return y.need-x.need;',
     '    return DEPTS.indexOf(x.o)-DEPTS.indexOf(y.o);',
     '  });',
     '  return out;',
+    '}',
+    '/* 列名行的两枚列名：选中的那枚带方向箭头、字色加深，没选中的写 ↕（可点）。 */',
+    'function setOrgSortUi(){',
+    '  var ls=document.querySelectorAll(".rea-bd-lhead [data-bd-org-sort]"),i,k,on,ar;',
+    '  for(i=0;i<ls.length;i++){',
+    '    k=ls[i].getAttribute("data-bd-org-sort");on=k===ORGK;',
+    '    ls[i].classList.toggle("is-on",on);',
+    '    ar=ls[i].querySelector("i");if(ar)ar.textContent=on?(ORGDIR<0?"↓":"↑"):"↕";',
+    '    ls[i].title=(k==="need"?"应执行人次":"完成率")+(on?"；点一下改"+(ORGDIR<0?"升序":"降序"):"；点一下按它排（降序）");',
+    '  }',
     '}',
     'function renderOrg(w){',
     '  var list=deptList(w),box=document.getElementById("rea-bd-org"),foot=document.getElementById("rea-bd-org-foot-text");',
@@ -13082,12 +13038,7 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '      +"</div>";',
     '  }',
     '  box.innerHTML="<div class=\\"rea-bd-org-in\\">"+h+"</div>";',
-    '  var srt=document.getElementById("rea-bd-org-sort");',
-    '  if(srt){',
-    '    srt.setAttribute("data-bd-org-dir",String(ORGDIR));',
-    '    var ar=srt.querySelector("i");if(ar)ar.textContent=ORGDIR<0?"↓":"↑";',
-    '    srt.title=ORGDIR<0?"按完成率降序（点一下改升序）":"按完成率升序（点一下改降序）";',
-    '  }',
+    '  setOrgSortUi();',
     '  /* 只有一个部门时不给「平均完成率」：均值就是那一行自己的数。 */',
     '  if(foot)foot.textContent=DEPTS.length>1?"共 "+DEPTS.length+" 个部门 · 部门平均完成率 "+(sum/list.length).toFixed(1)+"%":"共 1 个部门";',
     '}',
@@ -13118,10 +13069,17 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '});',
     '/* 列头「完成率」：翻排序方向，并把卡内滚动条拉回顶部——',
     '   翻面后最关心的那一头永远在第一位，不用先滚回上面再找。 */',
-    'var osrt=document.getElementById("rea-bd-org-sort");',
-    'if(osrt)osrt.addEventListener("click",function(e){',
+    'var ohead=document.querySelector(".rea-bd-lhead--org");',
+    'if(ohead)ohead.addEventListener("click",function(e){',
+    '  var n=e.target,k=null;',
+    '  while(n&&n!==ohead&&n.nodeType===1){',
+    '    if(n.getAttribute&&n.getAttribute("data-bd-org-sort")){k=n.getAttribute("data-bd-org-sort");break}',
+    '    n=n.parentNode;',
+    '  }',
+    '  if(!k)return;',
     '  e.preventDefault();e.stopPropagation();',
-    '  ORGDIR=-ORGDIR;renderOrg(CURW);',
+    '  if(k===ORGK)ORGDIR=-ORGDIR;else{ORGK=k;ORGDIR=-1;}',
+    '  renderOrg(CURW);',
     '  var o=document.getElementById("rea-bd-org");if(o)o.scrollTop=0;',
     '});',
     '/* 部门视图右下角的「查看全部」：进任务列表看全量逐条任务，不带任何筛选。',
@@ -13343,8 +13301,6 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '  var panes=document.querySelectorAll("[data-cmp-pane]"),i,p;',
     '  for(i=0;i<panes.length;i++){p=panes[i];p.hidden=(p.getAttribute("data-cmp-pane")==="org")!==showOrg;}',
     '  var sw=document.getElementById("rea-bd-cmp-switch");if(sw)sw.hidden=!DEPTS.length;',
-    '  var os=document.getElementById("rea-bd-org-sort");if(os)os.hidden=!showOrg;',
-    '  var lt=document.getElementById("rea-bd-ld-tools");if(lt)lt.hidden=showOrg;',
     '  setLdSortUi();',
     '  var ls=document.querySelectorAll("[data-bd-cmp]");',
     '  for(i=0;i<ls.length;i++){',
@@ -13379,7 +13335,7 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '/* 换窗口＝换一份数：这一页上所有跟着时间窗走的块一起重画——',
     '   占比（条数）、部门（人次）、员工（人次）、两张趋势图（条数／人次）。 */',
     '/* 两张图的粒度跟着窗口跨度走：31 天以内按日，更长按周——',
-    '   近三月按日就是 91 根挤成一条，读不出走势。用户手动切过的档保留到下一次换窗口。 */',
+    '   近三月按日就是 91 根挤成一条，读不出走势。卡头不再有粒度开关，这两行是唯一的定档处。 */',
     '/* 折线画入：按路径长度铺满虚线，再把 dashoffset 从满拉到 0——线从左端长到右端。',
     '   画完把虚线撤掉，否则下次 resize 重画会留一段看得见的缺口。',
     '   减动效偏好下整段跳过：图直接就是画好的样子。 */',
@@ -13398,24 +13354,11 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '    (function(el){setTimeout(function(){el.style.transition="";el.style.strokeDasharray="";el.style.strokeDashoffset="";},480)})(p);',
     '  }',
     '}',
-    'function setGranUi(){',
-    '  var sets=[["data-tr-gran",TRMODE],["data-qf-gran",QFMODE]],s,i,ls,on,b,r;',
-    '  for(s=0;s<sets.length;s++){',
-    '    ls=document.querySelectorAll("["+sets[s][0]+"]");',
-    '    for(i=0;i<ls.length;i++){',
-    '      on=ls[i].getAttribute(sets[s][0])===sets[s][1];',
-    '      ls[i].classList.toggle("ant-radio-button-wrapper-checked",on);',
-    '      b=ls[i].querySelector(".ant-radio-button");if(b)b.classList.toggle("ant-radio-button-checked",on);',
-    '      r=ls[i].querySelector("input");if(r)r.checked=on;',
-    '    }',
-    '  }',
-    '}',
     'function applyWin(w){',
     '  CURW=w;',
     '  var sp=WIN[w]||WIN[DEFW];sp=sp[1]-sp[0]+1;',
     '  TRMODE=sp>31?"week":"day";',
     '  QFMODE=TRMODE;',
-    '  setGranUi();',
     '  var tc=tally(winRows(w));',
     '  fill(document.getElementById("rea-bd-cards"),tc,w===DEFW);',
     '  paintDonut(tc);',
