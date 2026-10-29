@@ -11160,7 +11160,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
           <th class="num"><span class="sortc on" role="button" tabindex="0" data-mb-sort="count">使用次数 <i>↓</i></span></th>
           <th class="num">其中发送 / 复制保存</th>
           <th class="num"><span class="sortc" role="button" tabindex="0" data-mb-sort="people">使用人数 <i>↕</i></span></th>
-          <th>群发好友回复</th>
+          <th class="num"><span class="sortc" role="button" tabindex="0" data-mb-sort="reply" title="引用该素材的群发好友任务（全部部门合计），按回复率排">群发好友回复 <i>↕</i></span></th>
           <th><span class="sortc" role="button" tabindex="0" data-mb-sort="last">最近使用 <i>↕</i></span></th>
         </tr></thead>
         <tbody id="rea-mb-dbody"></tbody>
@@ -12056,6 +12056,8 @@ body .subapp{background:#F6F8FB!important}
 .rea-mb-qf-row .n{flex:0 0 64px;text-align:right;color:#8F959E;font-size:12px;font-variant-numeric:tabular-nums;white-space:nowrap}
 .rea-mb-qf-row .n.on{color:#1F2329;font-size:13px;font-weight:600}
 .rea-mb-qf-foot{padding-top:8px;color:#8F959E;font-size:11px;line-height:18px}
+.rea-mb-qf-foot .lnk{color:#1677FF;font-size:11px;text-decoration:none;cursor:pointer}
+.rea-mb-qf-foot .lnk:hover{text-decoration:underline}
 
 /* ---------- 执行趋势 ---------- */
 .rea-tr-chart{position:relative;margin-top:4px;min-height:200px}
@@ -17514,12 +17516,13 @@ for(i=0;i<RAW.length;i++){
     EVENTS.push([m.id,who,day,pickAct(m.type)]);
   }
 }
-/* 群发好友任务：34 条摊在近 90 天，约三分之二引用了素材；页上只出引用素材那一组的回复率，
-   不跟没引用素材的任务比。 */
+/* 群发好友任务：34 条摊在近 90 天，约四分之三引用了素材；页上只出引用素材那一组的回复率，
+   不跟没引用素材的任务比。九个热素材都至少被引用一次，近三月里有 9 条素材进回复卡，
+   正好演示「卡里只留前 6 条、其余去素材明细看」。 */
 var HOT=[9,10,12,17,18,25,28,33,39];
 var TASKS=[];
 for(i=0;i<34;i++){
-  var ref=(i%3!==0),mat=ref?HOT[i%HOT.length]:0;
+  var ref=(i%4!==0),mat=ref?HOT[i%HOT.length]:0;
   var sent=80+(i*53)%320,rate=ref?(.22+((i*13)%9)/100):(.14+((i*7)%11)/100);   /* 未引用的那批不进页面 */
   TASKS.push({day:-Math.round(i*2.6),ref:ref,mat:mat,sent:sent,replied:Math.round(sent*rate)});
 }
@@ -18029,10 +18032,11 @@ function renderEmps(w){
 
 /* ================= 群发好友回复 ================= */
 function pct(m,n){return n?(m/n*100).toFixed(1)+"%":"—"}
-/* 群发好友回复（PRD §2.6）：一条回复率 ＋ 逐条被引用的素材。
+/* 群发好友回复（PRD §2.6）：一条回复率 ＋ 逐条被引用的素材，卡里只留前 6 条，
+   卡高封顶；被引用的素材再多，全量去素材明细看（那边有可排序的「群发好友回复」列）。
    素材默认按发送量降序——样本大的先看，比率才有分量；也能点列名改按回复率排。
    条只画当前选中那一列的口径：发送量按列内最大值归一，回复率按 0–100% 画。 */
-var QFSK="sent",QFSD=-1;
+var QFSK="sent",QFSD=-1,QFCAP=6;
 function qfSortCmp(x,y,k,dir){
   var a=k==="rate"?x.rate:x.sent,b=k==="rate"?y.rate:y.sent;
   if(a!==b)return(a-b)*dir;
@@ -18051,6 +18055,7 @@ function renderQf(w){
   }
   list.sort(function(x,y){var c=qfSortCmp(x,y,QFSK,QFSD);if(c)return c;return x.title<y.title?-1:1;});
   for(k=0;k<list.length;k++)if(list[k].sent>maxS)maxS=list[k].sent;
+  var shown=list.length>QFCAP?list.slice(0,QFCAP):list;
   var h='<div class="rea-mb-qf-hero"><b>'+(rate*100).toFixed(1)+'%</b><span>回复率</span></div>'
     +'<span class="rea-mb-qf-split" role="img" aria-label="已回复 '+o.ref.replied+' 人，未回复 '+(o.ref.sent-o.ref.replied)+' 人"><i style="width:'+(rate*100).toFixed(1)+'%"></i></span>'
     +'<div class="rea-mb-qf-nums"><span>已发送 <b>'+o.ref.sent+'</b></span><span>已回复 <b>'+o.ref.replied+'</b></span><span>未回复 <b>'+(o.ref.sent-o.ref.replied)+'</b></span></div>'
@@ -18058,8 +18063,8 @@ function renderQf(w){
     +'<span class="n"><span class="sortc" role="button" tabindex="0" data-mb-qfsort="sent">已发送 <i></i></span></span>'
     +'<span class="n"><span class="sortc" role="button" tabindex="0" data-mb-qfsort="rate">回复率 <i></i></span></span>'
     +'</div><div class="rea-mb-qf-rows" id="rea-mb-qf-rows">';
-  for(k=0;k<list.length;k++){
-    r=list[k];
+  for(k=0;k<shown.length;k++){
+    r=shown[k];
     var wd=QFSK==="rate"?r.rate*100:(maxS?r.sent/maxS*100:0);
     h+='<div class="rea-mb-qf-row" role="button" tabindex="0" data-mb-qfmat="'+esc(r.title)+'" title="'+esc(r.title)+' · 已发送 '+r.sent+' 人 / 已回复 '+r.replied+' 人">'
       +'<span class="nm">'+esc(r.title)+'</span>'
@@ -18068,7 +18073,11 @@ function renderQf(w){
       +'<span class="n'+(QFSK==="rate"?" on":"")+'">'+(r.rate*100).toFixed(1)+'%</span>'
       +'</div>';
   }
-  h+='</div><div class="rea-mb-qf-foot">共 '+list.length+' 条素材被引用过 · 发送量少的排在下面，比率波动大</div>';
+  h+='</div><div class="rea-mb-qf-foot">共 '+list.length+' 条素材被引用过'
+    + (list.length>QFCAP
+        ? ' · <a href="javascript:;" class="lnk" data-mb-qfall="1" title="去素材明细看全部被引用的素材">查看全部 ›</a>'
+        : ' · 发送量少的排在下面，比率波动大')
+    +'</div>';
   box.innerHTML=h;
   syncSort("[data-mb-qfsort]","data-mb-qfsort",QFSK,QFSD,{sent:"已发送",rate:"回复率"});
 }
@@ -18254,6 +18263,12 @@ if(qfw)qfw.addEventListener("click",function(e){
       goDetail({q:mt,usage:"all",status:"all",group:"",type:"",dept:"all"});
       return;
     }
+    if(n.getAttribute&&n.getAttribute("data-mb-qfall")){
+      e.preventDefault();
+      /* 全量：明细按「群发好友回复」降序打开，没被引用的排在下面 */
+      goDetail({q:"",usage:"all",status:"all",group:"",type:"",dept:"all",sort:"reply"});
+      return;
+    }
     n=n.parentNode;
   }
 });
@@ -18285,7 +18300,7 @@ document.addEventListener("keydown",function(e){
   if(e.key!=="Enter"&&e.key!==" ")return;
   var n=e.target;
   if(!n||!n.getAttribute)return;
-  if(n.getAttribute("data-mb-sort")||n.getAttribute("data-mb-gsort")||n.getAttribute("data-mb-dsort")||n.getAttribute("data-mb-qfsort")||n.getAttribute("data-mb-qfmat")||n.getAttribute("data-mb-esort")||n.getAttribute("data-mb-etab")||n.getAttribute("data-mb-mat")||n.getAttribute("data-mb-group")||n.getAttribute("data-mb-dept")||n.getAttribute("data-mb-seg")||n.getAttribute("data-mb-win")){
+  if(n.getAttribute("data-mb-sort")||n.getAttribute("data-mb-gsort")||n.getAttribute("data-mb-dsort")||n.getAttribute("data-mb-qfsort")||n.getAttribute("data-mb-qfmat")||n.getAttribute("data-mb-qfall")||n.getAttribute("data-mb-esort")||n.getAttribute("data-mb-etab")||n.getAttribute("data-mb-mat")||n.getAttribute("data-mb-group")||n.getAttribute("data-mb-dept")||n.getAttribute("data-mb-seg")||n.getAttribute("data-mb-win")){
     e.preventDefault();n.click();
   }
 });
@@ -18328,7 +18343,9 @@ var PRE=window.__REA_MB_PRESET||{};
 var F={q:PRE.q||"",group:PRE.group||"",type:PRE.type||"",
   usage:(PRE.usage==="used"||PRE.usage==="cold"?PRE.usage:""),
   status:(PRE.status==="pub"?"已发布":(PRE.status==="exp"?"已过期":"")),dept:PRE.dept||"all"};
-var SORTK="count",SORTD=-1,PAGE=1,SIZE=20;
+/* 「群发好友回复」列也能排（从看板的卡片点「查看全部」进来时直接按回复率降序）。
+   没被群发好友任务引用过的素材没有比率，不分升降序都沉到最后。 */
+var SORTK=(PRE.sort==="reply"?"reply":"count"),SORTD=-1,PAGE=1,SIZE=20;
 
 function scope(r){
   var c=0,s=0,cp=0,last=-999,people=0,k,u;
@@ -18348,6 +18365,17 @@ function byExpiry(a,b){
 function sortList(list){
   list.sort(function(a,b){
     var va,vb;
+    if(SORTK==="reply"){
+      var qa=a.qf,qb=b.qf;
+      if(!qa!==!qb)return qa?-1:1;      /* 没被引用的没有比率，升降序都沉到后面 */
+      if(qa&&qb){
+        var ra=qa.sent?qa.replied/qa.sent:-1,rb=qb.sent?qb.replied/qb.sent:-1;
+        if(ra!==rb)return(ra-rb)*SORTD;
+        if(qa.sent!==qb.sent)return qb.sent-qa.sent;   /* 比率一样，样本大的先 */
+      }
+      if(a._c!==b._c)return b._c-a._c;
+      return a.title<b.title?-1:1;
+    }
     if(SORTK==="count"){va=a._c;vb=b._c;}
     else if(SORTK==="people"){va=a._p;vb=b._p;}
     else {va=a._l;vb=b._l;}
@@ -18444,7 +18472,8 @@ function renderTable(){
   start=(PAGE-1)*SIZE;end=Math.min(start+SIZE,total);
   for(k=start;k<end;k++){
     r=list[k];
-    var qf=r.qf?('已发送 '+r.qf.sent+' / 已回复 '+r.qf.replied+' / 未回复 '+(r.qf.sent-r.qf.replied)+' / '+pct(r.qf.replied,r.qf.sent)):"—";
+    /* 列宽放不下「未回复」第三个标签，未回复看列内悬停提示（＝已发送 − 已回复）。 */
+    var qf=r.qf?('已发送 '+r.qf.sent+' / 已回复 '+r.qf.replied+' / '+pct(r.qf.replied,r.qf.sent)):"—";
     var qfTitle=r.qf?('引用它的群发好友任务：已发送 '+r.qf.sent+'，已回复 '+r.qf.replied+'，未回复 '+(r.qf.sent-r.qf.replied)):"该时间段没有引用它的群发好友任务";
     h+='<tr data-mb-row="'+r.id+'">'
       +'<td class="t" title="'+esc(r.title)+'">'+esc(r.title)+'</td>'
