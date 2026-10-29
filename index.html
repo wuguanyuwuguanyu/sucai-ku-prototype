@@ -11618,7 +11618,16 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     /* 浮层里二级项竖排、一行一个（双列时那是 88px 的卡网格），字号跟现网折叠态的下拉一致 13px */
     + '.ykSideRoot.rea-collapsed .ykSideTwoColRight .ykSideTwoColSecondaryList{display:flex;flex-direction:column;gap:2px}'
     + '.ykSideRoot.rea-collapsed .ykSideTwoColRight .ykSideTwoColSecondaryList .ykMenuText{font-size:13px;line-height:16px}'
-    + '.ykSideRoot.rea-collapsed .ykSideTwoColRight .ykSideTwoColSecondaryHeader{padding:2px 8px 10px}';
+    + '.ykSideRoot.rea-collapsed .ykSideTwoColRight .ykSideTwoColSecondaryHeader{padding:2px 8px 10px}'
+    /* ---- 任务列表页新加的「完成进度」列（见 REA_TASK_PROG）----
+       与看板逐条进度同一口径：已执行人次 / 应执行人次，数字一行、浅蓝细条一行。
+       一律白底、无卡片框，条只编码值不按阈值换色（ADR-0082）。*/
+    + '.rea-tp{display:flex;flex-direction:column;gap:6px;min-width:88px}'
+    + '.rea-tp .n{display:flex;justify-content:space-between;gap:8px;font-size:12px;line-height:1.2;'
+    +   'color:#1F2329;font-variant-numeric:tabular-nums}'
+    + '.rea-tp .n em{font-style:normal;color:#8F959E}'
+    + '.rea-tp .bar{height:6px;border-radius:3px;background:#F0F2F5;overflow:hidden}'
+    + '.rea-tp .bar>i{display:block;height:100%;border-radius:3px;background:#1677FF}';
 
   /* ============================================================
      逐页覆盖（ADR-0043）——未覆盖的页一个字节都不动；被覆盖的页换新稿或补交互，
@@ -18993,8 +19002,190 @@ renderTable();
        + ' style="padding-right: 0px;"><span>删除</span></button></div></div>'
   };
 
+  /* ---- 任务列表页的「完成进度」列（2026-10-29）----
+     8 个任务列表页在快照里大多是空表，也根本没有这一列。这里在页加载时补：
+     「状态」列前插一列完成进度，每页补 3 条演示行。
+     口径与看板逐条进度一致——已执行人次 / 应执行人次（不是任务条数，docs/10 §4）；
+     任务名与人数沿用 docs/11 的看板演示集，同一条任务在任务页与看板上的进度对得上。
+     只动 DOM、不碰 _online-admin.js；8 页的登记见 docs/09 §2.3。 */
+  var REA_TASK_PROG = {
+    '发圈': [
+      { c: { '任务名称': '秋季新品主推', '素材分类': '图文', '发布方式': '链接跟踪',
+             '群发内容': '秋季新品主推 · 朋友圈图文', '执行人员': '张伟 等 8 人', '创建人': '张伟',
+             '任务有效期': '2026-10-20 10:00~2026-10-27 10:00', '创建时间': '2026-10-20 10:00' }, d: 7, t: 8 },
+      { c: { '任务名称': '国庆活动预告', '素材分类': '视频', '发布方式': '原始素材',
+             '群发内容': '国庆活动预告 · 预热视频', '执行人员': '李娜 等 10 人', '创建人': '李娜',
+             '任务有效期': '2026-10-22 09:30~2026-10-29 09:30', '创建时间': '2026-10-22 09:30' }, d: 8, t: 10 },
+      { c: { '任务名称': '门店周年庆', '素材分类': '文章', '发布方式': '链接跟踪',
+             '群发内容': '门店周年庆 · 长图文', '执行人员': '王强 等 5 人', '创建人': '王强',
+             '任务有效期': '2026-10-15 14:00~2026-10-22 14:00', '创建时间': '2026-10-15 14:00' }, d: 5, t: 5 }
+    ],
+    '群发好友': [
+      { c: { '任务名称': '老客户回访语', '群发内容': '老客户回访话术（含 3 张图）', '执行人员': '王强 等 6 人',
+             '创建人': '王强', '群发范围': '全部好友', '已发送好友数': '412',
+             '任务有效期': '2026-10-21 10:00~2026-10-28 10:00', '创建时间': '2026-10-21 10:00' }, d: 5, t: 6 },
+      { c: { '任务名称': '双十一预热', '群发内容': '双十一预热话术 ＋ 商品卡', '执行人员': '李娜 等 12 人',
+             '创建人': '李娜', '群发范围': '近半年互动客户', '已发送好友数': '1,286',
+             '任务有效期': '2026-10-25 09:00~2026-11-05 09:00', '创建时间': '2026-10-25 09:00' }, d: 9, t: 12 },
+      { c: { '任务名称': '中秋回访问候', '群发内容': '中秋回访问候语', '执行人员': '张伟 等 4 人',
+             '创建人': '张伟', '群发范围': '全部好友', '已发送好友数': '358',
+             '任务有效期': '2026-09-25 10:00~2026-10-02 10:00', '创建时间': '2026-09-25 10:00' }, d: 4, t: 4 }
+    ],
+    '群发群组': [
+      { c: { '任务名称': '行业群早报', '素材组名称': '早报素材组', '群发内容数量': '3',
+             '群发哪些群': '行业交流群 等 24 个群', '执行人员': '张伟 等 5 人', '创建人': '张伟',
+             '发布方式': '链接跟踪', '任务有效期': '2026-10-23 08:30~2026-10-30 08:30',
+             '创建时间': '2026-10-23 08:30' }, d: 5, t: 5 },
+      { c: { '任务名称': '社群活动通知', '素材组名称': '活动素材组', '群发内容数量': '2',
+             '群发哪些群': '客户服务群 等 18 个群', '执行人员': '王强 等 6 人', '创建人': '王强',
+             '发布方式': '原始素材', '任务有效期': '2026-10-24 14:00~2026-10-31 14:00',
+             '创建时间': '2026-10-24 14:00' }, d: 4, t: 6 },
+      { c: { '任务名称': '新品到货提醒', '素材组名称': '新品素材组', '群发内容数量': '1',
+             '群发哪些群': '门店客户群 等 12 个群', '执行人员': '李娜 等 3 人', '创建人': '李娜',
+             '发布方式': '原始素材', '任务有效期': '2026-11-01 10:00~2026-11-08 10:00',
+             '创建时间': '2026-10-28 16:00' }, d: 0, t: 3 }
+    ],
+    '批量加好友': [
+      { c: { '任务名称': '抖音获客名单', '添加总量': '150', '执行人员': '李娜 等 15 人', '创建人': '李娜',
+             '任务完成渠道': 'APP端', '人均添加量': '10',
+             '任务有效期': '2026-10-24 10:00~2026-10-31 10:00', '任务类型': '批量添加好友',
+             '创建时间': '2026-10-24 10:00' }, d: 11, t: 15 },
+      { c: { '任务名称': '展会线索导入', '添加总量': '80', '执行人员': '王强 等 8 人', '创建人': '王强',
+             '任务完成渠道': 'APP端', '人均添加量': '10',
+             '任务有效期': '2026-10-10 09:00~2026-10-17 09:00', '任务类型': '批量添加好友',
+             '创建时间': '2026-10-10 09:00' }, d: 6, t: 8, st: '已过期' },
+      { c: { '任务名称': '门店到店客户', '添加总量': '60', '执行人员': '张伟 等 6 人', '创建人': '张伟',
+             '任务完成渠道': 'APP端', '人均添加量': '10',
+             '任务有效期': '2026-11-02 10:00~2026-11-09 10:00', '任务类型': '批量添加好友',
+             '创建时间': '2026-10-28 15:00' }, d: 0, t: 6 }
+    ],
+    '关联好友': [
+      { c: { '任务名称': '展会名单关联', '执行人员': '李娜 等 7 人', '创建人': '李娜',
+             '任务有效期': '2026-10-21 10:00~2026-10-28 10:00', '创建时间': '2026-10-21 10:00' }, d: 4, t: 7 },
+      { c: { '任务名称': '老客户微信关联', '执行人员': '王强 等 9 人', '创建人': '王强',
+             '任务有效期': '2026-10-18 09:00~2026-10-25 09:00', '创建时间': '2026-10-18 09:00' }, d: 9, t: 9 },
+      { c: { '任务名称': '渠道商好友关联', '执行人员': '张伟 等 3 人', '创建人': '张伟',
+             '任务有效期': '2026-11-01 10:00~2026-11-08 10:00', '创建时间': '2026-10-28 14:00' }, d: 0, t: 3 }
+    ],
+    '视频号发布任务': [
+      { c: { '任务名称': '视频号新品发布', '视频文案': '秋季新品开箱视频，30 秒竖版', '视频话题': '#秋季新品 #开箱',
+             '执行人员': '王强 等 6 人', '发布时间': '2026-10-25 10:00', '创建时间': '2026-10-24 18:00',
+             '创建人': '王强' }, d: 3, t: 6 },
+      { c: { '任务名称': '门店探店视频', '视频文案': '门店探店 vlog，门店实拍', '视频话题': '#探店 #门店',
+             '执行人员': '张伟 等 4 人', '发布时间': '2026-10-18 15:00', '创建时间': '2026-10-17 20:00',
+             '创建人': '张伟' }, d: 4, t: 4 },
+      { c: { '任务名称': '客户案例分享', '视频文案': '客户案例访谈，成片 1 分钟', '视频话题': '#客户案例',
+             '执行人员': '李娜 等 5 人', '发布时间': '2026-11-02 11:00', '创建时间': '2026-10-28 16:00',
+             '创建人': '李娜' }, d: 0, t: 5 }
+    ],
+    '客户唤醒': [
+      { c: { '任务名称': '沉睡客户唤醒（90 天）', '唤醒内容': '沉睡客户唤醒话术', '执行人员': '张伟 等 9 人',
+             '创建人': '张伟', '唤醒客户条件': '90 天未互动', '已触达人数': '216',
+             '任务有效期': '2026-10-20 10:00~2026-10-27 10:00', '创建时间': '2026-10-20 10:00' }, d: 6, t: 9 },
+      { c: { '任务名称': '流失客户召回', '唤醒内容': '流失客户召回话术', '执行人员': '李娜 等 6 人',
+             '创建人': '李娜', '唤醒客户条件': '180 天未下单', '已触达人数': '143',
+             '任务有效期': '2026-10-15 10:00~2026-10-22 10:00', '创建时间': '2026-10-15 10:00' }, d: 6, t: 6 },
+      { c: { '任务名称': '会员到期提醒', '唤醒内容': '会员到期提醒话术', '执行人员': '王强 等 4 人',
+             '创建人': '王强', '唤醒客户条件': '会员 30 天内到期', '已触达人数': '0',
+             '任务有效期': '2026-11-01 10:00~2026-11-08 10:00', '创建时间': '2026-10-28 16:00' }, d: 0, t: 4 }
+    ],
+    '新小红书运营': [
+      { c: { '任务名称': '美妆种草拓客', '任务类型': '周期任务', '拓客行业': '美妆护肤',
+             '任务有效期': '2026-10-20 10:00~2026-11-20 10:00', '执行人员': '刘洋 等 6 人',
+             '创建时间': '2026-10-20 10:00', '创建人': '刘洋' }, d: 4, t: 6 },
+      { c: { '任务名称': '家居好物拓客', '任务类型': '单次任务', '拓客行业': '家居家装',
+             '任务有效期': '2026-10-15 10:00~2026-10-29 10:00', '执行人员': '陈敏 等 4 人',
+             '创建时间': '2026-10-15 10:00', '创建人': '陈敏' }, d: 4, t: 4 },
+      { c: { '任务名称': '母婴社群拓客', '任务类型': '周期任务', '拓客行业': '母婴用品',
+             '任务有效期': '2026-11-01 10:00~2026-11-30 10:00', '执行人员': '孙悦 等 3 人',
+             '创建时间': '2026-10-28 16:00', '创建人': '孙悦' }, d: 0, t: 3 }
+    ]
+  };
+
+  /* 「完成进度」列的注入脚本。跑在 reaDemoJs **之后**、REA_FX **之前**：
+     行得先存在，REA_FX 的行悬停才会绑上；REA_DEMO 那 5 页由这里统一重建，不再各补一行。 */
+  function reaProgJs(curName){
+   var rows = REA_TASK_PROG[curName];
+   if (!rows) return '';
+   return [
+    '(function(){',
+    'var ROWS=' + reaJson(rows) + ',CHK=' + reaJson(REA_CELL.chk) + ',OPS=' + reaJson(REA_CELL.ops) + ';',
+    'function txt(n){return ((n&&n.textContent)||"").replace(/\\s+/g,"")}',
+    'var hd=document.querySelector(".ant-table-thead"),tb=document.querySelector(".ant-table-tbody");',
+    'if(!hd||!tb)return;',
+    'var TH=hd.querySelectorAll("th"),si=-1,N0=TH.length,i,j;',
+    'for(i=0;i<N0;i++){var k=txt(TH[i]);if(k==="状态"||k==="任务状态"){si=i;break}}',
+    'if(si<0)return;  /* 找不到状态列就不插：列插歪比没有这一列更糟 */',
+    /* 表头插列 */
+    'var th=document.createElement("th");th.className="ant-table-cell";th.setAttribute("scope","col");',
+    'th.textContent="完成进度";TH[si].parentNode.insertBefore(th,TH[si]);',
+    /* colgroup：表头表与表体表各一份，列数与原表头一致才动 */
+    'var cg=document.querySelectorAll("colgroup");',
+    'for(j=0;j<cg.length;j++){if(cg[j].children.length!==N0)continue;',
+    '  var col=document.createElement("col");col.style.width="120px";',
+    '  cg[j].insertBefore(col,cg[j].children[si]);}',
+    /* 测宽行（表头测宽用的隐藏 th 行）也要补一格，否则列宽对不上 */
+    'var mr=tb.querySelector("tr.ant-table-measure-row");',
+    'if(mr&&mr.children[si]){var mh=document.createElement("th");mh.className="ant-table-measure-cell";',
+    '  mh.innerHTML="<div class=\\"ant-table-measure-cell-content\\">完成进度</div>";',
+    '  mr.insertBefore(mh,mr.children[si]);}',
+    /* 清空原有行（快照样例行／空表占位行），只留测宽行——倒序删，live 集合才不会跳元素 */
+    'var olds=tb.querySelectorAll("tr");',
+    'for(j=olds.length-1;j>=0;j--){if(olds[j].classList.contains("ant-table-measure-row"))continue;',
+    '  tb.removeChild(olds[j]);}',
+    /* 进度格：数字一行、浅蓝细条一行（样式见 REA_CSS 的 .rea-tp） */
+    'function prog(d,t){var p=t?Math.round(d*100/t):0;',
+    '  return \'<div class="rea-tp"><div class="n"><span>\'+d+\' / \'+t+\'</span><em>\'+p+\'%</em></div>\'',
+    '    +\'<div class="bar"><i style="width:\'+p+\'%"></i></div></div>\'}',
+    /* 状态徽标：进度推状态，已过期要显式给（st）——过期不等于「进行中」 */
+    'function badge(r){var st=r.st||(r.d===0?"未开始":r.d>=r.t?"已完成":"进行中");',
+    '  var dot=st==="已完成"?"success":st==="进行中"?"processing":st==="已过期"?"error":"default";',
+    '  return \'<div style="display: inline-block;"><span><span class="ant-badge ant-badge-status ant-badge-not-a-wrapper css-vgijab">\'',
+    '    +\'<span class="ant-badge-status-dot ant-badge-status-\'+dot+\'"></span>\'',
+    '    +\'<span class="ant-badge-status-text">\'+st+\'</span></span></span></div>\'}',
+    /* 建行：列样式抄表头 th，冻结/省略号跟着来；.ant-table-cell-fix-sticky 是表头的粘滞标记，真行没有 */
+    'var TH2=hd.querySelectorAll("th");',
+    'for(i=0;i<ROWS.length;i++){',
+    '  var r=ROWS[i],TR=document.createElement("tr");',
+    '  TR.className="ant-table-row ant-table-row-level-0";TR.setAttribute("data-row-key","rea-tp-"+i);',
+    '  for(j=0;j<TH2.length;j++){',
+    '    var key=txt(TH2[j]),td=document.createElement("td"),v;',
+    '    td.className=TH2[j].className.replace(" ant-table-cell-fix-sticky","");',
+    '    var sty=TH2[j].getAttribute("style");if(sty)td.setAttribute("style",sty);',
+    '    if(!key)td.innerHTML=CHK;',
+    '    else if(key==="操作")td.innerHTML=OPS;',
+    '    else if(key==="完成进度")td.innerHTML=prog(r.d,r.t);',
+    '    else if(/状态$/.test(key))td.innerHTML=badge(r);',
+    '    else if(key==="序号")td.textContent=String(i+1);',
+    '    else if((v=r.c[key])==null)td.textContent="-";',
+    '    else if(/名称$/.test(key)){',
+    '      var sp=document.createElement("span");',
+    '      sp.className="ant-typography ant-typography-ellipsis ant-typography-ellipsis-single-line css-vgijab";',
+    '      sp.setAttribute("title",v);sp.style.cssText="width:100%;margin:0;padding:0;";',
+    '      sp.textContent=v;td.appendChild(sp);',
+    '    }',
+    '    else td.textContent=v;',
+    '    TR.appendChild(td);',
+    '  }',
+    '  tb.appendChild(TR);',
+    '}',
+    /* 分页合计跟着改（原本写的是空表的「共 0 条记录」），全选框也启活 */
+    'var pt=document.querySelector(".ant-pagination-total-text");',
+    'if(pt)pt.textContent="共 "+ROWS.length+" 条记录";',
+    'var hb=hd.querySelector(".ant-table-selection input.ant-checkbox-input");',
+    'if(hb){',
+    '  hb.removeAttribute("disabled");',
+    '  var bw=hb.parentNode;if(bw)bw.classList.remove("ant-checkbox-disabled");',
+    '  var lw=hb;while(lw&&lw.nodeType===1&&!lw.classList.contains("ant-checkbox-wrapper"))lw=lw.parentNode;',
+    '  if(lw&&lw.nodeType===1)lw.classList.remove("ant-checkbox-wrapper-disabled");',
+    '}',
+    '})();'
+   ].join('\n');
+  }
+
   /* 补行脚本（注入在 REA_FX **之前**：REA_FX 的行悬停是加载时逐行绑的，这行得先存在） */
   function reaDemoJs(curName){
+   if (REA_TASK_PROG[curName]) return '';  /* 这几页由 reaProgJs 统一建行，不再各补一行 */
    return [
     '(function(){',
     'var DEMO=' + reaJson(REA_DEMO[curName] || null) + ',CHK=' + reaJson(REA_CELL.chk)
@@ -19289,6 +19480,8 @@ renderTable();
       /* 补行（演示行 / 刚存的行）必须排在 REA_FX **前面**：它的行悬停是加载时逐行绑的 */
       + (sv ? '<script>' + sv + '<' + '/script>' : '')
       + '<script>' + reaDemoJs(p.name) + '<' + '/script>'
+      /* 任务列表页的「完成进度」列：补列 ＋ 重建演示行，同样排在 REA_FX 前面 */
+      + (reaProgJs(p.name) ? '<script>' + reaProgJs(p.name) + '<' + '/script>' : '')
       + '<script>' + reaFxJs(p.name, reaTreeClosed) + '<' + '/script>'
       + (fl ? '<script>' + fl + '<' + '/script>' : '')
       + (cv && cv.js ? '<script>' + cv.js() + '<' + '/script>' : '')
