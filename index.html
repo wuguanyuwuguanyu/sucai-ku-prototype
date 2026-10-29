@@ -12008,6 +12008,27 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-win-off::before{background-color:transparent!important}
 .rea-bd-win-off:hover{color:#B7BCC4!important;background:transparent!important}
 
+/* ---------- 群发好友回复（任务看板 · 第 3 行左格） ----------
+   KPI 一排 ＋ 双轴图（柱＝已发送，线＝回复率）。下面那段 .rea-mb-qf-* 是「素材看板」里同名的那张卡，
+   两张卡同名不同物：类名前缀各走各的（qft ＝ 任务看板，mb-qf ＝ 素材看板），别拿一处的样式盖另一处。 */
+.rea-qft-kpis{display:flex;flex-wrap:wrap;gap:10px 22px;margin:0 0 4px;padding:0 0 2px}
+.rea-qft-kpi{display:flex;flex-direction:column;gap:3px;margin:0}
+.rea-qft-kpi .k{color:#8F959E;font-size:12px}
+.rea-qft-kpi b{color:#1F2329;font-size:17px;font-weight:600;line-height:1.3}
+.rea-qft-kpi.primary b{font-size:22px;line-height:1.2}
+.rea-qft-kpi b i{font-style:normal;font-size:12px;font-weight:400;color:#8F959E;margin-left:2px}
+.rea-qft-kpi b em{font-style:normal;font-size:12px;font-weight:500;margin-left:8px}
+.rea-qft-kpi b em.up{color:#52C41A}.rea-qft-kpi b em.down{color:#FAAD14}
+.rea-qft-kpi b em.flat{color:#8F959E}
+.rea-qft-chart{position:relative;margin-top:8px;min-height:200px}
+.rea-qft-chart svg{display:block;width:100%}
+.rea-qft-tip{position:absolute;z-index:5;display:none;pointer-events:none;padding:8px 10px;background:rgba(255,255,255,.98);border:1px solid #E5E8EF;border-radius:6px;box-shadow:0 6px 16px rgba(0,0,0,.08);color:#1F2329;font-size:12px;line-height:20px;white-space:nowrap}
+.rea-qft-tip .d{color:#8F959E;margin-bottom:2px}
+.rea-qft-tip .r{display:flex;align-items:center;gap:6px}
+.rea-qft-tip .r i{width:8px;height:8px;border-radius:2px;background:#BAE0FF}
+.rea-qft-tip .r.line i{height:2px;border-radius:1px;background:#1677FF}
+.rea-qft-tip .r b{margin-left:auto;padding-left:16px;font-weight:600;font-variant-numeric:tabular-nums}
+.rea-qft-empty{padding:36px 0 30px;text-align:center;color:#8F959E;font-size:12px}
 /* ---------- 群发好友回复 ----------
    上一条：整组回复率、已回复／未回复的占比条、三个总数；下面逐条列被引用的素材。
    只有引用素材的群发好友任务进本卡口径；素材默认按发送量排，也能改成按回复率排。 */
