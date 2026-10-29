@@ -11054,20 +11054,52 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
       <div class="rea-mb-foot"><span id="rea-mb-grp-foot"></span></div>
     </div>
 
-    <!-- 部门使用 · 第 4 行右格（PRD §2.5）。哪个部门在横向用、哪个一条没碰；默认取用次数降序。
-         列名与分组使用同一套；一样是「名字 · 一根满宽横条 · 两个数字」，部门之间横向比。 -->
-    <div class="rea-bd-card rea-bd-card--w6">
+    <!-- 部门与员工 · 第 4 行右格（PRD §2.5）。一张卡两个页签，各自记排序：
+         部门页看哪个部门在横向用、哪个一条没碰；员工页看谁在用、谁一条没碰。
+         两页都是「名字 · 一根满宽横条 · 两个数字」，条只画当前选中那一列。
+         员工行不进明细——个人明细在素材明细的「谁用过」抽屉里，这一页只给数。 -->
+    <div class="rea-bd-card rea-bd-card--w6" id="rea-mb-orgcard">
       <div class="rea-bd-ch">
-        <h6>部门使用</h6>
+        <h6>部门与员工</h6>
+        <div class="ant-radio-group ant-radio-group-solid css-vgijab rea-bd-cmp-switch" id="rea-mb-orgtabs">
+          <div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small">
+            <div class="ant-space-item">
+              <label class="ant-radio-button-wrapper ant-radio-button-wrapper-checked css-vgijab" data-mb-etab="dep">
+                <span class="ant-radio-button ant-radio-button-checked"><input name="rea-mb-etab" class="ant-radio-button-input" type="radio" value="dep" checked=""><span class="ant-radio-button-inner"></span></span>
+                <span class="ant-radio-button-label">部门</span>
+              </label>
+            </div>
+            <div class="ant-space-item">
+              <label class="ant-radio-button-wrapper css-vgijab" data-mb-etab="emp">
+                <span class="ant-radio-button"><input name="rea-mb-etab" class="ant-radio-button-input" type="radio" value="emp"><span class="ant-radio-button-inner"></span></span>
+                <span class="ant-radio-button-label">员工</span>
+              </label>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="rea-mb-lhead rea-mb-lhead--dep">
-        <span class="nm">部门</span>
-        <span class="track"></span>
-        <span class="n"><span class="sortc on" role="button" tabindex="0" data-mb-dsort="count" title="按取用次数降序（点一下改升序）">取用次数 <i>↓</i></span></span>
-        <span class="n"><span class="sortc" role="button" tabindex="0" data-mb-dsort="people" title="按使用人数排（点一下翻方向）">使用人数 <i>↕</i></span></span>
+      <div class="rea-mb-org-body">
+        <div class="rea-mb-org-pane" id="rea-mb-dep-pane">
+          <div class="rea-mb-lhead rea-mb-lhead--dep">
+            <span class="nm">部门</span>
+            <span class="track"></span>
+            <span class="n"><span class="sortc on" role="button" tabindex="0" data-mb-dsort="count" title="按取用次数降序（点一下改升序）">取用次数 <i>↓</i></span></span>
+            <span class="n"><span class="sortc" role="button" tabindex="0" data-mb-dsort="people" title="按使用人数排（点一下翻方向）">使用人数 <i>↕</i></span></span>
+          </div>
+          <div class="rea-mb-list" id="rea-mb-dep-list"></div>
+          <div class="rea-mb-foot"><span id="rea-mb-dep-foot"></span></div>
+        </div>
+        <div class="rea-mb-org-pane" id="rea-mb-emp-pane" hidden>
+          <div class="rea-mb-lhead rea-mb-lhead--emp">
+            <span class="nm">员工</span>
+            <span class="track"></span>
+            <span class="n"><span class="sortc on" role="button" tabindex="0" data-mb-esort="count" title="按取用次数降序（点一下改升序）">取用次数 <i>↓</i></span></span>
+            <span class="n"><span class="sortc" role="button" tabindex="0" data-mb-esort="m">素材条数 <i>↕</i></span></span>
+          </div>
+          <div class="rea-mb-list" id="rea-mb-emp-list"></div>
+          <div class="rea-mb-foot"><span id="rea-mb-emp-foot"></span></div>
+        </div>
       </div>
-      <div class="rea-mb-list" id="rea-mb-dep-list"></div>
-      <div class="rea-mb-foot"><span id="rea-mb-dep-foot"></span></div>
     </div>
 
   </div>
@@ -11987,6 +12019,7 @@ body .subapp{background:#F6F8FB!important}
 .rea-mb-qf-nums{display:flex;flex-wrap:wrap;gap:6px 18px;color:#646A73;font-size:12px;padding:10px 0 14px}
 .rea-mb-qf-nums b{color:#1F2329;font-weight:600;font-variant-numeric:tabular-nums}
 .rea-mb-qf-empty{padding:26px 0 18px;color:#8F959E;font-size:12px;line-height:20px}
+.rea-mb-empty{padding:26px 0 18px;color:#8F959E;font-size:12px;line-height:20px}
 .rea-mb-lhead.rea-mb-lhead--qf{margin-top:2px}
 .rea-mb-lhead.rea-mb-lhead--qf .nm{flex:0 0 200px;min-width:0;color:#8F959E;font-size:12px}
 .rea-mb-lhead.rea-mb-lhead--qf .track{flex:1 1 auto;min-width:20px}
@@ -12139,7 +12172,11 @@ body .subapp{background:#F6F8FB!important}
 .rea-mb-tbl .lnk:hover{color:#4096FF;text-decoration:underline}
 
 /* ---------- 分组与部门 ---------- */
-.rea-mb-list{flex:1 1 auto;overflow-y:auto;overflow-x:hidden;max-height:344px;scrollbar-width:thin;scrollbar-color:#D6DDE8 transparent}
+.rea-mb-list{flex:1 1 auto;overflow-y:auto;overflow-x:hidden;max-height:336px;scrollbar-width:thin;scrollbar-color:#D6DDE8 transparent}
+/* 部门与员工 · 两个页签各一张表，切页签不动时间范围。 */
+.rea-mb-org-body{display:flex;flex:1 1 auto;flex-direction:column;min-height:0}
+.rea-mb-org-pane{display:flex;flex:1 1 auto;flex-direction:column;min-height:0}
+.rea-mb-org-pane[hidden]{display:none}
 /* 列名行：与下面的行同一套 flex 尺寸，列才对得齐；数值列靠右，落在数字上方。 */
 .rea-mb-lhead{display:flex;align-items:center;gap:14px;min-height:28px;padding:0 8px;margin:0 -8px 2px;border-bottom:1px solid #E5E8EF;color:#8F959E;font-size:12px;white-space:nowrap}
 .rea-mb-lhead .nm{flex:0 0 120px}
@@ -12150,16 +12187,17 @@ body .subapp{background:#F6F8FB!important}
 .rea-mb-lhead .sortc.on{color:#1F2329}
 .rea-mb-lhead .sortc i{font-style:normal;color:#B7BCC4;font-size:10px;line-height:1}
 .rea-mb-lhead .sortc.on i{color:#1677FF}
-.rea-mb-grp-row,.rea-mb-dep-row{display:flex;align-items:center;gap:14px;min-height:42px;padding:4px 8px;margin:0 -8px;border-radius:6px;border-top:1px solid #F4F6FA;cursor:pointer;transition:background .12s linear}
-.rea-mb-grp-row:first-child,.rea-mb-dep-row:first-child{border-top:0}
+.rea-mb-grp-row,.rea-mb-dep-row,.rea-mb-emp-row{display:flex;align-items:center;gap:14px;min-height:42px;padding:4px 8px;margin:0 -8px;border-radius:6px;border-top:1px solid #F4F6FA;cursor:pointer;transition:background .12s linear}
+.rea-mb-grp-row:first-child,.rea-mb-dep-row:first-child,.rea-mb-emp-row:first-child{border-top:0}
 .rea-mb-grp-row:hover,.rea-mb-dep-row:hover{background:#F7F9FC}
+.rea-mb-emp-row{cursor:default;transition:none}
 .rea-mb-grp-row:hover .nm,.rea-mb-dep-row:hover .nm{color:#1677FF}
-.rea-mb-grp-row .nm,.rea-mb-dep-row .nm{flex:0 0 120px;color:#1F2329;font-size:13px;line-height:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.rea-mb-grp-row .nm em{display:block;font-style:normal;font-size:11px;color:#8F959E;line-height:14px;margin-top:1px}
-.rea-mb-grp-row .track,.rea-mb-dep-row .track{flex:1 1 auto;display:block;height:8px;border-radius:4px;background:#EEF2F9;overflow:hidden;min-width:20px}
-.rea-mb-grp-row .track>i,.rea-mb-dep-row .track>i{display:block;height:100%;border-radius:4px;background:#1677FF;transition:width .2s ease}
-.rea-mb-grp-row .n,.rea-mb-dep-row .n{flex:0 0 64px;text-align:right;color:#8F959E;font-size:12px;font-variant-numeric:tabular-nums;white-space:nowrap}
-.rea-mb-grp-row .n.on,.rea-mb-dep-row .n.on{color:#1F2329;font-size:13px;font-weight:600}
+.rea-mb-grp-row .nm,.rea-mb-dep-row .nm,.rea-mb-emp-row .nm{flex:0 0 120px;color:#1F2329;font-size:13px;line-height:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rea-mb-grp-row .nm em,.rea-mb-emp-row .nm em{display:block;font-style:normal;font-size:11px;color:#8F959E;line-height:14px;margin-top:1px}
+.rea-mb-grp-row .track,.rea-mb-dep-row .track,.rea-mb-emp-row .track{flex:1 1 auto;display:block;height:8px;border-radius:4px;background:#EEF2F9;overflow:hidden;min-width:20px}
+.rea-mb-grp-row .track>i,.rea-mb-dep-row .track>i,.rea-mb-emp-row .track>i{display:block;height:100%;border-radius:4px;background:#1677FF;transition:width .2s ease}
+.rea-mb-grp-row .n,.rea-mb-dep-row .n,.rea-mb-emp-row .n{flex:0 0 64px;text-align:right;color:#8F959E;font-size:12px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.rea-mb-grp-row .n.on,.rea-mb-dep-row .n.on,.rea-mb-emp-row .n.on{color:#1F2329;font-size:13px;font-weight:600}
 
 /* 素材使用 · 操作列：与素材库列表同一组动作（预览／编辑／删除／移动分组）。 */
 .rea-mb-tbl td.op{white-space:nowrap}
@@ -12202,7 +12240,7 @@ body .subapp{background:#F6F8FB!important}
 .rea-mb-dw-b{flex:1 1 auto;overflow:auto;padding:0 20px}
 .rea-mb-dw .rea-mb-pg{padding:12px 20px 16px;border-top:1px solid #F0F2F5}
 @media (prefers-reduced-motion: reduce){
-  .rea-mb-dw,.rea-mb-grp-row .track>i,.rea-mb-dep-row .track>i,.rea-mb-qf-row .track>i,.rea-mb-tbl tbody tr{transition:none!important}
+  .rea-mb-dw,.rea-mb-grp-row .track>i,.rea-mb-dep-row .track>i,.rea-mb-emp-row .track>i,.rea-mb-qf-row .track>i,.rea-mb-tbl tbody tr{transition:none!important}
 }
 `;
 
@@ -17829,10 +17867,12 @@ function renderUse(w){
 /* ================= 分组与部门 ================= */
 /* 两张卡同一套列：取用次数 / 使用人数。各自记自己的排序，默认次数降序。 */
 var GSK="count",GSD=-1,DSK="count",DSD=-1;
-function sortCmp(x,y,k,dir){
-  var a=k==="count"?x.n:x.people,b=k==="count"?y.n:y.people;
+/* 两列排序：count 恒指取用次数，另一列由调用方给键名（部门页是人数，员工页是素材条数）。 */
+function sortCmp(x,y,k,dir,v2){
+  v2=v2||"people";
+  var a=k==="count"?x.n:x[v2],b=k==="count"?y.n:y[v2];
   if(a!==b)return (a-b)*dir;
-  var a2=k==="count"?x.people:x.n,b2=k==="count"?y.people:y.n;
+  var a2=k==="count"?x[v2]:x.n,b2=k==="count"?y[v2]:y.n;
   return (a2-b2)*dir;
 }
 function groupRows(w,dept){
@@ -17878,11 +17918,12 @@ function deptRows(w){
 }
 /* 右边半行 ＝ 一根满宽横条 ＋ 两个数字（PRD §2.5）。
    条只画当前选中排序列的口径，长度按该列最大值归一；选中的数字加深，另一列退成灰。 */
-function metricCells(r,k,maxN,maxP){
-  var v=k==="count"?r.n:r.people,max=k==="count"?maxN:maxP,pct=max?Math.round(v/max*100):0;
+function metricCells(r,k,maxN,maxP,v2){
+  v2=v2||"people";
+  var v=k==="count"?r.n:r[v2],max=k==="count"?maxN:maxP,pct=max?Math.round(v/max*100):0;
   return '<span class="track"><i style="width:'+pct+'%"></i></span>'
     +'<span class="n'+(k==="count"?" on":"")+'">'+r.n+'</span>'
-    +'<span class="n'+(k==="people"?" on":"")+'">'+r.people+'</span>';
+    +'<span class="n'+(k===v2?" on":"")+'">'+r[v2]+'</span>';
 }
 function syncSort(sel,attr,k,dir,labels){
   var cs=document.querySelectorAll(sel),i,key,on,ic;
@@ -17921,6 +17962,48 @@ function renderDepts(w){
   if(dep)dep.innerHTML=h2;
   if(df)df.textContent="共 "+ds.length+" 个部门 · "+zero+" 个部门这段时间零取用";
   syncSort("[data-mb-dsort]","data-mb-dsort",DSK,DSD);
+}
+/* 员工页（PRD §2.5）：谁在用、谁一条没碰。名册全员都占一行，零取用的沉到最底，
+   升降序都不翻上来——这张卡要的是「谁没用」，不是把零值排到最前面。
+   素材条数是这个人用过多少条不同素材（按素材去重），与部门页的「使用人数」是一对镜像。
+   名单跟左侧栏的部门范围走（与素材使用、分组使用同一个范围）；部门页不跟，它要横向比部门。 */
+var ESK="count",ESD=-1;
+function empRows(w){
+  var map={},k,e,a,out=[],nm,ros=[];
+  for(k=0;k<ROSTER.length;k++)if(CURD==="all"||ROSTER[k][1]===CURD)ros.push(ROSTER[k]);
+  for(k=0;k<ros.length;k++)map[ros[k][0]]={o:ros[k][0],dept:ros[k][1],n:0,mats:{}};
+  for(k=0;k<EVENTS.length;k++){
+    e=EVENTS[k];if(!inWin(e[2],w))continue;
+    a=map[e[1]];if(!a)continue;
+    a.n++;a.mats[e[0]]=1;
+  }
+  for(k=0;k<ros.length;k++){
+    a=map[ros[k][0]];
+    var mc=0;for(nm in a.mats)mc++;
+    out.push({o:a.o,dept:a.dept,n:a.n,m:mc});
+  }
+  out.sort(function(x,y){
+    var xz=x.n?0:1,yz=y.n?0:1;
+    if(xz!==yz)return xz-yz;                 /* 零取用的不管升降序都沉底 */
+    var c=sortCmp(x,y,ESK,ESD,"m");if(c)return c;
+    if(x.dept!==y.dept)return DEPTS.indexOf(x.dept)-DEPTS.indexOf(y.dept);
+    return x.o<y.o?-1:1;
+  });
+  return out;
+}
+function renderEmps(w){
+  var box=document.getElementById("rea-mb-emp-list"),ef=document.getElementById("rea-mb-emp-foot");
+  var es=empRows(w),h="",k,r,zero=0,maxN=0,maxM=0;
+  for(k=0;k<es.length;k++){maxN=Math.max(maxN,es[k].n);maxM=Math.max(maxM,es[k].m);}
+  for(k=0;k<es.length;k++){
+    r=es[k];if(!r.n)zero++;
+    h+='<div class="rea-mb-emp-row">'
+      +'<span class="nm">'+esc(r.o)+'<em>'+esc(r.dept)+'</em></span>'
+      +metricCells(r,ESK,maxN,maxM,"m")+'</div>';
+  }
+  if(box)box.innerHTML=h||'<div class="rea-mb-empty">这个部门的名册里没有员工</div>';
+  if(ef)ef.textContent="共 "+es.length+" 人 · "+zero+" 人这段时间零取用";
+  syncSort("[data-mb-esort]","data-mb-esort",ESK,ESD,{m:"素材条数"});
 }
 
 /* ================= 群发好友回复 ================= */
@@ -18019,7 +18102,7 @@ function renderAll(){
   paintDonut(w);
   paintTrend(w);
   renderUse(w);
-  renderGroups(w);renderDepts(w);
+  renderGroups(w);renderDepts(w);renderEmps(w);
   renderQf(w);
   selfCheck(w);
 }
@@ -18107,6 +18190,30 @@ for(i=0;i<dchips.length;i++)dchips[i].addEventListener("click",function(e){
   renderDepts(CURW);
   var b=document.getElementById("rea-mb-dep-list");if(b)b.scrollTop=0;
 });
+/* 员工页：列名翻方向。两页各记自己的排序，切页签不串。 */
+var echips=document.querySelectorAll("[data-mb-esort]");
+for(i=0;i<echips.length;i++)echips[i].addEventListener("click",function(e){
+  e.preventDefault();e.stopPropagation();
+  var k=this.getAttribute("data-mb-esort");
+  if(k===ESK)ESD=-ESD;else{ESK=k;ESD=-1;}
+  renderEmps(CURW);
+  var b=document.getElementById("rea-mb-emp-list");if(b)b.scrollTop=0;
+});
+/* 部门／员工两个页签：只换显隐，两页各自的排序与滚动位置都留着。 */
+var etabs=document.querySelectorAll("[data-mb-etab]");
+for(i=0;i<etabs.length;i++)etabs[i].addEventListener("click",function(e){
+  e.preventDefault();
+  var key=this.getAttribute("data-mb-etab"),j,l,on,ab,inp;
+  for(j=0;j<etabs.length;j++){
+    l=etabs[j];on=l.getAttribute("data-mb-etab")===key;
+    l.className="ant-radio-button-wrapper css-vgijab"+(on?" ant-radio-button-wrapper-checked":"");
+    ab=l.querySelector(".ant-radio-button");if(ab)ab.className="ant-radio-button"+(on?" ant-radio-button-checked":"");
+    inp=l.querySelector("input");if(inp)inp.checked=on;
+  }
+  var dp=document.getElementById("rea-mb-dep-pane"),ep=document.getElementById("rea-mb-emp-pane");
+  if(dp)dp.hidden=key!=="dep";
+  if(ep)ep.hidden=key!=="emp";
+});
 /* 群发好友回复：列名翻方向；行 → 素材明细，按标题搜。
    卡片正文是每次渲染重画的，监听挂在容器上，不走逐节点绑定。 */
 var qfw=document.getElementById("rea-mb-qf");
@@ -18157,7 +18264,7 @@ document.addEventListener("keydown",function(e){
   if(e.key!=="Enter"&&e.key!==" ")return;
   var n=e.target;
   if(!n||!n.getAttribute)return;
-  if(n.getAttribute("data-mb-sort")||n.getAttribute("data-mb-gsort")||n.getAttribute("data-mb-dsort")||n.getAttribute("data-mb-qfsort")||n.getAttribute("data-mb-qfmat")||n.getAttribute("data-mb-mat")||n.getAttribute("data-mb-group")||n.getAttribute("data-mb-dept")||n.getAttribute("data-mb-seg")||n.getAttribute("data-mb-win")){
+  if(n.getAttribute("data-mb-sort")||n.getAttribute("data-mb-gsort")||n.getAttribute("data-mb-dsort")||n.getAttribute("data-mb-qfsort")||n.getAttribute("data-mb-qfmat")||n.getAttribute("data-mb-esort")||n.getAttribute("data-mb-etab")||n.getAttribute("data-mb-mat")||n.getAttribute("data-mb-group")||n.getAttribute("data-mb-dept")||n.getAttribute("data-mb-seg")||n.getAttribute("data-mb-win")){
     e.preventDefault();n.click();
   }
 });
