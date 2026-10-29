@@ -11884,7 +11884,7 @@ body .subapp{background:#F6F8FB!important}
 .rea-plat.p-wecom{background-color:#2B7FF3;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23fff' d='M3.2 4.2h9.6c.6 0 1 .4 1 1v4.6c0 .6-.4 1-1 1H7.9l-2.9 2.1v-2.1H3.2c-.6 0-1-.4-1-1V5.2c0-.6.4-1 1-1z'/%3E%3Ccircle cx='5.9' cy='7.5' r='.85' fill='%232B7FF3'/%3E%3Ccircle cx='8' cy='7.5' r='.85' fill='%232B7FF3'/%3E%3Ccircle cx='10.1' cy='7.5' r='.85' fill='%232B7FF3'/%3E%3C/svg%3E")}
 .rea-plat.p-dy{background-color:#161823;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23fff' d='M9.3 2.6h1.6c.1 1.3.7 2.2 1.9 2.6v1.6c-.8 0-1.5-.2-2.1-.6v4.2a2.7 2.7 0 1 1-2.7-2.7c.2 0 .4 0 .6.1v1.7a1.1 1.1 0 1 0 .7 1V2.6z'/%3E%3C/svg%3E")}
 .rea-plat.p-xhs{background-color:#FF2442;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23fff' d='M3.3 4.5c1.5-.6 3.1-.5 4.7.4 1.6-.9 3.2-1 4.7-.4v7.4c-1.5-.6-3.1-.5-4.7.4-1.6-.9-3.2-1-4.7-.4z'/%3E%3Cpath stroke='%23FF2442' stroke-width='.9' d='M8 5.1v7'/%3E%3C/svg%3E")}
-.rea-plat.p-wa{background-color:#25D366;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23fff' d='M8 2.8a5.1 5.1 0 0 0-4.4 7.7l-.6 2.3 2.3-.6A5.1 5.1 0 1 0 8 2.8z'/%3E%3Cpath fill='%2325D366' d='M6.4 5.6c.2.1.3.1.4.3l.5.8c.1.2.1.3 0 .4l-.3.4c-.1.1-.1.3 0 .4.3.6.9 1.1 1.5 1.4.1.1.3.1.4 0l.4-.4c.1-.1.3-.1.4 0l.8.5c.2.1.2.2.3.4v.4c-.1.4-.4.7-.8.8-.4.1-.9 0-1.6-.3-.9-.4-1.7-1-2.3-1.8-.5-.6-.8-1.3-.7-1.8.1-.4.3-.7.6-.9.1-.1.3-.2.4-.2z'/%3E%3C/svg%3E")}
+.rea-plat.p-wa{background-color:#FAAD14;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23fff' d='M8 2.8a5.1 5.1 0 0 0-4.4 7.7l-.6 2.3 2.3-.6A5.1 5.1 0 1 0 8 2.8z'/%3E%3Cpath fill='%23FAAD14' d='M6.4 5.6c.2.1.3.1.4.3l.5.8c.1.2.1.3 0 .4l-.3.4c-.1.1-.1.3 0 .4.3.6.9 1.1 1.5 1.4.1.1.3.1.4 0l.4-.4c.1-.1.3-.1.4 0l.8.5c.2.1.2.2.3.4v.4c-.1.4-.4.7-.8.8-.4.1-.9 0-1.6-.3-.9-.4-1.7-1-2.3-1.8-.5-.6-.8-1.3-.7-1.8.1-.4.3-.7.6-.9.1-.1.3-.2.4-.2z'/%3E%3C/svg%3E")}
 .rea-bd-name{display:flex;align-items:center;min-width:0}
 .rea-bd-ptask .rea-plat{align-self:center;margin-right:0}
 
@@ -13555,12 +13555,14 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '  });',
     '  return out;',
     '}',
-    '/* 内环取主色 #1677FF 的深浅阶、按平台名次给（占比大的深）；外环沿用同一个色、压到八折，',
-    '   子段贴着父段、又比父段浅一档。两圈都只在这一支主色里变深浅，不自造五色板（ADR-0082 §3）。',
-    '   最浅的平台压到八折只剩 .29，几乎看不出有色——外环给个 .3 的下限，最小的那段也还看得见。 */',
-    'var PCOL=[1,.84,.68,.52,.36];',
-    'function platColor(i){return "rgba(22,119,255,"+PCOL[Math.min(i,PCOL.length-1)]+")"}',
-    'function typeArcColor(i){return "rgba(22,119,255,"+Math.max(.3,PCOL[Math.min(i,PCOL.length-1)]*0.8).toFixed(2)+")"}',
+    '/* 平台各有一个固定色（ADR-0085）：微信绿、企业微信蓝、抖音黑、小红书红、WhatsApp 黄，',
+    '   与任务列表行首的平台小标 .rea-plat 同一套色，图例色块、内环弧段、悬停小窗里的平台小标都认它。',
+    '   颜色跟着平台走、不跟着名次走——换窗口时同一平台不会换色。外环沿用所属平台那个色、压到八折，',
+    '   子段贴着父段、又比父段浅一档。 */',
+    'var PCOL={wx:"7,193,96",wecom:"43,127,243",dy:"22,24,35",xhs:"255,36,66",wa:"250,173,20"};',
+    'function pcr(p){return PCOL[p]||PCOL.wx}',
+    'function platColor(p){return "rgba("+pcr(p)+",1)"}',
+    'function typeArcColor(p){return "rgba("+pcr(p)+",.8)"}',
     'var R_IN=27,R_OUT=46;',
     'function ringArc(svg,r,color,len,off,gap,attrs){',
     '  var C=2*Math.PI*r,dash=Math.max(len-gap,len*0.4),c=document.createElementNS("http://www.w3.org/2000/svg","circle"),k;',
@@ -13588,7 +13590,7 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '  for(i=0;i<plats.length;i++){',
     '    if(!total)break;',
     '    len=plats[i].n/total*C1;',
-    '    ringArc(svg,R_IN,platColor(i),len,acc,plats.length>1?2.5:0,{"data-bd-plat-arc":plats[i].p});',
+    '    ringArc(svg,R_IN,platColor(plats[i].p),len,acc,plats.length>1?2.5:0,{"data-bd-plat-arc":plats[i].p});',
     '    acc+=len;',
     '  }',
     '  /* 外环：平台段里再按类型切。组内留 1.5 的缝，平台交界处多留 2，看得出这是两级。 */',
@@ -13598,7 +13600,7 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '    for(j=0;j<ts.length;j++){',
     '      if(!total)break;',
     '      len=ts[j].n/total*C2;',
-    '      ringArc(svg,R_OUT,typeArcColor(i),len,acc,(ts.length>1?1.5:0)+(j===ts.length-1?2:0),',
+    '      ringArc(svg,R_OUT,typeArcColor(plats[i].p),len,acc,(ts.length>1?1.5:0)+(j===ts.length-1?2:0),',
     '        {"data-bd-type-arc":ts[j].t,"data-bd-type-plat":plats[i].p});',
     '      acc+=len;',
     '    }',
@@ -13611,7 +13613,7 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '  for(i=0;i<plats.length;i++){',
     '    o=plats[i];nm=PLAT_NM[o.p]||o.p;',
     '    h+=\'<li role="button" tabindex="0" data-bd-plat="\'+esc(o.p)+\'" title="\'+esc(nm)+\'：\'+o.n+\' 条，点一下进任务列表只看这个平台">\'',
-    '      +\'<i style="background:\'+platColor(i)+\'"></i><span class="nm">\'+esc(nm)+\'</span><b>\'+o.n+\'</b><em>\'+(total?(o.n/total*100).toFixed(1)+"%":"—")+\'</em></li>\';',
+    '      +\'<i style="background:\'+platColor(o.p)+\'"></i><span class="nm">\'+esc(nm)+\'</span><b>\'+o.n+\'</b><em>\'+(total?(o.n/total*100).toFixed(1)+"%":"—")+\'</em></li>\';',
     '  }',
     '  ul.innerHTML=h;',
     '}',
