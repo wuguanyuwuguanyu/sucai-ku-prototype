@@ -10010,6 +10010,25 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
       </div>
     </div>
 
+    <!-- 任务类型占比 · 第 1 层 · 结构（条数）。
+         窗口内下发的任务按类型切一刀：七段互斥，相加＝环心那颗总数，也＝「执行健康度」的条数。
+         排序按条数从多到少，同量按台账里的固定次序（TYPE_ORDER），换窗口时同分两类不会来回跳。
+         颜色只取主色的深浅阶，深浅就是名次；点一段或一枚外标进「任务列表」并按类型预筛（PRD §2.4a）。 -->
+    <div class="rea-bd-card rea-bd-card--w5" id="rea-bd-type">
+      <div class="rea-bd-ch"><h6>任务类型占比</h6><span class="th">条数</span></div>
+      <div class="rea-bd-tring" id="rea-bd-tring">
+        <svg class="rea-bd-tlead" id="rea-bd-tlead" aria-hidden="true"></svg>
+        <div class="rea-bd-tring-fig" id="rea-bd-type-fig">
+          <svg viewBox="0 0 120 120" role="img" aria-label="窗口内下发的任务按类型拆分">
+            <circle class="track" cx="60" cy="60" r="50"></circle>
+          </svg>
+          <span class="rea-bd-tring-mid"><b id="rea-bd-type-total">0</b><span>条任务</span></span>
+        </div>
+        <ul class="rea-bd-tlbls" id="rea-bd-type-lbls"></ul>
+        <div class="rea-bd-tip" id="rea-bd-type-tip" role="tooltip"></div>
+      </div>
+    </div>
+
     <!-- 群发好友回复 · 第 3 层 · 效果。数据来自台账里「群发好友」那些行；
          统计范围与粒度都跟着页顶时间窗走（跨度 ≤ 31 天按日、更长按周）。 -->
     <div class="rea-bd-card rea-bd-card--w7">
@@ -10018,6 +10037,29 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
       </div>
       <div class="rea-qft-kpis" id="rea-qft-kpis"></div>
       <div class="rea-qft-chart" id="rea-qft-chart"></div>
+    </div>
+
+    <!-- 任务列表 · 第 4 行 · 明细。
+         与二级页「任务列表」同一份行、同一套排序（逾期多的在前、欠得多的次之），只露前 5 条；
+         点行进该类型的详情页（视频号发布任务没有详情页，那一行不给箭头也不可点），
+         右下角「查看全部」进二级页看全量。三条筛选轴只留在二级页（PRD §2.4b）。 -->
+    <div class="rea-bd-card rea-bd-card--w7" id="rea-bd-peek">
+      <div class="rea-bd-ch"><h6>任务列表</h6><span class="th">逾期优先</span></div>
+      <div class="rea-bd-tl">
+        <div class="rea-bd-tl-head">
+          <span class="rea-bd-tlc-name">任务</span>
+          <span class="rea-bd-tlc-type">类型</span>
+          <span class="rea-bd-tlc-dept">部门</span>
+          <span class="rea-bd-tlc-pg">进度</span>
+          <span class="rea-bd-tlc-st">状态</span>
+          <span class="rea-bd-tlc-more"></span>
+        </div>
+        <div id="rea-bd-peek-body"></div>
+      </div>
+      <div class="rea-bd-org-foot">
+        <span id="rea-bd-peek-sum"></span>
+        <span class="rea-bd-links"><a href="#" data-bd-peek-all>查看全部<span class="rea-bd-chev" aria-hidden="true">›</span></a></span>
+      </div>
     </div>
 
     <!-- 配置 / 资产 · 这三个模块没有「完成率」这个概念（规则／模版／台账），
@@ -11862,6 +11904,62 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-tip li span{color:#646A73}
 .rea-bd-tip li b{font-weight:600;font-variant-numeric:tabular-nums}
 .rea-bd-tip .emp{color:#8F959E;font-size:11px}
+/* ---------- 任务类型占比 · 环 ＋ 外标（PRD §2.4a） ----------
+   七类任务按条数从多到少，从 12 点顺时针上环；外标摆在环的两侧，引线落到标注的内边，
+   排布规则照「执行健康度」那枚环（同一套：按弧中点分左右、同侧按最小行距往下推）。
+   颜色只取主色 #1677FF 的深浅阶：占比大的深、小的浅——深浅跟着排序走，
+   读的是名次不是分类，所以不自造七色板（ADR-0082 §3 只认主色与状态色）。 */
+/* 环卡撑满格高（右邻「群发好友回复」比它高），环在剩下的空间里居中；
+   框高变了外标要重排——paintType 每次换窗都量一次 clientHeight，宽度变了另有 resize 兜底。 */
+#rea-bd-type{display:flex;flex-direction:column}
+.rea-bd-tring{position:relative;width:100%;flex:1 1 auto;min-height:196px;margin-top:4px}
+/* 卡片窄到两侧放不下两列外标时（1280 附近最窄），退回单一图例：环在上、标在下，不画引线。 */
+.rea-bd-tring.is-narrow{display:flex;flex-direction:column;align-items:center}
+.rea-bd-tring.is-narrow #rea-bd-type-fig{position:relative;left:auto;top:auto;margin:0;flex:0 0 auto}
+.rea-bd-tring.is-narrow .rea-bd-tlead{display:none}
+.rea-bd-tring.is-narrow .rea-bd-tlbls{position:static;display:grid;grid-template-columns:1fr 1fr;gap:6px 14px;margin:14px 0 0;width:100%}
+.rea-bd-tring.is-narrow .rea-bd-tlbls li{position:static;transform:none;text-align:left;white-space:normal}
+.rea-bd-tlbls .rea-bd-tdot{display:inline-block;width:8px;height:8px;margin-right:6px;border-radius:2px;vertical-align:1px}
+.rea-bd-tring-fig{position:absolute;left:50%;top:50%;width:124px;height:124px;margin:-62px 0 0 -62px}
+.rea-bd-tring-fig svg{display:block;width:100%;height:100%;transform:rotate(-90deg)}
+.rea-bd-tring-fig circle{fill:none;stroke-width:13}
+.rea-bd-tring-fig circle.track{stroke:#F0F2F5}
+.rea-bd-tring-fig circle.arc{cursor:pointer}
+.rea-bd-tring-mid{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;pointer-events:none}
+.rea-bd-tring-mid b{font-size:28px;line-height:1.05;font-weight:600;color:#1F2329;letter-spacing:-.5px}
+.rea-bd-tring-mid span{font-size:12px;color:#8F959E}
+.rea-bd-tlead{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.rea-bd-tlead polyline{fill:none;stroke:#D6DBE3;stroke-width:1;stroke-linecap:round;stroke-linejoin:round}
+.rea-bd-tlbls{list-style:none;margin:0;padding:0}
+.rea-bd-tlbls li{position:absolute;transform:translateY(-50%);font-size:12px;line-height:16px;color:#646A73;white-space:nowrap;cursor:pointer;border-radius:4px}
+.rea-bd-tlbls li[data-side="r"]{left:calc(50% + 84px);text-align:left}
+.rea-bd-tlbls li[data-side="l"]{right:calc(50% + 84px);text-align:right}
+.rea-bd-tlbls li .nm{color:#1F2329;font-weight:500}
+.rea-bd-tlbls li b{color:#1F2329;font-weight:600;font-variant-numeric:tabular-nums}
+.rea-bd-tlbls li .pct{color:#8F959E;font-variant-numeric:tabular-nums}
+.rea-bd-tlbls li:hover .nm,.rea-bd-tlbls li.on .nm{color:#1677FF}
+.rea-bd-tlbls li:focus-visible{outline:2px solid #1677FF;outline-offset:1px}
+
+/* ---------- 任务列表 · 一级页前置（PRD §2.4b） ----------
+   与二级页同一份行、同一套排序（逾期多的在前），只露前 5 条；列裁到 5 列，
+   砍掉的那几列（创建人／执行人员／有效期／逾期数）在二级页都能看到。 */
+.rea-bd-tl{display:flex;flex-direction:column}
+.rea-bd-tl-head,.rea-bd-tl-row{display:flex;align-items:center;gap:12px;padding:0 6px}
+.rea-bd-tl-head{height:28px;font-size:11.5px;color:#8F959E;border-bottom:1px solid #E9EEF6}
+.rea-bd-tl-row{height:40px;border-bottom:1px solid #F1F4F8;font-size:12.5px;color:#646A73;border-radius:6px}
+.rea-bd-tl-row:last-child{border-bottom:0}
+.rea-bd-tl-row[role="button"]{cursor:pointer}
+.rea-bd-tl-row[role="button"]:hover{background:#F7FAFF}
+.rea-bd-tl-row[role="button"]:focus-visible{outline:2px solid #1677FF;outline-offset:-2px}
+.rea-bd-tlc-name{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:7px;color:#1F2329}
+.rea-bd-tlc-name .tx{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rea-bd-tlc-type{flex:0 0 84px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rea-bd-tlc-dept{flex:0 0 92px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rea-bd-tlc-pg{flex:0 0 132px}
+.rea-bd-tlc-st{flex:0 0 64px}
+.rea-bd-tlc-more{flex:0 0 12px;text-align:right;color:#C0C6CF}
+.rea-bd-tl-empty{padding:56px 0 46px;text-align:center;color:#8F959E;font-size:12px}
+
 /* 扇区小窗里那枚平台小标比列表里的小一号：小窗本身是 11–12px 的字，16px 的标会压过类型名 */
 .rea-bd-tip li .rea-plat{width:14px;height:14px;margin-right:5px;border-radius:3px;background-size:14px 14px;vertical-align:-2px}
 @media (max-width:767px){
@@ -13159,7 +13257,7 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     'document.addEventListener("keydown",function(e){',
     '  if(e.key!=="Enter"&&e.key!==" ")return;',
     '  var n=e.target;',
-    '  if(n&&n.getAttribute&&(n.getAttribute("data-bd-org-row")||n.getAttribute("data-bd-state")||n.getAttribute("data-bd-org-sort")||n.getAttribute("data-bd-type-row"))){e.preventDefault();n.click();}',
+    '  if(n&&n.getAttribute&&(n.getAttribute("data-bd-org-row")||n.getAttribute("data-bd-state")||n.getAttribute("data-bd-org-sort")||n.getAttribute("data-bd-type-row")||n.getAttribute("data-bd-type")||n.getAttribute("data-bd-peek-row"))){e.preventDefault();n.click();}',
     '});',
     '',
     '/* 执行人分配自检：每条任务分到的人数必须正好等于应执行（且名单不重复）。 */',
@@ -13383,6 +13481,254 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '  parent.postMessage({reaPage:' + reaJson(REA_DETAIL_TASK) + ',reaWin:CURW,reaRows:dumpRows()},"*");',
     '});',
     '',
+    '',
+    '/* ================= 任务类型占比（PRD §2.4a） =================',
+    '   窗口内下发的任务按类型切一刀：条数、互斥，各段相加恒等于环心那颗总数，',
+    '   也等于「执行健康度」环心的条数——两张图看的是同一批任务的两个切面。',
+    '   排序按条数从多到少，同量按 TYPE_ORDER 的固定次序：换窗口时同分的两类不会来回跳。 */',
+    'function typeShare(w){',
+    '  var rs=winRows(w),m={},out=[],i,r,t,o,g;',
+    '  for(i=0;i<rs.length;i++){',
+    '    r=rs[i];t=r.getAttribute("data-bd-type")||"其他";',
+    '    o=m[t]||(m[t]={t:t,n:0,f:0,p:0,o:0});',
+    '    o.n++;g=segOf(r);',
+    '    /* 每类里再按三段状态分一次——悬停小窗用，与环形占比同一套词、同一个判法。 */',
+    '    if(g==="d")o.f++;else if(g==="o")o.o++;else o.p++;',
+    '  }',
+    '  for(t in m)out.push(m[t]);',
+    '  out.sort(function(a,b){',
+    '    if(b.n!==a.n)return b.n-a.n;',
+    '    return TYPE_ORDER.indexOf(a.t)-TYPE_ORDER.indexOf(b.t);',
+    '  });',
+    '  return out;',
+    '}',
+    '/* 主色 #1677FF 的深浅阶，按名次给（0 ＝占比最大的那一段）。',
+    '   深浅跟着排序走，读的是名次不是分类，所以不自造七色板（ADR-0082 §3）。 */',
+    'var TCOL=[1,.88,.76,.64,.53,.42,.32];',
+    'function typeColor(i){return "rgba(22,119,255,"+TCOL[Math.min(i,TCOL.length-1)]+")"}',
+    'function paintType(w){',
+    '  var fig=document.getElementById("rea-bd-type-fig");if(!fig)return;',
+    '  var list=typeShare(w),total=0,i,svg=fig.querySelector("svg"),C=2*Math.PI*50,acc=0,on=list.length;',
+    '  for(i=0;i<list.length;i++)total+=list[i].n;',
+    '  var tn=document.getElementById("rea-bd-type-total");',
+    '  if(tn)tn.textContent=String(total);',
+    '  var olds=svg.querySelectorAll("circle.arc");',
+    '  for(i=0;i<olds.length;i++)olds[i].parentNode.removeChild(olds[i]);',
+    '  /* 只有一段时不扣缝：整圈缺个小口，看着像没画完、或者还有第八类。 */',
+    '  for(i=0;i<list.length;i++){',
+    '    if(!total)break;',
+    '    var len=list[i].n/total*C,GAP=on>1?2.5:0,dash=len>GAP*2?len-GAP:len;',
+    '    var c=document.createElementNS("http://www.w3.org/2000/svg","circle");',
+    '    c.setAttribute("class","arc");',
+    '    c.setAttribute("cx","60");c.setAttribute("cy","60");c.setAttribute("r","50");',
+    '    c.setAttribute("stroke",typeColor(i));',
+    '    c.setAttribute("stroke-dasharray",dash.toFixed(2)+" "+(C-dash).toFixed(2));',
+    '    c.setAttribute("stroke-dashoffset",(-acc).toFixed(2));',
+    '    c.setAttribute("data-bd-type-arc",list[i].t);',
+    '    svg.appendChild(c);acc+=len;',
+    '  }',
+    '  paintTypeLabels(list,total);',
+    '}',
+    '/* 外标与引线，排布照「执行健康度」那枚环：按弧中点分左右两列，同侧先按自然高度排、',
+    '   再按最小行距往下推。差别只有一处——推完越过下边时**整列上移**，不是逐枚夹住，',
+    '   夹住会让最后两枚叠在一起。七类比三段挤，这一条是必踩的。 */',
+    'function paintTypeLabels(list,total){',
+    '  var box=document.getElementById("rea-bd-tring");if(!box)return;',
+    '  var ul=document.getElementById("rea-bd-type-lbls"),lead=document.getElementById("rea-bd-tlead");',
+    '  /* 先定宽窄再量高：切到图例态会改框高，先量就量到旧的那份。 */',
+    '  var nar=box.clientWidth<460;',
+    '  if(box.classList.contains("is-narrow")!==nar)box.classList.toggle("is-narrow",nar);',
+    '  var W=box.clientWidth,H=box.clientHeight;if(!W||!H||!ul)return;',
+    '  var cx=W/2,cy=H/2,GAPL=24,groups={r:[],l:[]},acc=0,i,j,p,side,prev,over,it,mid;',
+    '  if(!total){ul.innerHTML="";if(lead)lead.innerHTML="";return;}',
+    '  for(i=0;i<list.length;i++){',
+    '    it=list[i];',
+    '    var a0=acc/total*2*Math.PI,a1=(acc+it.n)/total*2*Math.PI;acc+=it.n;',
+    '    mid=(a0+a1)/2;',
+    '    groups[Math.sin(mid)>=0?"r":"l"].push({t:it.t,n:it.n,a:mid,y:cy-60*Math.cos(mid)});',
+    '  }',
+    '  var h="",item=function(it,extra){',
+    '    return \'<li class="rea-bd-tlbl" role="button" tabindex="0" data-bd-type="\'+esc(it.t)+\'" data-a="\'+it.a.toFixed(4)+\'" \'+extra+\' title="\'+esc(it.t)+\'：\'+it.n+\' 条，点一下进任务列表">\'+(it.c?\'<i class="rea-bd-tdot" style="background:\'+it.c+\'"></i>\':"")+\'<span class="nm">\'+esc(it.t)+\'</span>：<b>\'+it.n+\'</b> <span class="pct">(\'+(it.n/total*100).toFixed(1)+\'%)</span></li>\';',
+    '  };',
+    '  /* 图例态：一行一枚，按条数从多到少；不用坐标，也就不画引线——',
+    '     改在名字前放一枚同色小方块，深浅与环上那一段对上（没有引线时靠它连起来）。 */',
+    '  if(nar){',
+    '    for(i=0;i<list.length;i++)h+=item({t:list[i].t,n:list[i].n,a:0,c:typeColor(i)},"");',
+    '    ul.innerHTML=h;if(lead)lead.innerHTML="";return;',
+    '  }',
+    '  for(side in groups){',
+    '    p=groups[side].sort(function(x,y){return x.y-y.y});',
+    '    prev=-1e9;',
+    '    for(j=0;j<p.length;j++){if(p[j].y<prev+GAPL)p[j].y=prev+GAPL;prev=p[j].y}',
+    '    if(p.length){',
+    '      over=p[p.length-1].y-(H-12);',
+    '      if(over>0)for(j=0;j<p.length;j++)p[j].y-=over;',
+    '      if(p[0].y<12){var down=12-p[0].y;for(j=0;j<p.length;j++)p[j].y+=down}',
+    '    }',
+    '    for(j=0;j<p.length;j++){',
+    '      h+=item(p[j],"data-side=\\""+side+"\\" style=\\"top:"+p[j].y.toFixed(1)+"px\\"");',
+    '    }',
+    '  }',
+    '  ul.innerHTML=h;',
+    '  /* 引线落在标注的真实行高中心（offsetTop 就是刚写进去的 top） */',
+    '  var lis=ul.querySelectorAll("li"),pol="",y,a,dir;',
+    '  for(i=0;i<lis.length;i++){',
+    '    side=lis[i].getAttribute("data-side");a=parseFloat(lis[i].getAttribute("data-a"))||0;',
+    '    y=lis[i].offsetTop+lis[i].offsetHeight/2;dir=side==="r"?1:-1;',
+    '    pol+="<polyline points=\\""+(cx+62*Math.sin(a)).toFixed(1)+","+(cy-62*Math.cos(a)).toFixed(1)+" "',
+    '      +(cx+dir*70).toFixed(1)+","+y.toFixed(1)+" "+(cx+dir*80).toFixed(1)+","+y.toFixed(1)+"\\"></polyline>";',
+    '  }',
+    '  if(lead)lead.innerHTML=pol;',
+    '}',
+    '/* 悬停一段或一枚外标：小窗写这类任务的条数、应执行与已执行人次、完成率。',
+    '   条数是这张图的口径，人次只是让人点开之前先有个分母感——不放回环上。 */',
+    'var TTIP=document.getElementById("rea-bd-type-tip"),TBOX=document.getElementById("rea-bd-tring");',
+    'function typeTipHide(){if(TTIP)TTIP.className="rea-bd-tip";}',
+    'function typeTipShow(t,x,y){',
+    '  if(!TTIP||!TBOX)return;',
+    '  var list=typeShare(CURW),it=null,i;',
+    '  for(i=0;i<list.length;i++)if(list[i].t===t){it=list[i];break}',
+    '  if(!it){typeTipHide();return;}',
+    '  TTIP.innerHTML="<div class=\\"rea-bd-tip-h\\"><i class=\\"rea-bd-tip-dot\\" style=\\"background:"+typeColor(i)+"\\"></i>"+esc(t)+"<b>"+it.n+"</b>条</div>"',
+    '    +"<ul><li><span>已完成</span><b>"+it.f+" 条</b></li>"',
+    '    +"<li><span>待完成</span><b>"+it.p+" 条</b></li>"',
+    '    +"<li><span>逾期未做</span><b>"+it.o+" 条</b></li></ul>";',
+    '  TTIP.className="rea-bd-tip on";',
+    '  var W=TBOX.clientWidth,H=TBOX.clientHeight,tw=TTIP.offsetWidth,th=TTIP.offsetHeight,',
+    '      above=y-10-th>=0,left=Math.min(Math.max(x,tw/2+4),Math.max(tw/2+4,W-tw/2-4));',
+    '  TTIP.style.left=left+"px";',
+    '  TTIP.style.top=(above?y-10:y+14)+"px";',
+    '  TTIP.style.transform=above?"translate(-50%,-100%)":"translate(-50%,0)";',
+    '}',
+    'if(TBOX){',
+    '  TBOX.addEventListener("mousemove",function(e){',
+    '    var n=e.target,t=n&&n.getAttribute&&(n.getAttribute("data-bd-type-arc")||n.getAttribute("data-bd-type"));',
+    '    if(!t){typeTipHide();return;}',
+    '    var b=TBOX.getBoundingClientRect();',
+    '    typeTipShow(t,e.clientX-b.left,e.clientY-b.top);',
+    '  });',
+    '  TBOX.addEventListener("mouseleave",typeTipHide);',
+    '  TBOX.addEventListener("focusin",function(e){',
+    '    var n=e.target,t=n&&n.getAttribute&&n.getAttribute("data-bd-type");',
+    '    if(!t)return;',
+    '    var r=n.getBoundingClientRect(),b=TBOX.getBoundingClientRect();',
+    '    typeTipShow(t,r.left-b.left+r.width/2,r.top-b.top);',
+    '  });',
+    '  TBOX.addEventListener("focusout",typeTipHide);',
+    '  /* 点一段或一枚外标：进「任务列表」并按这个类型预筛，与环上看到的条数一致。 */',
+    '  TBOX.addEventListener("click",function(e){',
+    '    var n=e.target,t;',
+    '    while(n&&n!==TBOX&&n.nodeType===1){',
+    '      t=n.getAttribute&&(n.getAttribute("data-bd-type-arc")||n.getAttribute("data-bd-type"));',
+    '      if(t){',
+    '        e.preventDefault();',
+    '        parent.postMessage({reaPage:' + reaJson(REA_TASKS_PAGE) + ',reaWin:CURW,reaRows:dumpRows(),reaType:t},"*");',
+    '        return;',
+    '      }',
+    '      n=n.parentNode;',
+    '    }',
+    '  });',
+    '}',
+    '',
+    '/* ================= 任务列表 · 一级页前置（PRD §2.4b） =================',
+    '   与二级页同一份行、同一套排序：逾期多的先、欠得多的次之、其余按台账次序。',
+    '   一级页只截前 5 条，条数与逾期数写在页脚——一行里既说规模又说风险。 */',
+    'var PEEK_N=5;',
+    '/* 六类有「· 详情」页，视频号发布任务没有；与二级页那张 HAS 表同一份取舍。 */',
+    'var HAS_DETAIL={"发圈":1,"群发好友":1,"群发群组":1,"批量加好友":1,"关联好友":1,"客户唤醒":1};',
+    'function peekRows(w){',
+    '  var rs=winRows(w),out=[],i,r;',
+    '  for(i=0;i<rs.length;i++){',
+    '    r=rs[i];',
+    '    out.push({',
+    '      id:+r.getAttribute("data-bd-row"),',
+    '      type:r.getAttribute("data-bd-type")||"",',
+    '      plat:platOf(r),',
+    '      org:r.getAttribute("data-bd-org")||"",',
+    '      name:((r.cells[0]&&r.cells[0].getAttribute("title"))||(r.cells[0]&&r.cells[0].textContent)||"").trim(),',
+    '      need:+r.getAttribute("data-bd-need"),done:+r.getAttribute("data-bd-done"),',
+    '      left:+r.getAttribute("data-bd-left"),over:+r.getAttribute("data-bd-over")',
+    '    });',
+    '  }',
+    '  out.sort(function(a,b){',
+    '    if(a.over!==b.over)return b.over-a.over;',
+    '    if(a.left!==b.left)return b.left-a.left;',
+    '    return a.id-b.id;',
+    '  });',
+    '  return out;',
+    '}',
+    'function stateOf(r){return r.done>=r.need?"已完成":(r.over>0?"已结束":"进行中")}',
+    'function tagOf(s){',
+    '  var c=s==="已完成"?"ant-tag ant-tag-green css-vgijab":(s==="进行中"?"ant-tag ant-tag-blue css-vgijab":"ant-tag css-vgijab");',
+    '  return "<span class=\\""+c+"\\">"+esc(s)+"</span>";',
+    '}',
+    'function renderPeek(w){',
+    '  var all=peekRows(w),body=document.getElementById("rea-bd-peek-body"),h="",i,o,st,pct,pend,has;',
+    '  if(!body)return;',
+    '  for(i=0;i<all.length&&i<PEEK_N;i++){',
+    '    o=all[i];st=stateOf(o);pct=o.need?Math.round(o.done/o.need*100):0;pend=Math.max(0,o.left-o.over);',
+    '    has=!!HAS_DETAIL[o.type];',
+    '    h+="<div class=\\"rea-bd-tl-row\\""+(has?" role=\\"button\\" tabindex=\\"0\\" data-bd-peek-row=\\""+esc(o.type)+"\\"":"")+">"',
+    '      +"<span class=\\"rea-bd-tlc-name\\">"+platTag(o.plat)+"<span class=\\"tx\\" title=\\""+esc(o.name)+"\\">"+esc(o.name)+"</span></span>"',
+    '      +"<span class=\\"rea-bd-tlc-type\\" title=\\""+esc(o.type)+"\\">"+esc(o.type)+"</span>"',
+    '      +"<span class=\\"rea-bd-tlc-dept\\" title=\\""+esc(o.org)+"\\">"+esc(o.org)+"</span>"',
+    '      +"<span class=\\"rea-bd-tlc-pg\\"><span class=\\"rea-bd-pg\\"><span class=\\"n\\"><span>"+o.done+" / "+o.need+"</span><em>"+pct+"%</em></span>"',
+    '      +"<span class=\\"rea-bd-track sm\\">"+(o.done>0?"<i class=\\"d\\" style=\\"flex:"+o.done+" 1 0\\"></i>":"")',
+    '      +(pend>0?"<i class=\\"l\\" style=\\"flex:"+pend+" 1 0\\"></i>":"")+(o.over>0?"<i class=\\"o\\" style=\\"flex:"+o.over+" 1 0\\"></i>":"")+"</span></span></span>"',
+    '      +"<span class=\\"rea-bd-tlc-st\\">"+tagOf(st)+"</span>"',
+    '      +"<span class=\\"rea-bd-tlc-more\\" aria-hidden=\\"true\\">"+(has?"›":"")+"</span>"',
+    '      +"</div>";',
+    '  }',
+    '  if(!all.length)h="<div class=\\"rea-bd-tl-empty\\">该时间窗内没有任务</div>";',
+    '  body.innerHTML=h;',
+    '  var ov=0;',
+    '  for(i=0;i<all.length;i++)if(all[i].over>0)ov++;',
+    '  var sum=document.getElementById("rea-bd-peek-sum");',
+    '  if(sum)sum.textContent="共 "+all.length+" 条"+(ov?" · 逾期 "+ov+" 条":"");',
+    '}',
+    '/* 行点进该类型的详情页：与二级页那枚「详情」同一套页面，带着当前窗口与整张台账，',
+    '   子页不另编一份数。视频号发布任务没有详情页，那一行不给箭头、也不可点。 */',
+    'var pk=document.getElementById("rea-bd-peek-body");',
+    'if(pk)pk.addEventListener("click",function(e){',
+    '  var n=e.target;',
+    '  while(n&&n!==pk&&n.nodeType===1){',
+    '    if(n.getAttribute&&n.getAttribute("data-bd-peek-row")){',
+    '      e.preventDefault();',
+    '      parent.postMessage({reaPage:n.getAttribute("data-bd-peek-row")+" · 详情",reaWin:CURW,reaRows:dumpRows()},"*");',
+    '      return;',
+    '    }',
+    '    n=n.parentNode;',
+    '  }',
+    '});',
+    '/* 右下角「查看全部」：进二级页看全量，不带任何筛选（三条轴都在那一页）。 */',
+    'var pa=document.querySelector("[data-bd-peek-all]");',
+    'if(pa)pa.addEventListener("click",function(e){',
+    '  e.preventDefault();',
+    '  parent.postMessage({reaPage:' + reaJson(REA_TASKS_PAGE) + ',reaWin:CURW,reaRows:dumpRows()},"*");',
+    '});',
+    '/* 环与外标、前置列表的对账：各段加总＝窗口条数，条数与首行还得与全量那一份一致。',
+    '   名字别取 typeCheck——那是上头「执行健康度」环的自检，同一条脚本里同名会互相顶掉。 */',
+    'function typeShareCheck(w){',
+    '  var list=typeShare(w),t=tally(winRows(w)),i,n=0,nf=0,np=0,no=0,all,el,show;',
+    '  for(i=0;i<list.length;i++){n+=list[i].n;nf+=list[i].f;np+=list[i].p;no+=list[i].o}',
+    '  if(n!==t.n)bad("类型占比各段之和 "+n+" ≠ 窗口任务条数 "+t.n);',
+    '  if(nf!==t.full)bad("类型占比已完成之和 "+nf+" ≠ 环上已完成 "+t.full);',
+    '  if(np!==t.n-t.full-t.miss)bad("类型占比待完成之和 "+np+" ≠ 环上待完成 "+(t.n-t.full-t.miss));',
+    '  if(no!==t.miss)bad("类型占比逾期未做之和 "+no+" ≠ 环上逾期未做 "+t.miss);',
+    '  all=peekRows(w);show=Math.min(PEEK_N,all.length);',
+    '  el=document.querySelectorAll("#rea-bd-peek-body .rea-bd-tl-row");',
+    '  if(el.length!==show)bad("任务列表前置露出 "+el.length+" 条，应为 "+show+" 条");',
+    '  if(show){',
+    '    var nm=el[0].querySelector(".tx");',
+    '    if(!nm||nm.textContent!==all[0].name)bad("任务列表前置的首行「"+(nm?nm.textContent:"")+"」≠ 全量排序的首条「"+all[0].name+"」");',
+    '  }',
+    '}',
+    '/* 卡片宽窄变了要重排外标（引线按像素算，不重算就停在旧位置）。 */',
+    'var tyrt=null;',
+    'window.addEventListener("resize",function(){',
+    '  if(tyrt)clearTimeout(tyrt);',
+    '  tyrt=setTimeout(function(){paintType(CURW)},150);',
+    '});',
     '/* 换窗口＝换一份数：这一页上所有跟着时间窗走的块一起重画——',
     '   占比（条数）、部门（人次）、员工（人次）、两张趋势图（条数／人次）。 */',
     '/* 两张图的粒度跟着窗口跨度走：31 天以内按日，更长按周——',
@@ -13422,6 +13768,10 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '  setCmpUi();',
     '  renderTrTrend();',
     '  renderQfTrend();',
+    '  /* 类型占比与任务列表前置同样跟窗口走：换窗＝换一批行，两张卡一起重画。 */',
+    '  paintType(w);',
+    '  renderPeek(w);',
+    '  typeShareCheck(w);',
     '  BDANIM=0;',
     '}',
     reaQfTrendJs(),
