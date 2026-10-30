@@ -9950,8 +9950,9 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     </div>
 
     <!-- 任务类型分布 · 第 2 行左格 · 第 1 层 · 结构（条数）。
-         左环按任务大类分，整圈就是这个窗口下发的全部任务，环心写总数；环下图例六行常驻。
-         右排横条默认排六个大类，点环上一段（或图例一行）就换成这个大类的细分类型，
+         左环按任务大类分，整圈就是这个窗口下发的全部任务，环心写总数；环下不列图例，
+         大类名字在右排横条上，悬停环上一段也有小窗。
+         右排横条默认排六个大类，点环上一段或某一条横条就换成这个大类的细分类型，
          再点「返回全部大类」回来；类型共 28 个，铺不满卡片，单独开一层「查看全部类型」。
          一条任务只有一个大类、一个类型，所以环上各段相加＝环心，也等于「执行健康度」环心
          ——几张图看的是同一批任务（PRD §2.3b）。 -->
@@ -9965,7 +9966,6 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
             </svg>
             <span class="rea-bd-tring-mid"><b id="rea-bd-type-total">0</b><span>下发任务总数</span></span>
           </div>
-          <ul class="rea-bd-tleg" id="rea-bd-type-legend"></ul>
         </div>
         <div class="rea-td-r">
           <div class="rea-td-rh">
@@ -11852,7 +11852,7 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-ch{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:2px 0 14px}
 .rea-bd-ch h6{margin:0;color:#1F2329;font-size:15px;line-height:22px;font-weight:600;letter-spacing:-.2px}
 .rea-bd-ch .th{margin-left:auto;color:#8F959E;font-size:12px}
-/* 视口 1280 以下内容区不足 770px，两列会把环形和图例挤在一起，回落到单列 */
+/* 视口 1280 以下内容区不足 770px，两列会把环形和右侧的横条挤在一起，回落到单列 */
 @media (max-width:1279px){
   .rea-bd-card--w8,.rea-bd-card--w7,.rea-bd-card--w6,.rea-bd-card--w5,.rea-bd-card--w4{grid-column:span 12}
 }
@@ -11975,14 +11975,14 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-tip li b{font-weight:600;font-variant-numeric:tabular-nums}
 .rea-bd-tip .emp{color:#8F959E;font-size:11px}
 /* ---------- 任务类型分布 · 左环大类 ＋ 右排横条（PRD §2.3b） ----------
-   左边一圈按任务大类分，环下图例六行；右边一排横条默认排大类，点一段换这一个类的类型。
-   颜色跟着大类走、不跟名次走（ADR-0085），环、图例、横条三处同一套值。
-   段与段之间留 2 的白缝；0 条的大类不画段，图例上仍写 0。 */
+   左边一圈按任务大类分，环下不列图例；右边一排横条默认排大类，点一段换这一个类的类型。
+   颜色跟着大类走、不跟名次走（ADR-0085），环与横条、浮层同一套值。
+   段与段之间留 2 的白缝；0 条的大类不画段，横条上仍写 0。 */
 #rea-bd-type{display:flex;flex-direction:column}
 .rea-td{position:relative;display:flex;align-items:stretch;gap:22px;width:100%;flex:1 1 auto;min-height:300px;margin-top:2px}
 .rea-td-l{flex:0 0 40%;max-width:290px;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
 .rea-td-r{flex:1 1 60%;min-width:0;display:flex;flex-direction:column}
-.rea-bd-tring-fig{position:relative;width:172px;height:172px;flex:0 0 auto;margin-left:2px;transition:opacity .18s}
+.rea-bd-tring-fig{position:relative;width:206px;height:206px;flex:0 0 auto;max-width:100%;aspect-ratio:1;transition:opacity .18s}
 .rea-bd-tring-fig svg{display:block;width:100%;height:100%;transform:rotate(-90deg)}
 .rea-bd-tring-fig circle{fill:none;stroke-width:13}
 .rea-bd-tring-fig circle.track{stroke:#F2F3F5}
@@ -11992,15 +11992,6 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-tring-mid{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;pointer-events:none;text-align:center}
 .rea-bd-tring-mid b{font-size:28px;line-height:1.05;font-weight:600;color:#1F2329;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
 .rea-bd-tring-mid span{font-size:11px;line-height:1.3;color:#8F959E}
-.rea-bd-tleg{list-style:none;margin:0;padding:0;width:100%;max-width:280px;min-width:0;display:flex;flex-direction:column;gap:1px}
-.rea-bd-tleg li{display:flex;align-items:center;gap:7px;height:26px;padding:0 8px;border-radius:6px;font-size:12px;line-height:16px;color:#646A73;cursor:pointer}
-.rea-bd-tleg li:hover,.rea-bd-tleg li.on{background:#F2F7FF}
-.rea-bd-tleg li.on .nm{font-weight:600}
-.rea-bd-tleg li:focus-visible{outline:2px solid #1677FF;outline-offset:0}
-.rea-bd-tleg i{width:9px;height:9px;border-radius:2px;flex:0 0 auto}
-.rea-bd-tleg .nm{flex:1 1 auto;min-width:0;color:#1F2329;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.rea-bd-tleg b{font-weight:600;color:#1F2329;font-variant-numeric:tabular-nums}
-.rea-bd-tleg em{font-style:normal;color:#8F959E;font-variant-numeric:tabular-nums;min-width:42px;text-align:right}
 /* 右列标题行：默认「任务大类 · 按条数」；下钻后换成「微信营销任务 · 类型分布」并露出「返回全部大类」 */
 .rea-td-rh{display:flex;align-items:center;gap:8px;padding:0 0 8px;border-bottom:1px solid #F0F2F5;flex:0 0 auto}
 .rea-td-rh .tt{flex:1 1 auto;min-width:0;font-size:13px;font-weight:600;color:#1F2329;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -12039,11 +12030,10 @@ body .subapp{background:#F6F8FB!important}
 .rea-td-dw em{flex:0 0 92px;font-style:normal;color:#8F959E;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .rea-td-dw b{flex:0 0 auto;min-width:30px;text-align:right;font-weight:600;color:#1F2329;font-variant-numeric:tabular-nums}
 .rea-td-dw .sh{flex:0 0 auto;min-width:42px;text-align:right;color:#8F959E;font-variant-numeric:tabular-nums}
-/* 卡窄到放不下并排（span 7 塌到 span 12 或小屏）时，环收窄、图例落到环下两列，右排照旧在下面 */
+/* 卡窄到放不下并排（span 7 塌到 span 12 或小屏）时，环在上、右排横条在下 */
 @media (max-width:1279px){
   .rea-td{flex-direction:column;gap:14px;min-height:0}
   .rea-td-l{flex:0 0 auto;max-width:none}
-  .rea-bd-tleg{display:grid;grid-template-columns:1fr 1fr;gap:0 10px;max-width:none}
 }
 
 /* ---------- 任务列表 · 一级页前置（PRD §2.4b） ----------
@@ -13606,7 +13596,7 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '',
     '/* ================= 任务类型分布（PRD §2.3b） =================',
     '   左边一圈：按任务大类分，整圈 360° 就是这个窗口的全部任务，环心写总数。',
-    '   右边一排横条：默认排六个大类；点圆环一段、图例一行或某一条横条，就换成这个大类的细分类型，',
+    '   右边一排横条：默认排六个大类；点圆环一段或某一条横条，就换成这个大类的细分类型，',
     '   「返回」回到大类排名。类型一共 28 个，塞不进环里也不该把卡片撑长，所以「查看全部类型」',
     '   开一层浮层。',
     '   颜色跟着任务大类走、不跟着名次走（ADR-0085）；单位是条，与「执行健康度」是同一批任务。 */',
@@ -13690,7 +13680,6 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '  }',
     '  fig.classList.toggle("is-dim",!!TDCAT);',
     '  tdMarkOn();',
-    '  renderTDLegend(cats,total);',
     '  paintBars(w,cats,total);',
     '  var ft=document.getElementById("rea-bd-type-foot");',
     '  if(ft)ft.textContent="共 "+total+" 条任务";',
@@ -13701,19 +13690,6 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '    p=arcs[i].getAttribute("data-bd-cat-arc");',
     '    arcs[i].classList.toggle("is-on",!!TDCAT&&p===TDCAT);',
     '  }',
-    '}',
-    '/* 图例六行常驻：本窗口没任务的大类写 0——它是一张分类表，不是「这一段有数」的意思。 */',
-    'function renderTDLegend(cats,total){',
-    '  var ul=document.getElementById("rea-bd-type-legend"),h="",i,p,o,map={},pct;',
-    '  if(!ul)return;',
-    '  for(i=0;i<cats.length;i++)map[cats[i].p]=cats[i];',
-    '  for(i=0;i<PLAT_ORDER.length;i++){',
-    '    p=PLAT_ORDER[i];o=map[p];',
-    '    pct=(total&&o)?(o.n/total*100).toFixed(1)+"%":"—";',
-    '    h+=\'<li role="button" tabindex="0" data-bd-cat="\'+p+\'"\'+(TDCAT===p?\' class="on"\':\'\')+\' title="\'+esc(PLAT_NM[p])+\'：\'+(o?o.n:0)+\' 条，点一下看细分类型">\'',
-    '      +\'<i style="background:\'+platColor(p)+\'"></i><span class="nm">\'+esc(PLAT_SN[p])+\'</span><b>\'+(o?o.n:0)+\'</b><em>\'+pct+\'</em></li>\';',
-    '  }',
-    '  ul.innerHTML=h;',
     '}',
     '/* 右排横条：大类视图排大类，下钻后排这一类下的类型；长度按当前这一列的最大值取满格。 */',
     'function paintBars(w,cats,total){',
@@ -13758,7 +13734,7 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '  TTIP.style.top=(above?y-10:y+14)+"px";',
     '  TTIP.style.transform=above?"translate(-50%,-100%)":"translate(-50%,0)";',
     '}',
-    '/* 光标落在哪一段：环上是大类，图例与横条也是大类，下钻后的类型条带 data-bd-cat-type。 */',
+    '/* 光标落在哪一段：环上与横条都是大类，下钻后的类型条带 data-bd-cat-type。 */',
     'function typeHit(n){',
     '  while(n&&n!==TBOX&&n.nodeType===1){',
     '    if(n.getAttribute){',
@@ -13925,13 +13901,12 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '  e.preventDefault();',
     '  parent.postMessage({reaPage:' + reaJson(REA_TASKS_PAGE) + ',reaWin:CURW,reaRows:dumpRows()},"*");',
     '});',
-    '/* 环、图例、右排横条与前置列表的对账：环上各段加总＝窗口条数，三段状态也得分毫不差。',
+    '/* 环、右排横条与前置列表的对账：环上各段加总＝窗口条数，三段状态也得分毫不差。',
     '   名字别取 typeCheck——那是上头「执行健康度」环的自检，同一条脚本里同名会互相顶掉。 */',
     'function typeShareCheck(w){',
     '  var list=typeShare(w),cats=platShare(w),t=tally(winRows(w)),i,n=0,nf=0,nl=0,no=0,pn=0,',
     '      drill=tdCat(w),',
     '      arcs=document.querySelectorAll("#rea-bd-type-fig circle[data-bd-cat-arc]").length,',
-    '      legs=document.querySelectorAll("#rea-bd-type-legend li").length,',
     '      bars=document.querySelectorAll("#rea-bd-type-bars li"),',
     '      ttl=document.getElementById("rea-bd-type-title"),',
     '      rel=document.getElementById("rea-bd-type-rel"),',
@@ -13945,7 +13920,6 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '  if(no!==t.miss)bad("类型分布逾期未做之和 "+no+" ≠ 环上逾期未做 "+t.miss);',
     '  if(tot&&+tot.textContent!==t.n)bad("环心写 "+tot.textContent+" 条，窗口任务是 "+t.n+" 条");',
     '  if(arcs!==cats.length)bad("环上画了 "+arcs+" 段，窗口里有任务的大类是 "+cats.length+" 个");',
-    '  if(legs!==PLAT_ORDER.length)bad("大类图例 "+legs+" 行，应为 "+PLAT_ORDER.length+" 个");',
     '  if(bars.length!==(drill?drill.types.length:cats.length))bad("右排横条 "+(drill?"下钻后应有 "+drill.types.length+" 条":"应为 "+cats.length+" 条")+"，实际 "+bars.length+" 条");',
     '  if(drill){',
     '    if(!ttl||ttl.textContent!==PLAT_NM[drill.p]+" · 类型分布")bad("下钻标题应为「"+PLAT_NM[drill.p]+" · 类型分布」，实际「"+(ttl?ttl.textContent:"")+"」");',
@@ -19881,7 +19855,7 @@ renderTable();
   var reaGroupNames = []; // 素材库列表页侧栏分组树里的分组名（供新建页的「所属分组」下拉用）
   var reaRows = null;     // 看板点「详细数据」时带过来的任务行（子页用，不另存一份）
   var reaWinSel = 'w7'; // 同上：点进来时的当前窗口（看板默认近一周，子页跟着开在近一周）
-  var reaPlatSel = 'all'; // 任务列表的预选筛选：平台（从类型占比卡的内环/图例点进来时有值）
+  var reaPlatSel = 'all'; // 任务列表的预选筛选：大类（从任务类型分布卡的一段／横条点进来时有值）
   var reaTypeSel = 'all'; // 同上：任务类型（从外环一段点进来时，平台和类型一起带上）
   var reaStateSel = 'all';// 同上：状态
   var reaOrgSel = 'all';  // 同上：部门（从部门完成情况的一行点进来时有值）
@@ -20294,8 +20268,8 @@ renderTable();
     /* 看板点的「详细数据」：先把行与窗口收下，子页 reaDoc 时会灌进 window（见 reaDataJs） */
     if (d.reaRows){
       reaRows = d.reaRows; reaWinSel = d.reaWin || 'w7';
-      /* 每次从看板进来都重设四轴筛选与排序：从部门行进来带部门，从类型占比卡的内环或图例行
-         进来带平台，从外环一段进来带平台＋类型；从「任务列表」链接进来全 all；
+      /* 每次从看板进来都重设四轴筛选与排序：从部门行进来带部门，从任务类型分布卡的一段或横条
+         进来带大类，从下钻后的类型条进来带大类＋类型；从「任务列表」链接进来全 all；
          从排行进来带 done/rate + 预展开的人，从「执行人明细」链接进来回到 debt。 */
       reaPlatSel = d.reaPlat || 'all';
       reaTypeSel = d.reaType || 'all'; reaStateSel = d.reaState || 'all'; reaOrgSel = d.reaOrg || 'all';
