@@ -9900,8 +9900,8 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
          一个入口一个去处——筛选栏只留时间窗与自定义区间（PRD §2.1）。 -->
   </div>
 
-  <!-- 卡片网格：上「健康度｜趋势」、中「部门｜员工」、下「群发回复｜配置资产」。
-       分组靠卡边界，不再用小标题＋分割线（ADR-0083）。 -->
+  <!-- 卡片网格：第 1 行「健康度｜趋势」、第 2 行「类型分布｜完成情况」、第 3 行「群发好友回复」通栏、
+       第 4 行「任务列表｜配置资产」。分组靠卡边界，不再用小标题＋分割线（ADR-0083）。 -->
   <div class="rea-bd-grid" id="rea-bd-grid">
 
     <!-- 执行健康度 · 第 1 层 · 结果（任务条数）。
@@ -9949,7 +9949,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
       <div class="rea-tr-chart" id="rea-tr-chart"></div>
     </div>
 
-    <!-- 任务类型分布 · 第 1 层 · 结构（条数）。
+    <!-- 任务类型分布 · 第 2 行左格 · 第 1 层 · 结构（条数）。
          左环按任务大类分，整圈就是这个窗口下发的全部任务，环心写总数；环下图例六行常驻。
          右排横条默认排六个大类，点环上一段（或图例一行）就换成这个大类的细分类型，
          再点「返回全部大类」回来；类型共 28 个，铺不满卡片，单独开一层「查看全部类型」。
@@ -9992,22 +9992,12 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
       </div>
     </div>
 
-    <!-- 群发好友回复 · 第 3 层 · 效果。数据来自台账里「群发好友」那些行；
-         统计范围与粒度都跟着页顶时间窗走（跨度 ≤ 31 天按日、更长按周）。 -->
-    <div class="rea-bd-card rea-bd-card--w5">
-      <div class="rea-bd-ch">
-        <h6>群发好友回复</h6>
-      </div>
-      <div class="rea-qft-kpis" id="rea-qft-kpis"></div>
-      <div class="rea-qft-chart" id="rea-qft-chart"></div>
-    </div>
-
-    <!-- 部门 / 员工完成情况 · 第 1–2 层 · **人次**。
+    <!-- 部门 / 员工完成情况 · 第 2 行右格 · 第 1–2 层 · **人次**。
          两个切法合到一张卡：卡头「部门 / 员工」切换，列表整幅替换，不并排。
          部门按创建人所属部门聚合，员工按执行人聚合；同一个单位、两个切法，
          总计相等、逐行不等（执行人员可跨部门）。点行分别去任务列表／执行人明细。
          当前范围**没有下级部门**（叶子部门）时只剩员工视图，切换器不出（PRD §2.4）。 -->
-    <div class="rea-bd-card rea-bd-card--w12" id="rea-bd-cmp">
+    <div class="rea-bd-card rea-bd-card--w5" id="rea-bd-cmp">
       <div class="rea-bd-ch">
         <h6>完成情况</h6>
         <div class="ant-radio-group ant-radio-group-solid css-vgijab rea-bd-cmp-switch" id="rea-bd-cmp-switch">
@@ -10063,7 +10053,17 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
       </div>
     </div>
 
-    <!-- 任务列表 · 第 4 行 · 明细。
+    <!-- 群发好友回复 · 第 3 行通栏 · 第 3 层 · 效果。数据来自台账里「群发好友」那些行；
+         统计范围与粒度都跟着页顶时间窗走（跨度 ≤ 31 天按日、更长按周）。 -->
+    <div class="rea-bd-card rea-bd-card--w12">
+      <div class="rea-bd-ch">
+        <h6>群发好友回复</h6>
+      </div>
+      <div class="rea-qft-kpis" id="rea-qft-kpis"></div>
+      <div class="rea-qft-chart" id="rea-qft-chart"></div>
+    </div>
+
+    <!-- 任务列表 · 第 4 行左格 · 明细。
          与二级页「任务列表」同一份行、同一套排序（逾期多的在前、欠得多的次之），只露前 5 条；
          点行进该类型的详情页（视频号发布任务没有详情页，那一行不给箭头也不可点），
          右下角「查看全部」进二级页看全量。三条筛选轴只留在二级页（PRD §2.4b）。 -->
@@ -12221,7 +12221,7 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-win-off::before{background-color:transparent!important}
 .rea-bd-win-off:hover{color:#B7BCC4!important;background:transparent!important}
 
-/* ---------- 群发好友回复（任务看板 · 第 3 行左格） ----------
+/* ---------- 群发好友回复（任务看板 · 第 3 行通栏） ----------
    KPI 一排 ＋ 双轴图（柱＝已发送，线＝回复率）。下面那段 .rea-mb-qf-* 是「素材看板」里同名的那张卡，
    两张卡同名不同物：类名前缀各走各的（qft ＝ 任务看板，mb-qf ＝ 素材看板），别拿一处的样式盖另一处。 */
 .rea-qft-kpis{display:flex;flex-wrap:wrap;gap:10px 22px;margin:0 0 4px;padding:0 0 2px}
