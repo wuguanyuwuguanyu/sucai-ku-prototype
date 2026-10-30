@@ -9839,6 +9839,153 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 </body>
 </html>
 </script>
+<!-- 使用总览：看板入口首页。正文、样式、交互从高保真稿嵌入；页面导航由视图③外壳提供。 -->
+<script type="text/plain" id="srcOverview"><div class="rea-ov-page">
+<main class="wrap">
+  <header class="top">
+    <div><div class="eyebrow">企业价值</div><h1>使用总览</h1><div class="range-label" id="range-label">2026.09.30—2026.10.29 · 演示</div></div>
+    <div class="top-actions">
+      <div class="date" role="group" aria-label="统计时间范围">
+        <button type="button" data-period="day" aria-pressed="false">今日</button>
+        <button type="button" data-period="week" aria-pressed="false">近一周</button>
+        <button type="button" data-period="month" aria-pressed="true">近一月</button>
+        <button type="button" data-period="quarter" aria-pressed="false">近三月</button>
+      </div>
+      <div class="date-more"><button class="iconbtn" type="button" id="time-more" aria-label="更多时间范围" aria-expanded="false" title="更多时间范围"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18" stroke-linecap="round"/></svg></button><div class="time-menu" id="time-menu" hidden><button type="button" disabled>近半年</button><button type="button" disabled>近一年</button><button type="button" disabled>自定义区间</button><small>演示数据暂未覆盖</small></div></div>
+      <button class="iconbtn" type="button" data-sheet="definitions" aria-label="查看数据说明" title="数据说明"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M9.7 9a2.4 2.4 0 0 1 4.6.9c0 1.7-2.3 2.1-2.3 3.7M12 17.5h.01" stroke-linecap="round"/></svg></button>
+    </div>
+  </header>
+
+  <div class="dashboard-grid">
+  <section class="seat-hero" aria-labelledby="seats-title">
+    <div class="seat-hero-head"><div><p class="seat-hero-title">企业开通情况</p><h2 id="seats-title">各版本席位</h2></div><div class="seat-total"><strong id="assigned-total">30</strong>已分配<span class="divider">/</span><strong id="bought-total">32</strong>已购</div></div>
+    <div class="seat-overview"><span>当前有效授权</span><span>分配率 <b id="seat-rate">93.8%</b></span></div>
+    <div class="seat-cards" id="tiers"></div>
+    <div class="seat-hero-bottom"><span>使用人数随时间范围变化</span><button class="text-link" type="button" data-sheet="seats" data-tier="all">查看员工与未分配席位 ↗</button></div>
+  </section>
+
+  <section class="section" aria-labelledby="people-title">
+    <div class="section-head"><h2 id="people-title">员工使用情况</h2><button class="text-link" type="button" data-sheet="people">查看构成 ↗</button></div>
+    <div class="people">
+      <div class="people-main"><div class="people-story"><b id="manual-number">20</b><span>人在主动操作</span></div><div class="people-sub"><span>有服务记录 <strong id="service-number">26 人</strong></span><span id="repeat-text">连续两期取用素材 <strong>18 人</strong></span></div></div>
+      <div class="composition"><div class="composition-bar" id="composition-bar" aria-label="已分配席位使用构成"></div><div class="legend"><button type="button" data-sheet="people" class="manual"><i></i>主动操作 <b id="manual-legend">20</b></button><button type="button" data-sheet="people" class="auto"><i></i>仅自动服务 <b id="auto-legend">6</b></button><button type="button" data-sheet="seats" data-tier="all" class="idle"><i></i>无记录 <b id="idle-legend">4</b></button></div></div>
+      <div class="scope"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01" stroke-linecap="round"/></svg>主动操作包含素材取用与工具完成</div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="tools-title">
+    <div class="section-head"><h2 id="tools-title">App 工具使用</h2><span class="tool-note">员工主动完成的操作</span></div>
+    <div class="tool-column-head"><span>工作类型</span><span>使用人数</span><span>完成次数</span><span></span></div>
+    <div class="tool-list" id="tool-list"></div>
+    <div class="tool-note">演示数据 · 进度条以本列表最多完成次数为基准</div>
+  </section>
+
+  <section class="section" aria-labelledby="results-title">
+    <div class="section-head"><h2 id="results-title">工作成果</h2><button class="text-link" type="button" data-sheet="definitions">数据怎么计算？</button></div>
+    <div class="outcomes">
+      <button class="outcome" type="button" data-sheet="hosting"><span class="result-label"><span class="outcome-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="5" width="14" height="14" rx="3"/><path d="M9 10h.01M15 10h.01M9 15c1.4 1.3 4.6 1.3 6 0M12 2v3M2 12h3M19 12h3" stroke-linecap="round"/></svg></span><span><b>AI托管完成动作</b><small id="hosting-people">覆盖 11 人</small></span></span><span class="outcome-main"><span id="hosting-number">744</span><small>次</small></span></button>
+      <button class="outcome" type="button" data-sheet="material"><span class="result-label"><span class="outcome-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="13" height="15" rx="2"/><path d="M8 8h5M8 12h5M8 16h8M17 9h3v11H9" stroke-linecap="round"/></svg></span><span><b>素材被员工取用</b><small id="material-people">20 人参与</small></span></span><span class="outcome-main"><span id="material-number">206</span><small>次</small></span></button>
+      <button class="outcome" type="button" data-sheet="tasks"><span class="result-label"><span class="outcome-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="m8 12 3 3 5-6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>营销任务做满</b><small id="task-trend">较上期 +17 条</small></span></span><span class="outcome-main"><span id="task-number">147</span><small>条</small></span></button>
+    </div>
+  </section>
+  </div>
+  <p class="note-bottom">演示数据 · 席位按当前有效授权统计，其他数字随所选时间变化</p>
+</main>
+<div class="mask" id="mask" aria-hidden="true"></div>
+<aside class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title" aria-hidden="true">
+  <div class="sheet-head"><div><h2 id="sheet-title"></h2><span class="small" id="sheet-subtitle"></span></div><button class="close" type="button" id="sheet-close" aria-label="关闭详情">×</button></div>
+  <div class="sheet-body" id="sheet-body"></div>
+</aside>
+</div></script>
+<script type="text/plain" id="srcOverviewStyle">.rea-ov-page{min-height:100%;background:#F6F8FB}
+.rea-ov-page{--blue:#1677ff;--blue-pale:#e6f4ff;--ink:#1f2329;--sub:#646a73;--weak:#8f959e;--line:#e5e8ef;--quiet:#f7f8fa;--white:#fff}.rea-ov-page *{box-sizing:border-box}.rea-ov-page{scroll-behavior:smooth}.rea-ov-page{margin:0;background:var(--white);color:var(--ink);font:14px/1.5 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;-webkit-font-smoothing:antialiased}.rea-ov-page button{font:inherit}.rea-ov-page button:focus-visible{outline:2px solid var(--blue);outline-offset:3px}.rea-ov-page button,.rea-ov-page [role="button"]{cursor:pointer}.rea-ov-page button:disabled{cursor:not-allowed}.rea-ov-page .wrap{max-width:1216px;margin:auto;padding:40px 32px 80px}.rea-ov-page .top{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:32px}.rea-ov-page .eyebrow{color:var(--blue);font-size:12px;font-weight:600;letter-spacing:.08em;margin-bottom:8px}.rea-ov-page .top h1{font-size:20px;line-height:1.3;margin:0;font-weight:600}.rea-ov-page .top-actions{display:flex;align-items:center;gap:16px}.rea-ov-page .date{display:flex;gap:4px;padding:4px;background:var(--quiet);border-radius:8px}.rea-ov-page .date button{border:0;background:transparent;border-radius:6px;height:36px;min-width:58px;padding:0 12px;color:var(--sub);transition:background .18s,color .18s}.rea-ov-page .date button:hover{background:#fff}.rea-ov-page .date button[aria-pressed="true"]{background:#fff;color:var(--ink);font-weight:600;box-shadow:0 1px 2px rgba(19,44,82,.08)}.rea-ov-page .iconbtn{border:1px solid var(--line);border-radius:8px;width:40px;height:40px;background:#fff;color:var(--sub);display:grid;place-items:center;transition:border-color .18s,color .18s}.rea-ov-page .iconbtn:hover{border-color:var(--blue);color:var(--blue)}.rea-ov-page .seat-hero{background:var(--blue-pale);border-radius:14px;padding:32px 38px 34px;overflow:hidden}.rea-ov-page .seat-hero-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:28px}.rea-ov-page .seat-hero-title{font-size:13px;color:var(--sub);margin:0 0 5px}.rea-ov-page .seat-hero-head h2{font-size:24px;line-height:1.25;font-weight:600;letter-spacing:-.02em;margin:0}.rea-ov-page .seat-total{display:flex;align-items:baseline;gap:8px;color:var(--sub);white-space:nowrap}.rea-ov-page .seat-total strong{font-size:30px;line-height:1;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums}.rea-ov-page .seat-total .divider{font-size:20px;color:#9bbfe9;margin:0 1px}.rea-ov-page .seat-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.rea-ov-page .seat-card{display:block;width:100%;padding:22px 24px 20px;border:1px solid rgba(22,119,255,.04);border-radius:10px;background:rgba(255,255,255,.86);text-align:left;box-shadow:0 2px 10px rgba(22,87,155,.025);transition:transform .18s,box-shadow .18s,background .18s}.rea-ov-page .seat-card:hover{transform:translateY(-2px);background:#fff;box-shadow:0 8px 22px rgba(22,87,155,.1)}.rea-ov-page .seat-card-top{display:flex;align-items:center;justify-content:space-between;gap:12px}.rea-ov-page .seat-card-name{font-size:15px;font-weight:600}.rea-ov-page .seat-card-arrow{color:var(--blue);font-size:18px;line-height:1}.rea-ov-page .seat-card-number{display:flex;align-items:baseline;gap:5px;margin:16px 0 6px;font-variant-numeric:tabular-nums}.rea-ov-page .seat-card-number strong{font-size:42px;line-height:1;font-weight:600;letter-spacing:-.06em}.rea-ov-page .seat-card-number span{color:var(--sub);font-size:13px}.rea-ov-page .seat-card-bar{display:block;width:100%;height:7px;border-radius:5px;background:#e7eef8;overflow:hidden;margin:18px 0 12px}.rea-ov-page .seat-card-bar i{display:block;height:100%;border-radius:5px;background:var(--blue)}.rea-ov-page .seat-card-foot{display:flex;justify-content:space-between;gap:8px;color:var(--sub);font-size:12px}.rea-ov-page .seat-card-foot b{color:var(--ink);font-weight:600}.rea-ov-page .seat-hero-bottom{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:20px;color:var(--sub);font-size:12px}.rea-ov-page .seat-hero-bottom .text-link{color:var(--blue)}.rea-ov-page .section{margin-top:48px}.rea-ov-page .section-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:20px}.rea-ov-page .section-head h2{font-size:16px;font-weight:600;margin:0}.rea-ov-page .text-link{border:0;background:none;color:var(--blue);padding:0;font-size:12px;font-weight:500;white-space:nowrap}.rea-ov-page .text-link:hover{text-decoration:underline}.rea-ov-page .outcomes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0}.rea-ov-page .outcome{padding:4px 28px 8px 0;border:0;border-right:1px solid var(--line);background:#fff;text-align:left;min-height:126px;transition:color .18s}.rea-ov-page .outcome+ .outcome{padding-left:32px}.rea-ov-page .outcome:last-child{border-right:0;padding-right:0}.rea-ov-page .outcome:hover .outcome-go{transform:translateX(4px);color:var(--blue)}.rea-ov-page .outcome-top{display:flex;align-items:center;gap:8px;color:var(--sub);font-size:12px}.rea-ov-page .outcome-icon{width:30px;height:30px;border-radius:8px;background:var(--blue-pale);color:var(--blue);display:grid;place-items:center}.rea-ov-page .outcome-main{font-size:36px;font-weight:600;line-height:1.2;letter-spacing:-.035em;margin-top:16px;font-variant-numeric:tabular-nums}.rea-ov-page .outcome-main small{font-size:14px;letter-spacing:0;font-weight:400;color:var(--sub);margin-left:4px}.rea-ov-page .outcome-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--sub);font-size:12px;margin-top:6px}.rea-ov-page .outcome-go{transition:transform .18s,color .18s;color:var(--weak)}.rea-ov-page .people{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}.rea-ov-page .people-story{display:flex;align-items:baseline;gap:12px}.rea-ov-page .people-story b{font-size:48px;line-height:1.1;letter-spacing:-.05em;font-variant-numeric:tabular-nums}.rea-ov-page .people-story span{font-size:14px;color:var(--sub)}.rea-ov-page .people-sub{display:flex;gap:20px;margin-top:12px;color:var(--sub);font-size:12px}.rea-ov-page .people-sub strong{color:var(--ink);font-weight:600}.rea-ov-page .scope{display:inline-flex;align-items:center;gap:5px;color:var(--weak);font-size:12px;margin-top:20px}.rea-ov-page .scope svg{flex:none}.rea-ov-page .composition{padding:24px 0 0}.rea-ov-page .composition-bar{display:flex;height:18px;border-radius:9px;overflow:hidden;background:var(--quiet);gap:2px}.rea-ov-page .composition-bar button{border:0;padding:0;min-width:0;transition:filter .18s}.rea-ov-page .composition-bar button:hover{filter:brightness(.9)}.rea-ov-page .composition-bar .manual{background:var(--blue)}.rea-ov-page .composition-bar .auto{background:#a8d4ff}.rea-ov-page .composition-bar .idle{background:#d9dee5}.rea-ov-page .legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:16px}.rea-ov-page .legend button{border:0;background:none;padding:0;display:flex;align-items:center;gap:6px;color:var(--sub);font-size:12px}.rea-ov-page .legend button:hover{color:var(--blue)}.rea-ov-page .legend i{width:8px;height:8px;border-radius:50%;display:inline-block}.rea-ov-page .legend b{color:var(--ink);font-weight:600}.rea-ov-page .legend .manual i{background:var(--blue)}.rea-ov-page .legend .auto i{background:#a8d4ff}.rea-ov-page .legend .idle i{background:#d9dee5}.rea-ov-page .tool-list{border-top:1px solid var(--line)}.rea-ov-page .tool-row{width:100%;display:grid;grid-template-columns:minmax(180px,1fr) 120px 136px 20px;gap:24px;align-items:center;padding:16px 4px;border:0;border-bottom:1px solid var(--line);background:#fff;text-align:left;transition:background .18s}.rea-ov-page .tool-row:hover{background:#f8fbff}.rea-ov-page .tool-name{font-size:14px;font-weight:600}.rea-ov-page .tool-name small{display:block;margin-top:2px;color:var(--weak);font-size:12px;font-weight:400}.rea-ov-page .tool-metric{color:var(--sub);font-size:12px;white-space:nowrap}.rea-ov-page .tool-metric b{color:var(--ink);font-size:22px;line-height:1;font-weight:600;font-variant-numeric:tabular-nums;margin-right:4px}.rea-ov-page .tool-row-arrow{color:var(--blue);font-size:18px}.rea-ov-page .tool-note{margin-top:12px;color:var(--weak);font-size:12px}.rea-ov-page .note-bottom{font-size:12px;color:var(--weak);margin-top:52px}.rea-ov-page .date-more{position:relative}.rea-ov-page .time-menu{position:absolute;right:0;top:48px;min-width:156px;background:#fff;border:1px solid var(--line);border-radius:8px;box-shadow:0 6px 16px rgba(0,0,0,.08);padding:8px;z-index:10}.rea-ov-page .time-menu[hidden]{display:none}.rea-ov-page .time-menu button{display:block;width:100%;border:0;background:#fff;text-align:left;padding:8px 10px;color:var(--weak);border-radius:6px;font-size:12px}.rea-ov-page .time-menu small{display:block;color:var(--weak);padding:6px 10px 2px}.rea-ov-page .mask{position:fixed;inset:0;background:rgba(31,35,41,.32);z-index:20;opacity:0;pointer-events:none;transition:opacity .18s}.rea-ov-page .mask.open{opacity:1;pointer-events:auto}.rea-ov-page .sheet{position:fixed;top:0;right:0;bottom:0;width:min(520px,100vw);background:#fff;z-index:21;box-shadow:-8px 0 24px rgba(31,35,41,.08);transform:translateX(100%);transition:transform .2s;display:flex;flex-direction:column}.rea-ov-page .sheet.open{transform:translateX(0)}.rea-ov-page .sheet-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:28px 32px 20px;border-bottom:1px solid var(--line)}.rea-ov-page .sheet-head h2{font-size:20px;margin:0}.rea-ov-page .sheet-head .small{display:block;color:var(--weak);font-size:12px;margin-top:3px}.rea-ov-page .close{border:0;background:var(--quiet);color:var(--sub);border-radius:8px;width:36px;height:36px;font-size:21px;line-height:1}.rea-ov-page .close:hover{color:var(--ink);background:var(--blue-pale)}.rea-ov-page .sheet-body{padding:28px 32px 48px;overflow:auto}.rea-ov-page .sheet-big{font-size:48px;line-height:1.1;font-weight:600;letter-spacing:-.045em;font-variant-numeric:tabular-nums}.rea-ov-page .sheet-big small{font-size:14px;font-weight:400;color:var(--sub);letter-spacing:0;margin-left:6px}.rea-ov-page .sheet-pair{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:24px 0}.rea-ov-page .sheet-mini{padding:18px;background:var(--quiet);border-radius:8px}.rea-ov-page .sheet-mini span{font-size:12px;color:var(--sub)}.rea-ov-page .sheet-mini b{display:block;font-size:22px;margin-top:4px;font-variant-numeric:tabular-nums}.rea-ov-page .sheet-label{font-size:12px;color:var(--weak);font-weight:600;margin:28px 0 8px}.rea-ov-page .sheet-row{display:flex;justify-content:space-between;gap:16px;padding:13px 0;border-bottom:1px solid var(--line);font-size:14px}.rea-ov-page .sheet-row span:last-child{font-variant-numeric:tabular-nums;font-weight:600}.rea-ov-page .sheet-note{font-size:12px;color:var(--sub);line-height:1.8;margin:20px 0 0}.rea-ov-page .sheet-tabs{display:flex;gap:8px;overflow:auto;margin-bottom:18px}.rea-ov-page .sheet-tabs button{white-space:nowrap;border:1px solid var(--line);background:#fff;border-radius:6px;padding:6px 10px;color:var(--sub);font-size:12px}.rea-ov-page .sheet-tabs button.active{border-color:var(--blue);background:var(--blue-pale);color:var(--blue)}.rea-ov-page .employee{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line);font-size:12px}.rea-ov-page .employee b{display:block;font-size:14px;font-weight:500}.rea-ov-page .employee small{display:block;color:var(--weak)}.rea-ov-page .employee .time{color:var(--sub)}@media(max-width:900px){.rea-ov-page .seat-hero{padding:28px}.rea-ov-page .seat-card{padding:18px}.rea-ov-page .people{grid-template-columns:1fr;gap:14px}.rea-ov-page .composition{padding-top:0}}@media(max-width:640px){.rea-ov-page .wrap{padding:24px 18px 56px}.rea-ov-page .top{display:block}.rea-ov-page .top-actions{margin-top:20px;justify-content:space-between}.rea-ov-page .date{flex:1;justify-content:space-between}.rea-ov-page .date button{min-width:0;flex:1;padding:0 6px}.rea-ov-page .seat-hero{padding:24px 18px}.rea-ov-page .seat-hero-head{display:block;margin-bottom:18px}.rea-ov-page .seat-hero-head h2{font-size:21px}.rea-ov-page .seat-total{margin-top:12px}.rea-ov-page .seat-total strong{font-size:24px}.rea-ov-page .seat-cards{grid-template-columns:1fr;gap:8px}.rea-ov-page .seat-card{padding:16px 18px}.rea-ov-page .seat-card-number{margin:8px 0 0}.rea-ov-page .seat-card-number strong{font-size:34px}.rea-ov-page .seat-card-bar{margin:12px 0 8px}.rea-ov-page .seat-hero-bottom{margin-top:16px}.rea-ov-page .section{margin-top:40px}.rea-ov-page .tool-row{grid-template-columns:minmax(0,1fr) 56px 80px 12px;gap:8px;padding:14px 0}.rea-ov-page .tool-metric b{font-size:18px}.rea-ov-page .tool-name small{font-size:11px}.rea-ov-page .outcomes{grid-template-columns:1fr}.rea-ov-page .outcome,.rea-ov-page .outcome+.outcome{padding:16px 0;border-right:0;border-bottom:1px solid var(--line);min-height:0}.rea-ov-page .outcome:last-child{border:0}.rea-ov-page .outcome-main{margin-top:10px}.rea-ov-page .people-story b{font-size:42px}.rea-ov-page .sheet-head{padding:22px 20px 18px}.rea-ov-page .sheet-body{padding:22px 20px 40px}}.rea-ov-page{background:#f6f8fb}.rea-ov-page .wrap{max-width:1280px;padding:32px 28px 56px}.rea-ov-page .top{margin-bottom:20px}.rea-ov-page .dashboard-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:stretch}.rea-ov-page .seat-hero,.rea-ov-page .section{min-width:0;margin:0;padding:22px 24px;background:#fff;border:1px solid #e9eef6;border-radius:12px;box-shadow:0 1px 2px rgba(19,44,82,.04)}.rea-ov-page .section-head{align-items:center;margin-bottom:18px}.rea-ov-page .section-head h2,.rea-ov-page .seat-hero-head h2{font-size:16px;letter-spacing:0}.rea-ov-page .seat-hero-head{align-items:center;margin-bottom:12px}.rea-ov-page .seat-hero-title{display:none}.rea-ov-page .seat-hero-head h2{margin:0}.rea-ov-page .seat-total{gap:5px;font-size:12px}.rea-ov-page .seat-total strong{font-size:29px}.rea-ov-page .seat-total .divider{font-size:17px;margin:0}.rea-ov-page .seat-overview{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px;color:var(--sub);font-size:12px}.rea-ov-page .seat-overview b{color:var(--blue);font-weight:600}.rea-ov-page .seat-cards{display:block;border-top:1px solid var(--line)}.rea-ov-page .seat-card{display:grid;grid-template-columns:80px minmax(0,1fr) 72px 72px 10px;align-items:center;gap:10px;padding:13px 0;border:0;border-bottom:1px solid var(--line);border-radius:0;background:#fff;box-shadow:none}.rea-ov-page .seat-card:hover{transform:none;box-shadow:none;background:#f8fbff}.rea-ov-page .seat-card-top{display:block}.rea-ov-page .seat-card-name{font-size:14px}.rea-ov-page .seat-card-number{display:block;margin:0;text-align:right}.rea-ov-page .seat-card-number strong{font-size:16px;letter-spacing:0}.rea-ov-page .seat-card-number span{font-size:12px}.rea-ov-page .seat-card-bar{height:7px;margin:0}.rea-ov-page .seat-card-foot{display:block;color:var(--sub);text-align:right}.rea-ov-page .seat-card-foot span:last-child{display:none}.rea-ov-page .seat-card-arrow{font-size:15px}.rea-ov-page .seat-hero-bottom{margin-top:14px}.rea-ov-page .seat-hero-bottom span{color:var(--sub)}.rea-ov-page .seat-hero-bottom .text-link{font-size:12px}.rea-ov-page .people{display:block}.rea-ov-page .people-main{display:flex;align-items:center;justify-content:space-between;gap:16px}.rea-ov-page .people-story b{font-size:38px}.rea-ov-page .people-story span{font-size:13px}.rea-ov-page .people-sub{display:block;margin:0;text-align:right}.rea-ov-page .people-sub span{display:block}.rea-ov-page .people-sub span+span{margin-top:3px}.rea-ov-page .composition{padding:20px 0 0}.rea-ov-page .composition-bar{height:14px}.rea-ov-page .legend{margin-top:12px;gap:8px 14px}.rea-ov-page .scope{margin-top:16px;color:var(--sub)}.rea-ov-page .tool-column-head{display:grid;grid-template-columns:minmax(0,1fr) 80px 92px 12px;gap:10px;padding:0 2px 8px;color:var(--sub);font-size:12px}.rea-ov-page .tool-column-head span:nth-child(n+2){text-align:right}.rea-ov-page .tool-row{grid-template-columns:minmax(0,1fr) 80px 92px 12px;gap:10px;padding:10px 2px}.rea-ov-page .tool-name{font-size:13px}.rea-ov-page .tool-name small{display:none}.rea-ov-page .tool-name .tool-progress{display:block;width:100%;height:4px;margin-top:7px;border-radius:3px;background:#e6edf7;overflow:hidden}.rea-ov-page .tool-progress i{display:block;height:100%;border-radius:3px;background:var(--blue)}.rea-ov-page .tool-metric{text-align:right}.rea-ov-page .tool-metric b{font-size:17px}.rea-ov-page .tool-note{margin-top:8px;color:var(--sub)}.rea-ov-page .section-head .tool-note{margin:0}.rea-ov-page .outcomes{display:grid;grid-template-columns:1fr;gap:9px}.rea-ov-page .outcome,.rea-ov-page .outcome+.outcome,.rea-ov-page .outcome:last-child{min-height:0;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border:0;border-radius:8px;background:var(--quiet)}.rea-ov-page .outcome:hover{background:var(--blue-pale)}.rea-ov-page .result-label{display:flex;align-items:center;gap:10px;min-width:0}.rea-ov-page .result-label b{display:block;font-size:13px;font-weight:500}.rea-ov-page .result-label small{display:block;color:var(--sub);font-size:12px}.rea-ov-page .outcome-main{margin:0;font-size:26px;white-space:nowrap}.rea-ov-page .outcome-main small{font-size:12px}.rea-ov-page .outcome-icon{flex:none;width:28px;height:28px}.rea-ov-page .outcome-foot,.rea-ov-page .outcome-go{display:none}.rea-ov-page .note-bottom{margin-top:20px}.rea-ov-page .range-label{color:var(--sub);font-size:12px;margin-top:5px}@media(max-width:960px){.rea-ov-page .dashboard-grid{grid-template-columns:1fr}.rea-ov-page .seat-hero,.rea-ov-page .section{padding:20px 22px}}@media(max-width:640px){.rea-ov-page .wrap{padding:20px 14px 40px}.rea-ov-page .top{margin-bottom:16px}.rea-ov-page .dashboard-grid{gap:14px}.rea-ov-page .seat-hero,.rea-ov-page .section{padding:18px}.rea-ov-page .seat-hero-head{display:flex;margin-bottom:10px}.rea-ov-page .seat-hero-head h2{font-size:16px}.rea-ov-page .seat-total{margin:0}.rea-ov-page .seat-total strong{font-size:23px}.rea-ov-page .seat-card{grid-template-columns:62px minmax(0,1fr) 52px 10px;gap:8px}.rea-ov-page .seat-card-number strong{font-size:14px}.rea-ov-page .seat-card-foot{display:none}.rea-ov-page .seat-hero-bottom{display:block}.rea-ov-page .seat-hero-bottom .text-link{display:block;margin-top:6px}.rea-ov-page .people-main{display:block}.rea-ov-page .people-sub{text-align:left;margin-top:8px}.rea-ov-page .people-sub span{display:inline-block}.rea-ov-page .people-sub span+span{margin-left:12px}.rea-ov-page .tool-column-head,.rea-ov-page .tool-row{grid-template-columns:minmax(0,1fr) 57px 75px 12px;gap:6px}.rea-ov-page .tool-metric b{font-size:16px}.rea-ov-page .tool-row{padding:10px 0}.rea-ov-page .outcome-main{font-size:23px}}.rea-ov-page .seat-total .divider{color:var(--weak)}.rea-ov-page .seat-card-bar,.rea-ov-page .tool-name .tool-progress{background:var(--blue-pale)}.rea-ov-page .seat-card:hover,.rea-ov-page .tool-row:hover{background:var(--blue-pale)}@media(prefers-reduced-motion:reduce){.rea-ov-page *,.rea-ov-page *:before,.rea-ov-page *:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+</script>
+<script type="text/plain" id="srcOverviewScript">const DATA={
+ day:{label:'今日',range:'2026.10.29 · 演示',sent:564,replied:194,tasks:8,material:14,materialPeople:8,hosting:28,hostingPeople:5,service:24,active:8,repeat:null,activeTiers:[2,1,5],serviceTiers:[7,3,14],tools:[[4,8],[5,13],[2,4],[3,6],[1,2]],prev:null},
+ week:{label:'近一周',range:'2026.10.23—2026.10.29 · 演示',sent:1548,replied:520,tasks:25,material:69,materialPeople:19,hosting:186,hostingPeople:9,service:24,active:19,repeat:null,activeTiers:[5,3,11],serviceTiers:[7,3,14],tools:[[10,29],[14,76],[7,21],[8,19],[5,10]],prev:null},
+ month:{label:'近一月',range:'2026.09.30—2026.10.29 · 演示',sent:7128,replied:2521,tasks:147,material:206,materialPeople:20,hosting:744,hostingPeople:11,service:26,active:20,repeat:18,activeTiers:[5,3,12],serviceTiers:[7,3,16],tools:[[12,68],[16,174],[9,54],[10,42],[6,27]],prev:{sent:6800,replied:2200,tasks:130,material:180,materialPeople:18,hosting:650,hostingPeople:10,service:24}},
+ quarter:{label:'近三月',range:'2026.07.30—2026.10.29 · 演示',sent:22032,replied:7831,tasks:475,material:437,materialPeople:20,hosting:2108,hostingPeople:13,service:28,active:20,repeat:null,activeTiers:[5,3,12],serviceTiers:[7,3,18],tools:[[13,191],[17,512],[10,168],[12,126],[7,73]],prev:null}
+};
+const TIERS=[{name:'标准版',bought:9,assigned:8,people:[{name:'韩雪',dept:'产品部',last:'从未使用'}]},{name:'高级版',bought:5,assigned:4,people:[{name:'许诺',dept:'设计部',last:'从未使用'}]},{name:'旗舰版',bought:18,assigned:18,people:[{name:'邓超',dept:'市场部',last:'38 天前'},{name:'蒋涛',dept:'人力行政部',last:'44 天前'},{name:'石磊',dept:'运营部',last:'21 天前'},{name:'唐颖',dept:'销售部',last:'9 天前'}]}];
+const TOOL_GROUPS=[
+ {name:'客户拓展',hint:'加好友 · 拉人进群',features:['群内好友','通讯录加人','企微添加客户','拉人进群']},
+ {name:'内容发送',hint:'发给好友 · 发给群组',features:['发图文到好友','发图文到群','文件分享','群发助手']},
+ {name:'AI 辅助',hint:'智能回复 · 画像分析',features:['智能回复采纳','画像分析完成','意向客户识别']},
+ {name:'内容运营',hint:'朋友圈 · 短视频平台',features:['朋友圈互动','小红书运营','抖音评论互动','视频号互动']},
+ {name:'客户维护',hint:'清理 · 客户同步',features:['智能清死粉','消息检测死粉','客户同步']}
+];
+const $=s=>document.querySelector(s),fmt=n=>new Intl.NumberFormat('zh-CN').format(n);let period='month',sheetKind=null,sheetTier='all',sheetStatus='assigned',sheetTool=0,lastFocus=null;
+function current(){return DATA[period]}function setText(id,value){$(id).textContent=value}
+function render(){
+ const d=current();
+ const assigned=TIERS.reduce((n,t)=>n+t.assigned,0),bought=TIERS.reduce((n,t)=>n+t.bought,0);
+ setText('#assigned-total',assigned);
+ setText('#bought-total',bought);
+ setText('#seat-rate',bought?(100*assigned/bought).toFixed(1)+'%':'—');
+ setText('#range-label',d.range);
+ setText('#material-number',fmt(d.material));
+ setText('#material-people',d.materialPeople+' 人参与');
+ setText('#hosting-number',fmt(d.hosting));
+ setText('#hosting-people','覆盖 '+d.hostingPeople+' 人');
+ setText('#task-number',fmt(d.tasks));
+ setText('#task-trend',d.prev?`较上期 +${fmt(d.tasks-d.prev.tasks)} 条`:'点击查看详情');
+ setText('#manual-number',d.active);
+ setText('#service-number',d.service+' 人');
+ $('#repeat-text').innerHTML=d.repeat!==null?`连续两期取用素材 <strong>${d.repeat} 人</strong>`:'';
+ setText('#manual-legend',d.active);
+ setText('#auto-legend',d.service-d.active);
+ setText('#idle-legend',30-d.service);
+ $('#composition-bar').innerHTML=`<button class="manual" data-sheet="people" style="width:${d.active/30*100}%" aria-label="主动操作 ${d.active} 人"></button><button class="auto" data-sheet="people" style="width:${(d.service-d.active)/30*100}%" aria-label="仅自动服务 ${d.service-d.active} 人"></button><button class="idle" data-sheet="seats" data-tier="all" style="width:${(30-d.service)/30*100}%" aria-label="无服务记录 ${30-d.service} 人"></button>`;
+ $('#tiers').innerHTML=TIERS.map((t,i)=>{
+   const unassigned=t.bought-t.assigned;
+   return `<button class="seat-card" type="button" data-sheet="seats" data-tier="${i}" aria-label="${t.name}，已购 ${t.bought} 席，已分配 ${t.assigned} 席，本期 ${d.activeTiers[i]} 人主动操作，查看明细"><span class="seat-card-top"><span class="seat-card-name">${t.name}</span></span><span class="seat-card-bar" aria-hidden="true"><i style="width:${t.bought?t.assigned/t.bought*100:0}%"></i></span><span class="seat-card-number"><strong>${t.assigned}</strong><span> / ${t.bought}</span></span><span class="seat-card-foot">${unassigned?unassigned+' 席待分配':'全部已分配'}</span><span class="seat-card-arrow">›</span></button>`;
+ }).join('');
+ const maxTools=Math.max(1,...d.tools.map(([,actions])=>actions));
+ $('#tool-list').innerHTML=TOOL_GROUPS.map((g,i)=>({g,i,people:d.tools[i][0],actions:d.tools[i][1]})).sort((a,b)=>b.actions-a.actions).map(({g,i,people,actions})=>`<button class="tool-row" type="button" data-sheet="tool" data-tool="${i}" aria-label="${g.name}，${people} 人参与，完成 ${actions} 次，查看功能明细"><span class="tool-name">${g.name}<span class="tool-progress" aria-hidden="true"><i style="width:${actions/maxTools*100}%"></i></span></span><span class="tool-metric"><b>${people}</b>人</span><span class="tool-metric"><b>${fmt(actions)}</b>次</span><span class="tool-row-arrow">›</span></button>`).join('');
+ document.querySelectorAll('[data-period]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.period===period)));
+ if(sheetKind)fillSheet();
+}
+function row(label,value){return `<div class="sheet-row"><span>${label}</span><span>${value}</span></div>`}function mini(label,value){return `<div class="sheet-mini"><span>${label}</span><b>${value}</b></div>`}
+function fillSheet(){const d=current(),p=d.prev;let title='',sub=d.label,body='';if(sheetKind==='definitions'){title='数据说明';sub='当前页面的统计范围';body=`${row('已购席位','32 席')}${row('已分配席位','30 席')}${row('主动操作',d.active+' 人')}${row('有服务记录',d.service+' 人')}<p class="sheet-note">席位是当前有效授权；其他数字随时间范围变化。员工主动操作包含素材取用和 App 工具完成，预览中的工具结果是演示数据。自动任务和托管动作只计入服务记录。成果不相加，也不折算工时或金额。</p>`}
+else if(sheetKind==='replies'){title='客户回复';body=`<div class="sheet-big">${fmt(d.replied)}<small>人回复</small></div><div class="sheet-pair">${mini('群发已发送',fmt(d.sent)+' 人')}${mini('回复占已发送',(100*d.replied/d.sent).toFixed(1)+'%')}</div>${p?row('上期回复',fmt(p.replied)+' 人'):''}<p class="sheet-note">只统计群发好友任务中已发送的好友及其回复。进入任务看板可核对任务明细；这里的回复数不代表新增成交。</p>`}
+else if(sheetKind==='material'){title='素材取用';body=`<div class="sheet-big">${fmt(d.material)}<small>次取用</small></div><div class="sheet-pair">${mini('主动取用员工',d.materialPeople+' 人')}${mini('上期取用',p?fmt(p.material)+' 次':'数据不足')}</div><p class="sheet-note">员工自行复制、保存、一键发送或一键发圈的取用事件。任务执行自动带出的素材不计入。</p><button class="text-link" type="button" data-overview-page="企业微信看板" style="margin-top:16px">查看素材看板 ↗</button>`}
+else if(sheetKind==='hosting'){title='AI托管';body=`<div class="sheet-big">${fmt(d.hosting)}<small>次动作</small></div><div class="sheet-pair">${mini('覆盖员工',d.hostingPeople+' 人')}${mini('上期动作',p?fmt(p.hosting)+' 次':'数据不足')}</div>${row('朋友圈互动 / 画像分析 / 自动打招呼','托管自有动作')}<p class="sheet-note">托管代跑的营销任务由任务台账统计，这里只计托管自有动作。明细来自托管工作日志，不包含聊天内容。</p>`}
+else if(sheetKind==='tasks'){title='营销任务';body=`<div class="sheet-big">${fmt(d.tasks)}<small>条做满</small></div><div class="sheet-pair">${mini('本期做满',fmt(d.tasks)+' 条')}${mini('上期做满',p?fmt(p.tasks)+' 条':'数据不足')}</div><div class="sheet-label">群发好友任务</div>${row('已发送好友',fmt(d.sent)+' 人')}${row('其中回复',fmt(d.replied)+' 人')}<button class="text-link" type="button" data-sheet="replies" style="margin-top:16px">查看回复详情 ↗</button><p class="sheet-note">按任务看板的任务台账计算。任务做满条数与员工账号上的执行人次是两种不同单位。</p><button class="text-link" type="button" data-overview-page="微小助看板" style="margin-top:16px">查看任务看板 ↗</button>`}
+else if(sheetKind==='tool'){const g=TOOL_GROUPS[sheetTool],people=d.tools[sheetTool][0],actions=d.tools[sheetTool][1],weights=[.38,.27,.2];let used=0;title=g.name;body=`<div class="sheet-big">${fmt(actions)}<small>次完成</small></div><div class="sheet-pair">${mini('参与员工',people+' 人')}${mini('有结果的功能',g.features.length+' 项示例')}</div><div class="sheet-label">具体功能</div>${g.features.map((name,i)=>{const count=i===g.features.length-1?actions-used:Math.floor(actions*(weights[i]||.15));used+=count;return row(name,fmt(count)+' 次')}).join('')}<p class="sheet-note">只计算员工主动完成且取得结果回执的操作；同一员工在多项功能里可重复出现，不能把人数相加。这里的功能与数字用于演示交互，正式版按功能 ID 的实际结果事件展开。</p>`}
+else if(sheetKind==='people'){title='员工使用构成';const auto=d.service-d.active,idle=30-d.service;body=`<div class="sheet-big">${d.active}<small>人主动操作</small></div><div class="sheet-pair">${mini('有服务记录',d.service+' / 30 人')}${mini('连续两期取用素材',d.repeat!==null?d.repeat+' 人':'数据不足')}</div>${row('员工主动操作',d.active+' 人')}${row('仅自动服务',auto+' 人')}${row('本期无记录',idle+' 人')}<p class="sheet-note">主动操作包含素材取用与 App 工具完成；预览中的工具用户都属于已有素材取用员工。仅自动服务指账号上有任务执行或托管动作，但没有已采集的本人操作。</p>`}
+else if(sheetKind==='seats'){
+ title='席位与员工';
+ const selected=sheetTier==='all'?TIERS:[TIERS[Number(sheetTier)]],totalBought=selected.reduce((n,t)=>n+t.bought,0),totalAssigned=selected.reduce((n,t)=>n+t.assigned,0);
+ sub='当前有效席位 · '+d.label;
+ const versionTabs=`<div class="sheet-tabs"><button class="${sheetTier==='all'?'active':''}" data-sheet="seats" data-tier="all">全部版本</button>${TIERS.map((t,i)=>`<button class="${String(i)===sheetTier?'active':''}" data-sheet="seats" data-tier="${i}">${t.name}</button>`).join('')}</div>`;
+ const statusTabs=`<div class="sheet-tabs seat-switch"><button class="${sheetStatus==='assigned'?'active':''}" data-seat-status="assigned">已分配 ${totalAssigned}</button><button class="${sheetStatus==='unassigned'?'active':''}" data-seat-status="unassigned">未分配 ${totalBought-totalAssigned}</button></div>`;
+ if(sheetStatus==='unassigned'){
+   body=`<div class="sheet-big">${totalBought-totalAssigned}<small>个未分配席位</small></div>${versionTabs}${statusTabs}${selected.map(t=>row(t.name,(t.bought-t.assigned)+' 个')).join('')}<p class="sheet-note">未分配席位尚无员工账号。到期日按授权记录里的购买批次查看；没有批次分配关系时，不推断某批还剩几个席位。</p>`;
+ }else{
+   const examples=selected.flatMap(t=>t.people.filter(e=>e.last==='从未使用'||(['day','week'].includes(period))||(['month'].includes(period)&&['38 天前','44 天前'].includes(e.last))));
+   body=`<div class="sheet-big">${totalAssigned}<small>/ ${totalBought} 已分配</small></div>${versionTabs}${statusTabs}${selected.map(t=>{const i=TIERS.indexOf(t);return row(t.name,`${d.activeTiers[i]} 人主动 · ${d.serviceTiers[i]} 人有服务`)}).join('')}${row('本期无服务记录',selected.reduce((n,t)=>n+t.assigned-d.serviceTiers[TIERS.indexOf(t)],0)+' 人')}<div class="sheet-label">本期无服务记录的员工</div>${examples.map(e=>`<div class="employee"><span><b>${e.name}</b><small>${e.dept}</small></span><span class="time">${e.last}</span></div>`).join('')||'<p class="sheet-note">这个版本在所选时间内没有无服务记录的员工。</p>'}<p class="sheet-note">名单用于查询分配与使用情况，不按员工排名。最后服务记录不受时间范围限制。</p>`;
+ }
+}
+setText('#sheet-title',title);setText('#sheet-subtitle',sub);$('#sheet-body').innerHTML=body}
+function openSheet(kind,tier='all',tool=0){lastFocus=document.activeElement;sheetKind=kind;sheetTier=tier;sheetTool=tool;if(kind==='seats')sheetStatus='assigned';fillSheet();$('#mask').classList.add('open');$('#sheet').classList.add('open');$('#sheet').setAttribute('aria-hidden','false');document.body.style.overflow='hidden';$('#sheet-close').focus()}
+function closeSheet(){sheetKind=null;$('#mask').classList.remove('open');$('#sheet').classList.remove('open');$('#sheet').setAttribute('aria-hidden','true');document.body.style.overflow='';lastFocus?.focus()}
+function closeTimeMenu(){const menu=$('#time-menu');menu.hidden=true;$('#time-more').setAttribute('aria-expanded','false')}
+document.addEventListener('click',e=>{
+ if(e.target.closest('#time-more')){const menu=$('#time-menu');menu.hidden=!menu.hidden;$('#time-more').setAttribute('aria-expanded',String(!menu.hidden));return}
+ if(!e.target.closest('.date-more'))closeTimeMenu();
+ const page=e.target.closest('[data-overview-page]');if(page){parent.postMessage({reaPage:page.dataset.overviewPage},'*');return}
+ const time=e.target.closest('[data-period]');if(time){period=time.dataset.period;render();return}
+ const seatTab=e.target.closest('[data-seat-status]');if(seatTab){sheetStatus=seatTab.dataset.seatStatus;fillSheet();return}
+ const trigger=e.target.closest('[data-sheet]');if(trigger){if(sheetKind==='seats'&&trigger.dataset.sheet==='seats'&&trigger.dataset.tier){sheetTier=trigger.dataset.tier;fillSheet();return}openSheet(trigger.dataset.sheet,trigger.dataset.tier||'all',Number(trigger.dataset.tool||0));return}
+ if(e.target.id==='mask'||e.target.id==='sheet-close')closeSheet();
+});
+document.addEventListener('keydown',e=>{
+ if(e.key==='Escape'&&!$('#time-menu').hidden){closeTimeMenu();$('#time-more').focus();return}
+ if(!sheetKind)return;
+ if(e.key==='Escape'){closeSheet();return}
+ if(e.key==='Tab'){const items=[...$('#sheet').querySelectorAll('button')],first=items[0],last=items[items.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}
+});
+render();</script>
 <!-- 载体③·微小助看板覆盖块：视图③「线上后台复刻」里被覆盖页（微小助看板）的正文，
      由 all.html 的 reaSplice() 按页名替换进去（ADR-0043：线上后台是设计面，可逐页覆盖）。
      这里是**片段**不是整页：只填 <div class="pagecontent"> 里的那一段，外壳与样式仍走快照。
@@ -11751,7 +11898,8 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
                        刻意不把正文抄一份进来：抄了就成一份会过期的副本，
                        重抓源目录后静默与线上脱钩，而这一页的正文本来不该变。
      ============================================================ */
-  var REA_BOARD_PAGE = '微小助看板';      // 只服务 reaLanding()（视图③的落地页），与覆盖是两件事
+  var REA_BOARD_PAGE = '微小助看板';      // 现网任务看板的注册表页名
+  var REA_OVERVIEW_PAGE = '使用总览';      // 看板入口首页，运行时克隆任务看板外壳
   var REA_MAT_PAGE = '素材库 · 新建';     // 素材库的「· 新建」子页（独立表单路由，见 docs/09 §2.2）
   var REA_MAT_LIST = REA_MAT_PAGE.split(' · ')[0];   // 它保存/取消后回落的那张列表页名
   var REA_XHS_PAGE = '新小红书运营';     // 小红书营销的模块页——「新小红书运营 · 新建」的「取消」回落到这里
@@ -19254,6 +19402,7 @@ renderTable();
   }
 
   var REA_COVER = {
+    '使用总览': { html: 'srcOverview', css: docOf('srcOverviewStyle'), js: function(){ return docOf('srcOverviewScript'); } },
     '微小助看板':    { html: 'srcBoard', css: REA_BOARD_CSS, js: reaBoardJs },
     '企业微信看板':  { html: 'srcBoardMat', css: REA_BOARD_CSS + REA_MB_CSS, js: reaBoardMatJs },
     '企业微信看板 · 素材明细': { html: 'srcMatDetail', css: REA_BOARD_CSS + REA_MB_CSS, js: reaMatDetailJs },
@@ -19293,12 +19442,12 @@ renderTable();
     return rest.slice(0, a) + reaCoverHtml(cv.html) + rest.slice(b);
   }
 
-  /* 视图③的落地页＝微小助看板（ADR-0043：它是微小助模块的脸）。
+  /* 视图③的落地页＝使用总览（看板组首页）。
      按页名反查、不写死下标——页序跟着线上后台走，写死会在下次重抓后静默错页。 */
   function reaLanding(){
     var P = window.__REAL_ADMIN__;
     for (var i = 0; i < P.pages.length; i++){
-      if (P.pages[i].name === REA_BOARD_PAGE) return i;
+      if (P.pages[i].name === REA_OVERVIEW_PAGE) return i;
     }
     return 0;
   }
@@ -19316,7 +19465,7 @@ renderTable();
     }
     var board = find(REA_BOARD_PAGE);
     if (board){
-      var add = [REA_TASKS_PAGE, REA_DETAIL_TASK];
+      var add = [REA_OVERVIEW_PAGE, REA_TASKS_PAGE, REA_DETAIL_TASK];
       for (i = 0; i < add.length; i++){
         P.pages.push({
           name: add[i],
@@ -19867,7 +20016,7 @@ renderTable();
 
   var REA_HDR = 'ykSideTwoColSecondaryHeader">';        // 侧栏二级列表的标题
   var REA_LIST = 'ykSideTwoColSecondaryList">';        // 侧栏二级列表本体
-  /* 侧栏一级项「数据看板」那一组按 任务／悬浮窗／素材 重排（2026-10-26 与产品经理对齐）；
+  /* 侧栏一级项「数据看板」点击后进入使用总览；二级仍按 任务／悬浮窗／素材 重排。
      不在表里的项原序跟在后面。组名「数据看板」在稿子里显示成「看板」。
      这两条原先写在页内脚本里、只管当前这一页的右列；现在折叠态的悬停浮层也要用，
      挪到 reaMenuIndex() 一处维护，两边共用同一份。 */
@@ -20180,7 +20329,7 @@ renderTable();
       seen[c].sort(function(a, b){
         return rankOf(P.pages[a].name) - rankOf(P.pages[b].name) || a - b;
       });
-      reaCatFirst[c] = P.pages[seen[c][0]].name;
+      reaCatFirst[c] = c === '数据看板' ? REA_OVERVIEW_PAGE : P.pages[seen[c][0]].name;
     }
     /* 顶部一级导航的落地页 = 落在该导航下、pages[] 里最靠前的那一页。
        与 reaCatFirst 同一套「组内第一页」定义，不另立第二套（原先担心的 微小助 与默认落地页
@@ -20191,6 +20340,7 @@ renderTable();
       var nav = reaTopOf(P.pages[i].rest);
       if (nav && !(nav in reaTopFirst)) reaTopFirst[nav] = P.pages[i].name;
     }
+    if (reaTopFirst['微小助']) reaTopFirst['微小助'] = REA_OVERVIEW_PAGE;
     /* 素材库新建页的「所属分组」下拉，选项就是列表页侧栏那棵树里的真分组——
        从快照里读，不另编一份；重抓后分组变了，下拉跟着变。 */
     for (i = 0; i < P.pages.length; i++){
@@ -20238,7 +20388,7 @@ renderTable();
   }
 
   /* 切到本视图时：已加载则直接重进，未加载则拉载体文件。
-     落地页是微小助看板（ADR-0043：它是微小助模块的脸，运营进模块第一眼就是它），
+     落地页是使用总览（管理员进入看板组的第一眼），
      由 reaLanding() 按页名反查得来；之后一来一回都停在上次那一页。 */
   function reaEnter(){
     var P = window.__REAL_ADMIN__;
