@@ -11846,7 +11846,7 @@ body .subapp{background:#F6F8FB!important}
 /* 合并卡：卡头只留「部门 / 员工」切换器，排序控件下到列表的列名行里。 */
 .rea-bd-cmp-switch{margin-left:2px}
 .rea-bd-cmp [hidden]{display:none!important}
-.rea-bd-cmp-body{display:flex;flex:1 1 auto;flex-direction:column;min-height:340px}
+.rea-bd-cmp-body{display:flex;flex:1 1 auto;flex-direction:column}
 .rea-bd-cmp-pane{display:flex;flex:1 1 auto;flex-direction:column;min-height:0}
 /* 卡头只有一种写法：标题 ＋ 自己的控件 ＋ 右侧的下钻链接／列名 */
 .rea-bd-ch{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:2px 0 14px}
@@ -11979,7 +11979,7 @@ body .subapp{background:#F6F8FB!important}
    颜色跟着大类走、不跟名次走（ADR-0085），环与横条、浮层同一套值。
    段与段之间留 2 的白缝；0 条的大类不画段，横条上仍写 0。 */
 #rea-bd-type{display:flex;flex-direction:column}
-.rea-td{position:relative;display:flex;align-items:stretch;gap:22px;width:100%;flex:1 1 auto;min-height:300px;margin-top:2px}
+.rea-td{position:relative;display:flex;align-items:stretch;gap:22px;width:100%;flex:1 1 auto;margin-top:2px}
 .rea-td-l{flex:0 0 40%;max-width:290px;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
 .rea-td-r{flex:1 1 60%;min-width:0;display:flex;flex-direction:column}
 .rea-bd-tring-fig{position:relative;width:206px;height:206px;flex:0 0 auto;max-width:100%;aspect-ratio:1;transition:opacity .18s}
@@ -12089,8 +12089,8 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-lhead--org .qty{flex:0 0 64px}
 .rea-bd-lhead--ld{gap:12px}
 .rea-bd-lhead--ld .rk{flex:0 0 34px}
-.rea-bd-lhead--ld .nm{flex:0 0 88px}
-.rea-bd-lhead--ld .dept{flex:0 0 92px}
+.rea-bd-lhead--ld .nm{flex:0 1 88px;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.rea-bd-lhead--ld .dept{flex:0 1 92px;min-width:0;overflow:hidden;text-overflow:ellipsis}
 .rea-bd-lhead--ld .track{flex:1 1 auto;min-width:60px}
 .rea-bd-lhead--ld .qty{flex:0 0 62px}
 .rea-bd-lhead--ld .rate{flex:0 0 52px}
@@ -12099,10 +12099,17 @@ body .subapp{background:#F6F8FB!important}
 /* ---------- 部门完成情况（人次） ----------
    一条细长的蓝条 ＋ 右对齐的粗体百分比 ＋ 该部门的应执行人次。
    条只编码值，不按阈值换色（PRD §5.6）：8 行一列下来就是一把尺子。 */
-.rea-bd-org{display:flex;flex:1 1 auto;flex-direction:column;margin-top:-2px;max-height:320px;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:#D6DDE8 transparent}
+/* 部门列表只在卡内滚：默认亮出 5 行（5 × 40），第 6 个部门起滚进来，卡不再跟着部门数长高。
+   滚动条细而淡；滚得动时列表底部压一层白渐隐，提示下面还有。 */
+.rea-bd-org{display:flex;flex:1 1 auto;flex-direction:column;max-height:200px;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:#D6DDE8 transparent}
 .rea-bd-org::-webkit-scrollbar{width:6px}
 .rea-bd-org::-webkit-scrollbar-thumb{background:#D6DDE8;border-radius:3px}
 .rea-bd-org::-webkit-scrollbar-track{background:transparent}
+/* 白渐隐挂在页脚上沿、压住最后一行的下沿（sticky 伪元素在 scrollTop 0 时看不见，不能用） */
+.rea-bd-cmp-pane .rea-bd-org-foot{position:relative}
+.rea-bd-org.is-more+.rea-bd-org-foot::before{content:"";position:absolute;left:0;right:6px;bottom:100%;height:18px;pointer-events:none;background:linear-gradient(180deg,rgba(255,255,255,0),#fff 58%)}
+/* 滚到底就不该再渐隐——最后一行的下半截被压白会读成「这行掉了」 */
+.rea-bd-org.is-end+.rea-bd-org-foot::before{display:none}
 /* 列名行压在列表上方之后，列表从第一行起排：列名底下空一截会读成「这两块不是一回事」 */
 .rea-bd-org-in{margin:0}
 .rea-bd-org-row{display:flex;align-items:center;gap:14px;min-height:40px;padding:4px 8px;margin:0 -8px;border-radius:6px;cursor:pointer;border-top:1px solid #F4F6FA}
@@ -12117,6 +12124,8 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-org-row .rate{flex:0 0 52px;text-align:right;color:#1F2329;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums}
 .rea-bd-org-row .qty{flex:0 0 64px;text-align:right;color:#8F959E;font-size:12px;white-space:nowrap;font-variant-numeric:tabular-nums}
 .rea-bd-org-foot{display:flex;align-items:center;gap:12px;margin-top:10px;padding-top:10px;border-top:1px solid #F0F2F5;color:#8F959E;font-size:12px}
+/* 同一行的卡被邻卡撑高时，页脚贴着卡底：与右卡页脚同一条线，中间不留一块空白 */
+.rea-bd-cmp-pane .rea-bd-org-foot,.rea-bd-cmp-pane .rea-bd-ld-foot{margin-top:auto}
 
 /* ---------- 小节标题 ---------- */
 .rea-bd-filters{padding-top:16px}
@@ -12270,15 +12279,19 @@ body .subapp{background:#F6F8FB!important}
 .rea-tr-tip .r.over i{background:#FAAD14}
 
 /* ---------- 员工完成情况 ---------- */
-.rea-bd-ld{display:flex;flex:1 1 auto;flex-direction:column;justify-content:flex-start}
-.rea-bd-ld-row{display:flex;align-items:center;gap:12px;padding:0 8px;margin:0 -8px;min-height:48px;border-top:1px solid #F7F8FA;border-radius:6px;cursor:pointer}
+/* 员工面前 5 名，与部门面同样 5 × 40 高，切「部门 / 员工」时卡不跳。 */
+.rea-bd-ld{display:flex;flex:1 1 auto;flex-direction:column;justify-content:flex-start;max-height:200px;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:#D6DDE8 transparent}
+.rea-bd-ld::-webkit-scrollbar{width:6px}
+.rea-bd-ld::-webkit-scrollbar-thumb{background:#D6DDE8;border-radius:3px}
+.rea-bd-ld::-webkit-scrollbar-track{background:transparent}
+.rea-bd-ld-row{display:flex;align-items:center;gap:12px;padding:0 8px;margin:0 -8px;min-height:40px;border-top:1px solid #F7F8FA;border-radius:6px;cursor:pointer}
 .rea-bd-ld-row:first-of-type{border-top:0}
 .rea-bd-ld-row:hover{background:#F7F9FC}
 .rea-bd-ld .rk{flex:0 0 34px}
 .rea-bd-ld .rk b,.rea-bd-rk{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 5px;border-radius:6px;background:#E6F4FF;color:#1677FF;font-size:12px;font-weight:600;font-variant-numeric:tabular-nums}
 .rea-bd-rk{margin-right:8px;vertical-align:middle}
-.rea-bd-ld .nm{flex:0 0 88px;color:#1F2329;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.rea-bd-ld .dept{flex:0 0 92px;color:#8F959E;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rea-bd-ld .nm{flex:0 1 88px;min-width:0;color:#1F2329;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rea-bd-ld .dept{flex:0 1 92px;min-width:0;color:#8F959E;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rea-bd-ld .track{flex:1 1 auto;min-width:60px}
 .rea-bd-ld .qty{flex:0 0 62px;text-align:right;color:#8F959E;font-size:12px;font-variant-numeric:tabular-nums;white-space:nowrap}
 .rea-bd-ld .qty b{color:#1F2329;font-size:13px;font-weight:600}
@@ -13283,6 +13296,8 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '      +"</div>";',
     '  }',
     '  box.innerHTML="<div class=\\"rea-bd-org-in\\">"+h+"</div>";',
+    '  /* 部门多于 5 个（列表滚得动）时挂 is-more，底部压一层白渐隐提示还有；换窗口重算。 */',
+    '  box.scrollTop=0;box.classList.remove("is-end");box.classList.toggle("is-more",box.scrollHeight>box.clientHeight+1);',
     '  setOrgSortUi();',
     '  /* 只有一个部门时不给「平均完成率」：均值就是那一行自己的数。 */',
     '  if(foot)foot.textContent=DEPTS.length>1?"共 "+DEPTS.length+" 个部门 · 部门平均完成率 "+(sum/list.length).toFixed(1)+"%":"共 1 个部门";',
@@ -13299,8 +13314,12 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '  if(dn!==t.need)bad("部门合计的应执行 "+dn+" ≠ 窗口应执行 "+t.need);',
     '  if(dd!==t.done)bad("部门合计的已执行 "+dd+" ≠ 窗口已执行 "+t.done);',
     '}',
-    '/* 部门行的点击：去二级页「任务列表」，带上当前窗口与部门筛选。 */',
+    '/* 滚到底收起底部渐隐（is-end），往上又出来。 */',
     'var ow=document.getElementById("rea-bd-org");',
+    'if(ow)ow.addEventListener("scroll",function(){',
+    '  ow.classList.toggle("is-end",ow.scrollTop+ow.clientHeight>=ow.scrollHeight-1);',
+    '});',
+    '/* 部门行的点击：去二级页「任务列表」，带上当前窗口与部门筛选。 */',
     'if(ow)ow.addEventListener("click",function(e){',
     '  var n=e.target;',
     '  while(n&&n!==ow&&n.nodeType===1){',
