@@ -13029,16 +13029,21 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '/* 偏移量↔日期：台账只存「相对今天第几天」，画图时才换算成真实日期（今天永远是 0）。 */',
     'function dayAt(off){var d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()+off);return d}',
     'function weekStart(d){var x=new Date(d.getFullYear(),d.getMonth(),d.getDate());x.setDate(x.getDate()-((x.getDay()+6)%7));return x}',
-    '/* 轴上限取「好读的刻度」：1／2／2.5／5 的整十倍，四等分后仍是整数。',
-    '   不这么做，612 好友会写出 0/163/325/488/650 这种没法读的轴。 */',
+    '/* 轴上限取「好读的整数刻度」：步长只从 1／2／5 的整十倍里挑，四等分后每一格都是整数。',
+    '   不这么做，612 好友会写出 0/163/325/488/650 这种没法读的轴；也不许 2.5 这类步长——',
+    '   人数、条数都是整数，四等分后落成 2.5 再取整，就成了 0/3/5/8/10 这种越读越乱的刻度。',
+    '   体量小的机构（一天几个人）同样按这个尺子走：峰值 1～3 人时轴取 4，不会被压成一条线。 */',
     'function niceMax(v,steps){',
     '  steps=steps||4;',
+    '  var pow=1,i,step;',
     '  if(!(v>0))return steps;',
-    '  var raw=v/steps,pow=Math.pow(10,Math.floor(Math.log(raw)/Math.LN10)),f=raw/pow,m;',
-    '  m=f<=1?1:(f<=2?2:(f<=2.5?2.5:(f<=5?5:10)));',
-    '  var step=m*pow;',
-    '  while(step*steps<v)step*=2;',
-    '  return Math.round(step*steps);',
+    '  while(true){',
+    '    for(i=0;i<3;i++){',
+    '      step=[1,2,5][i]*pow;',
+    '      if(step*steps>=v)return step*steps;',
+    '    }',
+    '    pow*=10;',
+    '  }',
     '}',
     'function winRows(w){',
     '  var rs=rows(),out=[],i;',
@@ -18352,14 +18357,18 @@ if(window.ResizeObserver){
 
 /* ================= 取用趋势 ================= */
 var GRAN="day";
+/* 轴上限取「好读的整数刻度」：步长只从 1／2／5 的整十倍里挑，四等分后每一格都是整数。 */
 function niceMax(v,steps){
   steps=steps||4;
+  var pow=1,i,step;
   if(!(v>0))return steps;
-  var raw=v/steps,pow=Math.pow(10,Math.floor(Math.log(raw)/Math.LN10)),f=raw/pow,m;
-  m=f<=1?1:(f<=2?2:(f<=2.5?2.5:(f<=5?5:10)));
-  var step=m*pow;
-  while(step*steps<v)step*=2;
-  return Math.round(step*steps);
+  while(true){
+    for(i=0;i<3;i++){
+      step=[1,2,5][i]*pow;
+      if(step*steps>=v)return step*steps;
+    }
+    pow*=10;
+  }
 }
 function dayAt(off){var d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()+off);return d}
 function weekStart(d){var x=new Date(d.getFullYear(),d.getMonth(),d.getDate());x.setDate(x.getDate()-((x.getDay()+6)%7));return x}
