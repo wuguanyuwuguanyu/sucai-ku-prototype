@@ -20016,11 +20016,11 @@ renderTable();
 
   var REA_HDR = 'ykSideTwoColSecondaryHeader">';        // 侧栏二级列表的标题
   var REA_LIST = 'ykSideTwoColSecondaryList">';        // 侧栏二级列表本体
-  /* 侧栏一级项「数据看板」点击后进入使用总览；二级仍按 任务／悬浮窗／素材 重排。
+  /* 侧栏一级项「数据看板」只展开菜单；二级按 总览／任务／悬浮窗／素材 排列。
      不在表里的项原序跟在后面。组名「数据看板」在稿子里显示成「看板」。
      这两条原先写在页内脚本里、只管当前这一页的右列；现在折叠态的悬停浮层也要用，
      挪到 reaMenuIndex() 一处维护，两边共用同一份。 */
-  var REA_MENU_ORDER = { '数据看板': ['微小助看板', '悬浮窗看板', '企业微信看板'] };
+  var REA_MENU_ORDER = { '数据看板': ['使用总览', '微小助看板', '悬浮窗看板', '企业微信看板'] };
   var REA_MENU_TITLE = { '数据看板': '看板' };
   var REA_TOPBAR = 'ant-pro-top-nav-header-base-menu'; // 顶栏一级导航的本体
   var reaCatFirst = {};   // 一级分类名 → 该分类第一个模块页名（由数据推导，不写死）
@@ -20161,6 +20161,12 @@ renderTable();
             + 'clearTimeout(closer);'
             + 'var sp=li.querySelector(".ykMenuText"),t=sp?((sp.getAttribute("title")||sp.textContent||"").trim()):"";'
             + 'if(MENU[t])openMenu(li,t);else closeMenu();'
+          + '});'
+          + 'li.addEventListener("click",function(e){'
+            + 'var sp=li.querySelector(".ykMenuText"),t=sp?((sp.getAttribute("title")||sp.textContent||"").trim()):"";'
+            + 'if(t!=="数据看板")return;'
+            + 'e.preventDefault();e.stopPropagation();'
+            + 'if(SIDER.classList.contains("rea-collapsed"))openMenu(li,t);else drawMenu(t);'
           + '})'
         + '})(rlis[mi])}'
         /* 离开侧栏才收（浮层挂在侧栏 DOM 里，进浮层不算离开），留 140ms 给「栏 → 浮层」这一跨 */
@@ -20198,6 +20204,7 @@ renderTable();
         + 'if(!sp)return;'                       /* AntD 顶栏溢出的「…」那项没有文本，不碰 */
         + 'var t=(sp.getAttribute("title")||sp.textContent||"").trim();'
         + 'if(!t)return;'
+        + 'if(li.getAttribute("data-level")==="1"&&t==="数据看板"){li.removeAttribute("data-rea");return;}'
         + 'var to=page(t)||map[t]||null;'
         + 'if(to===CUR||t===CUR)return;'         /* 就是当前这一页／当前这一组：不接，也不标 off */
         + 'if(!to){if(li.className.indexOf("rea-off")<0)li.className+=" rea-off";return;}'
@@ -20363,6 +20370,7 @@ renderTable();
       if (!c || seen[c]) continue;
       seen[c] = 1;
       names = reaSeqOf(P.pages[i].rest).slice();
+      if (c === '数据看板' && byName[REA_OVERVIEW_PAGE]) names.unshift(REA_OVERVIEW_PAGE);
       ord = REA_MENU_ORDER[c];
       if (ord){
         /* 只在表里有的项之间换位；表里没提的项按原序排到后面（sort 在现代引擎里是稳定的） */
