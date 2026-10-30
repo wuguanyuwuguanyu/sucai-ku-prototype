@@ -9949,6 +9949,37 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
       <div class="rea-tr-chart" id="rea-tr-chart"></div>
     </div>
 
+    <!-- 任务类型占比 · 第 1 层 · 结构（条数）。
+         同一个窗口切两刀：内环是平台、外环是平台下的任务类型。
+         一条任务只有一个平台、一个类型，所以内环五段相加＝环心，外环各段相加也＝环心，
+         也等于「执行健康度」环心那颗总数——三张图看的是同一批任务。
+         平台名在环右侧竖排图例（与内环同色）：点图例行按平台进任务列表，
+         点外环一段按「平台＋类型」进任务列表（PRD §2.3b）。 -->
+    <div class="rea-bd-card rea-bd-card--w5" id="rea-bd-type">
+      <div class="rea-bd-ch"><h6>任务类型占比</h6><span class="th">条数</span></div>
+      <div class="rea-bd-tring" id="rea-bd-tring">
+        <div class="rea-bd-tring-fig" id="rea-bd-type-fig">
+          <svg viewBox="0 0 120 120" role="img" aria-label="窗口内下发的任务：内环按平台、外环按类型">
+            <circle class="track" cx="60" cy="60" r="46"></circle>
+            <circle class="track" cx="60" cy="60" r="27"></circle>
+          </svg>
+          <span class="rea-bd-tring-mid"><b id="rea-bd-type-total">0</b><span>条任务</span></span>
+        </div>
+        <ul class="rea-bd-tleg" id="rea-bd-type-legend"></ul>
+        <div class="rea-bd-tip" id="rea-bd-type-tip" role="tooltip"></div>
+      </div>
+    </div>
+
+    <!-- 群发好友回复 · 第 3 层 · 效果。数据来自台账里「群发好友」那些行；
+         统计范围与粒度都跟着页顶时间窗走（跨度 ≤ 31 天按日、更长按周）。 -->
+    <div class="rea-bd-card rea-bd-card--w7">
+      <div class="rea-bd-ch">
+        <h6>群发好友回复</h6>
+      </div>
+      <div class="rea-qft-kpis" id="rea-qft-kpis"></div>
+      <div class="rea-qft-chart" id="rea-qft-chart"></div>
+    </div>
+
     <!-- 部门 / 员工完成情况 · 第 1–2 层 · **人次**。
          两个切法合到一张卡：卡头「部门 / 员工」切换，列表整幅替换，不并排。
          部门按创建人所属部门聚合，员工按执行人聚合；同一个单位、两个切法，
@@ -10008,37 +10039,6 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
           </div>
         </div>
       </div>
-    </div>
-
-    <!-- 任务类型占比 · 第 1 层 · 结构（条数）。
-         同一个窗口切两刀：内环是平台、外环是平台下的任务类型。
-         一条任务只有一个平台、一个类型，所以内环五段相加＝环心，外环各段相加也＝环心，
-         也等于「执行健康度」环心那颗总数——三张图看的是同一批任务。
-         平台名在环右侧竖排图例（与内环同色）：点图例行按平台进任务列表，
-         点外环一段按「平台＋类型」进任务列表（PRD §2.3b）。 -->
-    <div class="rea-bd-card rea-bd-card--w5" id="rea-bd-type">
-      <div class="rea-bd-ch"><h6>任务类型占比</h6><span class="th">条数</span></div>
-      <div class="rea-bd-tring" id="rea-bd-tring">
-        <div class="rea-bd-tring-fig" id="rea-bd-type-fig">
-          <svg viewBox="0 0 120 120" role="img" aria-label="窗口内下发的任务：内环按平台、外环按类型">
-            <circle class="track" cx="60" cy="60" r="46"></circle>
-            <circle class="track" cx="60" cy="60" r="27"></circle>
-          </svg>
-          <span class="rea-bd-tring-mid"><b id="rea-bd-type-total">0</b><span>条任务</span></span>
-        </div>
-        <ul class="rea-bd-tleg" id="rea-bd-type-legend"></ul>
-        <div class="rea-bd-tip" id="rea-bd-type-tip" role="tooltip"></div>
-      </div>
-    </div>
-
-    <!-- 群发好友回复 · 第 3 层 · 效果。数据来自台账里「群发好友」那些行；
-         统计范围与粒度都跟着页顶时间窗走（跨度 ≤ 31 天按日、更长按周）。 -->
-    <div class="rea-bd-card rea-bd-card--w7">
-      <div class="rea-bd-ch">
-        <h6>群发好友回复</h6>
-      </div>
-      <div class="rea-qft-kpis" id="rea-qft-kpis"></div>
-      <div class="rea-qft-chart" id="rea-qft-chart"></div>
     </div>
 
     <!-- 任务列表 · 第 4 行 · 明细。
