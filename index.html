@@ -10148,7 +10148,7 @@ render();</script>
     </div>
 
     <!-- 执行趋势 · 第 2 层 · 过程（任务条数）。两条线同单位、同量级，共用一根纵轴；
-         统计范围与粒度都跟着页顶时间窗走（跨度 ≤ 31 天按日、更长按周），卡内没有粒度开关。
+         统计范围与粒度都跟着页顶时间窗走（跨度 ≤ 31 天按日、32–90 天按周、更长按自然月），卡内没有粒度开关。
          折线用直线段：条数是整数，平滑会把 0 → 3 连成一段不存在的缓坡。 -->
     <div class="rea-bd-card rea-bd-card--w7">
       <div class="rea-bd-ch">
@@ -10262,7 +10262,7 @@ render();</script>
     </div>
 
     <!-- 群发好友回复 · 第 3 行通栏 · 第 3 层 · 效果。数据来自台账里「群发好友」那些行；
-         统计范围与粒度都跟着页顶时间窗走（跨度 ≤ 31 天按日、更长按周）。 -->
+         统计范围与粒度都跟着页顶时间窗走（跨度 ≤ 31 天按日、32–90 天按周、更长按自然月）。 -->
     <div class="rea-bd-card rea-bd-card--w12">
       <div class="rea-bd-ch">
         <h6>群发好友回复</h6>
@@ -12705,14 +12705,14 @@ body .subapp{background:#F6F8FB!important}
      观感照 ECharts 默认款（浅网格、柱＋折线双轴、左上图例、悬停浮窗），
      但节点、尺寸、配色都自己算，免得为一张图往 8MB 的载体里再塞一个库。
      数据全部从台账的群发好友任务派生（qfSentOf），统计范围与粒度都跟着页顶时间窗走
-     （跨度 ≤ 31 天按日、更长按周），卡内没有粒度开关。2026-10-26 去掉「回补中」：效果层不再假设 T+1 只有半周数据，
-     最后一格用淡底＋「今日／本周」标记，与「执行趋势」同一套。 */
+     （≤ 31 天按日、32–90 天按周、更长按自然月），卡内没有粒度开关。2026-10-26 去掉「回补中」：效果层不再假设 T+1 只有半周数据，
+     最后一格用淡底＋「今日／本周／本月」标记，与「执行趋势」同一套。 */
   function reaQfTrendJs(){
     return `
 /* ---- 群发好友回复（随页顶时间窗） ----
    数据只来自台账里「群发好友」那几行：已发送好友＝该条任务已执行人次 × 12（每人一批好友），
    已回复好友＝已发送 × 该条的回复率（确定性演示序列，同一页每次打开都是同一份）。
-   统计范围与粒度都跟着页顶时间窗走（≤ 31 天按日、更长按周），卡内没有粒度开关。
+   统计范围与粒度都跟着页顶时间窗走（≤ 31 天按日、32–90 天按周、更长按自然月），卡内没有粒度开关。
    2026-10-26 删掉「回补中」：效果层不再假设 T+1 只有半周数据，最后一段就是最后一段。 */
 function qfSentOf(r){return (+r.getAttribute("data-bd-done"))*12}
 function qfRateOf(r){return 0.28+(((+r.getAttribute("data-bd-row"))*7)%13)/100}
@@ -12729,25 +12729,38 @@ function qfTotals(lo,hi){
   }
   return {sent:sent,rep:rep};
 }
-/* 桶：按日＝窗口里的每一天；按周＝窗口跨到的每一周（周一起）。空桶留着——
-   「那一天没发」是事实，抹掉它会让柱距说谎。 */
+/* 桶：按日＝窗口里的每一天；按周＝窗口跨到的每一周（周一起）；按月＝窗口跨到的每个自然月。
+   空桶留着——「那一段没发」是事实，抹掉它会让柱距说谎。
+   月桶的起止截在窗口边界上：首月常常不是从 1 号起、末月还没走完，
+   这类桶打上 partial，悬停时写明「部分月份」。 */
 function qfBuckets(mode){
-  var w=WIN[CURW]||WIN[DEFW],lo=w[0],hi=w[1],rs=winRows(CURW),map={},out=[],i,r,off,d,key,b;
+  var w=WIN[CURW]||WIN[DEFW],lo=w[0],hi=w[1],rs=winRows(CURW),map={},out=[],i,r,off,d,key,b,mEnd;
+  function keyOf(x){
+    if(mode==="week")return weekStart(x);
+    if(mode==="month")return monthStart(x);
+    return x;
+  }
   for(off=lo;off<=hi;off++){
-    d=dayAt(off);
-    if(mode==="week")d=weekStart(d);
+    d=keyOf(dayAt(off));
     key=String(d.getTime());
     b=map[key];
     if(!b){b=map[key]={s:d,e:dayAt(off),sent:0,rep:0,n:0};out.push(b)}
     b.e=dayAt(off);
+  }
+  if(mode==="month"&&out.length){
+    out[0].s=dayAt(lo);
+    for(i=0;i<out.length;i++){
+      b=out[i];
+      mEnd=new Date(b.s.getFullYear(),b.s.getMonth()+1,0);
+      b.partial=b.s.getDate()!==1||b.e.getDate()!==mEnd.getDate();
+    }
   }
   for(i=0;i<rs.length;i++){
     r=rs[i];
     if(r.getAttribute("data-bd-type")!=="群发好友")continue;
     off=offOf(r);
     if(off<lo||off>hi)continue;
-    d=dayAt(off);
-    if(mode==="week")d=weekStart(d);
+    d=keyOf(dayAt(off));
     b=map[String(d.getTime())];if(!b)continue;
     b.n++;b.sent+=qfSentOf(r);b.rep+=qfRepOf(r);
   }
@@ -12755,7 +12768,17 @@ function qfBuckets(mode){
   return out;
 }
 function qfMd(d){return (d.getMonth()+1)+"/"+d.getDate()}
-function qfBandTip(b){return b.e>b.s?qfMd(b.s)+" ~ "+qfMd(b.e):qfMd(b.s)}
+/* 月轴标签：今年的月写「9月」；1 月补上年份（「26年1月」），窗口首格若落在往年也补
+   （「25年12月」），跨年时读得出先后。 */
+function ymLab(d,head){
+  var y=d.getFullYear();
+  return (d.getMonth()===0||(head&&y!==new Date().getFullYear())?String(y).slice(2)+"年":"")+(d.getMonth()+1)+"月";
+}
+function qfBandTip(b){
+  /* 浮窗没有轴标签可以借年份，跨年的月这里自己带上。 */
+  if(b.partial!==undefined)return ymLab(b.s,1)+(b.partial?"（部分月份）":"");
+  return b.e>b.s?qfMd(b.s)+" ~ "+qfMd(b.e):qfMd(b.s);
+}
 /* 千分位。本段整体是一层模板字符串，正则里的反斜杠要写两遍，否则 \B \d 会被模板字符串吃掉，
    到运行时变成 /B(?=(d{3})+(?!d))/,一个数都替换不掉（22,032 会显示成 22032）。 */
 function qfNum(n){return String(n).replace(/\\B(?=(\\d{3})+(?!\\d))/g,",")}
@@ -12803,13 +12826,13 @@ function renderQfTrend(){
     g+="<text x='"+(w2-R+8)+"' y='"+(yy+4).toFixed(1)+"' fill='#8F959E' font-size='11'>"+(Math.round(maxR*k/4*1000)/10)+"%</text>";
   }
   g+="<line x1='"+L+"' y1='"+(T+ph)+"' x2='"+(w2-R)+"' y2='"+(T+ph)+"' stroke='#E5E8EF'/>";
-  /* 最后一格还没走完（今日／本周）：淡淡压一层底，与「执行趋势」同一套标记。
+  /* 最后一格还没走完（今日／本周／本月）：淡淡压一层底，与「执行趋势」同一套标记。
      只有一格时不画——整张图就是那一格，压满反而像画坏了。 */
   if(n>1){
     var cx0=L+(n-1)*band;
     g+="<rect class='rea-shade' x='"+cx0.toFixed(1)+"' y='"+T+"' width='"+band.toFixed(1)+"' height='"+ph+"' fill='#F7F8FA'/>";
     g+="<line class='rea-shade' x1='"+cx0.toFixed(1)+"' y1='"+T+"' x2='"+cx0.toFixed(1)+"' y2='"+(T+ph)+"' stroke='#D9D9D9' stroke-dasharray='4 3'/>";
-    g+="<text x='"+(cx0+band/2).toFixed(1)+"' y='"+(T+13)+"' text-anchor='middle' fill='#8F959E' font-size='11'>"+(QFMODE==="week"?"本周":"今日")+"</text>";
+    g+="<text x='"+(cx0+band/2).toFixed(1)+"' y='"+(T+13)+"' text-anchor='middle' fill='#8F959E' font-size='11'>"+(QFMODE==="month"?"本月":QFMODE==="week"?"本周":"今日")+"</text>";
   }
   g+="<text x='"+L+"' y='"+(T-14)+"' fill='#8F959E' font-size='11'>人</text>";
   g+="<text x='"+(w2-R)+"' y='"+(T-14)+"' text-anchor='end' fill='#8F959E' font-size='11'>回复率</text>";
@@ -12837,10 +12860,11 @@ function renderQfTrend(){
   for(i=0;i<pts.length;i++){
     g+="<circle class='rea-dot' cx='"+pts[i][0].toFixed(1)+"' cy='"+pts[i][1].toFixed(1)+"' r='3.4' fill='#ffffff' stroke='#1677FF' stroke-width='2'/>";
   }
+  /* 抽稀时放过跨年的那一格：年份只写在跨过的那格里，被抽掉就分不清前后两年。 */
   var step=Math.ceil(n/8);
   for(i=0;i<n;i++){
-    if(n>1&&i!==n-1&&(i%step!==0||n-1-i<step))continue;
-    g+="<text x='"+(L+i*band+band/2).toFixed(1)+"' y='"+(T+ph+18)+"' text-anchor='middle' fill='#8F959E' font-size='11'>"+qfMd(view[i].s)+"</text>";
+    if(n>1&&i!==n-1&&(i%step!==0||n-1-i<step)&&view[i].s.getMonth()!==0)continue;
+    g+="<text x='"+(L+i*band+band/2).toFixed(1)+"' y='"+(T+ph+18)+"' text-anchor='middle' fill='#8F959E' font-size='11'>"+(QFMODE==="month"?ymLab(view[i].s,i===0):qfMd(view[i].s))+"</text>";
   }
   for(i=0;i<n;i++){
     g+="<rect class='qft-band' data-qft-i='"+i+"' x='"+(L+i*band).toFixed(1)+"' y='"+T+"' width='"+band.toFixed(1)+"' height='"+ph+"' fill='transparent'/>";
@@ -12893,25 +12917,37 @@ window.addEventListener("resize",function(){
    所以一条线各数各的，不相加也不互减。
    2026-10-26：「做满任务／到期没做满」改成「已完成／已逾期」，与环形占比的命名对齐；
    卡内档位由「近 N 周」改成按日／按周，统计范围不再自带，跟着页顶时间窗走。
-   2026-10-28：卡头的按日／按周开关撤掉——粒度随页顶时间窗的跨度自动定（≤ 31 天按日、更长按周），
-   与「素材看板」的取用趋势同一套。 */
+   2026-10-28：卡头的按日／按周开关撤掉——粒度随页顶时间窗的跨度自动定
+   （≤ 31 天按日、32–90 天按周、更长按自然月），与「素材看板」的取用趋势同一套。 */
 var TRMODE="day";
+/* 与群发好友那张同口径：月桶截在窗口边界上，首尾不完整的月打 partial。 */
 function trBuckets(mode){
-  var w=WIN[CURW]||WIN[DEFW],lo=w[0],hi=w[1],rs=winRows(CURW),map={},out=[],i,r,off,d,key,b;
+  var w=WIN[CURW]||WIN[DEFW],lo=w[0],hi=w[1],rs=winRows(CURW),map={},out=[],i,r,off,d,key,b,mEnd;
+  function keyOf(x){
+    if(mode==="week")return weekStart(x);
+    if(mode==="month")return monthStart(x);
+    return x;
+  }
   for(off=lo;off<=hi;off++){
-    d=dayAt(off);
-    if(mode==="week")d=weekStart(d);
+    d=keyOf(dayAt(off));
     key=String(d.getTime());
     b=map[key];
     if(!b){b=map[key]={s:d,e:dayAt(off),done:0,over:0,n:0};out.push(b)}
     b.e=dayAt(off);
   }
+  if(mode==="month"&&out.length){
+    out[0].s=dayAt(lo);
+    for(i=0;i<out.length;i++){
+      b=out[i];
+      mEnd=new Date(b.s.getFullYear(),b.s.getMonth()+1,0);
+      b.partial=b.s.getDate()!==1||b.e.getDate()!==mEnd.getDate();
+    }
+  }
   for(i=0;i<rs.length;i++){
     r=rs[i];
     off=offOf(r);
     if(off<lo||off>hi)continue;
-    d=dayAt(off);
-    if(mode==="week")d=weekStart(d);
+    d=keyOf(dayAt(off));
     b=map[String(d.getTime())];if(!b)continue;
     b.n++;
     if(+r.getAttribute("data-bd-over")>0)b.over++;
@@ -12920,7 +12956,10 @@ function trBuckets(mode){
   return out;
 }
 function trMd(d){return (d.getMonth()+1)+"/"+d.getDate()}
-function trLab(b){return b.e>b.s?trMd(b.s)+" ~ "+trMd(b.e):trMd(b.s)}
+function trLab(b){
+  if(b.partial!==undefined)return ymLab(b.s,1)+(b.partial?"（部分月份）":"");
+  return b.e>b.s?trMd(b.s)+" ~ "+trMd(b.e):trMd(b.s);
+}
 /* 四等分的上限取 4 的整数倍：刻度才落得下整数条，不会写出 2.5 这种半格 */
 function trNice(v){return Math.max(8,Math.ceil(v*1.15/4)*4)}
 function renderTrTrend(){
@@ -12954,7 +12993,7 @@ function renderTrTrend(){
     var cx0=L+(n-1)*band;
     g+="<rect class='rea-shade' x='"+cx0.toFixed(1)+"' y='"+T+"' width='"+band.toFixed(1)+"' height='"+ph+"' fill='#F7F8FA'/>";
     g+="<line class='rea-shade' x1='"+cx0.toFixed(1)+"' y1='"+T+"' x2='"+cx0.toFixed(1)+"' y2='"+(T+ph)+"' stroke='#D9D9D9' stroke-dasharray='4 3'/>";
-    g+="<text x='"+(cx0+band/2).toFixed(1)+"' y='"+(T+13)+"' text-anchor='middle' fill='#8F959E' font-size='11'>"+(TRMODE==="week"?"本周":"今日")+"</text>";
+    g+="<text x='"+(cx0+band/2).toFixed(1)+"' y='"+(T+13)+"' text-anchor='middle' fill='#8F959E' font-size='11'>"+(TRMODE==="month"?"本月":TRMODE==="week"?"本周":"今日")+"</text>";
   }
   g+="<rect class='tr-hov' x='0' y='0' width='"+band.toFixed(1)+"' height='"+ph+"' fill='#1F2329' opacity='0'/>";
   var series=[{k:"done",c:"#52C41A"},{k:"over",c:"#FAAD14"}],si,pts,path,dx;
@@ -12970,12 +13009,12 @@ function renderTrTrend(){
       g+="<circle class='rea-dot' cx='"+pts[i][0].toFixed(1)+"' cy='"+pts[i][1].toFixed(1)+"' r='3' fill='#ffffff' stroke='"+series[si].c+"' stroke-width='2'/>";
     }
   }
-  /* 日期标签按格宽抽稀；末格另有「今日／本周」压底，格子太窄时不强补 */
+  /* 日期标签按格宽抽稀；末格另有「今日／本周／本月」压底，格子太窄时不强补 */
   var step=Math.ceil(n/8);
   for(i=0;i<n;i++){
-    if(n>1&&i!==n-1&&(i%step!==0||n-1-i<step))continue;
+    if(n>1&&i!==n-1&&(i%step!==0||n-1-i<step)&&view[i].s.getMonth()!==0)continue;
     if(n>1&&i===n-1&&band<60)continue;
-    g+="<text x='"+(L+i*band+band/2).toFixed(1)+"' y='"+(T+ph+18)+"' text-anchor='middle' fill='#8F959E' font-size='11'>"+trMd(view[i].s)+"</text>";
+    g+="<text x='"+(L+i*band+band/2).toFixed(1)+"' y='"+(T+ph+18)+"' text-anchor='middle' fill='#8F959E' font-size='11'>"+(TRMODE==="month"?ymLab(view[i].s,i===0):trMd(view[i].s))+"</text>";
   }
   for(i=0;i<n;i++){
     g+="<rect class='tr-band' data-tr-i='"+i+"' x='"+(L+i*band).toFixed(1)+"' y='"+T+"' width='"+band.toFixed(1)+"' height='"+ph+"' fill='transparent'/>";
@@ -12992,7 +13031,7 @@ function renderTrTrend(){
       var idx=+this.getAttribute("data-tr-i"),v=view[idx];
       var bx=L+idx*band,x=bx+band/2,y=Math.min(yY(v.done),yY(v.over));
       if(hov){hov.setAttribute("x",bx.toFixed(1));hov.setAttribute("opacity","0.05")}
-      tip.innerHTML="<div class='d'>"+trLab(v)+(idx===n-1?(TRMODE==="week"?" · 本周":" · 今日"):"")+"</div>"
+      tip.innerHTML="<div class='d'>"+trLab(v)+(idx===n-1?(TRMODE==="month"?" · 本月":TRMODE==="week"?" · 本周":" · 今日"):"")+"</div>"
         +"<div class='r done'><i></i>已完成<b>"+v.done+" 条</b></div>"
         +"<div class='r over'><i></i>已逾期<b>"+v.over+" 条</b></div>";
       tip.style.display="block";
@@ -13280,6 +13319,7 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '/* 偏移量↔日期：台账只存「相对今天第几天」，画图时才换算成真实日期（今天永远是 0）。 */',
     'function dayAt(off){var d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()+off);return d}',
     'function weekStart(d){var x=new Date(d.getFullYear(),d.getMonth(),d.getDate());x.setDate(x.getDate()-((x.getDay()+6)%7));return x}',
+    'function monthStart(d){return new Date(d.getFullYear(),d.getMonth(),1)}',
     '/* 轴上限取「好读的整数刻度」：步长只从 1／2／5 的整十倍里挑，四等分后每一格都是整数。',
     '   不这么做，612 好友会写出 0/163/325/488/650 这种没法读的轴；也不许 2.5 这类步长——',
     '   人数、条数都是整数，四等分后落成 2.5 再取整，就成了 0/3/5/8/10 这种越读越乱的刻度。',
@@ -14322,7 +14362,8 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '  CURW=w;',
     '  setWinUi();',
     '  var sp=WIN[w]||WIN[DEFW];sp=sp[1]-sp[0]+1;',
-    '  TRMODE=sp>31?"week":"day";',
+    '  /* 跨度决定粒度：≤31 天按日、32–90 天按周、更长按自然月。 */',
+    '  TRMODE=sp>90?"month":sp>31?"week":"day";',
     '  QFMODE=TRMODE;',
     '  var tc=tally(winRows(w));',
     '  fill(document.getElementById("rea-bd-cards"),tc,w===DEFW);',
