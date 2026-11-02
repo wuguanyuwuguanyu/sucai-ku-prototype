@@ -10262,10 +10262,10 @@ render();</script>
     </div>
 
     <!-- 群发好友回复 · 第 3 行通栏 · 第 3 层 · 效果。数据来自台账里「群发好友」那些行；
-         统计范围与粒度都跟着页顶时间窗走（跨度 ≤ 31 天按日、32–90 天按周、更长按自然月）。 -->
+         窗口按任务下发日取，窗口内一条任务一行（已回复／未回复堆叠），不再按日期切格。 -->
     <div class="rea-bd-card rea-bd-card--w12">
       <div class="rea-bd-ch">
-        <h6>群发好友回复<span class="rea-bd-help" tabindex="0" role="img" aria-label="数据来源与统计口径" data-tip="来源：群发好友任务的好友级发送与回复记录。口径：按好友人数计；回复率＝已回复好友 ÷ 已发送好友，分子分母同属本窗口，并按任务下发日归格，回复晚到也算在下发那一格。">?</span></h6>
+        <h6>群发好友回复<span class="rea-bd-help" tabindex="0" role="img" aria-label="数据来源与统计口径" data-tip="来源：群发好友任务的好友级发送与回复记录。口径：按好友人数计；一条任务一行，已发送好友＝该任务实际发出的好友数，已回复好友＝其中回过的人，回复率＝已回复 ÷ 已发送。窗口＝任务下发日落在范围内；回复按当前累计计入该任务，刚下发的任务回复可能还在进来。有发送的任务超过 8 条时，图示发送量最大的 8 条。">?</span></h6>
         <span class="rea-bd-links"><a href="#" data-qft-all>查看全部<span class="rea-bd-chev" aria-hidden="true">›</span></a></span>
       </div>
       <div class="rea-qft-kpis" id="rea-qft-kpis"></div>
@@ -12139,9 +12139,9 @@ body .subapp{background:#F6F8FB!important}
    所以换窗口时走 scaleX；翻排序（BDANIM=0）不重播，免得每点一下列头 8 条一起长一遍。 */
 .rea-bd-org.is-anim .rea-bd-cmp-bar>i,
 .rea-bd-ld.is-anim .rea-bd-cmp-bar>i{transform-origin:left center;animation:reaGrowX .36s cubic-bezier(.2,.7,.3,1) both}
-/* 图：柱子从基线长起来；折线由 JS 按路径长度画入（见 reaDraw）；圆点与末格底纹晚半拍淡入，
-   免得线还没走到点上，点先亮了一片。 */
-#rea-qft-chart svg rect.qf-bar{transform-box:fill-box;transform-origin:50% 100%;animation:reaGrowY .32s cubic-bezier(.2,.7,.3,1) both}
+/* 图：每条任务的横条从左端长到该条的长度；折线（执行趋势）仍由 JS 按路径长度画入（见 reaDraw）
+   ——群发好友回复 2026-11-02 改成一条任务一行，不再画折线。 */
+#rea-qft-chart svg rect.qf-bar{transform-box:fill-box;transform-origin:0 50%;animation:reaGrowX .32s cubic-bezier(.2,.7,.3,1) both}
 .rea-dot{animation:reaIn .22s ease-out .26s both}
 .rea-shade{animation:reaIn .28s ease-out both}
 .rea-bd-ld-row{animation:reaIn .18s ease-out both}
@@ -12511,7 +12511,8 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-win-off:hover{color:#B7BCC4!important;background:transparent!important}
 
 /* ---------- 群发好友回复（任务看板 · 第 3 行通栏） ----------
-   KPI 一排 ＋ 双轴图（柱＝已发送，线＝回复率）。下面那段 .rea-mb-qf-* 是「素材看板」里同名的那张卡，
+   KPI 一排 ＋ 按任务拆的横条图（一条任务一行，已回复／未回复堆叠，行尾写回复率）。
+   下面那段 .rea-mb-qf-* 是「素材看板」里同名的那张卡，
    两张卡同名不同物：类名前缀各走各的（qft ＝ 任务看板，mb-qf ＝ 素材看板），别拿一处的样式盖另一处。 */
 .rea-qft-kpis{display:flex;flex-wrap:wrap;gap:10px 22px;margin:0 0 4px;padding:0 0 2px}
 .rea-qft-kpi{display:flex;flex-direction:column;gap:3px;margin:0}
@@ -12525,6 +12526,7 @@ body .subapp{background:#F6F8FB!important}
 .rea-qft-tip .d{color:#8F959E;margin-bottom:2px}
 .rea-qft-tip .r{display:flex;align-items:center;gap:6px}
 .rea-qft-tip .r i{width:8px;height:8px;border-radius:2px;background:#BAE0FF}
+.rea-qft-tip .r.rep i{background:#1677FF}
 .rea-qft-tip .r.line i{height:2px;border-radius:1px;background:#1677FF}
 .rea-qft-tip .r b{margin-left:auto;padding-left:16px;font-weight:600;font-variant-numeric:tabular-nums}
 .rea-qft-empty{padding:36px 0 30px;text-align:center;color:#8F959E;font-size:12px}
@@ -12771,22 +12773,20 @@ body .subapp{background:#F6F8FB!important}
 `;
 
   /* 看板「群发好友回复」板块。手绘 SVG，不引任何图表库——
-     观感照 ECharts 默认款（浅网格、柱＋折线双轴、左上图例、悬停浮窗），
-     但节点、尺寸、配色都自己算，免得为一张图往 8MB 的载体里再塞一个库。
-     数据全部从台账的群发好友任务派生（qfSentOf），统计范围与粒度都跟着页顶时间窗走
-     （≤ 31 天按日、32–90 天按周、更长按自然月），卡内没有粒度开关。2026-10-26 去掉「回补中」：效果层不再假设 T+1 只有半周数据，
-     最后一格用淡底＋「今日／本周／本月」标记，与「执行趋势」同一套。 */
+     一条任务一行：横条按已发送好友铺开，深蓝是已回复、浅蓝是未回复，行尾写回复率。
+     2026-11-02 把横轴从「日期」改成「任务」：一条任务从下发、发完到好友陆续回复可能跨几周，
+     按日期切会把同一批好友的发送与回复拆到相隔很远的格子里，读不出「这条任务回了多少」。
+     数据只来自台账里「群发好友」那几行，窗口仍按任务下发日取；卡内没有粒度开关。 */
   function reaQfTrendJs(){
     return `
 /* ---- 群发好友回复（随页顶时间窗） ----
    数据只来自台账里「群发好友」那几行：已发送好友＝该条任务已执行人次 × 12（每人一批好友），
    已回复好友＝已发送 × 该条的回复率（确定性演示序列，同一页每次打开都是同一份）。
-   统计范围与粒度都跟着页顶时间窗走（≤ 31 天按日、32–90 天按周、更长按自然月），卡内没有粒度开关。
-   2026-10-26 删掉「回补中」：效果层不再假设 T+1 只有半周数据，最后一段就是最后一段。 */
+   窗口按任务下发日取；窗口内一条任务一行，分子（已回复）与分母（已发送）永远是同一批好友。
+   窗口里有发送的任务多于 8 条时只画发送量最大的 8 条，其余在卡头「查看全部」里看。 */
 function qfSentOf(r){return (+r.getAttribute("data-bd-done"))*12}
 function qfRateOf(r){return 0.28+(((+r.getAttribute("data-bd-row"))*7)%13)/100}
 function qfRepOf(r){return Math.round(qfSentOf(r)*qfRateOf(r))}
-var QFMODE="day";
 function qfTotals(lo,hi){
   var rs=rows(),i,r,off,sent=0,rep=0;
   for(i=0;i<rs.length;i++){
@@ -12798,64 +12798,52 @@ function qfTotals(lo,hi){
   }
   return {sent:sent,rep:rep};
 }
-/* 桶：按日＝窗口里的每一天；按周＝窗口跨到的每一周（周一起）；按月＝窗口跨到的每个自然月。
-   空桶留着——「那一段没发」是事实，抹掉它会让柱距说谎。
-   月桶的起止截在窗口边界上：首月常常不是从 1 号起、末月还没走完，
-   这类桶打上 partial，悬停时写明「部分月份」。 */
-function qfBuckets(mode){
-  var w=WIN[CURW]||WIN[DEFW],lo=w[0],hi=w[1],rs=winRows(CURW),map={},out=[],i,r,off,d,key,b,mEnd;
-  function keyOf(x){
-    if(mode==="week")return weekStart(x);
-    if(mode==="month")return monthStart(x);
-    return x;
-  }
-  for(off=lo;off<=hi;off++){
-    d=keyOf(dayAt(off));
-    key=String(d.getTime());
-    b=map[key];
-    if(!b){b=map[key]={s:d,e:dayAt(off),sent:0,rep:0,n:0};out.push(b)}
-    b.e=dayAt(off);
-  }
-  if(mode==="month"&&out.length){
-    out[0].s=dayAt(lo);
-    for(i=0;i<out.length;i++){
-      b=out[i];
-      mEnd=new Date(b.s.getFullYear(),b.s.getMonth()+1,0);
-      b.partial=b.s.getDate()!==1||b.e.getDate()!==mEnd.getDate();
-    }
-  }
+/* 窗口内的群发好友任务，按已发送好友从多到少排；同样多的，新下发的在前。
+   没有发出好友的任务不上图（柱长为 0，读不出东西），但仍在 4 个效果数里算——它们本来就是 0。 */
+function qfTasks(lo,hi){
+  var rs=rows(),out=[],i,r,off,sent,rep;
   for(i=0;i<rs.length;i++){
     r=rs[i];
     if(r.getAttribute("data-bd-type")!=="群发好友")continue;
     off=offOf(r);
     if(off<lo||off>hi)continue;
-    d=keyOf(dayAt(off));
-    b=map[String(d.getTime())];if(!b)continue;
-    b.n++;b.sent+=qfSentOf(r);b.rep+=qfRepOf(r);
+    sent=qfSentOf(r);rep=qfRepOf(r);
+    out.push({off:off,sent:sent,rep:rep,rate:sent?rep/sent:null,
+      org:r.getAttribute("data-bd-org")||"",
+      name:(r.querySelector("td")||{}).textContent||"",
+      who:(r.children[2]||{}).textContent||""});
   }
-  for(i=0;i<out.length;i++)out[i].rate=out[i].sent?out[i].rep/out[i].sent:null;
+  out.sort(function(a,b){return b.sent-a.sent||b.off-a.off});
   return out;
 }
 function qfMd(d){return (d.getMonth()+1)+"/"+d.getDate()}
-/* 月轴标签：今年的月写「9月」；1 月补上年份（「26年1月」），窗口首格若落在往年也补
+/* 月轴标签（执行趋势用）：今年的月写「9月」；1 月补上年份（「26年1月」），窗口首格若落在往年也补
    （「25年12月」），跨年时读得出先后。 */
 function ymLab(d,head){
   var y=d.getFullYear();
   return (d.getMonth()===0||(head&&y!==new Date().getFullYear())?String(y).slice(2)+"年":"")+(d.getMonth()+1)+"月";
 }
-function qfBandTip(b){
-  /* 浮窗没有轴标签可以借年份，跨年的月这里自己带上。 */
-  if(b.partial!==undefined)return ymLab(b.s,1)+(b.partial?"（部分月份）":"");
-  return b.e>b.s?qfMd(b.s)+" ~ "+qfMd(b.e):qfMd(b.s);
-}
 /* 千分位。本段整体是一层模板字符串，正则里的反斜杠要写两遍，否则 \B \d 会被模板字符串吃掉，
    到运行时变成 /B(?=(d{3})+(?!d))/,一个数都替换不掉（22,032 会显示成 22032）。 */
 function qfNum(n){return String(n).replace(/\\B(?=(\\d{3})+(?!\\d))/g,",")}
+/* 左列标签放不下就截尾巴：中文按 12px、半角按 6.5px 估宽，够用，不为量文字再引一次布局测量。 */
+function qfFit(s,px){
+  var w=0,i,c,out="";
+  for(i=0;i<s.length;i++){
+    c=s.charAt(i);
+    w+=c.charCodeAt(0)<256?6.5:12;
+    if(w>px)return out+"…";
+    out+=c;
+  }
+  return out;
+}
+function qfTaskLabel(t,withOrg){
+  return qfMd(dayAt(t.off))+" "+t.name+(t.who?" · "+t.who:"")+(withOrg&&t.org?" · "+t.org:"");
+}
 function renderQfTrend(){
   var box=document.getElementById("rea-qft-chart");
   var kb=document.getElementById("rea-qft-kpis");
   if(!box||!kb)return;
-  var view=qfBuckets(QFMODE),n=view.length,i;
   var w=WIN[CURW]||WIN[DEFW],lo=w[0],hi=w[1];
   var cur=qfTotals(lo,hi);
   var rate=cur.sent?cur.rep/cur.sent:0,ts=cur.sent,tr=cur.rep;
@@ -12865,94 +12853,71 @@ function renderQfTrend(){
     +"<p class='rea-qft-kpi'><span class='k'>已回复好友</span><b>"+qfNum(tr)+"<i> 人</i></b></p>"
     +"<p class='rea-qft-kpi'><span class='k'>未回复好友</span><b>"+qfNum(ts-tr)+"<i> 人</i></b></p>";
 
-  if(!ts){
+  var all=qfTasks(lo,hi);
+  if(!all.length){
     box.innerHTML="<div class='rea-qft-empty'>该窗口没有群发好友任务</div>";
     return;
   }
+  var withSent=[],i0;
+  for(i0=0;i0<all.length;i0++)if(all[i0].sent)withSent.push(all[i0]);
+  if(!withSent.length){
+    box.innerHTML="<div class='rea-qft-empty'>该窗口的群发好友任务还没有发出好友</div>";
+    return;
+  }
+  var view=withSent.slice(0,8),more=withSent.length-view.length,n=view.length,i;
   var cw=box.clientWidth||900;
-  var w2=Math.max(380,cw),h=228,L=48,R=58,T=34,B=28,pw=w2-L-R,ph=h-T-B;
-  var ms=0,mr=0,maxS,maxR;
-  for(i=0;i<n;i++){if(view[i].sent>ms)ms=view[i].sent;if(view[i].rate>mr)mr=view[i].rate}
+  var w2=Math.max(420,cw),L=w2<620?132:190,R=w2<620?70:88,T=44,B=22,rh=26;
+  var h=T+n*rh+B,pw=w2-L-R,ms=0,maxS;
+  for(i=0;i<n;i++)if(view[i].sent>ms)ms=view[i].sent;
   maxS=niceMax(ms);
-  /* 右轴只在几档「四等分后还是整数％」的上限里挑（40% → 10%、60% → 15%、80% → 20%、100% → 25%）：
-     带 50% 的话四等分是 12.5%，刻度又是没法读的数 */
-  var LAD=[0.4,0.6,0.8,1],want=mr*1.25;
-  maxR=1;
-  for(i=0;i<LAD.length;i++){if(LAD[i]>=want){maxR=LAD[i];break}}
-  var band=pw/n,barW=Math.min(20,band*0.46);
-  function yS(v){return T+ph-(v/maxS)*ph}
-  function yR(v){return T+ph-(v/maxR)*ph}
-  var g="",k,val,yy;
+  function xS(v){return L+(v/maxS)*pw}
+  var g="",k,val,x,y,cy,sw,rw;
+
+  /* 图例在顶：深蓝＝已回复、浅蓝＝未回复；左上留刻度单位，右上到行尾写回复率。 */
+  g+="<g transform='translate("+L+",14)'>"
+    +"<rect x='0' y='-5' width='10' height='10' rx='2' fill='#1677FF'/>"
+    +"<text x='15' y='4' fill='#646A73' font-size='12'>已回复</text>"
+    +"<rect x='72' y='-5' width='10' height='10' rx='2' fill='#BAE0FF'/>"
+    +"<text x='87' y='4' fill='#646A73' font-size='12'>未回复</text></g>";
+  g+="<text x='"+(L-10)+"' y='"+(T-9)+"' text-anchor='end' fill='#8F959E' font-size='11'>人</text>";
   for(k=0;k<=4;k++){
-    val=maxS*k/4;yy=T+ph-ph*k/4;
-    g+="<line x1='"+L+"' y1='"+yy.toFixed(1)+"' x2='"+(w2-R)+"' y2='"+yy.toFixed(1)+"' stroke='#EFF1F5'/>";
-    g+="<text x='"+(L-8)+"' y='"+(yy+4).toFixed(1)+"' text-anchor='end' fill='#8F959E' font-size='11'>"+Math.round(val)+"</text>";
-    g+="<text x='"+(w2-R+8)+"' y='"+(yy+4).toFixed(1)+"' fill='#8F959E' font-size='11'>"+(Math.round(maxR*k/4*1000)/10)+"%</text>";
-  }
-  g+="<line x1='"+L+"' y1='"+(T+ph)+"' x2='"+(w2-R)+"' y2='"+(T+ph)+"' stroke='#E5E8EF'/>";
-  /* 最后一格还没走完（今日／本周／本月）：淡淡压一层底，与「执行趋势」同一套标记。
-     只有一格时不画——整张图就是那一格，压满反而像画坏了。 */
-  if(n>1){
-    var cx0=L+(n-1)*band;
-    g+="<rect class='rea-shade' x='"+cx0.toFixed(1)+"' y='"+T+"' width='"+band.toFixed(1)+"' height='"+ph+"' fill='#F7F8FA'/>";
-    g+="<line class='rea-shade' x1='"+cx0.toFixed(1)+"' y1='"+T+"' x2='"+cx0.toFixed(1)+"' y2='"+(T+ph)+"' stroke='#D9D9D9' stroke-dasharray='4 3'/>";
-    g+="<text x='"+(cx0+band/2).toFixed(1)+"' y='"+(T+13)+"' text-anchor='middle' fill='#8F959E' font-size='11'>"+(QFMODE==="month"?"本月":QFMODE==="week"?"本周":"今日")+"</text>";
-  }
-  g+="<text x='"+L+"' y='"+(T-14)+"' fill='#8F959E' font-size='11'>人</text>";
-  g+="<text x='"+(w2-R)+"' y='"+(T-14)+"' text-anchor='end' fill='#8F959E' font-size='11'>回复率</text>";
-  g+="<g transform='translate("+(L+56)+","+(T-10)+")'>"
-    +"<rect x='0' y='-6' width='10' height='12' rx='2' fill='#BAE0FF'/>"
-    +"<text x='15' y='4' fill='#646A73' font-size='12'>已发送好友</text>"
-    +"<line x1='98' y1='0' x2='114' y2='0' stroke='#1677FF' stroke-width='2'/>"
-    +"<circle cx='106' cy='0' r='3.2' fill='#ffffff' stroke='#1677FF' stroke-width='2'/>"
-    +"<text x='120' y='4' fill='#646A73' font-size='12'>回复率</text></g>";
-  for(i=0;i<n;i++){
-    if(!view[i].sent)continue;
-    var bx=L+i*band+(band-barW)/2,by=yS(view[i].sent),bh=T+ph-by;
-    g+="<rect class='qf-bar' x='"+bx.toFixed(1)+"' y='"+by.toFixed(1)+"' width='"+barW.toFixed(1)+"' height='"+Math.max(0,bh).toFixed(1)+"' rx='2' fill='#BAE0FF'/>";
-  }
-  /* 没有发送的那几段回复率是「无」，不是 0%：折线在那里断开，不画成掉到底 */
-  var pts=[],path="",open=false,x,y;
-  for(i=0;i<n;i++){
-    if(view[i].rate==null){open=false;continue}
-    x=L+i*band+band/2;y=yR(view[i].rate);
-    path+=(open?"L":"M")+x.toFixed(1)+","+y.toFixed(1);
-    open=true;
-    pts.push([x,y]);
-  }
-  if(path)g+="<path class='rea-draw' d='"+path+"' fill='none' stroke='#1677FF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/>";
-  for(i=0;i<pts.length;i++){
-    g+="<circle class='rea-dot' cx='"+pts[i][0].toFixed(1)+"' cy='"+pts[i][1].toFixed(1)+"' r='3.4' fill='#ffffff' stroke='#1677FF' stroke-width='2'/>";
-  }
-  /* 抽稀时放过跨年的那一格：年份只写在跨过的那格里，被抽掉就分不清前后两年。 */
-  var step=Math.ceil(n/8);
-  for(i=0;i<n;i++){
-    if(n>1&&i!==n-1&&(i%step!==0||n-1-i<step)&&view[i].s.getMonth()!==0)continue;
-    g+="<text x='"+(L+i*band+band/2).toFixed(1)+"' y='"+(T+ph+18)+"' text-anchor='middle' fill='#8F959E' font-size='11'>"+(QFMODE==="month"?ymLab(view[i].s,i===0):qfMd(view[i].s))+"</text>";
+    x=L+pw*k/4;val=Math.round(maxS*k/4);
+    g+="<line x1='"+x.toFixed(1)+"' y1='"+T+"' x2='"+x.toFixed(1)+"' y2='"+(T+n*rh)+"' stroke='#EFF1F5'/>";
+    g+="<text x='"+x.toFixed(1)+"' y='"+(T-9)+"' text-anchor='middle' fill='#8F959E' font-size='11'>"+val+"</text>";
   }
   for(i=0;i<n;i++){
-    g+="<rect class='qft-band' data-qft-i='"+i+"' x='"+(L+i*band).toFixed(1)+"' y='"+T+"' width='"+band.toFixed(1)+"' height='"+ph+"' fill='transparent'/>";
+    cy=T+i*rh+rh/2;
+    g+="<text x='"+(L-10)+"' y='"+(cy+4)+"' text-anchor='end' fill='#646A73' font-size='12'>"+qfFit(qfTaskLabel(view[i]),L-22)+"</text>";
+    sw=(view[i].sent/maxS)*pw;rw=(view[i].rep/maxS)*pw;
+    /* 先铺满整条（浅蓝＝未回复），再把已回复那段压在左边，两段永远等于已发送。 */
+    g+="<rect class='qf-bar' x='"+L+"' y='"+(cy-6)+"' width='"+sw.toFixed(1)+"' height='12' rx='2' fill='#BAE0FF'/>";
+    if(rw>0)g+="<rect class='qf-bar' x='"+L+"' y='"+(cy-6)+"' width='"+rw.toFixed(1)+"' height='12' rx='2' fill='#1677FF'/>";
+    g+="<text x='"+(L+pw+10)+"' y='"+(cy+4)+"' fill='#1F2329' font-size='12' font-weight='600' font-variant-numeric='tabular-nums'>"+(view[i].rate*100).toFixed(1)+"%</text>";
   }
-  box.innerHTML="<svg viewBox='0 0 "+w2+" "+h+"' width='"+w2+"' height='"+h+"' role='img' aria-label='群发好友发送量与回复率趋势'>"
+  if(more>0)g+="<text x='"+(w2-R)+"' y='"+(T+n*rh+15)+"' text-anchor='end' fill='#8F959E' font-size='11'>共 "+withSent.length+" 条有发送的任务 · 按发送量取前 8 条</text>";
+  for(i=0;i<n;i++){
+    g+="<rect class='qft-band' data-qft-i='"+i+"' x='"+L+"' y='"+(T+i*rh)+"' width='"+pw+"' height='"+rh+"' fill='transparent'/>";
+  }
+  box.innerHTML="<svg viewBox='0 0 "+w2+" "+h+"' width='"+w2+"' height='"+h+"' role='img' aria-label='群发好友任务的发送量与回复率'>"
     +"<g>"+g+"</g></svg>";
   var tip=document.createElement("div");
   tip.className="rea-qft-tip";
   box.appendChild(tip);
-  reaDraw(box);
   var bands=box.querySelectorAll("[data-qft-i]"),j;
   for(j=0;j<bands.length;j++){
     bands[j].addEventListener("mouseenter",function(){
       var idx=+this.getAttribute("data-qft-i"),v=view[idx];
-      var xx=L+idx*band+band/2,yy=v.rate==null?T+ph/2:yR(v.rate);
-      tip.innerHTML="<div class='d'>"+qfBandTip(v)+"</div>"
-        +"<div class='r'><i></i>已发送好友<b>"+(v.sent||0)+"</b></div>"
-        +"<div class='r'><i></i>已回复好友<b>"+(v.rep||0)+"</b></div>"
-        +"<div class='r line'><i></i>回复率<b>"+(v.rate==null?"—":(v.rate*100).toFixed(1)+"%")+"</b></div>";
+      var xx=xS(v.rep),yy=T+idx*rh+rh/2;
+      tip.innerHTML="<div class='d'>"+qfTaskLabel(v,1)+"</div>"
+        +"<div class='r'><i></i>已发送好友<b>"+qfNum(v.sent)+"</b></div>"
+        +"<div class='r rep'><i></i>已回复好友<b>"+qfNum(v.rep)+"</b></div>"
+        +"<div class='r'><i></i>未回复好友<b>"+qfNum(v.sent-v.rep)+"</b></div>"
+        +"<div class='r line'><i></i>回复率<b>"+(v.rate*100).toFixed(1)+"%</b></div>";
       tip.style.display="block";
       var tw=tip.offsetWidth,th=tip.offsetHeight,left=xx+14;
       if(left+tw>w2-4)left=xx-tw-14;
       tip.style.left=Math.max(4,left)+"px";
-      tip.style.top=Math.max(4,Math.min(T+ph-th-8,yy-th/2))+"px";
+      tip.style.top=Math.max(4,Math.min(T+n*rh-th-8,yy-th/2))+"px";
     });
     bands[j].addEventListener("mouseleave",function(){tip.style.display="none"});
   }
@@ -14435,7 +14400,6 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '  var sp=WIN[w]||WIN[DEFW];sp=sp[1]-sp[0]+1;',
     '  /* 跨度决定粒度：≤31 天按日、32–90 天按周、更长按自然月。 */',
     '  TRMODE=sp>90?"month":sp>31?"week":"day";',
-    '  QFMODE=TRMODE;',
     '  var tc=tally(winRows(w));',
     '  fill(document.getElementById("rea-bd-cards"),tc,w===DEFW);',
     '  paintDonut(tc);',
