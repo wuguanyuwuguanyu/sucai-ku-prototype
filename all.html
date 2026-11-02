@@ -10048,7 +10048,8 @@ render();</script>
   </div>
 
   <!-- 时间窗（PRD §2.2）· 一条筛选栏管全页：环形占比、部门完成情况、两张趋势图、二级页「任务列表」
-       都跟着它换数。六档里近半年／近一年没有演示集，置灰（docs/11 §8.3），不给说明文案。 -->
+       都跟着它换数。六档全部可点；自定义区间点开是起止日期，与固定档互斥。
+       演示台账在开跑时按整段平移补到近一年（见脚本 extendLedger），所以长窗也有数可看。 -->
   <div class="rea-bd-fbar">
     <span class="rea-bd-lab">任务时间窗</span>
     <div class="ant-radio-group ant-radio-group-solid css-vgijab rea-bd-window" id="rea-bd-window">
@@ -10078,20 +10079,31 @@ render();</script>
             </label>
           </div>
           <div class="ant-space-item">
-            <label class="ant-radio-button-wrapper css-vgijab rea-bd-win-off" data-bd-win="m6" title="演示数据未接入">
+            <label class="ant-radio-button-wrapper css-vgijab" data-bd-win="m6">
               <span class="ant-radio-button"><input name="rea-bd-win" class="ant-radio-button-input" type="radio" value="4"><span class="ant-radio-button-inner"></span></span>
               <span class="ant-radio-button-label">近半年</span>
             </label>
           </div>
           <div class="ant-space-item">
-            <label class="ant-radio-button-wrapper css-vgijab rea-bd-win-off" data-bd-win="y1" title="演示数据未接入">
+            <label class="ant-radio-button-wrapper css-vgijab" data-bd-win="y1">
               <span class="ant-radio-button"><input name="rea-bd-win" class="ant-radio-button-input" type="radio" value="5"><span class="ant-radio-button-inner"></span></span>
               <span class="ant-radio-button-label">近一年</span>
             </label>
           </div>
         </div>
     </div>
-    <span class="rea-bd-custom" aria-disabled="true" title="演示数据未接入">自定义区间</span>
+    <span class="rea-bd-custom" id="rea-bd-custom" role="button" tabindex="0" aria-expanded="false">自定义区间</span>
+    <!-- 自定义区间：点开是一张起止日期小卡，与上面六档互斥。起止口径＝[开始日 00:00，结束日 24:00]，
+         换算成相对今天的天偏移交给同一套 WIN；范围外没有台账行的地方按空格画，不补数。 -->
+    <div class="rea-bd-cpop" id="rea-bd-cpop" hidden>
+      <label class="rea-bd-cfield"><span>开始</span><input type="date" id="rea-bd-cfrom"></label>
+      <label class="rea-bd-cfield"><span>结束</span><input type="date" id="rea-bd-cto"></label>
+      <div class="rea-bd-cfoot">
+        <span class="rea-bd-cerr" id="rea-bd-cerr"></span>
+        <button type="button" class="rea-bd-cbtn" data-bd-ccancel>取消</button>
+        <button type="button" class="rea-bd-cbtn is-primary" data-bd-capply>应用</button>
+      </div>
+    </div>
     <!-- 右边不再挂「任务列表 ›」：全量逐条任务改由「完成情况」卡部门视图右下角的「查看全部」进，
          一个入口一个去处——筛选栏只留时间窗与自定义区间（PRD §2.1）。 -->
   </div>
@@ -10153,7 +10165,7 @@ render();</script>
          一条任务只有一个大类、一个类型，所以环上各段相加＝环心，也等于「执行健康度」环心
          ——几张图看的是同一批任务（PRD §2.3b）。 -->
     <div class="rea-bd-card rea-bd-card--w7" id="rea-bd-type">
-      <div class="rea-bd-ch"><h6>任务类型分布</h6><span class="th">条数</span></div>
+      <div class="rea-bd-ch"><h6>任务类型分布</h6></div>
       <div class="rea-td" id="rea-bd-tring">
         <div class="rea-td-l">
           <div class="rea-bd-tring-fig" id="rea-bd-type-fig">
@@ -10165,7 +10177,7 @@ render();</script>
         </div>
         <div class="rea-td-r">
           <div class="rea-td-rh">
-            <span class="tt" id="rea-bd-type-title">任务大类 · 按条数</span>
+            <span class="tt" id="rea-bd-type-title">任务大类</span>
             <button type="button" class="bk" id="rea-bd-type-rel" hidden>‹ 返回全部大类</button>
             <button type="button" class="all" id="rea-bd-type-all">查看全部类型</button>
           </div>
@@ -10175,7 +10187,7 @@ render();</script>
       </div>
       <div class="rea-td-foot">
         <span id="rea-bd-type-foot">共 0 条任务</span>
-        <a href="#" data-bd-type-all-tasks>看这批任务 →</a>
+        <span class="rea-bd-links"><a href="#" data-bd-type-all-tasks>查看全部<span class="rea-bd-chev" aria-hidden="true">›</span></a></span>
       </div>
       <div class="rea-td-mask" id="rea-bd-typecat-mask" hidden>
         <div class="rea-td-dw" role="dialog" aria-modal="true" aria-labelledby="rea-bd-typecat-hd">
@@ -10254,17 +10266,18 @@ render();</script>
     <div class="rea-bd-card rea-bd-card--w12">
       <div class="rea-bd-ch">
         <h6>群发好友回复</h6>
+        <span class="rea-bd-links"><a href="#" data-qft-all>查看全部<span class="rea-bd-chev" aria-hidden="true">›</span></a></span>
       </div>
       <div class="rea-qft-kpis" id="rea-qft-kpis"></div>
       <div class="rea-qft-chart" id="rea-qft-chart"></div>
     </div>
 
     <!-- 任务列表 · 第 4 行左格 · 明细。
-         与二级页「任务列表」同一份行、同一套排序（逾期多的在前、欠得多的次之），只露前 5 条；
+         与二级页「任务列表」同一份行，按**下发日从新到旧**露前 5 条（卡头不再挂排序口径）；
          点行进该类型的详情页（视频号发布任务没有详情页，那一行不给箭头也不可点），
-         右下角「查看全部」进二级页看全量。三条筛选轴只留在二级页（PRD §2.4b）。 -->
+         右下角「查看全部」进二级页看全量。三条筛选轴只留在二级页（PRD §2.5／§2.5c）。 -->
     <div class="rea-bd-card rea-bd-card--w7" id="rea-bd-peek">
-      <div class="rea-bd-ch"><h6>任务列表</h6><span class="th">逾期优先</span></div>
+      <div class="rea-bd-ch"><h6>任务列表</h6></div>
       <div class="rea-bd-tl">
         <div class="rea-bd-tl-head">
           <span class="rea-bd-tlc-name">任务</span>
@@ -10327,9 +10340,10 @@ render();</script>
 
   <div class="rea-bd-bad" id="rea-bd-bad" hidden></div>
 
-  <!-- 隐藏任务台账：页上所有数字都从这 144 行算出来，一个都不另写。
+  <!-- 隐藏任务台账：页上所有数字都从这 789 行算出来，一个都不另写。
        data-bd-day 是**相对今天的天偏移**（0＝今日，-1＝昨天 … -90），时间窗就是在这个轴上取区间。
-       演示集覆盖近三个月；近半年／近一年两档没有对应的行，所以置灰不给数。 -->
+       源里只写到近三月；开跑时 extendLedger() 把这一整段按 -91／-182／-273／-364 平移复制，
+       补到近一年（docs/11 §8.3），近半年／近一年才有真实的形状可看。 -->
   <div id="rea-bd-src" hidden>
         <div class="ant-spin-nested-loading css-vgijab"><div class="ant-spin-container">
           <div class="ant-table ant-table-middle css-vgijab">
@@ -11563,7 +11577,8 @@ render();</script>
 <!-- ============ 微小助看板 · 任务列表（执行健康度的二级页） ============
      「任务列表」原先摊在看板「任务执行」板块里，现在收成执行健康度的二级页：
      占比图与部门完成情况回答「整体／哪个部门欠」，这一页回答「具体是哪几条」。
-     筛选三轴——任务类型、状态、部门——外加与看板共用的时间窗；
+     筛选三轴——任务大类、任务类型、状态——外加与看板共用的时间窗；
+     部门不用下拉，走左侧那棵部门树（与模块页的「部门选择」是同一块）。
      数据由看板页在点进来时随 postMessage 带过来（dumpRows），不另编一份。 -->
 <script type="text/plain" id="srcBoardTasks">
 <div class="_board_gf4go_1 rea-bd-page rea-bd-sec">
@@ -11601,15 +11616,21 @@ render();</script>
           </label>
         </div>
         <div class="ant-space-item">
-          <label class="ant-radio-button-wrapper css-vgijab rea-bd-win-off" data-tasks-win="m6" title="演示数据未接入">
+          <label class="ant-radio-button-wrapper css-vgijab" data-tasks-win="m6">
             <span class="ant-radio-button"><input name="rea-tasks-win" class="ant-radio-button-input" type="radio" value="4"><span class="ant-radio-button-inner"></span></span>
             <span class="ant-radio-button-label">近半年</span>
           </label>
         </div>
         <div class="ant-space-item">
-          <label class="ant-radio-button-wrapper css-vgijab rea-bd-win-off" data-tasks-win="y1" title="演示数据未接入">
+          <label class="ant-radio-button-wrapper css-vgijab" data-tasks-win="y1">
             <span class="ant-radio-button"><input name="rea-tasks-win" class="ant-radio-button-input" type="radio" value="5"><span class="ant-radio-button-inner"></span></span>
             <span class="ant-radio-button-label">近一年</span>
+          </label>
+        </div>
+        <div class="ant-space-item" id="rea-tasks-custom-item" hidden>
+          <label class="ant-radio-button-wrapper css-vgijab" data-tasks-win="custom">
+            <span class="ant-radio-button"><input name="rea-tasks-win" class="ant-radio-button-input" type="radio" value="6"><span class="ant-radio-button-inner"></span></span>
+            <span class="ant-radio-button-label" id="rea-tasks-custom-lab">自定义区间</span>
           </label>
         </div>
       </div>
@@ -11680,20 +11701,6 @@ render();</script>
         <option value="已完成">已完成</option>
         <option value="进行中">进行中</option>
         <option value="已结束">已结束</option>
-      </select>
-    </label>
-    <label class="rea-bd-filter">
-      <span class="rea-bd-lab">部门</span>
-      <select class="rea-bd-sel" id="rea-tasks-org">
-        <option value="all">全部</option>
-        <option value="产品部">产品部</option>
-        <option value="市场部">市场部</option>
-        <option value="运营部">运营部</option>
-        <option value="销售部">销售部</option>
-        <option value="研发部">研发部</option>
-        <option value="客户成功部">客户成功部</option>
-        <option value="设计部">设计部</option>
-        <option value="人力行政部">人力行政部</option>
       </select>
     </label>
     <span class="rea-bd-count" id="rea-tasks-count">共 9 条</span>
@@ -12015,8 +12022,23 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-hero h1{margin:0;color:#17253D;font-size:20px;line-height:28px;font-weight:600;letter-spacing:-.3px}
 .rea-bd-upd{margin-left:auto;color:#8F959E;font-size:12px}
 /* 一条筛选栏管全页（环形占比／部门完成情况／两张趋势图／任务列表），右端挂唯一的下钻入口 */
-.rea-bd-fbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:9px 16px;background:#fff;border:1px solid #E9EEF6;border-radius:12px;box-shadow:0 1px 2px rgba(19,44,82,.04)}
+.rea-bd-fbar{position:relative;display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:9px 16px;background:#fff;border:1px solid #E9EEF6;border-radius:12px;box-shadow:0 1px 2px rgba(19,44,82,.04)}
 .rea-bd-custom{display:inline-flex;align-items:center;height:28px;padding:0 8px;border-radius:6px;color:#B7BCC4;font-size:12px;cursor:not-allowed}
+/* 任务看板这一枚是可点的：固定档之外最多再选一个起止区间，选中态与右侧单选钮同一套蓝 */
+.rea-bd-custom:not([aria-disabled="true"]){color:#1677FF;cursor:pointer}
+.rea-bd-custom:not([aria-disabled="true"]):hover{background:#F0F6FF}
+.rea-bd-custom.is-on{background:#E6F0FF;color:#1677FF;font-weight:500}
+.rea-bd-cpop{position:absolute;right:16px;top:calc(100% + 6px);z-index:60;display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px;padding:12px 14px;background:#fff;border:1px solid #E9EEF6;border-radius:10px;box-shadow:0 8px 24px rgba(19,44,82,.12)}
+.rea-bd-cpop[hidden]{display:none}
+.rea-bd-cfield{display:flex;flex-direction:column;gap:4px;font-size:12px;color:#646A73}
+.rea-bd-cfield input{height:30px;padding:0 8px;border:1px solid #D9DEE8;border-radius:6px;color:#1F2329;font-size:12px;background:#fff}
+.rea-bd-cfield input:focus{outline:none;border-color:#1677FF;box-shadow:0 0 0 2px rgba(22,119,255,.12)}
+.rea-bd-cfoot{display:flex;align-items:center;gap:8px;width:100%;padding-top:2px}
+.rea-bd-cerr{flex:1 1 auto;color:#D4380D;font-size:12px;line-height:18px}
+.rea-bd-cbtn{height:28px;padding:0 12px;border:1px solid #D9DEE8;border-radius:6px;background:#fff;color:#1F2329;font-size:12px;cursor:pointer}
+.rea-bd-cbtn:hover{border-color:#1677FF;color:#1677FF}
+.rea-bd-cbtn.is-primary{border-color:#1677FF;background:#1677FF;color:#fff}
+.rea-bd-cbtn.is-primary:hover{background:#4096FF;border-color:#4096FF;color:#fff}
 .rea-bd-links{display:flex;align-items:center;gap:16px;margin-left:auto}
 .rea-bd-links a{display:inline-flex;align-items:center;gap:2px;color:#1677FF;font-size:13px;text-decoration:none}
 .rea-bd-links a:hover{color:#4096FF}
@@ -12188,7 +12210,7 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-tring-mid{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;pointer-events:none;text-align:center}
 .rea-bd-tring-mid b{font-size:28px;line-height:1.05;font-weight:600;color:#1F2329;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
 .rea-bd-tring-mid span{font-size:11px;line-height:1.3;color:#8F959E}
-/* 右列标题行：默认「任务大类 · 按条数」；下钻后换成「微信营销任务 · 类型分布」并露出「返回全部大类」 */
+/* 右列标题行：默认「任务大类」；下钻后换成「微信营销任务 · 类型分布」并露出「返回全部大类」 */
 .rea-td-rh{display:flex;align-items:center;gap:8px;padding:0 0 8px;border-bottom:1px solid #F0F2F5;flex:0 0 auto}
 .rea-td-rh .tt{flex:1 1 auto;min-width:0;font-size:13px;font-weight:600;color:#1F2329;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .rea-td-rh button{flex:0 0 auto;height:24px;padding:0 8px;border:0;border-radius:6px;background:transparent;font:inherit;font-size:12px;line-height:24px;color:#1677FF;cursor:pointer}
@@ -13207,13 +13229,46 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     'function bad(s){BAD.push(s)}',
     'function rows(){return document.querySelectorAll("[data-bd-row]")}',
     '',
+    '/* 演示台账只写到近三月（-90…0）。长窗要能点开看真实的形状，就把这一整段按',
+    '   -91／-182／-273／-364 平移复制四份，拼到 -364…0：日期标记一起平移，',
+    '   整天数都已过有效期，所以逾期数补成未执行（否则 rowCheck 会按"未过期"判错）。',
+    '   名字、部门、类型、人次一个不动——演示集本来就是同一批名字在不同日子重复出现；',
+    '   平移后的每一行仍然自洽（应执行＝已执行＋未执行、逾期⊆未执行），窗口外的行不参与任何一张图。 */',
+    'function extendLedger(){',
+    '  var tb=document.querySelector("#rea-bd-src tbody");if(!tb)return;',
+    '  var src=[].slice.call(tb.querySelectorAll("tr[data-bd-row]")),SH=[-91,-182,-273,-364],',
+    '      base=src.length,si,k,tr,off,td,need,done,over;',
+    '  if(!base)return;',
+    '  for(si=0;si<SH.length;si++){',
+    '    for(k=0;k<base;k++){',
+    '      tr=src[k].cloneNode(true);',
+    '      off=(parseInt(src[k].getAttribute("data-bd-day"),10)||0)+SH[si];',
+    '      tr.setAttribute("data-bd-row",String(10000+si*base+k+1));',
+    '      tr.setAttribute("data-bd-day",String(off));',
+    '      (function(sh){',
+    '        [].forEach.call(tr.querySelectorAll("[data-rea-d]"),function(el){',
+    '          el.setAttribute("data-rea-d",el.getAttribute("data-rea-d").replace(/^d([+-][0-9]+)?/,function(m,o){',
+    '            return "d"+((o?parseInt(o,10):0)+sh);',
+    '          }));',
+    '        });',
+    '      })(SH[si]);',
+    '      need=+tr.getAttribute("data-bd-need");done=+tr.getAttribute("data-bd-done");',
+    '      over=+tr.getAttribute("data-bd-left");',
+    '      tr.setAttribute("data-bd-over",String(over));',
+    '      td=tr.querySelector("[data-rea-over]");if(td)td.textContent=String(over);',
+    '      td=tr.querySelector("[data-rea-state]");if(td)td.textContent=done>=need?"已完成":"已结束";',
+    '      tb.appendChild(tr);',
+    '    }',
+    '  }',
+    '}',
+    '',
     '/* ================= 时间窗（PRD §2.2／§4.2／§4.4） =================',
-    '   一档＝「相对今天的天偏移」闭区间：今日 [0,0]、近一周 [-6,0]、近一月 [-29,0]、近三月 [-89,0]。',
-    '   台账有 144 行、覆盖近三个月（0 … -90），所以近半年／近一年**没有对应的演示集**——',
-    '   两档置灰、点它不换窗口（docs/11 §8.3）。宁可少给一个态，也不拿三个月的行去冒充半年',
-    '   （docs/11 §1 第一条自律：指不回来源的指标不许出现）。 */',
-    'var WIN={today:[0,0],w7:[-6,0],m1:[-29,0],m3:[-89,0]};',
-    'var WIRED={today:1,w7:1,m1:1,m3:1};',
+    '   一档＝「相对今天的天偏移」闭区间：今日 [0,0]、近一周 [-6,0]、近一月 [-29,0]、',
+    '   近三月 [-89,0]、近半年 [-179,0]、近一年 [-364,0]；自定义区间由用户给的起止日期换算成同一对偏移，',
+    '   写在 WIN.custom 里。源台账只到 -90，开跑时 extendLedger() 把这段平移复制到 -364…-91，',
+    '   所以六档与自定义都有行可算；窗口里没有行的日子仍是空格，不补数。 */',
+    'var WIN={today:[0,0],w7:[-6,0],m1:[-29,0],m3:[-89,0],m6:[-179,0],y1:[-364,0],custom:[-29,0]};',
+    'var WIRED={today:1,w7:1,m1:1,m3:1,m6:1,y1:1,custom:1};',
     'var DEFW="w7";                 /* 默认窗口——环形占比静态正文里抄的就是它那一份 */',
     'var CURW=DEFW;                 /* 当前窗口 */',
     '/* 动效开关：系统「减少动态效果」开着就一律不播（CSS 末尾另有一份同样的让位）。',
@@ -13526,7 +13581,7 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '  while(n&&n!==ow&&n.nodeType===1){',
     '    if(n.getAttribute&&n.getAttribute("data-bd-org-row")){',
     '      e.preventDefault();',
-    '      parent.postMessage({reaPage:' + reaJson(REA_TASKS_PAGE) + ',reaWin:CURW,reaRows:dumpRows(),reaOrg:n.getAttribute("data-bd-org-row")},"*");',
+    '      parent.postMessage({reaPage:' + reaJson(REA_TASKS_PAGE) + ',reaWin:CURW,reaWinRange:(CURW==="custom"?WIN.custom:null),reaRows:dumpRows(),reaOrg:n.getAttribute("data-bd-org-row")},"*");',
     '      return;',
     '    }',
     '    n=n.parentNode;',
@@ -13563,7 +13618,7 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '  while(n&&n!==kw&&n.nodeType===1){',
     '    if(n.getAttribute&&n.getAttribute("data-bd-state")){',
     '      e.preventDefault();',
-    '      parent.postMessage({reaPage:' + reaJson(REA_TASKS_PAGE) + ',reaWin:CURW,reaRows:dumpRows(),reaState:n.getAttribute("data-bd-state")},"*");',
+    '      parent.postMessage({reaPage:' + reaJson(REA_TASKS_PAGE) + ',reaWin:CURW,reaWinRange:(CURW==="custom"?WIN.custom:null),reaRows:dumpRows(),reaState:n.getAttribute("data-bd-state")},"*");',
     '      return;',
     '    }',
     '    n=n.parentNode;',
@@ -13918,7 +13973,7 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '      rel=document.getElementById("rea-bd-type-rel");',
     '  rows=drill?o.types:cats;',
     '  for(i=0;i<rows.length;i++)if(rows[i].n>max)max=rows[i].n;',
-    '  if(ttl)ttl.textContent=drill?(PLAT_NM[TDCAT]+" · 类型分布"):"任务大类 · 按条数";',
+    '  if(ttl)ttl.textContent=drill?(PLAT_NM[TDCAT]+" · 类型分布"):"任务大类";',
     '  if(rel)rel.hidden=!drill;',
     '  if(!rows.length){',
     '    ul.innerHTML=\'<li class="rea-td-empty">\'+(total?"当前任务大类暂无下发记录":"暂无任务下发数据")+\'</li>\';',
@@ -13972,7 +14027,7 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '  paintType(CURW);',
     '}',
     'function typeGo(p,t){',
-    '  parent.postMessage({reaPage:' + reaJson(REA_TASKS_PAGE) + ',reaWin:CURW,reaRows:dumpRows(),reaPlat:p||"all",reaType:t||"all"},"*");',
+    '  parent.postMessage({reaPage:' + reaJson(REA_TASKS_PAGE) + ',reaWin:CURW,reaWinRange:(CURW==="custom"?WIN.custom:null),reaRows:dumpRows(),reaPlat:p||"all",reaType:t||"all"},"*");',
     '}',
     'if(TBOX){',
     '  TBOX.addEventListener("mousemove",function(e){',
@@ -14045,9 +14100,10 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '  });',
     '  document.addEventListener("keydown",function(e){if(e.key==="Escape")tdAllClose()});',
     '}',
-    '/* ================= 任务列表 · 一级页前置（PRD §2.4b） =================',
-    '   与二级页同一份行、同一套排序：逾期多的先、欠得多的次之、其余按台账次序。',
-    '   一级页只截前 5 条，条数与逾期数写在页脚——一行里既说规模又说风险。 */',
+    '/* ================= 任务列表 · 一级页前置（PRD §2.5／§2.5c） =================',
+    '   与二级页同一份行，但挑法不同：卡上按**下发日从新到旧**露前 5 条，',
+    '   让人先看到最近派下去的活；进度欠账怎么排，留在二级页那张全量列表里。',
+    '   同一天下发的按台账次序（id 升序），免得每次重画抖序。 */',
     'var PEEK_N=5;',
     '/* 六类有「· 详情」页，视频号发布任务没有；与二级页那张 HAS 表同一份取舍。 */',
     'var HAS_DETAIL={"发圈":1,"群发好友":1,"群发群组":1,"批量加好友":1,"关联好友":1,"客户唤醒":1};',
@@ -14062,12 +14118,13 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '      org:r.getAttribute("data-bd-org")||"",',
     '      name:((r.cells[0]&&r.cells[0].getAttribute("title"))||(r.cells[0]&&r.cells[0].textContent)||"").trim(),',
     '      need:+r.getAttribute("data-bd-need"),done:+r.getAttribute("data-bd-done"),',
-    '      left:+r.getAttribute("data-bd-left"),over:+r.getAttribute("data-bd-over")',
+    '      left:+r.getAttribute("data-bd-left"),over:+r.getAttribute("data-bd-over"),',
+    '      day:+r.getAttribute("data-bd-day")',
     '    });',
     '  }',
+    '  /* 下发日从新到旧；同一天按台账次序，不拿逾期数当第二把尺子。 */',
     '  out.sort(function(a,b){',
-    '    if(a.over!==b.over)return b.over-a.over;',
-    '    if(a.left!==b.left)return b.left-a.left;',
+    '    if(a.day!==b.day)return b.day-a.day;',
     '    return a.id-b.id;',
     '  });',
     '  return out;',
@@ -14119,7 +14176,14 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     'var pa=document.querySelector("[data-bd-peek-all]");',
     'if(pa)pa.addEventListener("click",function(e){',
     '  e.preventDefault();',
-    '  parent.postMessage({reaPage:' + reaJson(REA_TASKS_PAGE) + ',reaWin:CURW,reaRows:dumpRows()},"*");',
+    '  parent.postMessage({reaPage:' + reaJson(REA_TASKS_PAGE) + ',reaWin:CURW,reaWinRange:(CURW==="custom"?WIN.custom:null),reaRows:dumpRows()},"*");',
+    '});',
+    '/* 群发好友回复卡头的「查看全部」：带着当前窗口进任务列表，并把两轴预选到',
+    '   「微信营销任务 ＋ 群发好友」——这张图统计的就是这批任务，点进去看到的应是同一批行。 */',
+    'var qa=document.querySelector("[data-qft-all]");',
+    'if(qa)qa.addEventListener("click",function(e){',
+    '  e.preventDefault();',
+    '  parent.postMessage({reaPage:' + reaJson(REA_TASKS_PAGE) + ',reaWin:CURW,reaWinRange:(CURW==="custom"?WIN.custom:null),reaRows:dumpRows(),reaPlat:"wx",reaType:"群发好友"},"*");',
     '});',
     '/* 环、右排横条与前置列表的对账：环上各段加总＝窗口条数，三段状态也得分毫不差。',
     '   名字别取 typeCheck——那是上头「执行健康度」环的自检，同一条脚本里同名会互相顶掉。 */',
@@ -14145,7 +14209,7 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '    if(!ttl||ttl.textContent!==PLAT_NM[drill.p]+" · 类型分布")bad("下钻标题应为「"+PLAT_NM[drill.p]+" · 类型分布」，实际「"+(ttl?ttl.textContent:"")+"」");',
     '    if(rel&&rel.hidden)bad("下钻后「返回全部大类」没露出来");',
     '  }else{',
-    '    if(ttl&&ttl.textContent!=="任务大类 · 按条数")bad("大类视图的标题没复位，实际「"+ttl.textContent+"」");',
+    '    if(ttl&&ttl.textContent!=="任务大类")bad("大类视图的标题没复位，实际「"+ttl.textContent+"」");',
     '    if(rel&&!rel.hidden)bad("大类视图里「返回全部大类」还露着");',
     '  }',
     '  all=peekRows(w);show=Math.min(PEEK_N,all.length);',
@@ -14184,8 +14248,79 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '    (function(el){setTimeout(function(){el.style.transition="";el.style.strokeDasharray="";el.style.strokeDashoffset="";},480)})(p);',
     '  }',
     '}',
+    '/* 固定六档与自定义区间共用一组选中态：换档时把单选钮与自定义那一枚一起对齐。',
+    '   自定义选中后不写「自定义区间」，改写成起止日期，窗口边界自己说话。 */',
+    'function ymd(d){return d.getFullYear()+"-"+PAD(d.getMonth()+1)+"-"+PAD(d.getDate())}',
+    'function mdOf(off){var d=dayAt(off);return PAD(d.getMonth()+1)+"-"+PAD(d.getDate())}',
+    'function setWinUi(){',
+    '  var ls=document.querySelectorAll("[data-bd-win]"),i,on,b,r;',
+    '  for(i=0;i<ls.length;i++){',
+    '    on=ls[i].getAttribute("data-bd-win")===CURW;',
+    '    ls[i].classList.toggle("ant-radio-button-wrapper-checked",on);',
+    '    b=ls[i].querySelector(".ant-radio-button");if(b)b.classList.toggle("ant-radio-button-checked",on);',
+    '    r=ls[i].querySelector("input");if(r)r.checked=on;',
+    '  }',
+    '  var cb=document.getElementById("rea-bd-custom");if(!cb)return;',
+    '  var onc=CURW==="custom";',
+    '  cb.classList.toggle("is-on",onc);',
+    '  cb.setAttribute("aria-expanded",onc?"true":"false");',
+    '  if(onc){var w=WIN.custom;cb.textContent=mdOf(w[0])+" ~ "+mdOf(w[1]);',
+    '    cb.setAttribute("title","自定义区间 "+ymd(dayAt(w[0]))+" ~ "+ymd(dayAt(w[1])))}',
+    '  else{cb.textContent="自定义区间";cb.setAttribute("title","按起止日期看一段")}',
+    '}',
+    '/* 自定义区间：点开是一张起止日期小卡，与六档互斥。日期按真实日历给，',
+    '   存下来的是相对今天的天偏移（结束日算到当天 24:00）；最多回看一年，与台账的边界一致。 */',
+    'var CPOP=document.getElementById("rea-bd-cpop"),CB=document.getElementById("rea-bd-custom");',
+    'function cpopOpen(open){',
+    '  if(!CPOP)return;CPOP.hidden=!open;if(CB)CB.setAttribute("aria-expanded",open?"true":"false");',
+    '  if(!open)return;',
+    '  var w=CURW==="custom"?WIN.custom:[WIN.m1[0],0],',
+    '      f=document.getElementById("rea-bd-cfrom"),t=document.getElementById("rea-bd-cto"),',
+    '      e=document.getElementById("rea-bd-cerr");',
+    '  if(f){f.min=ymd(dayAt(WIN.y1[0]));f.max=ymd(dayAt(0));f.value=ymd(dayAt(w[0]))}',
+    '  if(t){t.min=ymd(dayAt(WIN.y1[0]));t.max=ymd(dayAt(0));t.value=ymd(dayAt(w[1]))}',
+    '  if(e)e.textContent="";',
+    '}',
+    'function offOfDate(s){',
+    '  var m=/^(\\d{4})-(\\d{2})-(\\d{2})$/.exec(String(s||""));',
+    '  if(!m)return null;',
+    '  var d=new Date(+m[1],+m[2]-1,+m[3]);d.setHours(0,0,0,0);',
+    '  var t=new Date();t.setHours(0,0,0,0);',
+    '  return Math.round((d-t)/864e5);',
+    '}',
+    'function customApply(){',
+    '  var f=document.getElementById("rea-bd-cfrom"),t=document.getElementById("rea-bd-cto"),',
+    '      e=document.getElementById("rea-bd-cerr"),',
+    '      lo=f?offOfDate(f.value):null,hi=t?offOfDate(t.value):null;',
+    '  if(lo===null||hi===null){if(e)e.textContent="请选择开始与结束日期";return}',
+    '  if(lo>hi){if(e)e.textContent="开始日期不能晚于结束日期";return}',
+    '  if(hi>0){if(e)e.textContent="结束日期不能晚于今天";return}',
+    '  if(lo<WIN.y1[0]){if(e)e.textContent="只能回看一年";return}',
+    '  WIN.custom=[lo,hi];',
+    '  cpopOpen(false);',
+    '  applyWin("custom");',
+    '}',
+    'if(CB){',
+    '  CB.addEventListener("click",function(e){e.preventDefault();cpopOpen(CPOP&&CPOP.hidden)});',
+    '  CB.addEventListener("keydown",function(e){',
+    '    if(e.key!=="Enter"&&e.key!==" ")return;e.preventDefault();cpopOpen(CPOP&&CPOP.hidden);',
+    '  });',
+    '}',
+    'if(CPOP){',
+    '  CPOP.addEventListener("click",function(e){',
+    '    var t=e.target;',
+    '    if(t.closest&&t.closest("[data-bd-capply]")){e.preventDefault();customApply();return}',
+    '    if(t.closest&&t.closest("[data-bd-ccancel]")){e.preventDefault();cpopOpen(false);return}',
+    '  });',
+    '  document.addEventListener("click",function(e){',
+    '    if(CPOP.hidden)return;',
+    '    if(CPOP.contains(e.target)||(CB&&CB.contains(e.target)))return;',
+    '    cpopOpen(false);',
+    '  });',
+    '}',
     'function applyWin(w){',
     '  CURW=w;',
+    '  setWinUi();',
     '  var sp=WIN[w]||WIN[DEFW];sp=sp[1]-sp[0]+1;',
     '  TRMODE=sp>31?"week":"day";',
     '  QFMODE=TRMODE;',
@@ -14209,9 +14344,9 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '}',
     reaQfTrendJs(),
     reaTrendJs(),
-    '/* 时间窗的点击：接数的四档照常走（点选态仍交给 REA_FX）。近半年／近一年与日期区间',
-    '   本来就没有对应的演示集，页上已置灰并挂「演示数据未接入」，这里再在捕获阶段',
-    '   拦掉点选、保证数字完全不动（docs/11 §8.3）；拦得住是因为 REA_FX 挂在 document 的冒泡阶段。 */',
+    '/* 时间窗的点击：六档都接数（点选态仍交给 REA_FX，自定义那一枚自己管）。',
+    '   捕获阶段先把窗口换掉再重画，冒泡到 REA_FX 时单选钮的蓝框才跟得上；',
+    '   WIRED 留着兜底——将来再加档而没接演示集时，点它不会把页面换成一窗空数。 */',
     'var wg=document.getElementById("rea-bd-window");',
     'if(wg)wg.addEventListener("click",function(e){',
     '  var n=e.target,id=null;',
@@ -14228,7 +14363,8 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '/* 期望值必须在任何写入之前抄底：下面每个坑位都会被换窗口覆写，',
     '   拿覆写后的文本去比就成了自己比自己。 */',
     'auth(document.getElementById("rea-bd-cards"),"data-rea-sum");',
-    'stamp();          /* 先钉日期：后面的有效期判断要用到 */',
+    'extendLedger();   /* 先把台账补到一年，后面每一块都从同一份行上算 */',
+    'stamp();          /* 再钉日期：后面的有效期判断要用到 */',
     'rowCheck();',
     'assignCheck();',
     'var gs=document.querySelectorAll(".rea-bd-tabs");',
@@ -14573,11 +14709,13 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '  }',
     '}',
     'function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}',
-    'var ROWS=window.__REA_ROWS||[],WIN=window.__REA_WIN||"today";',
-    '/* 时间窗＝相对今天第几天的一段区间（与看板页同一套：今日／近一周／近一月／近三月）。',
-    '   近半年／近一年没有演示集，页上置灰，这里也不接——WIRED 之外的一律不认。 */',
-    'var WINR={today:[0,0],w7:[-6,0],m1:[-29,0],m3:[-89,0]},WIRED={today:1,w7:1,m1:1,m3:1};',
-    'var CURW=WINR[WIN]?WIN:"today";',
+    'var ROWS=window.__REA_ROWS||[],WIN=window.__REA_WIN||"today",RANGE=window.__REA_RANGE||null;',
+    '/* 时间窗＝相对今天第几天的一段区间（与看板页同一套：今日／近一周／近一月／近三月／近半年／近一年）。',
+    '   自定义区间不在这里重选，只跟着看板带过来的起止偏移开一档。 */',
+    'var WINR={today:[0,0],w7:[-6,0],m1:[-29,0],m3:[-89,0],m6:[-179,0],y1:[-364,0]};',
+    'if(RANGE)WINR.custom=[RANGE[0],RANGE[1]];',
+    'var WIRED={today:1,w7:1,m1:1,m3:1,m6:1,y1:1,custom:RANGE?1:0};',
+    'var CURW=WINR[WIN]&&WIRED[WIN]?WIN:"today";',
     'var CURP=window.__REA_PLAT||"all",',
     '    CURT=window.__REA_TYPE&&window.__REA_TYPE!=="all"?(CURP!=="all"?CURP:typePlat(window.__REA_TYPE))+"|"+window.__REA_TYPE:"all",',
     '    CURS=window.__REA_STATE||"all",CURO=window.__REA_ORG||"all";',
@@ -14743,7 +14881,7 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '   两条对不上（类型不属于这个大类的）时以类型为准，把大类跟到它所属的那个。 */',
     'if(CURT!=="all")CURP=typePlat(CURT);',
     'seedSel("rea-tasks-plat",CURP);seedSel("rea-tasks-type",CURT);',
-    'seedSel("rea-tasks-state",CURS);seedSel("rea-tasks-org",CURO);',
+    'seedSel("rea-tasks-state",CURS);',
     'function bindSel(id,set){',
     '  var el=document.getElementById(id);',
     '  if(el)el.addEventListener("change",function(){set(this.value);paint()});',
@@ -14759,7 +14897,48 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '  if(CURT!=="all"&&typePlat(CURT)!==v){CURT="all";seedSel("rea-tasks-type","all")}',
     '});',
     'bindSel("rea-tasks-state",function(v){CURS=v});',
-    'bindSel("rea-tasks-org",function(v){CURO=v});',
+    '',
+    '/* ---------- 左侧部门树＝本页的部门轴 ----------',
+    '   快照那棵树写的是演示用例的「测试二级三部／测试3级」，与台账的 8 个部门对不上；',
+    '   这里换成「全公司 ＋ 8 个部门」，点一个节点就把列表收窄到它，选中态沿用 antd 的类名。',
+    '   从看板部门行进来时 CURO 已带着值，对应节点直接就是选中态。 */',
+    'var ORGS=["产品部","市场部","运营部","销售部","研发部","客户成功部","设计部","人力行政部"];',
+    'var TREEBOX=document.querySelector(".yk-lefttree .ant-tree"),',
+    '    TREEHOLD=TREEBOX?TREEBOX.querySelector(".ant-tree-list-holder-inner"):null;',
+    'function treeNodeHtml(name,val,child,caret){',
+    '  var sel=CURO===val;',
+    '  var h="<div role=\\"treeitem\\""+(child?" aria-expanded=\\"true\\"":"")+" class=\\"ant-tree-treenode "+(child?"ant-tree-treenode-switcher-open":"ant-tree-treenode-leaf-last")+(sel?" ant-tree-treenode-selected":"")+"\\">";',
+    '  h+="<span aria-hidden=\\"true\\" class=\\"ant-tree-indent\\">"+(child?"":"<span class=\\"ant-tree-indent-unit ant-tree-indent-unit-start ant-tree-indent-unit-end\\"></span>")+"</span>";',
+    '  h+="<span class=\\"ant-tree-switcher "+(child?"ant-tree-switcher_open":"ant-tree-switcher-noop")+"\\">"+(child?caret:"")+"</span>";',
+    '  h+="<span title=\\""+esc(name)+"\\" class=\\"ant-tree-node-content-wrapper "+(child?"ant-tree-node-content-wrapper-open":"")+(sel?" ant-tree-node-selected":"")+"\\" data-org=\\""+esc(val)+"\\"><span class=\\"ant-tree-title\\"><span>"+esc(name)+"</span></span></span>";',
+    '  return h+"</div>";',
+    '}',
+    'function paintTree(){',
+    '  if(!TREEHOLD)return;',
+    '  var icon=TREEHOLD.querySelector(".ant-tree-switcher-icon"),caret=icon?icon.outerHTML:"",h="",i;',
+    '  h+=treeNodeHtml("全公司","all",true,caret);',
+    '  for(i=0;i<ORGS.length;i++)h+=treeNodeHtml(ORGS[i],ORGS[i],false,caret);',
+    '  TREEHOLD.innerHTML=h;',
+    '}',
+    'paintTree();',
+    'if(TREEBOX)TREEBOX.addEventListener("click",function(e){',
+    '  var n=e.target,v=null;',
+    '  while(n&&n!==TREEBOX&&n.nodeType===1){',
+    '    if(n.getAttribute&&n.getAttribute("data-org")!==null){v=n.getAttribute("data-org");break}',
+    '    n=n.parentNode;',
+    '  }',
+    '  if(v===null)return;',
+    '  e.preventDefault();',
+    '  if(CURO===v)return;',
+    '  CURO=v;paintTree();paint();',
+    '});',
+    '/* 自定义区间由看板带进来才出现在这一排；没有区间时不摆一枚点不动的档位。 */',
+    'function mdOff(off){var d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()+off);return PAD(d.getMonth()+1)+"-"+PAD(d.getDate())}',
+    'if(RANGE){',
+    '  var ci=document.getElementById("rea-tasks-custom-item"),cl=document.getElementById("rea-tasks-custom-lab");',
+    '  if(ci)ci.hidden=false;',
+    '  if(cl)cl.textContent=mdOff(RANGE[0])+" ~ "+mdOff(RANGE[1]);',
+    '}',
     'stamp();setWinUi();paint();',
     '})();'
    ].join('\n');
@@ -19565,7 +19744,8 @@ renderTable();
     }
     if (name !== REA_DETAIL_TASK && name !== REA_TASKS_PAGE) return '';
     var js = 'window.__REA_ROWS=' + reaJson(reaRows || []) + ';'
-      + 'window.__REA_WIN=' + reaJson(reaWinSel || 'w7') + ';';
+      + 'window.__REA_WIN=' + reaJson(reaWinSel || 'w7') + ';'
+      + 'window.__REA_RANGE=' + reaJson(reaWinSel === 'custom' ? (reaWinRange || null) : null) + ';';
     if (name === REA_TASKS_PAGE){
       /* 任务列表的四轴筛选：从部门行点进来时带一个预选值，从类型占比卡点进来带平台、',
          或平台＋类型，其余从「任务列表」链接进来全是 all。 */
@@ -20080,6 +20260,7 @@ renderTable();
   var reaGroupNames = []; // 素材库列表页侧栏分组树里的分组名（供新建页的「所属分组」下拉用）
   var reaRows = null;     // 看板点「详细数据」时带过来的任务行（子页用，不另存一份）
   var reaWinSel = 'w7'; // 同上：点进来时的当前窗口（看板默认近一周，子页跟着开在近一周）
+  var reaWinRange = null; // 当前窗口是「自定义区间」时，随行带过来的起止天偏移 [lo,hi]
   var reaPlatSel = 'all'; // 任务列表的预选筛选：大类（从任务类型分布卡的一段／横条点进来时有值）
   var reaTypeSel = 'all'; // 同上：任务类型（从外环一段点进来时，平台和类型一起带上）
   var reaStateSel = 'all';// 同上：状态
@@ -20502,6 +20683,7 @@ renderTable();
     /* 看板点的「详细数据」：先把行与窗口收下，子页 reaDoc 时会灌进 window（见 reaDataJs） */
     if (d.reaRows){
       reaRows = d.reaRows; reaWinSel = d.reaWin || 'w7';
+      reaWinRange = d.reaWinRange || null;
       /* 每次从看板进来都重设四轴筛选与排序：从部门行进来带部门，从任务类型分布卡的一段或横条
          进来带大类，从下钻后的类型条进来带大类＋类型；从「任务列表」链接进来全 all；
          从排行进来带 done/rate + 预展开的人，从「执行人明细」链接进来回到 debt。 */
