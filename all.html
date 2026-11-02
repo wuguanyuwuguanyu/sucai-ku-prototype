@@ -10051,7 +10051,7 @@ render();</script>
        都跟着它换数。六档全部可点；自定义区间点开是起止日期，与固定档互斥。
        演示台账在开跑时按整段平移补到近一年（见脚本 extendLedger），所以长窗也有数可看。 -->
   <div class="rea-bd-fbar">
-    <span class="rea-bd-lab">任务时间窗</span>
+    <span class="rea-bd-lab">任务时间窗<span class="rea-bd-help" tabindex="0" role="img" aria-label="数据来源与统计口径" data-tip="窗口＝任务的下发日落在区间内。今日、近一周…近一年是固定档，自定义区间含起止两日；配置／资产不随时间窗变化。">?</span></span>
     <div class="ant-radio-group ant-radio-group-solid css-vgijab rea-bd-window" id="rea-bd-window">
         <div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small">
           <div class="ant-space-item">
@@ -10118,7 +10118,7 @@ render();</script>
          扇区与标注都可点：进「任务列表」并按状态预筛。
          悬停扇区时鼠标旁浮出一个小窗，写这一段里各类任务各多少条。 -->
     <div class="rea-bd-card rea-bd-card--w5" id="rea-bd-health">
-      <div class="rea-bd-ch"><h6>执行健康度</h6></div>
+      <div class="rea-bd-ch"><h6>执行健康度<span class="rea-bd-help" tabindex="0" role="img" aria-label="数据来源与统计口径" data-tip="来源：任务详情页上报的应执行／已执行人次。口径：按任务条数计，已完成＝执行人员全部做完，待完成＝未过期且仍有未执行，逾期未做＝已过期且仍有未执行；三段互斥，相加＝窗口内任务总数。">?</span></h6></div>
       <div class="rea-bd-ring" id="rea-bd-cards">
         <div class="rea-bd-donut" id="rea-bd-donut">
           <svg class="rea-bd-donut-lines" id="rea-bd-donut-lines" aria-hidden="true">
@@ -10152,7 +10152,7 @@ render();</script>
          折线用直线段：条数是整数，平滑会把 0 → 3 连成一段不存在的缓坡。 -->
     <div class="rea-bd-card rea-bd-card--w7">
       <div class="rea-bd-ch">
-        <h6>执行趋势</h6>
+        <h6>执行趋势<span class="rea-bd-help" tabindex="0" role="img" aria-label="数据来源与统计口径" data-tip="来源：同一批任务台账，按下发日归格。口径：按任务条数计；跨度 ≤31 天按日、32–90 天按周、更长按自然月。已完成＝该格内做满的任务，已逾期＝该格内仍有逾期人次的任务。">?</span></h6>
       </div>
       <div class="rea-tr-chart" id="rea-tr-chart"></div>
     </div>
@@ -10165,7 +10165,7 @@ render();</script>
          一条任务只有一个大类、一个类型，所以环上各段相加＝环心，也等于「执行健康度」环心
          ——几张图看的是同一批任务（PRD §2.3b）。 -->
     <div class="rea-bd-card rea-bd-card--w7" id="rea-bd-type">
-      <div class="rea-bd-ch"><h6>任务类型分布</h6></div>
+      <div class="rea-bd-ch"><h6>任务类型分布<span class="rea-bd-help" tabindex="0" role="img" aria-label="数据来源与统计口径" data-tip="来源：同一批任务台账。口径：按任务条数计，一条任务只归一个大类、一个类型，各段相加＝窗口内任务总数；点环段或大类横条可下钻到类型。">?</span></h6></div>
       <div class="rea-td" id="rea-bd-tring">
         <div class="rea-td-l">
           <div class="rea-bd-tring-fig" id="rea-bd-type-fig">
@@ -10207,7 +10207,7 @@ render();</script>
          当前范围**没有下级部门**（叶子部门）时只剩员工视图，切换器不出（PRD §2.4）。 -->
     <div class="rea-bd-card rea-bd-card--w5" id="rea-bd-cmp">
       <div class="rea-bd-ch">
-        <h6>完成情况</h6>
+        <h6>完成情况<span class="rea-bd-help" tabindex="0" role="img" aria-label="数据来源与统计口径" data-tip="来源：任务台账按创建人所属部门（部门视图）与执行人员（员工视图）聚合。口径：按人次计，一条任务派给几个人算几次；完成率＝已执行 ÷ 应执行。执行人员可跨部门，所以逐行可能不等、总计相等。">?</span></h6>
         <div class="ant-radio-group ant-radio-group-solid css-vgijab rea-bd-cmp-switch" id="rea-bd-cmp-switch">
           <div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small">
             <div class="ant-space-item">
@@ -10265,7 +10265,7 @@ render();</script>
          统计范围与粒度都跟着页顶时间窗走（跨度 ≤ 31 天按日、32–90 天按周、更长按自然月）。 -->
     <div class="rea-bd-card rea-bd-card--w12">
       <div class="rea-bd-ch">
-        <h6>群发好友回复</h6>
+        <h6>群发好友回复<span class="rea-bd-help" tabindex="0" role="img" aria-label="数据来源与统计口径" data-tip="来源：群发好友任务的好友级发送与回复记录。口径：按好友人数计；回复率＝已回复好友 ÷ 已发送好友，分子分母同属本窗口，并按任务下发日归格，回复晚到也算在下发那一格。">?</span></h6>
         <span class="rea-bd-links"><a href="#" data-qft-all>查看全部<span class="rea-bd-chev" aria-hidden="true">›</span></a></span>
       </div>
       <div class="rea-qft-kpis" id="rea-qft-kpis"></div>
@@ -10277,7 +10277,7 @@ render();</script>
          点行进该类型的详情页（视频号发布任务没有详情页，那一行不给箭头也不可点），
          右下角「查看全部」进二级页看全量。三条筛选轴只留在二级页（PRD §2.5／§2.5c）。 -->
     <div class="rea-bd-card rea-bd-card--w7" id="rea-bd-peek">
-      <div class="rea-bd-ch"><h6>任务列表</h6></div>
+      <div class="rea-bd-ch"><h6>任务列表<span class="rea-bd-help" tabindex="0" role="img" aria-label="数据来源与统计口径" data-tip="来源：与看板同一批任务台账。口径：按下发日从新到旧露出前 5 条，进度按人次计；完整逐条清单、创建时间与筛选在二级页「任务列表」。">?</span></h6></div>
       <div class="rea-bd-tl">
         <div class="rea-bd-tl-head">
           <span class="rea-bd-tlc-name">任务</span>
@@ -10295,16 +10295,15 @@ render();</script>
       </div>
     </div>
 
-    <!-- 配置 / 资产 · 这三个模块没有「完成率」这个概念（规则／模版／台账），
+    <!-- 配置 / 资产 · 这两个模块没有「完成率」这个概念（规则／模版），
          面板里都是存量数，窗口换了它一个字不动（PRD §2.5a / §3.3）。 -->
     <div class="rea-bd-card rea-bd-card--w5" id="rea-bd-cfg">
-      <div class="rea-bd-ch"><h6>配置 / 资产</h6></div>
+      <div class="rea-bd-ch"><h6>配置 / 资产<span class="rea-bd-help" tabindex="0" role="img" aria-label="数据来源与统计口径" data-tip="来源：各配置模块的存量台账。口径：不随页顶时间窗变化；智能回复按方案计，自动打招呼按模版数与使用人数、发送次数计。">?</span></h6></div>
       <div class="ant-tabs ant-tabs-top css-vgijab rea-bd-tabs">
         <div role="tablist" aria-orientation="horizontal" class="ant-tabs-nav">
           <div class="ant-tabs-nav-wrap"><div class="ant-tabs-nav-list" style="transform: translate(0px, 0px);">
             <div data-node-key="c1" class="ant-tabs-tab ant-tabs-tab-active" data-bd-pane="cfg-ai"><div role="tab" aria-selected="true" class="ant-tabs-tab-btn" tabindex="0">智能回复</div></div>
             <div data-node-key="c3" class="ant-tabs-tab" data-bd-pane="cfg-zh"><div role="tab" aria-selected="false" class="ant-tabs-tab-btn" tabindex="-1">自动打招呼</div></div>
-            <div data-node-key="c4" class="ant-tabs-tab" data-bd-pane="cfg-qun"><div role="tab" aria-selected="false" class="ant-tabs-tab-btn" tabindex="-1">微信群管理</div></div>
             <div class="ant-tabs-ink-bar ant-tabs-ink-bar-animated" style="width: 56px; left: 42px; transform: translateX(-50%);"></div>
           </div></div>
           <div class="ant-tabs-nav-operations ant-tabs-nav-operations-hidden">
@@ -10323,13 +10322,6 @@ render();</script>
               <div class="_card_13z6g_53"><p class="_cardTitle_13z6g_60">模版数</p><p class="_cardNum_13z6g_66">6</p></div>
               <div class="_card_13z6g_53"><p class="_cardTitle_13z6g_60">使用人数</p><p class="_cardNum_13z6g_66">19<span> / 24 人</span></p></div>
               <div class="_card_13z6g_53"><p class="_cardTitle_13z6g_60">发送次数</p><p class="_cardNum_13z6g_66">4,882</p></div>
-            </div>
-          </div>
-          <div role="tabpanel" tabindex="0" aria-hidden="true" class="ant-tabs-tabpane ant-tabs-tabpane-hidden" data-bd-pane="cfg-qun">
-            <div class="_threeBox_13z6g_50 rea-bd-cfg">
-              <div class="_card_13z6g_53"><p class="_cardTitle_13z6g_60">群总数</p><p class="_cardNum_13z6g_66">147</p></div>
-              <div class="_card_13z6g_53"><p class="_cardTitle_13z6g_60">异常群数</p><p class="_cardNum_13z6g_66">3<span> 个被踢出群</span></p></div>
-              <div class="_card_13z6g_53"><p class="_cardTitle_13z6g_60">覆盖成员数</p><p class="_cardNum_13z6g_66">5,236</p></div>
             </div>
           </div>
         </div></div>
@@ -11468,7 +11460,7 @@ render();</script>
 <script type="text/plain" id="srcBoardTask">
 <div class="_board_gf4go_1 rea-bd-page rea-bd-sec">
   <div class="_title_gf4go_8 rea-bd-pagehead">
-    <h6>执行人明细</h6>
+    <h6>执行人明细<span class="rea-bd-help" tabindex="0" role="img" aria-label="数据来源与统计口径" data-tip="来源：看板当前窗口的任务按执行人员聚合。口径：按人次计，一条任务派给几个人算几次；完成率＝已执行 ÷ 应执行。">?</span></h6>
     <a href="#" data-rea="微小助看板" class="rea-bd-back">← 返回看板</a>
   </div>
   <div class="ant-divider css-vgijab ant-divider-horizontal" role="separator" style="margin: 0px;"></div>
@@ -11573,7 +11565,7 @@ render();</script>
 <script type="text/plain" id="srcBoardPerson">
 <div class="_board_gf4go_1 rea-bd-page rea-bd-sec">
   <div class="_title_gf4go_8 rea-bd-pagehead">
-    <h6>执行人详情</h6>
+    <h6>执行人详情<span class="rea-bd-help" tabindex="0" role="img" aria-label="数据来源与统计口径" data-tip="来源：执行人明细里这个人的同一批任务。口径：上方汇总按人次；下方任务清单的进度按整条任务计，不是这个人的份额。">?</span></h6>
     <a href="#" data-rea="微小助看板 · 执行人明细" class="rea-bd-back">← 返回执行人明细</a>
   </div>
   <div class="ant-divider css-vgijab ant-divider-horizontal" role="separator" style="margin: 0px;"></div>
@@ -11617,7 +11609,7 @@ render();</script>
 <script type="text/plain" id="srcBoardTasks">
 <div class="_board_gf4go_1 rea-bd-page rea-bd-sec">
   <div class="_title_gf4go_8 rea-bd-pagehead">
-    <h6>任务列表</h6>
+    <h6>任务列表<span class="rea-bd-help" tabindex="0" role="img" aria-label="数据来源与统计口径" data-tip="来源：看板当前窗口的同一批任务。口径：条数随窗口与三轴筛选变；进度按人次计；创建时间取任务记录的创建时间，窗口按下发日归组。">?</span></h6>
     <a href="#" data-rea="微小助看板" class="rea-bd-back">← 返回看板</a>
   </div>
   <div class="ant-divider css-vgijab ant-divider-horizontal" role="separator" style="margin: 0px;"></div>
@@ -11745,12 +11737,13 @@ render();</script>
       <div class="ant-table ant-table-middle css-vgijab">
         <div class="ant-table-container"><div class="ant-table-content">
           <table class="rea-bd-follow" style="table-layout: fixed;">
-            <colgroup><col style="width: 20%"><col style="width: 11%"><col style="width: 10%"><col style="width: 12%"><col style="width: 18%"><col style="width: 14%"><col style="width: 8%"><col style="width: 7%"></colgroup>
+            <colgroup><col style="width: 18%"><col style="width: 9%"><col style="width: 9%"><col style="width: 10%"><col style="width: 12%"><col style="width: 16%"><col style="width: 12%"><col style="width: 8%"><col style="width: 6%"></colgroup>
             <thead class="ant-table-thead"><tr>
               <th scope="col" class="ant-table-cell">任务名称</th>
               <th scope="col" class="ant-table-cell">任务类型</th>
               <th scope="col" class="ant-table-cell">创建人</th>
               <th scope="col" class="ant-table-cell" title="该任务的执行人员人数；执行人员可跨部门（「部门完成情况」按创建人所属部门聚合，两种口径不同）">执行人员</th>
+              <th scope="col" class="ant-table-cell" title="任务创建（下发）的时间；页面窗口按下发日归组">创建时间</th>
               <th scope="col" class="ant-table-cell">任务有效期</th>
               <th scope="col" class="ant-table-cell" title="该任务已执行人数 / 应执行人数（人次）；占比图与部门完成情况按任务条数算">进度</th>
               <th scope="col" class="ant-table-cell">状态</th>
@@ -12106,6 +12099,15 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-ch{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:2px 0 14px}
 .rea-bd-ch h6{margin:0;color:#1F2329;font-size:15px;line-height:22px;font-weight:600;letter-spacing:-.2px}
 .rea-bd-ch .th{margin-left:auto;color:#8F959E;font-size:12px}
+/* 口径提示（PRD §2.11）：卡头／页头／筛选栏里的灰色问号，悬停或键盘聚焦浮出
+   「数据来源＋统计口径」。平时只占一枚 15px 圆点，页面不铺常驻说明。 */
+.rea-bd-help{position:relative;display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;flex:0 0 15px;margin-left:6px;border:1px solid #C9CED6;border-radius:50%;color:#8F959E;font-size:10px;line-height:1;font-weight:600;font-style:normal;cursor:help;vertical-align:-2px;-webkit-user-select:none;user-select:none}
+.rea-bd-help:hover,.rea-bd-help:focus-visible{border-color:#1677FF;color:#1677FF}
+.rea-bd-help::after{content:attr(data-tip);position:absolute;left:0;top:calc(100% + 9px);z-index:40;width:max-content;max-width:268px;padding:9px 11px;border-radius:8px;background:#1F2329;color:#fff;font-size:12px;line-height:1.65;font-weight:400;letter-spacing:0;text-align:left;white-space:normal;box-shadow:0 6px 18px rgba(15,29,51,.18);opacity:0;visibility:hidden;transform:translateY(-2px);transition:opacity .12s ease-out,transform .12s ease-out;pointer-events:none}
+.rea-bd-help:hover::after,.rea-bd-help:focus-visible::after{opacity:1;visibility:visible;transform:none}
+/* 悬停的卡抬一层，免得提示被下一张卡盖住；环卡原本就压在最上面，悬停时再抬一档。 */
+.rea-bd-card:hover,.rea-bd-card:focus-within{position:relative;z-index:9}
+#rea-bd-health:hover,#rea-bd-health:focus-within{z-index:10}
 /* 视口 1280 以下内容区不足 770px，两列会把环形和右侧的横条挤在一起，回落到单列 */
 @media (max-width:1279px){
   .rea-bd-card--w8,.rea-bd-card--w7,.rea-bd-card--w6,.rea-bd-card--w5,.rea-bd-card--w4{grid-column:span 12}
@@ -12425,7 +12427,8 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-prow:hover .nm,.rea-bd-prow:focus-visible .nm{color:#1677FF}
 .rea-bd-prow .rea-bd-go{display:inline-block;margin-left:6px;color:#B7BCC4;font-size:14px;transition:color .15s,transform .15s}
 .rea-bd-prow:hover .rea-bd-go{color:#1677FF;transform:translateX(2px)}
-.rea-bd-people,.rea-bd-span{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.rea-bd-people,.rea-bd-span,.rea-bd-created{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.rea-bd-created{font-variant-numeric:tabular-nums;color:#646A73}
 .rea-bd-creator{display:block;line-height:1.35}
 .rea-bd-creator em{display:block;font-style:normal;font-size:12px;color:#8F959E}
 .rea-bd-table .ant-table-cell{white-space:nowrap}
@@ -12516,9 +12519,6 @@ body .subapp{background:#F6F8FB!important}
 .rea-qft-kpi b{color:#1F2329;font-size:17px;font-weight:600;line-height:1.3}
 .rea-qft-kpi.primary b{font-size:22px;line-height:1.2}
 .rea-qft-kpi b i{font-style:normal;font-size:12px;font-weight:400;color:#8F959E;margin-left:2px}
-.rea-qft-kpi b em{font-style:normal;font-size:12px;font-weight:500;margin-left:8px}
-.rea-qft-kpi b em.up{color:#52C41A}.rea-qft-kpi b em.down{color:#FAAD14}
-.rea-qft-kpi b em.flat{color:#8F959E}
 .rea-qft-chart{position:relative;margin-top:8px;min-height:200px}
 .rea-qft-chart svg{display:block;width:100%}
 .rea-qft-tip{position:absolute;z-index:5;display:none;pointer-events:none;padding:8px 10px;background:rgba(255,255,255,.98);border:1px solid #E5E8EF;border-radius:6px;box-shadow:0 6px 16px rgba(0,0,0,.08);color:#1F2329;font-size:12px;line-height:20px;white-space:nowrap}
@@ -12856,16 +12856,11 @@ function renderQfTrend(){
   var kb=document.getElementById("rea-qft-kpis");
   if(!box||!kb)return;
   var view=qfBuckets(QFMODE),n=view.length,i;
-  var w=WIN[CURW]||WIN[DEFW],lo=w[0],hi=w[1],len=hi-lo+1;
-  var cur=qfTotals(lo,hi),prev=qfTotals(lo-len,lo-1);
+  var w=WIN[CURW]||WIN[DEFW],lo=w[0],hi=w[1];
+  var cur=qfTotals(lo,hi);
   var rate=cur.sent?cur.rep/cur.sent:0,ts=cur.sent,tr=cur.rep;
-  var prate=prev.sent?prev.rep/prev.sent:0,delta=(rate-prate)*100;
-  var has=prev.sent>0;
-  var cls=delta>0.05?"up":(delta<-0.05?"down":"flat");
-  var sign=delta>0.05?"↑ ":delta<-0.05?"↓ ":"— ";
   kb.innerHTML=
-    "<p class='rea-qft-kpi primary'><span class='k'>回复率</span><b>"+(rate*100).toFixed(1)+"%"
-      +(has?"<em class='"+cls+"'>"+sign+Math.abs(delta).toFixed(1)+"pp</em>":"")+"</b></p>"
+    "<p class='rea-qft-kpi primary'><span class='k'>回复率</span><b>"+(rate*100).toFixed(1)+"%</b></p>"
     +"<p class='rea-qft-kpi'><span class='k'>已发送好友</span><b>"+qfNum(ts)+"<i> 人</i></b></p>"
     +"<p class='rea-qft-kpi'><span class='k'>已回复好友</span><b>"+qfNum(tr)+"<i> 人</i></b></p>"
     +"<p class='rea-qft-kpi'><span class='k'>未回复好友</span><b>"+qfNum(ts-tr)+"<i> 人</i></b></p>";
@@ -13384,6 +13379,12 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     'var BDRM=!!(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches);',
     'var BDANIM=0;',
     'function offOf(r){return parseInt(r.getAttribute("data-bd-day"),10)||0}',
+    '/* 创建时间：台账只存下发日（相对今天的天偏移），这里按行号摊出一个当天 07:00–08:59 的时刻，',
+    '   早于有效期起点 09:00；同一行每次重画都得到同一个值（不随刷新抖动）。 */',
+    'function createdOf(r){',
+    '  var id=parseInt(r.getAttribute("data-bd-row"),10)||0,d=dayAt(offOf(r)),m=7*60+(id*11)%120;',
+    '  return d.getFullYear()+"-"+PAD(d.getMonth()+1)+"-"+PAD(d.getDate())+" "+PAD(Math.floor(m/60))+":"+PAD(m%60);',
+    '}',
     'function inWin(d,w){var r=WIN[w]||WIN[DEFW];return d>=r[0]&&d<=r[1]}',
     '/* 偏移量↔日期：台账只存「相对今天第几天」，画图时才换算成真实日期（今天永远是 0）。 */',
     'function dayAt(off){var d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()+off);return d}',
@@ -13821,6 +13822,7 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '      org:r.getAttribute("data-bd-org"),',
     '      name:((c[0]&&c[0].getAttribute("title"))||(c[0]&&c[0].textContent)||"").trim(),',
     '      creator:cr,',
+    '      created:createdOf(r),',
     '      people:((c[3]&&c[3].textContent)||"").trim(),',
     '      span:((c[4]&&c[4].textContent)||"").replace(/\\s+/g," ").trim(),',
     '      need:need,',
@@ -15017,13 +15019,14 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '      +"<td class=\\"ant-table-cell\\">"+esc(r.type)+"</td>"',
     '      +"<td class=\\"ant-table-cell\\"><span class=\\"rea-bd-creator\\">"+esc(r.creator)+"<em>"+esc(r.org)+"</em></span></td>"',
     '      +"<td class=\\"ant-table-cell\\"><span class=\\"rea-bd-people\\" title=\\""+esc(r.people)+"\\">"+esc(r.people)+"</span></td>"',
+    '      +"<td class=\\"ant-table-cell\\"><span class=\\"rea-bd-created\\">"+esc(r.created||"—")+"</span></td>"',
     '      +"<td class=\\"ant-table-cell\\"><span class=\\"rea-bd-span\\" title=\\""+esc(r.span)+"\\">"+esc(shortSpan(r.span))+"</span></td>"',
     '      +"<td class=\\"ant-table-cell\\"><div class=\\"rea-bd-pg\\"><span class=\\"n\\"><span>"+r.done+" / "+r.need+"</span><em>"+(r.need?Math.round(r.done/r.need*100)+"%":"")+"</em></span>"+seg(r.need,r.done,r.left,r.over)+"</div></td>"',
     '      +"<td class=\\"ant-table-cell\\">"+tag(state)+"</td>"',
     '      +"<td class=\\"ant-table-cell\\">"+op(r.type)+"</td>"',
     '      +"</tr>";',
     '  }',
-    '  if(!fs.length)h="<tr class=\\"ant-table-row ant-table-row-level-0\\"><td class=\\"ant-table-cell\\" colspan=\\"8\\"><span class=\\"rea-bd-dim\\">没有符合条件的任务</span></td></tr>";',
+    '  if(!fs.length)h="<tr class=\\"ant-table-row ant-table-row-level-0\\"><td class=\\"ant-table-cell\\" colspan=\\"9\\"><span class=\\"rea-bd-dim\\">没有符合条件的任务</span></td></tr>";',
     '  body.innerHTML=h;',
     '  var n=document.getElementById("rea-tasks-count");',
     '  if(n)n.textContent="共 "+fs.length+" 条";',
