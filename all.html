@@ -11565,7 +11565,7 @@ render();</script>
 <script type="text/plain" id="srcBoardPerson">
 <div class="_board_gf4go_1 rea-bd-page rea-bd-sec">
   <div class="_title_gf4go_8 rea-bd-pagehead">
-    <h6>执行人详情<span class="rea-bd-help" tabindex="0" role="img" aria-label="数据来源与统计口径" data-tip="来源：执行人明细里这个人的同一批任务。口径：上方汇总按人次；下方任务清单的进度按整条任务计，不是这个人的份额。">?</span></h6>
+    <h6>执行人详情<span class="rea-bd-help" tabindex="0" role="img" aria-label="数据来源与统计口径" data-tip="来源：执行人明细里这个人的同一批任务。口径：上方汇总按人次；下方任务清单的进度按整条任务计，不是这个人的份额；清单按任务创建时间从新到旧排列。">?</span></h6>
     <a href="#" data-rea="微小助看板 · 执行人明细" class="rea-bd-back">← 返回执行人明细</a>
   </div>
   <div class="ant-divider css-vgijab ant-divider-horizontal" role="separator" style="margin: 0px;"></div>
@@ -11583,10 +11583,11 @@ render();</script>
       <div class="ant-table ant-table-middle css-vgijab">
         <div class="ant-table-container"><div class="ant-table-content">
           <table class="rea-bd-person-table" style="table-layout: fixed;">
-            <colgroup><col style="width: 32%"><col style="width: 14%"><col style="width: 24%"><col style="width: 20%"><col style="width: 10%"></colgroup>
+            <colgroup><col style="width: 26%"><col style="width: 12%"><col style="width: 16%"><col style="width: 20%"><col style="width: 18%"><col style="width: 8%"></colgroup>
             <thead class="ant-table-thead"><tr>
               <th scope="col" class="ant-table-cell">任务名称</th>
               <th scope="col" class="ant-table-cell">任务类型</th>
+              <th scope="col" class="ant-table-cell">任务创建时间</th>
               <th scope="col" class="ant-table-cell">任务有效期</th>
               <th scope="col" class="ant-table-cell" title="整条任务的已执行 / 应执行人次，不是这个人的">任务进度</th>
               <th scope="col" class="ant-table-cell">状态</th>
@@ -14794,8 +14795,8 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '    out.push({r:r,o:o,need:need,done:done,left:left,over:over});',
     '  }',
     '  out.sort(function(x,y){',
-    '    if(x.over!==y.over)return y.over-x.over;',
-    '    if(x.left!==y.left)return y.left-x.left;',
+    '    var a=x.r.created||"",b=y.r.created||"";',
+    '    if(a!==b)return a<b?1:-1;',
     '    return x.r.name<y.r.name?-1:1;',
     '  });',
     '  return out;',
@@ -14812,12 +14813,13 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '      +(HAS[x.r.type]?"<a href=\\"#\\" data-rea=\\""+esc(x.r.type)+" · 详情\\" title=\\""+esc(x.r.name)+"\\"><span class=\\"tx\\">"+esc(x.r.name)+"</span></a>":"<span class=\\"tx\\" title=\\""+esc(x.r.name)+"\\">"+esc(x.r.name)+"</span>")',
     '      +"</span></td>"',
     '      +"<td class=\\"ant-table-cell\\">"+esc(x.r.type)+"</td>"',
+    '      +"<td class=\\"ant-table-cell\\">"+esc(x.r.created)+"</td>"',
     '      +"<td class=\\"ant-table-cell\\"><span class=\\"rea-bd-span\\" title=\\""+esc(x.r.span)+"\\">"+esc(x.r.span)+"</span></td>"',
     '      +"<td class=\\"ant-table-cell\\"><div class=\\"rea-bd-pg\\"><span class=\\"n\\"><span>"+x.r.done+" / "+x.r.need+"</span><em>"+trate.toFixed(1)+"%</em></span>"+seg(x.r.need,x.r.done,x.r.left,x.r.over)+"</div></td>"',
     '      +"<td class=\\"ant-table-cell\\"><span class=\\"st "+cls+"\\">"+st+"</span></td>"',
     '      +"</tr>";',
     '  }',
-    '  if(!ts.length)h="<tr class=\\"ant-table-row ant-table-row-level-0\\"><td class=\\"ant-table-cell\\" colspan=\\"5\\"><span class=\\"rea-bd-dim\\">该时间窗内没有这个人的执行记录</span></td></tr>";',
+    '  if(!ts.length)h="<tr class=\\"ant-table-row ant-table-row-level-0\\"><td class=\\"ant-table-cell\\" colspan=\\"6\\"><span class=\\"rea-bd-dim\\">该时间窗内没有这个人的执行记录</span></td></tr>";',
     '  document.getElementById("rea-ps-body").innerHTML=h;',
     '  var pc=need?done/need*100:0;',
     '  document.getElementById("rea-ps-stats").innerHTML=',
