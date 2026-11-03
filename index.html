@@ -11538,11 +11538,10 @@ render();</script>
       <div class="ant-table ant-table-middle css-vgijab">
         <div class="ant-table-container"><div class="ant-table-content">
           <table class="rea-bd-people-table" style="table-layout: fixed;">
-            <colgroup><col style="width: 23%"><col style="width: 13%"><col style="width: 9%"><col style="width: 9%"><col style="width: 9%"><col style="width: 9%"><col style="width: 8%"><col style="width: 20%"></colgroup>
+            <colgroup><col style="width: 26%"><col style="width: 14%"><col style="width: 10%"><col style="width: 10%"><col style="width: 10%"><col style="width: 10%"><col style="width: 20%"></colgroup>
             <thead class="ant-table-thead"><tr>
               <th scope="col" class="ant-table-cell">执行人</th>
               <th scope="col" class="ant-table-cell">所属部门</th>
-              <th scope="col" class="ant-table-cell" title="该执行人在这个窗口里被派到的任务条数"><span class="sortc" role="button" tabindex="0" data-dtl-sortby="tasks" aria-sort="none">参与任务<i>↕</i></span></th>
               <th scope="col" class="ant-table-cell" title="这个人被派到的任务人次之和"><span class="sortc" role="button" tabindex="0" data-dtl-sortby="need" aria-sort="none">应执行<i>↕</i></span></th>
               <th scope="col" class="ant-table-cell"><span class="sortc" role="button" tabindex="0" data-dtl-sortby="done" aria-sort="none">已执行<i>↕</i></span></th>
               <th scope="col" class="ant-table-cell" title="应执行 − 已执行；含已过期、做不了的那部分人次"><span class="sortc" role="button" tabindex="0" data-dtl-sortby="left" aria-sort="none">未执行<i>↕</i></span></th>
@@ -14503,7 +14502,7 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '   从看板排行点进来时带 done／rate，排序与名次跟着排行走；',
     '   名次只在按「已执行」「完成率」排时出现（排行口径），按别的列排不显示。 */',
     'var SORT=window.__REA_SORT||"debt",SK=window.__REA_SORTKEY||"",SD=window.__REA_SORTDIR==1?1:-1;',
-    'var KEYS={tasks:1,need:1,done:1,left:1,over:1,rate:1};',
+    'var KEYS={need:1,done:1,left:1,over:1,rate:1};',
     'var SORTKEY=KEYS[SK]?SK:(SORT==="done"?"done":(SORT==="rate"?"rate":"over")),SORTDIR=SD;',
     'var CURO="all";',
     'function winRows(w){',
@@ -14525,7 +14524,7 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '  var g=gcd(p.done,p.need);',
     '  return (p.done/g)+"/"+(p.need/g);',
     '}',
-    'function val(p,k){return k==="tasks"?p.tn:p[k]}',
+    'function val(p,k){return p[k]}',
     'function cmpKey(x,y,k){',
     '  if(k==="rate")return cmpRate(x,y);',
     '  return val(x,k)-val(y,k);',
@@ -14581,17 +14580,15 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '/* ===== 按**执行人**聚合（不是按任务）：一个人跨几条任务就累加几次。',
     '   它与看板上的「组织范围」是两个正交口径——那边按**创建人**的部门分组，',
     '   这里按**被派给谁**分组，所以两处的人次不可相加（PRD §5.4）。',
-    '   参与任务数按**条**去重（同一任务里被派两次只算一条），应执行按**人次**累加。',
-    '   参与者全列（含做满的人），这样 Σ应执行 才能对回窗口合计。 */',
+    '   应执行按**人次**累加；参与者全列（含做满的人），这样 Σ应执行 才能对回窗口合计。 */',
     'function people(w){',
     '  var rs=winRows(w),map={},order=[],out=[],i,j,a,p,as;',
     '  for(i=0;i<rs.length;i++){',
     '    as=rs[i].assignees||[];',
     '    for(j=0;j<as.length;j++){',
     '      a=as[j];',
-    '      if(!map[a.n]){map[a.n]={n:a.n,o:a.o,need:0,done:0,left:0,over:0,tn:0,last:-1,idx:order.length};order.push(a.n)}',
+    '      if(!map[a.n]){map[a.n]={n:a.n,o:a.o,need:0,done:0,left:0,over:0,idx:order.length};order.push(a.n)}',
     '      p=map[a.n];p.need++;',
-    '      if(p.last!==i){p.tn++;p.last=i}',
     '      if(a.d)p.done++;else{p.left++;if(a.over)p.over++}',
     '    }',
     '  }',
@@ -14610,7 +14607,6 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '    h+="<tr class=\\"ant-table-row ant-table-row-level-0 rea-bd-prow\\" tabindex=\\"0\\" role=\\"button\\" title=\\"查看 "+esc(p.n)+" 的任务清单\\" data-dtl-person=\\""+esc(p.n)+"\\">"',
     '      +"<td class=\\"ant-table-cell\\">"+(rk[p.n]?"<span class=\\"rea-bd-rk\\">"+rk[p.n]+"</span>":"")+"<span class=\\"ant-typography css-vgijab nm\\">"+esc(p.n)+"</span><span class=\\"rea-bd-go\\" aria-hidden=\\"true\\">›</span></td>"',
     '      +"<td class=\\"ant-table-cell\\">"+esc(p.o)+"</td>"',
-    '      +"<td class=\\"ant-table-cell\\">"+p.tn+"</td>"',
     '      +"<td class=\\"ant-table-cell\\">"+p.need+"</td>"',
     '      +"<td class=\\"ant-table-cell\\">"+p.done+"</td>"',
     '      +"<td class=\\"ant-table-cell\\">"+p.left+"</td>"',
@@ -14618,13 +14614,12 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     '      +"<td class=\\"ant-table-cell rea-dtl-rate\\"><span class=\\"pct\\">"+r.toFixed(1)+"%</span>"+seg(p.need,p.done,p.left,p.over)+"</td>"',
     '      +"</tr>";',
     '  }',
-    '  if(!ps.length)h="<tr class=\\"ant-table-row ant-table-row-level-0\\"><td class=\\"ant-table-cell\\" colspan=\\"8\\"><span class=\\"rea-bd-dim\\">该窗口没有执行记录</span></td></tr>";',
+    '  if(!ps.length)h="<tr class=\\"ant-table-row ant-table-row-level-0\\"><td class=\\"ant-table-cell\\" colspan=\\"7\\"><span class=\\"rea-bd-dim\\">该窗口没有执行记录</span></td></tr>";',
     '  if(ps.length){',
     '    var tr=need?done/need*100:0;',
     '    h+="<tr class=\\"ant-table-row ant-table-row-level-0 rea-bd-sum\\">"',
     '      +"<td class=\\"ant-table-cell\\">合计</td>"',
     '      +"<td class=\\"ant-table-cell\\">"+ps.length+" 人</td>"',
-    '      +"<td class=\\"ant-table-cell\\">—</td>"',
     '      +"<td class=\\"ant-table-cell\\">"+need+"</td>"',
     '      +"<td class=\\"ant-table-cell\\">"+done+"</td>"',
     '      +"<td class=\\"ant-table-cell\\">"+left+"</td>"',
