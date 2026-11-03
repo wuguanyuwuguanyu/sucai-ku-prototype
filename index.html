@@ -9843,7 +9843,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 <script type="text/plain" id="srcOverview"><div class="rea-ov-page">
 <main class="wrap">
   <header class="top">
-    <div><div class="eyebrow">企业价值</div><h1>使用总览</h1><div class="range-label" id="range-label">2026.09.30—2026.10.29 · 演示</div></div>
+    <div><h1>使用总览</h1></div>
     <div class="top-actions">
       <div class="date" role="group" aria-label="统计时间范围">
         <button type="button" data-period="day" aria-pressed="false">今日</button>
@@ -9945,7 +9945,7 @@ function render(){
  setText('#assigned-total',assigned);setText('#bought-total',bought);setText('#donut-total',bought);
  const circumference=2*Math.PI*50;let offset=0;
  $('#seat-donut-segments').innerHTML=bought?TIERS.map((t,i)=>{const length=t.bought/bought*circumference,segment=`<circle class="seat-donut-segment" cx="64" cy="64" r="50" stroke="${TIER_COLORS[i]}" stroke-dasharray="${Math.max(0,length-3)} ${circumference}" stroke-dashoffset="${-offset}" transform="rotate(-90 64 64)"/>`;offset+=length;return segment}).join(''):'';
- setText('#range-label',d.range);setText('#material-number',fmt(d.material));setText('#material-people',d.materialPeople+' 人参与');
+ setText('#material-number',fmt(d.material));setText('#material-people',d.materialPeople+' 人参与');
  setText('#hosting-number',fmt(d.hosting));setText('#hosting-people','覆盖 '+d.hostingPeople+' 人');
  setText('#task-number',fmt(d.tasks));setText('#task-trend',d.prev?`较上期 +${fmt(d.tasks-d.prev.tasks)} 条`:'点击查看详情');
  setText('#used-number',used);setText('#unused-number',assigned-used+' 人');setText('#used-legend',used);setText('#unused-legend',assigned-used);
