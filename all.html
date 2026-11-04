@@ -13307,11 +13307,10 @@ function renderTrTrend(){
       g+="<circle class='rea-dot' cx='"+pts[i][0].toFixed(1)+"' cy='"+pts[i][1].toFixed(1)+"' r='3' fill='#ffffff' stroke='"+series[si].c+"' stroke-width='2'/>";
     }
   }
-  /* 日期标签按格宽抽稀；末格另有「今日／本周／本月」压底，格子太窄时不强补 */
-  var step=Math.ceil(n/8);
+  /* 日期标签：格子放得下就每格都写（近三月最多 14 格），窄了才按格宽抽稀，末格始终写。 */
+  var step=Math.max(1,Math.ceil(34/band));
   for(i=0;i<n;i++){
     if(n>1&&i!==n-1&&(i%step!==0||n-1-i<step)&&view[i].s.getMonth()!==0)continue;
-    if(n>1&&i===n-1&&band<60)continue;
     g+="<text x='"+(L+i*band+band/2).toFixed(1)+"' y='"+(T+ph+18)+"' text-anchor='middle' fill='#8F959E' font-size='11'>"+trMd(view[i].s)+"</text>";
   }
   for(i=0;i<n;i++){
