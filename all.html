@@ -20454,7 +20454,7 @@ if(!total){
     zero.hidden=false;
     zero.innerHTML='<div class="lead">所选时间段内没有取用</div>'
       +'<div class="sub">这条素材在 '+LAB[win]+(dept==="all"?"":" · "+esc(dept))+' 没有产生复制、保存、发送或发圈。</div>'
-      +'<div class="last">截至今天最后一次取用：'+(lastAll>-999?fmtDate(lastAll)+"（"+(-lastAll)+" 天前）":"近三个月内没有取用记录")+'</div>';
+      +'<div class="last">截至今天最后一次取用：'+(lastAll>-999?fmtDate(lastAll)+"（"+(-lastAll)+" 天前）":"没有取用记录")+'</div>';
   }
   ["rea-md-acts-card","rea-md-depts-card","rea-md-users-card"].forEach(function(id){
     var el=document.getElementById(id);if(el)el.hidden=true;
