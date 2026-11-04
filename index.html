@@ -11695,7 +11695,7 @@ else if(overviewNav){requestAnimationFrame(()=>{overviewScroller().scrollTop=ove
       <div class="rea-mb-scroll rea-mb-use-scroll">
         <table class="rea-mb-tbl rea-mb-use">
           <colgroup>
-            <col><col style="width:92px"><col style="width:92px"><col style="width:76px"><col style="width:76px"><col style="width:94px"><col style="width:94px"><col style="width:84px"><col style="width:94px"><col style="width:56px"><col style="width:94px"><col style="width:176px">
+            <col><col style="width:92px"><col style="width:92px"><col style="width:76px"><col style="width:76px"><col style="width:94px"><col style="width:88px"><col style="width:94px"><col style="width:84px"><col style="width:94px"><col style="width:56px"><col style="width:94px"><col style="width:176px">
           </colgroup>
           <thead><tr>
             <th>素材标题</th>
@@ -11704,6 +11704,7 @@ else if(overviewNav){requestAnimationFrame(()=>{overviewScroller().scrollTop=ove
             <th class="num"><span class="sortc on" role="button" tabindex="0" data-mb-sort="count">使用次数 <i>↓</i></span></th>
             <th class="num"><span class="sortc" role="button" tabindex="0" data-mb-sort="people">使用人数 <i>↕</i></span></th>
             <th><span class="sortc" role="button" tabindex="0" data-mb-sort="last">最近使用 <i>↕</i></span></th>
+            <th>使用情况</th>
             <th>有效期</th>
             <th>状态</th>
             <th>创建时间</th>
@@ -11831,7 +11832,7 @@ else if(overviewNav){requestAnimationFrame(()=>{overviewScroller().scrollTop=ove
     <div class="rea-mb-scroll rea-mb-dscroll">
       <table class="rea-mb-tbl rea-mb-dtbl">
         <colgroup>
-          <col><col style="width:170px"><col style="width:70px"><col style="width:100px"><col style="width:82px"><col style="width:86px"><col style="width:112px"><col style="width:86px"><col style="width:206px"><col style="width:104px">
+          <col><col style="width:170px"><col style="width:70px"><col style="width:100px"><col style="width:82px"><col style="width:86px"><col style="width:112px"><col style="width:86px"><col style="width:206px"><col style="width:104px"><col style="width:88px">
         </colgroup>
         <thead><tr>
           <th>素材标题</th>
@@ -11844,6 +11845,7 @@ else if(overviewNav){requestAnimationFrame(()=>{overviewScroller().scrollTop=ove
           <th class="num"><span class="sortc" role="button" tabindex="0" data-mb-sort="people">使用人数 <i>↕</i></span></th>
           <th class="num"><span class="sortc" role="button" tabindex="0" data-mb-sort="reply" title="引用该素材的群发好友任务（全部部门合计），按回复率排">群发好友回复 <i>↕</i></span></th>
           <th><span class="sortc" role="button" tabindex="0" data-mb-sort="last">最近使用 <i>↕</i></span></th>
+          <th>使用情况</th>
         </tr></thead>
         <tbody id="rea-mb-dbody"></tbody>
       </table>
@@ -11869,6 +11871,66 @@ else if(overviewNav){requestAnimationFrame(()=>{overviewScroller().scrollTop=ove
   </div>
   <div class="rea-mb-pg" id="rea-mb-dw-pg"></div>
 </aside>
+</div></div>
+</script>
+
+<!-- 素材使用详情（三级页）：从「素材使用」「素材明细」或素材库列表进来。
+     正文结构固定，数与学生都从 window.__REA_MAT 那份行数据现算，不另编一份。 -->
+<script type="text/plain" id="srcBoardMatDetail"><div class="ant-spin-nested-loading css-vgijab rea-bd-page"><div class="ant-spin-container">
+<div class="_board_gf4go_1 rea-bd-sec rea-bd-shell">
+
+  <div class="rea-bd-hero">
+    <h1>素材使用详情</h1>
+    <a class="rea-bd-back" href="#" id="rea-md-back">← 返回素材看板</a>
+    <span class="rea-bd-upd">数据更新于 <span id="rea-md-now"></span></span>
+  </div>
+
+  <div class="rea-md-scope" id="rea-md-scope"></div>
+
+  <div class="rea-bd-grid">
+    <div class="rea-bd-card rea-bd-card--w12 rea-md-mat" id="rea-md-mat"></div>
+
+    <div class="rea-bd-card rea-bd-card--w12 rea-md-sums">
+      <div class="rea-md-tiles" id="rea-md-tiles"></div>
+    </div>
+
+    <div class="rea-bd-card rea-bd-card--w12">
+      <div class="rea-bd-ch"><h6>取用趋势</h6><span class="rea-mb-sub" id="rea-md-gran"></span></div>
+      <div class="rea-mb-legend"><span class="lg"><i class="b"></i>合计</span><span class="lg"><i></i>发送</span><span class="lg"><i class="g"></i>复制保存</span></div>
+      <div class="rea-mb-chart" id="rea-md-chart"></div>
+    </div>
+
+    <div class="rea-bd-card rea-bd-card--w12 rea-md-zero" id="rea-md-zero" hidden></div>
+
+    <div class="rea-bd-card rea-bd-card--w6" id="rea-md-acts-card">
+      <div class="rea-bd-ch"><h6>动作构成</h6><span class="rea-mb-sub">按动作看怎么用的</span></div>
+      <div class="rea-md-bars" id="rea-md-acts"></div>
+    </div>
+
+    <div class="rea-bd-card rea-bd-card--w6" id="rea-md-depts-card">
+      <div class="rea-bd-ch"><h6>部门分布</h6><span class="rea-mb-sub">按员工所属部门</span></div>
+      <div class="rea-md-bars" id="rea-md-depts"></div>
+    </div>
+
+    <div class="rea-bd-card rea-bd-card--w12" id="rea-md-users-card">
+      <div class="rea-bd-ch"><h6>谁用过</h6><span class="rea-mb-sub">按使用次数从多到少</span></div>
+      <div class="rea-mb-scroll">
+        <table class="rea-mb-tbl rea-md-users">
+          <colgroup><col><col style="width:120px"><col style="width:96px"><col style="width:96px"><col style="width:120px"></colgroup>
+          <thead><tr><th>员工</th><th>部门</th><th class="num">使用次数</th><th class="num">其中发送</th><th>最近一次</th></tr></thead>
+          <tbody id="rea-md-users"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="rea-bd-card rea-bd-card--w12" id="rea-md-qf-card">
+      <div class="rea-bd-ch"><h6>群发好友回复</h6><span class="rea-mb-sub">引用这条素材的任务</span></div>
+      <div id="rea-md-qf"></div>
+    </div>
+  </div>
+
+</div>
+<div class="rea-mb-toast" id="rea-md-toast" hidden></div>
 </div></div>
 </script>
 
@@ -12392,6 +12454,9 @@ else if(overviewNav){requestAnimationFrame(()=>{overviewScroller().scrollTop=ove
      它的二级页「素材明细」同样由 reaSynthPages() 克隆这一页的壳合成。 */
   var REA_MB_PAGE = '企业微信看板';
   var REA_MB_DETAIL = '企业微信看板 · 素材明细';
+  /* 三级页「素材使用详情」：从看板的「素材使用」、明细的行尾或素材库列表的「使用情况」进来，
+     同样是克隆看板外壳合成，正文来自载体块 srcBoardMatDetail。 */
+  var REA_MB_MAT_DETAIL = '企业微信看板 · 素材使用详情';
 
   /* 侧栏「数据看板」一组改叫三块看板（2026-10-26 与产品经理对齐）：任务看板／悬浮窗看板／素材看板。
      页名是注册表主键（REA_COVER、子页、落地页都按它查），一个字节都不能改；
@@ -13157,8 +13222,60 @@ body .subapp{background:#F6F8FB!important}
 .rea-mb-dw-f .rea-mb-search{width:100%}
 .rea-mb-dw-b{flex:1 1 auto;overflow:auto;padding:0 20px}
 .rea-mb-dw .rea-mb-pg{padding:12px 20px 16px;border-top:1px solid #F0F2F5}
+
+/* ---------- 素材使用详情（三级页） ---------- */
+.rea-md-scope{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:-2px 0 4px;color:#646A73;font-size:12px;line-height:20px}
+.rea-md-scope b{color:#1F2329;font-weight:600}
+.rea-md-scope .dot{color:#C4C8CF}
+.rea-md-mat{display:flex;align-items:flex-start;gap:20px;padding:18px 20px}
+.rea-md-mat .main{flex:1 1 auto;min-width:0}
+.rea-md-mat h2{margin:0 0 8px;color:#17253D;font-size:18px;line-height:26px;font-weight:600;letter-spacing:-.2px;word-break:break-all}
+.rea-md-tags{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.rea-md-tag{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:4px;background:#F2F5FA;color:#646A73;font-size:12px}
+.rea-md-tag.blue{background:#E6F4FF;color:#1677FF}
+.rea-md-tag.pub{background:#EAF8E8;color:#3A9E2C}
+.rea-md-tag.exp{background:#FFF3E6;color:#C26B00}
+.rea-md-meta{display:flex;flex-wrap:wrap;gap:6px 22px;color:#646A73;font-size:12px;line-height:20px}
+.rea-md-meta b{color:#1F2329;font-weight:500}
+.rea-md-prev{flex:0 0 auto;height:30px;padding:0 14px;border:1px solid #1677FF;border-radius:6px;background:#fff;color:#1677FF;font-size:13px;cursor:pointer}
+.rea-md-prev:hover{background:#F0F6FF}
+.rea-md-sums{padding:0}
+.rea-md-tiles{display:grid;grid-template-columns:repeat(5,minmax(0,1fr))}
+.rea-md-tile{position:relative;min-width:0;padding:16px 20px 18px}
+.rea-md-tile+.rea-md-tile{border-left:1px solid #F0F2F5}
+.rea-md-tile .lb{display:block;color:#8F959E;font-size:12px;line-height:18px}
+.rea-md-tile b{display:block;margin-top:4px;color:#17253D;font-size:24px;line-height:32px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rea-md-tile b small{margin-left:4px;color:#646A73;font-size:12px;font-weight:400;letter-spacing:0}
+.rea-md-tile .sub{display:block;margin-top:2px;color:#B7BCC4;font-size:11px;line-height:16px}
+.rea-md-bars{display:flex;flex-direction:column}
+.rea-md-brow{display:flex;align-items:center;gap:12px;min-height:36px;border-top:1px solid #F4F6FA}
+.rea-md-brow:first-child{border-top:0}
+.rea-md-brow .nm{flex:0 0 82px;color:#1F2329;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rea-md-brow .nm em{display:block;margin-top:1px;color:#8F959E;font-size:11px;font-style:normal;line-height:14px}
+.rea-md-brow .track{flex:1 1 auto;display:block;height:8px;min-width:20px;border-radius:4px;background:#EEF2F9;overflow:hidden}
+.rea-md-brow .track>i{display:block;height:100%;border-radius:4px;background:#1677FF}
+.rea-md-brow .n{flex:0 0 54px;text-align:right;color:#1F2329;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.rea-md-brow .pct{flex:0 0 48px;text-align:right;color:#8F959E;font-size:12px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.rea-md-note{margin-top:10px;padding-top:10px;border-top:1px solid #F0F2F5;color:#8F959E;font-size:12px;line-height:1.6}
+.rea-md-zero{padding:20px}
+.rea-md-zero .lead{color:#1F2329;font-size:14px;line-height:22px;font-weight:500}
+.rea-md-zero .sub{margin-top:6px;color:#646A73;font-size:12px;line-height:20px}
+.rea-md-zero .last{margin-top:4px;color:#8F959E;font-size:12px;line-height:20px}
+.rea-md-qf{display:flex;align-items:flex-end;gap:36px;flex-wrap:wrap;padding:2px 0 4px}
+.rea-md-qf .k{display:block;color:#8F959E;font-size:12px;line-height:18px}
+.rea-md-qf b{display:block;color:#17253D;font-size:22px;line-height:30px;font-weight:600;font-variant-numeric:tabular-nums}
+.rea-md-qf b small{margin-left:3px;color:#646A73;font-size:12px;font-weight:400}
+.rea-md-qf .hint{flex:1 1 240px;color:#8F959E;font-size:12px;line-height:20px}
+.rea-md-qf .empty{color:#8F959E;font-size:12px;line-height:20px;padding:10px 0}
+.rea-mb-tbl td.md{white-space:nowrap}
+.rea-mb-tbl td.md a{color:#1677FF;font-size:12px;line-height:20px;text-decoration:none}
+.rea-mb-tbl td.md a:hover{color:#4096FF;text-decoration:underline}
+@media (max-width:900px){
+  .rea-md-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .rea-md-tile+.rea-md-tile{border-left:0;border-top:1px solid #F0F2F5}
+}
 @media (prefers-reduced-motion: reduce){
-  .rea-mb-dw,.rea-mb-grp-row .track>i,.rea-mb-dep-row .track>i,.rea-mb-emp-row .track>i,.rea-mb-qf-row .track>i,.rea-mb-tbl tbody tr{transition:none!important}
+  .rea-mb-dw,.rea-mb-grp-row .track>i,.rea-mb-dep-row .track>i,.rea-mb-emp-row .track>i,.rea-mb-qf-row .track>i,.rea-mb-tbl tbody tr,.rea-md-brow .track>i{transition:none!important}
 }
 `;
 
@@ -18865,6 +18982,7 @@ for(i=0;i<rows.length;i++){
    return `
 (function(){
 var DETAIL=${reaJson(REA_MB_DETAIL)};
+var MATDETAIL=${reaJson(REA_MB_MAT_DETAIL)};
 var PAD=function(n){return (n<10?"0":"")+n};
 /* 日期一律相对真钟写：快照与演示集都不许出现写死日期，过一天就腐坏。 */
 function when(d,t){
@@ -19367,6 +19485,7 @@ function renderUse(w){
       +'<td class="num">'+r.count+'</td>'
       +'<td class="num">'+(r.people?r.people:"—")+'</td>'
       +'<td class="q">'+(r.last>-999?fmtDate(r.last):"—")+'</td>'
+      +'<td class="md"><a href="#" data-mb-md="'+r.id+'">查看 <span class="rea-bd-chev" aria-hidden="true">›</span></a></td>'
       +'<td class="q">'+fmtDate(r.exp)+'</td>'
       +'<td><span class="st '+(r.status==="已发布"?"pub":"exp")+'">'+r.status+'</span></td>'
       +'<td class="q">'+fmtDate(r.created)+'</td>'
@@ -19374,7 +19493,7 @@ function renderUse(w){
       +'<td class="q">'+fmtDate(r.upd)+'</td>'
       +'<td class="op"><a href="#" data-mb-op="预览">预览</a><a href="#" data-mb-op="编辑">编辑</a><a href="#" data-mb-op="删除">删除</a><a href="#" data-mb-op="移动分组">移动分组</a></td></tr>';
   }
-  if(!list.length)h='<tr><td colspan="12" class="empty">还没有企业素材</td></tr>';
+  if(!list.length)h='<tr><td colspan="13" class="empty">还没有企业素材</td></tr>';
   if(tb)tb.innerHTML=h;
   var sc=document.querySelectorAll("[data-mb-sort]"),i2;
   for(i2=0;i2<sc.length;i2++){
@@ -19611,7 +19730,14 @@ function selfCheck(w){
 
 /* ================= 页面装配 ================= */
 function dumpRows(w){
-  var rows=allRows(w,"all"),end=endOff(w),q=qfAgg(w),out=[],k,r,byId={},id;
+  var rows=allRows(w,"all"),end=endOff(w),q=qfAgg(w),out=[],k,r,byId={},id,
+      evMap={},e;
+  /* 取用流水按素材收一份（近三个月全集，不只当前窗口）：三级页要自己按部门与
+     窗口重算趋势、动作构成和谁用过，不能只拿聚合好的数。每条 [天偏移, 员工, 动作]。 */
+  for(k=0;k<EVENTS.length;k++){
+    e=EVENTS[k];
+    (evMap[e[0]]||(evMap[e[0]]=[])).push([e[2],e[1],e[3]]);
+  }
   for(k=0;k<rows.length;k++){
     r=rows[k];byId[r.id]=r;
     out.push(r);
@@ -19620,6 +19746,7 @@ function dumpRows(w){
     r=rows[k];
     var mm=q.byMat[r.id];
     r.qf=mm?{sent:mm.sent,replied:mm.replied}:null;
+    r.ev=evMap[r.id]||[];
   }
   return {rows:out,win:w,matEnd:end,depts:DEPTS};
 }
@@ -19628,6 +19755,20 @@ function goDetail(preset){
   if(!('dept' in preset))preset.dept=(CURD==="all"?"all":CURD);
   var payload=dumpRows(CURW);
   parent.postMessage({reaPage:DETAIL,reaMat:payload,reaPreset:preset},"*")
+}
+/* 素材使用 → 素材使用详情：行数据仍走同一份 dumpRows，另把排序与滚动位置交给外壳，
+   返回时原样落回去。 */
+function goMatDetail(id){
+  var payload=dumpRows(CURW),
+      box=document.querySelector(".rea-mb-use-scroll");
+  parent.postMessage({
+    reaPage:MATDETAIL,reaMat:payload,
+    reaPreset:{matId:id,source:"board",from:"企业微信看板",dept:CURD,win:CURW},
+    reaMbWin:CURW,
+    reaMbState:{sortK:SORTK,sortD:SORTD,
+      scrollTop:box?box.scrollTop:0,scrollLeft:box?box.scrollLeft:0,
+      winScroll:window.scrollY||window.pageYOffset||0}
+  },"*");
 }
 function renderAll(){
   var w=CURW;
@@ -19674,6 +19815,11 @@ if(uh)uh.addEventListener("click",function(e){
       var tr=n;while(tr&&tr.tagName!=="TR")tr=tr.parentNode;
       var tt=tr&&tr.querySelector("td.t")?tr.querySelector("td.t").textContent:"";
       toast(n.getAttribute("data-mb-op")+"："+tt+"（演示）");
+      return;
+    }
+    if(n.getAttribute&&n.getAttribute("data-mb-md")){
+      e.preventDefault();
+      goMatDetail(+n.getAttribute("data-mb-md"));
       return;
     }
     if(n.getAttribute&&n.getAttribute("data-mb-mat")){
@@ -19802,7 +19948,7 @@ document.addEventListener("keydown",function(e){
   if(e.key!=="Enter"&&e.key!==" ")return;
   var n=e.target;
   if(!n||!n.getAttribute)return;
-  if(n.getAttribute("data-mb-sort")||n.getAttribute("data-mb-gsort")||n.getAttribute("data-mb-dsort")||n.getAttribute("data-mb-qfsort")||n.getAttribute("data-mb-qfmat")||n.getAttribute("data-mb-qfall")||n.getAttribute("data-mb-esort")||n.getAttribute("data-mb-etab")||n.getAttribute("data-mb-mat")||n.getAttribute("data-mb-group")||n.getAttribute("data-mb-dept")||n.getAttribute("data-mb-seg")||n.getAttribute("data-mb-win")){
+  if(n.getAttribute("data-mb-sort")||n.getAttribute("data-mb-gsort")||n.getAttribute("data-mb-dsort")||n.getAttribute("data-mb-qfsort")||n.getAttribute("data-mb-qfmat")||n.getAttribute("data-mb-qfall")||n.getAttribute("data-mb-esort")||n.getAttribute("data-mb-etab")||n.getAttribute("data-mb-mat")||n.getAttribute("data-mb-md")||n.getAttribute("data-mb-group")||n.getAttribute("data-mb-dept")||n.getAttribute("data-mb-seg")||n.getAttribute("data-mb-win")){
     e.preventDefault();n.click();
   }
 });
@@ -19812,6 +19958,16 @@ stamp();
 var overviewWin=window.__REA_OVERVIEW_NAV?({day:"today",week:"w7",month:"m1",quarter:"m3"}[window.__REA_OVERVIEW_NAV.period]):"";
 var startWin=overviewWin||((window.__REA_MB_WIN&&WIN[window.__REA_MB_WIN])?window.__REA_MB_WIN:DEFW);
 applyWin(startWin);
+/* 从素材使用详情返回：把离开时的排序列与滚动位置落回去，行还是那一批。 */
+var MBS=window.__REA_MB_STATE;
+if(MBS){
+  if(MBS.sortK&&MBS.sortK!==SORTK)SORTK=MBS.sortK;
+  if(MBS.sortD===1||MBS.sortD===-1)SORTD=MBS.sortD;
+  renderUse(CURW);
+  var mbBox=document.querySelector(".rea-mb-use-scroll");
+  if(mbBox){mbBox.scrollTop=MBS.scrollTop||0;mbBox.scrollLeft=MBS.scrollLeft||0;}
+  if(MBS.winScroll)window.scrollTo(0,MBS.winScroll);
+}
 if(BAD.length){
   var eb=document.getElementById("rea-mb-bad");
   if(eb){eb.hidden=false;eb.innerHTML="<b>演示数据自检未通过（"+BAD.length+" 处）</b><br>"+BAD.join("<br>");}
@@ -19830,6 +19986,8 @@ if(BAD.length){
    return `
 (function(){
 var BACK=${reaJson(REA_MB_PAGE)};
+var SELF=${reaJson(REA_MB_DETAIL)};
+var MATDETAIL=${reaJson(REA_MB_MAT_DETAIL)};
 function pad2(n){return (n<10?"0":"")+n}
 function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
 function fmtDate(off){
@@ -19848,7 +20006,8 @@ var F={q:PRE.q||"",group:PRE.group||"",type:PRE.type||"",
   status:(PRE.status==="pub"?"已发布":(PRE.status==="exp"?"已过期":"")),dept:PRE.dept||"all"};
 /* 「群发好友回复」列也能排（从看板的卡片点「查看全部」进来时直接按回复率降序）。
    没被群发好友任务引用过的素材没有比率，不分升降序都沉到最后。 */
-var SORTK=(PRE.sort==="reply"?"reply":"count"),SORTD=-1,PAGE=1,SIZE=20;
+var SORTK=(PRE.sortK||(PRE.sort==="reply"?"reply":"count")),SORTD=(PRE.sortD===1?1:-1),
+    PAGE=(PRE.page||1),SIZE=20;
 
 function scope(r){
   var c=0,s=0,cp=0,last=-999,people=0,k,u;
@@ -19988,9 +20147,10 @@ function renderTable(){
       +'<td class="num">'+r._s+' / '+r._cp+'</td>'
       +'<td class="num"><button type="button" class="lnk" data-mb-user="'+r.id+'" title="看谁用过这条素材">'+(r._p?r._p:"—")+'</button></td>'
       +'<td class="q" title="'+esc(qfTitle)+'">'+qf+'</td>'
-      +'<td>'+(r._l>-999?fmtDate(r._l):"—")+'</td></tr>';
+      +'<td>'+(r._l>-999?fmtDate(r._l):"—")+'</td>'
+      +'<td class="md"><a href="#" data-mb-md="'+r.id+'">查看 <span class="rea-bd-chev" aria-hidden="true">›</span></a></td></tr>';
   }
-  if(!total)h='<tr><td colspan="10" class="empty">没有符合条件的素材</td></tr>';
+  if(!total)h='<tr><td colspan="11" class="empty">没有符合条件的素材</td></tr>';
   if(tb)tb.innerHTML=h;
   var cnt=document.getElementById("rea-mb-count");
   if(cnt)cnt.textContent="共 "+total+" 条";
@@ -20082,6 +20242,19 @@ if(body)body.addEventListener("click",function(e){
   var n=e.target;
   while(n&&n!==body&&n.nodeType===1){
     if(n.getAttribute&&n.getAttribute("data-mb-user")){e.preventDefault();openDrawer(+n.getAttribute("data-mb-user"));return;}
+    if(n.getAttribute&&n.getAttribute("data-mb-md")){
+      e.preventDefault();
+      var mdid=+n.getAttribute("data-mb-md"),db=document.querySelector(".rea-mb-dscroll");
+      /* 把当前的筛选、排序、页码与滚动位置一并交给外壳：返回明细时原样落回去。 */
+      parent.postMessage({reaPage:MATDETAIL,reaMat:DATA,reaPreset:{
+        matId:mdid,source:"detail",from:SELF,dept:F.dept,win:DATA.win,
+        q:F.q,group:F.group,type:F.type,usage:F.usage,
+        status:(F.status==="已发布"?"pub":(F.status==="已过期"?"exp":"")),
+        sortK:SORTK,sortD:SORTD,page:PAGE,
+        scroll:{left:db?db.scrollLeft:0,win:window.scrollY||window.pageYOffset||0}
+      }},"*");
+      return;
+    }
     if(n.getAttribute&&n.getAttribute("data-mb-sort")){
       var k=n.getAttribute("data-mb-sort");
       if(k===SORTK)SORTD=-SORTD;else{SORTK=k;SORTD=-1;}
@@ -20121,6 +20294,464 @@ for(var bi=0;bi<back.length;bi++)back[bi].addEventListener("click",function(e){
 
 fillSelects();
 renderTable();
+/* 从素材使用详情返回：滚回离开时的位置（横向滚动条与页面纵向）。 */
+if(PRE.scroll){
+  var dbox2=document.querySelector(".rea-mb-dscroll");
+  if(dbox2&&PRE.scroll.left)dbox2.scrollLeft=PRE.scroll.left;
+  if(PRE.scroll.win)window.scrollTo(0,PRE.scroll.win);
+}
+})();
+`;
+  }
+
+  /* ============================================================
+     素材看板 · 素材使用详情（三级页）
+     从「素材使用」的行尾、「素材明细」的行尾或素材库列表的「使用情况」进来。
+     页内不放时间控件：窗口与部门由来源带过来（Q5），页头写清当前口径；
+     所有数从这一条素材的取用流水现算，不另编一份（Q10）。
+     ============================================================ */
+  function reaMatUsageJs(){
+   return `
+(function(){
+var WIN={today:[0,0],w7:[-6,0],m1:[-29,0],m3:[-89,0]};
+var LAB={today:"今日",w7:"近一周",m1:"近一月",m3:"近三月"};
+var DATA=window.__REA_MAT||{rows:[],win:"w7",depts:[]};
+var PRE=window.__REA_MB_PRESET||{};
+var ROWS=DATA.rows||[],DEPTS=DATA.depts||[];
+var ROW=null,k;
+for(k=0;k<ROWS.length;k++)if(ROWS[k].id===PRE.matId){ROW=ROWS[k];break}
+function pad2(n){return (n<10?"0":"")+n}
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+function fmtDate(off){
+  var d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()+off);
+  return d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate());
+}
+function fmtMD(off){
+  var d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()+off);
+  return (d.getMonth()+1)+"/"+d.getDate();
+}
+function fmtOff(v){return typeof v==="number"?fmtDate(v):"—"}
+function weekStartOff(off){
+  var d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()+off);
+  return off-((d.getDay()+6)%7);
+}
+function pct(m,n){return n?(Math.round(m/n*1000)/10)+"%":"—"}
+function toast(msg){
+  var t=document.getElementById("rea-md-toast");if(!t)return;
+  t.textContent=msg;t.hidden=false;
+  clearTimeout(toast._t);toast._t=setTimeout(function(){t.hidden=true},2200);
+}
+
+var win=WIN[DATA.win]?DATA.win:"w7",RANGE=WIN[win];
+var dept=(PRE.dept&&PRE.dept!=="all")?PRE.dept:"all";
+var DEPT_OF={};
+if(ROW&&ROW.users)for(k=0;k<ROW.users.length;k++)DEPT_OF[ROW.users[k].n]=ROW.users[k].o;
+
+/* 返回：来源页与页头文案（Q11）。素材库没有窗口，回去时只恢复滚动位置。 */
+var FROM=PRE.from||"企业微信看板";
+var back=document.getElementById("rea-md-back");
+if(back){
+  back.textContent=(FROM==="素材库")?"← 返回素材库":(FROM==="企业微信看板 · 素材明细"?"← 返回素材明细":"← 返回素材看板");
+  back.addEventListener("click",function(e){
+    e.preventDefault();
+    if(FROM==="素材库")parent.postMessage({reaPage:"素材库"},"*");
+    else parent.postMessage({reaPage:FROM,reaMbWin:DATA.win},"*");
+  });
+}
+(function(){
+  var d=new Date(),el=document.getElementById("rea-md-now");
+  if(el)el.textContent=pad2(d.getHours())+":"+pad2(d.getMinutes());
+})();
+
+if(!ROW){
+  var m0=document.getElementById("rea-md-mat");
+  if(m0)m0.innerHTML='<div class="main"><h2>没有找到这条素材</h2><div class="rea-md-meta">演示数据里没有对应记录，请返回上一页重试。</div></div>';
+  return;
+}
+
+/* 当前窗口 + 当前部门里的取用流水。窗口内一条都没有，就是零取用（Q8）。 */
+var EV=[],e;
+if(ROW.ev)for(k=0;k<ROW.ev.length;k++){
+  e=ROW.ev[k];
+  if(e[0]<RANGE[0]||e[0]>RANGE[1])continue;
+  if(dept!=="all"&&DEPT_OF[e[1]]!==dept)continue;
+  EV.push(e);
+}
+/* 不限窗口的最近一次：只在零取用时用来回答「这条是不是已经死了」。 */
+var lastAll=-999;
+if(ROW.ev)for(k=0;k<ROW.ev.length;k++){
+  e=ROW.ev[k];
+  if(dept!=="all"&&DEPT_OF[e[1]]!==dept)continue;
+  if(e[0]>lastAll)lastAll=e[0];
+}
+
+/* 按员工归拢：人数、发送、复制保存、最近一次都从同一批事件算，不从聚合列抄。 */
+var UM={},UK=[],us;
+for(k=0;k<EV.length;k++){
+  e=EV[k];
+  us=UM[e[1]]||(UM[e[1]]={n:e[1],o:DEPT_OF[e[1]]||"",c:0,s:0,cp:0,last:-999});
+  us.c++;
+  if(e[2]==="一键发送"||e[2]==="一键发圈")us.s++;else us.cp++;
+  if(e[0]>us.last)us.last=e[0];
+  if(UK.indexOf(us)<0)UK.push(us);
+}
+UK.sort(function(a,b){return b.c-a.c||(a.n<b.n?-1:1)});
+var total=0,send=0,copy=0,last=-999;
+for(k=0;k<UK.length;k++){
+  total+=UK[k].c;send+=UK[k].s;copy+=UK[k].cp;
+  if(UK[k].last>last)last=UK[k].last;
+}
+
+/* 页头口径（Q5）：时间范围跟来源，部门也跟来源，使用口径写清。 */
+var scope=document.getElementById("rea-md-scope");
+if(scope){
+  var sh='<span><b>'+LAB[win]+'</b></span><span class="dot">·</span><span>'+(dept==="all"?"全公司":esc(dept))+'</span>'
+    +'<span class="dot">·</span><span>使用＝复制／保存／一键发送／一键发圈，不含任务执行</span>';
+  if(PRE.source==="matlib")sh+='<span class="dot">·</span><span>从素材库进入，时间范围默认近一周</span>';
+  scope.innerHTML=sh;
+}
+
+/* 素材信息：只给「预览」，编辑与治理动作留在看板和素材库（Q9）。 */
+var mat=document.getElementById("rea-md-mat");
+if(mat){
+  mat.innerHTML='<div class="main">'
+    +'<h2>'+esc(ROW.title||"未命名素材")+'</h2>'
+    +'<div class="rea-md-tags">'
+    +'<span class="rea-md-tag blue">'+esc(ROW.group||"—")+' · '+esc(ROW.dept||"—")+'</span>'
+    +'<span class="rea-md-tag">'+esc(ROW.type||"—")+'</span>'
+    +'<span class="rea-md-tag '+(ROW.status==="已发布"?"pub":"exp")+'">'+esc(ROW.status||"—")+'</span>'
+    +'</div>'
+    +'<div class="rea-md-meta">'
+    +'<span>关键词 <b>'+esc(ROW.kw||"—")+'</b></span>'
+    +'<span>有效期 <b>'+fmtOff(ROW.exp)+'</b></span>'
+    +'<span>创建时间 <b>'+fmtOff(ROW.created)+'</b></span>'
+    +'<span>更新人 <b>'+esc(ROW.owner||"—")+'</b></span>'
+    +'<span>更新时间 <b>'+fmtOff(ROW.upd)+'</b></span>'
+    +'</div></div>'
+    +'<button type="button" class="rea-md-prev" id="rea-md-prev">预览素材</button>';
+  var pv=document.getElementById("rea-md-prev");
+  if(pv)pv.addEventListener("click",function(){toast("预览："+(ROW.title||"未命名素材")+"（演示）")});
+}
+
+/* 总量五格：最近使用仍是窗口内口径，不造「历史最近一次」。 */
+var tiles=document.getElementById("rea-md-tiles");
+if(tiles){
+  var TT=[
+    {lb:"使用次数",v:total,u:"次",sub:"所选时间段内"},
+    {lb:"使用人数",v:UK.length,u:"人",sub:"按员工去重"},
+    {lb:"发送",v:send,u:"次",sub:"一键发送＋一键发圈"},
+    {lb:"复制保存",v:copy,u:"次",sub:"复制＋保存"},
+    {lb:"最近使用",v:(last>-999?fmtDate(last):"—"),u:"",sub:"所选时间段内"}
+  ],h="";
+  for(k=0;k<TT.length;k++)h+='<div class="rea-md-tile"><span class="lb">'+TT[k].lb+'</span><b>'+TT[k].v+(TT[k].u?'<small>'+TT[k].u+'</small>':'')+'</b><span class="sub">'+TT[k].sub+'</span></div>';
+  tiles.innerHTML=h;
+}
+
+/* 零取用：保留总量与趋势，动作／部门／谁用过合并成一句（Q8）。 */
+var zero=document.getElementById("rea-md-zero");
+if(!total){
+  if(zero){
+    zero.hidden=false;
+    zero.innerHTML='<div class="lead">所选时间段内没有取用</div>'
+      +'<div class="sub">这条素材在 '+LAB[win]+(dept==="all"?"":" · "+esc(dept))+' 没有产生复制、保存、发送或发圈。</div>'
+      +'<div class="last">截至今天最后一次取用：'+(lastAll>-999?fmtDate(lastAll)+"（"+(-lastAll)+" 天前）":"近三个月内没有取用记录")+'</div>';
+  }
+  ["rea-md-acts-card","rea-md-depts-card","rea-md-users-card"].forEach(function(id){
+    var el=document.getElementById(id);if(el)el.hidden=true;
+  });
+}
+
+/* 动作构成 */
+var acts=document.getElementById("rea-md-acts");
+if(acts&&total){
+  var ACTS=["一键发送","一键发圈","复制","保存"],AM={},maxA=0,h2="";
+  for(k=0;k<ACTS.length;k++)AM[ACTS[k]]=0;
+  for(k=0;k<EV.length;k++)if(AM[EV[k][2]]!=null)AM[EV[k][2]]++;
+  for(k=0;k<ACTS.length;k++)if(AM[ACTS[k]]>maxA)maxA=AM[ACTS[k]];
+  for(k=0;k<ACTS.length;k++){
+    h2+='<div class="rea-md-brow"><span class="nm">'+ACTS[k]+'</span>'
+      +'<span class="track"><i style="width:'+(maxA?Math.round(AM[ACTS[k]]/maxA*100):0)+'%"></i></span>'
+      +'<span class="n">'+AM[ACTS[k]]+'</span><span class="pct">'+pct(AM[ACTS[k]],total)+'</span></div>';
+  }
+  acts.innerHTML=h2;
+}
+
+/* 部门分布：跟着当前范围收窄；范围里只有一个部门时只列这一行并注明（Q10）。 */
+var depts=document.getElementById("rea-md-depts");
+if(depts&&total){
+  var DM={},DK=[],d2,a2,maxD=0,h3="";
+  for(k=0;k<UK.length;k++){
+    d2=UK[k].o||"未知部门";
+    a2=DM[d2]||(DM[d2]={o:d2,c:0,p:0});
+    a2.c+=UK[k].c;a2.p++;
+    if(DK.indexOf(a2)<0)DK.push(a2);
+  }
+  DK.sort(function(x,y){return y.c-x.c||(x.o<y.o?-1:1)});
+  for(k=0;k<DK.length;k++)if(DK[k].c>maxD)maxD=DK[k].c;
+  for(k=0;k<DK.length;k++){
+    h3+='<div class="rea-md-brow"><span class="nm">'+esc(DK[k].o)+'<em>'+DK[k].p+' 人</em></span>'
+      +'<span class="track"><i style="width:'+(maxD?Math.round(DK[k].c/maxD*100):0)+'%"></i></span>'
+      +'<span class="n">'+DK[k].c+'</span><span class="pct">'+pct(DK[k].c,total)+'</span></div>';
+  }
+  if(dept!=="all")h3+='<div class="rea-md-note">当前范围只有 1 个部门（'+esc(dept)+'），其余部门不在这个数字里。</div>';
+  depts.innerHTML=h3;
+}
+
+/* 谁用过 */
+var ub=document.getElementById("rea-md-users");
+if(ub){
+  var hu="";
+  for(k=0;k<UK.length;k++){
+    hu+='<tr><td>'+esc(UK[k].n)+'</td><td>'+esc(UK[k].o||"—")+'</td>'
+      +'<td class="num">'+UK[k].c+'</td><td class="num">'+UK[k].s+'</td>'
+      +'<td>'+(UK[k].last>-999?fmtDate(UK[k].last):"—")+'</td></tr>';
+  }
+  if(!UK.length)hu='<tr><td colspan="5" class="empty">所选时间段内没有取用</td></tr>';
+  ub.innerHTML=hu;
+}
+
+/* 群发好友回复：任务不落部门，这一块始终是全部部门合计，随卡片注明。 */
+var qfb=document.getElementById("rea-md-qf");
+if(qfb){
+  if(!ROW.qf){
+    qfb.innerHTML='<div class="empty">所选时间段内没有引用这条素材的群发好友任务。</div>';
+  }else{
+    var qs=ROW.qf.sent,qr=ROW.qf.replied;
+    qfb.innerHTML='<div class="rea-md-qf">'
+      +'<div><span class="k">已发送好友</span><b>'+qs+'<small>人</small></b></div>'
+      +'<div><span class="k">已回复好友</span><b>'+qr+'<small>人</small></b></div>'
+      +'<div><span class="k">回复率</span><b>'+pct(qr,qs)+'</b></div>'
+      +'<div class="hint">引用这条素材的群发好友任务，按全部部门合计，不随部门筛选拆分。回复取决于客户，不是素材本身的效果。</div>'
+      +'</div>';
+  }
+}
+
+/* 取用趋势：与看板同一套画法，粒度跟窗口跨度走（31 天以内按日，更长按周）。 */
+function niceMax(v,steps){
+  steps=steps||4;
+  var pow=1,i,step;
+  if(!(v>0))return steps;
+  while(true){
+    for(i=0;i<3;i++){
+      step=[1,2,5][i]*pow;
+      if(step*steps>=v)return step*steps;
+    }
+    pow*=10;
+  }
+}
+function paintChart(){
+  var box=document.getElementById("rea-md-chart");if(!box)return;
+  var span=RANGE[1]-RANGE[0],gran=span>31?"week":"day",
+      gl=document.getElementById("rea-md-gran");
+  if(gl)gl.textContent=(gran==="week"?"按周":"按日")+" · "+(gran==="week"?"同一周的事件落在同一格":"每天一格");
+  var bs=[],bm={},off,b;
+  if(gran==="week"){
+    for(off=weekStartOff(RANGE[0]);off<=RANGE[1];off+=7){b={off:off,label:fmtMD(off),send:0,copy:0};bs.push(b);bm[off]=b;}
+  }else{
+    for(off=RANGE[0];off<=RANGE[1];off++){b={off:off,label:fmtMD(off),send:0,copy:0};bs.push(b);bm[off]=b;}
+  }
+  for(k=0;k<EV.length;k++){
+    var key=gran==="week"?weekStartOff(EV[k][0]):EV[k][0],bb=bm[key];
+    if(!bb)continue;
+    if(EV[k][2]==="一键发送"||EV[k][2]==="一键发圈")bb.send++;else bb.copy++;
+  }
+  var W=box.clientWidth||600,H=214,L=44,R=16,T=14,B=30,
+      pw=Math.max(60,W-L-R),ph=H-T-B,kk;
+  var max=0;
+  for(k=0;k<bs.length;k++)max=Math.max(max,bs[k].send+bs[k].copy);
+  var top=niceMax(max,4);
+  function x(i2){return bs.length>1?L+pw*i2/(bs.length-1):L+pw/2}
+  function y(v){return T+ph-(top?Math.min(v,top)/top:0)*ph}
+  var h='<svg width="'+W+'" height="'+H+'" role="img" aria-label="取用趋势：合计柱与发送、复制保存两条线">';
+  for(kk=0;kk<=4;kk++){
+    var gy=T+ph-ph*kk/4;
+    h+='<line x1="'+L+'" y1="'+gy+'" x2="'+(W-R)+'" y2="'+gy+'" stroke="'+(kk===0?"#E5E8EF":"#F0F2F5")+'" stroke-width="1"/>';
+    h+='<text x="'+(L-8)+'" y="'+(gy+4)+'" text-anchor="end" fill="#8F959E" font-size="11">'+Math.round(top*kk/4)+'</text>';
+  }
+  var gap=bs.length>1?pw/(bs.length-1):pw,bw=Math.max(4,Math.min(40,gap*0.5));
+  if(bs.length){
+    var hw=bs.length>1?gap:bw+16,lx=x(bs.length-1);
+    h+='<rect x="'+(lx-hw/2).toFixed(1)+'" y="'+T+'" width="'+hw.toFixed(1)+'" height="'+ph+'" fill="#F7F9FC"/>';
+  }
+  for(k=0;k<bs.length;k++){
+    var tot=bs[k].send+bs[k].copy,by=y(tot);
+    if(tot>0)h+='<rect class="mb-bar" x="'+(x(k)-bw/2).toFixed(1)+'" y="'+by.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+(ph-(by-T)).toFixed(1)+'" rx="3" fill="#E8F1FF"/>';
+  }
+  function line(key2,color){
+    var pts=[],i3,d3;
+    for(i3=0;i3<bs.length;i3++)pts.push(x(i3).toFixed(1)+","+y(bs[i3][key2]).toFixed(1));
+    d3="M"+pts.join(" L");
+    var s='<path class="mb-line" d="'+d3+'" fill="none" stroke="'+color+'" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>';
+    for(i3=0;i3<bs.length;i3++)s+='<circle cx="'+x(i3).toFixed(1)+'" cy="'+y(bs[i3][key2]).toFixed(1)+'" r="2.6" fill="'+color+'"/>';
+    return s;
+  }
+  h+=line("copy","#8F959E");
+  h+=line("send","#1677FF");
+  var step=bs.length>10?Math.ceil(bs.length/7):1;
+  for(k=0;k<bs.length;k++){
+    if(k!==bs.length-1&&k%step!==0)continue;
+    var lab=(k===bs.length-1)?(gran==="day"?"今日":"本周"):bs[k].label;
+    h+='<text x="'+x(k).toFixed(1)+'" y="'+(H-8)+'" text-anchor="middle" fill="'+(k===bs.length-1?"#1F2329":"#8F959E")+'" font-size="11">'+esc(lab)+'</text>';
+  }
+  for(k=0;k<bs.length;k++){
+    var hw2=bs.length>1?pw/(bs.length-1):pw;
+    h+='<rect class="mb-hit" data-md-i="'+k+'" x="'+(x(k)-hw2/2).toFixed(1)+'" y="'+T+'" width="'+hw2.toFixed(1)+'" height="'+ph+'" fill="transparent"/>';
+  }
+  h+='</svg><div class="mb-tip" id="rea-md-tip"></div>';
+  box.innerHTML=h;
+  var tip=document.getElementById("rea-md-tip");
+  box.querySelectorAll(".mb-hit").forEach(function(r){
+    r.addEventListener("mouseenter",function(){
+      var i3=+r.getAttribute("data-md-i"),b2=bs[i3];if(!b2||!tip)return;
+      tip.innerHTML='<div class="d">'+esc(b2.label)+'</div>'
+        +'<div class="r"><i class="b"></i>合计<b>'+(b2.send+b2.copy)+'</b></div>'
+        +'<div class="r"><i></i>发送<b>'+b2.send+'</b></div>'
+        +'<div class="r"><i class="g"></i>复制保存<b>'+b2.copy+'</b></div>';
+      tip.style.display="block";
+      tip.style.left=Math.max(0,Math.min(W-140,x(i3)+10))+"px";
+      tip.style.top=(T+8)+"px";
+    });
+    r.addEventListener("mouseleave",function(){if(tip)tip.style.display="none"});
+  });
+}
+paintChart();
+window.addEventListener("resize",paintChart);
+})();
+`;
+  }
+
+  /* ============================================================
+     素材库列表 · 补一列「使用情况」
+     正文仍是快照（REA_COVER 里没有 html），只补 css／js：
+     在 sticky 的「操作」列前插一列（行末入口，与看板、素材明细一致），
+     单元格只放「查看 ›」，不显示任何使用数字。表格本就横向滚动，窄屏下需滚到右侧。
+     企业素材页签显示、个人素材页签收起（个人素材不统计）。
+     快照只有三条占位素材，演示数按行序给一份确定性映射；正式版按素材 ID 取。
+     ============================================================ */
+  var REA_MLUSE_CSS = `
+.rea-mluse{color:#1677FF;font-size:12px;line-height:20px;text-decoration:none;white-space:nowrap}
+.rea-mluse:hover{color:#4096FF;text-decoration:underline}
+.rea-mluse .rea-bd-chev{font-size:14px}
+`;
+  function reaMatListUseJs(){
+   return `
+(function(){
+var MD=${reaJson(REA_MB_MAT_DETAIL)};
+var DEPTS=["销售一部","销售二部","市场部","客户成功部","运营部","设计部"];
+
+/* 演示映射：快照三条占位素材与看板的 46 条演示集不是同一批，按行序给一份确定性的数。
+   第一条正常使用、第二条少量使用、第三条窗口内零取用（但三个月内有过取用）。 */
+var DEMO=[
+  {type:"图片",kw:"世界杯,活动",n:23,days:[-6,-5,-4,-3,-2,-1,0],
+   users:["张伟","王芳","李娜","黄强","刘洋"],acts:["复制","一键发送","保存","一键发圈"],
+   qf:{sent:186,replied:63}},
+  {type:"含文件",kw:"赛程,小组赛",n:9,days:[-6,-4,-2,0],
+   users:["张伟","陈敏","徐磊"],acts:["复制","一键发送","保存"],
+   qf:{sent:92,replied:21}},
+  {type:"纯文本",kw:"球队,竞猜",n:0,days:null,zeroDays:[-46,-61,-78],
+   users:["张伟"],acts:["复制","一键发送","保存"],qf:null}
+];
+function demoRow(i,title){
+  var spec=DEMO[i%DEMO.length],ev=[],t,who,acts=spec.acts;
+  if(spec.zeroDays){
+    for(t=0;t<spec.zeroDays.length;t++)
+      ev.push([spec.zeroDays[t],spec.users[t%spec.users.length],acts[t%acts.length]]);
+  }else{
+    for(t=0;t<spec.n;t++)
+      ev.push([spec.days[t%spec.days.length],spec.users[(t*3)%spec.users.length],acts[(t+i)%acts.length]]);
+  }
+  return {
+    id:1000+i,title:(title&&title!=="—")?title:"未命名素材",
+    dept:"销售一部",group:"世界杯",type:spec.type,kw:spec.kw,
+    exp:30+i*20,created:-120+i*30,owner:"张伟",upd:-10+i*2,status:"已发布",
+    users:spec.users.map(function(n){return {n:n,o:"销售一部",c:0,s:0,cp:0,last:-999}}),
+    ev:ev,qf:spec.qf
+  };
+}
+
+/* 1) 两张表（表头／表体）各补一个 col、一格 th；表体每行补一格 td。
+      操作列 sticky 在右，只能插在它前面。 */
+var tables=document.querySelectorAll(".ant-table-header>table, .ant-table-body>table"),ti;
+for(ti=0;ti<tables.length;ti++){
+  var table=tables[ti],cg=table.querySelector("colgroup");
+  if(cg){
+    var col=document.createElement("col");
+    col.setAttribute("data-mluse-col","1");
+    col.style.width="92px";
+    cg.insertBefore(col,cg.lastElementChild);
+  }
+  var head=table.querySelector("thead tr");
+  if(head&&head.children.length){
+    var th=document.createElement("th");
+    th.className="ant-table-cell";
+    th.setAttribute("scope","col");
+    th.setAttribute("data-mluse","1");
+    th.textContent="使用情况";
+    head.insertBefore(th,head.lastElementChild);
+  }
+  var measure=table.querySelector("tr.ant-table-measure-row");
+  if(measure&&measure.children.length){
+    var mth=document.createElement("th");
+    mth.className="ant-table-measure-cell";
+    mth.setAttribute("data-mluse","1");
+    mth.innerHTML='<div class="ant-table-measure-cell-content">使用情况</div>';
+    measure.insertBefore(mth,measure.lastElementChild);
+  }
+  var rows=table.querySelectorAll("tr.ant-table-row"),ri;
+  for(ri=0;ri<rows.length;ri++){
+    var tr=rows[ri],first=tr.querySelector("td"),title=first?first.textContent.trim():"";
+    var td=document.createElement("td");
+    td.className="ant-table-cell";
+    td.setAttribute("data-mluse","1");
+    td.innerHTML='<a href="#" class="rea-mluse" data-mluse-row="'+ri+'" data-mluse-title="'
+      +String(title).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")
+      +'">查看 <span class="rea-bd-chev" aria-hidden="true">›</span></a>';
+    tr.insertBefore(td,tr.lastElementChild);
+  }
+}
+
+/* 2) 个人素材页签收起这一列：个人素材不统计，入口只在企业素材出现。 */
+var tabs=document.querySelectorAll(".ant-tabs-tab"),i;
+function setUse(on){
+  var es=document.querySelectorAll("[data-mluse]"),j;
+  for(j=0;j<es.length;j++)es[j].style.display=on?"":"none";
+  var cols=document.querySelectorAll("[data-mluse-col]");
+  for(j=0;j<cols.length;j++)cols[j].style.width=on?"92px":"0px";
+}
+for(i=0;i<tabs.length;i++){
+  tabs[i].addEventListener("click",function(){
+    setUse(this.getAttribute("data-node-key")!=="1");
+  });
+}
+
+/* 3) 点「查看」：带着这一行的演示数与返回时要恢复的滚动位置进详情页。 */
+document.addEventListener("click",function(e){
+  var n=e.target;
+  while(n&&n.nodeType===1){
+    if(n.getAttribute&&n.getAttribute("data-mluse-row")!=null){
+      e.preventDefault();
+      var idx=+n.getAttribute("data-mluse-row"),row=demoRow(idx,n.getAttribute("data-mluse-title")),
+          box=document.querySelector(".ant-table-body");
+      parent.postMessage({
+        reaPage:MD,
+        reaMat:{rows:[row],win:"w7",matEnd:0,depts:DEPTS},
+        reaPreset:{matId:row.id,source:"matlib",from:"素材库",dept:"all",win:"w7"},
+        reaMatLibScroll:{win:window.scrollY||window.pageYOffset||0,
+          body:box?box.scrollTop:0,left:box?box.scrollLeft:0}
+      },"*");
+      return;
+    }
+    n=n.parentNode;
+  }
+});
+
+/* 4) 从详情页返回：滚回离开时的位置。 */
+var ST=window.__REA_ML_STATE;
+if(ST){
+  var body=document.querySelector(".ant-table-body");
+  if(body){body.scrollTop=ST.body||0;body.scrollLeft=ST.left||0;}
+  if(ST.win)window.scrollTo(0,ST.win);
+}
 })();
 `;
   }
@@ -20131,6 +20762,10 @@ renderTable();
     '微小助看板':    { html: 'srcBoard', css: REA_BOARD_CSS, js: reaBoardJs },
     '企业微信看板':  { html: 'srcBoardMat', css: REA_BOARD_CSS + REA_MB_CSS, js: reaBoardMatJs },
     '企业微信看板 · 素材明细': { html: 'srcMatDetail', css: REA_BOARD_CSS + REA_MB_CSS, js: reaMatDetailJs },
+    /* 素材使用详情（三级页）：正文 srcBoardMatDetail，数从看板／明细带过来的行里现算 */
+    [REA_MB_MAT_DETAIL]: { html: 'srcBoardMatDetail', css: REA_BOARD_CSS + REA_MB_CSS, js: reaMatUsageJs },
+    /* 素材库列表只补一列「使用情况」，正文仍是快照（不带 html） */
+    '素材库': { css: REA_MLUSE_CSS, js: reaMatListUseJs },
     '微小助看板 · 任务列表': { html: 'srcBoardTasks', css: REA_BOARD_CSS, js: reaBoardTasksJs },
     '微小助看板 · 执行人明细': { html: 'srcBoardTask', css: REA_BOARD_CSS, js: reaBoardTaskJs },
     '微小助看板 · 执行人详情': { html: 'srcBoardPerson', css: REA_BOARD_CSS, js: reaBoardPersonJs },
@@ -20212,6 +20847,13 @@ renderTable();
         contentStart: mbd.contentStart,
         contentEnd: mbd.contentEnd
       });
+      /* 素材使用详情（三级页）：与素材明细共用同一张壳 */
+      P.pages.push({
+        name: REA_MB_MAT_DETAIL,
+        rest: mbd.rest,
+        contentStart: mbd.contentStart,
+        contentEnd: mbd.contentEnd
+      });
     } else {
       reaWarn('「素材明细」页合成失败：快照里找不到「' + REA_MB_PAGE + '」页');
     }
@@ -20233,13 +20875,20 @@ renderTable();
   /* 子页要的那份数据（看不出页名的一律空串）：行由看板页带过来，窗口也跟着走。
      用 reaJson 转义尖括号——拼进 srcdoc 的 script 里不能出现字面闭标签。 */
   function reaDataJs(name){
-    /* 素材看板：二级页与从明细返回时的那一次开窗都走这里 */
-    if (name === REA_MB_DETAIL){
+    /* 素材看板：二级页、三级页与从明细返回时的那一次开窗都走这里 */
+    if (name === REA_MB_DETAIL || name === REA_MB_MAT_DETAIL){
       return 'window.__REA_MAT=' + reaJson(reaMatPayload || { rows: [], win: 'w7', matEnd: 0, depts: [] }) + ';'
         + 'window.__REA_MB_PRESET=' + reaJson(reaMatPreset || {}) + ';';
     }
-    if (name === REA_MB_PAGE && reaMbWin){
-      return 'window.__REA_MB_WIN=' + reaJson(reaMbWin) + ';';
+    if (name === REA_MB_PAGE){
+      var mb = '';
+      if (reaMbWin) mb += 'window.__REA_MB_WIN=' + reaJson(reaMbWin) + ';';
+      if (reaMbState) mb += 'window.__REA_MB_STATE=' + reaJson(reaMbState) + ';';
+      if (mb) return mb;
+    }
+    /* 素材库列表只补一列「使用情况」：从详情页返回时恢复离开前的滚动位置 */
+    if (name === REA_MAT_LIST && reaMatLibState){
+      return 'window.__REA_ML_STATE=' + reaJson(reaMatLibState) + ';';
     }
     if (name !== REA_DETAIL_TASK && name !== REA_TASKS_PAGE && name !== REA_PERSON_PAGE) return '';
     var js = 'window.__REA_ROWS=' + reaJson(reaRows || []) + ';'
@@ -20779,6 +21428,8 @@ renderTable();
   var reaMatPreset = {};    // 同上：入口带来的预筛（搜索词／分组／使用状态／状态／部门）
   var reaOverviewNav = null, reaOverviewTarget = '';
   var reaMbWin = '';        // 从素材明细返回看板时要恢复的时间范围
+  var reaMbState = null;    // 从素材使用详情返回看板时要恢复的排序与滚动位置
+  var reaMatLibState = null;// 从素材使用详情返回素材库列表时要恢复的滚动位置
   var reaTreeClosed = false; // 微小助模块左侧「部门选择」面板收起了没有（面板是每页的 rest 各带一份，状态得存在外壳上）
   var reaSideOpen = false;  // 左侧菜单是否展开成双列（默认折叠：只留一级栏，二级走悬停浮层；同样得存在外壳上）
   var reaMenuGroups = {};   // 一级菜单名 → { title, items:[{t: 显示名, p: 页名|null}] }，见 reaMenuIndex()
@@ -21225,7 +21876,11 @@ renderTable();
        从明细点「返回看板」时只带窗口，让看板回到离开时的那一档。 */
     if (d.reaMat){ reaMatPayload = d.reaMat; reaMatPreset = d.reaPreset || {}; }
     if (d.reaMbWin){ reaMbWin = d.reaMbWin; }
+    if (d.reaMbState){ reaMbState = d.reaMbState; }
+    if (d.reaMatLibScroll){ reaMatLibState = d.reaMatLibScroll; }
     var name = d.reaPage;
+    /* 离开素材看板去别的页时清掉旧状态，免得下次从侧栏进来还套着上次的排序与滚动 */
+    if (name && name !== REA_MB_PAGE && name !== REA_MB_MAT_DETAIL) reaMbState = null;
     if(d.reaOverview){reaOverviewNav=d.reaOverview;reaOverviewTarget=name;}
     else if(name&&!d.reaOverviewBack&&name!==REA_OVERVIEW_PAGE&&name!==reaOverviewTarget&&name.indexOf(' · ')<0){reaOverviewTarget='';}
     if (!name && d.reaSave){
