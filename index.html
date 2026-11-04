@@ -10037,6 +10037,15 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 .rea-ov-page .drow .tr{flex:1;height:6px;border-radius:999px;background:var(--line2);overflow:hidden}
 .rea-ov-page .drow .tr i{display:block;height:100%;border-radius:999px;background:var(--blue);opacity:.8}
 .rea-ov-page .drow .pp{flex:0 0 70px;text-align:right;font-size:12px;color:var(--weak);white-space:nowrap}
+.rea-ov-page .feat-extreme{margin:12px 0 2px;padding:8px 10px;border-radius:6px;background:var(--blue-pale);color:var(--sub);font-size:12px;line-height:1.7}
+.rea-ov-page .feat-extreme b{color:var(--ink);font-weight:600}
+.rea-ov-page .feat{padding:10px 0;border-bottom:1px solid var(--line2)}
+.rea-ov-page .feat-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.rea-ov-page .feat-name{min-width:0;font-size:14px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rea-ov-page .feat-num{flex:none;font-size:14px;font-weight:500;font-variant-numeric:tabular-nums}
+.rea-ov-page .feat-num em{font-style:normal;font-size:12px;font-weight:400;color:var(--weak);margin-left:2px}
+.rea-ov-page .feat-bar{display:block;height:6px;margin-top:8px;border-radius:999px;background:var(--line2);overflow:hidden}
+.rea-ov-page .feat-bar i{display:block;height:100%;border-radius:999px;background:var(--blue);opacity:.8}
 .rea-ov-page .sheet-tabs{display:flex;gap:0;margin:0;border-bottom:1px solid var(--line);overflow:visible}
 .rea-ov-page .sheet-tabs button{border:0;border-bottom:2px solid transparent;border-radius:0;background:none;margin-right:24px;padding:10px 0;color:var(--sub);font-size:13px;white-space:nowrap}
 .rea-ov-page .sheet-tabs button:last-child{margin-right:0}
@@ -10279,8 +10288,16 @@ function fillSheet(){
  else if(sheetKind==='tool'){
   const group=TOOL_GROUPS[sheetTool],counts=data.tools[sheetTool],actions=d.tools[sheetTool][1];
   const participants=ROSTER.filter(person=>amount(counts,person.id)>0).sort((a,b)=>amount(counts,b.id)-amount(counts,a.id));
+  const feats=featureBreakdown(group,actions),maxFeat=Math.max(1,...feats.map(item=>item.count));
+  const topCount=feats[0].count,lowCount=feats[feats.length-1].count;
+  const topItems=feats.filter(item=>item.count===topCount),lowItems=feats.filter(item=>item.count===lowCount);
+  const topNames=topItems.map(item=>item.name).join('、'),lowNames=lowItems.map(item=>item.name).join('、');
+  const extreme=!actions?'<p class="sheet-empty">所选期间暂无记录。</p>'
+   :topCount===lowCount?`<div class="feat-extreme">各功能各 ${fmt(topCount)} 次</div>`
+   :`<div class="feat-extreme">使用最多 <b>${topNames}</b> ${topItems.length>1?'各 ':''}${fmt(topCount)} 次 · 使用最少 <b>${lowNames}</b> ${lowItems.length>1?'各 ':''}${fmt(lowCount)} 次</div>`;
+  const featRows=feats.map(item=>`<div class="feat"><div class="feat-top"><span class="feat-name">${item.name}</span><span class="feat-num">${fmt(item.count)}<em>次</em></span></div><span class="feat-bar"><i style="width:${Math.round(item.count/maxFeat*100)}%"></i></span></div>`).join('');
   title=group.name;sub=`App 工具 · ${d.label}`;
-  body=`<div class="summary"><div class="big"><b>${fmt(actions)}</b><span>次完成</span></div><div class="mini"><div><small>参与员工</small><b>${participants.length} 人</b></div><div><small>具体功能</small><b>${group.features.length} 项</b></div></div></div><div class="slabel"><span>参与员工</span><span class="r">点员工看个人详情</span></div>${metricRows(participants,person=>fmt(amount(counts,person.id)),'次')}<div class="slabel"><span>功能构成</span><span class="r">正式版按功能 ID 展开</span></div>`+group.features.map((name,i)=>staticRow(name,fmt(Math.floor(actions/group.features.length)+(i<actions%group.features.length?1:0)),'次')).join('');
+  body=`<div class="summary"><div class="big"><b>${fmt(actions)}</b><span>次完成</span></div><div class="mini"><div><small>参与员工</small><b>${participants.length} 人</b></div><div><small>具体功能</small><b>${group.features.length} 项</b></div></div></div><div class="slabel"><span>功能构成</span><span class="r">按完成次数排序</span></div>${extreme}${actions?featRows:''}<div class="slabel"><span>参与员工</span><span class="r">点员工看个人详情</span></div>${metricRows(participants,person=>fmt(amount(counts,person.id)),'次')}`;
   foot=`<span>共 ${participants.length} 人 · ${fmt(actions)} 次</span><span>点员工看详情</span>`;
  }
  else if(sheetKind==='material'||sheetKind==='hosting'){
