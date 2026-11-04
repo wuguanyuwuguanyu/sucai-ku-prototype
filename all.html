@@ -9859,8 +9859,8 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   <div class="dashboard-grid">
   <section class="seat-hero" aria-labelledby="seats-title">
     <div class="seat-hero-head"><div><p class="seat-hero-title">企业开通情况</p><h2 id="seats-title">各版本席位</h2></div><div class="seat-total"><strong id="assigned-total">30</strong>已分配<span class="divider">/</span><strong id="bought-total">32</strong>已购</div></div>
-    <div class="seat-layout"><button class="seat-donut" type="button" data-sheet="seats" data-tier="all" aria-label="已购席位版本构成，查看全部席位"><svg viewBox="0 0 128 128" aria-hidden="true" focusable="false"><circle class="seat-donut-track" cx="64" cy="64" r="50"/><g id="seat-donut-segments"></g></svg><span class="seat-donut-center"><strong id="donut-total">32</strong><small>已购席位</small></span></button><div class="seat-cards" id="tiers"></div></div>
-    <div class="seat-hero-bottom"><span>未分配 <b id="unassigned-total">2</b> 个席位</span><button class="text-link" type="button" data-sheet="seats" data-tier="all">查看员工与未分配席位 ↗</button></div>
+    <div class="seat-layout"><div class="seat-donut" aria-hidden="true"><svg viewBox="0 0 128 128" aria-hidden="true" focusable="false"><circle class="seat-donut-track" cx="64" cy="64" r="50"/><g id="seat-donut-segments"></g></svg><span class="seat-donut-center"><strong id="donut-total">32</strong><small>已购席位</small></span></div><div class="seat-cards" id="tiers"></div></div>
+    <div class="seat-hero-bottom"><span>未分配 <b id="unassigned-total">2</b> 个席位</span><span class="seat-entry-hint">点版本行查看席位</span></div>
   </section>
 
   <section class="section section-usage" aria-labelledby="usage-title">
@@ -9885,14 +9885,206 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   </section>
   </div>
 </main>
+
+<div class="ov-seatpage" id="seat-page" hidden>
+  <div class="seat-top">
+    <button class="seat-back" type="button" id="seat-back">‹ 使用总览</button>
+    <span class="seat-crumb">数据看板 / <b>各版本席位</b> / <span id="seat-crumb-tier">标准版</span></span>
+    <span class="seat-when" id="seat-when">当前有效授权 · 近一月</span>
+  </div>
+  <div class="seat-page">
+    <div class="vrail" id="seat-vrail"></div>
+    <div class="scontent">
+      <div class="stitle"><h3 id="seat-title">标准版席位</h3><span id="seat-record-note"></span></div>
+      <div class="statrow" id="seat-stats"></div>
+      <div class="seat-tools">
+        <label class="search" for="seat-search"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4" stroke-linecap="round"/></svg><input id="seat-search" type="search" placeholder="手机号 / 姓名" autocomplete="off"></label>
+        <span class="sp"></span>
+        <button class="btn primary" type="button" id="seat-add">添加使用者</button>
+        <button class="btn" type="button" id="seat-unassign">批量解除分配</button>
+      </div>
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <colgroup><col style="width:11%"><col style="width:15%"><col style="width:12%"><col style="width:12%"><col style="width:14%"><col style="width:20%"><col style="width:16%"></colgroup>
+          <thead><tr><th>姓名</th><th>手机号</th><th>职位</th><th>部门</th><th>到期时间</th><th>本期使用</th><th>操作</th></tr></thead>
+          <tbody id="seat-rows"></tbody>
+        </table>
+      </div>
+      <div class="pager"><span id="seat-count"></span><span class="pg" id="seat-pager"></span></div>
+    </div>
+  </div>
+</div>
+<div class="ov-toast" id="ov-toast" hidden></div>
+
 <div class="mask" id="mask" aria-hidden="true"></div>
 <aside class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title" aria-hidden="true">
-  <div class="sheet-head"><button class="sheet-back" type="button" id="sheet-back" hidden aria-label="返回员工列表">←</button><div><h2 id="sheet-title"></h2><span class="small" id="sheet-subtitle"></span></div><button class="close" type="button" id="sheet-close" aria-label="关闭详情">×</button></div>
+  <div class="sheet-head">
+    <div class="sheet-heading">
+      <button class="sheet-crumb" type="button" id="sheet-back" hidden>‹ 返回</button>
+      <h2 id="sheet-title"></h2>
+      <span class="small" id="sheet-subtitle"></span>
+    </div>
+    <button class="close" type="button" id="sheet-close" aria-label="关闭详情">×</button>
+  </div>
   <div class="sheet-body" id="sheet-body"></div>
+  <div class="sheet-foot" id="sheet-foot"></div>
 </aside>
 </div></script>
 <script type="text/plain" id="srcOverviewStyle">.rea-ov-page{min-height:100%;background:#F6F8FB}
 .rea-ov-page{--blue:#1677ff;--blue-pale:#e6f4ff;--ink:#1f2329;--sub:#646a73;--weak:#8f959e;--line:#e5e8ef;--quiet:#f7f8fa;--white:#fff}.rea-ov-page *{box-sizing:border-box}.rea-ov-page{scroll-behavior:smooth}.rea-ov-page{margin:0;background:var(--white);color:var(--ink);font:14px/1.5 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;-webkit-font-smoothing:antialiased}.rea-ov-page button{font:inherit}.rea-ov-page button:focus-visible{outline:2px solid var(--blue);outline-offset:3px}.rea-ov-page button,.rea-ov-page [role="button"]{cursor:pointer}.rea-ov-page button:disabled{cursor:not-allowed}.rea-ov-page .wrap{max-width:1216px;margin:auto;padding:40px 32px 80px}.rea-ov-page .top{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:32px}.rea-ov-page .eyebrow{color:var(--blue);font-size:12px;font-weight:600;letter-spacing:.08em;margin-bottom:8px}.rea-ov-page .top h1{font-size:20px;line-height:1.3;margin:0;font-weight:600}.rea-ov-page .top-actions{display:flex;align-items:center;gap:16px}.rea-ov-page .date{display:flex;gap:4px;padding:4px;background:var(--quiet);border-radius:8px}.rea-ov-page .date button{border:0;background:transparent;border-radius:6px;height:36px;min-width:58px;padding:0 12px;color:var(--sub);transition:background .18s,color .18s}.rea-ov-page .date button:hover{background:#fff}.rea-ov-page .date button[aria-pressed="true"]{background:#fff;color:var(--ink);font-weight:600;box-shadow:0 1px 2px rgba(19,44,82,.08)}.rea-ov-page .iconbtn{border:1px solid var(--line);border-radius:8px;width:40px;height:40px;background:#fff;color:var(--sub);display:grid;place-items:center;transition:border-color .18s,color .18s}.rea-ov-page .iconbtn:hover{border-color:var(--blue);color:var(--blue)}.rea-ov-page .seat-hero{background:var(--blue-pale);border-radius:14px;padding:32px 38px 34px;overflow:hidden}.rea-ov-page .seat-hero-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:28px}.rea-ov-page .seat-hero-title{font-size:13px;color:var(--sub);margin:0 0 5px}.rea-ov-page .seat-hero-head h2{font-size:24px;line-height:1.25;font-weight:600;letter-spacing:-.02em;margin:0}.rea-ov-page .seat-total{display:flex;align-items:baseline;gap:8px;color:var(--sub);white-space:nowrap}.rea-ov-page .seat-total strong{font-size:30px;line-height:1;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums}.rea-ov-page .seat-total .divider{font-size:20px;color:#9bbfe9;margin:0 1px}.rea-ov-page .seat-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.rea-ov-page .seat-card{display:block;width:100%;padding:22px 24px 20px;border:1px solid rgba(22,119,255,.04);border-radius:10px;background:rgba(255,255,255,.86);text-align:left;box-shadow:0 2px 10px rgba(22,87,155,.025);transition:transform .18s,box-shadow .18s,background .18s}.rea-ov-page .seat-card:hover{transform:translateY(-2px);background:#fff;box-shadow:0 8px 22px rgba(22,87,155,.1)}.rea-ov-page .seat-card-top{display:flex;align-items:center;justify-content:space-between;gap:12px}.rea-ov-page .seat-card-name{font-size:15px;font-weight:600}.rea-ov-page .seat-card-arrow{color:var(--blue);font-size:18px;line-height:1}.rea-ov-page .seat-card-number{display:flex;align-items:baseline;gap:5px;margin:16px 0 6px;font-variant-numeric:tabular-nums}.rea-ov-page .seat-card-number strong{font-size:42px;line-height:1;font-weight:600;letter-spacing:-.06em}.rea-ov-page .seat-card-number span{color:var(--sub);font-size:13px}.rea-ov-page .seat-card-bar{display:block;width:100%;height:7px;border-radius:5px;background:#e7eef8;overflow:hidden;margin:18px 0 12px}.rea-ov-page .seat-card-bar i{display:block;height:100%;border-radius:5px;background:var(--blue)}.rea-ov-page .seat-card-foot{display:flex;justify-content:space-between;gap:8px;color:var(--sub);font-size:12px}.rea-ov-page .seat-card-foot b{color:var(--ink);font-weight:600}.rea-ov-page .seat-hero-bottom{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:20px;color:var(--sub);font-size:12px}.rea-ov-page .seat-hero-bottom b{color:var(--ink);font-weight:600}.rea-ov-page .seat-hero-bottom .text-link{color:var(--blue)}.rea-ov-page .section{margin-top:48px}.rea-ov-page .section-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:20px}.rea-ov-page .section-head h2{font-size:16px;font-weight:600;margin:0}.rea-ov-page .section-title{display:flex;align-items:center;gap:7px;min-width:0}.rea-ov-page .hint{position:relative;display:inline-grid;place-items:center;width:17px;height:17px;border:1px solid var(--line);border-radius:50%;background:#fff;color:var(--weak);cursor:help;flex:none;outline:none}.rea-ov-page .hint:hover,.rea-ov-page .hint:focus-visible{border-color:var(--blue);color:var(--blue)}.rea-ov-page .hint-tip{position:absolute;left:-4px;bottom:calc(100% + 8px);width:max-content;max-width:min(280px,70vw);padding:7px 10px;border-radius:6px;background:rgba(31,35,41,.92);color:#fff;font-size:12px;line-height:1.5;text-align:left;opacity:0;visibility:hidden;transition:opacity .15s,visibility .15s;z-index:6;pointer-events:none}.rea-ov-page .hint:hover .hint-tip,.rea-ov-page .hint:focus-visible .hint-tip{opacity:1;visibility:visible}.rea-ov-page .text-link{border:0;background:none;color:var(--blue);padding:0;font-size:12px;font-weight:500;white-space:nowrap}.rea-ov-page .text-link:hover{text-decoration:underline}.rea-ov-page .outcomes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0}.rea-ov-page .outcome{padding:4px 28px 8px 0;border:0;border-right:1px solid var(--line);background:#fff;text-align:left;min-height:126px;transition:color .18s}.rea-ov-page .outcome+ .outcome{padding-left:32px}.rea-ov-page .outcome:last-child{border-right:0;padding-right:0}.rea-ov-page .outcome:hover .outcome-go{transform:translateX(4px);color:var(--blue)}.rea-ov-page .outcome-top{display:flex;align-items:center;gap:8px;color:var(--sub);font-size:12px}.rea-ov-page .outcome-icon{width:30px;height:30px;border-radius:8px;background:var(--blue-pale);color:var(--blue);display:grid;place-items:center}.rea-ov-page .outcome-main{font-size:36px;font-weight:600;line-height:1.2;letter-spacing:-.035em;margin-top:16px;font-variant-numeric:tabular-nums}.rea-ov-page .outcome-main small{font-size:14px;letter-spacing:0;font-weight:400;color:var(--sub);margin-left:4px}.rea-ov-page .outcome-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--sub);font-size:12px;margin-top:6px}.rea-ov-page .outcome-go{transition:transform .18s,color .18s;color:var(--weak)}.rea-ov-page .people{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}.rea-ov-page .people-story{display:flex;align-items:baseline;gap:12px}.rea-ov-page .people-story b{font-size:48px;line-height:1.1;letter-spacing:-.05em;font-variant-numeric:tabular-nums}.rea-ov-page .people-story span{font-size:14px;color:var(--sub)}.rea-ov-page .people-sub{display:flex;gap:20px;margin-top:12px;color:var(--sub);font-size:12px}.rea-ov-page .people-sub strong{color:var(--ink);font-weight:600}.rea-ov-page .scope{display:inline-flex;align-items:center;gap:5px;color:var(--weak);font-size:12px;margin-top:20px}.rea-ov-page .scope svg{flex:none}.rea-ov-page .composition{padding:24px 0 0}.rea-ov-page .composition-bar{display:flex;height:18px;border-radius:9px;overflow:hidden;background:var(--quiet);gap:2px}.rea-ov-page .composition-bar button{border:0;padding:0;min-width:0;transition:filter .18s}.rea-ov-page .composition-bar button:hover{filter:brightness(.9)}.rea-ov-page .composition-bar .manual{background:var(--blue)}.rea-ov-page .composition-bar .auto{background:#a8d4ff}.rea-ov-page .composition-bar .idle{background:#d9dee5}.rea-ov-page .legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:16px}.rea-ov-page .legend button{border:0;background:none;padding:0;display:flex;align-items:center;gap:6px;color:var(--sub);font-size:12px}.rea-ov-page .legend button:hover{color:var(--blue)}.rea-ov-page .legend i{width:8px;height:8px;border-radius:50%;display:inline-block}.rea-ov-page .legend b{color:var(--ink);font-weight:600}.rea-ov-page .legend .manual i{background:var(--blue)}.rea-ov-page .legend .auto i{background:#a8d4ff}.rea-ov-page .legend .idle i{background:#d9dee5}.rea-ov-page .tool-list{border-top:1px solid var(--line)}.rea-ov-page .tool-row{width:100%;display:grid;grid-template-columns:minmax(180px,1fr) 120px 136px 20px;gap:24px;align-items:center;padding:16px 4px;border:0;border-bottom:1px solid var(--line);background:#fff;text-align:left;transition:background .18s}.rea-ov-page .tool-row:hover{background:#f8fbff}.rea-ov-page .tool-name{font-size:14px;font-weight:600}.rea-ov-page .tool-name small{display:block;margin-top:2px;color:var(--weak);font-size:12px;font-weight:400}.rea-ov-page .tool-metric{color:var(--sub);font-size:12px;white-space:nowrap}.rea-ov-page .tool-metric b{color:var(--ink);font-size:22px;line-height:1;font-weight:600;font-variant-numeric:tabular-nums;margin-right:4px}.rea-ov-page .tool-row-arrow{color:var(--blue);font-size:18px}.rea-ov-page .tool-note{margin-top:12px;color:var(--weak);font-size:12px}.rea-ov-page .note-bottom{font-size:12px;color:var(--weak);margin-top:52px}.rea-ov-page .date-more{position:relative}.rea-ov-page .time-menu{position:absolute;right:0;top:48px;min-width:156px;background:#fff;border:1px solid var(--line);border-radius:8px;box-shadow:0 6px 16px rgba(0,0,0,.08);padding:8px;z-index:10}.rea-ov-page .time-menu[hidden]{display:none}.rea-ov-page .time-menu button{display:block;width:100%;border:0;background:#fff;text-align:left;padding:8px 10px;color:var(--weak);border-radius:6px;font-size:12px}.rea-ov-page .time-menu small{display:block;color:var(--weak);padding:6px 10px 2px}.rea-ov-page .mask{position:fixed;inset:0;background:rgba(31,35,41,.32);z-index:200;opacity:0;pointer-events:none;transition:opacity .18s}.rea-ov-page .mask.open{opacity:1;pointer-events:auto}.rea-ov-page .sheet{position:fixed;top:0;right:0;bottom:0;width:min(520px,100vw);background:#fff;z-index:201;box-shadow:-8px 0 24px rgba(31,35,41,.08);transform:translateX(100%);transition:transform .2s;display:flex;flex-direction:column}.rea-ov-page .sheet.open{transform:translateX(0)}.rea-ov-page .sheet-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:28px 32px 20px;border-bottom:1px solid var(--line)}.rea-ov-page .sheet-head h2{font-size:20px;margin:0}.rea-ov-page .sheet-head .small{display:block;color:var(--weak);font-size:12px;margin-top:3px}.rea-ov-page .close{border:0;background:var(--quiet);color:var(--sub);border-radius:8px;width:36px;height:36px;font-size:21px;line-height:1}.rea-ov-page .close:hover{color:var(--ink);background:var(--blue-pale)}.rea-ov-page .sheet-body{padding:28px 32px 48px;overflow:auto}.rea-ov-page .sheet-big{font-size:48px;line-height:1.1;font-weight:600;letter-spacing:-.045em;font-variant-numeric:tabular-nums}.rea-ov-page .sheet-big small{font-size:14px;font-weight:400;color:var(--sub);letter-spacing:0;margin-left:6px}.rea-ov-page .sheet-pair{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:24px 0}.rea-ov-page .sheet-mini{padding:18px;background:var(--quiet);border-radius:8px}.rea-ov-page .sheet-mini span{font-size:12px;color:var(--sub)}.rea-ov-page .sheet-mini b{display:block;font-size:22px;margin-top:4px;font-variant-numeric:tabular-nums}.rea-ov-page .sheet-label{font-size:12px;color:var(--weak);font-weight:600;margin:28px 0 8px}.rea-ov-page .sheet-row{display:flex;justify-content:space-between;gap:16px;padding:13px 0;border-bottom:1px solid var(--line);font-size:14px}.rea-ov-page .sheet-row span:last-child{font-variant-numeric:tabular-nums;font-weight:600}.rea-ov-page .sheet-note{font-size:12px;color:var(--sub);line-height:1.8;margin:20px 0 0}.rea-ov-page .sheet-tabs{display:flex;gap:8px;overflow:auto;margin-bottom:18px}.rea-ov-page .sheet-tabs button{white-space:nowrap;border:1px solid var(--line);background:#fff;border-radius:6px;padding:6px 10px;color:var(--sub);font-size:12px}.rea-ov-page .sheet-tabs button.active{border-color:var(--blue);background:var(--blue-pale);color:var(--blue)}.rea-ov-page .employee{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line);font-size:12px}.rea-ov-page .employee b{display:block;font-size:14px;font-weight:500}.rea-ov-page .employee small{display:block;color:var(--weak)}.rea-ov-page .employee .time{color:var(--sub)}@media(max-width:900px){.rea-ov-page .seat-hero{padding:28px}.rea-ov-page .seat-card{padding:18px}.rea-ov-page .people{grid-template-columns:1fr;gap:14px}.rea-ov-page .composition{padding-top:0}}@media(max-width:640px){.rea-ov-page .wrap{padding:24px 18px 56px}.rea-ov-page .top{display:block}.rea-ov-page .top-actions{margin-top:20px;justify-content:space-between}.rea-ov-page .date{flex:1;justify-content:space-between}.rea-ov-page .date button{min-width:0;flex:1;padding:0 6px}.rea-ov-page .seat-hero{padding:24px 18px}.rea-ov-page .seat-hero-head{display:block;margin-bottom:18px}.rea-ov-page .seat-hero-head h2{font-size:21px}.rea-ov-page .seat-total{margin-top:12px}.rea-ov-page .seat-total strong{font-size:24px}.rea-ov-page .seat-cards{grid-template-columns:1fr;gap:8px}.rea-ov-page .seat-card{padding:16px 18px}.rea-ov-page .seat-card-number{margin:8px 0 0}.rea-ov-page .seat-card-number strong{font-size:34px}.rea-ov-page .seat-card-bar{margin:12px 0 8px}.rea-ov-page .seat-hero-bottom{margin-top:16px}.rea-ov-page .section{margin-top:40px}.rea-ov-page .tool-row{grid-template-columns:minmax(0,1fr) 56px 80px 12px;gap:8px;padding:14px 0}.rea-ov-page .tool-metric b{font-size:18px}.rea-ov-page .tool-name small{font-size:11px}.rea-ov-page .outcomes{grid-template-columns:1fr}.rea-ov-page .outcome,.rea-ov-page .outcome+.outcome{padding:16px 0;border-right:0;border-bottom:1px solid var(--line);min-height:0}.rea-ov-page .outcome:last-child{border:0}.rea-ov-page .outcome-main{margin-top:10px}.rea-ov-page .people-story b{font-size:42px}.rea-ov-page .sheet-head{padding:22px 20px 18px}.rea-ov-page .sheet-body{padding:22px 20px 40px}}.rea-ov-page{background:#f6f8fb}.rea-ov-page .wrap{max-width:1600px;padding:32px 28px 56px}.rea-ov-page .top{margin-bottom:20px}.rea-ov-page .dashboard-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:stretch}.rea-ov-page .seat-hero,.rea-ov-page .section{min-width:0;margin:0;padding:28px 32px;background:#fff;border:1px solid #e9eef6;border-radius:12px;box-shadow:0 1px 2px rgba(19,44,82,.04)}.rea-ov-page .section-head{align-items:center;margin-bottom:18px}.rea-ov-page .section-head h2,.rea-ov-page .seat-hero-head h2{font-size:16px;letter-spacing:0}.rea-ov-page .seat-hero-head{align-items:center;margin-bottom:12px}.rea-ov-page .seat-hero-title{display:none}.rea-ov-page .seat-hero-head h2{margin:0}.rea-ov-page .seat-total{gap:5px;font-size:12px}.rea-ov-page .seat-total strong{font-size:29px}.rea-ov-page .seat-total .divider{font-size:17px;margin:0}.rea-ov-page .seat-cards{display:block;border-top:1px solid var(--line)}.rea-ov-page .seat-card{display:grid;grid-template-columns:80px minmax(0,1fr) 72px 72px 10px;align-items:center;gap:10px;padding:13px 0;border:0;border-bottom:1px solid var(--line);border-radius:0;background:#fff;box-shadow:none}.rea-ov-page .seat-card:hover{transform:none;box-shadow:none;background:#f8fbff}.rea-ov-page .seat-card-top{display:block}.rea-ov-page .seat-card-name{font-size:14px}.rea-ov-page .seat-card-number{display:block;margin:0;text-align:right}.rea-ov-page .seat-card-number strong{font-size:16px;letter-spacing:0}.rea-ov-page .seat-card-number span{font-size:12px}.rea-ov-page .seat-card-bar{height:7px;margin:0}.rea-ov-page .seat-card-foot{display:block;color:var(--sub);text-align:right}.rea-ov-page .seat-card-foot span:last-child{display:none}.rea-ov-page .seat-card-arrow{font-size:15px}.rea-ov-page .seat-hero-bottom{margin-top:14px}.rea-ov-page .seat-hero-bottom .text-link{font-size:12px}.rea-ov-page .people{display:block}.rea-ov-page .people-main{display:flex;align-items:center;justify-content:space-between;gap:16px}.rea-ov-page .people-story b{font-size:38px}.rea-ov-page .people-story span{font-size:13px}.rea-ov-page .people-sub{display:block;margin:0;text-align:right}.rea-ov-page .people-sub span{display:block}.rea-ov-page .people-sub span+span{margin-top:3px}.rea-ov-page .composition{padding:20px 0 0}.rea-ov-page .composition-bar{height:14px}.rea-ov-page .legend{margin-top:12px;gap:8px 14px}.rea-ov-page .scope{margin-top:16px;color:var(--sub)}.rea-ov-page .tool-column-head{display:grid;grid-template-columns:minmax(0,1fr) 80px 92px 12px;gap:10px;padding:0 2px 8px;color:var(--sub);font-size:12px}.rea-ov-page .tool-column-head span:nth-child(n+2){text-align:right}.rea-ov-page .tool-row{grid-template-columns:minmax(0,1fr) 80px 92px 12px;gap:10px;padding:10px 2px}.rea-ov-page .tool-name{font-size:13px}.rea-ov-page .tool-name small{display:none}.rea-ov-page .tool-name .tool-progress{display:block;width:100%;height:4px;margin-top:7px;border-radius:3px;background:#e6edf7;overflow:hidden}.rea-ov-page .tool-progress i{display:block;height:100%;border-radius:3px;background:var(--blue)}.rea-ov-page .tool-metric{text-align:right}.rea-ov-page .tool-metric b{font-size:17px}.rea-ov-page .tool-note{margin-top:8px;color:var(--sub)}.rea-ov-page .section-head .tool-note{margin:0}.rea-ov-page .outcomes{display:grid;grid-template-columns:1fr;gap:9px}.rea-ov-page .outcome,.rea-ov-page .outcome+.outcome,.rea-ov-page .outcome:last-child{min-height:0;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border:0;border-radius:8px;background:var(--quiet)}.rea-ov-page .outcome:hover{background:var(--blue-pale)}.rea-ov-page .result-label{display:flex;align-items:center;gap:10px;min-width:0}.rea-ov-page .result-label b{display:block;font-size:13px;font-weight:500}.rea-ov-page .result-label small{display:block;color:var(--sub);font-size:12px}.rea-ov-page .outcome-main{margin:0;font-size:26px;white-space:nowrap}.rea-ov-page .outcome-main small{font-size:12px}.rea-ov-page .outcome-icon{flex:none;width:28px;height:28px}.rea-ov-page .outcome-foot,.rea-ov-page .outcome-go{display:none}.rea-ov-page .note-bottom{margin-top:20px}.rea-ov-page .range-label{color:var(--sub);font-size:12px;margin-top:5px}@media(max-width:960px){.rea-ov-page .dashboard-grid{grid-template-columns:1fr}.rea-ov-page .seat-hero,.rea-ov-page .section{padding:20px 22px}}@media(max-width:640px){.rea-ov-page .wrap{padding:20px 14px 40px}.rea-ov-page .top{margin-bottom:16px}.rea-ov-page .dashboard-grid{gap:14px}.rea-ov-page .seat-hero,.rea-ov-page .section{padding:18px}.rea-ov-page .seat-hero-head{display:flex;margin-bottom:10px}.rea-ov-page .seat-hero-head h2{font-size:16px}.rea-ov-page .seat-total{margin:0}.rea-ov-page .seat-total strong{font-size:23px}.rea-ov-page .seat-card{grid-template-columns:62px minmax(0,1fr) 52px 10px;gap:8px}.rea-ov-page .seat-card-number strong{font-size:14px}.rea-ov-page .seat-card-foot{display:none}.rea-ov-page .seat-hero-bottom{display:block}.rea-ov-page .seat-hero-bottom .text-link{display:block;margin-top:6px}.rea-ov-page .people-main{display:block}.rea-ov-page .people-sub{text-align:left;margin-top:8px}.rea-ov-page .people-sub span{display:inline-block}.rea-ov-page .people-sub span+span{margin-left:12px}.rea-ov-page .tool-column-head,.rea-ov-page .tool-row{grid-template-columns:minmax(0,1fr) 57px 75px 12px;gap:6px}.rea-ov-page .tool-metric b{font-size:16px}.rea-ov-page .tool-row{padding:10px 0}.rea-ov-page .outcome-main{font-size:23px}}.rea-ov-page .seat-total .divider{color:var(--weak)}.rea-ov-page .seat-card-bar,.rea-ov-page .tool-name .tool-progress{background:var(--blue-pale)}.rea-ov-page .seat-card:hover,.rea-ov-page .tool-row:hover{background:var(--blue-pale)}.rea-ov-page .seat-layout{display:grid;grid-template-columns:132px minmax(0,1fr);align-items:center;gap:18px}.rea-ov-page .seat-donut{width:132px;height:132px;position:relative;display:grid;place-items:center;padding:0;border:0;background:none;border-radius:50%}.rea-ov-page .seat-donut svg{display:block;width:132px;height:132px}.rea-ov-page .seat-donut-track{fill:none;stroke:var(--blue-pale);stroke-width:16}.rea-ov-page .seat-donut-segment{fill:none;stroke-width:16;transition:stroke-width .18s}.rea-ov-page .seat-donut:hover .seat-donut-segment{stroke-width:19}.rea-ov-page .seat-donut-center{position:absolute;inset:24px;display:flex;flex-direction:column;justify-content:center;align-items:center;line-height:1.2;pointer-events:none}.rea-ov-page .seat-donut-center strong{font-size:28px;font-weight:600;font-variant-numeric:tabular-nums}.rea-ov-page .seat-donut-center small{font-size:12px;color:var(--sub);margin-top:4px}.rea-ov-page .seat-cards{border-top:0}.rea-ov-page .seat-card{grid-template-columns:minmax(72px,1fr) 64px 64px 10px;gap:6px;padding:10px 0}.rea-ov-page .seat-card-bar{display:none}.rea-ov-page .seat-card-top{min-width:0}.rea-ov-page .seat-card-name{display:flex;align-items:center;gap:7px;white-space:nowrap}.rea-ov-page .seat-key{display:inline-block;width:8px;height:8px;border-radius:50%;flex:none}.rea-ov-page .seat-card-number strong{font-size:16px}.rea-ov-page .seat-card-foot{font-size:12px}@media(max-width:640px){.rea-ov-page .seat-layout{grid-template-columns:1fr;gap:8px}.rea-ov-page .seat-donut{width:116px;height:116px;margin:auto}.rea-ov-page .seat-donut svg{width:116px;height:116px}.rea-ov-page .seat-card{grid-template-columns:minmax(72px,1fr) 70px 10px;gap:8px}.rea-ov-page .seat-card-foot{display:none}}.rea-ov-page .people{display:block}.rea-ov-page .people-main{align-items:flex-end}.rea-ov-page .people-story{align-items:baseline}.rea-ov-page .people-story b{font-size:44px}.rea-ov-page .people-sub{font-size:13px}.rea-ov-page .people-sub strong{font-size:18px}.rea-ov-page .usage-tabs{display:inline-flex;flex:0 0 auto;border:1px solid var(--line);border-radius:8px;overflow:hidden}.rea-ov-page .usage-tabs button{border:0;border-right:1px solid var(--line);background:#fff;color:var(--sub);font-size:12px;line-height:1.5;padding:5px 12px;transition:background .18s,color .18s}.rea-ov-page .usage-tabs button:last-child{border-right:0}.rea-ov-page .usage-tabs button:hover{color:var(--blue)}.rea-ov-page .usage-tabs button[aria-pressed="true"]{background:var(--blue-pale);color:var(--blue);font-weight:600}.rea-ov-page .section-usage{display:flex;flex-direction:column}.rea-ov-page .usage-list{display:flex;flex-direction:column;border-top:1px solid var(--line)}.rea-ov-page .usage-row{display:grid;align-items:center;gap:12px;height:32px;border-bottom:1px solid var(--line);font-size:13px;min-width:0}.rea-ov-page .usage-row.empty{border-bottom-color:transparent}.rea-ov-page .usage-row.dept{grid-template-columns:minmax(72px,100px) minmax(0,1fr) 76px 64px}.rea-ov-page .usage-row.emp{grid-template-columns:20px minmax(72px,100px) minmax(0,1fr) 76px}.rea-ov-page .usage-row .nm{color:var(--ink);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rea-ov-page .usage-row .no{color:var(--weak);font-size:12px;font-variant-numeric:tabular-nums}.rea-ov-page .usage-row .dp{color:var(--sub);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rea-ov-page .usage-row .bar{height:6px;border-radius:3px;background:var(--blue-pale);overflow:hidden}.rea-ov-page .usage-row .bar i{display:block;height:100%;border-radius:3px;background:var(--blue)}.rea-ov-page .usage-row .ct{text-align:right;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}.rea-ov-page .usage-row .ct em{font-style:normal;color:var(--sub);font-size:11px;margin-left:2px}.rea-ov-page .usage-row .pp{text-align:right;color:var(--sub);font-size:12px;white-space:nowrap;font-variant-numeric:tabular-nums}.rea-ov-page .usage-foot{display:flex;justify-content:flex-end;margin-top:auto;padding-top:14px}.rea-ov-page .sheet-head{align-items:center}.rea-ov-page .sheet-back{border:0;background:none;color:var(--blue);font-size:14px;padding:4px 8px 4px 0}.rea-ov-page .sheet-back[hidden]{display:none}.rea-ov-page .employee-list{margin-top:12px;border-top:1px solid var(--line)}.rea-ov-page .employee-row{display:flex;width:100%;align-items:center;justify-content:space-between;gap:12px;padding:13px 0;border:0;border-bottom:1px solid var(--line);background:#fff;text-align:left;color:var(--ink)}.rea-ov-page .employee-row:hover{background:var(--blue-pale)}.rea-ov-page .employee-row b{display:block;font-size:14px;font-weight:500}.rea-ov-page .employee-row small{display:block;color:var(--weak);font-size:12px;margin-top:2px}.rea-ov-page .employee-row .metric{color:var(--sub);font-size:12px;white-space:nowrap}.rea-ov-page .employee-row .metric strong{color:var(--ink);font-size:14px}.rea-ov-page .employee-row .go{color:var(--blue);font-size:18px}.rea-ov-page .sheet-filter{display:flex;gap:8px;margin:20px 0 10px}.rea-ov-page .sheet-filter button{border:1px solid var(--line);border-radius:6px;background:#fff;padding:7px 10px;color:var(--sub);font-size:12px}.rea-ov-page .sheet-filter button.active{border-color:var(--blue);background:var(--blue-pale);color:var(--blue)}.rea-ov-page .person-identity{padding:18px;background:var(--quiet);border-radius:8px}.rea-ov-page .person-identity b{display:block;font-size:18px}.rea-ov-page .person-identity span{color:var(--sub);font-size:12px}.rea-ov-page .person-metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:20px 0}.rea-ov-page .person-metrics div{padding:16px;border:1px solid var(--line);border-radius:8px}.rea-ov-page .person-metrics small{display:block;color:var(--sub);font-size:12px}.rea-ov-page .person-metrics strong{display:block;font-size:24px;font-weight:600;margin-top:4px}.rea-ov-page .person-metrics em{font-style:normal;font-size:12px;font-weight:400;color:var(--sub);margin-left:3px}@media(prefers-reduced-motion:reduce){.rea-ov-page *,.rea-ov-page *:before,.rea-ov-page *:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+/* ---------- 二级页 / 三级页：版本席位独立页 + 抽屉重排 ---------- */
+.rea-ov-page .seat-donut{cursor:default}
+.rea-ov-page .seat-donut:hover .seat-donut-segment{stroke-width:16}
+.rea-ov-page .seat-entry-hint{color:var(--weak);font-size:12px}
+.rea-ov-page .tag{display:inline-block;border-radius:4px;padding:0 6px;margin-right:6px;background:var(--blue-pale);color:var(--blue);font-size:11px;line-height:18px;font-weight:500}
+.rea-ov-page .tag.no{background:#f2f3f5;color:var(--weak)}
+
+.ov-seatpage{max-width:1600px;margin:0 auto;padding:32px 28px 56px}
+.ov-seatpage[hidden]{display:none}
+.ov-seatpage .seat-top{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.ov-seatpage .seat-back{border:0;background:none;padding:0;color:var(--blue);font-size:14px;font-weight:500}
+.ov-seatpage .seat-back:hover{text-decoration:underline}
+.ov-seatpage .seat-crumb{color:var(--weak);font-size:12px}
+.ov-seatpage .seat-crumb b{color:var(--ink);font-weight:500}
+.ov-seatpage .seat-when{margin-left:auto;color:var(--weak);font-size:12px;white-space:nowrap}
+.ov-seatpage .seat-page{display:flex;min-height:560px;border:1px solid var(--line);border-radius:12px;background:#fff;overflow:hidden}
+.ov-seatpage .vrail{flex:0 0 264px;border-right:1px solid var(--line);padding:20px 16px;background:#fbfcfe}
+.ov-seatpage .vh{padding:0 8px 14px}
+.ov-seatpage .vh b{display:block;font-size:14px;font-weight:600}
+.ov-seatpage .vh span{display:block;margin-top:3px;font-size:12px;color:var(--weak)}
+.ov-seatpage .vitem{display:block;width:100%;border:0;border-radius:8px;background:transparent;padding:12px 10px;margin-bottom:4px;text-align:left}
+.ov-seatpage .vitem:hover{background:#f2f7ff}
+.ov-seatpage .vitem.on{background:var(--blue-pale)}
+.ov-seatpage .vr1{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.ov-seatpage .vr1 .nm{font-size:14px;font-weight:500;color:var(--ink)}
+.ov-seatpage .vr1 .num{font-size:12px;color:var(--weak);white-space:nowrap}
+.ov-seatpage .vr1 .num b{font-size:14px;font-weight:600;color:var(--ink)}
+.ov-seatpage .vitem .bar{height:4px;margin:9px 0 7px;border-radius:999px;background:#e7eef8;overflow:hidden}
+.ov-seatpage .vitem .bar i{display:block;height:100%;border-radius:999px;background:var(--blue)}
+.ov-seatpage .vitem .sub{font-size:11px;color:var(--weak);line-height:1.5}
+.ov-seatpage .vitem .sub em{font-style:normal;color:var(--ink);font-weight:500}
+.ov-seatpage .scontent{flex:1;min-width:0;padding:22px 26px 24px}
+.ov-seatpage .stitle{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px}
+.ov-seatpage .stitle h3{margin:0;font-size:16px;font-weight:600}
+.ov-seatpage .stitle span{font-size:12px;color:var(--weak)}
+.ov-seatpage .statrow{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.ov-seatpage .stat{padding:12px 16px;border-left:1px solid var(--line);min-width:0}
+.ov-seatpage .stat:first-child{border-left:0;padding-left:0}
+.ov-seatpage .stat small{display:block;font-size:12px;color:var(--weak)}
+.ov-seatpage .stat b{display:block;margin-top:2px;font-size:24px;line-height:1.25;font-weight:600;font-variant-numeric:tabular-nums}
+.ov-seatpage .stat b em{font-style:normal;font-size:12px;font-weight:400;color:var(--weak);margin-left:2px}
+.ov-seatpage .seat-tools{display:flex;align-items:center;gap:8px;margin:16px 0 8px}
+.ov-seatpage .search{display:flex;align-items:center;gap:8px;width:240px;height:34px;padding:0 10px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--weak)}
+.ov-seatpage .search:focus-within{border-color:var(--blue);box-shadow:0 0 0 2px rgba(22,119,255,.12)}
+.ov-seatpage .search input{flex:1;min-width:0;border:0;outline:0;background:none;font:inherit;font-size:12px;color:var(--ink)}
+.ov-seatpage .sp{flex:1}
+.ov-seatpage .btn{height:34px;padding:0 13px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--ink);font-size:12px;font-weight:500}
+.ov-seatpage .btn:hover{border-color:var(--blue);color:var(--blue)}
+.ov-seatpage .btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}
+.ov-seatpage .btn.primary:hover{background:#0958d9;color:#fff}
+.ov-seatpage .tbl-wrap{overflow-x:auto}
+.ov-seatpage .tbl{width:100%;border-collapse:collapse;font-size:12px;min-width:720px}
+.ov-seatpage .tbl th{text-align:left;font-weight:400;color:var(--weak);padding:10px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+.ov-seatpage .tbl td{height:48px;padding:0 8px;border-bottom:1px solid var(--line2);color:var(--sub);white-space:nowrap}
+.ov-seatpage .tbl td.nm{color:var(--ink);font-weight:500;cursor:pointer}
+.ov-seatpage .tbl td.nm:hover{color:var(--blue)}
+.ov-seatpage .tbl td.empty{text-align:center;color:var(--weak);height:120px}
+.ov-seatpage .tbl .op{color:var(--blue)}
+.ov-seatpage .tbl .op span{cursor:pointer}
+.ov-seatpage .tbl .op span:hover{text-decoration:underline}
+.ov-seatpage .tbl .op i{font-style:normal;color:var(--line);margin:0 6px}
+.ov-seatpage .pager{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:14px;color:var(--weak);font-size:12px}
+.ov-seatpage .pg{display:flex;gap:4px}
+.ov-seatpage .pg button{width:28px;height:28px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--sub);font-size:12px}
+.ov-seatpage .pg button:hover:not(:disabled){border-color:var(--blue);color:var(--blue)}
+.ov-seatpage .pg button.on{border-color:var(--blue);background:var(--blue-pale);color:var(--blue);font-weight:600}
+.ov-seatpage .pg button:disabled{color:#c9ced6;cursor:not-allowed}
+
+.rea-ov-page .sheet-head{padding:22px 24px 16px;align-items:flex-start;gap:12px}
+.rea-ov-page .sheet-heading{flex:1;min-width:0}
+.rea-ov-page .sheet-head h2{font-size:20px;line-height:1.35;font-weight:600;letter-spacing:-.01em}
+.rea-ov-page .sheet-head .small{font-size:13px;color:var(--sub);margin-top:4px;line-height:1.5}
+.rea-ov-page .sheet-crumb{display:block;margin:0 0 8px;border:0;background:none;padding:0;color:var(--blue);font-size:12.5px;font-weight:500;text-align:left}
+.rea-ov-page .sheet-crumb[hidden]{display:none}
+.rea-ov-page .close{width:28px;height:28px;border-radius:6px;background:none;color:var(--weak);font-size:22px;font-weight:400}
+.rea-ov-page .close:hover{background:var(--quiet);color:var(--ink)}
+.rea-ov-page .sheet-body{flex:1 1 auto;min-height:0;overflow-y:auto;padding:20px 24px 24px;font-size:14px;line-height:1.5}
+.rea-ov-page .sheet-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;flex:none;padding:12px 24px;border-top:1px solid var(--line);background:var(--quiet);color:var(--weak);font-size:12px}
+.rea-ov-page .sheet-foot .lk{border:0;background:none;padding:0;color:var(--blue);font:inherit;font-weight:500;cursor:pointer;white-space:nowrap}
+.rea-ov-page .sheet-foot .lk:hover{text-decoration:underline}
+.rea-ov-page .summary{display:flex;align-items:flex-end;gap:24px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.rea-ov-page .summary .big{display:flex;align-items:baseline;gap:5px;white-space:nowrap}
+.rea-ov-page .summary .big b{font-size:32px;line-height:1.1;font-weight:600;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.rea-ov-page .summary .big span{font-size:12px;color:var(--weak)}
+.rea-ov-page .summary .mini{display:flex;gap:26px;margin-left:auto;padding-bottom:2px}
+.rea-ov-page .summary .mini small{display:block;font-size:12px;color:var(--weak);white-space:nowrap}
+.rea-ov-page .summary .mini b{display:block;margin-top:3px;font-size:14px;font-weight:500;color:var(--ink);white-space:nowrap}
+.rea-ov-page .slabel{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:22px 0 2px}
+.rea-ov-page .slabel span{font-size:13px;font-weight:600;color:var(--ink)}
+.rea-ov-page .slabel .r{font-size:12px;font-weight:400;color:var(--weak)}
+.rea-ov-page .erow,.rea-ov-page .vrow,.rea-ov-page .drow{display:flex;align-items:center;gap:10px;width:100%;min-height:48px;padding:6px 0;border:0;border-bottom:1px solid var(--line2);background:#fff;text-align:left;color:var(--ink);font:inherit}
+.rea-ov-page .erow:hover,.rea-ov-page .vrow:hover,.rea-ov-page .drow:hover{background:#f8fbff}
+.rea-ov-page .erow .nm{flex:0 0 56px;font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rea-ov-page .erow .dp{flex:0 0 54px;font-size:12px;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rea-ov-page .erow .ver{flex:0 0 48px;font-size:12px;color:var(--sub);white-space:nowrap}
+.rea-ov-page .erow .last{flex:1;text-align:right;font-size:12px;color:var(--weak);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rea-ov-page .erow .go,.rea-ov-page .vrow .go,.rea-ov-page .drow .go{flex:0 0 10px;text-align:right;color:#b4bcc8;font-size:15px;line-height:1}
+.rea-ov-page .vrow .nm{flex:1;min-width:0;font-size:14px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rea-ov-page .vrow .dp{flex:0 0 64px;font-size:12px;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rea-ov-page .vrow .num,.rea-ov-page .drow .ct{flex:0 0 auto;text-align:right;font-size:14px;font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap}
+.rea-ov-page .vrow .num em,.rea-ov-page .drow .ct em{font-style:normal;font-size:12px;font-weight:400;color:var(--weak);margin-left:2px}
+.rea-ov-page .vrow.static:hover{background:#fff}
+.rea-ov-page .drow .nm{flex:0 0 96px;font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rea-ov-page .drow .tr{flex:1;height:6px;border-radius:999px;background:var(--line2);overflow:hidden}
+.rea-ov-page .drow .tr i{display:block;height:100%;border-radius:999px;background:var(--blue);opacity:.8}
+.rea-ov-page .drow .pp{flex:0 0 70px;text-align:right;font-size:12px;color:var(--weak);white-space:nowrap}
+.rea-ov-page .sheet-tabs{display:flex;gap:0;margin:0;border-bottom:1px solid var(--line);overflow:visible}
+.rea-ov-page .sheet-tabs button{border:0;border-bottom:2px solid transparent;border-radius:0;background:none;margin-right:24px;padding:10px 0;color:var(--sub);font-size:13px;white-space:nowrap}
+.rea-ov-page .sheet-tabs button:last-child{margin-right:0}
+.rea-ov-page .sheet-tabs button:hover{color:var(--blue)}
+.rea-ov-page .sheet-tabs button.active{border-bottom-color:var(--blue);color:var(--blue);font-weight:600;background:none}
+.rea-ov-page .sheet-empty{margin:18px 0;color:var(--weak);font-size:13px;text-align:center}
+.rea-ov-page .ident{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.rea-ov-page .ident span{font-size:12px;color:var(--weak)}
+.rea-ov-page .ident b{font-size:14px;font-weight:500;color:var(--ink)}
+.rea-ov-page .metrics{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--line)}
+.rea-ov-page .metrics div{padding:14px 16px;border-left:1px solid var(--line);min-width:0}
+.rea-ov-page .metrics div:nth-child(3n+1){padding-left:0;border-left:0}
+.rea-ov-page .metrics div:nth-child(n+4){border-top:1px solid var(--line)}
+.rea-ov-page .metrics small{display:block;font-size:12px;color:var(--weak);white-space:nowrap}
+.rea-ov-page .metrics b{display:block;margin-top:3px;font-size:24px;line-height:1.3;font-weight:600;font-variant-numeric:tabular-nums}
+.rea-ov-page .metrics b em{font-style:normal;font-size:12px;font-weight:400;color:var(--weak);margin-left:2px}
+.rea-ov-page .ov-toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:260;padding:9px 14px;border-radius:8px;background:rgba(31,35,41,.9);color:#fff;font-size:12px;box-shadow:0 6px 18px rgba(0,0,0,.15);white-space:nowrap}
+.rea-ov-page .ov-toast[hidden]{display:none}
+@media(max-width:960px){
+ .ov-seatpage{padding:24px 20px 40px}
+ .ov-seatpage .seat-page{display:block}
+ .ov-seatpage .vrail{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;flex:none;border-right:0;border-bottom:1px solid var(--line);padding:14px}
+ .ov-seatpage .vh{grid-column:1/-1;padding:0 4px 8px}
+ .ov-seatpage .vitem{margin:0;padding:10px 8px}
+ .ov-seatpage .scontent{padding:18px}
+}
+@media(max-width:640px){
+ .ov-seatpage .seat-top{flex-wrap:wrap}
+ .ov-seatpage .seat-when{display:none}
+ .ov-seatpage .vrail{grid-template-columns:1fr}
+ .ov-seatpage .seat-tools{flex-wrap:wrap}
+ .ov-seatpage .search{width:100%}
+ .ov-seatpage .sp{display:none}
+ .ov-seatpage .statrow{grid-template-columns:repeat(2,1fr)}
+ .ov-seatpage .stat:nth-child(3){border-left:0;padding-left:0}
+ .ov-seatpage .stat:nth-child(n+3){border-top:1px solid var(--line)}
+ .rea-ov-page .summary{gap:14px}
+ .rea-ov-page .summary .mini{gap:16px}
+ .rea-ov-page .sheet-head{padding:18px 18px 14px}
+ .rea-ov-page .sheet-body{padding:16px 18px 20px}
+ .rea-ov-page .sheet-foot{padding:10px 18px}
+ .rea-ov-page .erow .ver{display:none}
+ .rea-ov-page .erow .dp{flex-basis:48px}
+ .rea-ov-page .metrics div{padding:12px 10px}
+ .rea-ov-page .metrics b{font-size:20px}
+}
 </script>
 <script type="text/plain" id="srcOverviewScript">const DATA={
  day:{label:'今日',range:'2026.10.29 · 演示',sent:564,replied:194,tasks:8,taskExecTotal:179,material:14,materialPeople:8,hosting:28,hostingPeople:5,service:24,tools:[[4,8],[5,13],[2,4],[3,6],[1,2]],prev:null},
@@ -9901,11 +10093,12 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
  quarter:{label:'近三月',range:'2026.07.30—2026.10.29 · 演示',sent:22032,replied:7831,tasks:475,taskExecTotal:6624,material:437,materialPeople:20,hosting:2108,hostingPeople:13,service:28,tools:[[13,191],[17,512],[10,168],[12,126],[7,73]],prev:null}
 };
 const TIERS=[{name:'标准版',bought:9,assigned:8},{name:'高级版',bought:5,assigned:4},{name:'旗舰版',bought:18,assigned:18}];
+const TITLES={'产品部':'产品经理','市场部':'市场专员','运营部':'运营专员','销售部':'销售顾问','设计部':'设计师','研发部':'研发工程师','客户成功部':'客户成功经理','人力行政部':'人事专员'};
 const ROSTER=[
  ['韩雪','产品部',0,999],['张伟','产品部',0,0],['陈敏','产品部',0,0],['刘洋','产品部',0,0],['王芳','市场部',0,0],['周杰','市场部',0,0],['吴静','市场部',0,0],['徐磊','运营部',0,0],
  ['许诺','设计部',1,999],['孙悦','运营部',1,0],['马超','运营部',1,0],['朱琳','销售部',1,0],
  ['邓超','市场部',2,38],['蒋涛','人力行政部',2,44],['石磊','运营部',2,21],['唐颖','销售部',2,9],['李娜','销售部',2,0],['黄强','销售部',2,0],['林婷','研发部',2,0],['郑浩','研发部',2,0],['谢敏','研发部',2,0],['罗鹏','客户成功部',2,0],['梁雪','客户成功部',2,0],['王强','客户成功部',2,0],['赵磊','设计部',2,0],['孙浩','设计部',2,0],['郭静','设计部',2,0],['何伟','人力行政部',2,0],['高媛','人力行政部',2,0],['冯磊','人力行政部',2,0]
-].map(([name,dept,tier,lastDays],id)=>({id,name,dept,tier,lastDays,assignedOn:({韩雪:'2026.10.24',邓超:'2026.07.01',石磊:'2026.08.01',唐颖:'2026.06.01',许诺:'2026.08.30',蒋涛:'2026.04.12'})[name]||'2026.0'+(3+id%6)+'.'+String(10+id%18).padStart(2,'0')}));
+].map(([name,dept,tier,lastDays],id)=>({id,name,dept,tier,lastDays,phone:['138','139','137','136','135'][id%5]+'****'+String(2041+id*37).slice(-4),title:TITLES[dept]||'员工',expires:tier===2?(id%4===0?'2026-12-31':'2027-06-30'):['2027-06-30','2027-03-31'][tier],assignedOn:({韩雪:'2026.10.24',邓超:'2026.07.01',石磊:'2026.08.01',唐颖:'2026.06.01',许诺:'2026.08.30',蒋涛:'2026.04.12'})[name]||'2026.0'+(3+id%6)+'.'+String(10+id%18).padStart(2,'0')}));
 const TIER_COLORS=['#9CCEFF','#5AA7FF','#1677FF'];
 const TOOL_GROUPS=[
  {name:'客户拓展',hint:'加好友 · 拉人进群',features:['群内好友','通讯录加人','企微添加客户','拉人进群']},
@@ -9916,12 +10109,20 @@ const TOOL_GROUPS=[
 ];
 const $=s=>document.querySelector(s),fmt=n=>new Intl.NumberFormat('zh-CN').format(n);
 const WINDOW_DAYS={day:0,week:6,month:29,quarter:91};
-let period='month',sheetKind=null,sheetTier='all',sheetStatus='assigned',sheetPeopleStatus='all',sheetTool=0,personId=null,lastFocus=null,usageTab='dept';
+let period='month',sheetKind=null,sheetTier='all',sheetPeopleStatus='all',sheetTool=0,personId=null,lastFocus=null,usageTab='dept';
+let sheetReturn=null,sheetDept=null,personFromSeat=false,personReturnScroll=0;
+let seatTierPage=0,seatPageNo=1,seatQuery='',overviewScroll=0,toastTimer=null;
 function current(){return DATA[period]}
-function setText(id,value){$(id).textContent=value}
+function setText(id,value){const el=$(id);if(el)el.textContent=value}
 function hasRecord(person){return person.lastDays<=WINDOW_DAYS[period]}
 function usedPeople(){return ROSTER.filter(hasRecord)}
 function lastRecord(person){return person.lastDays===999?'从未有记录':person.lastDays===0?'演示日':person.lastDays+' 天前'}
+function lastUseText(person){
+ if(person.lastDays===999)return '一直没用过';
+ if(person.lastDays===0)return '今天 '+String(9+person.id%3).padStart(2,'0')+':'+String(10+person.id*7%50).padStart(2,'0');
+ if(person.lastDays===1)return '昨天 '+String(10+person.id%8).padStart(2,'0')+':'+String(5+person.id*3%55).padStart(2,'0');
+ return person.lastDays+' 天前';
+}
 function allocations(total,peopleCount,start,pool=usedPeople()){
  const people=pool,count=Math.min(peopleCount,people.length),result={};
  if(!count)return result;
@@ -9969,92 +10170,191 @@ function render(){
  setText('#material-number',fmt(d.material));setText('#material-people',d.materialPeople+' 人参与');
  setText('#hosting-number',fmt(d.hosting));setText('#hosting-people','覆盖 '+d.hostingPeople+' 人');
  setText('#task-number',fmt(d.tasks));setText('#task-trend',d.prev?`较上期 +${fmt(d.tasks-d.prev.tasks)} 条`:'点击查看详情');
- $('#tiers').innerHTML=TIERS.map((t,i)=>{const unassigned=t.bought-t.assigned;return `<button class="seat-card" type="button" data-sheet="seats" data-tier="${i}" aria-label="${t.name}，已购 ${t.bought} 席，已分配 ${t.assigned} 席，查看员工"><span class="seat-card-top"><span class="seat-card-name"><i class="seat-key" style="background:${TIER_COLORS[i]}"></i>${t.name}</span></span><span class="seat-card-number"><strong>${t.assigned}</strong><span> / ${t.bought}</span></span><span class="seat-card-foot">${unassigned?unassigned+' 席待分配':'全部已分配'}</span><span class="seat-card-arrow">›</span></button>`}).join('');
+ $('#tiers').innerHTML=TIERS.map((t,i)=>{const unassigned=t.bought-t.assigned;return `<button class="seat-card" type="button" data-seat-open="${i}" aria-label="${t.name}，已购 ${t.bought} 席，已分配 ${t.assigned} 席，查看席位"><span class="seat-card-top"><span class="seat-card-name"><i class="seat-key" style="background:${TIER_COLORS[i]}"></i>${t.name}</span></span><span class="seat-card-number"><strong>${t.assigned}</strong><span> / ${t.bought}</span></span><span class="seat-card-foot">${unassigned?unassigned+' 席待分配':'全部已分配'}</span><span class="seat-card-arrow">›</span></button>`}).join('');
  const maxTools=Math.max(1,...d.tools.map(([,actions])=>actions));
  $('#tool-list').innerHTML=TOOL_GROUPS.map((g,i)=>({g,i,people:d.tools[i][0],actions:d.tools[i][1]})).sort((a,b)=>b.actions-a.actions).map(({g,i,people,actions})=>`<button class="tool-row" type="button" data-sheet="tool" data-tool="${i}" aria-label="${g.name}，${people} 人参与，完成 ${actions} 次，查看员工"><span class="tool-name">${g.name}<span class="tool-progress" aria-hidden="true"><i style="width:${actions/maxTools*100}%"></i></span></span><span class="tool-metric"><b>${people}</b>人</span><span class="tool-metric"><b>${fmt(actions)}</b>次</span><span class="tool-row-arrow">›</span></button>`).join('');
  document.querySelectorAll('[data-period]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.period===period)));
  if(sheetKind)fillSheet();
+ if(!$('#seat-page').hidden)renderSeatPage();
 }
-function row(label,value){return `<div class="sheet-row"><span>${label}</span><span>${value}</span></div>`}
-function mini(label,value){return `<div class="sheet-mini"><span>${label}</span><b>${value}</b></div>`}
-function employeeRows(people,metric){
- if(!people.length)return '<p class="sheet-note">当前筛选下没有员工。</p>';
- return '<div class="employee-list">'+people.map(person=>{const value=metric(person);return `<button class="employee-row" type="button" data-person="${person.id}" aria-label="查看${person.name}的个人详情"><span><b>${person.name}</b><small>${person.dept} · ${TIERS[person.tier].name}</small></span><span class="metric">${value}</span><span class="go">›</span></button>`}).join('')+'</div>';
+function seatPeople(){
+ const q=seatQuery.trim().toLowerCase();
+ return ROSTER.filter(person=>person.tier===seatTierPage&&(!q||person.name.toLowerCase().includes(q)||person.phone.includes(q)));
 }
-function peopleFilter(){return `<div class="sheet-filter"><button type="button" data-filter="all" class="${sheetPeopleStatus==='all'?'active':''}">全部</button><button type="button" data-filter="used" class="${sheetPeopleStatus==='used'?'active':''}">有记录</button><button type="button" data-filter="unused" class="${sheetPeopleStatus==='unused'?'active':''}">无记录</button></div>`}
-function filterPeople(people){return people.filter(person=>sheetPeopleStatus==='all'||hasRecord(person)===(sheetPeopleStatus==='used'))}
-function personBody(person,data){
- const stats=personStats(person,data),status=hasRecord(person)?'本期有记录':'本期无记录';
- const toolRows=TOOL_GROUPS.map((group,i)=>row(group.name,fmt(amount(data.tools[i],person.id))+' 次')).join('');
- return `<div class="person-identity"><b>${person.name}</b><span>${person.dept} · ${TIERS[person.tier].name} · ${status}</span></div>`
- +`<div class="sheet-label">席位与使用</div>${row('分配日期',person.assignedOn+' · 演示')}${row('最后使用记录',lastRecord(person))}`
- +`<div class="person-metrics"><div><small>App 工具完成</small><strong>${fmt(stats.tool)}<em>次</em></strong></div><div><small>素材取用</small><strong>${fmt(stats.material)}<em>次</em></strong></div><div><small>AI托管动作</small><strong>${fmt(stats.hosting)}<em>次</em></strong></div><div><small>任务做满</small><strong>${fmt(stats.taskDone)}<em>条</em></strong></div></div>`
- +`<div class="sheet-label">营销任务</div>${row('任务执行',fmt(stats.taskExec)+' 人次')}${row('客户回复',fmt(stats.replies)+' 人')}`
- +`<div class="sheet-label">App 工具</div>${toolRows}<p class="sheet-note">个人次数与员工归属为演示分配；正式版按同一员工 ID 从功能结果事件、任务台账、素材流水和托管日志汇总。各类成果单位不同，不相加。</p>`;
+function renderSeatPage(){
+ const tier=TIERS[seatTierPage],d=current(),all=ROSTER.filter(person=>person.tier===seatTierPage),people=seatPeople();
+ const pages=Math.max(1,Math.ceil(people.length/5));
+ if(seatPageNo>pages)seatPageNo=pages;
+ const start=(seatPageNo-1)*5,pagePeople=people.slice(start,start+5),usedAll=all.filter(hasRecord).length;
+ const unassigned=tier.bought-tier.assigned,rate=tier.bought?(tier.assigned/tier.bought*100).toFixed(1):'—';
+ const totalAssigned=TIERS.reduce((n,t)=>n+t.assigned,0),totalBought=TIERS.reduce((n,t)=>n+t.bought,0);
+ setText('#seat-crumb-tier',tier.name);setText('#seat-when','当前有效授权 · '+d.label);setText('#seat-title',tier.name+'席位');
+ setText('#seat-record-note',`本期有记录 ${usedAll} / ${tier.assigned} · 无记录 ${tier.assigned-usedAll}`);
+ setText('#seat-count',people.length?`共 ${people.length} 人 · ${start+1}–${start+pagePeople.length} / ${people.length}`:'共 0 人');
+ $('#seat-stats').innerHTML=`<div class="stat"><small>已购</small><b>${tier.bought}<em>席</em></b></div><div class="stat"><small>已分配</small><b>${tier.assigned}<em>席</em></b></div><div class="stat"><small>未分配</small><b>${unassigned}<em>席</em></b></div><div class="stat"><small>分配率</small><b>${rate}<em>${rate==='—'?'':'%'}</em></b></div>`;
+ $('#seat-vrail').innerHTML=`<div class="vh"><b>各版本席位</b><span>${totalAssigned} / ${totalBought} 已分配</span></div>`+TIERS.map((t,i)=>{const un=t.bought-t.assigned,used=ROSTER.filter(person=>person.tier===i&&hasRecord(person)).length;return `<button class="vitem ${i===seatTierPage?'on':''}" type="button" data-seat-tier="${i}"><div class="vr1"><span class="nm">${t.name}</span><span class="num"><b>${t.assigned}</b> / ${t.bought}</span></div><div class="bar"><i style="width:${t.bought?t.assigned/t.bought*100:0}%"></i></div><div class="sub">${un?un+' 个待分配':'全部已分配'} · 本期有记录 <em>${used}</em></div></button>`}).join('');
+ $('#seat-rows').innerHTML=pagePeople.map(person=>{const rec=hasRecord(person);return `<tr><td class="nm" data-seat-person="${person.id}">${person.name}</td><td>${person.phone}</td><td>${person.title}</td><td>${person.dept}</td><td>${person.expires}</td><td><span class="tag${rec?'':' no'}">${rec?'有记录':'无记录'}</span>${lastUseText(person)}</td><td class="op"><span data-assign="解除使用">解除使用</span><i>·</i><span data-assign="更换使用人">更换使用人</span></td></tr>`}).join('')||'<tr><td colspan="7" class="empty">没有匹配的员工</td></tr>';
+ const pageButtons=Array.from({length:pages},(_,i)=>`<button type="button" data-seat-nav="${i+1}" class="${seatPageNo===i+1?'on':''}">${i+1}</button>`).join('');
+ $('#seat-pager').innerHTML=`<button type="button" data-seat-nav="${seatPageNo-1}" ${seatPageNo<=1?'disabled':''} aria-label="上一页">‹</button>${pageButtons}<button type="button" data-seat-nav="${seatPageNo+1}" ${seatPageNo>=pages?'disabled':''} aria-label="下一页">›</button>`;
+}
+function openSeatPage(tier){
+ overviewScroll=window.scrollY;
+ seatTierPage=Number(tier)||0;seatPageNo=1;seatQuery='';$('#seat-search').value='';
+ renderSeatPage();$('#seat-page').hidden=false;$('.rea-ov-page .wrap').hidden=true;window.scrollTo(0,0);
+}
+function closeSeatPage(){
+ $('#seat-page').hidden=true;$('.rea-ov-page .wrap').hidden=false;window.scrollTo(0,overviewScroll);
+}
+function showToast(text){
+ const el=$('#ov-toast');el.textContent=text;el.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>{el.hidden=true},2400);
+}
+function staticRow(label,value,unit){
+ return `<div class="vrow static"><span class="nm">${label}</span><span class="num">${value}${unit?`<em>${unit}</em>`:''}</span></div>`;
+}
+function employeeRows(people){
+ if(!people.length)return '<p class="sheet-empty">当前筛选下没有员工。</p>';
+ return people.map(person=>{const rec=hasRecord(person);return `<button class="erow" type="button" data-person="${person.id}" aria-label="查看${person.name}的个人详情"><span class="nm">${person.name}</span><span class="dp">${person.dept}</span><span class="ver">${TIERS[person.tier].name}</span><span class="tag${rec?'':' no'}">${rec?'有记录':'无记录'}</span><span class="last">${lastUseText(person)}</span><span class="go">›</span></button>`}).join('');
+}
+function metricRows(people,value,unit){
+ if(!people.length)return '<p class="sheet-empty">本期没有相关员工。</p>';
+ return people.map(person=>`<button class="vrow" type="button" data-person="${person.id}" aria-label="查看${person.name}的个人详情"><span class="nm">${person.name}</span><span class="dp">${person.dept}</span><span class="num">${value(person)}<em>${unit}</em></span><span class="go">›</span></button>`).join('');
+}
+function peopleTabs(used,unused,total){
+ return `<div class="sheet-tabs" role="group" aria-label="筛选员工">${[['all','全部',total],['used','有记录',used],['unused','无记录',unused]].map(([key,label,count])=>`<button type="button" data-filter="${key}" class="${sheetPeopleStatus===key?'active':''}">${label} ${count}</button>`).join('')}</div>`;
+}
+function sheetCrumbLabel(kind){
+ if(kind==='people')return '员工使用';
+ if(kind==='depts')return '部门使用';
+ if(kind==='tool')return TOOL_GROUPS[sheetTool]?TOOL_GROUPS[sheetTool].name:'工具明细';
+ if(kind==='tasks'||kind==='replies')return '营销任务';
+ if(kind==='material')return '素材取用';
+ if(kind==='hosting')return 'AI托管';
+ if(kind==='seats')return '版本席位';
+ return '返回';
 }
 function fillSheet(){
- const d=current(),data=details(),p=d.prev;let title='',sub=d.label,body='';
- $('#sheet-back').hidden=personId===null;
- if(personId!==null){const person=ROSTER[personId];title=person.name;sub='员工个人 · '+d.label;body=personBody(person,data)}
- else if(sheetKind==='definitions'){title='数据说明';sub='当前页面的统计范围';body=`${row('已购席位','32 席')}${row('已分配席位','30 席')}${row('本期有记录',usedPeople().length+' 人')}<p class="sheet-note">有记录指已分配员工在所选期间至少有一条任务执行、素材取用、App 工具完成或 AI托管动作。同一员工只算一次。席位是当前有效授权；其余数字随时间范围变化。各成果单位不同，不相加，也不折算工时或金额。页面数字为演示数据。</p>`}
- else if(sheetKind==='seats'){
-  title='席位与员工';sub='当前有效席位 · '+d.label;
-  const selected=sheetTier==='all'?TIERS:[TIERS[Number(sheetTier)]],totalBought=selected.reduce((n,t)=>n+t.bought,0),totalAssigned=selected.reduce((n,t)=>n+t.assigned,0);
-  const versionTabs=`<div class="sheet-tabs"><button class="${sheetTier==='all'?'active':''}" data-sheet="seats" data-tier="all">全部版本</button>${TIERS.map((t,i)=>`<button class="${String(i)===sheetTier?'active':''}" data-sheet="seats" data-tier="${i}">${t.name}</button>`).join('')}</div>`;
-  const statusTabs=`<div class="sheet-tabs seat-switch"><button class="${sheetStatus==='assigned'?'active':''}" data-seat-status="assigned">已分配 ${totalAssigned}</button><button class="${sheetStatus==='unassigned'?'active':''}" data-seat-status="unassigned">未分配 ${totalBought-totalAssigned}</button></div>`;
-  if(sheetStatus==='unassigned')body=`<div class="sheet-big">${totalBought-totalAssigned}<small>席待分配</small></div>${versionTabs}${statusTabs}${selected.map(t=>row(t.name,(t.bought-t.assigned)+' 席')).join('')}<p class="sheet-note">未分配席位还没有对应员工。购买批次与到期日以授权记录为准。</p>`;
-  else {let people=ROSTER.filter(person=>sheetTier==='all'||person.tier===Number(sheetTier));people=filterPeople(people).sort((a,b)=>Number(hasRecord(a))-Number(hasRecord(b))||a.id-b.id);body=`<div class="sheet-big">${totalAssigned}<small>/ ${totalBought} 已分配</small></div>${versionTabs}${statusTabs}${peopleFilter()}${employeeRows(people,person=>hasRecord(person)?'本期有记录':lastRecord(person))}<p class="sheet-note">点击员工查看席位、使用记录、工具与成果。无记录只指所选期间。</p>`}
+ const d=current(),data=details(),p=d.prev;
+ let title='',sub=d.label,body='',foot='';
+ $('#sheet-back').hidden=personId===null&&!sheetReturn;
+ const crumb=personId!==null?(personFromSeat?'版本席位':sheetCrumbLabel(sheetKind)):(sheetReturn?sheetCrumbLabel(sheetReturn.kind):'');
+ const crumbEl=$('#sheet-back');crumbEl.textContent=crumb?'‹ '+crumb:'‹ 返回';
+ if(personId!==null){
+  const person=ROSTER[personId],stats=personStats(person,data);
+  title=person.name;
+  sub=`${person.dept} · ${TIERS[person.tier].name} · 分配于 ${person.assignedOn}`;
+  body=`<div class="ident"><span>最后一条使用记录</span><b>${lastUseText(person)}</b></div>`
+   +`<div class="metrics"><div><small>App 工具完成</small><b>${fmt(stats.tool)}<em>次</em></b></div><div><small>素材取用</small><b>${fmt(stats.material)}<em>次</em></b></div><div><small>AI托管自有动作</small><b>${fmt(stats.hosting)}<em>次</em></b></div><div><small>做满任务</small><b>${fmt(stats.taskDone)}<em>条</em></b></div><div><small>任务执行</small><b>${fmt(stats.taskExec)}<em>人次</em></b></div><div><small>客户回复</small><b>${fmt(stats.replies)}<em>人</em></b></div></div>`
+   +`<div class="slabel"><span>App 工具 · 按五组</span><span class="r">合计 ${fmt(stats.tool)} 次</span></div>`
+   +TOOL_GROUPS.map((group,i)=>staticRow(group.name,fmt(amount(data.tools[i],person.id)),'次')).join('');
+  foot=`<span>${d.label} · 数据随来源窗口</span><button class="lk" type="button" id="sheet-foot-back">返回${personFromSeat?'版本席位':sheetCrumbLabel(sheetKind)}</button>`;
+ }
+ else if(sheetKind==='definitions'){
+  title='数据说明';sub='当前页面的统计范围';
+  body=`${staticRow('已购席位','32','席')}${staticRow('已分配席位','30','席')}${staticRow('本期有记录',usedPeople().length,'人')}<p class="sheet-note">有记录指已分配员工在所选期间至少有一条任务执行、素材取用、App 工具完成或 AI托管动作。同一员工只算一次。席位是当前有效授权；其余数字随时间范围变化。各成果单位不同，不相加，也不折算工时或金额。页面数字为演示数据。</p>`;
  }
  else if(sheetKind==='people'){
-  title='员工使用情况';sub=d.label;
-  const people=filterPeople(ROSTER).sort((a,b)=>Number(hasRecord(b))-Number(hasRecord(a))||a.id-b.id);
-  body=`<div class="sheet-big">${usedPeople().length}<small>/ 30 人有记录</small></div>${peopleFilter()}${employeeRows(people,person=>hasRecord(person)?'最近 '+lastRecord(person):lastRecord(person))}<p class="sheet-note">有记录按员工账号去重；点击任一员工查看其个人数据。</p>`;
+  const base=ROSTER.filter(person=>!sheetDept||person.dept===sheetDept),used=base.filter(hasRecord).length,unused=base.length-used;
+  const shown=base.filter(person=>sheetPeopleStatus==='all'||hasRecord(person)===(sheetPeopleStatus==='used')).sort((a,b)=>Number(hasRecord(b))-Number(hasRecord(a))||a.id-b.id);
+  title='员工使用';sub=`${sheetDept?sheetDept+' · ':''}${d.label} · 有记录 ${used} / 已分配 ${base.length}`;
+  body=`${peopleTabs(used,unused,base.length)}<div class="slabel"><span>完整员工名册</span><span class="r">按员工账号去重</span></div>${employeeRows(shown)}`;
+  foot=`<span>共 ${base.length} 人 · ${d.label}</span><span>点员工看详情</span>`;
  }
  else if(sheetKind==='depts'){
-  const list=departmentStats(data),active=list.filter(dept=>dept.used>0).length,total=list.reduce((n,dept)=>n+dept.count,0);
-  title='部门使用情况';sub=d.label;
-  body=`<div class="sheet-big">${active}<small>/ ${list.length} 个部门本期有记录</small></div><div class="sheet-pair">${mini('参与员工',usedPeople().length+' 人')}${mini('使用次数',fmt(total)+' 次')}</div><div class="sheet-label">按本期使用次数</div>${list.map(dept=>row(dept.name,`${fmt(dept.count)} 次 · ${dept.used}/${dept.assigned} 人`)).join('')}<p class="sheet-note">部门面按成员所属部门聚合，次数为成员次数之和；与员工面共用同一份花名册和统计口径。次数不是绩效评分。</p>`;
+  const list=departmentStats(data),active=list.filter(dept=>dept.used>0).length,max=Math.max(1,...list.map(dept=>dept.count));
+  title='部门使用';sub=`${d.label} · 有记录 ${usedPeople().length} / 已分配 ${ROSTER.length}`;
+  body=`<div class="summary"><div class="big"><b>${active}</b><span>个部门</span></div><div class="mini"><div><small>有记录</small><b>${usedPeople().length} 人</b></div><div><small>已分配</small><b>${ROSTER.length} 人</b></div></div></div><div class="slabel"><span>部门 · 按本期使用次数</span><span class="r">点部门看该部门员工</span></div>`+list.map(dept=>`<button class="drow" type="button" data-dept="${dept.name}"><span class="nm">${dept.name}</span><span class="tr"><i style="width:${Math.round(dept.count/max*100)}%"></i></span><span class="ct">${fmt(dept.count)}<em>次</em></span><span class="pp">${dept.used}/${dept.assigned} 人</span><span class="go">›</span></button>`).join('');
+  foot=`<span>共 ${list.length} 个部门 · ${d.label}</span>`;
  }
  else if(sheetKind==='tool'){
-  const group=TOOL_GROUPS[sheetTool],counts=data.tools[sheetTool],actions=d.tools[sheetTool][1],participants=ROSTER.filter(person=>amount(counts,person.id)>0).sort((a,b)=>amount(counts,b.id)-amount(counts,a.id));
-  title=group.name;body=`<div class="sheet-big">${fmt(actions)}<small>次完成</small></div><div class="sheet-pair">${mini('参与员工',participants.length+' 人')}${mini('具体功能',group.features.length+' 项示例')}</div><div class="sheet-label">参与员工</div>${employeeRows(participants,person=>`<strong>${fmt(amount(counts,person.id))}</strong> 次`)}<div class="sheet-label">功能构成</div>${group.features.map((name,i)=>row(name,fmt(Math.floor(actions/group.features.length)+(i<actions%group.features.length?1:0))+' 次')).join('')}<p class="sheet-note">工具完成次数与员工列表均为演示分配；正式版由功能结果事件按员工 ID 汇总。</p>`;
+  const group=TOOL_GROUPS[sheetTool],counts=data.tools[sheetTool],actions=d.tools[sheetTool][1];
+  const participants=ROSTER.filter(person=>amount(counts,person.id)>0).sort((a,b)=>amount(counts,b.id)-amount(counts,a.id));
+  title=group.name;sub=`App 工具 · ${d.label}`;
+  body=`<div class="summary"><div class="big"><b>${fmt(actions)}</b><span>次完成</span></div><div class="mini"><div><small>参与员工</small><b>${participants.length} 人</b></div><div><small>具体功能</small><b>${group.features.length} 项</b></div></div></div><div class="slabel"><span>参与员工</span><span class="r">点员工看个人详情</span></div>${metricRows(participants,person=>fmt(amount(counts,person.id)),'次')}<div class="slabel"><span>功能构成</span><span class="r">正式版按功能 ID 展开</span></div>`+group.features.map((name,i)=>staticRow(name,fmt(Math.floor(actions/group.features.length)+(i<actions%group.features.length?1:0)),'次')).join('');
+  foot=`<span>共 ${participants.length} 人 · ${fmt(actions)} 次</span><span>点员工看详情</span>`;
  }
  else if(sheetKind==='material'||sheetKind==='hosting'){
-  const isMaterial=sheetKind==='material',counts=isMaterial?data.material:data.hosting,total=isMaterial?d.material:d.hosting,unit=isMaterial?'次取用':'次动作',participants=ROSTER.filter(person=>amount(counts,person.id)>0).sort((a,b)=>amount(counts,b.id)-amount(counts,a.id));
-  title=isMaterial?'素材取用':'AI托管';body=`<div class="sheet-big">${fmt(total)}<small>${unit}</small></div><div class="sheet-pair">${mini('涉及员工',participants.length+' 人')}${mini('上期',p?fmt(isMaterial?p.material:p.hosting)+' 次':'数据不足')}</div><div class="sheet-label">员工明细</div>${employeeRows(participants,person=>`<strong>${fmt(amount(counts,person.id))}</strong> 次`)}<p class="sheet-note">${isMaterial?'素材只计员工自行取用；任务自动带出的素材不计入。':'这里只计托管自有动作；托管代跑的营销任务归任务台账。'}个人次数为演示分配，正式版按员工 ID 从原始记录汇总。</p>${isMaterial?'<button class="text-link" type="button" data-overview-page="企业微信看板" style="margin-top:16px">查看素材看板 ↗</button>':''}`;
+  const isMaterial=sheetKind==='material',counts=isMaterial?data.material:data.hosting,total=isMaterial?d.material:d.hosting,unit=isMaterial?'次取用':'次动作';
+  const participants=ROSTER.filter(person=>amount(counts,person.id)>0).sort((a,b)=>amount(counts,b.id)-amount(counts,a.id));
+  title=isMaterial?'素材被员工取用':'AI托管完成动作';sub=(isMaterial?'销售自发取用 · ':'托管自有动作 · ')+d.label;
+  const prevText=p?(isMaterial?`${fmt(p.material)} 次 / ${p.materialPeople} 人`:`${fmt(p.hosting)} 次 / ${p.hostingPeople} 人`):'上期数据不足';
+  body=`<div class="summary"><div class="big"><b>${fmt(total)}</b><span>${unit}</span></div><div class="mini"><div><small>${isMaterial?'参与员工':'覆盖员工'}</small><b>${participants.length} 人</b></div><div><small>${isMaterial?'上期取用':'上期动作'}</small><b>${prevText}</b></div></div></div><div class="slabel"><span>相关员工</span><span class="r">点员工看个人详情</span></div>${metricRows(participants,person=>fmt(amount(counts,person.id)),'次')}`;
+  foot=`<span>共 ${participants.length} 人${p?` · 上期 ${fmt(isMaterial?p.material:p.hosting)} 次`:' · 上期数据不足'}</span>`+(isMaterial?'<button class="lk" type="button" data-overview-page="企业微信看板">去素材看板 ↗</button>':'<span>托管明细不展示聊天内容</span>');
  }
- else if(sheetKind==='tasks'||sheetKind==='replies'){
-  const isReplies=sheetKind==='replies',counts=isReplies?data.replies:data.taskDone,participants=ROSTER.filter(person=>amount(counts,person.id)>0).sort((a,b)=>amount(counts,b.id)-amount(counts,a.id));
-  title=isReplies?'客户回复':'营销任务';
-  body=`<div class="sheet-big">${fmt(isReplies?d.replied:d.tasks)}<small>${isReplies?'人回复':'条做满'}</small></div><div class="sheet-pair">${mini('已发送好友',fmt(d.sent)+' 人')}${mini('其中回复',fmt(d.replied)+' 人')}</div>${isReplies?'':'<button class="text-link" type="button" data-sheet="replies">查看客户回复员工 ↗</button>'}<div class="sheet-label">${isReplies?'客户回复员工':'任务做满员工'}</div>${employeeRows(participants,person=>`<strong>${fmt(amount(counts,person.id))}</strong> ${isReplies?'人':'条'}`)}<p class="sheet-note">员工行按${isReplies?'客户回复人数':'做满任务条数'}汇总。个人归属为演示分配，正式版从任务台账按员工 ID 汇总。</p><button class="text-link" type="button" data-overview-page="微小助看板" style="margin-top:16px">查看任务看板 ↗</button>`;
+ else if(sheetKind==='tasks'){
+  const participants=ROSTER.filter(person=>amount(data.taskDone,person.id)>0).sort((a,b)=>amount(data.taskDone,b.id)-amount(data.taskDone,a.id));
+  title='营销任务做满';sub='任务台账 · '+d.label;
+  body=`<div class="summary"><div class="big"><b>${fmt(d.tasks)}</b><span>条做满</span></div><div class="mini"><div><small>本期做满</small><b>${fmt(d.tasks)} 条</b></div><div><small>上期做满</small><b>${p?fmt(p.tasks)+' 条':'上期数据不足'}</b></div></div></div><div class="slabel"><span>群发好友任务</span><span class="r">回复详情另开一层</span></div>${staticRow('已发送好友',fmt(d.sent),'人')}<button class="vrow" type="button" data-goto="replies"><span class="nm">其中回复</span><span class="num">${fmt(d.replied)}<em>人</em></span><span class="go">›</span></button><div class="slabel"><span>做满员工</span><span class="r">点员工看个人详情</span></div>${metricRows(participants,person=>fmt(amount(data.taskDone,person.id)),'条')}`;
+  foot=`<span>共 ${participants.length} 人做满${p?` · 上期 ${fmt(p.tasks)} 条`:''}</span><button class="lk" type="button" data-overview-page="微小助看板">去任务看板 ↗</button>`;
  }
- setText('#sheet-title',title);setText('#sheet-subtitle',sub);$('#sheet-body').innerHTML=body;
+ else if(sheetKind==='replies'){
+  const hasSent=d.sent>0,rate=hasSent?(d.replied/d.sent*100).toFixed(1)+'%':'—';
+  const participants=hasSent?ROSTER.filter(person=>amount(data.replies,person.id)>0).sort((a,b)=>amount(data.replies,b.id)-amount(data.replies,a.id)):[];
+  title='群发好友回复';sub='任务台账 · '+d.label;
+  body=`<div class="summary"><div class="big"><b>${fmt(d.replied)}</b><span>人回复</span></div><div class="mini"><div><small>群发已发送</small><b>${hasSent?fmt(d.sent)+' 人':'—'}</b></div><div><small>回复占已发送</small><b>${rate}</b></div></div></div>${hasSent?'':'<p class="sheet-empty">本期无群发好友发送。</p>'}<div class="slabel"><span>按负责员工</span><span class="r">客户按员工去重</span></div>${metricRows(participants,person=>fmt(amount(data.replies,person.id)),'人')}`;
+  foot=`<span>${p?`上期 ${fmt(p.sent)} 已发送 / ${fmt(p.replied)} 回复`:'上期数据不足'}</span><span>点员工看详情</span>`;
+ }
+ setText('#sheet-title',title);setText('#sheet-subtitle',sub);$('#sheet-body').innerHTML=body;$('#sheet-foot').innerHTML=foot;
 }
 function openSheet(kind,tier='all',tool=0,peopleStatus='all'){
- lastFocus=document.activeElement;sheetKind=kind;sheetTier=tier;sheetTool=tool;sheetPeopleStatus=peopleStatus;sheetStatus='assigned';personId=null;fillSheet();
+ lastFocus=document.activeElement;sheetKind=kind;sheetTier=tier;sheetTool=tool;sheetPeopleStatus=peopleStatus;sheetDept=null;sheetReturn=null;personId=null;personFromSeat=false;
+ fillSheet();
  $('#mask').classList.add('open');$('#sheet').classList.add('open');$('#sheet').setAttribute('aria-hidden','false');document.body.style.overflow='hidden';$('#sheet-close').focus();
 }
-function closeSheet(){sheetKind=null;personId=null;$('#mask').classList.remove('open');$('#sheet').classList.remove('open');$('#sheet').setAttribute('aria-hidden','true');document.body.style.overflow='';lastFocus?.focus()}
+function openPerson(id,fromSeat){
+ personReturnScroll=$('#sheet-body').scrollTop;personId=Number(id);personFromSeat=!!fromSeat;fillSheet();
+ $('#mask').classList.add('open');$('#sheet').classList.add('open');$('#sheet').setAttribute('aria-hidden','false');document.body.style.overflow='hidden';$('#sheet-close').focus();
+}
+function openDeptPeople(name){
+ sheetReturn={kind:'depts',dept:null,peopleStatus:'all',scroll:$('#sheet-body').scrollTop};
+ sheetKind='people';sheetDept=name;sheetPeopleStatus='all';personId=null;fillSheet();$('#sheet-body').scrollTop=0;
+}
+function openReplies(){
+ sheetReturn={kind:'tasks',dept:null,peopleStatus:'all',scroll:$('#sheet-body').scrollTop};
+ sheetKind='replies';sheetDept=null;sheetPeopleStatus='all';personId=null;fillSheet();$('#sheet-body').scrollTop=0;
+}
+function goBack(){
+ if(personId!==null){
+  personId=null;
+  if(personFromSeat){personFromSeat=false;closeSheet();return}
+  fillSheet();$('#sheet-body').scrollTop=personReturnScroll;return;
+ }
+ if(sheetReturn){
+  const ret=sheetReturn;sheetReturn=null;sheetKind=ret.kind;sheetDept=ret.dept||null;sheetPeopleStatus=ret.peopleStatus||'all';fillSheet();$('#sheet-body').scrollTop=ret.scroll||0;return;
+ }
+ closeSheet();
+}
+function closeSheet(){sheetKind=null;personId=null;personFromSeat=false;sheetReturn=null;sheetDept=null;$('#mask').classList.remove('open');$('#sheet').classList.remove('open');$('#sheet').setAttribute('aria-hidden','true');document.body.style.overflow='';lastFocus?.focus()}
 function closeTimeMenu(){const menu=$('#time-menu');menu.hidden=true;$('#time-more').setAttribute('aria-expanded','false')}
 document.addEventListener('click',e=>{
  if(e.target.closest('#time-more')){const menu=$('#time-menu');menu.hidden=!menu.hidden;$('#time-more').setAttribute('aria-expanded',String(!menu.hidden));return}
  if(!e.target.closest('.date-more'))closeTimeMenu();
- if(e.target.closest('#sheet-back')){personId=null;fillSheet();return}
- const person=e.target.closest('[data-person]');if(person){personId=Number(person.dataset.person);fillSheet();$('#sheet-back').focus();return}
+ if(e.target.closest('#sheet-back')||e.target.closest('#sheet-foot-back')){goBack();return}
+ if(e.target.closest('#seat-back')){closeSeatPage();return}
+ const seatNav=e.target.closest('[data-seat-nav]');if(seatNav&&!seatNav.disabled){seatPageNo=Number(seatNav.dataset.seatNav);renderSeatPage();return}
+ const seatTier=e.target.closest('[data-seat-tier]');if(seatTier){seatTierPage=Number(seatTier.dataset.seatTier);seatPageNo=1;renderSeatPage();return}
+ const seatOpen=e.target.closest('[data-seat-open]');if(seatOpen){openSeatPage(Number(seatOpen.dataset.seatOpen));return}
+ const seatPerson=e.target.closest('[data-seat-person]');if(seatPerson){openPerson(Number(seatPerson.dataset.seatPerson),true);return}
+ const assign=e.target.closest('[data-assign]');if(assign){showToast('演示：'+assign.dataset.assign+'需要后台确认');return}
+ if(e.target.closest('#seat-add')){showToast('演示：添加使用者需要后台分配席位');return}
+ if(e.target.closest('#seat-unassign')){showToast('演示：先勾选员工，再批量解除分配');return}
+ const goto=e.target.closest('[data-goto]');if(goto){openReplies();return}
+ const dept=e.target.closest('[data-dept]');if(dept){openDeptPeople(dept.dataset.dept);return}
+ const person=e.target.closest('[data-person]');if(person){openPerson(Number(person.dataset.person),false);return}
  const page=e.target.closest('[data-overview-page]');if(page){parent.postMessage({reaPage:page.dataset.overviewPage},'*');return}
  const time=e.target.closest('[data-period]');if(time){period=time.dataset.period;render();return}
  const usageTabBtn=e.target.closest('[data-usage-tab]');if(usageTabBtn){usageTab=usageTabBtn.dataset.usageTab;renderUsage();return}
- const seatTab=e.target.closest('[data-seat-status]');if(seatTab){sheetStatus=seatTab.dataset.seatStatus;fillSheet();return}
  const filter=e.target.closest('[data-filter]');if(filter){sheetPeopleStatus=filter.dataset.filter;fillSheet();return}
- const trigger=e.target.closest('[data-sheet]');if(trigger){if(sheetKind==='seats'&&trigger.closest('#sheet')&&trigger.dataset.sheet==='seats'&&trigger.dataset.tier){sheetTier=trigger.dataset.tier;fillSheet();return}openSheet(trigger.dataset.sheet,trigger.dataset.tier||'all',Number(trigger.dataset.tool||0),trigger.dataset.peopleStatus||'all');return}
+ const trigger=e.target.closest('[data-sheet]');if(trigger){openSheet(trigger.dataset.sheet,'all',Number(trigger.dataset.tool||0),trigger.dataset.peopleStatus||'all');return}
  if(e.target.id==='mask'||e.target.id==='sheet-close')closeSheet();
 });
 document.addEventListener('keydown',e=>{
  if(e.key==='Escape'&&!$('#time-menu').hidden){closeTimeMenu();$('#time-more').focus();return}
- if(!sheetKind)return;
- if(e.key==='Escape'){if(personId!==null){personId=null;fillSheet();$('#sheet-back').focus()}else closeSheet();return}
+ if(e.key==='Escape'&&!$('#seat-page').hidden&&sheetKind===null&&personId===null){closeSeatPage();return}
+ if(!$('#sheet').classList.contains('open'))return;
+ if(e.key==='Escape'){goBack();return}
  if(e.key==='Tab'){const items=[...$('#sheet').querySelectorAll('button:not([hidden])')],first=items[0],last=items[items.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}
 });
+$('#seat-search').addEventListener('input',e=>{seatQuery=e.target.value;seatPageNo=1;renderSeatPage()});
 render();</script>
 <!-- 载体③·微小助看板覆盖块：视图③「线上后台复刻」里被覆盖页（微小助看板）的正文，
      由 all.html 的 reaSplice() 按页名替换进去（ADR-0043：线上后台是设计面，可逐页覆盖）。
