@@ -9890,12 +9890,11 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   <div class="seat-top">
     <button class="seat-back" type="button" id="seat-back">‹ 使用总览</button>
     <span class="seat-crumb">数据看板 / <b>各版本席位</b> / <span id="seat-crumb-tier">标准版</span></span>
-    <span class="seat-when" id="seat-when">当前有效授权 · 近一月</span>
   </div>
   <div class="seat-page">
     <div class="vrail" id="seat-vrail"></div>
     <div class="scontent">
-      <div class="stitle"><h3 id="seat-title">标准版席位</h3><span id="seat-record-note"></span></div>
+      <div class="stitle"><h3 id="seat-title">标准版席位</h3></div>
       <div class="statrow" id="seat-stats"></div>
       <div class="seat-tools">
         <label class="search" for="seat-search"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4" stroke-linecap="round"/></svg><input id="seat-search" type="search" placeholder="手机号 / 姓名" autocomplete="off"></label>
@@ -9905,8 +9904,8 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
       </div>
       <div class="tbl-wrap">
         <table class="tbl">
-          <colgroup><col style="width:11%"><col style="width:15%"><col style="width:12%"><col style="width:12%"><col style="width:14%"><col style="width:20%"><col style="width:16%"></colgroup>
-          <thead><tr><th>姓名</th><th>手机号</th><th>职位</th><th>部门</th><th>到期时间</th><th>本期使用</th><th>操作</th></tr></thead>
+          <colgroup><col style="width:13%"><col style="width:17%"><col style="width:14%"><col style="width:14%"><col style="width:16%"><col style="width:26%"></colgroup>
+          <thead><tr><th>姓名</th><th>手机号</th><th>职位</th><th>部门</th><th>到期时间</th><th>操作</th></tr></thead>
           <tbody id="seat-rows"></tbody>
         </table>
       </div>
@@ -9940,15 +9939,14 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 .rea-ov-page .tag{display:inline-block;border-radius:4px;padding:0 6px;margin-right:6px;background:var(--blue-pale);color:var(--blue);font-size:11px;line-height:18px;font-weight:500}
 .rea-ov-page .tag.no{background:#f2f3f5;color:var(--weak)}
 
-.ov-seatpage{max-width:1600px;margin:0 auto;padding:32px 28px 56px}
+.ov-seatpage{display:flex;flex-direction:column;min-height:100%;max-width:1600px;margin:0 auto;padding:28px 28px 32px}
 .ov-seatpage[hidden]{display:none}
 .ov-seatpage .seat-top{display:flex;align-items:center;gap:14px;margin-bottom:18px}
 .ov-seatpage .seat-back{border:0;background:none;padding:0;color:var(--blue);font-size:14px;font-weight:500}
 .ov-seatpage .seat-back:hover{text-decoration:underline}
 .ov-seatpage .seat-crumb{color:var(--weak);font-size:12px}
 .ov-seatpage .seat-crumb b{color:var(--ink);font-weight:500}
-.ov-seatpage .seat-when{margin-left:auto;color:var(--weak);font-size:12px;white-space:nowrap}
-.ov-seatpage .seat-page{display:flex;min-height:560px;border:1px solid var(--line);border-radius:12px;background:#fff;overflow:hidden}
+.ov-seatpage .seat-page{display:flex;flex:1;min-height:480px;border:1px solid var(--line);border-radius:12px;background:#fff;overflow:hidden}
 .ov-seatpage .vrail{flex:0 0 264px;border-right:1px solid var(--line);padding:20px 16px;background:#fbfcfe}
 .ov-seatpage .vh{padding:0 8px 14px}
 .ov-seatpage .vh b{display:block;font-size:14px;font-weight:600}
@@ -10067,7 +10065,6 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 }
 @media(max-width:640px){
  .ov-seatpage .seat-top{flex-wrap:wrap}
- .ov-seatpage .seat-when{display:none}
  .ov-seatpage .vrail{grid-template-columns:1fr}
  .ov-seatpage .seat-tools{flex-wrap:wrap}
  .ov-seatpage .search{width:100%}
@@ -10102,11 +10099,11 @@ const ROSTER=[
 ].map(([name,dept,tier,lastDays],id)=>({id,name,dept,tier,lastDays,phone:['138','139','137','136','135'][id%5]+'****'+String(2041+id*37).slice(-4),title:TITLES[dept]||'员工',expires:tier===2?(id%4===0?'2026-12-31':'2027-06-30'):['2027-06-30','2027-03-31'][tier],assignedOn:({韩雪:'2026.10.24',邓超:'2026.07.01',石磊:'2026.08.01',唐颖:'2026.06.01',许诺:'2026.08.30',蒋涛:'2026.04.12'})[name]||'2026.0'+(3+id%6)+'.'+String(10+id%18).padStart(2,'0')}));
 const TIER_COLORS=['#9CCEFF','#5AA7FF','#1677FF'];
 const TOOL_GROUPS=[
- {name:'客户拓展',hint:'加好友 · 拉人进群',features:['群内好友','通讯录加人','企微添加客户','拉人进群']},
- {name:'内容发送',hint:'发给好友 · 发给群组',features:['发图文到好友','发图文到群','文件分享','群发助手']},
- {name:'AI 辅助',hint:'智能回复 · 画像分析',features:['智能回复采纳','画像分析完成','意向客户识别']},
- {name:'内容运营',hint:'朋友圈 · 短视频平台',features:['朋友圈互动','小红书运营','抖音评论互动','视频号互动']},
- {name:'客户维护',hint:'清理 · 客户同步',features:['智能清死粉','消息检测死粉','客户同步']}
+ {name:'客户拓展',hint:'加好友 · 拉人进群',features:['群内好友','通讯录加人','企微添加客户','拉人进群'],weights:[.42,.26,.19,.13]},
+ {name:'内容发送',hint:'发给好友 · 发给群组',features:['发图文到好友','发图文到群','文件分享','群发助手'],weights:[.36,.28,.21,.15]},
+ {name:'AI 辅助',hint:'智能回复 · 画像分析',features:['智能回复采纳','画像分析完成','意向客户识别'],weights:[.46,.33,.21]},
+ {name:'内容运营',hint:'朋友圈 · 短视频平台',features:['朋友圈互动','小红书运营','抖音评论互动','视频号互动'],weights:[.34,.28,.22,.16]},
+ {name:'客户维护',hint:'清理 · 客户同步',features:['智能清死粉','消息检测死粉','客户同步'],weights:[.43,.34,.23]}
 ];
 const $=s=>document.querySelector(s),fmt=n=>new Intl.NumberFormat('zh-CN').format(n);
 const WINDOW_DAYS={day:0,week:6,month:29,quarter:91};
@@ -10137,6 +10134,14 @@ function allocations(total,peopleCount,start,pool=usedPeople()){
  values[values.length-1]+=total-used;
  chosen.forEach((person,i)=>{result[person.id]=values[i]});
  return result;
+}
+function featureBreakdown(group,actions){
+ /* 演示数据：按组内固定权重把该组完成次数拆到具体功能，尾部取整余数补足，合计仍等于该组次数 */
+ const count=group.features.length,weights=group.weights&&group.weights.length===count?group.weights:Array(count).fill(1);
+ const sum=weights.reduce((n,w)=>n+w,0)||1,raw=weights.map(w=>actions*w/sum),values=raw.map(Math.floor);
+ let left=actions-values.reduce((n,v)=>n+v,0);
+ raw.map((value,index)=>({index,frac:value-Math.floor(value)})).sort((a,b)=>b.frac-a.frac||a.index-b.index).forEach(({index})=>{if(left>0){values[index]++;left--}});
+ return group.features.map((name,index)=>({name,count:values[index]})).sort((a,b)=>b.count-a.count||group.features.indexOf(a.name)-group.features.indexOf(b.name));
 }
 function details(){
  const d=current(),tools=d.tools.map(([count,total],i)=>allocations(total,count,i*4));
@@ -10183,25 +10188,30 @@ function seatPeople(){
  return ROSTER.filter(person=>person.tier===seatTierPage&&(!q||person.name.toLowerCase().includes(q)||person.phone.includes(q)));
 }
 function renderSeatPage(){
- const tier=TIERS[seatTierPage],d=current(),all=ROSTER.filter(person=>person.tier===seatTierPage),people=seatPeople();
+ const tier=TIERS[seatTierPage],people=seatPeople();
  const pages=Math.max(1,Math.ceil(people.length/5));
  if(seatPageNo>pages)seatPageNo=pages;
- const start=(seatPageNo-1)*5,pagePeople=people.slice(start,start+5),usedAll=all.filter(hasRecord).length;
+ const start=(seatPageNo-1)*5,pagePeople=people.slice(start,start+5);
  const unassigned=tier.bought-tier.assigned,rate=tier.bought?(tier.assigned/tier.bought*100).toFixed(1):'—';
  const totalAssigned=TIERS.reduce((n,t)=>n+t.assigned,0),totalBought=TIERS.reduce((n,t)=>n+t.bought,0);
- setText('#seat-crumb-tier',tier.name);setText('#seat-when','当前有效授权 · '+d.label);setText('#seat-title',tier.name+'席位');
- setText('#seat-record-note',`本期有记录 ${usedAll} / ${tier.assigned} · 无记录 ${tier.assigned-usedAll}`);
+ setText('#seat-crumb-tier',tier.name);setText('#seat-title',tier.name+'席位');
  setText('#seat-count',people.length?`共 ${people.length} 人 · ${start+1}–${start+pagePeople.length} / ${people.length}`:'共 0 人');
  $('#seat-stats').innerHTML=`<div class="stat"><small>已购</small><b>${tier.bought}<em>席</em></b></div><div class="stat"><small>已分配</small><b>${tier.assigned}<em>席</em></b></div><div class="stat"><small>未分配</small><b>${unassigned}<em>席</em></b></div><div class="stat"><small>分配率</small><b>${rate}<em>${rate==='—'?'':'%'}</em></b></div>`;
- $('#seat-vrail').innerHTML=`<div class="vh"><b>各版本席位</b><span>${totalAssigned} / ${totalBought} 已分配</span></div>`+TIERS.map((t,i)=>{const un=t.bought-t.assigned,used=ROSTER.filter(person=>person.tier===i&&hasRecord(person)).length;return `<button class="vitem ${i===seatTierPage?'on':''}" type="button" data-seat-tier="${i}"><div class="vr1"><span class="nm">${t.name}</span><span class="num"><b>${t.assigned}</b> / ${t.bought}</span></div><div class="bar"><i style="width:${t.bought?t.assigned/t.bought*100:0}%"></i></div><div class="sub">${un?un+' 个待分配':'全部已分配'} · 本期有记录 <em>${used}</em></div></button>`}).join('');
- $('#seat-rows').innerHTML=pagePeople.map(person=>{const rec=hasRecord(person);return `<tr><td class="nm" data-seat-person="${person.id}">${person.name}</td><td>${person.phone}</td><td>${person.title}</td><td>${person.dept}</td><td>${person.expires}</td><td><span class="tag${rec?'':' no'}">${rec?'有记录':'无记录'}</span>${lastUseText(person)}</td><td class="op"><span data-assign="解除使用">解除使用</span><i>·</i><span data-assign="更换使用人">更换使用人</span></td></tr>`}).join('')||'<tr><td colspan="7" class="empty">没有匹配的员工</td></tr>';
+ $('#seat-vrail').innerHTML=`<div class="vh"><b>各版本席位</b><span>${totalAssigned} / ${totalBought} 已分配</span></div>`+TIERS.map((t,i)=>{const un=t.bought-t.assigned;return `<button class="vitem ${i===seatTierPage?'on':''}" type="button" data-seat-tier="${i}"><div class="vr1"><span class="nm">${t.name}</span><span class="num"><b>${t.assigned}</b> / ${t.bought}</span></div><div class="bar"><i style="width:${t.bought?t.assigned/t.bought*100:0}%"></i></div><div class="sub">${un?un+' 个待分配':'全部已分配'}</div></button>`}).join('');
+ $('#seat-rows').innerHTML=pagePeople.map(person=>`<tr><td class="nm" data-seat-person="${person.id}">${person.name}</td><td>${person.phone}</td><td>${person.title}</td><td>${person.dept}</td><td>${person.expires}</td><td class="op"><span data-assign="解除使用">解除使用</span><i>·</i><span data-assign="更换使用人">更换使用人</span></td></tr>`).join('')||'<tr><td colspan="6" class="empty">没有匹配的员工</td></tr>';
  const pageButtons=Array.from({length:pages},(_,i)=>`<button type="button" data-seat-nav="${i+1}" class="${seatPageNo===i+1?'on':''}">${i+1}</button>`).join('');
  $('#seat-pager').innerHTML=`<button type="button" data-seat-nav="${seatPageNo-1}" ${seatPageNo<=1?'disabled':''} aria-label="上一页">‹</button>${pageButtons}<button type="button" data-seat-nav="${seatPageNo+1}" ${seatPageNo>=pages?'disabled':''} aria-label="下一页">›</button>`;
 }
 function openSeatPage(tier){
  overviewScroll=window.scrollY;
  seatTierPage=Number(tier)||0;seatPageNo=1;seatQuery='';$('#seat-search').value='';
- renderSeatPage();$('#seat-page').hidden=false;$('.rea-ov-page .wrap').hidden=true;window.scrollTo(0,0);
+ renderSeatPage();$('#seat-page').hidden=false;$('.rea-ov-page .wrap').hidden=true;window.scrollTo(0,0);requestAnimationFrame(fitSeatPage);
+}
+function fitSeatPage(){
+ const page=$('#seat-page');if(!page||page.hidden)return;
+ page.style.minHeight='';
+ const avail=window.innerHeight-page.getBoundingClientRect().top;
+ page.style.minHeight=Math.max(480,Math.round(avail))+'px';
 }
 function closeSeatPage(){
  $('#seat-page').hidden=true;$('.rea-ov-page .wrap').hidden=false;window.scrollTo(0,overviewScroll);
@@ -10356,6 +10366,7 @@ document.addEventListener('keydown',e=>{
  if(e.key==='Tab'){const items=[...$('#sheet').querySelectorAll('button:not([hidden])')],first=items[0],last=items[items.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}
 });
 $('#seat-search').addEventListener('input',e=>{seatQuery=e.target.value;seatPageNo=1;renderSeatPage()});
+window.addEventListener('resize',fitSeatPage);
 render();</script>
 <!-- 载体③·微小助看板覆盖块：视图③「线上后台复刻」里被覆盖页（微小助看板）的正文，
      由 all.html 的 reaSplice() 按页名替换进去（ADR-0043：线上后台是设计面，可逐页覆盖）。
