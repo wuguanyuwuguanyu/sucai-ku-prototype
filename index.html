@@ -9878,9 +9878,9 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   <section class="section section-results" aria-labelledby="results-title">
     <div class="section-head"><h2 id="results-title">工作成果</h2><button class="text-link" type="button" data-sheet="definitions">数据怎么计算？</button></div>
     <div class="outcomes">
-      <button class="outcome" type="button" data-sheet="hosting"><span class="outcome-label"><span class="outcome-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="5" width="14" height="14" rx="3"/><path d="M9 10h.01M15 10h.01M9 15c1.4 1.3 4.6 1.3 6 0M12 2v3M2 12h3M19 12h3" stroke-linecap="round"/></svg></span><b>AI托管完成动作</b></span><span class="outcome-main"><span id="hosting-number">744</span><small>次</small></span><span class="result-cover" id="hosting-people">覆盖 11 人</span></button>
-      <button class="outcome" type="button" data-sheet="material"><span class="outcome-label"><span class="outcome-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="13" height="15" rx="2"/><path d="M8 8h5M8 12h5M8 16h8M17 9h3v11H9" stroke-linecap="round"/></svg></span><b>素材被员工取用</b></span><span class="outcome-main"><span id="material-number">206</span><small>次</small></span><span class="result-cover" id="material-people">20 人参与</span></button>
-      <button class="outcome" type="button" data-sheet="tasks"><span class="outcome-label"><span class="outcome-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="m8 12 3 3 5-6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><b>营销任务做满</b></span><span class="outcome-main"><span id="task-number">147</span><small>条</small></span><span class="result-cover" id="task-trend">24 人做满</span></button>
+      <button class="outcome" type="button" data-overview-page="AI托管数据看板" aria-label="查看AI托管数据看板"><span class="outcome-label"><span class="outcome-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="5" width="14" height="14" rx="3"/><path d="M9 10h.01M15 10h.01M9 15c1.4 1.3 4.6 1.3 6 0M12 2v3M2 12h3M19 12h3" stroke-linecap="round"/></svg></span><b>AI托管完成动作</b></span><span class="outcome-main"><span id="hosting-number">744</span><small>次</small></span><span class="result-cover" id="hosting-people">覆盖 11 人</span><span class="outcome-destination">查看AI托管数据看板 →</span></button>
+      <button class="outcome" type="button" data-overview-page="企业微信看板" aria-label="查看素材看板"><span class="outcome-label"><span class="outcome-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="13" height="15" rx="2"/><path d="M8 8h5M8 12h5M8 16h8M17 9h3v11H9" stroke-linecap="round"/></svg></span><b>素材被员工取用</b></span><span class="outcome-main"><span id="material-number">206</span><small>次</small></span><span class="result-cover" id="material-people">20 人参与</span><span class="outcome-destination">查看素材看板 →</span></button>
+      <button class="outcome" type="button" data-overview-page="微小助看板" aria-label="查看任务看板"><span class="outcome-label"><span class="outcome-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="m8 12 3 3 5-6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><b>营销任务做满</b></span><span class="outcome-main"><span id="task-number">147</span><small>条</small></span><span class="result-cover" id="task-trend">24 人做满</span><span class="outcome-destination">查看任务看板 →</span></button>
     </div>
   </section>
   </div>
@@ -9913,6 +9913,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     </div>
   </div>
 </div>
+<section class="ov-hostingpage" id="hosting-page" hidden></section>
 <div class="ov-toast" id="ov-toast" hidden></div>
 
 <div class="mask" id="mask" aria-hidden="true"></div>
@@ -9985,8 +9986,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 .ov-seatpage .tbl{width:100%;border-collapse:collapse;font-size:12px;min-width:720px}
 .ov-seatpage .tbl th{text-align:left;font-weight:400;color:var(--weak);padding:10px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
 .ov-seatpage .tbl td{height:48px;padding:0 8px;border-bottom:1px solid var(--line2);color:var(--sub);white-space:nowrap}
-.ov-seatpage .tbl td.nm{color:var(--ink);font-weight:500;cursor:pointer}
-.ov-seatpage .tbl td.nm:hover{color:var(--blue)}
+.ov-seatpage .tbl td.nm{color:var(--ink);font-weight:500}
 .ov-seatpage .tbl td.empty{text-align:center;color:var(--weak);height:120px}
 .ov-seatpage .tbl .op{color:var(--blue)}
 .ov-seatpage .tbl .op span{cursor:pointer}
@@ -10089,6 +10089,49 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
  .rea-ov-page .metrics b{font-size:20px}
 }
 @media(max-width:640px){.rea-ov-page .outcomes{grid-template-columns:1fr}}
+
+/* 员工工具详情与成果直达（2026-11-04）。 */
+.rea-ov-page .sheet.tool-person{width:min(760px,100vw)}
+.rea-ov-page .ov-person-scope{font-size:12px;color:var(--sub);margin-bottom:24px}
+.rea-ov-page .ov-record-filter{display:flex;align-items:center;gap:8px;margin:16px 0;color:var(--sub);font-size:12px}
+.rea-ov-page select{height:36px;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:#fff;font:inherit;color:var(--ink)}
+.rea-ov-page .ov-record-table{overflow-x:auto}
+.rea-ov-page .ov-record-table table{width:100%;border-collapse:collapse;white-space:nowrap;font-size:14px;text-align:left}
+.rea-ov-page .ov-record-table th{background:var(--quiet);font-size:12px;color:var(--sub);font-weight:400}
+.rea-ov-page .ov-record-table th,.rea-ov-page .ov-record-table td{height:48px;padding:8px 12px;border-bottom:1px solid var(--line)}
+.rea-ov-page .ov-record-table th:last-child,.rea-ov-page .ov-record-table td:last-child{text-align:right}
+.rea-ov-page .ov-record-pager{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:16px;font-size:12px;color:var(--sub)}
+.rea-ov-page .ov-record-pager button{border:1px solid var(--line);border-radius:6px;background:#fff;padding:4px 8px;color:var(--sub)}
+.rea-ov-page .ov-record-pager button:disabled{color:var(--weak);cursor:default}
+.rea-ov-page .ov-record-pager button:hover:not(:disabled){color:var(--blue);border-color:var(--blue)}
+.rea-ov-page .ov-whole-link{margin-top:24px}
+.rea-ov-page .usage-row[type=button]{width:100%;border:0;border-bottom:1px solid var(--line);background:#fff;text-align:left;font:inherit;cursor:pointer}
+.rea-ov-page .usage-row[type=button]:hover{background:var(--blue-pale)}
+.rea-ov-page .outcome-destination{display:block;font-size:12px;color:var(--blue);margin-top:16px}
+.rea-ov-page .outcome:hover .outcome-destination{text-decoration:underline}
+.ov-hostingpage{max-width:1600px;margin:auto;padding:32px}
+.ov-hostingpage[hidden]{display:none}
+.rea-ov-page .ov-host-head{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-bottom:24px}
+.rea-ov-page .ov-host-head h1{font-size:20px;margin:8px 0;font-weight:600}
+.rea-ov-page .ov-host-head p,.rea-ov-page .ov-host-card>p{font-size:12px;color:var(--sub);margin:8px 0}
+.rea-ov-page .ov-host-period{display:flex;gap:4px;flex-wrap:wrap}
+.rea-ov-page .ov-host-period button{border:1px solid var(--line);border-radius:8px;background:#fff;padding:8px 12px;font-size:14px}
+.rea-ov-page .ov-host-period button[aria-pressed=true]{color:var(--blue);border-color:var(--blue);background:var(--blue-pale)}
+.rea-ov-page .ov-host-summary{display:flex;align-items:center;gap:32px;padding:24px;background:#fff;border:1px solid #E9EEF6;border-radius:12px;margin-bottom:24px}
+.rea-ov-page .ov-host-summary span{display:block;font-size:12px;color:var(--sub)}
+.rea-ov-page .ov-host-summary b{display:block;font-size:32px;font-weight:600;margin-top:8px}
+.rea-ov-page .ov-host-summary em,.rea-ov-page .ov-host-employees em{font-size:12px;font-weight:400;color:var(--sub);font-style:normal;margin-left:4px}
+.rea-ov-page .ov-host-summary p{margin:0 0 0 auto;font-size:12px;max-width:360px;color:var(--sub)}
+.rea-ov-page .ov-host-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+.rea-ov-page .ov-host-card{background:#fff;padding:24px;border:1px solid #E9EEF6;border-radius:12px;min-width:0}
+.rea-ov-page .ov-host-card h2{font-size:16px;font-weight:600;margin:0 0 16px}
+.rea-ov-page .ov-host-wide{grid-column:1/-1}
+.rea-ov-page .ov-host-employees{display:grid;grid-template-columns:1fr 1fr;gap:0 32px;max-height:280px;overflow:auto}
+.rea-ov-page .ov-host-employees>div{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:48px;border-bottom:1px solid var(--line);font-size:14px}
+.rea-ov-page .ov-host-employees small{font-size:12px;margin-left:12px;color:var(--sub)}
+.rea-ov-page .ov-host-filters{display:flex;gap:24px;flex-wrap:wrap;margin:16px 0;font-size:12px;color:var(--sub)}
+@media(max-width:760px){.ov-hostingpage{padding:24px 16px}.rea-ov-page .ov-host-head,.rea-ov-page .ov-host-summary{align-items:flex-start;flex-wrap:wrap}.rea-ov-page .ov-host-summary p{margin:0;max-width:none;flex-basis:100%}.rea-ov-page .ov-host-grid{grid-template-columns:1fr}.rea-ov-page .ov-host-employees{grid-template-columns:1fr}.rea-ov-page .ov-record-pager{align-items:flex-start;flex-direction:column}}
+
 </script>
 <script type="text/plain" id="srcOverviewScript">const DATA={
  day:{label:'今日',range:'2026.10.29 · 演示',sent:564,replied:194,tasks:8,taskExecTotal:179,material:14,materialPeople:8,hosting:28,hostingPeople:5,service:24,tools:[[4,8],[5,13],[2,4],[3,6],[1,2]],prev:null},
@@ -10112,9 +10155,12 @@ const TOOL_GROUPS=[
  {name:'客户维护',hint:'清理 · 客户同步',features:['智能清死粉','消息检测死粉','客户同步'],weights:[.43,.34,.23]}
 ];
 const $=s=>document.querySelector(s),fmt=n=>new Intl.NumberFormat('zh-CN').format(n);
-const WINDOW_DAYS={day:0,week:6,month:29,quarter:91};
+const WINDOW_DAYS={day:0,week:6,month:29,quarter:89};
 let period='month',sheetKind=null,sheetTier='all',sheetPeopleStatus='all',sheetTool=0,personId=null,lastFocus=null,usageTab='dept';
-let sheetReturn=null,sheetDept=null,personFromSeat=false,personReturnScroll=0;
+let sheetReturn=null,sheetDept=null,personReturnScroll=0;
+let personContext=null,personStack=[],personFeature='all',personRecordPage=1;
+const overviewNav=window.__REA_OVERVIEW_NAV||null;
+if(overviewNav&&DATA[overviewNav.period]){period=overviewNav.period;usageTab=overviewNav.usageTab||'dept';}
 let seatTierPage=0,seatPageNo=1,seatQuery='',overviewScroll=0,toastTimer=null;
 function current(){return DATA[period]}
 function setText(id,value){const el=$(id);if(el)el.textContent=value}
@@ -10155,11 +10201,11 @@ function renderUsage(data){
  data=data||details();let items,linkSheet,linkText;
  if(usageTab==='dept'){
   const list=departmentStats(data).slice(0,5),max=Math.max(1,...list.map(dept=>dept.count));
-  items=list.map(dept=>`<div class="usage-row dept"><span class="nm">${dept.name}</span><span class="bar"><i style="width:${Math.round(dept.count/max*100)}%"></i></span><span class="ct">${fmt(dept.count)}<em>次</em></span><span class="pp">${dept.used}/${dept.assigned} 人</span></div>`);
+  items=list.map(dept=>`<button type="button" class="usage-row dept" data-overview-dept="${dept.name}"><span class="nm">${dept.name}</span><span class="bar"><i style="width:${Math.round(dept.count/max*100)}%"></i></span><span class="ct">${fmt(dept.count)}<em>次</em></span><span class="pp">${dept.used}/${dept.assigned} 人</span></button>`);
   linkSheet='depts';linkText='查看全部部门 ↗';
  }else{
   const list=ROSTER.map(person=>({person,count:personUsage(person,data)})).filter(item=>item.count>0).sort((a,b)=>b.count-a.count).slice(0,5);
-  items=list.map((item,i)=>`<div class="usage-row emp"><span class="no">${i+1}</span><span class="nm">${item.person.name}</span><span class="dp">${item.person.dept}</span><span class="ct">${fmt(item.count)}<em>次</em></span></div>`);
+  items=list.map((item,i)=>`<button type="button" class="usage-row emp" data-overview-person="${item.person.id}"><span class="no">${i+1}</span><span class="nm">${item.person.name}</span><span class="dp">${item.person.dept}</span><span class="ct">${fmt(item.count)}<em>次</em></span></button>`);
   linkSheet='people';linkText='查看全部员工 ↗';
  }
  $('#usage-list').innerHTML=items.join('')+Array(Math.max(0,5-items.length)).fill('<div class="usage-row empty" aria-hidden="true"></div>').join('');
@@ -10197,14 +10243,14 @@ function renderSeatPage(){
  setText('#seat-count',people.length?`共 ${people.length} 人 · ${start+1}–${start+pagePeople.length} / ${people.length}`:'共 0 人');
  $('#seat-stats').innerHTML=`<div class="stat"><small>已购</small><b>${tier.bought}<em>席</em></b></div><div class="stat"><small>已分配</small><b>${tier.assigned}<em>席</em></b></div><div class="stat"><small>未分配</small><b>${unassigned}<em>席</em></b></div><div class="stat"><small>分配率</small><b>${rate}<em>${rate==='—'?'':'%'}</em></b></div>`;
  $('#seat-vrail').innerHTML=`<div class="vh"><b>各版本席位</b><span>${totalAssigned} / ${totalBought} 已分配</span></div>`+TIERS.map((t,i)=>{const un=t.bought-t.assigned;return `<button class="vitem ${i===seatTierPage?'on':''}" type="button" data-seat-tier="${i}"><div class="vr1"><span class="nm">${t.name}</span><span class="num"><b>${t.assigned}</b> / ${t.bought}</span></div><div class="bar"><i style="width:${t.bought?t.assigned/t.bought*100:0}%"></i></div><div class="sub">${un?un+' 个待分配':'全部已分配'}</div></button>`}).join('');
- $('#seat-rows').innerHTML=pagePeople.map(person=>`<tr><td class="nm" data-seat-person="${person.id}">${person.name}</td><td>${person.phone}</td><td>${person.title}</td><td>${person.dept}</td><td>${person.expires}</td><td class="op"><span data-assign="解除使用">解除使用</span><i>·</i><span data-assign="更换使用人">更换使用人</span></td></tr>`).join('')||'<tr><td colspan="6" class="empty">没有匹配的员工</td></tr>';
+ $('#seat-rows').innerHTML=pagePeople.map(person=>`<tr><td class="nm">${person.name}</td><td>${person.phone}</td><td>${person.title}</td><td>${person.dept}</td><td>${person.expires}</td><td class="op"><span data-assign="解除使用">解除使用</span><i>·</i><span data-assign="更换使用人">更换使用人</span></td></tr>`).join('')||'<tr><td colspan="6" class="empty">没有匹配的员工</td></tr>';
  const pageButtons=Array.from({length:pages},(_,i)=>`<button type="button" data-seat-nav="${i+1}" class="${seatPageNo===i+1?'on':''}">${i+1}</button>`).join('');
  $('#seat-pager').innerHTML=`<button type="button" data-seat-nav="${seatPageNo-1}" ${seatPageNo<=1?'disabled':''} aria-label="上一页">‹</button>${pageButtons}<button type="button" data-seat-nav="${seatPageNo+1}" ${seatPageNo>=pages?'disabled':''} aria-label="下一页">›</button>`;
 }
 function openSeatPage(tier){
- overviewScroll=window.scrollY;
+ overviewScroll=overviewScroller().scrollTop;
  seatTierPage=Number(tier)||0;seatPageNo=1;seatQuery='';$('#seat-search').value='';
- renderSeatPage();$('#seat-page').hidden=false;$('.rea-ov-page .wrap').hidden=true;window.scrollTo(0,0);requestAnimationFrame(fitSeatPage);
+ renderSeatPage();$('#seat-page').hidden=false;$('.rea-ov-page .wrap').hidden=true;overviewScroller().scrollTop=0;requestAnimationFrame(fitSeatPage);
 }
 function fitSeatPage(){
  const page=$('#seat-page');if(!page||page.hidden)return;
@@ -10213,7 +10259,7 @@ function fitSeatPage(){
  page.style.minHeight=Math.max(480,Math.round(avail))+'px';
 }
 function closeSeatPage(){
- $('#seat-page').hidden=true;$('.rea-ov-page .wrap').hidden=false;window.scrollTo(0,overviewScroll);
+ $('#seat-page').hidden=true;$('.rea-ov-page .wrap').hidden=false;overviewScroller().scrollTop=overviewScroll;
 }
 function showToast(text){
  const el=$('#ov-toast');el.textContent=text;el.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>{el.hidden=true},2400);
@@ -10246,16 +10292,24 @@ function fillSheet(){
  const d=current(),data=details(),p=d.prev;
  let title='',sub=d.label,body='',foot='';
  $('#sheet-back').hidden=personId===null&&!sheetReturn;
- const crumb=personId!==null?(personFromSeat?'版本席位':sheetCrumbLabel(sheetKind)):(sheetReturn?sheetCrumbLabel(sheetReturn.kind):'');
+ const previous=personStack[personStack.length-1];
+ const crumb=personId!==null?(previous?(previous.context===null?'员工整体数据':TOOL_GROUPS[previous.context].name):sheetCrumbLabel(sheetKind)):(sheetReturn?sheetCrumbLabel(sheetReturn.kind):'');
+ $('#sheet').classList.toggle('tool-person',personId!==null&&personContext!==null);
  const crumbEl=$('#sheet-back');crumbEl.textContent=crumb?'‹ '+crumb:'‹ 返回';
  if(personId!==null){
   const person=ROSTER[personId],stats=personStats(person,data);
-  title=person.name;
+  title=person.name+(personContext!==null?' · '+TOOL_GROUPS[personContext].name+'使用详情':' · 使用详情');
   sub=`${person.dept} · ${TIERS[person.tier].name} · 分配于 ${person.assignedOn}`;
-  body=`<div class="metrics"><div><small>任务执行</small><b>${fmt(stats.taskExec)}<em>人次</em></b></div><div><small>App 工具完成</small><b>${fmt(stats.tool)}<em>次</em></b></div><div><small>素材取用</small><b>${fmt(stats.material)}<em>次</em></b></div><div><small>AI托管自有动作</small><b>${fmt(stats.hosting)}<em>次</em></b></div></div>`
-   +`<div class="slabel"><span>App 工具 · 按五组</span><span class="r">合计 ${fmt(stats.tool)} 次</span></div>`
-   +TOOL_GROUPS.map((group,i)=>staticRow(group.name,fmt(amount(data.tools[i],person.id)),'次')).join('');
-  foot=`<span>${d.label} · 数据随来源窗口</span><button class="lk" type="button" id="sheet-foot-back">返回${personFromSeat?'版本席位':sheetCrumbLabel(sheetKind)}</button>`;
+  if(personContext!==null){
+   const group=TOOL_GROUPS[personContext],actions=amount(data.tools[personContext],person.id);
+   body=`<div class="ov-person-scope">仅 ${group.name} · ${currentRangeLabel()}</div><div class="summary"><div class="big"><b>${fmt(actions)}</b><span>次完成</span></div></div><div class="slabel"><span>具体功能构成</span><span class="r">按完成次数排序</span></div>`+toolFeatureRows(featureBreakdown(group,actions))
+    +`<div class="slabel"><span>完成记录</span><span class="r">批量操作按实际完成目标数计</span></div><label class="ov-record-filter">具体功能 <select id="person-feature"><option value="all">全部功能</option>${group.features.map((name,i)=>`<option value="${i}" ${String(i)===personFeature?'selected':''}>${name}</option>`).join('')}</select></label><div id="person-records"></div><button class="text-link ov-whole-link" type="button" data-person-whole>查看员工整体数据 →</button>`;
+  }else{
+   body=`<div class="ov-person-scope">整体使用数据 · ${currentRangeLabel()}</div><div class="metrics"><div><small>任务执行</small><b>${fmt(stats.taskExec)}<em>人次</em></b></div><div><small>App 工具完成</small><b>${fmt(stats.tool)}<em>次</em></b></div><div><small>素材取用</small><b>${fmt(stats.material)}<em>次</em></b></div><div><small>AI托管自有动作</small><b>${fmt(stats.hosting)}<em>次</em></b></div></div>`
+    +`<div class="slabel"><span>App 工具 · 按五组</span><span class="r">点击查看该类详情</span></div>`
+    +TOOL_GROUPS.map((group,i)=>`<button type="button" class="vrow" data-person-group="${i}"><span class="nm">${group.name}</span><span class="num">${fmt(amount(data.tools[i],person.id))}<em>次</em></span><span class="go">›</span></button>`).join('');
+  }
+  foot=`<span>${d.label} · ${personContext===null?'不同业务指标分别统计，不相加':'仅统计本类 App 工具完成记录'}</span><button class="lk" type="button" id="sheet-foot-back">返回${crumb}</button>`;
  }
  else if(sheetKind==='definitions'){
   title='数据说明';sub='当前页面的统计范围';
@@ -10277,7 +10331,7 @@ function fillSheet(){
  else if(sheetKind==='tool'){
   const group=TOOL_GROUPS[sheetTool],counts=data.tools[sheetTool],actions=d.tools[sheetTool][1];
   const participants=ROSTER.filter(person=>amount(counts,person.id)>0).sort((a,b)=>amount(counts,b.id)-amount(counts,a.id));
-  const feats=featureBreakdown(group,actions),maxFeat=Math.max(1,...feats.map(item=>item.count));
+  const feats=group.features.map(name=>({name,count:participants.reduce((sum,person)=>sum+(featureBreakdown(group,amount(counts,person.id)).find(item=>item.name===name)?.count||0),0)})).sort((a,b)=>b.count-a.count),maxFeat=Math.max(1,...feats.map(item=>item.count));
   const topCount=feats[0].count,lowCount=feats[feats.length-1].count;
   const topItems=feats.filter(item=>item.count===topCount),lowItems=feats.filter(item=>item.count===lowCount);
   const topNames=topItems.map(item=>item.name).join('、'),lowNames=lowItems.map(item=>item.name).join('、');
@@ -10286,7 +10340,7 @@ function fillSheet(){
    :`<div class="feat-extreme">使用最多 <b>${topNames}</b> ${topItems.length>1?'各 ':''}${fmt(topCount)} 次 · 使用最少 <b>${lowNames}</b> ${lowItems.length>1?'各 ':''}${fmt(lowCount)} 次</div>`;
   const featRows=feats.map(item=>`<div class="feat"><div class="feat-top"><span class="feat-name">${item.name}</span><span class="feat-num">${fmt(item.count)}<em>次</em></span></div><span class="feat-bar"><i style="width:${Math.round(item.count/maxFeat*100)}%"></i></span></div>`).join('');
   title=group.name;sub=`App 工具 · ${d.label}`;
-  body=`<div class="summary"><div class="big"><b>${fmt(actions)}</b><span>次完成</span></div><div class="mini"><div><small>参与员工</small><b>${participants.length} 人</b></div><div><small>具体功能</small><b>${group.features.length} 项</b></div></div></div><div class="slabel"><span>功能构成</span><span class="r">按完成次数排序</span></div>${extreme}${actions?featRows:''}<div class="slabel"><span>参与员工</span><span class="r">点员工看个人详情</span></div>${metricRows(participants,person=>fmt(amount(counts,person.id)),'次')}`;
+  body=`<div class="summary"><div class="big"><b>${fmt(actions)}</b><span>次完成</span></div><div class="mini"><div><small>参与员工</small><b>${participants.length} 人</b></div><div><small>具体功能</small><b>${group.features.length} 项</b></div></div></div><div class="slabel"><span>功能构成</span><span class="r">按完成次数排序</span></div>${extreme}${actions?featRows:''}<div class="slabel"><span>参与员工</span><span class="r">点员工看本类工具详情</span></div>${metricRows(participants,person=>fmt(amount(counts,person.id)),'次')}`;
   foot=`<span>共 ${participants.length} 人 · ${fmt(actions)} 次</span><span>点员工看详情</span>`;
  }
  else if(sheetKind==='material'||sheetKind==='hosting'){
@@ -10311,15 +10365,21 @@ function fillSheet(){
   foot=`<span>${p?`上期 ${fmt(p.sent)} 已发送 / ${fmt(p.replied)} 回复`:'上期数据不足'}</span><span>点员工看详情</span>`;
  }
  setText('#sheet-title',title);setText('#sheet-subtitle',sub);$('#sheet-body').innerHTML=body;$('#sheet-foot').innerHTML=foot;
+ if(personId!==null&&personContext!==null)renderPersonRecords();
 }
 function openSheet(kind,tier='all',tool=0,peopleStatus='all'){
- lastFocus=document.activeElement;sheetKind=kind;sheetTier=tier;sheetTool=tool;sheetPeopleStatus=peopleStatus;sheetDept=null;sheetReturn=null;personId=null;personFromSeat=false;
+ lastFocus=document.activeElement;sheetKind=kind;sheetTier=tier;sheetTool=tool;sheetPeopleStatus=peopleStatus;sheetDept=null;sheetReturn=null;personId=null;personContext=null;personStack=[];
  fillSheet();
  $('#mask').classList.add('open');$('#sheet').classList.add('open');$('#sheet').setAttribute('aria-hidden','false');document.body.style.overflow='hidden';$('#sheet-close').focus();
 }
-function openPerson(id,fromSeat){
- personReturnScroll=$('#sheet-body').scrollTop;personId=Number(id);personFromSeat=!!fromSeat;fillSheet();
+function openPerson(id){
+ personReturnScroll=$('#sheet-body').scrollTop;personId=Number(id);personContext=sheetKind==='tool'?sheetTool:null;personStack=[];personFeature='all';personRecordPage=1;
+ fillSheet();$('#sheet-body').scrollTop=0;
  $('#mask').classList.add('open');$('#sheet').classList.add('open');$('#sheet').setAttribute('aria-hidden','false');document.body.style.overflow='hidden';$('#sheet-close').focus();
+}
+function changePersonContext(context){
+ personStack.push({context:personContext,feature:personFeature,page:personRecordPage,scroll:$('#sheet-body').scrollTop});
+ personContext=context;personFeature='all';personRecordPage=1;fillSheet();$('#sheet-body').scrollTop=0;
 }
 function openDeptPeople(name){
  sheetReturn={kind:'depts',dept:null,peopleStatus:'all',scroll:$('#sheet-body').scrollTop};
@@ -10331,16 +10391,15 @@ function openReplies(){
 }
 function goBack(){
  if(personId!==null){
-  personId=null;
-  if(personFromSeat){personFromSeat=false;closeSheet();return}
-  fillSheet();$('#sheet-body').scrollTop=personReturnScroll;return;
+  if(personStack.length){const ret=personStack.pop();personContext=ret.context;personFeature=ret.feature;personRecordPage=ret.page;fillSheet();$('#sheet-body').scrollTop=ret.scroll;return;}
+  personId=null;personContext=null;fillSheet();$('#sheet-body').scrollTop=personReturnScroll;return;
  }
  if(sheetReturn){
   const ret=sheetReturn;sheetReturn=null;sheetKind=ret.kind;sheetDept=ret.dept||null;sheetPeopleStatus=ret.peopleStatus||'all';fillSheet();$('#sheet-body').scrollTop=ret.scroll||0;return;
  }
  closeSheet();
 }
-function closeSheet(){sheetKind=null;personId=null;personFromSeat=false;sheetReturn=null;sheetDept=null;$('#mask').classList.remove('open');$('#sheet').classList.remove('open');$('#sheet').setAttribute('aria-hidden','true');document.body.style.overflow='';lastFocus?.focus()}
+function closeSheet(){sheetKind=null;personId=null;personContext=null;personStack=[];sheetReturn=null;sheetDept=null;$('#mask').classList.remove('open');$('#sheet').classList.remove('open');$('#sheet').setAttribute('aria-hidden','true');document.body.style.overflow='';lastFocus?.focus()}
 function closeTimeMenu(){const menu=$('#time-menu');menu.hidden=true;$('#time-more').setAttribute('aria-expanded','false')}
 document.addEventListener('click',e=>{
  if(e.target.closest('#time-more')){const menu=$('#time-menu');menu.hidden=!menu.hidden;$('#time-more').setAttribute('aria-expanded',String(!menu.hidden));return}
@@ -10350,14 +10409,21 @@ document.addEventListener('click',e=>{
  const seatNav=e.target.closest('[data-seat-nav]');if(seatNav&&!seatNav.disabled){seatPageNo=Number(seatNav.dataset.seatNav);renderSeatPage();return}
  const seatTier=e.target.closest('[data-seat-tier]');if(seatTier){seatTierPage=Number(seatTier.dataset.seatTier);seatPageNo=1;renderSeatPage();return}
  const seatOpen=e.target.closest('[data-seat-open]');if(seatOpen){openSeatPage(Number(seatOpen.dataset.seatOpen));return}
- const seatPerson=e.target.closest('[data-seat-person]');if(seatPerson){openPerson(Number(seatPerson.dataset.seatPerson),true);return}
  const assign=e.target.closest('[data-assign]');if(assign){showToast('演示：'+assign.dataset.assign+'需要后台确认');return}
  if(e.target.closest('#seat-add')){showToast('演示：添加使用者需要后台分配席位');return}
  if(e.target.closest('#seat-unassign')){showToast('演示：先勾选员工，再批量解除分配');return}
  const goto=e.target.closest('[data-goto]');if(goto){openReplies();return}
  const dept=e.target.closest('[data-dept]');if(dept){openDeptPeople(dept.dataset.dept);return}
- const person=e.target.closest('[data-person]');if(person){openPerson(Number(person.dataset.person),false);return}
- const page=e.target.closest('[data-overview-page]');if(page){parent.postMessage({reaPage:page.dataset.overviewPage},'*');return}
+ const homePerson=e.target.closest('[data-overview-person]');if(homePerson){openSheet('people');openPerson(Number(homePerson.dataset.overviewPerson));return}
+ const homeDept=e.target.closest('[data-overview-dept]');if(homeDept){openSheet('depts');openDeptPeople(homeDept.dataset.overviewDept);return}
+ const whole=e.target.closest('[data-person-whole]');if(whole){changePersonContext(null);return}
+ const personalGroup=e.target.closest('[data-person-group]');if(personalGroup){changePersonContext(Number(personalGroup.dataset.personGroup));return}
+ const recordPage=e.target.closest('[data-record-page]');if(recordPage&&!recordPage.disabled){personRecordPage=Number(recordPage.dataset.recordPage);renderPersonRecords();return}
+ const person=e.target.closest('[data-person]');if(person){openPerson(Number(person.dataset.person));return}
+ const page=e.target.closest('[data-overview-page]');if(page){parent.postMessage({reaPage:page.dataset.overviewPage,reaOverview:overviewState()},'*');return}
+ if(e.target.closest('[data-overview-back]')){parent.postMessage({reaPage:'使用总览',reaOverviewBack:true},'*');return}
+ const hostPage=e.target.closest('[data-host-page]');if(hostPage&&!hostPage.disabled){hostingLogPage=Number(hostPage.dataset.hostPage);renderHostingLogs();return}
+ const hostPeriod=e.target.closest('[data-host-period]');if(hostPeriod){period=hostPeriod.dataset.hostPeriod;hostingLogPage=1;renderHosting();return}
  const time=e.target.closest('[data-period]');if(time){period=time.dataset.period;render();return}
  const usageTabBtn=e.target.closest('[data-usage-tab]');if(usageTabBtn){usageTab=usageTabBtn.dataset.usageTab;renderUsage();return}
  const filter=e.target.closest('[data-filter]');if(filter){sheetPeopleStatus=filter.dataset.filter;fillSheet();return}
@@ -10369,11 +10435,53 @@ document.addEventListener('keydown',e=>{
  if(e.key==='Escape'&&!$('#seat-page').hidden&&sheetKind===null&&personId===null){closeSeatPage();return}
  if(!$('#sheet').classList.contains('open'))return;
  if(e.key==='Escape'){goBack();return}
- if(e.key==='Tab'){const items=[...$('#sheet').querySelectorAll('button:not([hidden])')],first=items[0],last=items[items.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}
+ if(e.key==='Tab'){const items=[...$('#sheet').querySelectorAll('button:not([hidden]):not(:disabled),select')],first=items[0],last=items[items.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}
 });
 $('#seat-search').addEventListener('input',e=>{seatQuery=e.target.value;seatPageNo=1;renderSeatPage()});
+function dateAt(offset){const date=new Date();date.setHours(0,0,0,0);date.setDate(date.getDate()+offset);return date.getFullYear()+'.'+String(date.getMonth()+1).padStart(2,'0')+'.'+String(date.getDate()).padStart(2,'0')}
+function currentRangeLabel(){return dateAt(-WINDOW_DAYS[period])+' — '+dateAt(0)}
+function overviewScroller(){return $('.rea-ov-page').closest('.ant-pro-grid-content')||document.scrollingElement}
+function overviewState(){return {period,usageTab,scroll:overviewScroller().scrollTop,start:dateAt(-WINDOW_DAYS[period]),end:dateAt(0),org:'全公司'}}
+function toolFeatureRows(items){const max=Math.max(1,...items.map(item=>item.count));return items.map(item=>`<div class="feat"><div class="feat-top"><span class="feat-name">${item.name}</span><span class="feat-num">${fmt(item.count)}<em>次</em></span></div><span class="feat-bar"><i style="width:${item.count/max*100}%"></i></span></div>`).join('')}
+function personalRecords(){
+ const person=ROSTER[personId],group=TOOL_GROUPS[personContext],items=featureBreakdown(group,amount(details().tools[personContext],personId)),rows=[];
+ for(const item of items){let left=item.count,sequence=0;while(left>0){const count=Math.min(left,1+sequence%3);rows.push({feature:group.features.indexOf(item.name),name:item.name,count});left-=count;sequence++;}}
+ return rows.map((r,i)=>({...r,time:dateAt(-Math.min(WINDOW_DAYS[period],Math.floor(i/3)))+' '+String(16-i%5).padStart(2,'0')+':'+String(50-i%40).padStart(2,'0'),platform:/小红书/.test(r.name)?'小红书':/抖音/.test(r.name)?'抖音':/视频号/.test(r.name)?'视频号':/企微/.test(r.name)?'企业微信':'微信'}));
+}
+function renderPersonRecords(){
+ const rows=personalRecords().filter(row=>personFeature==='all'||String(row.feature)===personFeature),pages=Math.max(1,Math.ceil(rows.length/5));personRecordPage=Math.min(personRecordPage,pages);
+ const shown=rows.slice((personRecordPage-1)*5,personRecordPage*5);
+ $('#person-records').innerHTML=rows.length?`<div class="ov-record-table"><table><thead><tr><th>完成时间</th><th>具体功能</th><th>平台</th><th>完成数量</th></tr></thead><tbody>${shown.map(row=>`<tr><td>${row.time}</td><td>${row.name}</td><td>${row.platform}</td><td>${row.count} 次</td></tr>`).join('')}</tbody></table></div><div class="ov-record-pager"><span>共 ${rows.length} 条记录 · 合计 ${fmt(rows.reduce((sum,row)=>sum+row.count,0))} 次完成</span><span><button type="button" data-record-page="${personRecordPage-1}" ${personRecordPage===1?'disabled':''}>上一页</button> ${personRecordPage} / ${pages} <button type="button" data-record-page="${personRecordPage+1}" ${personRecordPage===pages?'disabled':''}>下一页</button></span></div>`:'<p class="sheet-empty">所选期间暂无记录。</p>';
+}
+document.addEventListener('change',event=>{
+ if(event.target.id==='person-feature'){personFeature=event.target.value;personRecordPage=1;renderPersonRecords();}
+ if(event.target.id==='host-employee'){hostingEmployee=event.target.value;hostingLogPage=1;renderHostingLogs();}
+ if(event.target.id==='host-action'){hostingAction=event.target.value;hostingLogPage=1;renderHostingLogs();}
+});
+let hostingLogPage=1,hostingEmployee='all',hostingAction='all';
+const HOST_ACTIONS=['朋友圈互动','画像分析','自动打招呼'];
+function hostingRows(){
+ const counts=details().hosting,rows=[];
+ for(const person of ROSTER){const total=amount(counts,person.id),items=featureBreakdown({features:HOST_ACTIONS,weights:[.45,.3,.25]},total);for(const item of items){let left=item.count,n=0;while(left>0){const count=Math.min(left,1+n%4);rows.push({person,name:item.name,count});left-=count;n++;}}}
+ return rows.map((row,i)=>({...row,day:-(i%(WINDOW_DAYS[period]+1)),time:dateAt(-(i%(WINDOW_DAYS[period]+1)))+' '+String(16-i%7).padStart(2,'0')+':'+String(50-i%40).padStart(2,'0')})).sort((a,b)=>b.time.localeCompare(a.time));
+}
+function renderHosting(){
+ const d=current(),counts=details().hosting,people=ROSTER.filter(person=>amount(counts,person.id)>0).sort((a,b)=>amount(counts,b.id)-amount(counts,a.id));
+ const rows=hostingRows(),trend=[];for(let end=0;end<=WINDOW_DAYS[period];end+=7){const start=Math.min(WINDOW_DAYS[period],end+6);trend.push({name:dateAt(-start).slice(5)+'—'+dateAt(-end).slice(5),count:rows.filter(row=>-row.day>=end&&-row.day<=start).reduce((sum,row)=>sum+row.count,0)});}
+ const types=HOST_ACTIONS.map(name=>({name,count:rows.filter(row=>row.name===name).reduce((sum,row)=>sum+row.count,0)}));
+ $('#hosting-page').innerHTML=`<header class="ov-host-head"><div>${overviewNav?'<button class="text-link" type="button" data-overview-back>‹ 返回使用总览</button>':''}<h1>AI托管数据看板</h1><p>${currentRangeLabel()} · 全公司</p></div><div class="ov-host-period">${Object.keys(DATA).map(key=>`<button type="button" data-host-period="${key}" aria-pressed="${key===period}">${DATA[key].label}</button>`).join('')}</div></header><div class="ov-host-summary"><div><span>托管自有动作完成</span><b>${fmt(d.hosting)}<em>次</em></b></div><div><span>覆盖员工</span><b>${people.length}<em>人</em></b></div><p>演示数据 · 只统计托管自有动作，代跑营销任务由任务看板统计。</p></div><div class="ov-host-grid"><section class="ov-host-card"><h2>完成动作趋势</h2><p>按周汇总 · 次</p>${toolFeatureRows(trend.reverse())}</section><section class="ov-host-card"><h2>动作类型分布</h2>${toolFeatureRows(types.sort((a,b)=>b.count-a.count))}</section><section class="ov-host-card ov-host-wide"><h2>员工使用明细</h2><div class="ov-host-employees">${people.map(person=>`<div><span>${person.name}<small>${person.dept}</small></span><b>${fmt(amount(counts,person.id))}<em>次</em></b></div>`).join('')}</div></section><section class="ov-host-card ov-host-wide"><h2>托管动作记录</h2><div class="ov-host-filters"><label>员工 <select id="host-employee"><option value="all">全部员工</option>${ROSTER.map(person=>`<option value="${person.id}" ${String(person.id)===hostingEmployee?'selected':''}>${person.name}</option>`).join('')}</select></label><label>动作 <select id="host-action"><option value="all">全部动作</option>${HOST_ACTIONS.map(name=>`<option ${hostingAction===name?'selected':''}>${name}</option>`).join('')}</select></label></div><div id="host-logs"></div></section></div>`;
+ renderHostingLogs();
+}
+function renderHostingLogs(){
+ const rows=hostingRows().filter(row=>(hostingEmployee==='all'||String(row.person.id)===hostingEmployee)&&(hostingAction==='all'||row.name===hostingAction)),pages=Math.max(1,Math.ceil(rows.length/10));hostingLogPage=Math.min(hostingLogPage,pages);
+ const shown=rows.slice((hostingLogPage-1)*10,hostingLogPage*10);
+ $('#host-logs').innerHTML=rows.length?`<div class="ov-record-table"><table><thead><tr><th>完成时间</th><th>员工</th><th>部门</th><th>动作</th><th>完成数量</th></tr></thead><tbody>${shown.map(row=>`<tr><td>${row.time}</td><td>${row.person.name}</td><td>${row.person.dept}</td><td>${row.name}</td><td>${row.count} 次</td></tr>`).join('')}</tbody></table></div><div class="ov-record-pager"><span>共 ${rows.length} 条记录 · 合计 ${fmt(rows.reduce((sum,row)=>sum+row.count,0))} 次完成</span><span><button type="button" data-host-page="${hostingLogPage-1}" ${hostingLogPage===1?'disabled':''}>上一页</button> ${hostingLogPage} / ${pages} <button type="button" data-host-page="${hostingLogPage+1}" ${hostingLogPage===pages?'disabled':''}>下一页</button></span></div>`:'<p class="sheet-empty">所选期间暂无记录。</p>';
+}
+
 window.addEventListener('resize',fitSeatPage);
-render();</script>
+render();
+if(window.__OVERVIEW_HOSTING){$('.rea-ov-page .wrap').hidden=true;$('#hosting-page').hidden=false;renderHosting();}
+else if(overviewNav){requestAnimationFrame(()=>{overviewScroller().scrollTop=overviewNav.scroll||0;});}</script>
 <!-- 载体③·微小助看板覆盖块：视图③「线上后台复刻」里被覆盖页（微小助看板）的正文，
      由 all.html 的 reaSplice() 按页名替换进去（ADR-0043：线上后台是设计面，可逐页覆盖）。
      这里是**片段**不是整页：只填 <div class="pagecontent"> 里的那一段，外壳与样式仍走快照。
@@ -14695,7 +14803,7 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
     'assignCheck();',
     'var gs=document.querySelectorAll(".rea-bd-tabs");',
     'for(var gi=0;gi<gs.length;gi++)tabs(gs[gi]);',
-    'applyWin(DEFW);   /* 装完页签再按默认窗口铺一遍数 */',
+    'applyWin(window.__REA_OVERVIEW_NAV?({day:"today",week:"w7",month:"m1",quarter:"m3"}[window.__REA_OVERVIEW_NAV.period]||DEFW):DEFW);',
     '',
     'if(BAD.length){',
     '  var el=document.getElementById("rea-bd-bad");',
@@ -19719,7 +19827,8 @@ document.addEventListener("keydown",function(e){
 
 /* --- 开跑 --- */
 stamp();
-var startWin=(window.__REA_MB_WIN&&WIN[window.__REA_MB_WIN])?window.__REA_MB_WIN:DEFW;
+var overviewWin=window.__REA_OVERVIEW_NAV?({day:"today",week:"w7",month:"m1",quarter:"m3"}[window.__REA_OVERVIEW_NAV.period]):"";
+var startWin=overviewWin||((window.__REA_MB_WIN&&WIN[window.__REA_MB_WIN])?window.__REA_MB_WIN:DEFW);
 applyWin(startWin);
 if(BAD.length){
   var eb=document.getElementById("rea-mb-bad");
@@ -20036,6 +20145,7 @@ renderTable();
 
   var REA_COVER = {
     '使用总览': { html: 'srcOverview', css: docOf('srcOverviewStyle'), js: function(){ return docOf('srcOverviewScript'); } },
+    'AI托管数据看板': { html: 'srcOverview', css: docOf('srcOverviewStyle'), js: function(){ return 'window.__OVERVIEW_HOSTING=true;'+docOf('srcOverviewScript'); } },
     '微小助看板':    { html: 'srcBoard', css: REA_BOARD_CSS, js: reaBoardJs },
     '企业微信看板':  { html: 'srcBoardMat', css: REA_BOARD_CSS + REA_MB_CSS, js: reaBoardMatJs },
     '企业微信看板 · 素材明细': { html: 'srcMatDetail', css: REA_BOARD_CSS + REA_MB_CSS, js: reaMatDetailJs },
@@ -20099,7 +20209,7 @@ renderTable();
     }
     var board = find(REA_BOARD_PAGE);
     if (board){
-      var add = [REA_OVERVIEW_PAGE, REA_TASKS_PAGE, REA_DETAIL_TASK, REA_PERSON_PAGE];
+      var add = [REA_OVERVIEW_PAGE, 'AI托管数据看板', REA_TASKS_PAGE, REA_DETAIL_TASK, REA_PERSON_PAGE];
       for (i = 0; i < add.length; i++){
         P.pages.push({
           name: add[i],
@@ -20661,7 +20771,7 @@ renderTable();
      不在表里的项原序跟在后面。组名「数据看板」在稿子里显示成「看板」。
      这两条原先写在页内脚本里、只管当前这一页的右列；现在折叠态的悬停浮层也要用，
      挪到 reaMenuIndex() 一处维护，两边共用同一份。 */
-  var REA_MENU_ORDER = { '数据看板': ['使用总览', '微小助看板', '悬浮窗看板', '企业微信看板'] };
+  var REA_MENU_ORDER = { '数据看板': ['使用总览', '微小助看板', '悬浮窗看板', '企业微信看板', 'AI托管数据看板'] };
   var REA_MENU_TITLE = { '数据看板': '看板' };
   var REA_TOPBAR = 'ant-pro-top-nav-header-base-menu'; // 顶栏一级导航的本体
   var reaCatFirst = {};   // 一级分类名 → 该分类第一个模块页名（由数据推导，不写死）
@@ -20685,6 +20795,7 @@ renderTable();
   var reaFocusSel = '';   // 从排行点某个人进来时要预展开的人名（旧口径，执行人明细已改为跳详情页）
   var reaMatPayload = null; // 素材看板点进「素材明细」时带过来的素材行（子页用，不另存一份）
   var reaMatPreset = {};    // 同上：入口带来的预筛（搜索词／分组／使用状态／状态／部门）
+  var reaOverviewNav = null, reaOverviewTarget = '';
   var reaMbWin = '';        // 从素材明细返回看板时要恢复的时间范围
   var reaTreeClosed = false; // 微小助模块左侧「部门选择」面板收起了没有（面板是每页的 rest 各带一份，状态得存在外壳上）
   var reaSideOpen = false;  // 左侧菜单是否展开成双列（默认折叠：只留一级栏，二级走悬停浮层；同样得存在外壳上）
@@ -20897,6 +21008,15 @@ renderTable();
   /* 拼一页文档：沿用快照重组时的那套外壳（与原页逐像素一致的那份），
      末尾多挂三段脚本——换页（per 页，要带页名）→ 补演示行 → 交互。
      补行必须排在交互**前面**：REA_FX 的表格行悬停是加载时逐行绑事件的，那行得先存在。 */
+  function reaOverviewNavJs(name){
+    if(!reaOverviewNav||(name!==REA_OVERVIEW_PAGE&&name!==reaOverviewTarget))return '';
+    return 'window.__REA_OVERVIEW_NAV='+reaJson(reaOverviewNav)+';';
+  }
+  function reaOverviewBackJs(name){
+    if(!reaOverviewNav||name!==reaOverviewTarget||[REA_BOARD_PAGE,REA_MB_PAGE].indexOf(name)<0)return '';
+    return '(function(){var root=document.querySelector(".rea-bd-page"),button=document.createElement("button");if(!root)return;button.type="button";button.textContent="‹ 返回使用总览";button.setAttribute("data-overview-return","");button.style.cssText="display:block;margin:0 0 16px;padding:0;border:0;background:none;color:#1677FF;font:14px -apple-system,PingFang SC,Microsoft YaHei,sans-serif;cursor:pointer";button.onclick=function(){parent.postMessage({reaPage:"使用总览",reaOverviewBack:true},"*")};root.insertBefore(button,root.firstChild);var range=document.createElement("p");range.textContent='+reaJson('来源：使用总览 · '+reaOverviewNav.start+' — '+reaOverviewNav.end+' · 全公司')+';range.style.cssText="font-size:12px;color:#646A73;margin:0 0 16px";button.after(range);})();';
+  }
+
   function reaDoc(i){
     var P = window.__REAL_ADMIN__, p = P.pages[i];
     /* 覆盖页多两样：它那份样式，和它那段脚本（查 REA_COVER 登记表）。
@@ -20910,6 +21030,7 @@ renderTable();
       + '<style>' + P.css + '</style>'
       + '<style>' + REA_CSS + (cv && cv.css ? cv.css : '') + '</style>'
       + '</head><body>' + P.shell + reaSplice(p, p.rest)
+      + (reaOverviewNavJs(p.name) ? '<script>' + reaOverviewNavJs(p.name) + '<' + '/script>' : '')
       + '<script>' + reaNavJs(p.name) + '<' + '/script>'
       /* 「详细数据」子页多一段：把看板带过来的行与窗口先落到 window 上 */
       + (reaDataJs(p.name) ? '<script>' + reaDataJs(p.name) + '<' + '/script>' : '')
@@ -20921,6 +21042,7 @@ renderTable();
       + '<script>' + reaFxJs(p.name, reaTreeClosed) + '<' + '/script>'
       + (fl ? '<script>' + fl + '<' + '/script>' : '')
       + (cv && cv.js ? '<script>' + cv.js() + '<' + '/script>' : '')
+      + (reaOverviewBackJs(p.name) ? '<script>' + reaOverviewBackJs(p.name) + '<' + '/script>' : '')
       + '</body></html>';
   }
 
@@ -21015,7 +21137,7 @@ renderTable();
       if (!c || seen[c]) continue;
       seen[c] = 1;
       names = reaSeqOf(P.pages[i].rest).slice();
-      if (c === '数据看板' && byName[REA_OVERVIEW_PAGE]) names.unshift(REA_OVERVIEW_PAGE);
+      if (c === '数据看板' && byName[REA_OVERVIEW_PAGE]){names.unshift(REA_OVERVIEW_PAGE);if(names.indexOf('AI托管数据看板')<0)names.push('AI托管数据看板');}
       ord = REA_MENU_ORDER[c];
       if (ord){
         /* 只在表里有的项之间换位；表里没提的项按原序排到后面（sort 在现代引擎里是稳定的） */
@@ -21122,6 +21244,8 @@ renderTable();
     if (d.reaMat){ reaMatPayload = d.reaMat; reaMatPreset = d.reaPreset || {}; }
     if (d.reaMbWin){ reaMbWin = d.reaMbWin; }
     var name = d.reaPage;
+    if(d.reaOverview){reaOverviewNav=d.reaOverview;reaOverviewTarget=name;}
+    else if(name&&!d.reaOverviewBack&&name!==REA_OVERVIEW_PAGE&&name!==reaOverviewTarget&&name.indexOf(' · ')<0){reaOverviewTarget='';}
     if (!name && d.reaSave){
       reaSaved.push(d.reaSave);
       reaFlash = '素材「' + d.reaSave.title + '」已保存并发布';
