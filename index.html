@@ -9912,7 +9912,6 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     </div>
   </div>
 </div>
-<section class="ov-hostingpage" id="hosting-page" hidden></section>
 <div class="ov-toast" id="ov-toast" hidden></div>
 
 <div class="mask" id="mask" aria-hidden="true"></div>
@@ -10089,28 +10088,6 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 .rea-ov-page .usage-row[type=button]:hover{background:var(--blue-pale)}
 .rea-ov-page .outcome-destination{display:block;font-size:12px;color:var(--blue);margin-top:16px}
 .rea-ov-page .outcome:hover .outcome-destination{text-decoration:underline}
-.ov-hostingpage{max-width:1600px;margin:auto;padding:32px}
-.ov-hostingpage[hidden]{display:none}
-.rea-ov-page .ov-host-head{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-bottom:24px}
-.rea-ov-page .ov-host-head h1{font-size:20px;margin:8px 0;font-weight:600}
-.rea-ov-page .ov-host-head p,.rea-ov-page .ov-host-card>p{font-size:12px;color:var(--sub);margin:8px 0}
-.rea-ov-page .ov-host-period{display:flex;gap:4px;flex-wrap:wrap}
-.rea-ov-page .ov-host-period button{border:1px solid var(--line);border-radius:8px;background:#fff;padding:8px 12px;font-size:14px}
-.rea-ov-page .ov-host-period button[aria-pressed=true]{color:var(--blue);border-color:var(--blue);background:var(--blue-pale)}
-.rea-ov-page .ov-host-summary{display:flex;align-items:center;gap:32px;padding:24px;background:#fff;border:1px solid #E9EEF6;border-radius:12px;margin-bottom:24px}
-.rea-ov-page .ov-host-summary span{display:block;font-size:12px;color:var(--sub)}
-.rea-ov-page .ov-host-summary b{display:block;font-size:32px;font-weight:600;margin-top:8px}
-.rea-ov-page .ov-host-summary em,.rea-ov-page .ov-host-employees em{font-size:12px;font-weight:400;color:var(--sub);font-style:normal;margin-left:4px}
-.rea-ov-page .ov-host-summary p{margin:0 0 0 auto;font-size:12px;max-width:360px;color:var(--sub)}
-.rea-ov-page .ov-host-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
-.rea-ov-page .ov-host-card{background:#fff;padding:24px;border:1px solid #E9EEF6;border-radius:12px;min-width:0}
-.rea-ov-page .ov-host-card h2{font-size:16px;font-weight:600;margin:0 0 16px}
-.rea-ov-page .ov-host-wide{grid-column:1/-1}
-.rea-ov-page .ov-host-employees{display:grid;grid-template-columns:1fr 1fr;gap:0 32px;max-height:280px;overflow:auto}
-.rea-ov-page .ov-host-employees>div{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:48px;border-bottom:1px solid var(--line);font-size:14px}
-.rea-ov-page .ov-host-employees small{font-size:12px;margin-left:12px;color:var(--sub)}
-.rea-ov-page .ov-host-filters{display:flex;gap:24px;flex-wrap:wrap;margin:16px 0;font-size:12px;color:var(--sub)}
-@media(max-width:760px){.ov-hostingpage{padding:24px 16px}.rea-ov-page .ov-host-head,.rea-ov-page .ov-host-summary{align-items:flex-start;flex-wrap:wrap}.rea-ov-page .ov-host-summary p{margin:0;max-width:none;flex-basis:100%}.rea-ov-page .ov-host-grid{grid-template-columns:1fr}.rea-ov-page .ov-host-employees{grid-template-columns:1fr}.rea-ov-page .ov-record-pager{align-items:flex-start;flex-direction:column}}
 
 /* 第二行：工作成果在左，App 工具在右；成果在左卡内纵向排列。 */
 .rea-ov-page .section-results .outcomes{grid-template-columns:1fr;gap:12px}
@@ -10403,9 +10380,6 @@ document.addEventListener('click',e=>{
  const recordPage=e.target.closest('[data-record-page]');if(recordPage&&!recordPage.disabled){personRecordPage=Number(recordPage.dataset.recordPage);renderPersonRecords();return}
  const person=e.target.closest('[data-person]');if(person){openPerson(Number(person.dataset.person));return}
  const page=e.target.closest('[data-overview-page]');if(page){parent.postMessage({reaPage:page.dataset.overviewPage,reaOverview:overviewState()},'*');return}
- if(e.target.closest('[data-overview-back]')){parent.postMessage({reaPage:'使用总览',reaOverviewBack:true},'*');return}
- const hostPage=e.target.closest('[data-host-page]');if(hostPage&&!hostPage.disabled){hostingLogPage=Number(hostPage.dataset.hostPage);renderHostingLogs();return}
- const hostPeriod=e.target.closest('[data-host-period]');if(hostPeriod){period=hostPeriod.dataset.hostPeriod;hostingLogPage=1;renderHosting();return}
  const time=e.target.closest('[data-period]');if(time){period=time.dataset.period;render();return}
  const usageTabBtn=e.target.closest('[data-usage-tab]');if(usageTabBtn){usageTab=usageTabBtn.dataset.usageTab;renderUsage();return}
  const filter=e.target.closest('[data-filter]');if(filter){sheetPeopleStatus=filter.dataset.filter;fillSheet();return}
@@ -10437,33 +10411,616 @@ function renderPersonRecords(){
 }
 document.addEventListener('change',event=>{
  if(event.target.id==='person-feature'){personFeature=event.target.value;personRecordPage=1;renderPersonRecords();}
- if(event.target.id==='host-employee'){hostingEmployee=event.target.value;hostingLogPage=1;renderHostingLogs();}
- if(event.target.id==='host-action'){hostingAction=event.target.value;hostingLogPage=1;renderHostingLogs();}
 });
-let hostingLogPage=1,hostingEmployee='all',hostingAction='all';
-const HOST_ACTIONS=['朋友圈互动','画像分析','自动打招呼'];
-function hostingRows(){
- const counts=details().hosting,rows=[];
- for(const person of ROSTER){const total=amount(counts,person.id),items=featureBreakdown({features:HOST_ACTIONS,weights:[.45,.3,.25]},total);for(const item of items){let left=item.count,n=0;while(left>0){const count=Math.min(left,1+n%4);rows.push({person,name:item.name,count});left-=count;n++;}}}
- return rows.map((row,i)=>({...row,day:-(i%(WINDOW_DAYS[period]+1)),time:dateAt(-(i%(WINDOW_DAYS[period]+1)))+' '+String(16-i%7).padStart(2,'0')+':'+String(50-i%40).padStart(2,'0')})).sort((a,b)=>b.time.localeCompare(a.time));
-}
-function renderHosting(){
- const d=current(),counts=details().hosting,people=ROSTER.filter(person=>amount(counts,person.id)>0).sort((a,b)=>amount(counts,b.id)-amount(counts,a.id));
- const rows=hostingRows(),trend=[];for(let end=0;end<=WINDOW_DAYS[period];end+=7){const start=Math.min(WINDOW_DAYS[period],end+6);trend.push({name:dateAt(-start).slice(5)+'—'+dateAt(-end).slice(5),count:rows.filter(row=>-row.day>=end&&-row.day<=start).reduce((sum,row)=>sum+row.count,0)});}
- const types=HOST_ACTIONS.map(name=>({name,count:rows.filter(row=>row.name===name).reduce((sum,row)=>sum+row.count,0)}));
- $('#hosting-page').innerHTML=`<header class="ov-host-head"><div>${overviewNav?'<button class="text-link" type="button" data-overview-back>‹ 返回使用总览</button>':''}<h1>AI托管数据看板</h1><p>${currentRangeLabel()} · 全公司</p></div><div class="ov-host-period">${Object.keys(DATA).map(key=>`<button type="button" data-host-period="${key}" aria-pressed="${key===period}">${DATA[key].label}</button>`).join('')}</div></header><div class="ov-host-summary"><div><span>托管自有动作完成</span><b>${fmt(d.hosting)}<em>次</em></b></div><div><span>覆盖员工</span><b>${people.length}<em>人</em></b></div><p>演示数据 · 只统计托管自有动作，代跑营销任务由任务看板统计。</p></div><div class="ov-host-grid"><section class="ov-host-card"><h2>完成动作趋势</h2><p>按周汇总 · 次</p>${toolFeatureRows(trend.reverse())}</section><section class="ov-host-card"><h2>动作类型分布</h2>${toolFeatureRows(types.sort((a,b)=>b.count-a.count))}</section><section class="ov-host-card ov-host-wide"><h2>员工使用明细</h2><div class="ov-host-employees">${people.map(person=>`<div><span>${person.name}<small>${person.dept}</small></span><b>${fmt(amount(counts,person.id))}<em>次</em></b></div>`).join('')}</div></section><section class="ov-host-card ov-host-wide"><h2>托管动作记录</h2><div class="ov-host-filters"><label>员工 <select id="host-employee"><option value="all">全部员工</option>${ROSTER.map(person=>`<option value="${person.id}" ${String(person.id)===hostingEmployee?'selected':''}>${person.name}</option>`).join('')}</select></label><label>动作 <select id="host-action"><option value="all">全部动作</option>${HOST_ACTIONS.map(name=>`<option ${hostingAction===name?'selected':''}>${name}</option>`).join('')}</select></label></div><div id="host-logs"></div></section></div>`;
- renderHostingLogs();
-}
-function renderHostingLogs(){
- const rows=hostingRows().filter(row=>(hostingEmployee==='all'||String(row.person.id)===hostingEmployee)&&(hostingAction==='all'||row.name===hostingAction)),pages=Math.max(1,Math.ceil(rows.length/10));hostingLogPage=Math.min(hostingLogPage,pages);
- const shown=rows.slice((hostingLogPage-1)*10,hostingLogPage*10);
- $('#host-logs').innerHTML=rows.length?`<div class="ov-record-table"><table><thead><tr><th>完成时间</th><th>员工</th><th>部门</th><th>动作</th><th>完成数量</th></tr></thead><tbody>${shown.map(row=>`<tr><td>${row.time}</td><td>${row.person.name}</td><td>${row.person.dept}</td><td>${row.name}</td><td>${row.count} 次</td></tr>`).join('')}</tbody></table></div><div class="ov-record-pager"><span>共 ${rows.length} 条记录 · 合计 ${fmt(rows.reduce((sum,row)=>sum+row.count,0))} 次完成</span><span><button type="button" data-host-page="${hostingLogPage-1}" ${hostingLogPage===1?'disabled':''}>上一页</button> ${hostingLogPage} / ${pages} <button type="button" data-host-page="${hostingLogPage+1}" ${hostingLogPage===pages?'disabled':''}>下一页</button></span></div>`:'<p class="sheet-empty">所选期间暂无记录。</p>';
-}
-
 window.addEventListener('resize',fitSeatPage);
 render();
-if(window.__OVERVIEW_HOSTING){$('.rea-ov-page .wrap').hidden=true;$('#hosting-page').hidden=false;renderHosting();}
-else if(overviewNav){requestAnimationFrame(()=>{overviewScroller().scrollTop=overviewNav.scroll||0;});}</script>
+if(overviewNav){requestAnimationFrame(()=>{overviewScroller().scrollTop=overviewNav.scroll||0;});}</script>
+<!-- 载体③·AI托管看板覆盖块（2026-11-05）：视图③「数据看板」组第五页，注册表页名仍是
+     「AI托管数据看板」，显示名由 REA_NAME 换成「AI托管看板」；二级页「托管工作日志」
+     由 reaSynthPages() 克隆看板外壳合成。正文按 docs/wireframes/AI托管数据看板.html 落：
+     托管成果五格 → 执行记录趋势（单色总量）→ 类型分布（五组）→ 员工托管情况 ＋ 工作日志。
+     五组合计＝执行记录条数，员工表、日志都从同一批记录里切，数与题头对得上。 -->
+<script type="text/plain" id="srcHostingDash"><div class="ant-spin-nested-loading css-vgijab rea-bd-page rea-hd-page"><div class="ant-spin-container">
+<div class="_board_gf4go_1 rea-bd-sec rea-bd-shell">
+
+  <div class="rea-bd-hero">
+    <h1>AI托管看板</h1>
+    <span class="rea-bd-upd">数据更新于 <span data-rea-d="now@hhmm"></span></span>
+  </div>
+
+  <!-- 一条筛选栏管全页：成果五格、执行记录趋势、类型分布、员工表、工作日志都是同一批记录，
+       切窗口整页重算。四档固定；自定义区间演示数据没铺，先按不可点摆着。 -->
+  <div class="rea-bd-fbar">
+    <span class="rea-bd-lab">统计时间窗<span class="rea-bd-help" tabindex="0" role="img" aria-label="数据来源与统计口径" data-tip="页面上的数全部落在这一段时间里：托管成果五格、执行记录趋势、类型分布、员工托管情况与工作日志都是同一批记录。今日／近一周／近一月／近三月是固定档，切档整页重算。">?</span></span>
+    <div class="ant-radio-group ant-radio-group-solid css-vgijab rea-bd-window" id="rea-hd-window">
+        <div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small">
+          <div class="ant-space-item">
+            <label class="ant-radio-button-wrapper css-vgijab" data-hd-win="today">
+              <span class="ant-radio-button"><input name="rea-hd-win" class="ant-radio-button-input" type="radio" value="0"><span class="ant-radio-button-inner"></span></span>
+              <span class="ant-radio-button-label">今日</span>
+            </label>
+          </div>
+          <div class="ant-space-item">
+            <label class="ant-radio-button-wrapper ant-radio-button-wrapper-checked css-vgijab" data-hd-win="w7">
+              <span class="ant-radio-button ant-radio-button-checked"><input name="rea-hd-win" class="ant-radio-button-input" type="radio" value="1" checked=""><span class="ant-radio-button-inner"></span></span>
+              <span class="ant-radio-button-label">近一周</span>
+            </label>
+          </div>
+          <div class="ant-space-item">
+            <label class="ant-radio-button-wrapper css-vgijab" data-hd-win="m1">
+              <span class="ant-radio-button"><input name="rea-hd-win" class="ant-radio-button-input" type="radio" value="2"><span class="ant-radio-button-inner"></span></span>
+              <span class="ant-radio-button-label">近一月</span>
+            </label>
+          </div>
+          <div class="ant-space-item">
+            <label class="ant-radio-button-wrapper css-vgijab" data-hd-win="m3">
+              <span class="ant-radio-button"><input name="rea-hd-win" class="ant-radio-button-input" type="radio" value="3"><span class="ant-radio-button-inner"></span></span>
+              <span class="ant-radio-button-label">近三月</span>
+            </label>
+          </div>
+        </div>
+    </div>
+    <span class="rea-bd-custom" aria-disabled="true" title="演示数据暂未覆盖">自定义区间</span>
+  </div>
+
+  <!-- 卡片网格：第 1 行托管成果通栏、第 2 行执行记录趋势通栏、第 3 行类型分布通栏、
+       第 4 行「员工托管情况｜工作日志」。分组靠卡边界（ADR-0083）。 -->
+  <div class="rea-bd-grid" id="rea-hd-grid">
+
+    <section class="rea-bd-card rea-bd-card--w12" id="rea-hd-outcome" aria-label="托管成果"></section>
+
+    <section class="rea-bd-card rea-bd-card--w12" id="rea-hd-trend" aria-label="执行记录趋势"></section>
+
+    <section class="rea-bd-card rea-bd-card--w12" id="rea-hd-group" aria-label="类型分布"></section>
+
+    <section class="rea-bd-card rea-bd-card--w7" id="rea-hd-people" aria-label="员工托管情况"></section>
+
+    <section class="rea-bd-card rea-bd-card--w5" id="rea-hd-log" aria-label="工作日志"></section>
+
+  </div>
+
+</div></div></div></script>
+<!-- 二级页「托管工作日志」的正文（片段）：与看板共用样式和脚本，只是把五条换成全表 -->
+<script type="text/plain" id="srcHostingLog"><div class="ant-spin-nested-loading css-vgijab rea-bd-page rea-hd-page"><div class="ant-spin-container">
+<div class="_board_gf4go_1 rea-bd-sec rea-bd-shell">
+
+  <div class="rea-bd-hero rea-hd-hero">
+    <div>
+      <a href="#" class="rea-hd-back" data-hd-back>‹ 返回 AI托管看板</a>
+      <h1>托管工作日志</h1>
+    </div>
+    <span class="rea-bd-upd">数据更新于 <span data-rea-d="now@hhmm"></span></span>
+  </div>
+
+  <div class="rea-bd-fbar">
+    <span class="rea-bd-lab">统计时间窗<span class="rea-bd-help" tabindex="0" role="img" aria-label="数据来源与统计口径" data-tip="与看板同一批记录、同一个窗口：从看板的哪一格点进来，这里就把那一格预选上。">?</span></span>
+    <div class="ant-radio-group ant-radio-group-solid css-vgijab rea-bd-window" id="rea-hd-window">
+        <div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small">
+          <div class="ant-space-item">
+            <label class="ant-radio-button-wrapper css-vgijab" data-hd-win="today">
+              <span class="ant-radio-button"><input name="rea-hd-win" class="ant-radio-button-input" type="radio" value="0"><span class="ant-radio-button-inner"></span></span>
+              <span class="ant-radio-button-label">今日</span>
+            </label>
+          </div>
+          <div class="ant-space-item">
+            <label class="ant-radio-button-wrapper ant-radio-button-wrapper-checked css-vgijab" data-hd-win="w7">
+              <span class="ant-radio-button ant-radio-button-checked"><input name="rea-hd-win" class="ant-radio-button-input" type="radio" value="1" checked=""><span class="ant-radio-button-inner"></span></span>
+              <span class="ant-radio-button-label">近一周</span>
+            </label>
+          </div>
+          <div class="ant-space-item">
+            <label class="ant-radio-button-wrapper css-vgijab" data-hd-win="m1">
+              <span class="ant-radio-button"><input name="rea-hd-win" class="ant-radio-button-input" type="radio" value="2"><span class="ant-radio-button-inner"></span></span>
+              <span class="ant-radio-button-label">近一月</span>
+            </label>
+          </div>
+          <div class="ant-space-item">
+            <label class="ant-radio-button-wrapper css-vgijab" data-hd-win="m3">
+              <span class="ant-radio-button"><input name="rea-hd-win" class="ant-radio-button-input" type="radio" value="3"><span class="ant-radio-button-inner"></span></span>
+              <span class="ant-radio-button-label">近三月</span>
+            </label>
+          </div>
+        </div>
+    </div>
+    <span class="rea-bd-custom" aria-disabled="true" title="演示数据暂未覆盖">自定义区间</span>
+  </div>
+
+  <div class="rea-bd-grid">
+    <section class="rea-bd-card rea-bd-card--w12">
+      <div class="rea-bd-ch"><h6>托管工作日志<span class="rea-bd-help" tabindex="0" role="img" aria-label="数据来源与统计口径" data-tip="来源：托管执行记录，一条完成态记一行。日志只写动作与数量，不出现客户姓名、联系方式、聊天正文、素材正文；现网只落完成态，所以没有结果筛选。">?</span></h6><span class="th" id="rea-hd-count"></span></div>
+      <div class="rea-bd-row rea-hd-filters">
+        <label class="rea-bd-filter"><span class="rea-bd-lab">员工</span><select class="rea-bd-sel" id="rea-hd-f-emp"><option value="all">全部</option></select></label>
+        <label class="rea-bd-filter"><span class="rea-bd-lab">动作类型</span><select class="rea-bd-sel" id="rea-hd-f-grp"><option value="all">全部</option></select></label>
+        <span class="rea-bd-count" id="rea-hd-range"></span>
+      </div>
+      <div class="rea-hd-tablewrap" id="rea-hd-logs"></div>
+      <div class="rea-hd-pager" id="rea-hd-pager"></div>
+    </section>
+  </div>
+
+</div></div></div></script>
+<script type="text/plain" id="srcHostingStyle">
+/* ---------- AI托管看板 / 托管工作日志 ----------
+   与看板组同一套画布与卡片（ADR-0082 浅蓝＋白、ADR-0083 卡边界分组），
+   这一页只多四样东西：成果五格、单色总量柱、类型横条、日志列表。
+   图一律单色——类型已在下面的横条里分开，柱子不再分色，免得同一份数读两遍。 */
+
+/* 托管成果：五格横排，格与格之间一道细线，不套小卡 */
+.rea-hd-outcomes{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0}
+.rea-hd-oc{min-width:0;padding:2px 20px}
+.rea-hd-oc:first-child{padding-left:0}
+.rea-hd-oc+.rea-hd-oc{border-left:1px solid #EDF1F7}
+.rea-hd-oc>strong{display:block;color:#646A73;font-size:12px;line-height:18px;font-weight:400}
+.rea-hd-oc .v{display:block;margin:7px 0 4px;color:#17253D;font-size:26px;line-height:34px;font-weight:600;letter-spacing:-.6px;font-variant-numeric:tabular-nums}
+.rea-hd-oc .v small{margin-left:5px;color:#8F959E;font-size:12px;font-weight:400;letter-spacing:0}
+.rea-hd-oc .sub{display:grid;gap:2px;color:#8F959E;font-size:12px;line-height:18px}
+.rea-hd-oc .sub div{display:flex;justify-content:space-between;gap:12px}
+.rea-hd-oc .sub b{color:#646A73;font-weight:500;font-variant-numeric:tabular-nums}
+
+/* 执行记录趋势：只画总量，一根柱＝一格；柱高按窗内最大值等比，鼠标停上去出数 */
+.rea-hd-chart{display:flex;align-items:flex-end;gap:10px;height:176px;padding-top:6px;border-bottom:1px solid #EDF1F7}
+.rea-hd-col{display:flex;flex:1 1 0;flex-direction:column;justify-content:flex-end;min-width:0;height:100%}
+.rea-hd-col>i{display:block;width:100%;max-width:46px;margin:0 auto;border-radius:3px 3px 0 0;background:#A9C6F7;transform-origin:center bottom;animation:reaGrowY .32s cubic-bezier(.2,.7,.3,1) both;transition:background .12s linear}
+.rea-hd-col:hover>i{background:#1677FF}
+.rea-hd-axis{display:flex;gap:10px;margin-top:7px;color:#8F959E;font-size:11px;line-height:16px}
+.rea-hd-axis span{flex:1 1 0;min-width:0;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* 类型分布：一行一组，横条长度按行内最大值等比；整行可点，进日志并预选这一组 */
+.rea-hd-rows{margin-top:-2px}
+.rea-hd-row{display:flex;align-items:center;gap:14px;min-height:42px;padding:0 8px;margin:0 -8px;border-radius:6px;cursor:pointer;transition:background .12s linear}
+.rea-hd-row:hover{background:#F7F9FC}
+.rea-hd-row .nm{flex:0 0 128px;min-width:0;color:#1F2329;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rea-hd-row .tr{flex:1 1 auto;min-width:40px;height:8px;border-radius:4px;background:#F0F2F5;overflow:hidden}
+.rea-hd-row .tr>i{display:block;height:100%;border-radius:4px;background:#1677FF}
+.rea-hd-row .num{flex:0 0 76px;text-align:right;color:#1F2329;font-size:13px;font-variant-numeric:tabular-nums}
+.rea-hd-row .pct{flex:0 0 52px;text-align:right;color:#8F959E;font-size:12px;font-variant-numeric:tabular-nums}
+
+/* 卡脚：一行灰字交代口径，右侧挂唯一的去路（有的话） */
+.rea-hd-foot{display:flex;align-items:baseline;gap:12px;margin-top:14px;padding-top:11px;border-top:1px solid #F0F2F5;color:#8F959E;font-size:12px;line-height:18px}
+.rea-hd-foot .lnk{margin-left:auto;white-space:nowrap;color:#1677FF;font-size:12px;text-decoration:none;cursor:pointer}
+.rea-hd-foot .lnk:hover{color:#4096FF}
+
+/* 表：员工托管情况与日志共用一套写法 */
+.rea-hd-scroll{max-height:396px;overflow:auto}
+.rea-hd-table{width:100%;border-collapse:collapse;font-size:13px}
+.rea-hd-table th{position:sticky;top:0;z-index:1;padding:9px 12px;background:#F7F8FA;color:#646A73;font-size:12px;font-weight:500;text-align:left;white-space:nowrap}
+.rea-hd-table th:first-child,.rea-hd-table td:first-child{padding-left:12px}
+.rea-hd-table td{padding:11px 12px;border-bottom:1px solid #F0F2F5;color:#1F2329;vertical-align:middle}
+.rea-hd-table tbody tr:last-child td{border-bottom:0}
+.rea-hd-table tbody tr:hover td{background:#F7F8FA}
+.rea-hd-table .num{text-align:right;font-variant-numeric:tabular-nums}
+.rea-hd-table .sub{display:block;color:#8F959E;font-size:12px;line-height:16px}
+.rea-hd-lnk{border:0;background:none;padding:0;color:#1677FF;font:inherit;font-size:13px;cursor:pointer}
+.rea-hd-lnk:hover{text-decoration:underline}
+.rea-hd-when{white-space:nowrap;color:#646A73;font-variant-numeric:tabular-nums}
+
+/* 工作日志（看板右下那张卡的最近几条） */
+.rea-hd-log .it{display:grid;grid-template-columns:76px minmax(0,1fr);gap:12px;padding:10px 0;border-bottom:1px solid #F4F6FA}
+.rea-hd-log .it:last-child{border-bottom:0}
+.rea-hd-log .tm{color:#8F959E;font-size:12px;line-height:20px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.rea-hd-log .bd{min-width:0}
+.rea-hd-log .bd strong{display:block;color:#1F2329;font-size:13px;line-height:20px;font-weight:500}
+.rea-hd-log .bd small{display:block;color:#8F959E;font-size:12px;line-height:18px}
+
+/* 托管工作日志（副页）：返回入口、筛选行、分页 */
+.rea-hd-hero>div{min-width:0}
+.rea-hd-back{display:inline-block;margin-bottom:6px;color:#1677FF;font-size:12px;line-height:18px;text-decoration:none}
+.rea-hd-back:hover{color:#4096FF}
+.rea-hd-filters{padding-top:2px}
+.rea-hd-tablewrap{margin-top:4px}
+.rea-hd-empty{padding:32px 0;color:#8F959E;font-size:13px;text-align:center}
+.rea-hd-pager{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;color:#8F959E;font-size:12px}
+.rea-hd-pager button{height:28px;padding:0 10px;border:1px solid #D9DEE8;border-radius:6px;background:#fff;color:#1F2329;font-size:12px;cursor:pointer}
+.rea-hd-pager button+button{margin-left:8px}
+.rea-hd-pager button:hover:not(:disabled){border-color:#1677FF;color:#1677FF}
+.rea-hd-pager button:disabled{color:#B7BCC4;cursor:not-allowed}
+
+@media (max-width:1279px){
+  .rea-hd-outcomes{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 0}
+  .rea-hd-oc{padding:0 16px}
+  .rea-hd-oc:nth-child(odd){padding-left:0;border-left:0}
+}
+@media (max-width:767px){
+  .rea-hd-outcomes{grid-template-columns:1fr}
+  .rea-hd-oc{padding:10px 0!important;border-left:0!important;border-top:1px solid #EDF1F7}
+  .rea-hd-oc:first-child{border-top:0}
+  .rea-hd-row .nm{flex-basis:96px}
+}
+@media (prefers-reduced-motion:reduce){
+  .rea-hd-col>i{animation:none!important}
+  .rea-hd-row{transition:none!important}
+}
+</script>
+<script type="text/plain" id="srcHostingScript">/* AI托管看板 ＋ 托管工作日志：两页共用这一份脚本，正文里有哪些节点就渲染哪一页。
+   演示数据是一个闭环：五组各窗合计＝执行记录条数；员工表、类型分布、工作日志里的行
+   全从同一批记录里切出来，所以「点类型 / 点员工 → 日志预选」之后两边对得上。 */
+(function(){
+'use strict';
+var PAD=function(n){return (n<10?'0':'')+n};
+
+/* 时间戳：页头「数据更新于」按真钟写，不写死（快照里的日期过一天就腐坏） */
+function stamp(){
+  var es=document.querySelectorAll('[data-rea-d]'),i,m,d,t,s;
+  for(i=0;i<es.length;i++){
+    m=/^(now|d(?:[+-]\d+)?)(?:@(now|hhmm|\d{2}:\d{2}(?::\d{2})?))?$/.exec(es[i].getAttribute('data-rea-d'));
+    if(!m)continue;
+    d=new Date();
+    if(m[1]!=='now'){var k=m[1]==='d'?0:parseInt(m[1].slice(1),10);d.setDate(d.getDate()+k);}
+    s=d.getFullYear()+'-'+PAD(d.getMonth()+1)+'-'+PAD(d.getDate());
+    t=m[2];
+    if(t){
+      if(t==='now')t=PAD(d.getHours())+':'+PAD(d.getMinutes())+':'+PAD(d.getSeconds());
+      else if(t==='hhmm')t=PAD(d.getHours())+':'+PAD(d.getMinutes());
+      s+=' '+t;
+    }
+    es[i].textContent=s;
+  }
+}
+stamp();
+
+var GROUPS=['微信营销任务','企业微信任务','WhatsApp 加好友','消息回复','员工自建能力'];
+
+/* 窗口即口径：col 是五组，逐窗合计＝exec；cover 是有执行记录的人数。
+   员工自建能力那一组＝使用总览的 AI托管完成动作（28／186／744／2,108），两页对得上。 */
+var W={
+  today:{label:'今日',range:'今天',bars:9,bucket:'hour',days:1,cover:5,exec:341,durMin:8892,
+    groups:[80,31,8,194,28],itask:50,msgs:1240,publish:[18],added:[27,13,6]},
+  w7:{label:'近一周',range:'近 7 天',bars:7,bucket:'day',days:7,cover:9,exec:2184,durMin:61740,
+    groups:[512,198,48,1240,186],itask:320,msgs:7860,publish:[120],added:[156,78,34]},
+  m1:{label:'近一月',range:'近 30 天',bars:5,bucket:'week',days:30,cover:11,exec:9120,durMin:265080,
+    groups:[2147,830,201,5198,744],itask:1340,msgs:31400,publish:[502],added:[618,318,128]},
+  m3:{label:'近三月',range:'近 90 天',bars:13,bucket:'week',days:90,cover:13,exec:26730,durMin:794340,
+    groups:[6311,2440,591,15280,2108],itask:3944,msgs:96800,publish:[1476],added:[1846,952,382]}
+};
+
+var EMPLOYEES=[
+  {n:'张伟',dept:'产品部',acc:4,w:1.90},
+  {n:'王芳',dept:'市场部',acc:3,w:1.60},
+  {n:'徐磊',dept:'运营部',acc:3,w:1.42},
+  {n:'朱琳',dept:'销售部',acc:2,w:1.29},
+  {n:'韩雪',dept:'产品部',acc:2,w:1.11},
+  {n:'李娜',dept:'销售部',acc:2,w:0.97},
+  {n:'罗鹏',dept:'客户成功部',acc:1,w:0.79},
+  {n:'石磊',dept:'运营部',acc:1,w:0.70},
+  {n:'梁雪',dept:'客户成功部',acc:1,w:0.59},
+  {n:'郑浩',dept:'研发部',acc:1,w:0.52},
+  {n:'高媛',dept:'人力行政部',acc:1,w:0.46},
+  {n:'马超',dept:'运营部',acc:1,w:0.41},
+  {n:'唐颖',dept:'销售部',acc:1,w:0.36}
+];
+
+/* 每组能做的动作就是这些——托管不做视频号、抖音、小红书，也不做拓客养号 */
+var TPL={
+  '微信营销任务':[
+    ['微信','发朋友圈','发布 1 条'],
+    ['微信','群发好友','已发送 128 人'],
+    ['微信','客户唤醒','发送 6 人'],
+    ['微信','群发群','已发送 12 个群'],
+    ['微信','批量加好友','成功添加 12 人'],
+    ['微信','群发好友','已发送 86 人'],
+    ['微信','客户唤醒','发送 9 人']
+  ],
+  '企业微信任务':[
+    ['企业微信','群发客户','已发送 46 人'],
+    ['企业微信','群发客户群','已发送 5 个群'],
+    ['企业微信','批量加好友','成功添加 7 人']
+  ],
+  'WhatsApp 加好友':[
+    ['WhatsApp','批量加好友','成功添加 5 人'],
+    ['WhatsApp','批量加好友','成功添加 3 人']
+  ],
+  '消息回复':[
+    ['微信','消息回复','回复 38 位客户'],
+    ['企业微信','消息回复','回复 21 位客户'],
+    ['微信','消息回复','回复 33 位客户']
+  ],
+  '员工自建能力':[
+    ['微信','朋友圈互动','点赞 12 条、评论 3 条'],
+    ['微信','画像分析','分析 4 位客户'],
+    ['微信','自动打招呼','通过 8 位好友申请'],
+    ['微信','朋友圈互动','点赞 9 条'],
+    ['微信','画像分析','分析 2 位客户'],
+    ['微信','朋友圈互动','点赞 6 条、评论 1 条']
+  ]
+};
+
+var BOARD='AI托管数据看板';
+var LOGPAGE=BOARD+' · 托管工作日志';
+var state={win:window.__REA_HOST_WIN||'w7',emp:'all',grp:'all',page:1};
+if(!W[state.win])state.win='w7';
+var PRESET=window.__REA_HOST||null;
+
+var fmt=function(n){return Number(n).toLocaleString('zh-CN')};
+var sum=function(a){return a.reduce(function(x,y){return x+y},0)};
+var hours=function(m){return fmt(Math.round(m/60))};
+
+/* 把总量摊到柱子上：固定权重，保证各柱相加等于总量 */
+function series(total,weights){
+  var n=weights.length;
+  if(n<=1)return [total];
+  var s=sum(weights),out=weights.map(function(x){return Math.round(total*x/s)});
+  out[n-1]+=total-sum(out);
+  return out;
+}
+function splitBy(total,people){
+  var s=people.reduce(function(a,p){return a+p.w},0);
+  var out=people.map(function(p){return Math.round(total*p.w/s)});
+  out[0]+=total-sum(out);
+  return out;
+}
+
+/* 一批演示记录：按组发牌，组内条数恰好等于 d.groups；
+   员工按权重分好后打散再发，免得排在前面的组清一色落在同几个人身上。 */
+function buildRows(d){
+  var targets=splitBy(d.exec,EMPLOYEES.slice(0,d.cover)),owner=[],i,j;
+  for(i=0;i<targets.length;i++)for(j=0;j<targets[i];j++)owner.push(i);
+  var seed=97;
+  for(i=owner.length-1;i>0;i--){
+    seed=(seed*9301+49297)%233280;
+    var k=seed%(i+1),t=owner[i];owner[i]=owner[k];owner[k]=t;
+  }
+  var base=new Date();base.setHours(0,0,0,0);
+  var rows=[],n=0;
+  for(i=0;i<GROUPS.length;i++){
+    var g=GROUPS[i],tpl=TPL[g],cnt=d.groups[i],per=Math.max(1,Math.ceil(cnt/d.days));
+    for(j=0;j<cnt;j++){
+      var ei=owner[n],t2=tpl[j%tpl.length],day=Math.floor(j/per),slot=j%per,
+          mins=17*60+59-Math.floor(slot*529/per)-(ei*13)%29,
+          when=new Date(base);
+      when.setDate(base.getDate()-day);
+      when.setHours(Math.floor(mins/60),mins%60,0,0);
+      rows.push({t:when,g:g,plat:t2[0],act:t2[1],sum:t2[2],emp:EMPLOYEES[owner[n++]]});
+    }
+  }
+  rows.sort(function(a,b){return b.t-a.t});
+  return rows;
+}
+var CACHE={};
+function rowsOf(key){
+  if(!CACHE[key])CACHE[key]=buildRows(W[key]);
+  return CACHE[key];
+}
+function rel(d){
+  var t=new Date();t.setHours(0,0,0,0);
+  var c=new Date(d);c.setHours(0,0,0,0);
+  return c.getTime()===t.getTime()?'今天 '+PAD(d.getHours())+':'+PAD(d.getMinutes())
+    :(d.getMonth()+1)+'-'+PAD(d.getDate())+' '+PAD(d.getHours())+':'+PAD(d.getMinutes());
+}
+
+/* ---------- 托管成果 ---------- */
+function outcomeHtml(d){
+  var cells=[
+    ['累计托管时间','小时',hours(d.durMin),'按账号累加'],
+    ['互动任务','个',fmt(d.itask),'群发与唤醒'],
+    ['消息条数','条',fmt(d.msgs),'回复与群发'],
+    ['内容发布','个',fmt(sum(d.publish)),[['朋友圈',d.publish[0]]]],
+    ['新增客户','人',fmt(sum(d.added)),[['微信',d.added[0]],['企业微信',d.added[1]],['WhatsApp',d.added[2]]]]
+  ];
+  var body=cells.map(function(c){
+    var sub=typeof c[3]==='string'
+      ? '<div class="sub"><div><span>'+c[3]+'</span></div></div>'
+      : '<div class="sub">'+c[3].map(function(x){return '<div><span>'+x[0]+'</span><b>'+fmt(x[1])+'</b></div>'}).join('')+'</div>';
+    return '<div class="rea-hd-oc"><strong>'+c[0]+'</strong><span class="v">'+c[2]+'<small>'+c[1]+'</small></span>'+sub+'</div>';
+  }).join('');
+  return '<div class="rea-bd-ch"><h6>托管成果<span class="rea-bd-help" tabindex="0" role="img" aria-label="数据来源与统计口径" data-tip="来源：托管执行记录。累计托管时间＝各账号托管在线运行时长之和；互动任务＝群发好友、群发群、客户唤醒；消息条数＝AI智能回复与群发里的消息；内容发布只有朋友圈；新增客户按首次加为好友计。">?</span></h6></div>'
+    +'<div class="rea-hd-outcomes">'+body+'</div>'
+    +'<div class="rea-hd-foot">累计托管时间按账号托管的运行时长累加。托管不做视频号、抖音、小红书发布，所以内容发布只有朋友圈这一项。</div>';
+}
+
+/* ---------- 执行记录趋势（单色总量） ---------- */
+function trendHtml(d){
+  var labels=[],weights=[],i,today=new Date();
+  today.setHours(0,0,0,0);
+  if(d.bucket==='hour'){
+    labels=['09–10','10–11','11–12','12–13','13–14','14–15','15–16','16–17','17–18'];
+    weights=[0.70,1.15,1.30,1.05,0.55,1.00,1.25,1.15,0.75];
+  }else{
+    for(i=d.bars-1;i>=0;i--){
+      var t=new Date(today);
+      if(d.bucket==='day')t.setDate(today.getDate()-i);
+      else t.setDate(today.getDate()-i*7);
+      labels.push((t.getMonth()+1)+'/'+t.getDate());
+      if(d.bucket==='day'){
+        var wd=t.getDay();
+        weights.push((wd===0||wd===6)?0.45:1+0.12*Math.sin((d.bars-1-i)*1.3));
+      }else{
+        weights.push(1+0.22*Math.sin((d.bars-1-i)*1.9+0.6)+0.08*Math.cos((d.bars-1-i)*0.7));
+      }
+    }
+  }
+  var vals=series(d.exec,weights),max=Math.max.apply(null,vals),cols='',axis='';
+  for(i=0;i<vals.length;i++){
+    cols+='<div class="rea-hd-col" title="'+labels[i]+' · '+fmt(vals[i])+' 条"><i style="height:'+Math.max(2,vals[i]/max*168).toFixed(1)+'px"></i></div>';
+    axis+='<span>'+labels[i]+'</span>';
+  }
+  var unit=d.bucket==='hour'?'小时':(d.bucket==='day'?'日':'周');
+  var foot=d.bucket==='hour'
+    ? '今日窗口只有一天，按工作时段（09:00–18:00）逐小时看，共 '+fmt(d.exec)+' 条。'
+    : (d.bucket==='day'
+      ? '七天内按日看，各柱相加等于 '+fmt(d.exec)+' 条。'
+      : '窗口超过七天，按周看（七天一段、自今日倒推），各柱相加等于 '+fmt(d.exec)+' 条。');
+  return '<div class="rea-bd-ch"><h6>执行记录趋势<span class="rea-bd-help" tabindex="0" role="img" aria-label="数据来源与统计口径" data-tip="来源：托管执行记录，按完成时间归格。一条记录算一条，不按类型拆开——类型在下面那张卡里分。今日按小时，七天内按日，超过七天按周。">?</span></h6><span class="th">每根柱＝一'+unit+'的执行记录条数</span></div>'
+    +'<div class="rea-hd-chart">'+cols+'</div>'
+    +'<div class="rea-hd-axis">'+axis+'</div>'
+    +'<div class="rea-hd-foot">'+foot+'</div>';
+}
+
+/* ---------- 类型分布（五组，可点进日志） ---------- */
+function groupHtml(d){
+  var order=[0,1,2,3,4].sort(function(a,b){return d.groups[b]-d.groups[a]});
+  var max=Math.max.apply(null,d.groups);
+  var rows=order.map(function(i){
+    return '<div class="rea-hd-row" role="button" tabindex="0" data-hd-group="'+GROUPS[i]+'" title="在托管工作日志里看这一组">'
+      +'<span class="nm">'+GROUPS[i]+'</span>'
+      +'<span class="tr"><i style="width:'+(d.groups[i]/max*100).toFixed(1)+'%"></i></span>'
+      +'<span class="num">'+fmt(d.groups[i])+'</span>'
+      +'<span class="pct">'+(d.groups[i]/d.exec*100).toFixed(1)+'%</span>'
+      +'</div>';
+  }).join('');
+  return '<div class="rea-bd-ch"><h6>类型分布<span class="rea-bd-help" tabindex="0" role="img" aria-label="数据来源与统计口径" data-tip="按托管实际能做的活分组：微信营销任务＝发圈、群发好友、群发群、批量加好友、客户唤醒；企业微信任务＝群发客户、群发客户群、批量加客户；WhatsApp 加好友；消息回复由 AI智能回复产出；员工自建能力＝员工自己创建的那几项。五组合计＝执行记录条数。">?</span></h6><span class="th">合计 '+fmt(d.exec)+' 条</span></div>'
+    +'<div class="rea-hd-rows">'+rows+'</div>'
+    +'<div class="rea-hd-foot">组的边界就是托管实际能做的活，五组相加等于执行记录条数。点任一行进托管工作日志，并预选这一组。</div>';
+}
+
+/* ---------- 员工托管情况 ---------- */
+function personStats(rows,d){
+  var by={},i,r,e;
+  for(i=0;i<rows.length;i++){
+    r=rows[i];
+    if(!by[r.emp.n])by[r.emp.n]={emp:r.emp,n:0,last:r.t};
+    by[r.emp.n].n++;
+  }
+  var list=[];
+  for(e=0;e<d.cover;e++)if(by[EMPLOYEES[e].n])list.push(by[EMPLOYEES[e].n]);
+  list.sort(function(a,b){return b.n-a.n});
+  return list;
+}
+function peopleHtml(d,rows){
+  var list=personStats(rows,d);
+  var body=list.slice(0,8).map(function(x){
+    return '<tr><td><button type="button" class="rea-hd-lnk" data-hd-emp="'+x.emp.n+'">'+x.emp.n+'</button></td>'
+      +'<td>'+x.emp.dept+'</td>'
+      +'<td class="num">'+x.emp.acc+'</td>'
+      +'<td class="num">'+fmt(x.n)+'</td>'
+      +'<td class="rea-hd-when">'+rel(x.last)+'</td></tr>';
+  }).join('');
+  var more=list.length>8?'；表内为前 8 行，其余 '+(list.length-8)+' 人点日志看':'';
+  return '<div class="rea-bd-ch"><h6>员工托管情况<span class="rea-bd-help" tabindex="0" role="img" aria-label="数据来源与统计口径" data-tip="按执行人汇总：托管账号＝这位员工名下正在被托管的账号数；执行记录＝窗口内他名下账号完成的记录条数；最近一条＝他名下最新一条记录的完成时间。">?</span></h6><span class="th">按执行记录从多到少</span></div>'
+    +'<div class="rea-hd-scroll"><table class="rea-hd-table"><thead><tr><th>员工</th><th>部门</th><th class="num">托管账号</th><th class="num">执行记录</th><th>最近一条</th></tr></thead><tbody>'+body+'</tbody></table></div>'
+    +'<div class="rea-hd-foot">共 '+list.length+' 人有执行记录 · 合计 '+fmt(d.exec)+' 条'+more+'。点员工进工作日志并按他筛。</div>';
+}
+
+/* ---------- 工作日志（看板上的最近五条） ---------- */
+function logCardHtml(rows){
+  var body=rows.slice(0,5).map(function(r){
+    return '<div class="it"><span class="tm">'+rel(r.t)+'</span><span class="bd"><strong>'+r.emp.n+' · '+r.act+'</strong><small>'+r.sum+'</small></span></div>';
+  }).join('');
+  return '<div class="rea-bd-ch"><h6>工作日志<span class="rea-bd-help" tabindex="0" role="img" aria-label="数据来源与统计口径" data-tip="来源：托管执行记录，一条完成态一行。这里只摆最近五条，写的是动作与数量，不出现客户姓名、联系方式、聊天正文、素材正文。">?</span></h6><span class="th">最近 5 条</span></div>'
+    +'<div class="rea-hd-log">'+body+'</div>'
+    +'<div class="rea-hd-foot"><a href="#" class="lnk" data-hd-all>查看全部托管工作日志 ›</a></div>';
+}
+
+/* ---------- 看板 ---------- */
+function boardRender(){
+  var d=W[state.win],rows=rowsOf(state.win);
+  document.getElementById('rea-hd-outcome').innerHTML=outcomeHtml(d);
+  document.getElementById('rea-hd-trend').innerHTML=trendHtml(d);
+  document.getElementById('rea-hd-group').innerHTML=groupHtml(d);
+  document.getElementById('rea-hd-people').innerHTML=peopleHtml(d,rows);
+  document.getElementById('rea-hd-log').innerHTML=logCardHtml(rows);
+}
+
+/* ---------- 托管工作日志 ---------- */
+var PLAT={'微信':'p-wx','企业微信':'p-wecom','WhatsApp':'p-wa'};
+function logFilters(rows,d){
+  var emp=document.getElementById('rea-hd-f-emp'),grp=document.getElementById('rea-hd-f-grp'),i,h;
+  if(!emp||!grp)return;
+  var list=personStats(rows,d);
+  h='<option value="all">全部</option>';
+  for(i=0;i<list.length;i++)h+='<option value="'+list[i].emp.n+'">'+list[i].emp.n+'</option>';
+  emp.innerHTML=h;
+  h='<option value="all">全部</option>';
+  for(i=0;i<GROUPS.length;i++)h+='<option value="'+GROUPS[i]+'">'+GROUPS[i]+'</option>';
+  grp.innerHTML=h;
+  if(state.emp!=='all')emp.value=state.emp;
+  if(state.grp!=='all')grp.value=state.grp;
+  if(emp.value!==state.emp)state.emp='all';
+  if(grp.value!==state.grp)state.grp='all';
+}
+function logRender(){
+  var d=W[state.win],rows=rowsOf(state.win),i,list=[];
+  for(i=0;i<rows.length;i++){
+    if(state.emp!=='all'&&rows[i].emp.n!==state.emp)continue;
+    if(state.grp!=='all'&&rows[i].g!==state.grp)continue;
+    list.push(rows[i]);
+  }
+  var pages=Math.max(1,Math.ceil(list.length/20));
+  if(state.page>pages)state.page=pages;
+  var shown=list.slice((state.page-1)*20,state.page*20);
+  var body=shown.map(function(r){
+    return '<tr><td class="rea-hd-when">'+rel(r.t)+'</td>'
+      +'<td>'+r.emp.n+'<span class="sub">'+r.emp.dept+'</span></td>'
+      +'<td><span class="rea-plat '+PLAT[r.plat]+'"></span>'+r.plat+'</td>'
+      +'<td>'+r.act+'</td>'
+      +'<td>'+r.sum+'</td></tr>';
+  }).join('');
+  document.getElementById('rea-hd-logs').innerHTML=list.length
+    ? '<table class="rea-hd-table"><thead><tr><th>时间</th><th>员工（部门）</th><th>账号（平台）</th><th>动作</th><th>内容摘要</th></tr></thead><tbody>'+body+'</tbody></table>'
+    : '<p class="rea-hd-empty">所选条件下这个窗口里没有记录。</p>';
+  document.getElementById('rea-hd-count').textContent='共 '+fmt(list.length)+' 条';
+  document.getElementById('rea-hd-range').textContent=W[state.win].label+' · '+(state.emp==='all'?'全部员工':state.emp)+' · '+(state.grp==='all'?'全部类型':state.grp);
+  var pager=document.getElementById('rea-hd-pager');
+  if(pager){
+    pager.innerHTML='<span>共 '+fmt(list.length)+' 条记录 · 第 '+state.page+' / '+pages+' 页</span>'
+      +'<span><button type="button" data-hd-page="prev"'+(state.page<=1?' disabled':'')+'>上一页</button>'
+      +'<button type="button" data-hd-page="next"'+(state.page>=pages?' disabled':'')+'>下一页</button></span>';
+  }
+}
+
+function syncWin(){
+  var ls=document.querySelectorAll('[data-hd-win]'),i;
+  for(i=0;i<ls.length;i++){
+    var on=ls[i].getAttribute('data-hd-win')===state.win;
+    ls[i].classList.toggle('ant-radio-button-wrapper-checked',on);
+    var rb=ls[i].querySelector('.ant-radio-button');if(rb)rb.classList.toggle('ant-radio-button-checked',on);
+    var inp=ls[i].querySelector('input');if(inp)inp.checked=on;
+  }
+}
+function render(){
+  syncWin();
+  if(document.getElementById('rea-hd-outcome')){
+    boardRender();
+  }else{
+    /* 换窗口后员工名单会变（今日只有 5 人有记录），筛选项跟着重铺一遍再画表 */
+    logFilters(rowsOf(state.win),W[state.win]);
+    logRender();
+  }
+}
+function setWin(k){if(!W[k])return;state.win=k;state.page=1;render();}
+function goLog(preset){
+  parent.postMessage({reaPage:LOGPAGE,reaWin:state.win,reaHost:preset||null},'*');
+}
+
+var isLog=!!document.getElementById('rea-hd-logs');
+if(isLog&&PRESET){state.emp=PRESET.emp||'all';state.grp=PRESET.group||'all';}
+
+document.addEventListener('click',function(e){
+  var t=e.target;
+  if(!t||t.nodeType!==1||!t.closest)return;
+  var w=t.closest('[data-hd-win]');
+  if(w){setWin(w.getAttribute('data-hd-win'));return;}
+  if(t.closest('[data-hd-back]')){
+    e.preventDefault();
+    parent.postMessage({reaPage:BOARD,reaWin:state.win},'*');
+    return;
+  }
+  if(isLog){
+    var p=t.closest('[data-hd-page]');
+    if(p&&!p.disabled){state.page+=(p.getAttribute('data-hd-page')==='next'?1:-1);logRender();}
+    return;
+  }
+  var g=t.closest('[data-hd-group]');
+  if(g){goLog({group:g.getAttribute('data-hd-group')});return;}
+  var p2=t.closest('[data-hd-emp]');
+  if(p2){goLog({emp:p2.getAttribute('data-hd-emp')});return;}
+  if(t.closest('[data-hd-all]')){e.preventDefault();goLog(null);}
+});
+document.addEventListener('keydown',function(e){
+  if(e.key!=='Enter'&&e.key!==' ')return;
+  var t=e.target;
+  if(!t||t.nodeType!==1||!t.closest||t.tagName==='BUTTON'||t.tagName==='A'||t.tagName==='SELECT'||t.tagName==='INPUT')return;
+  var g=t.closest('[data-hd-group]');
+  if(g){e.preventDefault();goLog({group:g.getAttribute('data-hd-group')});}
+});
+document.addEventListener('change',function(e){
+  var t=e.target;
+  if(!t)return;
+  if(t.id==='rea-hd-f-emp'){state.emp=t.value;state.page=1;logRender();}
+  if(t.id==='rea-hd-f-grp'){state.grp=t.value;state.page=1;logRender();}
+});
+
+render();
+})();</script>
 <!-- 载体③·微小助看板覆盖块：视图③「线上后台复刻」里被覆盖页（微小助看板）的正文，
      由 all.html 的 reaSplice() 按页名替换进去（ADR-0043：线上后台是设计面，可逐页覆盖）。
      这里是**片段**不是整页：只填 <div class="pagecontent"> 里的那一段，外壳与样式仍走快照。
@@ -12450,6 +13007,12 @@ else if(overviewNav){requestAnimationFrame(()=>{overviewScroller().scrollTop=ove
   /* 执行健康度的二级页「任务列表」：同样由 reaSynthPages() 克隆看板外壳合成，
      正文来自载体块 srcBoardTasks。筛任务类型／状态／部门，时间窗与看板共用。 */
   var REA_TASKS_PAGE = '微小助看板 · 任务列表';
+  /* AI托管看板（2026-11-05）：数据看板组的第五页。注册表页名还是「AI托管数据看板」，
+     显示名由 REA_NAME 换成「AI托管看板」（与任务看板／素材看板同一套叫法）。
+     二级页「托管工作日志」不在快照里，同样由 reaSynthPages() 克隆看板外壳合成，
+     正文来自载体块 srcHostingLog；两页共用 srcHostingScript。 */
+  var REA_HOST_PAGE = 'AI托管数据看板';
+  var REA_HOST_LOG = REA_HOST_PAGE + ' · 托管工作日志';
   /* 素材看板：注册表页名是「企业微信看板」，显示名由 REA_NAME 换成「素材看板」；
      它的二级页「素材明细」同样由 reaSynthPages() 克隆这一页的壳合成。 */
   var REA_MB_PAGE = '企业微信看板';
@@ -12461,7 +13024,7 @@ else if(overviewNav){requestAnimationFrame(()=>{overviewScroller().scrollTop=ove
   /* 侧栏「数据看板」一组改叫三块看板（2026-10-26 与产品经理对齐）：任务看板／悬浮窗看板／素材看板。
      页名是注册表主键（REA_COVER、子页、落地页都按它查），一个字节都不能改；
      只在显示层换名——侧栏文字、页内 h6、浏览器标题。名字表放这儿，nav 与 reaDoc 共用。 */
-  var REA_NAME = { '微小助看板': '任务看板', '企业微信看板': '素材看板' };
+  var REA_NAME = { '微小助看板': '任务看板', '企业微信看板': '素材看板', 'AI托管数据看板': 'AI托管看板' };
   function reaName(n){
     var m = /^([^ ]+)/.exec(n || '');
     return m && REA_NAME[m[1]] ? REA_NAME[m[1]] + n.slice(m[1].length) : n;
@@ -20758,7 +21321,9 @@ if(ST){
 
   var REA_COVER = {
     '使用总览': { html: 'srcOverview', css: docOf('srcOverviewStyle'), js: function(){ return docOf('srcOverviewScript'); } },
-    'AI托管数据看板': { html: 'srcOverview', css: docOf('srcOverviewStyle'), js: function(){ return 'window.__OVERVIEW_HOSTING=true;'+docOf('srcOverviewScript'); } },
+    /* AI托管看板与它的二级页「托管工作日志」：正文各一块，样式与脚本两页共用 */
+    [REA_HOST_PAGE]: { html: 'srcHostingDash', css: REA_BOARD_CSS + docOf('srcHostingStyle'), js: function(){ return docOf('srcHostingScript'); } },
+    [REA_HOST_LOG]:  { html: 'srcHostingLog',  css: REA_BOARD_CSS + docOf('srcHostingStyle'), js: function(){ return docOf('srcHostingScript'); } },
     '微小助看板':    { html: 'srcBoard', css: REA_BOARD_CSS, js: reaBoardJs },
     '企业微信看板':  { html: 'srcBoardMat', css: REA_BOARD_CSS + REA_MB_CSS, js: reaBoardMatJs },
     '企业微信看板 · 素材明细': { html: 'srcMatDetail', css: REA_BOARD_CSS + REA_MB_CSS, js: reaMatDetailJs },
@@ -20826,7 +21391,7 @@ if(ST){
     }
     var board = find(REA_BOARD_PAGE);
     if (board){
-      var add = [REA_OVERVIEW_PAGE, 'AI托管数据看板', REA_TASKS_PAGE, REA_DETAIL_TASK, REA_PERSON_PAGE];
+      var add = [REA_OVERVIEW_PAGE, REA_HOST_PAGE, REA_HOST_LOG, REA_TASKS_PAGE, REA_DETAIL_TASK, REA_PERSON_PAGE];
       for (i = 0; i < add.length; i++){
         P.pages.push({
           name: add[i],
@@ -20889,6 +21454,12 @@ if(ST){
     /* 素材库列表只补一列「使用情况」：从详情页返回时恢复离开前的滚动位置 */
     if (name === REA_MAT_LIST && reaMatLibState){
       return 'window.__REA_ML_STATE=' + reaJson(reaMatLibState) + ';';
+    }
+    /* AI托管看板与托管工作日志：窗口跟着来回走；从看板的哪一行点进来，
+       日志就把那一行预选上（员工或类型），返回时带着同一个窗口回看板。 */
+    if (name === REA_HOST_PAGE || name === REA_HOST_LOG){
+      return 'window.__REA_HOST_WIN=' + reaJson(reaHostWinSel || 'w7') + ';'
+        + 'window.__REA_HOST=' + reaJson(reaHostPreset || null) + ';';
     }
     if (name !== REA_DETAIL_TASK && name !== REA_TASKS_PAGE && name !== REA_PERSON_PAGE) return '';
     var js = 'window.__REA_ROWS=' + reaJson(reaRows || []) + ';'
@@ -21415,6 +21986,7 @@ if(ST){
   var reaRows = null;     // 看板点「详细数据」时带过来的任务行（子页用，不另存一份）
   var reaWinSel = 'w7'; // 同上：点进来时的当前窗口（看板默认近一周，子页跟着开在近一周）
   var reaWinRange = null; // 当前窗口是「自定义区间」时，随行带过来的起止天偏移 [lo,hi]
+  var reaHostWinSel = 'w7', reaHostPreset = null; // AI托管看板：窗口 ＋ 日志页的预选（员工／类型）
   var reaPlatSel = 'all'; // 任务列表的预选筛选：大类（从任务类型分布卡的一段／横条点进来时有值）
   var reaTypeSel = 'all'; // 同上：任务类型（从外环一段点进来时，平台和类型一起带上）
   var reaStateSel = 'all';// 同上：状态
@@ -21646,7 +22218,7 @@ if(ST){
     return 'window.__REA_OVERVIEW_NAV='+reaJson(reaOverviewNav)+';';
   }
   function reaOverviewBackJs(name){
-    if(!reaOverviewNav||name!==reaOverviewTarget||[REA_BOARD_PAGE,REA_MB_PAGE].indexOf(name)<0)return '';
+    if(!reaOverviewNav||name!==reaOverviewTarget||[REA_BOARD_PAGE,REA_MB_PAGE,REA_HOST_PAGE].indexOf(name)<0)return '';
     return '(function(){var root=document.querySelector(".rea-bd-page"),button=document.createElement("button");if(!root)return;button.type="button";button.textContent="‹ 返回使用总览";button.setAttribute("data-overview-return","");button.style.cssText="display:block;margin:0 0 16px;padding:0;border:0;background:none;color:#1677FF;font:14px -apple-system,PingFang SC,Microsoft YaHei,sans-serif;cursor:pointer";button.onclick=function(){parent.postMessage({reaPage:"使用总览",reaOverviewBack:true},"*")};root.insertBefore(button,root.firstChild);var range=document.createElement("p");range.textContent='+reaJson('来源：使用总览 · '+reaOverviewNav.start+' — '+reaOverviewNav.end+' · 全公司')+';range.style.cssText="font-size:12px;color:#646A73;margin:0 0 16px";button.after(range);})();';
   }
 
@@ -21879,9 +22451,20 @@ if(ST){
     if (d.reaMbState){ reaMbState = d.reaMbState; }
     if (d.reaMatLibScroll){ reaMatLibState = d.reaMatLibScroll; }
     var name = d.reaPage;
+    /* AI托管看板 ↔ 托管工作日志：窗口与预选（员工／类型）在这一条消息里带走 */
+    if (name === REA_HOST_PAGE || name === REA_HOST_LOG){
+      if (d.reaWin) reaHostWinSel = d.reaWin;
+      reaHostPreset = d.reaHost || null;
+    }
     /* 离开素材看板去别的页时清掉旧状态，免得下次从侧栏进来还套着上次的排序与滚动 */
     if (name && name !== REA_MB_PAGE && name !== REA_MB_MAT_DETAIL) reaMbState = null;
-    if(d.reaOverview){reaOverviewNav=d.reaOverview;reaOverviewTarget=name;}
+    if(d.reaOverview){
+      reaOverviewNav=d.reaOverview;reaOverviewTarget=name;
+      /* 从使用总览的成果格进来时，把这边的窗口落成来源那一档，免得来源写着近一月、页面却在近一周 */
+      if(name===REA_HOST_PAGE&&d.reaOverview.period){
+        reaHostWinSel={'day':'today','week':'w7','month':'m1','quarter':'m3'}[d.reaOverview.period]||reaHostWinSel;
+      }
+    }
     else if(name&&!d.reaOverviewBack&&name!==REA_OVERVIEW_PAGE&&name!==reaOverviewTarget&&name.indexOf(' · ')<0){reaOverviewTarget='';}
     if (!name && d.reaSave){
       reaSaved.push(d.reaSave);
