@@ -9856,6 +9856,13 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     </div>
   </header>
 
+  <section class="ov-summary" aria-label="本期使用">
+    <div><small>任务执行</small><b><span id="sum-task">0</span><em>人次</em></b></div>
+    <div><small>App 工具完成</small><b><span id="sum-tool">0</span><em>次</em></b></div>
+    <div><small>素材取用</small><b><span id="sum-material">0</span><em>次</em></b></div>
+    <div><small>AI托管自有动作</small><b><span id="sum-hosting">0</span><em>次</em></b></div>
+  </section>
+
   <div class="dashboard-grid">
   <section class="seat-hero" aria-labelledby="seats-title">
     <div class="seat-hero-head"><div><p class="seat-hero-title">企业开通情况</p><h2 id="seats-title">各版本席位</h2></div><div class="seat-total"><strong id="assigned-total">30</strong>已分配<span class="divider">/</span><strong id="bought-total">32</strong>已购</div></div>
@@ -9942,6 +9949,13 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 .rea-ov-page .seat-entry-hint{color:var(--weak);font-size:12px}
 .rea-ov-page .tag{display:inline-block;border-radius:4px;padding:0 6px;margin-right:6px;background:var(--blue-pale);color:var(--blue);font-size:11px;line-height:18px;font-weight:500}
 .rea-ov-page .tag.no{background:#f2f3f5;color:var(--weak)}
+/* 一级页顶部四指标：读数与使用详情同一套，随所选时间范围重算 */
+.rea-ov-page .ov-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;margin:0 0 28px;padding:0 4px}
+.rea-ov-page .ov-summary small{display:block;color:var(--sub);font-size:12px}
+.rea-ov-page .ov-summary b{display:block;margin-top:4px;font-size:30px;line-height:1.2;font-weight:600;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.rea-ov-page .ov-summary em{font-style:normal;font-size:12px;font-weight:400;letter-spacing:0;color:var(--sub);margin-left:5px}
+@media(max-width:960px){.rea-ov-page .ov-summary{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px;margin-bottom:22px}}
+@media(max-width:640px){.rea-ov-page .ov-summary b{font-size:26px}}
 
 .ov-seatpage{display:flex;flex-direction:column;min-height:100%;max-width:1600px;margin:0 auto;padding:28px 28px 32px}
 .ov-seatpage[hidden]{display:none}
@@ -10226,6 +10240,10 @@ function render(){
  setText('#material-number',fmt(d.material));
  setText('#hosting-number',fmt(d.hosting));
  setText('#task-number',fmt(d.tasks));
+ setText('#sum-task',fmt(d.taskExecTotal));
+ setText('#sum-tool',fmt(d.tools.reduce((n,t)=>n+t[1],0)));
+ setText('#sum-material',fmt(d.material));
+ setText('#sum-hosting',fmt(d.hosting));
  $('#tiers').innerHTML=TIERS.map((t,i)=>{const unassigned=t.bought-t.assigned;return `<button class="seat-card" type="button" data-seat-open="${i}" aria-label="${t.name}，已购 ${t.bought} 席，已分配 ${t.assigned} 席，查看席位"><span class="seat-card-top"><span class="seat-card-name"><i class="seat-key" style="background:${TIER_COLORS[i]}"></i>${t.name}</span></span><span class="seat-card-number"><strong>${t.assigned}</strong><span> / ${t.bought}</span></span><span class="seat-card-foot">${unassigned?unassigned+' 席待分配':'全部已分配'}</span><span class="seat-card-arrow">›</span></button>`}).join('');
  const maxTools=Math.max(1,...d.tools.map(([,actions])=>actions));
  $('#tool-list').innerHTML=TOOL_GROUPS.map((g,i)=>({g,i,people:d.tools[i][0],actions:d.tools[i][1]})).sort((a,b)=>b.actions-a.actions).map(({g,i,people,actions})=>`<button class="tool-row" type="button" data-sheet="tool" data-tool="${i}" aria-label="${g.name}，${people} 人参与，完成 ${actions} 次，查看员工"><span class="tool-name">${g.name}<span class="tool-progress" aria-hidden="true"><i style="width:${actions/maxTools*100}%"></i></span></span><span class="tool-metric"><b>${people}</b>人</span><span class="tool-metric"><b>${fmt(actions)}</b>次</span><span class="tool-row-arrow">›</span></button>`).join('');
@@ -10301,7 +10319,7 @@ function renderUsageDetail(){
  let body='';
  if(detailView==='all'){
   const stats=selected.reduce((sum,p)=>{const v=personStats(p,data);for(const k of Object.keys(sum))sum[k]+=v[k];return sum},{taskExec:0,tool:0,material:0,hosting:0});
-  body=`<div class="ov-detail-metrics">${[['任务执行',stats.taskExec,'人次'],['App 工具完成',stats.tool,'次'],['素材取用',stats.material,'次'],['AI托管自有动作',stats.hosting,'次']].map(([name,count,unit])=>`<div><small>${name}</small><b>${fmt(count)}<em>${unit}</em></b></div>`).join('')}</div><div class="${person?'':'ov-detail-grid'}"><section class="ov-detail-section"><h2>App 工具使用对比</h2><p>按完成次数排序 · 点击工具查看具体功能</p>${comparisonRows(TOOL_GROUPS.map((g,index)=>({name:g.name,index,count:selected.reduce((sum,p)=>sum+amount(data.tools[index],p.id),0)})),true)}</section>${person?'':renderEmployeeList(data)}</div>`;
+  body=`<div class="ov-detail-metrics">${[['任务执行',stats.taskExec,'人次'],['App 工具完成',stats.tool,'次'],['素材取用',stats.material,'次'],['AI托管自有动作',stats.hosting,'次']].map(([name,count,unit])=>`<div><small>${name}</small><b>${fmt(count)}<em>${unit}</em></b></div>`).join('')}</div>${person?'':renderEmployeeList(data)}`;
  }else{
   const index=Number(detailView),group=TOOL_GROUPS[index],total=selected.reduce((sum,p)=>sum+amount(data.tools[index],p.id),0),participants=selected.filter(p=>amount(data.tools[index],p.id)>0).length;
   const features=group.features.map(name=>({name,count:selected.reduce((sum,p)=>sum+featureBreakdown(group,amount(data.tools[index],p.id)).find(f=>f.name===name).count,0)}));
