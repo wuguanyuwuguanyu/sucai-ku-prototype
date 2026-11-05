@@ -9914,8 +9914,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 </div>
 <section class="ov-usage-detail" id="usage-detail" hidden>
   <button class="seat-back" type="button" id="usage-back">‹ 使用总览</button>
-  <header class="ov-detail-header"><div><h1 id="detail-title">使用详情</h1><p id="detail-subtitle"></p></div><span id="detail-range"></span></header>
-  <div class="ov-detail-selectors"><label>员工 <select id="detail-employee" aria-label="员工"></select></label><label>查看范围 <select id="detail-view" aria-label="查看范围"></select></label></div>
+  <header class="ov-detail-header"><div><h1 id="detail-title">使用详情</h1><p id="detail-subtitle"></p><button class="ov-detail-reset" type="button" id="detail-reset" hidden>‹ 整体数据</button></div><span id="detail-range"></span></header>
   <div id="detail-content"></div>
 </section>
 <div class="ov-toast" id="ov-toast" hidden></div>
@@ -10111,11 +10110,10 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 .rea-ov-page .ov-detail-header{display:flex;justify-content:space-between;align-items:baseline;gap:20px;margin:24px 0}
 .rea-ov-page .ov-detail-header h1{font-size:20px;margin:0;font-weight:600}
 .rea-ov-page .ov-detail-header p,.rea-ov-page #detail-range{font-size:12px;color:var(--sub);margin:8px 0 0}
-.rea-ov-page .ov-detail-selectors{display:flex;gap:24px;flex-wrap:wrap;padding-bottom:24px;border-bottom:1px solid var(--line);margin-bottom:24px}
-.rea-ov-page .ov-detail-selectors label{display:flex;align-items:center;gap:10px;color:var(--sub)}
-.rea-ov-page .ov-detail-selectors select{min-width:170px}
-.rea-ov-page .ov-detail-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 32px;margin-bottom:32px}
-.rea-ov-page .ov-detail-metrics>div{padding:16px 0;border-bottom:1px solid var(--line)}
+.rea-ov-page .ov-detail-reset{border:0;background:none;padding:0;margin-top:8px;color:var(--blue);font:12px inherit;cursor:pointer}
+.rea-ov-page .ov-detail-reset[hidden]{display:none}
+.rea-ov-page .ov-detail-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0 32px;margin:8px 0 32px}
+.rea-ov-page .ov-detail-metrics>div{padding:12px 0}
 .rea-ov-page .ov-detail-metrics small{display:block;color:var(--sub);font-size:12px}
 .rea-ov-page .ov-detail-metrics b{display:block;margin-top:6px;font-size:28px;font-weight:600}
 .rea-ov-page .ov-detail-metrics em{font-size:12px;font-weight:400;font-style:normal;margin-left:5px;color:var(--sub)}
@@ -10136,8 +10134,8 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 .rea-ov-page .ov-detail-records{margin-top:36px}
 .ov-org-button{display:block;width:100%;min-height:36px;padding:8px 16px 8px 28px;text-align:left;border:0;background:white;color:#646A73;font:13px -apple-system,'PingFang SC','Microsoft YaHei',sans-serif;cursor:pointer}
 .ov-org-button:first-child{padding-left:16px;font-weight:500}.ov-org-button[aria-pressed=true]{color:#1677FF;background:#E6F4FF}.ov-org-button:hover{background:#F6F8FB}.ov-org-button:focus-visible{outline:2px solid #1677FF;outline-offset:-2px}
-@media(max-width:1100px){.rea-ov-page .ov-detail-grid{grid-template-columns:1fr;gap:32px}.rea-ov-page .ov-usage-detail{padding:24px}}
-@media(max-width:640px){.rea-ov-page .ov-detail-header{flex-direction:column;gap:0}.rea-ov-page .ov-usage-detail{padding:20px 16px}.rea-ov-page .ov-detail-selectors{gap:12px}.rea-ov-page .ov-detail-selectors label{flex:1;min-width:200px}.rea-ov-page .ov-detail-selectors select{flex:1;min-width:0}.rea-ov-page .ov-record-pager{align-items:flex-start;flex-direction:column}}
+@media(max-width:1100px){.rea-ov-page .ov-detail-grid{grid-template-columns:1fr;gap:32px}.rea-ov-page .ov-usage-detail{padding:24px}.rea-ov-page .ov-detail-metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:0 24px}}
+@media(max-width:640px){.rea-ov-page .ov-detail-header{flex-direction:column;gap:0}.rea-ov-page .ov-usage-detail{padding:20px 16px}.rea-ov-page .ov-record-pager{align-items:flex-start;flex-direction:column}}
 </script>
 <script type="text/plain" id="srcOverviewScript">const DATA={
  day:{label:'今日',range:'2026.10.29 · 演示',sent:564,replied:194,tasks:8,taskExecTotal:179,material:14,materialPeople:8,hosting:28,hostingPeople:5,service:24,tools:[[4,8],[5,13],[2,4],[3,6],[1,2]],prev:null},
@@ -10296,10 +10294,10 @@ function renderDetailEmployees(){
 function renderUsageDetail(){
  const people=scopedPeople();if(detailEmployee!=='all'&&!people.some(p=>p.id===Number(detailEmployee)))detailEmployee='all';
  const selected=selectedPeople(),person=detailEmployee==='all'?null:selected[0],data=details();
- $('#detail-employee').innerHTML='<option value="all">全部员工</option>'+people.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');$('#detail-employee').value=detailEmployee;
- $('#detail-view').innerHTML='<option value="all">整体数据</option>'+TOOL_GROUPS.map((g,i)=>`<option value="${i}">${g.name}</option>`).join('');$('#detail-view').value=detailView;
- setText('#detail-title',person?person.name+' · 使用详情':'使用详情');setText('#detail-range',currentRangeLabel());
+ const scopeName=detailView==='all'?null:TOOL_GROUPS[Number(detailView)].name;
+ setText('#detail-title',(person?person.name:scopeName)?(person?person.name:scopeName)+(person&&scopeName?' · '+scopeName:'')+' · 使用详情':'使用详情');setText('#detail-range',currentRangeLabel());
  setText('#detail-subtitle',person?person.dept+' · '+TIERS[person.tier].name+' · 分配于 '+person.assignedOn:detailOrg+' · '+people.length+' 名已分配员工');
+ const reset=$('#detail-reset');if(reset)reset.hidden=detailView==='all'&&detailEmployee==='all';
  let body='';
  if(detailView==='all'){
   const stats=selected.reduce((sum,p)=>{const v=personStats(p,data);for(const k of Object.keys(sum))sum[k]+=v[k];return sum},{taskExec:0,tool:0,material:0,hosting:0});
@@ -10331,6 +10329,7 @@ function closeSheet(){sheetKind=null;$('#mask').classList.remove('open');$('#she
 function closeTimeMenu(){const menu=$('#time-menu');menu.hidden=true;$('#time-more').setAttribute('aria-expanded','false')}
 document.addEventListener('click',e=>{
  if(e.target.closest('#usage-back')){parent.postMessage({reaPage:'使用总览',reaOverviewBack:true},'*');return}
+ if(e.target.closest('#detail-reset')){detailEmployee='all';personFeature='all';personRecordPage=1;changeUsageView('all');return}
  const org=e.target.closest('[data-overview-org]');if(org){detailOrg=org.dataset.overviewOrg;detailQuery='';detailStatus='all';personFeature='all';personRecordPage=1;renderUsageDetail();return}
  const member=e.target.closest('[data-detail-employee]');if(member){detailEmployee=member.dataset.detailEmployee;personFeature='all';personRecordPage=1;renderUsageDetail();return}
  const view=e.target.closest('[data-detail-view]');if(view){changeUsageView(view.dataset.detailView);return}
@@ -10373,12 +10372,10 @@ function personalRecords(){
 function renderPersonRecords(){
  const rows=personalRecords().filter(row=>personFeature==='all'||String(row.feature)===personFeature),pages=Math.max(1,Math.ceil(rows.length/5));personRecordPage=Math.min(personRecordPage,pages);
  const shown=rows.slice((personRecordPage-1)*5,personRecordPage*5);
- $('#person-records').innerHTML=rows.length?`<div class="ov-record-table"><table><thead><tr><th>完成时间</th><th>员工</th><th>具体功能</th><th>平台</th><th>完成数量</th></tr></thead><tbody>${shown.map(row=>`<tr><td>${row.time}</td><td>${row.employee}</td><td>${row.name}</td><td>${row.platform}</td><td>${row.count} 次</td></tr>`).join('')}</tbody></table></div><div class="ov-record-pager"><span>共 ${rows.length} 条记录 · 合计 ${fmt(rows.reduce((sum,row)=>sum+row.count,0))} 次完成</span><span><button type="button" data-record-page="${personRecordPage-1}" ${personRecordPage===1?'disabled':''}>上一页</button> ${personRecordPage} / ${pages} <button type="button" data-record-page="${personRecordPage+1}" ${personRecordPage===pages?'disabled':''}>下一页</button></span></div>`:'<p class="sheet-empty">所选期间暂无记录。可切换员工或查看范围。</p>';
+ $('#person-records').innerHTML=rows.length?`<div class="ov-record-table"><table><thead><tr><th>完成时间</th><th>员工</th><th>具体功能</th><th>平台</th><th>完成数量</th></tr></thead><tbody>${shown.map(row=>`<tr><td>${row.time}</td><td>${row.employee}</td><td>${row.name}</td><td>${row.platform}</td><td>${row.count} 次</td></tr>`).join('')}</tbody></table></div><div class="ov-record-pager"><span>共 ${rows.length} 条记录 · 合计 ${fmt(rows.reduce((sum,row)=>sum+row.count,0))} 次完成</span><span><button type="button" data-record-page="${personRecordPage-1}" ${personRecordPage===1?'disabled':''}>上一页</button> ${personRecordPage} / ${pages} <button type="button" data-record-page="${personRecordPage+1}" ${personRecordPage===pages?'disabled':''}>下一页</button></span></div>`:'<p class="sheet-empty">所选期间暂无记录。</p>';
 }
 document.addEventListener('change',event=>{
  if(event.target.id==='person-feature'){personFeature=event.target.value;personRecordPage=1;renderPersonRecords()}
- if(event.target.id==='detail-view')changeUsageView(event.target.value);
- if(event.target.id==='detail-employee'){detailEmployee=event.target.value;personFeature='all';personRecordPage=1;renderUsageDetail()}
 });
 document.addEventListener('input',event=>{if(event.target.id==='detail-search'){detailQuery=event.target.value;renderDetailEmployees()}});
 window.addEventListener('resize',fitSeatPage);
