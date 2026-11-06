@@ -2302,7 +2302,9 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .wx-head h4{flex:1;text-align:center;font-size:16px;font-weight:500;color:#1A1A1A}
 .wx-head .ic{color:#1A1A1A;width:30px;display:flex;justify-content:center}
 .wx-dock{flex:none;display:flex;gap:8px;align-items:center;padding:9px 12px;background:var(--inverse-surface);font-size:11px;color:var(--inverse-on-surface)}
-.wx-dock .dk{background:rgba(255,255,255,.1);border-radius:999px;padding:6px 12px;font-weight:500;position:relative;overflow:hidden}
+.wx-dock .dk{background:rgba(255,255,255,.1);border-radius:999px;padding:6px 12px;font-weight:500;position:relative;overflow:hidden;white-space:nowrap}
+/* 五枚按钮（2026-11-06 加「▶▶ 连发」）在 412 宽里刚好排得下：标签一长就换行成两截，所以钉 nowrap，
+   字数也别再加——再加一枚或加字就放不下，先减字数。 */
 .wx-dock .dk.hl{background:var(--primary);color:#fff}
 .chat-scroll{flex:1;overflow-y:auto;padding:14px 13px 18px;scrollbar-width:none}
 .chat-scroll::-webkit-scrollbar{display:none}
@@ -2399,7 +2401,13 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
    同日再改（ADR-0046）：那一行剩下的「换一组」也从「问题上方单独一行、右对齐」**挪进问题行内部**，
    见 .ra-q / .ra-swap。原先的排法在时间线上会被读成**上一轮卡片的右下角**（上一轮的卡结束、隔 14px
    就是这一行），用户原话：「换一组从右下角挪到每一个问题模块的右上角」。.ra-ctx-h 随之删除。 */
-.ra-ctx{background:none;border-radius:0;padding:0;margin-bottom:11px}
+/* 2026-11-06（ADR-0087）：轮首改成「序号 ＋ 问句」两列。序号＝本会话第几次提问（合并只算一次）；
+   问句块只露首尾两句、中间用「…」带过（不可点——聊天本身是正本，面板只是摘要）。 */
+.ra-ctx{background:none;border-radius:0;padding:0;margin-bottom:11px;display:flex;align-items:flex-start;gap:10px}
+.ra-no{flex:none;min-width:25px;height:25px;padding:0 6px;box-sizing:border-box;border-radius:7px;
+  background:#E9EDFF;color:#3E5AD6;font-size:12.5px;font-weight:600;line-height:25px;text-align:center;
+  font-variant-numeric:tabular-nums}
+.ra-more{display:block;color:#6a7fa8;letter-spacing:.12em;margin:1px 0 2px}
 /* 「换一组」：新稿是**渐变文字 ＋ 渐变描边图标**（#1677ff→#9452ff），没有胶囊底。
    -webkit-text-fill-color 只作用于文字字形，所以 svg 的 currentColor 仍是兜底的 #1677ff；
    图标再被下面这条 stroke 规则换成同一支渐变（#aiSwapGrad 在文档顶部的 defs 里）。
@@ -2413,7 +2421,14 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .ra-swap svg{stroke:url(#aiSwapGrad)}
 /* overflow:hidden 只为一件事：把上面那枚右浮动的「换一组」**兜在问句块里**（浮动不占流，块子不建 BFC
    就收不住它，短问句时按钮会探到下面的命中素材行里去）。问句本身不裁任何东西。 */
-.ra-q{font-size:14.8px;line-height:1.33;color:#102953;font-weight:500;overflow:hidden}
+.ra-q{flex:1;min-width:0;font-size:14.8px;line-height:1.33;color:#102953;font-weight:500;overflow:hidden}
+/* 「客户还在输入」：一问还没收口时不放话术卡，先占一行说明为什么还没答（ADR-0087）。
+   三点跳动复用 .ra-gen 的 @keyframes tp——同一件事（还在等）不必造第二套。 */
+.ra-wait{display:flex;align-items:center;gap:6px;font-size:12.1px;color:#6a91e4;padding:2px 2px 4px}
+.ra-wait i{width:5px;height:5px;border-radius:50%;background:#8aa4f0;animation:tp 1s infinite}
+.ra-wait i:nth-of-type(2){animation-delay:.16s}
+.ra-wait i:nth-of-type(3){animation-delay:.32s}
+@media (prefers-reduced-motion:reduce){ .ra-wait i{animation:none} }
 /* 回答模块的抬头（.ra-sec，写「AI 建议」／「AI 推荐话术」／占位轮「AI 参考话术」）2026-10-14 按用户要求
    整个删除（ADR-0044）。它原是 .ra-card 的**上半截**：两块同款水平渐变（左 .6 → 右 .4）、接缝处逐点同色，
    靠下面这条拼接规则拼成新稿那一整块——
@@ -2454,10 +2469,14 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .ra-hit-row .rah-b h5{font-size:16px;font-weight:500;color:var(--on-surface);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ra-hit-row .rah-b p{font-size:10.5px;color:var(--on-surface-variant);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ra-hit-src{color:var(--primary)}
-/* 行内「命中「×××」」那半句：只在 #hpPanel（未开启聊天辅助时自动弹出的素材浮层，ADR-0061）里出现。
-   AI 浮层的时间线**不挂它**——那条线的分区头已经说了"这句客户原话命中了素材"，逐行再点一次词是重复。
-   浮层那份是**扁平一张清单**，没有分区头可依，行内不点名就没有任何东西能说明"它为什么在这儿"。 */
+/* 行内「命中「×××」」那半句：#hpPanel（ADR-0061）与辅助面板时间线**都用**（ADR-0087 起）。
+   原先时间线不挂它，理由是分区头已经说过"这句命中了素材"；一问合并多条原话之后，分区头只报
+   总条数，说不出"这条是因为哪句话进来的"——命中词才把多句的归属讲清楚。 */
 .rah-kw{color:var(--primary);font-weight:500}
+/* 素材超过 3 条时的那枚展开条（ADR-0087）：与行同宽、同底、同圆角，收在清单尾部 */
+.ra-hit-more{display:block;width:100%;box-sizing:border-box;margin:0 0 9px;padding:9px 0;border:none;
+  border-radius:var(--shape-m);background:var(--sc);color:var(--primary);font-family:inherit;
+  font-size:11px;font-weight:500;cursor:pointer}
 .rah-q{flex:none;display:flex;align-items:center;gap:6px}
 .rah-chev{flex:none;display:flex;color:var(--on-surface-variant);transition:transform .15s}
 .ra-hit-exp{background:var(--sc-high);border-radius:var(--shape-m);margin:-5px 0 9px;padding:11px 13px;animation:fade .15s}
@@ -4266,7 +4285,9 @@ function resetDemo(){
   S.hostExp={};
   pendingHits.length=0; pQ=''; pHitNew=0;
   HVA_ADMIN_LOCKED=false;   /* 演示开关也回默认（「允许修改」），免得重置后两屏还停在只读态 */
-  closePanel(); closeAiPanel(); closeHpPanel(); aiBallReset(); hpHits=[]; hpMsg=''; S.aiTipsSeen=false; closeBallMenu(); raRounds=[]; raExpId=null; raStreamStop(); S.raPaused=false; wxRebuildChat(); updateBall(); ballBadge(); dkRefresh();
+  closePanel(); closeAiPanel(); closeHpPanel(); aiBallReset(); hpHits=[]; hpMsg=''; S.aiTipsSeen=false; closeBallMenu();
+  raBatchReset(); RA_MSGLOG=[]; raHitsExp={};   /* 会话与分轮一起归零（ADR-0087）：留旧消息序列会让重开后的轮序号对不上屏幕上的聊天气泡 */
+  raRounds=[]; raExpId=null; raStreamStop(); S.raPaused=false; wxRebuildChat(); updateBall(); ballBadge(); dkRefresh();
   render(cur,{}); toast('演示数据已重置');
 }
 <\/script>
@@ -7485,8 +7506,9 @@ function oneKeySend(id){
   var ms=msgsOf(m);
   markUsed(id); /* 发送=取用记录；「发没发给这个客户」不另记账——会话本身即台账（ADR-0006 修订三） */
   go('wechat');
+  raCloseOpenBatch(); /* 发送＝员工在回话：跟 wxSend 同一口径，先把还开着的那一问收口（ADR-0087） */
   for(var i=0;i<ms.length;i++){ /* 按编排顺序逐条入会话 */
-    if(ms[i].t==='text')appendBub('me',esc(ms[i].txt));
+    if(ms[i].t==='text'){appendBub('me',esc(ms[i].txt));RA_MSGLOG.push({side:'me',t:ms[i].txt,ts:Date.now()});}
     else{var d=TYPES[ms[i].t];
       appendBub('me','<span style="display:inline-flex;align-items:center;gap:6px">'+I(d.icon,14,2)+' '+d.label+'（消息）</span>');}
   }
@@ -8153,6 +8175,8 @@ function appendBub(side,text,extra){
 function wxRebuildChat(){
   /* DEMO_MSGS 是纯文本数组（客户来问），全部走客户侧气泡——写成 m.s/m.t 会渲染出「客 undefined」 */
   $('chatLog').innerHTML=DEMO_MSGS.map(function(t){return bub('other',esc(t))}).join('');
+  /* 种子消息预置到达时刻（每条隔 60 秒）：重建时间线时它们各成一问，不会被合并成一坨（ADR-0087） */
+  RA_MSGLOG=DEMO_MSGS.map(function(t,i){return{side:'other',t:t,ts:Date.now()-(DEMO_MSGS.length-i)*60000}});
   var sc=$('wxScroll');sc.scrollTop=sc.scrollHeight;
 }
 function simCustomer(){
@@ -8161,14 +8185,30 @@ function simCustomer(){
      旧池里「发我个链接看看」「你们资质怎么样？」「售后怎么保障？」三条零命中，已被换掉。
      命中对照（按可见池 kwPool() 实测）：多少钱→m-s1｜活动→m-i1+p4｜手册→m-f1｜分期→m-s3｜开票→m-lg2｜报价→m-s1+p1+p6。 */
   var msgs=['这个多少钱？','有活动吗？','有产品手册吗？','怎么分期付款？','能开票吗？','报价方案发我一份'];
-  var t=msgs[Math.floor(Math.random()*msgs.length)];
+  simMsg(msgs[Math.floor(Math.random()*msgs.length)]);
+}
+/* 客户消息的唯一落点（ADR-0087）：气泡、消息流水、角标、命中分流都从这里走。
+   流水记的是**原文**（不是转义后的气泡 HTML）——重建时间线要拿它重算命中。 */
+function simMsg(t){
   appendBub('other',esc(t));
+  RA_MSGLOG.push({side:'other',t:t,ts:Date.now()});
   pendingHits.push({msg:t,done:false});
   var b=$('ball');
   if(b){b.classList.add('hit');setTimeout(function(){b.classList.remove('hit')},2000)}
   ballBadge();
   dkRefresh();
   matchKw(t);
+}
+/* 「客户连发」演示（ADR-0087）：5 句组成同一个问题的五个侧面，0.4 秒一句——
+   点一次就能看到「合并成一次提问 → 素材上插 → 静默收口 → 出话术」整条链路。 */
+var BURST_MSGS=['这个多少钱？','有活动吗？','怎么分期付款？','能开票吗？','报价方案发我一份'];
+function simBurst(){
+  var i=0;
+  (function step(){
+    if(i>=BURST_MSGS.length)return;
+    simMsg(BURST_MSGS[i++]);
+    setTimeout(step,400);
+  })();
 }
 /* ---------- 关键词命中（只匹配文字；附件不参与匹配）——弹卡与面板共用同一命中池（企业素材＋个人素材） ---------- */
 function kwPool(){
@@ -8188,12 +8228,13 @@ function matchKw(msg){
      急停只停「自动展示」，不停「读会话」：时间线里的命中段照常跟着会话走。
      **S.stopped 自 ADR-0078 起没有球上入口**（长按撤掉了）：它仍是引擎侧的"自动展示"状态位，
      冒烟直接写它来验分流；球上只剩单击＋拖动。 */
-  if(aiOpen){raRoundPush(msg);raStreamKick();} /* 先让新一轮（新问题＋它命中的素材）带脉冲追加进来，380ms 后才开始流话术——这就是「先弹素材、再流话术」 */
+  if(aiOpen){raFeed(msg);} /* 一问＝一轮（ADR-0087）：3 秒内再来的话并进同一轮、素材只增不改；收口后才开始流话术 */
   if(!hits.length||S.stopped)return; /* 急停／无命中：不自动展示，角标照常累加 */
   if(!aiOpen)hpShow(msg,hits);
 }
 function wxOnMsg(t){
   appendBub('other',esc(t));
+  RA_MSGLOG.push({side:'other',t:t,ts:Date.now()});
   matchKw(t);
 }
 
@@ -9173,6 +9214,8 @@ function fillInput(t){var i=$('wxInput');if(i)i.value=t}
 function wxSend(){
   var i=$('wxInput');if(!i)return;
   var t=i.value.trim();if(!t)return;
+  raCloseOpenBatch();   /* 员工发言＝这一问到此为止（ADR-0087）：先收口再发，答案不会跟员工的话抢在前面 */
+  RA_MSGLOG.push({side:'me',t:t,ts:Date.now()});
   appendBub('me',esc(t));
   i.value='';
 }
@@ -9182,6 +9225,7 @@ function dkRefresh(){
   var el=$('wxKwDock');if(!el)return;
   var n=pendingHits.filter(function(h){return !h.done}).length;
   el.innerHTML='<button class="dk hl" onclick="simCustomer()">▶ 客户新消息</button>'
+    +'<button class="dk" onclick="simBurst()" title="客户连发 5 句（同一问的五个侧面）">▶▶ 连发</button>'
     +'<button class="dk" onclick="openPanel()">'+I('zap',11,2.4)+' 命中 '+Math.min(n,9)+'</button>'
     +'<button class="dk" onclick="go(\'library\')">'+I('folder',11,2.2)+' 素材库</button>'
     +'<button class="dk" onclick="aiToggle()">'+I('sparkle',11,2)+' 聊天辅助</button>';
@@ -9198,9 +9242,19 @@ var AI_LP_MS=550; /* 长按阈值（与悬浮球的长按同一档）；冒烟�
    2026-10-10 起由「固定几组假问题轮换」改成**时间线**：每条客户消息追加一轮，轮内自上而下是
    客户原话 → 该条命中的素材 → 针对该条的 AI 回答（见 raRounds / raRoundPush / aiRender）。
    「换一组」从"换整组假问题"降级为"只换最新一轮的措辞"（RA_ANS 里同一主题的两个版本），历史轮次不动。 */
-var raRounds=[],raExpId=null; /* raRounds＝时间线的轮次：每项 {msg:客户原话, hits:该条的命中素材, v:该轮话术版本号}。
-   与 raStreamGen 同寿命、同复位点（resetDemo）。raExpId＝**整个时间线**同一时刻唯一摊开的那一行（复合键 i:id，
-   见 raHitTap）——它仍与素材面板的 S.pExpId 各记各的，两条流互不干扰。 */
+/* 2026-11-06（ADR-0087）：**一次提问＝一轮**。客户连着说的几句在静默 3 秒内合并成同一次上传，
+   所以轮次不再是「一条消息一轮」，而是「一段提问一轮」：
+   每项 {msg:本轮全部原话拼成的检索文本, msgs:[{t,ts}], hits:去重后的命中素材（最近消息的排前）,
+         v:该轮话术版本号, closed:是否已收口（未收口＝等待客户补充，不出话术卡）}。
+   msg 保留是给 raAnsFor 挑主题用的——它只看合并后的整段文字，不关心分了几句。 */
+var raRounds=[],raExpId=null;
+var raHitsExp={};          /* 素材清单「展开全部」的展开态，按轮次序号记；重建时间线时清空 */
+/* 合并窗口（ADR-0087）：静默 3 秒收口；单次提问最多 8 条、总时长最多 10 秒（先到先收）。
+   单位都是毫秒／条数，改口径只动这三个常量。 */
+var RA_GAP=3000,RA_MAXN=8,RA_MAXMS=10000;
+var RA_BATCH=null,RA_BT=null; /* RA_BATCH＝当前还没收口的那一轮；RA_BT＝3 秒静默的收口定时器 */
+var RA_MSGLOG=[];          /* 本会话的消息流水 [{side:'other'|'me', t:原文, ts:到达时刻}]——
+   时间线重建（打开面板／关掉再开）靠它还原「哪几句是同一问」。聊天气泡本身不存时间，故由载体自己记。 */
 /* 话术「流式生成」的两项态（见 raStreamKick/raStreamPlay）：
    raStreamGen＝代际令牌。流式是一条 setTimeout 链，**取消的唯一机制是让链上的令牌过期**——
    每级回调先比 gen===raStreamGen，不等就 return，往后的 timer 自然全废，不必逐个 clearTimeout。
@@ -9315,6 +9369,8 @@ function openAiPanel(){
   /* 打开浮层＝不流（用户口径：只有新消息才流）。但上一轮的流可能还在飞——关掉再打开若不掐掉，
      卡片会停在半截文字上（因为流式只改 DOM 文字、不改 _txt，重开的 aiRender 才会重画）。 */
   raStreamStop();
+  raBatchReset();                     /* 重开＝一句还在等也没意义了：重开时按会话现状重建，别让旧计时器在后面偷偷收口 */
+  raHitsExp={};                       /* 展开态是按轮序号记的，重建后序号全变——一并抹平 */
   var p=$('aiPanel'); if(!p)return;
   p.style.display='flex';
   raRounds=raRebuildRounds(); /* 重开＝按会话现状重新分析一遍（与 raExpId 复位同口径）：会话里已有的每条客户消息补成一轮 */
@@ -9330,6 +9386,7 @@ function openAiPanel(){
 function closeAiPanel(){
   aiOpen=false;
   raStreamStop(); /* 浮层都不在了，流式链必须掐断——否则 timer 会继续在隐藏的卡片上敲字 */
+  raBatchReset();  /* 收起＝没人看着这一问了：停掉 3 秒计时，重开时按会话重建（收口的流不会在隐藏卡片上跑） */
   var p=$('aiPanel'); if(p)p.style.display='none';
   /* 收起＝**收成它自己的小球**（ADR-0078，产品口径），不是整个关死；全局素材球照旧不动。
      被别的浮层顶掉时走的也是这里（openPanel → closeAiPanel），所以"顶掉"与"收起"同一个去向。 */
@@ -9348,7 +9405,8 @@ function raSwap(i){
 /* 「重置为本会话」及其 raResetSession() 已于 2026-10-14 按用户要求**整个撤销**（ADR-0044）：
    连同头部那颗渐变按钮、RIP_SEL 里的 .ai-reset 一并删除，全仓无引用、冒烟也未断言过它。
    若日后要恢复："重置"＝按当前会话现状重走 raRebuildRounds（只动辅助模块、不碰 #chatLog 与 S.aiTipsSeen）。 */
-/* 时间线的一次全量渲染：每条客户消息一个 .ra-round，自上而下＝客户原话 → 该条命中素材 → AI 话术卡。
+/* 时间线的一次全量渲染：**一次提问一个 .ra-round**（ADR-0087），自上而下＝
+   序号＋客户原话（首尾两句） → 这一问命中的素材 → AI 话术卡（还没收口时换成一行「客户还在输入」）。
    旧的往上堆、最新一轮在最后（唯一"活的"那轮）。pulseLast=true＝由新客户消息触发，最新一轮的命中行带脉冲。
    **只有最新一轮是 .ai-card**（承载 _txt 与双击/长按手势），旧轮一律 .ra-card.ra-ans（同款视觉、无交互）。
    这是硬约束不是风格：tools/smoke.js 的 aiCard() 是 `querySelector('#aiPanel .ai-card')`（取文档序第一个），
@@ -9359,63 +9417,156 @@ function aiRender(pulseLast){
   /* 会话里还没有客户消息时合成一轮占位（`ph`）：真机上少见（进微信就有种子会话），但**开浮层恒有唯一 .ai-card**
      是硬约束——tools/smoke.js 的双击填充/长按直发都打在它上面，空面板会让这两条红。占位不进 raRounds：
      会话一有动静就被真轮次取代。 */
-  var rounds=raRounds.length?raRounds:[{msg:'',hits:[],v:0,ph:true}];
+  var rounds=raRounds.length?raRounds:[{msg:'',msgs:[],hits:[],v:0,ph:true,closed:true}];
   var h='';
   /* 群聊暂停提示条：由 S.raPaused 驱动。演示会话是与「李经理」的单聊，默认 false → 不出现 */
   if(S.raPaused)h+='<div class="ra-notice">'+I('info',13,2)+' 群聊期间辅助已暂停，返回私聊继续使用</div>';
   for(var i=0;i<rounds.length;i++){
-    var r=rounds[i],last=i===rounds.length-1,s=raAnsFor(r.msg,r.v);
+    var r=rounds[i],last=i===rounds.length-1,s=raAnsFor(r.msg,r.v),closed=r.ph||r.closed;
     h+='<div class="ra-round'+(last?' last':'')+'">'
-      /* 上下文区：这一轮分析的就是**这条客户原话本身**。原顶上那颗「客户在问」胶囊已删（ADR-0044）。
-         「换一组」右浮在问句首行的右上角（ADR-0046，原先是问句上方单独一行、右对齐，看着像上一轮卡片的
-         右下角）——**每一轮都挂一枚**（2026-10-14 修订：原先只挂最新一轮，用户要求每个问题模块都带）。
-         传 i 而不是「默认最后一轮」：点哪一轮就换哪一轮的措辞，历史轮也能改。占位轮没有可换的东西。
-         按钮必须排在文字**前面**：浮动元素要先进行盒，后面的文字才会绕开它。 */
-      +'<div class="ra-ctx">'
-        +'<div class="ra-q">'
-          +(r.ph?'':'<button class="ra-swap" onclick="raSwap('+i+')" title="换一组措辞">'+I('refresh',11,2.4)+' 换一组</button>')
-          +esc(r.ph?'客户发来消息后，这里会给出这一条的针对性建议。':r.msg)+'</div></div>'
+      + raQuestionBlock(r,i)
       /* 命中素材：挂载点常驻（内容由 raHitsDraw 填），**但没命中时这里一个像素都不输出**——素材库的徽章、
          条数、说明一律不出现，直接接下面的话术卡（ADR-0044，用户点名「那什么时候能发货？」那条）。
          位置＝客户原话与话术卡之间：先看客户问了什么，再看手上能直接用的素材，最后才是 AI 话术。
          这是用户定稿顺序，别再自行挪动。 */
       +(r.ph?'':'<div id="aiHits-'+i+'"></div>')
       /* 原「AI 建议／AI 推荐话术／AI 参考话术」抬头（.ra-sec）已删（ADR-0044）：卡是自己解释自己的话术卡，
-         不必再顶一行分类标签。抬头删除后 .ra-card 自己补回四边内边距，见 CSS。 */
-      +'<div class="ra-card'+(last?' ai-card':' ra-ans')+'"><div class="ra-lead">'+esc(s.lead)+'</div>'
-        +'<ol class="ra-pts">'+s.pts.map(function(t){return '<li>'+esc(t)+'</li>'}).join('')+'</ol>'
-        +'<div class="ra-tail">'+esc(s.tail)+'</div>'
-      /* 脚注只挂最新一轮，且**在卡内部**——新稿把那行「已合并N条对话消息分析」画在回答模块里（ADR-0041）。
-         N＝会话里已经分析过的客户消息条数（最新一轮即第 N 条），读作"AI 分析到第几条消息"。
-         进了卡内就得防误触：长按脚注会顺着冒泡打到 .ai-card 上把话发出去，所以 aiBindCard 里加了守卫。
-         （给 .ai-foot 上 pointer-events:none 解决不了——事件会落到 .ra-card 本身，照样发送。） */
-        +(last?'<div class="ai-foot">'+I('info',11,2)
-          +(r.ph?' 双击填输入框 / 长按直发':' 已合并 '+raRounds.length+' 条对话消息分析 · 双击填输入框 / 长按直发')+'</div>':'')
-        +'</div>'
+         不必再顶一行分类标签。抬头删除后 .ra-card 自己补回四边内边距，见 CSS。
+         ADR-0087：这一问还没收口时不出卡，先放一行「客户还在输入」；收口那一刻换成卡并开始流式。 */
+      +(closed
+        ? '<div class="ra-card'+(last?' ai-card':' ra-ans')+'"><div class="ra-lead">'+esc(s.lead)+'</div>'
+          +'<ol class="ra-pts">'+s.pts.map(function(t){return '<li>'+esc(t)+'</li>'}).join('')+'</ol>'
+          +'<div class="ra-tail">'+esc(s.tail)+'</div>'
+        /* 脚注只挂最新一轮，且**在卡内部**——新稿把那行「已合并N条对话消息分析」画在回答模块里（ADR-0041）。
+           ADR-0087 起 N＝**这一轮合并的原话条数**（不再读整条会话分析到第几条）——它说的就是"这一问由几句合成"。
+           进了卡内就得防误触：长按脚注会顺着冒泡打到 .ai-card 上把话发出去，所以 aiBindCard 里加了守卫。
+           （给 .ai-foot 上 pointer-events:none 解决不了——事件会落到 .ra-card 本身，照样发送。） */
+          +(last?'<div class="ai-foot">'+I('info',11,2)
+            +(r.ph?' 双击填输入框 / 长按直发':' '+raMergedFoot(r)+' · 双击填输入框 / 长按直发')+'</div>':'')
+          +'</div>'
+        : '<div class="ra-wait"><span>客户还在输入，收齐一并回答</span><i></i><i></i><i></i></div>')
       +'</div>';
   }
   b.innerHTML=h;
   raHitsDraw(pulseLast);
-  var c=b.querySelector('.ai-card');   /* 全仓唯一 .ai-card＝最新一轮 */
+  var c=b.querySelector('.ai-card');   /* 全仓唯一 .ai-card＝最新一轮（且只在它已收口时才有） */
   if(c){var lr=rounds[rounds.length-1];c._txt=raFull(raAnsFor(lr.msg,lr.v));aiBindCard(c)}
 }
-/* 会话 → 轮次：把 #chatLog 里现有的客户消息逐条补成一轮（打开浮层时用）。
-   与素材面板的命中口径不同：素材面板只看**当前的这一批**（`pHitMsgs`：区段出现以来到达、还没被收掉的那几条消息，ADR-0081），这里读**整个当前会话**
-   ——宿主模块本来就是读会话屏幕的，且只有这个口径才对得上眼睛看得见的东西。
-   命中集在成轮时算好、存在轮里（不再有一条跨会话累积的全局命中段），会话一重建（resetDemo→wxRebuildChat）自动跟着回零。 */
+/* 轮首问句块（ADR-0087）：序号＝本会话第几次提问（合并只算一次）；
+   多条原话只露首尾两句、中间用「…」带过——不可点，中间几句回微信里看原文（聊天是正本，面板是摘要）。
+   「换一组」仍是 .ra-q 的第一个元素子节点（ADR-0046 的浮动定位与冒烟断言都靠这个位置）。 */
+function raQuestionBlock(r,i){
+  if(r.ph)return '<div class="ra-ctx"><div class="ra-q">'+esc('客户发来消息后，这里会给出这一条的针对性建议。')+'</div></div>';
+  var ms=r.msgs||[],first=ms.length?ms[0].t:r.msg,lastm=ms.length?ms[ms.length-1].t:r.msg,body=esc(first);
+  if(ms.length>1)body+='<span class="ra-more">…</span>'+esc(lastm);
+  return '<div class="ra-ctx"><span class="ra-no">'+(i+1)+'</span>'
+    +'<div class="ra-q"><button class="ra-swap" onclick="raSwap('+i+')" title="换一组措辞">'+I('refresh',11,2.4)+' 换一组</button>'
+    +body+'</div></div>';
+}
+function raMergedFoot(r){
+  var n=(r.msgs&&r.msgs.length)||1;
+  return n>1?'已合并 '+n+' 条对话消息分析':'已分析 '+n+' 条对话消息';
+}
+/* 会话 → 轮次（ADR-0087）：按 RA_MSGLOG 把连续客户消息切成「一次提问」——
+   间隔 <3 秒、单次 ≤8 条、总时长 <10 秒都算同一问；员工发出的消息一刀切断。
+   命中在成轮时按原话逐句算、按素材去重，**后到消息的命中排前**（raHitsMerge）。
+   与素材面板的命中批（ADR-0081，按区段生命周期划界）**不是同一个概念**：那边管"还能取哪些素材"，
+   这边管"AI 要回答哪一串话"；两边边界可以不同，不要为了统一硬拧成一套。 */
 function raRebuildRounds(){
-  var log=$('chatLog'),out=[]; if(!log)return out;
-  var nodes=log.querySelectorAll('.bub.other');
-  for(var i=0;i<nodes.length;i++){var msg=nodes[i].textContent||'';out.push({msg:msg,hits:kwMatch(msg),v:0})}
+  var out=[],cur=null,i,m;
+  function close(){ if(cur){out.push(cur);cur=null} }
+  for(i=0;i<RA_MSGLOG.length;i++){
+    m=RA_MSGLOG[i];
+    if(m.side!=='other'){close();continue}
+    if(cur&&(m.ts-cur.lastTs)<RA_GAP&&cur.msgs.length<RA_MAXN&&(m.ts-cur.t0)<RA_MAXMS){
+      cur.msgs.push({t:m.t,ts:m.ts});cur.lastTs=m.ts;
+    }else{
+      close();
+      cur={msgs:[{t:m.t,ts:m.ts}],hits:[],v:0,closed:true,t0:m.ts,lastTs:m.ts};
+    }
+  }
+  close();
+  for(i=0;i<out.length;i++){
+    var r=out[i];r.msg=r.msgs.map(function(x){return x.t}).join(' ');
+    for(var k=0;k<r.msgs.length;k++)r.hits=raHitsMerge(r.hits,kwMatch(r.msgs[k].t));
+  }
   return out;
 }
-/* 追加一轮＝来了一条新客户消息（matchKw 在浮层开着时走这里）。push 完立刻全量重建：
-   旧轮在这一步就"沉淀"成 .ra-ans（构建期决定类名——原地降级做不到，监听器与 _txt 都拔不掉）。 */
+/* 命中合并（ADR-0087）：新一句的命中排到最前，旧命中按原序跟在后面；同一素材只留一条。
+   被最新一句再次命中的素材也跟着上移到顶部（Q15 口径），命中词在渲染时按各句话回算。 */
+function raHitsMerge(oldHits,newHits){
+  var ids={},out=[],i;
+  for(i=0;i<newHits.length;i++){ids[newHits[i].id]=1;out.push(newHits[i])}
+  for(i=0;i<(oldHits||[]).length;i++)if(!ids[oldHits[i].id])out.push(oldHits[i]);
+  return out;
+}
+/* 一次提问的喂入与收口（ADR-0087）。三条收口路子：静默 3 秒、满 8 条／满 10 秒、员工发出消息。 */
+function raBatchReset(){ if(RA_BT){clearTimeout(RA_BT);RA_BT=null} RA_BATCH=null; }
+function raFeed(msg){
+  var now=Date.now(),b=RA_BATCH;
+  if(b&&!b.closed){
+    var span=now-((b.msgs[0]&&b.msgs[0].ts)||now);
+    if(b.msgs.length>=RA_MAXN||span>=RA_MAXMS){raBatchClose(b)}   /* 到顶：这一问先收，当前这条另起一问 */
+    else{raBatchAdd(b,msg,now);return}
+  }
+  var r={msg:'',msgs:[],hits:[],v:0,closed:false};
+  raRounds.push(r);RA_BATCH=r;
+  raBatchAdd(r,msg,now,true);
+}
+function raBatchAdd(r,msg,now,isNew){
+  r.msgs.push({t:msg,ts:now});
+  r.msg=r.msgs.map(function(x){return x.t}).join(' ');
+  r.hits=raHitsMerge(r.hits,kwMatch(msg));
+  if(RA_BT){clearTimeout(RA_BT);RA_BT=null}
+  if(r.msgs.length>=RA_MAXN){raBatchClose(r);return}
+  RA_BT=setTimeout(function(){raBatchClose(r)},RA_GAP);
+  raRenderKeep(isNew);
+}
+/* 收口：停表、置 closed、重画并开始流式。重画后把这一轮顶上钉进视野——
+   答案出现时内容会变高，钉住问句块才不会让人正看着的素材被推走。 */
+function raBatchClose(r){
+  if(!r||r.closed)return;
+  r.closed=true;
+  if(RA_BATCH===r)RA_BATCH=null;
+  if(RA_BT){clearTimeout(RA_BT);RA_BT=null}
+  aiRender(true);
+  var b=$('aiBody'),el=b?b.querySelector('.ra-round.last'):null;
+  raPin(el);
+  raFreshFlash();
+  raStreamKick();
+}
+/* 轮内追加时**不动视野**（Q8）：记下最新一轮轮顶相对面板体的位置，重画后把同一位置还原；
+   只有「新的一轮出现」才钉顶。全量重画会把 scrollTop 打回 0，所以这一步不能省。
+   还原之后再补一次 raPin：第一句进来时这一轮还很矮，面板到底了也钉不到顶；后面几条把它撑高，
+   多出来的正是下方可滚的余量——就地补齐，这一问的问句与末尾的「客户还在输入」才不会停在折线以下。
+   raPin 只向下，用户手动上翻时不抢（此时轮顶已在视野之上，算出来的是负向，不生效）。 */
+function raRenderKeep(isNew){
+  var b=$('aiBody');
+  if(!b){aiRender();return}
+  var lr=b.querySelector('.ra-round.last');
+  var off=lr?lr.getBoundingClientRect().top-b.getBoundingClientRect().top:0;
+  aiRender();
+  var nb=$('aiBody');if(!nb)return;
+  var nr=nb.querySelector('.ra-round.last');if(!nr)return;
+  if(isNew){raPin(nr);return}
+  var nbb=nb.getBoundingClientRect();
+  nb.scrollTop+=((nr.getBoundingClientRect().top-nbb.top)-off)/raZoom(nb);
+  raPin(nr);
+}
+/* 预览页把整机缩放过（桌面预览是 0.62 倍），getBoundingClientRect 给的是**屏幕**像素，
+   而 scrollTop 吃的是**布局**像素——不换算就会欠滚（滚 0.62 倍的距离，越往下差得越多）。
+   比例＝缩放后宽 ÷ offsetWidth；手机壳里两者相等（＝1），APK 与真机都是这条。 */
+function raZoom(el){var w=el.offsetWidth;return w?el.getBoundingClientRect().width/w:1}
+/* 员工发出任何消息＝这一问立即收口（Q2／Q9）：答案照常出，不另作标记——
+   面板是「这一问 AI 会怎么答」，回没回是会话自己的事。 */
+function raCloseOpenBatch(){ if(RA_BATCH&&!RA_BATCH.closed)raBatchClose(RA_BATCH) }
+/* 追加一轮＝直接塞一条**已收口**的单句提问（冒烟夹具／需要强制独立成轮时用）。
+   实时路径走 raFeed：3 秒内的连发会并进同一轮，不会再经过这里。 */
 function raRoundPush(msg){
-  raRounds.push({msg:msg,hits:kwMatch(msg),v:0});
+  raRounds.push({msg:msg,msgs:[{t:msg,ts:Date.now()}],hits:kwMatch(msg),v:0,closed:true});
   aiRender(true);
   var b=$('aiBody'),r=b?b.querySelector('.ra-round.last'):null;
-  raPin(r);          /* 先弹素材：把新一轮顶上那条客户原话钉到面板体顶，让新问题＋命中素材先入眼 */
+  raPin(r);
   raFreshFlash();
 }
 function raHitsHead(n){
@@ -9445,10 +9596,20 @@ function raHitsDraw(pulse){
     var box=$('aiHits-'+i); if(!box)continue;
     var hits=raRounds[i].hits||[],fresh=pulse&&i===raRounds.length-1;
     if(!hits.length){box.innerHTML='';continue}   /* 没命中就整段不出现：不画徽章、不画条数、不画说明（ADR-0044） */
+    /* 一次提问可能命中十来条（5 句 × 每句 2–3 条）：默认只铺 3 条，其余收进展开条（ADR-0087，Q6）。
+       3 条与素材面板命中区段同一上限，员工不用学第二套。 */
+    var open=!!raHitsExp[i],show=open?hits:hits.slice(0,3);
     var h=raHitsHead(hits.length);
-    for(var k=0;k<hits.length;k++)h+=raHitRow(hits[k],fresh,i);
+    for(var k=0;k<show.length;k++)h+=raHitRow(show[k],fresh,i,raRounds[i]);
+    if(hits.length>3)h+='<button class="ra-hit-more" onclick="raHitsMore('+i+')">'
+      +(open?'收起':'还有 '+(hits.length-3)+' 条 · 展开')+'</button>';
     box.innerHTML=h;
   }
+}
+/* 素材清单的展开／收起（ADR-0087）：只动这一段，问句块与话术卡原地不动 */
+function raHitsMore(i){
+  raHitsExp[i]=!raHitsExp[i];
+  raHitsDraw();
 }
 /* 脉冲只演一次：.fresh 的描边是常驻样式（不是纯 animation），演完得把类摘掉，否则最近一轮会被永久描一圈粗边。
    令牌防串：新脉冲先清掉上一发的回收定时器，免得它把新一轮的描边也摘了。 */
@@ -9461,11 +9622,16 @@ function raFreshFlash(){
     for(var i=0;i<rows.length;i++)rows[i].classList.remove('fresh');
   },420); /* .34s 的 raHitIn 演完 + 一拍缓冲；紧接着 raStreamKick 的 380ms 到点开始流——两拍正好错开 */
 }
-function raHitRow(m,fresh,i){
+/* 一行素材（ADR-0087）：来源 · **命中词** · 首段摘录。命中词按这一轮各句原话回算——
+   一问由几句合成时，它回答"这条是被哪句话带进来的"；同一条被几句命中就把词列全。
+   日期让位（行内已有摘录，且命中词更直接回答"为什么推荐它"）。 */
+function raHitRow(m,fresh,i,r){
   /* kwPool 给个人素材做过瘦身映射（丢了 msgs/atts）：预览与摘录都取真对象，才走得通 wxSendSim 的完整编排 */
   var real=anyById(m.id)||m,open=raExpId===i+':'+m.id,ft=firstText(real);
   var cut=function(s,n){return esc(s.length>n?s.slice(0,n)+'…':s)};
-  var sub='<span class="ra-hit-src">'+(m.personal?'个人':'企业')+'</span>'+(m.date?' · '+esc(m.date):'')
+  var kws=raHitWords(r,m);
+  var kwh=kws.length?' · 命中<span class="rah-kw">'+kws.map(function(k){return '「'+esc(k)+'」'}).join('')+'</span>':'';
+  var sub='<span class="ra-hit-src">'+(m.personal?'个人':'企业')+'</span>'+kwh
     +' · '+(ft?cut(ft,30):'这条素材只有附件、没有文字内容');
   return '<div class="ra-hit-row'+(fresh?' fresh':'')+'">'
     +'<div class="rah-b" onclick="raHitTap('+i+',\''+m.id+'\')"><h5>'+esc(matTitle(real))+'</h5><p>'+sub+'</p></div>'
@@ -9476,6 +9642,14 @@ function raHitRow(m,fresh,i){
     +'</span>'
     +'<span class="rah-chev" style="transform:rotate('+(open?90:0)+'deg)">'+I('chev',14,2.2)+'</span>'
     +'</div>'+(open?raHitExp(m):'');
+}
+/* 这一行是被哪（几）个词带进来的：拿本轮每一句原话回算，按句子先后收集、词不重复。
+   命中排前的是后到消息，但**词序仍按句子先后**——读起来像"客户先说了 A，又说了 B"，与聊天顺序一致。 */
+function raHitWords(r,m){
+  var ms=(r&&r.msgs)||[],kws=m.keywords||[],out=[],i,j;
+  for(i=0;i<ms.length;i++)for(j=0;j<kws.length;j++)
+    if(ms[i].t.indexOf(kws[j])>=0&&out.indexOf(kws[j])<0)out.push(kws[j]);
+  return out;
 }
 /* 摊开区＝微信发送模拟预览 ＋ 三动作。刻意不带「一键发圈」：这是聊天取用语境，
    发圈动作收在素材面板／素材卡那边（也正是不能直接复用 pExpHtml 的原因之一）。 */
@@ -9581,14 +9755,14 @@ function raStreamPlay(card,gen){
    用 getBoundingClientRect 差值而非 offsetTop：这些元素的 offsetParent 是定位的 .panel，不是 #aiBody。 */
 function raPin(el){
   var b=$('aiBody'); if(!b||!el)return;
-  var want=b.scrollTop+(el.getBoundingClientRect().top-b.getBoundingClientRect().top)-8;
+  var want=b.scrollTop+(el.getBoundingClientRect().top-b.getBoundingClientRect().top)/raZoom(b)-8;
   if(want>b.scrollTop)b.scrollTop=want;
 }
 function raFollow(el){
   var b=$('aiBody'); if(!b||!el)return;
   var bb=b.getBoundingClientRect(),eb=el.getBoundingClientRect();
   var over=eb.bottom-(bb.top+bb.height-10);  /* 只关心"掉到折叠线以下"多少 */
-  if(over>0)b.scrollTop+=over;
+  if(over>0)b.scrollTop+=over/raZoom(b);
 }
 
 /* 两个动作抽成具名函数：长按/双击的定时器回调只调它们，冒烟也就有真实的验点（不是只验常量） */
