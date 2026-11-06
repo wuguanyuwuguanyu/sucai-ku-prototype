@@ -2671,6 +2671,22 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 /* 底部拖拽药丸：纯装饰，不吃指针事件（压在内容卡下沿之上） */
 .ai-drag{position:absolute;left:50%;bottom:5.5px;transform:translateX(-50%);width:30.8px;height:2.8px;
   border-radius:20px;background:#cbd4e7;pointer-events:none}
+/* 命中清单里的搜索（ADR-0089）：连发合并之后一批可能有几十条，没有收窄就只能一路滑。
+   **恒在**，不随条数出现／消失（同 #panel 那排 chips 的口径——钮忽有忽无比多一行更难受）。
+   排在头部与内容卡之间，高度由 .ai-content 的 flex:1 让出（33＋9），下面那笔高度账一个字没动。 */
+.hp-search{flex:none;display:flex;align-items:center;gap:7px;height:33px;margin:0 11px 9px;
+  padding:0 12px;border-radius:999px;background:rgba(255,255,255,.9);color:var(--on-surface-variant)}
+.hp-search input{flex:1;min-width:0;background:none;border:none;outline:none;font-family:var(--f);
+  font-size:12.5px;color:var(--on-surface)}
+.hp-search input::placeholder{color:var(--on-surface-variant)}
+/* 搜不到：说清是"这一批里没有"，并给回全量的路（同库内空态口径：点名原因＋最小出口） */
+.hp-empty{padding:22px 6px;text-align:center;font-size:12px;line-height:1.7;color:var(--on-surface-variant)}
+/* 从辅助浮层下钻来的那一次（ADR-0089）：清单**叠在**时间线上，是它的下一层，不是"后开的那块"——
+   关掉只褪这一层，下面的时间线与话术卡原样留着。
+   **层级不用另调**：三块浮层同为 z-index:72，#hpPanel 在 DOM 里排在 #aiPanel、#panel 之后，
+   同层里后画的压在上面；悬浮球是 73，照旧浮在清单上方（点球换到素材库面板＝一次正常的后开者胜）。
+   曾经写成 74 想"压上去"，那会把球也盖住，与其它面板的观感不一致。
+   `.stack` 只留在 JS 与冒烟里当"这次是下钻来的子层"的记号，不是靠它定层级的。 */
 
 /* ===== 素材库面板的卡（ADR-0075 ④）：标题（渐变色字）＋一行摘要＋行尾两枚取用钮、右上角一枚来源角标 =====
    稿 670×134、行距 146 → 368×73.6、行距 80.2（卡间距 6.6）；白卡 90% 底、圆角 26 → 14.3、
@@ -3648,6 +3664,14 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
               <span id="hpTitle"></span>
               <button class="ai-close" onclick="closeHpPanel()" title="收起"><svg width="11" height="11" viewBox="0 0 20.0017 20" fill="#AAC1E5" aria-hidden="true"><path d="M10.0008 7.94717L2.48033 0.424977C1.9137 -0.141659 0.994998 -0.141659 0.428363 0.424977C-0.138273 0.991612 -0.138273 1.91031 0.428363 2.47695L7.94717 9.99914L0.424977 17.5196C-0.141659 18.0863 -0.141659 19.005 0.424977 19.5716C0.991612 20.1382 1.91031 20.1382 2.47694 19.5716L10.0008 12.0528L17.5213 19.575C17.8879 19.9415 18.4221 20.0847 18.9228 19.9505C19.4236 19.8164 19.8147 19.4253 19.9488 18.9245C20.083 18.4238 19.9398 17.8896 19.5733 17.523L12.0545 9.99914L19.5767 2.47864C19.9432 2.11209 20.0864 1.57783 19.9522 1.07712C19.8181 0.576403 19.4269 0.185299 18.9262 0.0511333C18.4255 -0.0830329 17.8913 0.0601208 17.5247 0.42667L10.0008 7.94548V7.94717Z"/></svg></button>
             </div>
+            <!-- 搜索条（ADR-0089）：恒在。它收窄的是**这一批命中**（标题／正文／关键词／附件名），不是全库——
+                 要翻库去素材库面板，那里才有视图与筛选。输入框写成静态节点、不随重绘替换，否则每敲一个字
+                 都换掉焦点节点、光标会掉。 -->
+            <div class="hp-search" id="hpSearchBar">
+              <span class="psic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7.5"/><line x1="21" y1="21" x2="16.3" y2="16.3"/></svg></span>
+              <input id="hpSearchI" placeholder="在命中素材里找" oninput="hpSearch2(this.value)">
+              <button class="pclr" id="hpSearchClr" style="display:none" onclick="hpSearchClear()" title="清空搜索">✕</button>
+            </div>
             <div class="ai-content"><div id="hpBody" class="panel-list"></div></div>
             <div class="ai-drag"></div>
           </div>
@@ -4308,7 +4332,7 @@ function resetDemo(){
   pendingHits.length=0; pQ=''; pHitNew=0;
   HVA_ADMIN_LOCKED=false;   /* 演示开关也回默认（「允许修改」），免得重置后两屏还停在只读态 */
   closePanel(true); closeAiPanel(true); closeHpPanel(true); aiBallReset(); hpHits=[]; hpMsg=''; S.aiTipsSeen=false; closeBallMenu(true); /* 重置＝瞬切，不播交接动效（ADR-0088） */
-  raBatchReset(); RA_MSGLOG=[]; raHitsExp={};   /* 会话与分轮一起归零（ADR-0087）：留旧消息序列会让重开后的轮序号对不上屏幕上的聊天气泡 */
+  raBatchReset(); RA_MSGLOG=[];   /* 会话与分轮一起归零（ADR-0087）：留旧消息序列会让重开后的轮序号对不上屏幕上的聊天气泡 */
   raRounds=[]; raExpId=null; raStreamStop(); S.raPaused=false; wxRebuildChat(); updateBall(); ballBadge(); dkRefresh();
   render(cur,{}); toast('演示数据已重置');
 }
@@ -8715,6 +8739,9 @@ function pRowsDraw(){
         +(pHitMsgCount()>1?'<span class="p-hitfrom">最近 '+pHitMsgCount()+' 条消息</span>':'')
         +'<button class="p-hitx" title="收起命中推荐" onclick="pHitDismiss()">'+I('x',12,2.4)+'</button></div>';
       for(var a=0;a<hits.length&&a<3;a++)h+=pRowHtml(hits[a]);
+      /* 多出来的不在区段里铺开（ADR-0089）：这段是面板顶部的一份索引，铺几十条会把下面的库列表
+         整个顶出屏；走「查看全部 ›」进命中清单，那一层可滚、可搜。 */
+      if(hits.length>3)h+='<button class="ra-hit-more" onclick="pHitOpenAll()">查看全部 '+hits.length+' 条 ›</button>';
       h+='</div>';
     }
     var gl=pPoolList();
@@ -8758,6 +8785,13 @@ function pHitGoto(){
 function pHitDismiss(){
   pHitMsgs=[];pHitNew=0;
   pRowsDraw();
+}
+/* 命中推荐区段的「查看全部 N 条 ›」（ADR-0089）：把这**一批**交给命中清单，面板让位。
+   先取值再 closePanel——关面板会清空 pHitMsgs（这一批结束，ADR-0081），顺序反了就只剩空清单。 */
+function pHitOpenAll(){
+  var msgs=pHitMsgs.slice();
+  closePanel();                    /* 后开者胜：清单接替面板（ADR-0028 决策 3） */
+  hpOpenList(msgs,false);
 }
 /* 这一批命中的素材：逐条消息回算，再按 id 去重。
    遍历从**最后一条消息往前**，故后到消息的命中排在前面；同一条素材被几条消息先后命中只出现一次。
@@ -9110,12 +9144,15 @@ function pexClose(reg){
    可就地展开预览并取用，且与辅助开着时的观感连成一条线（同一层浮层的两个状态）。
    与另外两个浮层的关系不变（ADR-0028 决策 3，后开者胜）：辅助开着＝命中走时间线（hpShow 直接不进），
    本浮层开＝素材库面板让位；反过来开哪个面板都把本浮层收起（openPanel／openAiPanel 里各一行）。
-   **本浮层不是素材库面板的替身**：它没有筛选、没有搜索、没有 chips——那三样是"翻库"的工具，
-   而这份清单是引擎递上来的，翻它没有意义（同 ADR-0006 修订三「会话本身即台账」的克制口径）。 */
-var hpOpen=false,hpHits=[],hpMsg='',hpMsgs=[],hpExpId=null; /* hpMsg＝**最新**那条客户原话（横幅文案用它）；
+   **本浮层不是素材库面板的替身**：它没有筛选、没有 chips——那两样是"翻库"的工具，
+   而这份清单是引擎递上来的，翻库没有意义（同 ADR-0006 修订三「会话本身即台账」的克制口径）。
+   唯一一条搜索只筛**这一批**（ADR-0089）：条数几十上百时滚也是成本，但它不假装能搜整个素材库。 */
+var hpOpen=false,hpHits=[],hpMsg='',hpMsgs=[],hpExpId=null,hpChild=false,hpQ=''; /* hpMsg＝**最新**那条客户原话（横幅文案用它）；
    hpMsgs＝这一批命中清单的触发原话（ADR-0081：与素材库面板区段同一套合并口径——区段还在时新消息追加合并、
    按素材去重，不按时间窗；清单关了＝这一批结束）。**为什么还要 hpMsg**：横幅只说最新一条，清单才是一阵子；
-   行内「为什么命中」逐个素材回算，不再只认 hpMsg。hpExpId＝本浮层同一时刻唯一摊开的那一行（按素材 id，只手风琴本表）。 */
+   行内「为什么命中」逐个素材回算，不再只认 hpMsg。hpExpId＝本浮层同一时刻唯一摊开的那一行（按素材 id，只手风琴本表）。
+   hpChild＝这一份清单是从**辅助浮层下钻**来的（ADR-0089）：叠在时间线上、关掉只褪这一层；
+   hpQ＝清单内的搜索词，只筛这一批。 */
 /* ---------- 命中两个浮层元素：横幅 #hpTip（先说一声）与浮层 #hpPanel（点开才看） ----------
    未开启聊天辅助时的命中链路＝**悬浮球（折叠态）→ 横幅 #hpTip → 浮层 #hpPanel**，三段是同一件事的三步：
    引擎发现了 → 告诉你有这件事 → 你要看才摊开清单。中途那一跳是用户点名要的（原先是命中即自动展开浮层）。 */
@@ -9185,29 +9222,57 @@ function hpTipHide(){
   /* 横幅自隐**不等于这份命中没了**：它就退回"只记角标"——与它接手的那张弹卡（6 秒自隐）同一条口径：
      自动展示可以停，会话照读、角标照记。 */
 }
-function hpExpand(){ /* 点横幅＝看清单。**只有这一条路进 #hpPanel**——它没有别的入口，正是"先说一声、点开才看" */
+function hpExpand(){ /* 点横幅＝看清单。这是"先说一声、点开才看"那一条路。
+   另外两处入口都是**下钻**（ADR-0089）：辅助时间线与素材库面板命中段的「查看全部 N 条 ›」，都收口到 hpOpenList */
   if(!hpTipOn)return;
   hpTipHide();
   hpOpenPanel();
 }
 function hpOpenPanel(){
   if(aiOpen)return;                     /* 兜底：横幅那 3 秒里若辅助被打开，这份清单就不该再顶上来 */
-  hpOpen=true;hpExpId=null;
   /* 点横幅进来＝把面板关着期间**累计的未呈现命中**一次全收进这一批（ADR-0081），
      不再只看最后一条：客户连发几条各命中不同素材，点开清单应当都在。
      收进来的这些此后算「已呈现」——之后打开素材库面板不会再把这批冒出来（同 ADR-0080 口径）。 */
-  hpMsgs=[];
+  var msgs=[];
   for(var i=0;i<pendingHits.length;i++){
-    if(!pendingHits[i].done&&kwMatch(pendingHits[i].msg).length)hpMsgs.push(pendingHits[i].msg);
+    if(!pendingHits[i].done&&kwMatch(pendingHits[i].msg).length)msgs.push(pendingHits[i].msg);
   }
-  if(!hpMsgs.length&&hpHits.length)hpMsgs=[hpMsg]; /* 兜底：引擎没往 pendingHits 里记时，至少保留当前这条 */
-  hpHits=hpMerged();
+  if(!msgs.length&&hpMsg)msgs=[hpMsg]; /* 兜底：引擎没往 pendingHits 里记时，至少保留当前这条 */
   for(var i=0;i<pendingHits.length;i++)pendingHits[i].done=true; /* 清单就摊在眼前＝这一批已呈现 */
   ballBadge();dkRefresh();
+  hpOpenList(msgs,false);
+}
+/* 打开命中清单（ADR-0089 起有三条入口，正文只有这一份）：
+   ① 屏顶横幅（未开辅助）：清单占屏，问的就是"这一阵子命中了什么"；
+   ② 素材库面板的「查看全部 N 条 ›」：面板让位，清单接替（后开者胜，ADR-0028 决策 3）；
+   ③ 辅助浮层的「查看全部 N 条 ›」：清单**叠在时间线上**（child=1），关掉只褪这一层——
+      时间线、问句块、话术卡、滚动位置一个都不动，员工看完还能接着发。
+   child 只影响"能不能共存 + 层级"，正文、行、取用、搜索全共用。 */
+function hpOpenList(msgs,child){
+  hpOpen=true;hpChild=!!child;hpExpId=null;
+  hpSearchReset();
+  hpMsgs=(msgs||[]).slice();
+  hpHits=hpMerged();
   var p=$('hpPanel');if(!p)return;
-  panelShow(p,false);                 /* 只有横幅这一条入口、且开着时它必然不在场＝恒为"首次打开"（ADR-0088） */
+  p.classList.toggle('stack',hpChild);
+  panelShow(p,false);
   hpRender();
   var ph=$('hpHead');if(ph&&!ph._dragged){panelDrag(ph);ph._dragged=true}
+}
+/* 清单内搜索：只筛**这一批**（标题／正文／关键词／附件名，与库内搜索同一个谓词）。
+   它不换视图、不碰会话，清空即回全量——所以不需要"搜索态"那一套，输入即筛。 */
+function hpSearch2(v){hpQ=(v||'').trim();hpExpId=null;hpSearchClrSync();hpRender()}
+function hpSearchClear(){hpSearch2('')}
+function hpSearchReset(){
+  hpQ='';
+  var i=$('hpSearchI');if(i)i.value='';
+  hpSearchClrSync();
+}
+function hpSearchClrSync(){var c=$('hpSearchClr');if(c)c.style.display=hpQ?'':'none'}
+function hpFiltered(){
+  var q=hpQ.toLowerCase();
+  if(!q)return hpHits;
+  return hpHits.filter(function(m){return searchHay(anyById(m.id)||m).indexOf(q)>=0});
 }
 /* 清单这一批的合并：与面板区段同一条规则（ADR-0081）——逐条原话回算、按素材去重，
    从最后一条原话往前遍历，故最近消息的命中排前。 */
@@ -9227,17 +9292,25 @@ function hpAdd(msg){
 }
 function closeHpPanel(instant){
   hpOpen=false;hpExpId=null;hpMsgs=[]; /* 清单关了＝这一批结束（ADR-0081）；再来的命中从横幅重新起一批 */
+  hpChild=false;
+  hpSearchReset();
+  var p=$('hpPanel');if(p)p.classList.remove('stack');
   hpTipHide();                          /* 横幅是这份清单的**前一态**：浮层都不在了，横幅更没有留着的理由 */
-  panelHide($('hpPanel'),instant);      /* 与另两块同一条退场（ADR-0088） */
+  panelHide(p,instant);                 /* 与另两块同一条退场（ADR-0088） */
   /* 与 closeAiPanel 同一条口径：不动悬浮球。球是素材库的折叠态、存活条件是「微信前台」，
-     本浮层收起不等于离开微信——球留在右侧边缘，正好当"去素材库翻一条"的入口。 */
+     本浮层收起不等于离开微信——球留在右侧边缘，正好当"去素材库翻一条"的入口。
+     **下钻来的那次（hpChild）关掉只褪这一层**：下面的辅助浮层从头到尾没被关过，时间线原样留着。 */
 }
 function hpRender(){
   var t=$('hpTitle');if(t)t.innerHTML=raHitsHead(hpHits.length); /* 标题＝分区头整块（素材库徽章 ＋ 命中素材 · N 条） */
   var b=$('hpBody');if(!b)return;
+  var list=hpFiltered();
   var h='';                             /* 正文**不再带分区头**：它整个搬到头部去了，这里只剩行 */
-  for(var i=0;i<hpHits.length;i++)h+='<div id="hpRow-'+hpHits[i].id+'">'+hpRow(hpHits[i])+'</div>';
+  /* 搜不到＝说清"这一批里没有"，别让人以为素材被收走了（没搜索词时维持原来的空白，不硬造空态） */
+  if(!list.length&&hpQ)h='<div class="hp-empty">这一批里没有「'+esc(hpQ)+'」<br>换个词，或清空搜索看全部 '+hpHits.length+' 条</div>';
+  for(var i=0;i<list.length;i++)h+='<div id="hpRow-'+list[i].id+'">'+hpRow(list[i])+'</div>';
   b.innerHTML=h;
+  var si=$('hpSearchI');if(si)si.placeholder='在 '+hpHits.length+' 条命中素材里找';
 }
 /* 摊开态重画：**逐行各自重写**，不整体重写 #hpBody——整体重写会把 scrollTop 打回 0，
    从第三行点开一条时清单会跳回顶端。与时间线那边 raHitsDraw 只重写各轮挂载点是同一个理由。
@@ -9334,7 +9407,6 @@ var AI_LP_MS=550; /* 长按阈值（与悬浮球的长按同一档）；冒烟�
          v:该轮话术版本号, closed:是否已收口（未收口＝等待客户补充，不出话术卡）}。
    msg 保留是给 raAnsFor 挑主题用的——它只看合并后的整段文字，不关心分了几句。 */
 var raRounds=[],raExpId=null;
-var raHitsExp={};          /* 素材清单「展开全部」的展开态，按轮次序号记；重建时间线时清空 */
 /* 合并窗口（ADR-0087）：静默 3 秒收口；单次提问最多 8 条、总时长最多 10 秒（先到先收）。
    单位都是毫秒／条数，改口径只动这三个常量。 */
 var RA_GAP=3000,RA_MAXN=8,RA_MAXMS=10000;
@@ -9457,7 +9529,6 @@ function openAiPanel(){
      卡片会停在半截文字上（因为流式只改 DOM 文字、不改 _txt，重开的 aiRender 才会重画）。 */
   raStreamStop();
   raBatchReset();                     /* 重开＝一句还在等也没意义了：重开时按会话现状重建，别让旧计时器在后面偷偷收口 */
-  raHitsExp={};                       /* 展开态是按轮序号记的，重建后序号全变——一并抹平 */
   var p=$('aiPanel'); if(!p)return;
   panelShow(p,swap);
   raRounds=raRebuildRounds(); /* 重开＝按会话现状重新分析一遍（与 raExpId 复位同口径）：会话里已有的每条客户消息补成一轮 */
@@ -9472,6 +9543,7 @@ function openAiPanel(){
 }
 function closeAiPanel(instant){
   aiOpen=false;
+  if(hpChild)closeHpPanel(instant); /* 下钻的清单是它的下一层（ADR-0089）：这一层收，那一层不能留在屏上裸着 */
   raStreamStop(); /* 浮层都不在了，流式链必须掐断——否则 timer 会继续在隐藏的卡片上敲字 */
   raBatchReset();  /* 收起＝没人看着这一问了：停掉 3 秒计时，重开时按会话重建（收口的流不会在隐藏卡片上跑） */
   panelHide($('aiPanel'),instant); /* 120ms 淡出后才落 display（ADR-0088） */
@@ -9683,20 +9755,22 @@ function raHitsDraw(pulse){
     var box=$('aiHits-'+i); if(!box)continue;
     var hits=raRounds[i].hits||[],fresh=pulse&&i===raRounds.length-1;
     if(!hits.length){box.innerHTML='';continue}   /* 没命中就整段不出现：不画徽章、不画条数、不画说明（ADR-0044） */
-    /* 一次提问可能命中十来条（5 句 × 每句 2–3 条）：默认只铺 3 条，其余收进展开条（ADR-0087，Q6）。
-       3 条与素材面板命中区段同一上限，员工不用学第二套。 */
-    var open=!!raHitsExp[i],show=open?hits:hits.slice(0,3);
+    /* 一次提问可能命中十来条（5 句 × 每句 2–3 条）：**只铺 3 条，其余不在时间线里展开**
+       （ADR-0089 改了 ADR-0087 ⑥ 的收法）——几十条的清单就地摊在时间线上，一是把话术卡推到很远，
+       二是每一轮都能摊开，整条时间线会失控。改成下钻命中清单：那一层可滚、可搜、行内同样能预览取用。 */
+    var show=hits.slice(0,3);
     var h=raHitsHead(hits.length);
     for(var k=0;k<show.length;k++)h+=raHitRow(show[k],fresh,i,raRounds[i]);
-    if(hits.length>3)h+='<button class="ra-hit-more" onclick="raHitsMore('+i+')">'
-      +(open?'收起':'还有 '+(hits.length-3)+' 条 · 展开')+'</button>';
+    if(hits.length>3)h+='<button class="ra-hit-more" onclick="raHitsOpenAll('+i+')">'
+      +'查看全部 '+hits.length+' 条 ›</button>';
     box.innerHTML=h;
   }
 }
-/* 素材清单的展开／收起（ADR-0087）：只动这一段，问句块与话术卡原地不动 */
-function raHitsMore(i){
-  raHitsExp[i]=!raHitsExp[i];
-  raHitsDraw();
+/* 「查看全部 N 条 ›」＝把**这一轮**的命中交给命中清单，清单叠在浮层上（ADR-0089）。
+   下面那层一个字不动：关掉清单，问句块、命中段前 3 条、话术卡、滚动位置都还在原处。 */
+function raHitsOpenAll(i){
+  var r=raRounds[i];if(!r)return;
+  hpOpenList((r.msgs||[]).map(function(m){return m.t}),true);
 }
 /* 脉冲只演一次：.fresh 的描边是常驻样式（不是纯 animation），演完得把类摘掉，否则最近一轮会被永久描一圈粗边。
    令牌防串：新脉冲先清掉上一发的回收定时器，免得它把新一轮的描边也摘了。 */
