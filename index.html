@@ -2330,6 +2330,9 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
   display:flex;align-items:center;justify-content:center;cursor:grab;touch-action:none;user-select:none;
   box-shadow:var(--e3),0 0 0 1px rgba(255,255,255,.7);overflow:visible}
 .ball.drag{cursor:grabbing}
+/* 程序化抬升／落回才走过渡（ADR-0088）：**不能**直接挂到 .ball 上——自由拖拽也在写 left/top，
+   全局加 transition 会让拖动变粘手。由 ballGlide() 临时加类、PMOT.ball 到点摘掉；按下时立刻摘。 */
+.ball.glide{transition:left .2s var(--emph),top .2s var(--emph),right .2s var(--emph),bottom .2s var(--emph)}
 .ball.hit{animation:pulse 1s var(--emph) 2}
 @keyframes pulse{0%{box-shadow:var(--e3),0 0 0 4px rgba(255,255,255,.7)}50%{box-shadow:0 4px 12px 2px rgba(186,26,26,.45),0 0 0 9px rgba(186,26,26,.18)}100%{box-shadow:var(--e3),0 0 0 4px rgba(255,255,255,.7)}}
 /* AI 模块球（ADR-0078）＝聊天辅助浮层收起后的**自己的**折叠态，与全局素材球是两颗独立的球：
@@ -2341,6 +2344,10 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
   display:flex;align-items:center;justify-content:center;cursor:grab;touch-action:none;user-select:none;
   box-shadow:var(--e3),0 0 0 1px rgba(255,255,255,.7)}
 .mball.drag{cursor:grabbing}
+/* 模块球「等旧面板淡完再出现」（ADR-0088）：时长与延迟由 aiBallShow() 按 PMOT 写成内联，
+   这里只定名字与填充方式——类摘掉即回到常态，不会把球留在半透明。 */
+@keyframes mballIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:none}}
+.mball.anim-in{animation-name:mballIn;animation-fill-mode:both;animation-timing-function:var(--emph)}
 .ball-badge{position:absolute;top:-4px;right:-4px;min-width:19px;height:19px;border-radius:10px;background:var(--error);color:#fff;
   font-size:10.5px;font-weight:500;display:none;align-items:center;justify-content:center;padding:0 5px;box-shadow:0 0 0 2.5px #fff}
 .ball-badge.show{display:flex}
@@ -2363,6 +2370,9 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .pop-i.danger,.pop-i.danger svg{color:var(--error)}
 /* 悬浮球点开＝两选一菜单（话术库 / 聊天辅助）：外壳沿用 .pop／.bmenu 那套贴边小卡，行结构另写（不是素材卡） */
 .bmenu{position:absolute;z-index:73;width:214px;background:var(--sc-lowest);border-radius:var(--shape-m);box-shadow:var(--e3);overflow:hidden;animation:popCard .24s var(--emph)}
+/* 菜单退场只淡不缩（ADR-0088）：它是贴着球的一枚小 popover，缩放会抢走面板交接的动作线。 */
+@keyframes menuOut{to{opacity:0}}
+.bmenu.anim-out{animation:menuOut .1s linear forwards;pointer-events:none}
 .bm-row{display:flex;align-items:center;gap:11px;padding:11px 13px;position:relative;overflow:hidden;cursor:pointer}
 .bm-row+.bm-row{border-top:1px solid var(--outline-variant)}
 .bm-ic{width:32px;height:32px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center}
@@ -2525,6 +2535,18 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 /* 悬浮素材面板（球 = 折叠态 · M3 浮层） */
 .panel{position:absolute;width:330px;height:46%;background:var(--sc-low);border-radius:var(--shape-xl);
   box-shadow:var(--e3);display:flex;flex-direction:column;animation:popCard .3s var(--emph);z-index:72;overflow:hidden}
+/* ===== 浮层交接（ADR-0088）：三块面板同一套 =====
+   切换＝"换掉"不是"关一个再开一个"：旧面板 120ms 淡出＋缩到 .96，新面板从 40ms 起、220ms 淡入
+   从 .96 放大回 1（并叠约 80ms，总 260ms）；单独关闭走同一条退场。**首次打开仍用基类的 popCard**
+   （上移 12px 的落点感）——两类入场各自说清一件事，不合并。
+   毫秒数与 JS 里的 PMOT 是同一组数：CSS 定动画、JS 起"退场到点落 display"的定时器，**改一处必须同改**。
+   anim-out 期间 pointer-events:none——淡出中的面板不该再吃点击。 */
+@keyframes panelSwapOut{from{opacity:1;transform:none}to{opacity:0;transform:scale(.96)}}
+@keyframes panelSwapIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+.panel.anim-out{animation:panelSwapOut .12s var(--emph) forwards;pointer-events:none}
+.panel.anim-in{animation:panelSwapIn .22s var(--emph) .04s both}
+/* 系统开了「减弱动效」时全部瞬切；JS 侧 pmotOff() 也会直接走同步分支，这里是第二道保险 */
+@media (prefers-reduced-motion:reduce){.panel.anim-out,.panel.anim-in,.bmenu.anim-out,.mball.anim-in,.ball.glide{animation:none;transition:none}}
 .panel-head{flex:none;display:flex;align-items:center;gap:8px;padding:10px 14px 8px;background:var(--sc-low);border-bottom:1px solid var(--outline-variant);cursor:grab;touch-action:none;user-select:none}
 /* 面板搜索条：常态不占行（收进头部一枚 icon），点开才摊在头部下方——面板列表因此常态多一行 */
 .panel-search{flex:none;display:flex;align-items:center;gap:8px;background:var(--sc-high);border-radius:999px;height:44px;padding:0 16px;color:var(--on-surface-variant);font-size:13px;animation:fade .15s}
@@ -4128,7 +4150,7 @@ var stack=[]; var cur=null;
 function render(id,params){ if(REND[id]) REND[id](params||{}); }
 function go(id,params){
   if(!isPro()&&VIP_ONLY[id]) id='host-ai-up';   /* 非旗舰版：旗舰版的屏一律落到升级提示页 */
-  closeBallMenu(); /* 切屏即收：两选一菜单只活在微信屏，别跟着切到别的页 */
+  closeBallMenu(true); /* 切屏即收：两选一菜单只活在微信屏，别跟着切到别的页；瞬收，不留一段淡出到新屏上 */
   var to=$(id); if(!to) return;
   var from=cur?$(cur):null;
   render(id,params);
@@ -4285,7 +4307,7 @@ function resetDemo(){
   S.hostExp={};
   pendingHits.length=0; pQ=''; pHitNew=0;
   HVA_ADMIN_LOCKED=false;   /* 演示开关也回默认（「允许修改」），免得重置后两屏还停在只读态 */
-  closePanel(); closeAiPanel(); closeHpPanel(); aiBallReset(); hpHits=[]; hpMsg=''; S.aiTipsSeen=false; closeBallMenu();
+  closePanel(true); closeAiPanel(true); closeHpPanel(true); aiBallReset(); hpHits=[]; hpMsg=''; S.aiTipsSeen=false; closeBallMenu(true); /* 重置＝瞬切，不播交接动效（ADR-0088） */
   raBatchReset(); RA_MSGLOG=[]; raHitsExp={};   /* 会话与分轮一起归零（ADR-0087）：留旧消息序列会让重开后的轮序号对不上屏幕上的聊天气泡 */
   raRounds=[]; raExpId=null; raStreamStop(); S.raPaused=false; wxRebuildChat(); updateBall(); ballBadge(); dkRefresh();
   render(cur,{}); toast('演示数据已重置');
@@ -8264,6 +8286,8 @@ function ballDrag(b){
   var sx,sy,ox,oy,inner,moved,down=false;
   b.addEventListener('pointerdown',function(e){
     down=true;moved=false;sx=e.clientX;sy=e.clientY;
+    /* 抬手就拖：程序化抬升的过渡类必须当场摘掉，否则拖动的前 200ms 会追着手指跑（ADR-0088） */
+    if(b._gt){clearTimeout(b._gt);b._gt=null} b.classList.remove('glide');
     var r=b.getBoundingClientRect();ox=r.left;oy=r.top;
     inner=b.closest('.phone-inner').getBoundingClientRect();
     b.setPointerCapture(e.pointerId);
@@ -8310,6 +8334,7 @@ function ballLiftForPanel(){
   if(isNaN(left))left=412-parseFloat(b.style.right||12)-54;
   if(left+54<=9.9||left>=402.1||top+54<=434||top>=895.4)return; /* 不相交＝不动 */
   ballLift={left:b.style.left,top:b.style.top,right:b.style.right,bottom:b.style.bottom,edge:b.classList.contains('edge')};
+  ballGlide(b);                       /* 抬升跟着面板同拍（ADR-0088），不瞬移 */
   b.style.left=left+'px';
   b.style.top=(434-54-8)+'px';
   b.style.right='auto';b.style.bottom='auto';
@@ -8318,6 +8343,7 @@ function ballUnliftForPanel(){
   if(!ballLift)return;
   var b=$('ball');
   if(b){
+    ballGlide(b);                     /* 落回也走 200ms，与面板退场同拍（ADR-0088） */
     b.style.left=ballLift.left;b.style.top=ballLift.top;
     b.style.right=ballLift.right;b.style.bottom=ballLift.bottom;
     b.classList.toggle('edge',ballLift.edge);
@@ -8351,6 +8377,8 @@ function ballTap(){
 var ballMenuOpen=false;
 function openBallMenu(){
   var m=$('ballMenu'), b=$('ball'); if(!m||!b)return;
+  if(m._mt){clearTimeout(m._mt);m._mt=null}   /* 上一轮的退场还没落地就又点开：取消它，别把新菜单关掉 */
+  m.classList.remove('anim-out');
   m.innerHTML=
      '<div class="bm-row" onclick="pickLib()"><span class="bm-ic lib">'+I('folder',16,2.2)+'</span>'
        +'<span class="bm-t">话术库<span class="bm-s">关键词命中 · 最近使用</span></span></div>'
@@ -8367,7 +8395,16 @@ function openBallMenu(){
   m.style.top=Math.max(70,Math.min(by,840-mh-8))+'px';
   ballMenuOpen=true;
 }
-function closeBallMenu(){var m=$('ballMenu');if(m)m.style.display='none';ballMenuOpen=false} /* 幂等：元素缺失、本来没开都不抛（resetDemo 的冒烟替身会跑到它） */
+function closeBallMenu(instant){ /* 幂等：元素缺失、本来没开都不抛（resetDemo 的冒烟替身会跑到它） */
+  var m=$('ballMenu');ballMenuOpen=false;
+  if(!m)return;
+  if(m._mt){clearTimeout(m._mt);m._mt=null}
+  if(m.style.display==='none'){m.classList.remove('anim-out');return}
+  /* 退场只淡不缩（ADR-0088）：它是贴着球的一枚小 popover，缩放会抢走面板交接那条动作线 */
+  if(instant||pmotOff()||PMOT.menu<=0){m.classList.remove('anim-out');m.style.display='none';return}
+  m.classList.add('anim-out');
+  m._mt=setTimeout(function(){m._mt=null;m.classList.remove('anim-out');m.style.display='none'},PMOT.menu);
+}
 function pickLib(){closeBallMenu();openPanel()}
 function pickRa(){closeBallMenu();openAiPanel()}
 /* ---------- AI 模块球（ADR-0078）----------
@@ -8384,9 +8421,17 @@ function aiBallInit(){
 }
 function aiBallShow(){
   var b=$('aiBall');if(!b)return;
-  b.style.display=(aiBallOn&&!aiOpen&&S.floatOn)?'flex':'none';
+  if(!(aiBallOn&&!aiOpen&&S.floatOn)){aiBallHide();return}
+  if(b.style.display==='flex')return;   /* 已亮着＝不重播入场（updateBall／dkRefresh 会反复调到这里） */
+  b.style.display='flex';
+  if(pmotOff()||PMOT.aiBall<=0){b.classList.remove('anim-in');return}
+  /* 等旧面板淡完再出现（ADR-0088）：120ms 延迟 + 150ms 淡入放大。它和面板占同一块区域，
+     同时淡出淡入会互相稀释——错开半拍才读得出「面板收起来了，入口在这儿」。 */
+  b.style.animationDuration=PMOT.aiBall+'ms';
+  b.style.animationDelay=PMOT.aiBallDelay+'ms';
+  b.classList.remove('anim-in');void b.offsetWidth;b.classList.add('anim-in');
 }
-function aiBallHide(){var b=$('aiBall');if(b)b.style.display='none'}
+function aiBallHide(){var b=$('aiBall');if(!b)return;b.style.display='none';b.classList.remove('anim-in')}
 function aiBallReset(){
   aiBallOn=false;
   var b=$('aiBall');if(!b)return;
@@ -8431,8 +8476,50 @@ var panelOpen=false,pHitMsgs=[],aiOpen=false,pHitNew=0; /* aiOpen=辅助回复�
    pHitMsgs＝当前这一批命中推荐的触发原话。**「一批」的边界不是时间窗，是区段的生命周期**（ADR-0081）：
    区段出现后到达的客户消息**追加合并**（按素材去重、新消息的命中排前），直到区段被收掉
    （取用任一命中／关面板／✕）才结束；中间不再一条顶一条。 */
+/* ---------- 浮层交接状态机（ADR-0088）----------
+   三块面板（#panel／#aiPanel／#hpPanel）共用一个开合函数对：panelShow 管进场、panelHide 管退场。
+   **切换**（有另一块在场）＝两块并叠：旧面板加 .anim-out 后仍留在屏上 120ms，新面板加 .anim-in 从 40ms 起淡入；
+   **首次打开**＝不加类，走 .panel 基类自带的 popCard（上移 12px 的落点感）。
+   **单独关闭**＝同一条退场。退场到点才 display:none——所以"display 已经是 none 了吗"不能当"关没关"用，
+   开关状态一律看 panelOpen／aiOpen／hpOpen 三个布尔。
+   毫秒数必须与 CSS 里 .anim-out/.anim-in 的时长一致（CSS 那边有同样的提醒）。 */
+var PMOT={out:120,in:220,delay:40,ball:200,aiBall:150,aiBallDelay:120,menu:100};
+function pmotOff(){ try{return !!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)}catch(e){return false} }
+function panelShow(el,swap){
+  if(!el)return;
+  var already=el.style.display!=='none'&&!el.classList.contains('anim-out'); /* 已亮着＝重开同一块，不重播动效 */
+  if(el._pt){clearTimeout(el._pt);el._pt=null}
+  el.classList.remove('anim-out');
+  if(already){el.style.display='flex';return}
+  if(swap&&!pmotOff()&&PMOT.in>0)el.classList.add('anim-in');
+  else el.classList.remove('anim-in');           /* 首次打开：清掉旧类，让基类 popCard 接手 */
+  el.style.display='flex';
+}
+function panelHide(el,instant){
+  if(!el)return;
+  if(el._pt){clearTimeout(el._pt);el._pt=null}
+  el.classList.remove('anim-in');
+  if(el.style.display==='none')return;           /* 本来就没开：不排定时器，也不留退场类 */
+  if(instant||pmotOff()||PMOT.out<=0){el.classList.remove('anim-out');el.style.display='none';return}
+  el.classList.add('anim-out');
+  el._pt=setTimeout(function(){el._pt=null;el.classList.remove('anim-out');el.style.display='none'},PMOT.out);
+}
+/* 冒烟用：把还在飞的退场当场落地。**不动 PMOT**——测的就是"退场期间 display 还没变"这条真行为 */
+function panelFinish(el){
+  if(!el)return;
+  if(el._pt){clearTimeout(el._pt);el._pt=null}
+  el.classList.remove('anim-out','anim-in');
+  el.style.display='none';
+}
+function ballGlide(b){
+  if(!b||pmotOff()||PMOT.ball<=0)return;
+  b.classList.add('glide');
+  if(b._gt)clearTimeout(b._gt);
+  b._gt=setTimeout(function(){b._gt=null;b.classList.remove('glide')},PMOT.ball);
+}
 function openPanel(){
   closeBallMenu();                    /* 面板开＝菜单收（菜单是球的展开，不是面板的） */
+  var swap=aiOpen||hpOpen;            /* 捕获在关闭之前：有另一块在场＝这次是"换掉"，走并叠 */
   if(aiOpen)closeAiPanel();
   closeHpPanel();                     /* 后开者胜（ADR-0028 决策 3）：命中浮层让位 */
   var wasOpen=panelOpen;             /* 已开着再被 openPanel（比如从球菜单再点一次）＝不重置这一批 */
@@ -8450,17 +8537,16 @@ function openPanel(){
   S.pMom=false;S.pRec=true;pQ='';pSOn=false;S.pFltOpen=false;S.pExpId=null; /* 打开面板永远落「最近使用」：命中推荐排在首位，引擎递来的东西不依赖用户翻筛选；搜索条同落收起态；筛选 popover 同落收起态（上次是点 ✕ 收起面板的话 popover 会留着开）；展开态同落收起（面板重开＝回到能扫的那一屏，不停在上次摊开的那条上） */
   /* 全局球**不收起**（ADR-0078，产品口径「球恒在，素材库面板打开时也不收起」）：
      只把与面板相交的球抬到面板上沿之上，关面板时还原。 */
-  var p=$('panel');
-  p.style.display='flex';
+  panelShow($('panel'),swap);
   ballLiftForPanel();
   panelRender();
   var ph=$('panelHead');
   if(ph&&!ph._dragged){panelDrag(ph);ph._dragged=true}
 }
-function closePanel(){
+function closePanel(instant){
   panelOpen=false;
   pHitMsgs=[];pHitNew=0;              /* 关面板即收（ADR-0080）：命中推荐不跨开合残留，也结束这一批 */
-  var p=$('panel');p.style.display='none';
+  panelHide($('panel'),instant);      /* 120ms 淡出后才落 display（ADR-0088）；resetDemo 传 true 走瞬切 */
   ballUnliftForPanel();               /* 面板关了：球回原位（用户拖过就不回，见 ballLift） */
   aiBallShow();                       /* 顶掉辅助浮层时它已收了球；这里再同步一次，幂等 */
   var b=$('ball');if(b)b.style.display=S.floatOn?'flex':'none';
@@ -9119,7 +9205,7 @@ function hpOpenPanel(){
   for(var i=0;i<pendingHits.length;i++)pendingHits[i].done=true; /* 清单就摊在眼前＝这一批已呈现 */
   ballBadge();dkRefresh();
   var p=$('hpPanel');if(!p)return;
-  p.style.display='flex';
+  panelShow(p,false);                 /* 只有横幅这一条入口、且开着时它必然不在场＝恒为"首次打开"（ADR-0088） */
   hpRender();
   var ph=$('hpHead');if(ph&&!ph._dragged){panelDrag(ph);ph._dragged=true}
 }
@@ -9139,10 +9225,10 @@ function hpAdd(msg){
   hpMsgs.push(msg);
   if(hpMsgs.length>20)hpMsgs.shift();
 }
-function closeHpPanel(){
+function closeHpPanel(instant){
   hpOpen=false;hpExpId=null;hpMsgs=[]; /* 清单关了＝这一批结束（ADR-0081）；再来的命中从横幅重新起一批 */
   hpTipHide();                          /* 横幅是这份清单的**前一态**：浮层都不在了，横幅更没有留着的理由 */
-  var p=$('hpPanel');if(p)p.style.display='none';
+  panelHide($('hpPanel'),instant);      /* 与另两块同一条退场（ADR-0088） */
   /* 与 closeAiPanel 同一条口径：不动悬浮球。球是素材库的折叠态、存活条件是「微信前台」，
      本浮层收起不等于离开微信——球留在右侧边缘，正好当"去素材库翻一条"的入口。 */
 }
@@ -9359,6 +9445,7 @@ function raFull(s){return s.lead+' '+s.pts.map(function(t,i){return (i+1)+'. '+t
 function aiToggle(){ if(aiOpen)closeAiPanel(); else openAiPanel(); }
 function openAiPanel(){
   closeBallMenu();                    /* 同上：浮层开＝菜单收 */
+  var swap=panelOpen||hpOpen;         /* 捕获在关闭之前：有另一块在场＝这次是"换掉"，走并叠（ADR-0088） */
   if(panelOpen)closePanel();          /* 后开者胜：素材库面板让位（两个方向都成立的关键） */
   closeHpPanel();                     /* 同上：命中浮层也让位——开着辅助时不留在屏上（与 matchKw 的分流同一条口径） */
   aiOpen=true;aiBallOn=true;          /* 开过一次就记住：收起时才有那颗模块球，没开过不凭空出现 */
@@ -9372,7 +9459,7 @@ function openAiPanel(){
   raBatchReset();                     /* 重开＝一句还在等也没意义了：重开时按会话现状重建，别让旧计时器在后面偷偷收口 */
   raHitsExp={};                       /* 展开态是按轮序号记的，重建后序号全变——一并抹平 */
   var p=$('aiPanel'); if(!p)return;
-  p.style.display='flex';
+  panelShow(p,swap);
   raRounds=raRebuildRounds(); /* 重开＝按会话现状重新分析一遍（与 raExpId 复位同口径）：会话里已有的每条客户消息补成一轮 */
   aiRender();
   /* 时间线可能比一屏长：重开落在**最新一轮的顶上**（与"追加新轮"同一拍）——让「客户原话 ＋ 它命中的素材」在视野里，
@@ -9383,11 +9470,11 @@ function openAiPanel(){
   var ph=$('aiHead'); if(ph&&!ph._dragged){panelDrag(ph);ph._dragged=true} /* 复用面板头部拖拽（closest('.panel') 成立） */
   if(!S.aiTipsSeen)aiTipsShow();       /* 首次说明弹窗 */
 }
-function closeAiPanel(){
+function closeAiPanel(instant){
   aiOpen=false;
   raStreamStop(); /* 浮层都不在了，流式链必须掐断——否则 timer 会继续在隐藏的卡片上敲字 */
   raBatchReset();  /* 收起＝没人看着这一问了：停掉 3 秒计时，重开时按会话重建（收口的流不会在隐藏卡片上跑） */
-  var p=$('aiPanel'); if(p)p.style.display='none';
+  panelHide($('aiPanel'),instant); /* 120ms 淡出后才落 display（ADR-0088） */
   /* 收起＝**收成它自己的小球**（ADR-0078，产品口径），不是整个关死；全局素材球照旧不动。
      被别的浮层顶掉时走的也是这里（openPanel → closeAiPanel），所以"顶掉"与"收起"同一个去向。 */
   aiBallShow();
