@@ -18435,12 +18435,23 @@ tb.addEventListener("click",function(e){
     + '.rea-qf-src .ant-btn.on{background:#E6F4FF!important;border-color:#E6F4FF!important;color:#1677FF!important;font-weight:500}'
     + '.rea-qf-ctype .ant-btn{height:28px!important;padding:0 12px!important;border:1px solid #E5E8EF!important;background:#fff!important;color:#646A73!important;font-size:13px!important;box-shadow:none!important}'
     + '.rea-qf-ctype .ant-btn-primary{background:#E6F4FF!important;border-color:#E6F4FF!important;color:#1677FF!important}'
-    + '.rea-qf-tags{display:flex;flex-wrap:wrap;gap:8px;margin:-6px 0 10px 108px}'
-    + '.rea-qf-tag{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px;border:1px solid #E5E8EF;border-radius:6px;background:#fff;font-size:13px;color:#646A73;cursor:pointer;transition:border-color .15s,background .15s}'
-    + '.rea-qf-tag:hover{border-color:#1677FF;color:#1677FF}'
-    + '.rea-qf-tag.on{background:#E6F4FF;border-color:#E6F4FF;color:#1677FF}'
-    + '.rea-qf-tagn{font-size:12px;color:#8F959E}'
-    + '.rea-qf-tag.on .rea-qf-tagn{color:#1677FF}'
+    + '.rea-qf-tagpanel{margin:-8px 0 4px 108px;max-width:560px}'
+    + '.rea-qf-tagpanel[hidden]{display:none!important}'
+    + '.rea-qf-trow{display:flex;align-items:center;gap:16px;margin-bottom:12px;font-size:14px;color:#1F2329}'
+    + '.rea-qf-trow>span:first-child{flex:none;color:#646A73}'
+    + '.rea-qf-rd{position:relative;display:inline-flex;align-items:center;gap:8px;color:#1F2329;cursor:pointer}'
+    + '.rea-qf-rd input{position:absolute;opacity:0;width:0;height:0}'
+    + '.rea-qf-rddot{position:relative;box-sizing:border-box;width:16px;height:16px;flex:none;border:1px solid #D9D9D9;border-radius:50%;background:#fff;transition:border-color .15s}'
+    + '.rea-qf-rd input:checked+.rea-qf-rddot{border-color:#1677FF}'
+    + '.rea-qf-rd input:checked+.rea-qf-rddot:after{content:"";position:absolute;left:3px;top:3px;width:8px;height:8px;border-radius:50%;background:#1677FF}'
+    + '.rea-qf-rd input:focus-visible+.rea-qf-rddot{box-shadow:0 0 0 2px #E6F4FF}'
+    + '.rea-qf-help{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;flex:none;border:1px solid #C9CDD4;border-radius:50%;color:#8F959E;font-size:10px;line-height:1;cursor:help}'
+    + '.rea-qf-select.rea-qf-minisel{width:140px;color:#1F2329}'
+    + '.rea-qf-minisel .rea-qf-selmenu{width:140px}'
+    + '.rea-qf-tagin{display:flex;align-items:center;box-sizing:border-box;width:100%;height:32px;padding:0 11px;border:1px solid #E5E8EF;border-radius:8px;background:#fff}'
+    + '.rea-qf-tagin:focus-within{border-color:#1677FF;box-shadow:0 0 0 2px #E6F4FF}'
+    + '.rea-qf-tagin input{flex:1;min-width:0;border:0;outline:0;background:transparent;font-size:14px;color:#1F2329}'
+    + '.rea-qf-tagin input::placeholder{color:#C9CDD4}'
     + '.rea-qf-dt{width:240px;max-width:100%}'
     + '.rea-qf-promise{margin:0 0 8px 108px;padding:8px 12px;border-radius:8px;background:#F7F8FA;font-size:13px;line-height:20px;color:#1F2329;max-width:560px}'
     + '.rea-qf-exec{position:relative}'
@@ -18486,7 +18497,7 @@ tb.addEventListener("click",function(e){
     + '.rea-qf-sum{margin-top:20px;border-top:1px solid #E5E8EF}'
     + '.rea-qf-sumrow{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:10px 0;border-bottom:1px solid #F7F8FA;font-size:13px}'
     + '.rea-qf-sumrow span{flex:none;color:#8F959E}'
-    + '.rea-qf-sumrow b{font-weight:500;color:#1F2329;text-align:right}'
+    + '.rea-qf-sumrow b{max-width:66%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500;color:#1F2329;text-align:right}'
     + '.rea-qf-side .rea-qf-hint{margin-left:0}';
 
   /* 批量加好友 · 新建专用样式（2026-10-27「添加群内好友」）。
@@ -19068,7 +19079,10 @@ function initFq(){
    右侧半屏空着。这一版只搬原节点、不重造控件——按「发给谁 → 发什么 → 什么时候发 →
    谁来发」重排成四段，任务名称／发送类型／全局弹窗收进「更多设置」；右栏给客户视角的
    预览与四行汇总。富文本编辑器、单选、开关仍是快照原节点（REA_FX 的接线不动），
-   这里只加本页标记类与新的排序容器。 */
+   这里只加本页标记类与新的排序容器。
+   ① 段的「按微信标签」照现网：标签在各销售自己的微信里，后台查不到名单也统计不了
+   好友数，所以只给「是否按照整个标签发送／精确搜索／标签名输入框」，页面上任何位置
+   都不出现预估人数。 */
 function initQf(){
   var con=document.querySelector('[class*="_con_"]');if(!con)return;
   var title=con.querySelector('[class*="_titleBar_"]');
@@ -19156,58 +19170,54 @@ function initQf(){
     return 'assistant';
   }
 
-  /* ---------- ① 发给谁 ---------- */
+  /* ---------- ① 发给谁 ----------
+     标签是各销售自己微信里的：后台既查不到标签名单，也统计不了好友数，
+     所以照现网的控件让运营**手填标签名**（多个用 ; 隔开），这里只做名称匹配，
+     任何地方都不预估人数。面板里的单选／下拉／输入框是自造的，不挂 ant- 类，
+     免得被快照的 REA_FX 按「同名单选组」插手。 */
   var b1=sec('1','发给谁','先定范围，再写内容');
   put(rScope,b1);
-  var tagWrap=document.createElement('div');tagWrap.className='rea-qf-tags';b1.appendChild(tagWrap);
+  var tagPanel=document.createElement('div');tagPanel.className='rea-qf-tagpanel';b1.appendChild(tagPanel);
+  tagPanel.innerHTML=
+     '<div class="rea-qf-trow"><span>是否按照整个标签发送</span>'
+    +'<label class="rea-qf-rd"><input type="radio" name="rea-qf-whole" value="whole" checked><span class="rea-qf-rddot"></span>按照整个标签</label>'
+    +'<span class="rea-qf-help" role="img" aria-label="说明">?</span>'
+    +'<label class="rea-qf-rd"><input type="radio" name="rea-qf-whole" value="part"><span class="rea-qf-rddot"></span>不按照整个标签</label></div>'
+    +'<div class="rea-qf-trow"><div class="rea-qf-mini">'
+    +'<button type="button" class="rea-qf-select rea-qf-minisel" aria-haspopup="listbox" aria-expanded="false">'
+    +'<span class="rea-qf-seltext">精确搜索</span><span class="rea-qf-selcaret">▾</span></button>'
+    +'<div class="rea-qf-selmenu" role="listbox"><button type="button" class="rea-qf-opt" role="option" aria-selected="true">精确搜索</button></div>'
+    +'</div></div>'
+    +'<div class="rea-qf-trow"><label class="rea-qf-tagin"><input type="text" aria-label="标签名称"></label></div>';
+  var tagSel=tagPanel.querySelector('.rea-qf-select'),tagMenu=tagPanel.querySelector('.rea-qf-selmenu'),
+      tagInput=tagPanel.querySelector('.rea-qf-tagin input');
+  tagInput.placeholder="请输入标签名称，多个标签请用';'隔开";
+  tagSel.addEventListener('click',function(e){
+    e.preventDefault();
+    var on=!tagMenu.classList.contains('on');
+    tagMenu.classList.toggle('on',on);
+    tagSel.setAttribute('aria-expanded',on?'true':'false');
+  });
+  tagMenu.addEventListener('click',function(e){
+    if(!e.target.closest('.rea-qf-opt'))return;
+    e.preventDefault();tagMenu.classList.remove('on');tagSel.setAttribute('aria-expanded','false');
+  });
+  document.addEventListener('click',function(e){
+    if(!tagPanel.contains(e.target)){tagMenu.classList.remove('on');tagSel.setAttribute('aria-expanded','false')}
+  });
+  /* 标签按名称匹配：; 与全角；都当分隔符，去空去重。 */
+  function tagNames(){
+    var seen={},out=[],list=tagInput.value.split(/[;；]/),q,v;
+    for(q=0;q<list.length;q++){
+      v=list[q].trim();
+      if(v&&!seen[v]){seen[v]=1;out.push(v)}
+    }
+    return out;
+  }
+  function drawPanel(){tagPanel.hidden=!scopeIsTags()}
   var tagHint=hint('');b1.appendChild(tagHint);
   var warn=hint('','rea-qf-warn');b1.appendChild(warn);
-
-  var QF_TOTAL=1283;
-  var QF_TAGS=[
-    {id:'vip',name:'重点客户',from:0,to:213},
-    {id:'old',name:'老客户',from:100,to:485},
-    {id:'high',name:'高意向',from:200,to:331},
-    {id:'follow',name:'待跟进',from:250,to:517},
-    {id:'new',name:'新客户',from:500,to:588},
-    {id:'done',name:'已成交',from:0,to:155}
-  ];
-  var tags=[];
-  function tagOf(id){for(var j=0;j<QF_TAGS.length;j++)if(QF_TAGS[j].id===id)return QF_TAGS[j];return null}
-  function tagCount(t){return t.to-t.from+1}
-  function tagUnion(){
-    var seen={},n=0,j,m,t;
-    for(j=0;j<tags.length;j++){
-      t=tagOf(tags[j]);if(!t)continue;
-      for(m=t.from;m<=t.to;m++)if(!seen[m]){seen[m]=1;n++}
-    }
-    return n;
-  }
-  function fmtNum(x){
-    var s=String(x),o='',j;
-    for(j=0;j<s.length;j++){if(j&&(s.length-j)%3===0)o+=',';o+=s.charAt(j)}
-    return o;
-  }
-  function drawTags(){
-    var h='',j,t,on;
-    for(j=0;j<QF_TAGS.length;j++){
-      t=QF_TAGS[j];on=tags.indexOf(t.id)>=0;
-      h+='<button type="button" class="rea-qf-tag'+(on?' on':'')+'" data-tag="'+t.id
-        +'" aria-pressed="'+(on?'true':'false')+'">'+esc(t.name)
-        +'<span class="rea-qf-tagn">'+tagCount(t)+'</span></button>';
-    }
-    tagWrap.innerHTML=h;
-    tagWrap.style.display=scopeIsTags()?'':'none';
-  }
-  tagWrap.addEventListener('click',function(e){
-    var b=e.target.closest?e.target.closest('.rea-qf-tag'):null;
-    if(!b)return;
-    e.preventDefault();
-    var id=b.getAttribute('data-tag'),at=tags.indexOf(id);
-    if(at>=0)tags.splice(at,1);else tags.push(id);
-    drawTags();render();
-  });
-  if(rScope)rScope.addEventListener('click',function(){setTimeout(function(){drawTags();render()},0)});
+  if(rScope)rScope.addEventListener('click',function(){setTimeout(function(){drawPanel();render()},0)});
 
   /* ---------- ② 发什么 ---------- */
   var b2=sec('2','发什么','');
@@ -19422,15 +19432,16 @@ function initQf(){
   }
   function render(){
     var all=!scopeIsTags();
-    var n=all?QF_TOTAL:(tags.length?tagUnion():0);
+    var names=tagNames(),n=names.length;
     var st=sendType();
-    sumWho.textContent=all?('全部好友 · '+fmtNum(QF_TOTAL)+' 人')
-      :(tags.length?(tags.length+' 个标签 · '+fmtNum(n)+' 人'):'按微信标签 · 未选');
+    sumWho.textContent=all?'全部好友 · 人数执行时统计'
+      :(n?('标签：'+names.join(';')):'按微信标签 · 未填');
+    sumWho.title=sumWho.textContent;
     var how;
-    if(st==='assistant')how='群发助手 · 约 '+Math.ceil(n/200)+' 批';
-    else if(st==='search')how='搜索发送 · 逐人 '+fmtNum(n)+' 次';
-    else how='文件传输助手转发 · 约 '+Math.ceil(n/9)+' 批';
-    sumHow.textContent=n?how:'—';
+    if(st==='assistant')how='群发助手 · 每批最多 200 人';
+    else if(st==='search')how='搜索发送 · 逐人发送';
+    else how='文件传输助手转发 · 每批最多 9 个';
+    sumHow.textContent=how;
     var sv=startI?startI.value:'',ev=endI?endI.value:'';
     var rep=checkedLabel(rRepeat)||'单次任务';
     var gap=dayGap(sv,ev);
@@ -19439,13 +19450,13 @@ function initQf(){
     if(ev)when+='，'+gap+' 天内完成';
     sumWhen.textContent=when;
     sumExec.textContent=execSel?(execSel.n+' · '+execSel.c+' 人'):'未选择';
-    actSum.textContent=n?('预计发给 '+fmtNum(n)+' 人 · '
-      +(st==='assistant'?'群发助手':st==='search'?'搜索发送':'文件传输助手转发')):'先选群发范围';
+    var stName=st==='assistant'?'群发助手':st==='search'?'搜索发送':'文件传输助手转发';
+    actSum.textContent=(all?'全部好友':(n?n+' 个标签':'标签未填'))+' · '+stName;
     if(!all){
-      tagHint.textContent=tags.length?('已选 '+tags.length+' 个标签 · 去重后 '+fmtNum(n)+' 人')
-        :'至少选一个标签，才知道发给谁';
+      tagHint.textContent=n?('已填 '+n+' 个标签；标签按名称匹配，人数以各销售手机为准。')
+        :'标签在各销售自己的微信里，后台按名称匹配，人数以各人手机为准。';
     }else{
-      tagHint.textContent='全部好友约 '+fmtNum(QF_TOTAL)+' 人；也可以按微信标签只发一部分。';
+      tagHint.textContent='每位执行人员发给自己微信里的全部好友；人数以各人手机为准，后台不预先统计。';
     }
     if(all&&st==='file'){
       warn.style.display='';warn.textContent='全部好友用文件传输助手转发要在选择器里一批批勾，大批量建议改用群发助手。';
@@ -19496,7 +19507,7 @@ function initQf(){
     if(!picked&&!editorText()&&ctypeSel()==='文本'){
       setErr(rContent,'请从素材库选一条素材，或临时写完内容');ok=false;
     }else setErr(rContent,'');
-    if(scopeIsTags()&&!tags.length){setErr(rScope,'按微信标签群发时，至少选一个标签');ok=false}else setErr(rScope,'');
+    if(scopeIsTags()&&!tagNames().length){setErr(rScope,'按微信标签群发时，请至少填写一个标签名称');ok=false}else setErr(rScope,'');
     if(!startI||!startI.value){setErr(rStart,'请选择通知时间');ok=false}else setErr(rStart,'');
     if(!endI||!endI.value){setErr(rEnd,'请选择截止时间');ok=false}
     else if(startI&&startI.value&&endI.value<=startI.value){setErr(rEnd,'截止时间要晚于通知时间');ok=false}
@@ -19508,7 +19519,7 @@ function initQf(){
 
   document.addEventListener('click',function(){setTimeout(render,0)});
   document.addEventListener('input',function(){setTimeout(render,0)});
-  drawTags();render();
+  drawPanel();render();
 }
 
 /* ---------- 群发群组 · 新建（快照里没有表单，这一页整页另造） ---------- */
