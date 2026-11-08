@@ -10175,876 +10175,2132 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 </html>
 </script>
 <!-- 使用总览：看板入口首页。正文、样式、交互从高保真稿嵌入；页面导航由视图③外壳提供。 -->
-<script type="text/plain" id="srcOverview"><div class="rea-ov-page"><main class="overview-main"><div id="overview-page">
-        <header class="page-head">
-          <div><h1>使用总览</h1><p class="muted" id="date-range"></p></div>
-          <div class="page-controls">
-            <div class="period" role="group" aria-label="统计时间范围">
-              <button type="button" data-period="day" aria-pressed="false">今日</button>
-              <button type="button" data-period="week" aria-pressed="false">近一周</button>
-              <button type="button" data-period="month" aria-pressed="true">近一月</button>
-              <button type="button" data-period="quarter" aria-pressed="false">近三月</button>
-            </div>
-            <button class="link" type="button" data-detail="definitions">数据说明</button>
+<script type="text/plain" id="srcOverview"><div class="rea-ov-page">
+  <main class="ov-main">
+    <div id="ov-home">
+      <header class="ov-heading">
+        <div>
+          <h1>使用总览</h1>
+          <p id="ov-range" class="ov-muted"></p>
+        </div>
+        <button type="button" class="ov-link" data-action="definitions">
+          数据说明
+        </button>
+      </header>
+      <div class="ov-toolbar">
+        <div class="ov-schemes" role="group" aria-label="总览方案">
+          <button type="button" data-scheme="A" aria-pressed="true">
+            方案 A · 业务结果</button
+          ><button type="button" data-scheme="B" aria-pressed="false">
+            方案 B · 看板分组
+          </button>
+        </div>
+        <div class="ov-periods" role="group" aria-label="统计时间范围">
+          <button type="button" data-period="day">今日</button
+          ><button type="button" data-period="week">近一周</button
+          ><button type="button" data-period="month">近一月</button
+          ><button type="button" data-period="quarter">近三月</button>
+        </div>
+      </div>
+      <section class="ov-results-section" aria-labelledby="ov-results-title">
+        <div class="ov-section-heading">
+          <div>
+            <h2 id="ov-results-title">本期业务成果</h2>
+            <p class="ov-muted" id="ov-scheme-description"></p>
           </div>
-        </header>
-
-        <section class="outcome-grid" id="results" aria-label="本期四项成果"></section>
-
-        <section class="panel business-results" aria-labelledby="business-heading">
-          <div class="panel-head"><div><h2 id="business-heading">业务成果</h2><small>按完成次数从高到低</small></div></div>
-          <div class="ranking-head"><span></span><span>业务场景</span><span>完成次数</span><span></span></div>
-          <div id="business-results"></div>
-          <p class="footnote">进度条以当前最高完成次数为满格。点击业务场景查看具体事项与完成记录。</p>
+          <span class="ov-tag">方案演示</span>
+        </div>
+        <div id="ov-results"></div>
+      </section>
+      <section class="ov-panel ov-people" aria-labelledby="ov-people-title">
+        <div class="ov-section-heading">
+          <div>
+            <h2 id="ov-people-title">员工使用</h2>
+            <p class="ov-muted">主动操作按员工去重，托管自动执行单独统计</p>
+          </div>
+          <button type="button" class="ov-link" data-action="employees">
+            查看全部员工 →
+          </button>
+        </div>
+        <div id="ov-people-stats" class="ov-stats"></div>
+        <div class="ov-activity-layout">
+          <section>
+            <div class="ov-section-heading">
+              <h3>每日活跃员工</h3>
+              <span class="ov-muted">点日期查看当日员工</span>
+            </div>
+            <div id="ov-activity-chart"></div>
+          </section>
+          <section>
+            <div class="ov-section-heading">
+              <h3>使用天数分布</h3>
+              <span class="ov-muted">按所选期间</span>
+            </div>
+            <div id="ov-frequency"></div>
+          </section>
+        </div>
+        <div class="ov-section-heading ov-ranking-heading">
+          <h3>使用情况</h3>
+          <div class="ov-tabs" role="group" aria-label="使用情况维度">
+            <button type="button" data-people-tab="department">部门</button
+            ><button type="button" data-people-tab="employee">员工</button>
+          </div>
+        </div>
+        <div id="ov-people-ranking"></div>
+      </section>
+      <div class="ov-section-heading ov-resource-heading">
+        <h2>企业资源 <span class="ov-tag">全公司</span></h2>
+        <span class="ov-muted">席位与余额为当前存量，点数消耗跟随所选时间</span>
+      </div>
+      <div class="ov-resources">
+        <section class="ov-panel" aria-labelledby="ov-seats-title">
+          <div class="ov-section-heading">
+            <h2 id="ov-seats-title">版本席位</h2>
+            <button type="button" class="ov-link" data-action="seats">
+              查看分配 →
+            </button>
+          </div>
+          <div class="ov-seat-summary">
+            <b>30 <small>/ 32 席已分配</small></b
+            ><span class="ov-tag">2 席待分配</span>
+          </div>
+          <div id="ov-seats"></div>
+          <p class="ov-footnote">当前有效授权，点版本查看员工与到期日期。</p>
         </section>
-
-        <div class="business-grid">
-          <section class="panel" aria-labelledby="people-heading">
-            <div class="panel-head"><div><h2 id="people-heading">员工使用</h2><small>按员工去重</small></div><button class="link" type="button" data-detail="employees">查看全部员工 →</button></div>
-            <div class="people-metrics" id="people-metrics"></div>
-            <section class="people-ranking" aria-labelledby="usage-heading">
-              <div class="panel-head"><h3 id="usage-heading">使用排行</h3><div class="sort" role="group" aria-label="部门与员工排行"><button type="button" data-usage="dept" aria-pressed="true">部门</button><button type="button" data-usage="employee" aria-pressed="false">员工</button></div></div>
-              <div id="usage-ranking"></div>
-              <div class="panel-head" style="margin: 12px 0 0"><small>本期记录量排序 · 前 5 名</small><button class="link" type="button" id="usage-all" data-detail="departments">查看全部部门 →</button></div>
-            </section>
-          </section>
-          <section class="panel" aria-labelledby="features-heading">
-            <div class="panel-head"><h2 id="features-heading">热门功能 Top 5</h2><button class="link" type="button" data-detail="features">查看全部功能 →</button></div>
-            <p class="muted" style="margin-bottom: 14px">App 工具 · 按完成次数从高到低</p>
-            <div class="ranking-head"><span></span><span>具体功能</span><span>完成次数</span><span></span></div>
-            <div id="features"></div>
-            <p class="footnote">点具体功能直接查看完成记录。</p>
-          </section>
-        </div>
-
-        <header class="resource-head"><h2>企业资源 <small>全公司</small></h2><span class="muted">企业席位与余额为当前存量 · AI 点数消耗按全公司及所选时间统计</span></header>
-        <div class="resource-grid">
-          <section class="panel" aria-labelledby="seats-heading">
-            <div class="panel-head"><h2 id="seats-heading">版本席位</h2><div class="seat-total"><strong>30</strong>已分配<span class="divider">/</span><strong>32</strong>已购</div></div>
-            <div class="seat-layout">
-              <div class="seat-donut" aria-hidden="true">
-                <svg viewBox="0 0 128 128" aria-hidden="true" focusable="false"><circle class="seat-donut-track" cx="64" cy="64" r="50"/><g><circle class="seat-donut-segment" cx="64" cy="64" r="50" stroke="#9CCEFF" stroke-dasharray="85.36 314.16" stroke-dashoffset="0" transform="rotate(-90 64 64)"/><circle class="seat-donut-segment" cx="64" cy="64" r="50" stroke="#5AA7FF" stroke-dasharray="46.09 314.16" stroke-dashoffset="-88.36" transform="rotate(-90 64 64)"/><circle class="seat-donut-segment" cx="64" cy="64" r="50" stroke="#1677FF" stroke-dasharray="173.71 314.16" stroke-dashoffset="-137.44" transform="rotate(-90 64 64)"/></g></svg>
-                <span class="seat-donut-center"><strong>32</strong><small>已购席位</small></span>
-              </div>
-              <div class="seat-cards">
-                <button class="seat-card" type="button" data-tier="0" aria-label="标准版，已购 9 席，已分配 8 席，查看席位"><span class="seat-card-top"><span class="seat-card-name"><i class="seat-key" style="background:#9CCEFF"></i>标准版</span></span><span class="seat-card-number"><strong>8</strong><span> / 9</span></span><span class="seat-card-foot">1 席待分配</span><span class="seat-card-arrow">›</span></button>
-                <button class="seat-card" type="button" data-tier="1" aria-label="高级版，已购 5 席，已分配 4 席，查看席位"><span class="seat-card-top"><span class="seat-card-name"><i class="seat-key" style="background:#5AA7FF"></i>高级版</span></span><span class="seat-card-number"><strong>4</strong><span> / 5</span></span><span class="seat-card-foot">1 席待分配</span><span class="seat-card-arrow">›</span></button>
-                <button class="seat-card" type="button" data-tier="2" aria-label="旗舰版，已购 18 席，已分配 18 席，查看席位"><span class="seat-card-top"><span class="seat-card-name"><i class="seat-key" style="background:#1677FF"></i>旗舰版</span></span><span class="seat-card-number"><strong>18</strong><span> / 18</span></span><span class="seat-card-foot">全部已分配</span><span class="seat-card-arrow">›</span></button>
-              </div>
+        <section class="ov-panel" aria-labelledby="ov-points-title">
+          <div class="ov-section-heading">
+            <h2 id="ov-points-title">AI 点数</h2>
+            <button type="button" class="ov-link" data-action="points">
+              查看消耗明细 →
+            </button>
+          </div>
+          <div class="ov-point-stats">
+            <div><span>本期消耗</span><b id="ov-points-total"></b></div>
+            <div>
+              <span>当前剩余</span><b>42,000 <small>点</small></b>
             </div>
-            <div class="seat-hero-bottom"><span>未分配 <b>2</b> 个席位</span><span>点版本行查看席位</span></div>
-            <p class="footnote">当前有效授权 · 余额与席位查询时点为 <span data-overview-updated></span></p>
-          </section>
-          <section class="panel" aria-labelledby="points-heading">
-            <div class="panel-head"><h2 id="points-heading">AI 点数</h2><button class="link" type="button" data-detail="points">查看消耗明细 →</button></div>
-            <div class="point-summary">
-              <div><small>当前剩余</small><b>42,000<small>点</small></b><small>截至 <span data-overview-updated></span></small></div>
-              <div><small>本期消耗</small><b id="point-total"></b></div>
+          </div>
+          <div class="ov-section-heading">
+            <h3 id="ov-point-ranking-title">员工消耗 Top 5</h3>
+            <div class="ov-tabs" role="group" aria-label="点数消耗维度">
+              <button type="button" data-points-tab="employee">员工</button
+              ><button type="button" data-points-tab="feature">功能</button>
             </div>
-            <div class="point-chart"><div class="panel-head" style="margin-bottom: 8px"><h3>消耗分布</h3><small>按功能 · 消耗</small></div><div id="point-breakdown"></div></div>
-            <p class="footnote">点数与功能映射为方案演示，账务口径待确认。</p>
-          </section>
-        </div>
-        </div>
-        <section id="detail-page" hidden aria-label="使用总览详情"></section>
-</main><dialog id="detail-dialog" aria-labelledby="dialog-title">
-    <div class="dialog-head"><h2 id="dialog-title"></h2><button type="button" class="close" id="close-dialog" aria-label="关闭数据说明">×</button></div>
-    <div id="dialog-content"></div>
-  </dialog>
+          </div>
+          <div id="ov-points-ranking"></div>
+          <p class="ov-footnote">
+            员工排行、功能分布与逐笔流水取自同一份演示账单。
+          </p>
+        </section>
+      </div>
+      <footer class="ov-footer">
+        数据更新于 <span id="ov-updated"></span> ·
+        新增业务结果、主动活跃与逐人点数均为演示数据
+      </footer>
+    </div>
+    <section id="ov-detail" hidden aria-label="总览详情"></section>
+    <dialog id="ov-dialog" aria-labelledby="ov-dialog-title">
+      <div class="ov-section-heading">
+        <h2 id="ov-dialog-title">数据说明</h2>
+        <button type="button" class="ov-link" data-action="close-dialog">
+          关闭 ×
+        </button>
+      </div>
+      <div id="ov-dialog-body"></div>
+    </dialog>
+  </main>
 </div></script>
-<script type="text/plain" id="srcOverviewStyle">
-    .rea-ov-page {
-      --ink: #1F2329;
-      --sub: #646A73;
-      --line: #E5E8EF;
-      --soft: #F7F8FA;
-      --canvas: #F6F8FB;
-      --white: #fff;
-      --selected: #E6F4FF;
-    }
-    .rea-ov-page * { box-sizing: border-box; }
-    .rea-ov-page { margin: 0; background: var(--canvas); color: var(--ink); font: 14px/1.6 -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; }
-    .rea-ov-page h1, .rea-ov-page h2, .rea-ov-page h3, .rea-ov-page p { margin: 0; }
-    .rea-ov-page h1 { font-size: 20px; font-weight: 600; }
-    .rea-ov-page h2 { font-size: 16px; font-weight: 600; }
-    .rea-ov-page h3 { font-size: 14px; font-weight: 600; }
-    .rea-ov-page button, .rea-ov-page select { font: inherit; color: inherit; }
-    .rea-ov-page button { cursor: pointer; }
-    .rea-ov-page button:focus-visible, .rea-ov-page select:focus-visible, .rea-ov-page a:focus-visible { outline: 2px solid #1677FF; outline-offset: 3px; }
-    .rea-ov-page button:hover { background: var(--soft); }
-    .rea-ov-page button:active { background: var(--selected); }
-    .rea-ov-page a { color: inherit; text-underline-offset: 4px; }
-    .rea-ov-page small, .rea-ov-page .muted { color: var(--sub); font-size: 12px; }
-    .rea-ov-page [hidden] { display: none !important; }
-    .rea-ov-page .review-head, .rea-ov-page .panel-head, .rea-ov-page .page-head, .rea-ov-page .resource-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-    .rea-ov-page .review-head h1 { font-size: 18px; }
-    .rea-ov-page .tag { display: inline-block; padding: 2px 8px; border: 1px solid #E5E8EF; border-radius: 4px; font-size: 12px; white-space: nowrap; }
-    .rea-ov-page .overview-main { min-width: 0; padding: 24px; background: #F6F8FB; }
-    .rea-ov-page .page-head { margin-bottom: 20px; align-items: flex-start; }
-    .rea-ov-page .page-head p { margin-top: 4px; }
-    .rea-ov-page .page-controls { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-    .rea-ov-page .period, .rea-ov-page .sort { display: flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: var(--white); }
-    .rea-ov-page .period button, .rea-ov-page .sort button { min-height: 34px; padding: 6px 12px; border: 0; background: transparent; font-size: 12px; }
-    .rea-ov-page .period button[aria-pressed="true"], .rea-ov-page .sort button[aria-pressed="true"] { background: var(--selected); font-weight: 600; }
-    .rea-ov-page .link { padding: 2px 0; border: 0; background: transparent; text-decoration: underline; text-underline-offset: 4px; font-size: 12px; }
-    .rea-ov-page .panel { background: var(--white); border: 1px solid #E9EEF6; border-radius: 12px; padding: 20px 24px; min-width: 0; }
-    .rea-ov-page .panel-head { margin-bottom: 18px; }
-    .rea-ov-page .people-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .rea-ov-page .metric { display: flex; flex-direction: column; align-items: stretch; min-width: 0; text-align: left; border: 0; background: transparent; padding: 0 20px; }
-    .rea-ov-page .metric:first-child { padding-left: 0; }
-    .rea-ov-page .metric + .metric { border-left: 1px solid var(--line); }
-    .rea-ov-page .metric-label { display: flex; justify-content: space-between; gap: 4px; color: var(--sub); font-size: 12px; }
-    .rea-ov-page .metric b { display: block; margin: 8px 0 4px; font-size: 34px; line-height: 1.2; font-weight: 600; font-variant-numeric: tabular-nums; }
-    .rea-ov-page .metric b small { margin-left: 5px; font-weight: 400; }
-    .rea-ov-page .metric-description { display: block; font-size: 12px; color: var(--sub); }
-    .rea-ov-page .business-grid, .rea-ov-page .resource-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 20px; }
-    .rea-ov-page .business-grid { margin-top: 20px; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
-    .rea-ov-page .people-ranking { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line); }
-    .rea-ov-page .outcome-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-bottom: 20px; }
-    .rea-ov-page .result { display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between; gap: 12px; min-height: 138px; padding: 18px; border: 1px solid var(--line); border-radius: 8px; background: var(--white); text-align: left; }
-    .rea-ov-page .result strong { display: block; font-weight: 500; }
-    .rea-ov-page .result small { display: block; margin-top: 4px; }
-    .rea-ov-page .result-value { flex-shrink: 0; text-align: right; }
-    .rea-ov-page .result-value b { font-size: 26px; font-weight: 600; font-variant-numeric: tabular-nums; }
-    .rea-ov-page .result-value em { margin-left: 4px; font-size: 12px; color: var(--sub); font-style: normal; }
-    .rea-ov-page .footnote { padding-top: 12px; font-size: 12px; color: var(--sub); }
-    .rea-ov-page .ranking-head, .rea-ov-page .feature-row { display: grid; grid-template-columns: 22px minmax(0, 1fr) 74px 12px; align-items: center; gap: 12px; }
-    .rea-ov-page .ranking-head { color: var(--sub); font-size: 12px; padding: 0 0 8px; }
-    .rea-ov-page .ranking-head span:nth-child(n+3), .rea-ov-page .feature-row .number { text-align: right; }
-    .rea-ov-page .feature-row { width: 100%; min-height: 50px; border: 0; border-top: 1px solid var(--line); background: transparent; text-align: left; padding: 8px 0; }
-    .rea-ov-page .rank { color: var(--sub); font-size: 12px; }
-    .rea-ov-page .feature-name strong { font-size: 14px; font-weight: 500; }
-    .rea-ov-page .track { display: block; margin-top: 5px; height: 4px; background: var(--soft); border-radius: 2px; overflow: hidden; }
-    .rea-ov-page .track i { display: block; height: 100%; background: #8F959E; }
-    .rea-ov-page .number { font-variant-numeric: tabular-nums; }
-    .rea-ov-page .resource-head { padding: 26px 0 12px; margin-top: 8px; border-top: 1px dashed #E5E8EF; }
-    .rea-ov-page .resource-head h2 { font-size: 16px; }
-    .rea-ov-page .seat-total { display: flex; align-items: baseline; justify-content: flex-end; gap: 5px; color: var(--sub); font-size: 12px; white-space: nowrap; }
-    .rea-ov-page .seat-total strong { font-size: 29px; line-height: 1; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
-    .rea-ov-page .seat-total .divider { font-size: 17px; color: #8F959E; }
-    .rea-ov-page .seat-layout { display: grid; grid-template-columns: 132px minmax(0, 1fr); align-items: center; gap: 18px; }
-    .rea-ov-page .seat-donut { position: relative; display: grid; place-items: center; width: 132px; height: 132px; }
-    .rea-ov-page .seat-donut svg { display: block; width: 132px; height: 132px; }
-    .rea-ov-page .seat-donut-track { fill: none; stroke: #E6F4FF; stroke-width: 16; }
-    .rea-ov-page .seat-donut-segment { fill: none; stroke-width: 16; transition: stroke-width .18s; }
-    .rea-ov-page .seat-donut:hover .seat-donut-segment { stroke-width: 19; }
-    .rea-ov-page .seat-donut-center { position: absolute; inset: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.2; pointer-events: none; }
-    .rea-ov-page .seat-donut-center strong { font-size: 28px; font-weight: 600; font-variant-numeric: tabular-nums; }
-    .rea-ov-page .seat-donut-center small { margin-top: 4px; font-size: 12px; color: var(--sub); }
-    .rea-ov-page .seat-cards { min-width: 0; }
-    .rea-ov-page .seat-card { display: grid; grid-template-columns: minmax(72px, 1fr) 64px 64px 10px; align-items: center; gap: 6px; width: 100%; padding: 10px 0; border: 0; border-bottom: 1px solid var(--line); background: transparent; text-align: left; }
-    .rea-ov-page .seat-card:hover { background: var(--selected); }
-    .rea-ov-page .seat-card-top { min-width: 0; }
-    .rea-ov-page .seat-card-name { display: flex; align-items: center; gap: 7px; white-space: nowrap; font-size: 14px; }
-    .rea-ov-page .seat-key { display: inline-block; flex: none; width: 8px; height: 8px; border-radius: 50%; }
-    .rea-ov-page .seat-card-number { text-align: right; font-variant-numeric: tabular-nums; }
-    .rea-ov-page .seat-card-number strong { font-size: 16px; font-weight: 600; }
-    .rea-ov-page .seat-card-number span { color: var(--sub); font-size: 12px; }
-    .rea-ov-page .seat-card-foot { text-align: right; color: var(--sub); font-size: 12px; }
-    .rea-ov-page .seat-card-arrow { color: #1677FF; font-size: 15px; text-align: right; }
-    .rea-ov-page .seat-hero-bottom { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; color: var(--sub); font-size: 12px; }
-    .rea-ov-page .seat-hero-bottom b { color: var(--ink); font-weight: 600; }
-    .rea-ov-page table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; }
-    .rea-ov-page th { background: var(--soft); color: var(--sub); font-weight: 400; }
-    .rea-ov-page td, .rea-ov-page th { padding: 10px 8px; height: 48px; border-bottom: 1px solid var(--line); }
-    .rea-ov-page td:not(:first-child), .rea-ov-page th:not(:first-child) { text-align: right; font-variant-numeric: tabular-nums; }
-    .rea-ov-page .point-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    .rea-ov-page .point-summary div + div { border-left: 1px solid var(--line); padding-left: 24px; }
-    .rea-ov-page .point-summary b { display: block; font-size: 26px; line-height: 1.4; font-weight: 600; font-variant-numeric: tabular-nums; }
-    .rea-ov-page .point-summary b small { font-weight: 400; margin-left: 4px; }
-    .rea-ov-page .point-chart { padding-top: 16px; margin-top: 16px; border-top: 1px solid var(--line); }
-    .rea-ov-page .point-row { display: grid; grid-template-columns: 94px minmax(0, 1fr) 84px; align-items: center; gap: 12px; margin-top: 10px; font-size: 12px; }
-    .rea-ov-page .point-row .track { margin: 0; height: 6px; }
-    .rea-ov-page .review-notes { max-width: 1432px; margin: 16px auto 32px; padding: 0 24px; font-size: 12px; color: var(--sub); }
-    .rea-ov-page .review-notes summary { cursor: pointer; }
-    .rea-ov-page .review-notes ul { padding-left: 18px; }
-    .rea-ov-page dialog { width: min(680px, calc(100% - 32px)); max-height: calc(100vh - 48px); padding: 24px; border: 1px solid #E5E8EF; border-radius: 8px; color: var(--ink); }
-    .rea-ov-page dialog::backdrop { background: rgb(0 0 0 / 25%); }
-    .rea-ov-page .dialog-head { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 16px; }
-    .rea-ov-page .close { width: 32px; height: 32px; border: 1px solid var(--line); border-radius: 4px; background: var(--white); font-size: 20px; }
-    .rea-ov-page .dialog-facts { margin: 16px 0 0; padding-left: 20px; font-size: 14px; }
-    .rea-ov-page .dialog-facts li + li { margin-top: 10px; }
-    .rea-ov-page .linked-board-head { padding: 16px 24px; border-bottom: 1px solid var(--line); }
-    .rea-ov-page .linked-board-head .page-head { margin: 8px 0 0; }
-    .rea-ov-page .detail-back { margin-bottom: 12px; }
-    .rea-ov-page .detail-summary { display: flex; gap: 32px; flex-wrap: wrap; margin-bottom: 20px; }
-    .rea-ov-page .detail-summary div { min-width: 100px; }
-    .rea-ov-page .detail-summary b { display: block; font-size: 28px; font-weight: 600; font-variant-numeric: tabular-nums; }
-    .rea-ov-page .detail-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin: 20px 0 16px; }
-    .rea-ov-page .detail-toolbar form { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-    .rea-ov-page .detail-toolbar input, .rea-ov-page .detail-toolbar select, .rea-ov-page .detail-button { min-height: 34px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 4px; background: var(--white); font: inherit; font-size: 12px; color: inherit; max-width: 100%; }
-    .rea-ov-page .detail-toolbar input { width: 180px; }
-    .rea-ov-page .detail-table { overflow: auto; }
-    .rea-ov-page .detail-table table { min-width: 620px; }
-    .rea-ov-page .detail-table td, .rea-ov-page .detail-table th { height: 48px; white-space: nowrap; }
-    .rea-ov-page .detail-table td:not(:first-child), .rea-ov-page .detail-table th:not(:first-child) { text-align: left; }
-    .rea-ov-page .detail-pager { display: flex; justify-content: space-between; gap: 16px; align-items: center; margin-top: 16px; font-size: 12px; color: var(--sub); }
-    .rea-ov-page .detail-pager div { display: flex; align-items: center; gap: 10px; }
-    .rea-ov-page button:disabled { cursor: default; color: #8F959E; }
-    .rea-ov-page .detail-empty { text-align: center; padding: 40px 16px; color: var(--sub); }
-    .rea-ov-page .identity { margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--line); }
-    .rea-ov-page .usage-row { display: grid; grid-template-columns: minmax(0, 1fr) 82px 78px 12px; gap: 10px; align-items: center; width: 100%; min-height: 50px; padding: 8px 0; border: 0; border-bottom: 1px solid var(--line); background: transparent; text-align: left; }
-    .rea-ov-page .usage-row strong { font-weight: 500; }
-    .rea-ov-page .usage-row small { display: block; }
-    .rea-ov-page .business-results { margin-top: 20px; }
-    .rea-ov-page .group-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; margin-bottom: 24px; }
-    .rea-ov-page .pie-content { display: grid; grid-template-columns: minmax(140px, 180px) minmax(0, 1fr); gap: 16px; align-items: start; margin-top: 16px; }
-    .rea-ov-page .pie-chart { width: 100%; max-width: 220px; justify-self: center; }
-    .rea-ov-page .pie-chart a:hover { opacity: .75; }
-    .rea-ov-page .pie-chart a:focus-visible { outline: none; stroke: var(--ink); stroke-width: 3px; }
-    .rea-ov-page .pie-legend { max-height: 280px; overflow: auto; }
-    .rea-ov-page .pie-legend button { display: grid; grid-template-columns: 10px minmax(0, 1fr) auto; gap: 8px; align-items: baseline; width: 100%; padding: 8px 0; border: 0; border-bottom: 1px solid var(--line); background: transparent; text-align: left; font-size: 12px; }
-    .rea-ov-page .pie-key { width: 10px; height: 10px; display: inline-block; border: 1px solid #aaa; }
-    .rea-ov-page .pie-legend strong { font-weight: 500; }
-    .rea-ov-page .pie-legend small { display: block; }
-    .rea-ov-page .pie-value { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
-    .rea-ov-page .pie-placeholder { fill: var(--soft); stroke: var(--line); }
-    @media (max-width: 1150px) {
-      .rea-ov-page main { padding: 20px; }
-      .rea-ov-page .panel { padding: 18px; }
-      .rea-ov-page .page-head { flex-wrap: wrap; }
-      .rea-ov-page .metric { padding: 0 12px; }
-      .rea-ov-page .metric b { font-size: 30px; }
-      .rea-ov-page .business-grid, .rea-ov-page .resource-grid { gap: 16px; }
-      .rea-ov-page .business-grid { grid-template-columns: minmax(0, 1fr); }
-      .rea-ov-page .pie-content { grid-template-columns: minmax(0, 1fr); }
-      .rea-ov-page .ranking-head, .rea-ov-page .feature-row { gap: 8px; grid-template-columns: 18px minmax(0, 1fr) 62px 10px; }
-    }
-    @media (max-width: 900px) {
-      .rea-ov-page .business-grid, .rea-ov-page .resource-grid { grid-template-columns: minmax(0, 1fr); }
-      .rea-ov-page .outcome-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .rea-ov-page .group-layout { grid-template-columns: minmax(0, 1fr); }
-      .rea-ov-page .resource-head { align-items: flex-start; flex-direction: column; gap: 4px; }
-    }
-    @media (max-width: 600px) {
-      .rea-ov-page .review-head { align-items: flex-start; flex-direction: column; gap: 8px; }
-      .rea-ov-page .outcome-grid { gap: 10px; }
-      .rea-ov-page .result { padding: 12px; min-height: 130px; }
-      .rea-ov-page main { padding: 16px 12px; }
-      .rea-ov-page .panel { padding: 16px; }
-      .rea-ov-page .panel-head { flex-wrap: wrap; gap: 8px; }
-      .rea-ov-page .page-controls { gap: 12px; }
-      .rea-ov-page .period button { padding: 6px 9px; }
-      .rea-ov-page .metric b { font-size: 28px; }
-      .rea-ov-page .metric-description { font-size: 12px; }
-      .rea-ov-page .people-metrics { grid-template-columns: minmax(0, 1fr); }
-      .rea-ov-page .metric { padding: 16px 0; }
-      .rea-ov-page .metric:first-child { padding-top: 0; }
-      .rea-ov-page .metric + .metric { border-left: 0; border-top: 1px solid var(--line); }
-      .rea-ov-page .seat-layout { grid-template-columns: minmax(0, 1fr); gap: 8px; }
-      .rea-ov-page .seat-donut { width: 116px; height: 116px; margin: auto; }
-      .rea-ov-page .seat-donut svg { width: 116px; height: 116px; }
-      .rea-ov-page .seat-card { grid-template-columns: minmax(0, 1fr) 64px 10px; }
-      .rea-ov-page .seat-card-foot { display: none; }
-      .rea-ov-page .point-summary { gap: 12px; }
-      .rea-ov-page .point-summary div + div { padding-left: 12px; }
-      .rea-ov-page .point-summary b { font-size: 24px; }
-      .rea-ov-page .point-row { grid-template-columns: 84px minmax(0, 1fr) 72px; gap: 8px; }
-    }
-.rea-ov-page { min-height:100%; color:#1F2329; background:#F6F8FB; font:14px/1.6 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif; }
-.rea-ov-page .result { border:1px solid #E9EEF6; border-radius:12px; min-height:176px; padding:20px 24px; gap:8px; box-shadow:0 1px 2px rgba(19,44,82,.04); }
-.rea-ov-page .result:hover { border-color:#91CAFF; background:#FFFFFF; }
-.rea-ov-page .result-value { text-align:left; }
-.rea-ov-page .result-value b { font-size:32px; }
-.rea-ov-page .result-top { display:flex; align-items:center; justify-content:space-between; width:100%; color:#8F959E; }
-.rea-ov-page .result-icon { display:flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:8px; color:#1677FF; background:#E6F4FF; }
-.rea-ov-page .panel { box-shadow:0 1px 2px rgba(19,44,82,.04); }
-.rea-ov-page .track { background:#E6F4FF; }
-.rea-ov-page .track i { background:#5AA7FF; }
-.rea-ov-page .link { color:#1677FF; text-decoration:none; }
-.rea-ov-page .link:hover { text-decoration:underline; background:transparent; }
-.rea-ov-page .period button[aria-pressed="true"], .rea-ov-page .sort button[aria-pressed="true"] { color:#1677FF; }
-.rea-ov-page .metric-label { min-height:20px; }
-.rea-ov-page .metric-description { line-height:1.6; }
-.rea-ov-page .detail-table th { background:#F7F8FA; }
-.rea-ov-page .detail-table td { font-size:14px; }
-.rea-ov-page .detail-empty { padding:32px 16px; }
-.rea-ov-page.is-detail { background:#FFFFFF; }
-.rea-ov-page.is-detail .overview-main { background:#FFFFFF; }
-.rea-ov-page.is-detail .panel { padding:0; border:0; border-radius:0; box-shadow:none; }
-.rea-ov-page.is-detail .page-head { margin-bottom:24px; }
-.rea-ov-page .detail-button { border-radius:8px; }
-.rea-ov-page .group-layout { gap:32px; padding-bottom:24px; border-bottom:1px solid #E5E8EF; }
-.rea-ov-page .group-layout .panel-head { align-items:baseline; }
-.rea-ov-page dialog { box-shadow:0 6px 16px rgba(0,0,0,.08); border-color:#E5E8EF; }
-.yk-lefttree .ov-org-button { display:block; width:100%; min-height:40px; padding:8px 16px; border:0; border-radius:8px; background:transparent; color:#646A73; font:14px/1.6 -apple-system,"PingFang SC",sans-serif; text-align:left; cursor:pointer; }
-.yk-lefttree .ov-org-button:hover { background:#F7F8FA; }
-.yk-lefttree .ov-org-button[aria-pressed="true"] { background:#E6F4FF; color:#1677FF; font-weight:600; }
-.yk-lefttree .ov-org-button:focus-visible { outline:2px solid #1677FF; outline-offset:-2px; }
-@media(max-width:1100px){.rea-ov-page .people-metrics{grid-template-columns:repeat(3,minmax(0,1fr));}.rea-ov-page .business-grid{grid-template-columns:minmax(0,1fr);}}
-</script>
-<script type="text/plain" id="srcOverviewScript">(function(){
+<script type="text/plain" id="srcOverviewStyle">.rea-ov-page {
+  min-height: 100%;
+  background: #f6f8fb;
+  color: #1f2329;
+  font:
+    14px/1.6 -apple-system,
+    "PingFang SC",
+    "Microsoft YaHei",
+    sans-serif;
+}
+.rea-ov-page * {
+  box-sizing: border-box;
+}
+.rea-ov-page [hidden] {
+  display: none !important;
+}
+.rea-ov-page button,
+.rea-ov-page input,
+.rea-ov-page select {
+  font: inherit;
+}
+.rea-ov-page button {
+  cursor: pointer;
+  color: inherit;
+}
+.rea-ov-page button:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+.rea-ov-page button:focus-visible,
+.rea-ov-page input:focus-visible,
+.rea-ov-page select:focus-visible {
+  outline: 2px solid #1677ff;
+  outline-offset: 3px;
+}
+.rea-ov-page h1,
+.rea-ov-page h2,
+.rea-ov-page h3,
+.rea-ov-page p {
+  margin: 0;
+}
+.rea-ov-page h1 {
+  font-size: 20px;
+  font-weight: 600;
+}
+.rea-ov-page h2 {
+  font-size: 16px;
+  font-weight: 600;
+}
+.rea-ov-page h3 {
+  font-size: 14px;
+  font-weight: 600;
+}
+.rea-ov-page .ov-main {
+  max-width: 1600px;
+  margin: auto;
+  padding: 24px;
+}
+.rea-ov-page .ov-heading,
+.rea-ov-page .ov-section-heading,
+.rea-ov-page .ov-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.rea-ov-page .ov-heading {
+  margin-bottom: 24px;
+  align-items: flex-start;
+}
+.rea-ov-page .ov-heading p {
+  margin-top: 8px;
+}
+.rea-ov-page .ov-muted,
+.rea-ov-page .ov-footnote,
+.rea-ov-page .ov-footer {
+  font-size: 12px;
+  color: #646a73;
+}
+.rea-ov-page .ov-footnote {
+  margin-top: 16px;
+}
+.rea-ov-page .ov-footer {
+  padding: 24px 0;
+  text-align: center;
+}
+.rea-ov-page .ov-link {
+  border: 0;
+  padding: 0;
+  background: none;
+  color: #1677ff;
+  font-size: 14px;
+  white-space: nowrap;
+}
+.rea-ov-page .ov-link:hover {
+  text-decoration: underline;
+}
+.rea-ov-page .ov-link:active {
+  color: #1f2329;
+}
+.rea-ov-page .ov-toolbar {
+  padding: 16px;
+  background: #fff;
+  border: 1px solid #e9eef6;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+.rea-ov-page .ov-schemes,
+.rea-ov-page .ov-periods,
+.rea-ov-page .ov-tabs {
+  display: inline-flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.rea-ov-page .ov-schemes button,
+.rea-ov-page .ov-periods button,
+.rea-ov-page .ov-tabs button,
+.rea-ov-page .ov-control {
+  border: 1px solid #e5e8ef;
+  background: #fff;
+  border-radius: 8px;
+  padding: 8px 16px;
+}
+.rea-ov-page .ov-schemes button[aria-pressed="true"],
+.rea-ov-page .ov-periods button[aria-pressed="true"],
+.rea-ov-page .ov-tabs button[aria-pressed="true"] {
+  background: #e6f4ff;
+  border-color: #1677ff;
+  color: #1677ff;
+  font-weight: 500;
+}
+.rea-ov-page .ov-schemes button:hover,
+.rea-ov-page .ov-periods button:hover,
+.rea-ov-page .ov-tabs button:hover,
+.rea-ov-page .ov-control:hover {
+  border-color: #1677ff;
+}
+.rea-ov-page .ov-tabs button {
+  padding: 0 8px;
+  font-size: 12px;
+  min-height: 32px;
+}
+.rea-ov-page .ov-section-heading {
+  margin-bottom: 16px;
+}
+.rea-ov-page .ov-section-heading p {
+  margin-top: 8px;
+}
+.rea-ov-page .ov-tag {
+  display: inline-block;
+  border-radius: 6px;
+  color: #646a73;
+  background: #f7f8fa;
+  font-size: 12px;
+  font-weight: 400;
+  padding: 0 8px;
+  line-height: 24px;
+  white-space: nowrap;
+}
+.rea-ov-page .ov-panel {
+  background: #fff;
+  border: 1px solid #e9eef6;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 2px rgba(19, 44, 82, 0.04);
+  min-width: 0;
+}
+.rea-ov-page .ov-kpis {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+.rea-ov-page .ov-kpi {
+  display: block;
+  text-align: left;
+  border: 1px solid #e9eef6;
+  border-radius: 12px;
+  background: #fff;
+  padding: 24px;
+  min-height: 168px;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
+}
+.rea-ov-page .ov-kpi:hover,
+.rea-ov-page .ov-group-metric:hover {
+  background: #e6f4ff;
+  border-color: #1677ff;
+}
+.rea-ov-page .ov-kpi:active,
+.rea-ov-page .ov-group-metric:active {
+  background: #e6f4ff;
+}
+.rea-ov-page .ov-kpi-title {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-weight: 500;
+}
+.rea-ov-page .ov-kpi-title i {
+  font-style: normal;
+  color: #8f959e;
+  font-weight: 400;
+}
+.rea-ov-page .ov-kpi-value {
+  display: block;
+  font-size: 32px;
+  line-height: 1.3;
+  letter-spacing: -0.5px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  margin: 16px 0 8px;
+}
+.rea-ov-page .ov-kpi-value small,
+.rea-ov-page .ov-stat b small,
+.rea-ov-page .ov-point-stats small {
+  font-size: 12px;
+  font-weight: 400;
+  color: #646a73;
+  margin-left: 4px;
+  letter-spacing: 0;
+}
+.rea-ov-page .ov-source-caption {
+  display: block;
+  font-size: 12px;
+  color: #646a73;
+}
+.rea-ov-page .ov-explainer {
+  margin: 16px 0 0;
+  font-size: 12px;
+  color: #646a73;
+}
+.rea-ov-page .ov-source-overview {
+  margin-top: 16px;
+}
+.rea-ov-page .ov-source-row {
+  display: grid;
+  grid-template-columns: 120px 1fr 80px;
+  gap: 16px;
+  align-items: center;
+  padding: 8px 0;
+  font-size: 12px;
+}
+.rea-ov-page .ov-groups {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.rea-ov-page .ov-group-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.rea-ov-page .ov-group-metric {
+  border: 1px solid transparent;
+  text-align: left;
+  border-radius: 8px;
+  padding: 16px 8px;
+  background: #fff;
+  min-width: 0;
+}
+.rea-ov-page .ov-group-metric strong {
+  display: block;
+  font-size: 24px;
+  line-height: 1.4;
+  margin-top: 8px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.rea-ov-page .ov-group-metric small {
+  font-size: 12px;
+  color: #646a73;
+  font-weight: 400;
+}
+.rea-ov-page .ov-group-metric .ov-source-caption {
+  margin-top: 4px;
+}
+.rea-ov-page .ov-group-foot {
+  border-top: 1px solid #e5e8ef;
+  padding-top: 16px;
+  margin-top: 8px;
+  font-size: 12px;
+  color: #646a73;
+}
+.rea-ov-page .ov-people {
+  margin-top: 24px;
+}
+.rea-ov-page .ov-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin: 16px 0 24px;
+}
+.rea-ov-page .ov-stat {
+  display: block;
+  text-align: left;
+  background: none;
+  border: 0;
+  border-right: 1px solid #e5e8ef;
+  padding: 0 16px 0 0;
+  min-width: 0;
+}
+.rea-ov-page .ov-stat:last-child {
+  border-right: 0;
+}
+.rea-ov-page button.ov-stat:hover {
+  color: #1677ff;
+}
+.rea-ov-page .ov-stat b {
+  display: block;
+  font-size: 24px;
+  line-height: 1.4;
+  font-weight: 600;
+  margin: 8px 0;
+  font-variant-numeric: tabular-nums;
+}
+.rea-ov-page .ov-stat > small {
+  display: block;
+  color: #646a73;
+  font-size: 12px;
+}
+.rea-ov-page .ov-activity-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(240px, 1fr);
+  gap: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #e5e8ef;
+}
+.rea-ov-page .ov-bars {
+  height: 160px;
+  display: flex;
+  align-items: stretch;
+  gap: 4px;
+  padding-top: 16px;
+}
+.rea-ov-page .ov-bar {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  border-radius: 6px 6px 0 0;
+  background: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+}
+.rea-ov-page .ov-bar i {
+  display: block;
+  background: #9cceff;
+  width: 80%;
+  min-height: 2px;
+  border-radius: 6px 6px 0 0;
+}
+.rea-ov-page .ov-bar:hover i {
+  background: #1677ff;
+}
+.rea-ov-page .ov-bar small {
+  font-size: 12px;
+  color: #646a73;
+  height: 24px;
+}
+.rea-ov-page .ov-frequency-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 40px;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+  padding: 8px 0;
+  background: none;
+  border: 0;
+  font-size: 12px;
+  text-align: left;
+}
+.rea-ov-page .ov-frequency-row:hover {
+  color: #1677ff;
+}
+.rea-ov-page .ov-track {
+  display: block;
+  height: 8px;
+  border-radius: 6px;
+  background: #e6f4ff;
+  overflow: hidden;
+}
+.rea-ov-page .ov-track i {
+  display: block;
+  height: 100%;
+  background: #1677ff;
+  border-radius: 6px;
+}
+.rea-ov-page .ov-ranking-heading {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #e5e8ef;
+}
+.rea-ov-page .ov-table-wrap {
+  overflow-x: auto;
+}
+.rea-ov-page table {
+  border-collapse: collapse;
+  width: 100%;
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+}
+.rea-ov-page th {
+  background: #f7f8fa;
+  color: #646a73;
+  font-weight: 400;
+  white-space: nowrap;
+}
+.rea-ov-page th,
+.rea-ov-page td {
+  padding: 16px;
+  border-bottom: 1px solid #e5e8ef;
+  min-height: 48px;
+  font-size: 14px;
+}
+.rea-ov-page td small {
+  display: block;
+  color: #646a73;
+  font-size: 12px;
+}
+.rea-ov-page tbody tr:hover {
+  background: #f7f8fa;
+}
+.rea-ov-page .ov-resource-heading {
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+.rea-ov-page .ov-resources {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: 16px;
+}
+.rea-ov-page .ov-seat-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 24px 0;
+}
+.rea-ov-page .ov-seat-summary b {
+  font-size: 32px;
+  font-weight: 600;
+}
+.rea-ov-page .ov-seat-summary small {
+  font-size: 12px;
+  font-weight: 400;
+  color: #646a73;
+}
+.rea-ov-page .ov-seat-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 112px;
+  gap: 16px;
+  align-items: center;
+  background: none;
+  border: 0;
+  border-top: 1px solid #e5e8ef;
+  padding: 16px 0;
+  width: 100%;
+  text-align: left;
+}
+.rea-ov-page .ov-seat-row:hover {
+  color: #1677ff;
+}
+.rea-ov-page .ov-point-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 24px 0;
+}
+.rea-ov-page .ov-point-stats span {
+  font-size: 12px;
+  color: #646a73;
+}
+.rea-ov-page .ov-point-stats b {
+  display: block;
+  font-size: 24px;
+  font-weight: 600;
+  margin-top: 8px;
+  font-variant-numeric: tabular-nums;
+}
+.rea-ov-page .ov-point-row {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 96px 1fr 104px;
+  gap: 16px;
+  align-items: center;
+  border: 0;
+  background: none;
+  text-align: left;
+  padding: 8px 0;
+  font-size: 12px;
+}
+.rea-ov-page .ov-point-row:hover {
+  color: #1677ff;
+}
+.rea-ov-page .ov-point-row small {
+  display: block;
+  color: #646a73;
+  font-size: 12px;
+}
+.rea-ov-page .ov-point-row > strong {
+  text-align: right;
+  font-size: 14px;
+  font-weight: 500;
+}
+.rea-ov-page .ov-point-row > strong small {
+  font-weight: 400;
+}
+.rea-ov-page .ov-form {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 24px 0 16px;
+  align-items: center;
+}
+.rea-ov-page input,
+.rea-ov-page select {
+  border: 1px solid #e5e8ef;
+  border-radius: 8px;
+  background: #fff;
+  padding: 8px;
+  color: #1f2329;
+  min-width: 0;
+}
+.rea-ov-page input {
+  width: 240px;
+}
+.rea-ov-page .ov-pagination {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  margin-top: 16px;
+  font-size: 12px;
+}
+.rea-ov-page .ov-pagination > div {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.rea-ov-page .ov-detail-back {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.rea-ov-page .ov-scope-note {
+  padding: 16px;
+  background: #e6f4ff;
+  border-radius: 8px;
+  margin: 16px 0;
+  font-size: 12px;
+  color: #646a73;
+}
+.rea-ov-page .ov-empty {
+  padding: 32px;
+  text-align: center;
+  color: #646a73;
+}
+.rea-ov-page .ov-detail-heading {
+  margin: 24px 0 16px;
+}
+.rea-ov-page dialog {
+  width: min(640px, calc(100vw - 48px));
+  border: 1px solid #e5e8ef;
+  border-radius: 12px;
+  padding: 24px;
+  color: #1f2329;
+  background: #fff;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+.rea-ov-page dialog::backdrop {
+  background: rgba(31, 35, 41, 0.3);
+}
+.rea-ov-page dialog p {
+  margin-top: 16px;
+}
+.rea-ov-org-tree .ov-org-button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: 0;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font:
+    14px -apple-system,
+    "PingFang SC",
+    "Microsoft YaHei",
+    sans-serif;
+  color: #1f2329;
+  cursor: pointer;
+}
+.ov-org-button[aria-pressed="true"] {
+  background: #e6f4ff;
+  color: #1677ff;
+}
+.ov-org-button:hover {
+  background: #f7f8fa;
+}
+.ov-org-button:focus-visible {
+  outline: 2px solid #1677ff;
+  outline-offset: -2px;
+}
+@media (max-width: 1100px) {
+  .rea-ov-page .ov-main {
+    padding: 16px;
+  }
+  .rea-ov-page .ov-activity-layout,
+  .rea-ov-page .ov-resources {
+    grid-template-columns: 1fr;
+  }
+  .rea-ov-page .ov-source-row {
+    grid-template-columns: 96px 1fr 64px;
+  }
+  .rea-ov-page .ov-panel,
+  .rea-ov-page .ov-kpi {
+    padding: 16px;
+  }
+}
+@media (max-width: 760px) {
+  .rea-ov-page .ov-kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .rea-ov-page .ov-groups {
+    grid-template-columns: 1fr;
+  }
+  .rea-ov-page .ov-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .rea-ov-page .ov-heading,
+  .rea-ov-page .ov-section-heading {
+    flex-wrap: wrap;
+  }
+  .rea-ov-page .ov-bar small {
+    font-size: 12px;
+  }
+  .rea-ov-page .ov-source-row {
+    grid-template-columns: 80px 1fr 64px;
+  }
+  .rea-ov-page .ov-point-row {
+    grid-template-columns: 80px 1fr 96px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rea-ov-page * {
+    transition: none !important;
+  }
+}
 
-    'use strict';
+.rea-ov-page .ov-board-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: center;
+  margin: 16px 0 24px;
+}
 
-    const periods = {
-      day: { label: '今日', days: 1, used: 25, exec: 179, material: 17, hosting: 341, durMin: 8892, net: 230,
-        people: [5, 4, 4, 2, 3, 1, 1, 1, 2, 2, 1, 2], counts: [7, 4, 5, 2, 4, 1, 1, 1, 2, 3, 1, 2] },
-      week: { label: '近一周', days: 7, used: 26, exec: 571, material: 82, hosting: 2184, durMin: 61740, net: 1650,
-        people: [14, 11, 9, 7, 8, 4, 5, 3, 8, 6, 2, 4], counts: [40, 22, 18, 12, 12, 6, 6, 4, 14, 11, 3, 7] },
-      month: { label: '近一月', days: 30, used: 26, exec: 2232, material: 203, hosting: 9120, durMin: 265080, net: 7000,
-        people: [16, 12, 10, 9, 8, 6, 6, 4, 10, 7, 4, 5], counts: [96, 48, 44, 30, 24, 18, 16, 11, 30, 24, 6, 18] },
-      quarter: { label: '近三月', days: 90, used: 27, exec: 6624, material: 437, hosting: 26730, durMin: 794340, net: 19400,
-        people: [17, 14, 12, 10, 12, 8, 7, 5, 12, 9, 5, 7], counts: [282, 142, 124, 94, 72, 56, 43, 30, 88, 67, 18, 54] }
-    };
-    // 与素材看板同一份取用流水逐人汇总，部门映射沿用总览名册。
-    const materialCounts = {"day": {"黄强": 2, "高媛": 3, "冯磊": 1, "梁雪": 1, "朱琳": 1, "李娜": 2, "王芳": 2, "刘洋": 1, "吴静": 1, "陈敏": 1, "谢敏": 1, "郑浩": 1}, "week": {"周杰": 6, "罗鹏": 4, "黄强": 5, "陈敏": 5, "马超": 6, "梁雪": 2, "高媛": 4, "冯磊": 3, "朱琳": 5, "李娜": 6, "王芳": 6, "张伟": 9, "刘洋": 2, "吴静": 3, "孙悦": 4, "徐磊": 2, "林婷": 4, "谢敏": 2, "郑浩": 4}, "month": {"周杰": 12, "罗鹏": 14, "张伟": 15, "孙悦": 12, "黄强": 18, "陈敏": 12, "马超": 10, "郑浩": 9, "梁雪": 7, "高媛": 10, "王芳": 17, "朱琳": 11, "冯磊": 5, "李娜": 15, "吴静": 9, "刘洋": 9, "徐磊": 8, "林婷": 8, "谢敏": 2}, "quarter": {"张伟": 39, "黄强": 34, "周杰": 26, "孙悦": 27, "林婷": 22, "罗鹏": 24, "陈敏": 22, "徐磊": 21, "马超": 21, "谢敏": 18, "朱琳": 24, "郑浩": 21, "梁雪": 13, "高媛": 15, "王芳": 32, "冯磊": 8, "李娜": 30, "刘洋": 18, "吴静": 17, "赵磊": 5}};
-    const hostingEmployees = [['张伟', 1.90], ['王芳', 1.60], ['徐磊', 1.42], ['朱琳', 1.29], ['韩雪', 1.11], ['李娜', .97], ['罗鹏', .79], ['石磊', .70], ['梁雪', .59], ['郑浩', .52], ['高媛', .46], ['马超', .41], ['唐颖', .36]];
-    const hostingGroups = ['微信营销任务', '企业微信任务', 'WhatsApp 加好友', 'AI智能回复', '员工自建能力'];
-    const hostingCounts = { day: [80, 31, 8, 194, 28], week: [512, 198, 48, 1240, 186], month: [2147, 830, 201, 5198, 744], quarter: [6311, 2440, 591, 15280, 2108] };
-    const linkedBoards = { tasks: { name: '任务看板', page: '微小助看板' }, material: { name: '素材看板', page: '企业微信看板' }, hosting: { name: 'AI托管看板', page: 'AI托管数据看板' } };
-    const featureNames = ['发图文到好友', '群发助手', '群内好友', '智能回复采纳', '朋友圈互动', '画像分析', '消息检测死粉', '客户同步', '发图文到群', '通讯录加人', '意向客户识别', '小红书运营'];
-    const outcomeLabels = ['图文发送给好友', '群发助手完成', '群内加人完成', '智能回复采纳', '朋友圈互动完成', '客户画像生成', '死粉检测完成', '客户同步完成', '图文发送到群', '通讯录加人完成', '意向客户识别完成', '小红书运营完成'];
-    const groups = [
-      { name: '客户拓展', features: [2, 9] }, { name: '内容发送', features: [0, 1, 8] },
-      { name: 'AI 辅助', features: [3, 5, 10] }, { name: '内容运营', features: [4, 11] }, { name: '客户维护', features: [6, 7] }
+.rea-ov-page .ov-resources {
+  align-items: start;
+}</script>
+<script type="text/plain" id="srcOverviewScript">(function () {
+  "use strict";
+  const tiers = [
+    { name: "标准版", bought: 9, assigned: 8 },
+    { name: "高级版", bought: 5, assigned: 4 },
+    { name: "旗舰版", bought: 18, assigned: 18 },
+  ];
+  const employees = [
+    ["张伟", "产品部"],
+    ["陈敏", "产品部"],
+    ["刘洋", "产品部"],
+    ["王芳", "市场部"],
+    ["周杰", "市场部"],
+    ["吴静", "市场部"],
+    ["徐磊", "运营部"],
+    ["孙悦", "运营部"],
+    ["马超", "运营部"],
+    ["朱琳", "销售部"],
+    ["李娜", "销售部"],
+    ["黄强", "销售部"],
+    ["林婷", "研发部"],
+    ["郑浩", "研发部"],
+    ["谢敏", "研发部"],
+    ["罗鹏", "客户成功部"],
+    ["梁雪", "客户成功部"],
+    ["王强", "客户成功部"],
+    ["赵磊", "设计部"],
+    ["孙浩", "设计部"],
+    ["郭静", "设计部"],
+    ["何伟", "人力行政部"],
+    ["高媛", "人力行政部"],
+    ["冯磊", "人力行政部"],
+    ["石磊", "运营部"],
+    ["唐颖", "销售部"],
+    ["邓超", "市场部"],
+    ["蒋涛", "人力行政部"],
+    ["韩雪", "产品部"],
+    ["许诺", "设计部"],
+  ].map(([name, dept], id) => ({
+    id,
+    name,
+    dept,
+    tier: id < 7 || id === 28 ? 0 : id < 10 || id === 29 ? 1 : 2,
+    phone: `138****${2041 + id * 37}`,
+    position: {
+      产品部: "产品经理",
+      市场部: "市场专员",
+      运营部: "运营专员",
+      销售部: "销售顾问",
+      研发部: "研发工程师",
+      设计部: "设计师",
+      客户成功部: "客户成功经理",
+      人力行政部: "人事专员",
+    }[dept],
+    assignedOn:
+      {
+        韩雪: "2026.10.24",
+        邓超: "2026.07.01",
+        石磊: "2026.08.01",
+        唐颖: "2026.06.01",
+        许诺: "2026.08.30",
+        蒋涛: "2026.04.12",
+      }[name] || "2026.03.10",
+  }));
+
+  const periods = {
+    day: { name: "今日", days: 1 },
+    week: { name: "近一周", days: 7 },
+    month: { name: "近一月", days: 30 },
+    quarter: { name: "近三月", days: 90 },
+  };
+  const sources = {
+    tasks: {
+      name: "任务成果",
+      board: "任务看板",
+      page: "微小助看板",
+      note: "含托管代跑的任务结果",
+      metrics: ["publish", "friendSend", "request", "taskExec"],
+    },
+    hosting: {
+      name: "AI托管成果",
+      board: "AI托管看板",
+      page: "AI托管数据看板",
+      note: "自动执行按成功回执计，托管时长按账号累加",
+      metrics: ["hostingExec", "message", "publish", "added"],
+    },
+    tools: {
+      name: "App 工具成果",
+      board: "App 工具看板",
+      page: "App 工具看板",
+      note: "员工主动使用 App 工具完成的工作",
+      metrics: ["added", "message", "aiReply", "profile"],
+    },
+    material: {
+      name: "素材使用",
+      board: "素材看板",
+      page: "企业微信看板",
+      note: "复制、保存、一键发送与一键发圈均计取用",
+      metrics: ["material", "materialUsers", "materialCount", "materialSend"],
+    },
+  };
+  const metrics = {
+    added: {
+      name: "成功新增好友",
+      unit: "人次",
+      note: "按成功确认计，同一客户跨账号或多次添加按人次累计",
+    },
+    publish: {
+      name: "成功发布朋友圈",
+      unit: "条",
+      note: "按成功发布回执计，托管代跑在汇总时只计一次",
+    },
+    message: {
+      name: "消息发送成功",
+      unit: "条",
+      note: "群发、自动回复和工具发送的成功消息条数",
+    },
+    aiReply: {
+      name: "AI 回复采纳",
+      unit: "次",
+      note: "员工将 AI 建议填入、复制或发送计一次采纳，同次建议去重",
+    },
+    material: {
+      name: "素材取用",
+      unit: "次",
+      note: "员工主动复制、保存、一键发送或一键发圈",
+    },
+    hostingExec: {
+      name: "托管执行记录",
+      unit: "条",
+      note: "任务、消息回复与员工自建能力的执行日志条数",
+    },
+    friendSend: {
+      name: "群发好友发送",
+      unit: "人次",
+      note: "按实际发送成功的目标计，同一好友跨任务可重复",
+    },
+    request: {
+      name: "发出好友申请",
+      unit: "次",
+      note: "已发送验证请求，后续加为好友另计成功确认",
+    },
+    taskExec: {
+      name: "已执行任务",
+      unit: "人次",
+      note: "按所选期间下发任务的执行人员回执统计",
+    },
+    profile: { name: "客户画像生成", unit: "次", note: "完成画像分析后计入" },
+    materialUsers: {
+      name: "取用员工",
+      unit: "人",
+      note: "本期主动取用过素材的员工去重人数",
+    },
+    materialCount: {
+      name: "被取用素材",
+      unit: "条",
+      note: "本期有取用记录的素材去重数量",
+    },
+    materialSend: {
+      name: "一键发送与发圈",
+      unit: "次",
+      note: "素材取用中选择一键发送或一键发圈的次数",
+    },
+    interact: {
+      name: "朋友圈互动完成",
+      unit: "次",
+      note: "按点赞或评论完成回执计",
+    },
+    clean: { name: "客户检测完成", unit: "次", note: "完成死粉检测的操作次数" },
+    sync: { name: "客户同步完成", unit: "次", note: "完成客户同步的操作次数" },
+    intent: {
+      name: "意向识别完成",
+      unit: "次",
+      note: "完成意向客户识别的次数",
+    },
+    xhs: {
+      name: "小红书运营完成",
+      unit: "次",
+      note: "取得实际发布或互动完成回执的次数",
+    },
+  };
+  const heroMetrics = [
+    "added",
+    "publish",
+    "message",
+    "aiReply",
+    "material",
+    "hostingExec",
+  ];
+  const pointFeatures = ["智能回复", "画像分析", "意向客户识别"];
+  const root = document.querySelector(".rea-ov-page");
+  const $ = (selector) => root.querySelector(selector);
+  const html = (value) =>
+    String(value).replace(
+      /[&<>"']/g,
+      (character) =>
+        ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;",
+        })[character],
+    );
+  const number = (value) => Number(value).toLocaleString("zh-CN");
+  const sum = (records, field = "qty") =>
+    records.reduce((total, record) => total + record[field], 0);
+  const saved = window.__REA_OVERVIEW_NAV || {};
+  let scheme = saved.scheme === "B" ? "B" : "A";
+  let period = periods[saved.period] ? saved.period : "month";
+  let peopleTab = saved.peopleTab || "department";
+  let pointsTab = saved.pointsTab || "employee";
+  let homeOrg = saved.homeOrg || saved.org || "all";
+  if (!employees.some((employee) => employee.dept === homeOrg)) homeOrg = "all";
+  let homeScroll = saved.scroll || 0;
+  let trail = saved.trail || [];
+  let route = window.__REA_TOOL_BOARD
+    ? { view: "board", source: "tools", org: homeOrg, ...saved.detail }
+    : window.__REA_USAGE_DETAIL
+      ? { view: "employees", org: homeOrg, ...saved.detail }
+      : { view: "home", org: homeOrg };
+  if (!employees.some((employee) => employee.dept === route.org))
+    route.org = "all";
+  let filters = { query: "", source: "all", feature: "all", status: "all" };
+  let recordPage = 1;
+  const allRecords = [];
+  const pointLedger = [];
+  const hostData = window.__REA_OVERVIEW_HOST_DATA;
+  const hostIds = hostData.employees.map(
+    (employee) => employees.find((person) => person.name === employee.n).id,
+  );
+  const hostWindows = ["today", "w7", "m1", "m3"];
+  const hostTotals = (field) =>
+    hostWindows.map((key) => hostData.windows[key][field]);
+
+  function dateLabel(offset = 0) {
+    const date = new Date();
+    date.setDate(date.getDate() - offset);
+    return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, "0")}.${String(date.getDate()).padStart(2, "0")}`;
+  }
+  function timeLabel(record) {
+    return `${dateLabel(record.day)} ${record.day === 0 ? "00" : String(9 + (record.sequence % 9)).padStart(2, "0")}:${String(record.sequence % 60).padStart(2, "0")}`;
+  }
+  function portion(total, count, index) {
+    return Math.floor(total / count) + (index < total % count ? 1 : 0);
+  }
+  // Each band adds records to one canonical 90-day ledger. All four windows and both layouts query it.
+  function addSeries(metric, totals, sourceIds, options = {}) {
+    const ranges = [
+      [0, 1],
+      [1, 7],
+      [7, 30],
+      [30, 90],
     ];
-    const groupPeople = { day: [4, 5, 2, 3, 1], week: [10, 14, 7, 8, 5], month: [12, 16, 9, 10, 6], quarter: [13, 17, 10, 12, 7] };
-    const pointNames = ['智能回复', '画像分析', '意向客户识别'];
-    const tiers = [{ name: '标准版', bought: 9, assigned: 8 }, { name: '高级版', bought: 5, assigned: 4 }, { name: '旗舰版', bought: 18, assigned: 18 }];
-    const employees = [
-      ['张伟', '产品部'], ['陈敏', '产品部'], ['刘洋', '产品部'], ['王芳', '市场部'], ['周杰', '市场部'], ['吴静', '市场部'],
-      ['徐磊', '运营部'], ['孙悦', '运营部'], ['马超', '运营部'], ['朱琳', '销售部'], ['李娜', '销售部'], ['黄强', '销售部'],
-      ['林婷', '研发部'], ['郑浩', '研发部'], ['谢敏', '研发部'], ['罗鹏', '客户成功部'], ['梁雪', '客户成功部'], ['王强', '客户成功部'],
-      ['赵磊', '设计部'], ['孙浩', '设计部'], ['郭静', '设计部'], ['何伟', '人力行政部'], ['高媛', '人力行政部'], ['冯磊', '人力行政部'],
-      ['石磊', '运营部'], ['唐颖', '销售部'], ['邓超', '市场部'], ['蒋涛', '人力行政部'], ['韩雪', '产品部'], ['许诺', '设计部']
-    ].map(([name, dept], id) => ({ id, name, dept, tier: id < 7 || id === 28 ? 0 : id < 10 || id === 29 ? 1 : 2,
-      phone: `138****${2041 + id * 37}`, position: { 产品部: '产品经理', 市场部: '市场专员', 运营部: '运营专员', 销售部: '销售顾问', 研发部: '研发工程师', 设计部: '设计师', 客户成功部: '客户成功经理', 人力行政部: '人事专员' }[dept],
-      assignedOn: { 韩雪: '2026.10.24', 邓超: '2026.07.01', 石磊: '2026.08.01', 唐颖: '2026.06.01', 许诺: '2026.08.30', 蒋涛: '2026.04.12' }[name] || '2026.03.10' }));
-    const resultIcons = ["<svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"16\" height=\"16\" rx=\"3\"/><path d=\"m8 12 3 3 5-6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>", "<svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"6.5\" height=\"6.5\" rx=\"1.6\"/><rect x=\"13.5\" y=\"4\" width=\"6.5\" height=\"6.5\" rx=\"1.6\"/><rect x=\"4\" y=\"13.5\" width=\"6.5\" height=\"6.5\" rx=\"1.6\"/><rect x=\"13.5\" y=\"13.5\" width=\"6.5\" height=\"6.5\" rx=\"1.6\"/></svg>", "<svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\"><path d=\"M3.5 7.5a2 2 0 0 1 2-2h4l2 2.5h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z\" stroke-linejoin=\"round\"/></svg>", "<svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\"><rect x=\"5\" y=\"5\" width=\"14\" height=\"14\" rx=\"3\"/><path d=\"M9 10h.01M15 10h.01M9 15c1.4 1.3 4.6 1.3 6 0M12 2v3M2 12h3M19 12h3\" stroke-linecap=\"round\"/></svg>"];
-    const number = value => value.toLocaleString('zh-CN');
-    const root = document.querySelector('.rea-ov-page');
-    const query = selector => root.querySelector(selector);
-    const escapeHtml = value => String(value).replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
-    const usageViews = ['employees', 'employee', 'departments', 'features', 'feature', 'group', 'tasks', 'material', 'hosting', 'toolboard'];
-    let period = 'month';
-    let usageTab = 'dept';
-    let route = { view: 'home', org: 'all' };
-    let filters = { query: '', type: 'all' };
-    let recordPage = 1;
-    let homeScroll = 0;
-    let homeOrg = 'all';
-
-    function dateLabel(offset = 0) {
-      const date = new Date();
-      date.setDate(date.getDate() - offset);
-      return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
-    }
-
-    function portion(total, count, index) {
-      return Math.floor(total / count) + (index < total % count ? 1 : 0);
-    }
-
-    function usageRecords() {
-      const data = periods[period];
-      const records = [];
-      function add(employee, type, label, count, feature = null) {
-        const index = records.length;
-        records.push({ employee, type, label, count, feature, group: feature === null ? null : groups.findIndex(group => group.features.includes(feature)),
-          time: `${dateLabel(index % data.days)} ${String(9 + index % 3).padStart(2, '0')}:${String(index % 60).padStart(2, '0')}`,
-          platform: feature === 11 ? '小红书' : '微信' });
-      }
-      featureNames.forEach((name, feature) => {
-        const group = groups.findIndex(item => item.features.includes(feature));
-        const participants = groupPeople[period][group];
-        const start = groups[group].features[0] === feature ? 0 : participants - data.people[feature];
-        for (let index = 0; index < data.people[feature]; index++) {
-          const employee = employees[(group * 4 + (start + index) % participants) % 24];
-          add(employee, 'tools', name, portion(data.counts[feature], data.people[feature], index), feature);
-        }
-      });
-      const hostingPeople = { day: 5, week: 9, month: 11, quarter: 13 }[period];
-      for (let index = 0; index < 24; index++) {
-        add(employees[index], 'tasks', '营销任务执行', portion(data.exec, 24, index));
-      }
-      Object.entries(materialCounts[period]).forEach(([name, count]) => {
-        add(employees.find(employee => employee.name === name), 'material', '企业素材取用', count);
-      });
-      // 与已有 AI托管看板使用同一份员工权重和确定性分配，保证逐人和部门合计也能对上。
-      const hosts = hostingEmployees.slice(0, hostingPeople);
-      const weight = hosts.reduce((sum, host) => sum + host[1], 0);
-      const targets = hosts.map(host => Math.round(data.hosting * host[1] / weight));
-      targets[0] += data.hosting - targets.reduce((sum, count) => sum + count, 0);
-      const owners = targets.flatMap((count, index) => Array(count).fill(index));
-      let seed = 97;
-      for (let index = owners.length - 1; index > 0; index--) {
-        seed = (seed * 9301 + 49297) % 233280;
-        const other = seed % (index + 1);
-        [owners[index], owners[other]] = [owners[other], owners[index]];
-      }
-      let offset = 0;
-      hostingCounts[period].forEach((count, group) => {
-        const counts = Array(hosts.length).fill(0);
-        owners.slice(offset, offset + count).forEach(owner => counts[owner]++);
-        offset += count;
-        counts.forEach((completed, index) => {
-          if (!completed) return;
-          add(employees.find(employee => employee.name === hosts[index][0]), 'hosting', hostingGroups[group], completed);
-          records[records.length - 1].platform = group === 1 ? '企业微信' : group === 2 ? 'WhatsApp' : '微信';
-        });
-      });
-      return records.sort((a, b) => b.time.localeCompare(a.time));
-    }
-
-    function pointRecords() {
-      const data = periods[period];
-      const records = [];
-      pointData().forEach((net, feature) => {
-        for (let index = 0; index < 4; index++) {
-          records.push({ feature, type: 'charge', amount: -portion(net, 4, index),
-            time: `${dateLabel((feature * 4 + index) % data.days)} 10:${String(feature * 4 + index).padStart(2, '0')}` });
-        }
-      });
-      return records.sort((a, b) => b.time.localeCompare(a.time));
-    }
-
-    function overviewScroller() {
-      return root.closest('.ant-pro-grid-content') || document.scrollingElement;
-    }
-
-    function navigate(view, values = {}) {
-      if (route.view === 'home') {
-        homeOrg = route.org;
-        homeScroll = overviewScroller().scrollTop;
-      }
-      const org = view === 'home' ? homeOrg : usageViews.includes(view) ? route.org : 'all';
-      const next = { view, org, ...values };
-      if (view === 'home') homeOrg = next.org;
-      const state = { period, usageTab, homeOrg, scroll:homeScroll, org:next.org, start:dateLabel(periods[period].days-1), end:dateLabel(), detail:next };
-      let page = view === 'home' ? '使用总览' : view === 'toolboard' ? 'App 工具看板' : '使用总览 · 使用详情';
-      if (linkedBoards[view]) {
-        page = linkedBoards[view].page;
-        state.detail = { view:'home', org:homeOrg };
-      }
-      parent.postMessage({ reaPage:page, reaOverview:state }, '*');
-    }
-
-    function readRoute() {
-      const saved = window.__REA_OVERVIEW_NAV || {};
-      if (periods[saved.period]) period = saved.period;
-      usageTab = saved.usageTab || 'dept';
-      homeOrg = saved.homeOrg || saved.org || 'all';
-      if (homeOrg === '全公司') homeOrg = 'all';
-      homeScroll = saved.scroll || 0;
-      route = window.__REA_TOOL_BOARD ? { org:homeOrg, ...saved.detail, view:'toolboard' } :
-        window.__REA_USAGE_DETAIL ? { view:'employees', org:homeOrg, ...saved.detail } : { view:'home', org:homeOrg };
-      if (route.org === '全公司') route.org = 'all';
-      if (route.view === 'all') route.view = 'employees';
-      if (/^\d+$/.test(route.view)) { route.group = Number(route.view); route.view = 'group'; }
-      if (route.employee === 'all') delete route.employee;
-      route.status = route.status || 'all';
-      if (!employees.some(employee => employee.dept === route.org)) route.org = 'all';
-      for (const key of ['employee','feature','group','tier']) {
-        if (route[key] !== undefined) route[key] = Number(route[key]);
-      }
-      filters = { query:'', type:'all' };
-      recordPage = 1;
-      render();
-      requestAnimationFrame(() => { overviewScroller().scrollTop = route.view === 'home' ? homeScroll : 0; });
-    }
-
-    function scopedRecords() {
-      return usageRecords().filter(record => route.org === 'all' || record.employee.dept === route.org);
-    }
-
-    function scopedEmployees() {
-      return employees.filter(employee => route.org === 'all' || employee.dept === route.org);
-    }
-
-    const hostingPeopleByPeriod = { day: 5, week: 9, month: 11, quarter: 13 };
-    // 与 AI托管看板的「累计托管时间」同口径：窗口总时长按员工权重摊到人，再取所选部门的人相加。
-    function hostingHours() {
-      const hosts = hostingEmployees.slice(0, hostingPeopleByPeriod[period]);
-      const weight = hosts.reduce((sum, host) => sum + host[1], 0);
-      const minutes = hosts.reduce((sum, [name, share]) =>
-        route.org === 'all' || employees.find(employee => employee.name === name).dept === route.org ? sum + periods[period].durMin * share / weight : sum, 0);
-      return Math.round(minutes / 60);
-    }
-
-    function featureData(records = scopedRecords()) {
-      return featureNames.map((name, id) => {
-        const own = records.filter(record => record.feature === id);
-        return { id, name, count: own.reduce((sum, record) => sum + record.count, 0) };
-      })
-        .sort((a, b) => b.count - a.count || a.id - b.id);
-    }
-
-    function groupData(records = scopedRecords()) {
-      return groups.map((group, id) => {
-        const own = records.filter(record => record.group === id);
-        return { id, name: group.name, people: new Set(own.map(record => record.employee.id)).size, count: own.reduce((sum, record) => sum + record.count, 0) };
-      }).sort((a, b) => b.count - a.count || a.id - b.id);
-    }
-
-    function pointData() {
-      const total = periods[period].net;
-      const reply = Math.round(total * 34 / 70);
-      const profile = Math.round(total * 24 / 70);
-      return [reply, profile, total - reply - profile];
-    }
-
-    function renderBusinessResults() {
-      const scenes = groupData();
-      query('#business-results').innerHTML = scenes.map((scene, index) => `
-        <button type="button" class="feature-row" data-group="${scene.id}">
-          <span class="rank">${index + 1}</span>
-          <span class="feature-name"><strong>${scene.name}</strong><span class="track"><i style="width: ${scene.count / Math.max(1, scenes[0].count) * 100}%"></i></span></span>
-          <span class="number">${number(scene.count)}</span><span class="muted">›</span>
-        </button>`).join('');
-    }
-
-    function renderFeatures() {
-      const features = featureData().filter(feature => feature.count > 0).slice(0, 5);
-      query('#features').innerHTML = features.map((feature, index) => `
-        <button type="button" class="feature-row" data-feature="${feature.id}">
-          <span class="rank">${index + 1}</span>
-          <span class="feature-name"><strong>${feature.name}</strong><span class="track"><i style="width: ${feature.count / Math.max(1, features[0].count) * 100}%"></i></span></span>
-          <span class="number">${number(feature.count)}</span><span class="muted">›</span>
-        </button>`).join('') || '<p class="detail-empty">所选期间暂无完成记录</p>';
-    }
-
-    function departmentData(records) {
-      return [...new Set(employees.map(employee => employee.dept))].map(name => {
-        const own = records.filter(record => record.employee.dept === name);
-        return { name, count: own.reduce((sum, record) => sum + record.count, 0), used: new Set(own.map(record => record.employee.id)).size, assigned: employees.filter(employee => employee.dept === name).length };
-      }).sort((a, b) => b.count - a.count);
-    }
-
-    function renderUsage() {
-      const records = scopedRecords();
-      const effectiveTab = route.org === 'all' ? usageTab : 'employee';
-      const rows = effectiveTab === 'dept' ? departmentData(records).map(dept => ({
-        label: dept.name,
-        note: `${dept.used} / ${dept.assigned} 人`,
-        count: dept.count,
-        action: `data-dept="${dept.name}"`
-      })) : scopedEmployees().map(employee => ({
-        label: employee.name,
-        note: employee.dept,
-        count: records.filter(record => record.employee.id === employee.id).reduce((sum, record) => sum + record.count, 0),
-        action: `data-employee="${employee.id}"`
-      })).filter(row => row.count > 0).sort((a, b) => b.count - a.count);
-      query('#usage-ranking').innerHTML = rows.slice(0, 5).map(row => `<button type="button" class="usage-row" ${row.action}><strong>${row.label}<span class="track"><i style="width: ${row.count / Math.max(1, rows[0].count) * 100}%"></i></span></strong><span class="number">${number(row.count)}</span><small>${row.note}</small><span>›</span></button>`).join('') || '<p class="detail-empty">所选期间暂无使用记录</p>';
-      query('#usage-all').textContent = effectiveTab === 'dept' ? '查看全部部门 →' : '查看全部员工 →';
-      query('#usage-all').dataset.detail = effectiveTab === 'dept' ? 'departments' : 'employees';
-      root.querySelectorAll('[data-usage]').forEach(button => {
-        button.hidden = route.org !== 'all' && button.dataset.usage === 'dept';
-        button.setAttribute('aria-pressed', String(button.dataset.usage === effectiveTab));
-      });
-    }
-
-    function renderOrgTree() {
-      const tree = document.querySelector('.yk-lefttree .ant-tree');
-      if (!tree) return;
-      const panel = tree.closest('.yk-lefttree');
-      panel.style.display = ['seats','points'].includes(route.view) ? 'none' : '';
-      tree.setAttribute('aria-label','部门架构');
-      tree.innerHTML = ['all', ...new Set(employees.map(employee => employee.dept))].map(org => `<button type="button" class="ov-org-button" data-org="${org}" aria-pressed="${route.org === org}">${org === 'all' ? '全公司' : org}</button>`).join('');
-      const search = panel.querySelector('input');
-      if (search) {
-        search.placeholder = '搜索部门';
-        search.addEventListener('input', () => tree.querySelectorAll('button').forEach(button => { button.hidden = !button.textContent.includes(search.value.trim()); }));
-      }
-    }
-
-    function render() {
-      root.classList.toggle('is-detail', route.view !== 'home');
-      const data = periods[period];
-      const records = scopedRecords();
-      const assigned = scopedEmployees().length;
-      const used = new Set(records.map(record => record.employee.id)).size;
-      const idle = assigned - used;
-      const total = type => records.filter(record => record.type === type).reduce((sum, record) => sum + record.count, 0);
-      const metrics = [
-        ['used', '本期使用人数', used, '人', '有任务、素材、工具或托管有效记录'],
-        ['idle', '本期无使用记录', idle, '人', '所选期间内暂无有效使用记录'],
-        ['coverage', '使用覆盖率', assigned ? (used / assigned * 100).toFixed(1) : '—', '%', `${used} / ${assigned} 名已分配员工`]
-      ];
-      query('#people-metrics').innerHTML = metrics.map(([id, label, value, unit, description]) => `
-        <button type="button" class="metric" data-detail="${id}"><span class="metric-label">${label}<span>↗</span></span><b>${value}<small>${unit}</small></b><span class="metric-description">${description}</span></button>`).join('');
-      const results = [
-        ['tasks', '任务执行', '查看任务看板', total('tasks'), '人次'],
-        ['toolboard', 'App 工具完成', '查看 App 工具看板', total('tools'), '次'],
-        ['material', '素材取用', '查看素材看板', total('material'), '次'],
-        ['hosting', 'AI托管时长', '查看 AI托管看板', hostingHours(), '小时']
-      ];
-      query('#results').innerHTML = results.map(([id, label, caption, value, unit], index) => `
-        <button type="button" class="result" data-board="${id}"><span class="result-top"><span class="result-icon">${resultIcons[index]}</span><span aria-hidden="true">↗</span></span><span><strong>${label}</strong><small>${caption}</small></span><span class="result-value"><b>${number(value)}</b><em>${unit} ›</em></span></button>`).join('');
-      query('#point-total').innerHTML = `${number(data.net)}<small>点</small>`;
-      query('#point-breakdown').innerHTML = pointData().map((value, index) => `
-        <div class="point-row"><span>${pointNames[index]}</span><span class="track"><i style="width: ${value / data.net * 100}%"></i></span><span class="number">${number(value)} 点</span></div>`).join('');
-      const updated = `${dateLabel()} ${String(new Date().getHours()).padStart(2,'0')}:${String(new Date().getMinutes()).padStart(2,'0')}`;
-      root.querySelectorAll('[data-overview-updated]').forEach(element => { element.textContent = updated; });
-      const end = new Date();
-      const start = new Date(end);
-      start.setDate(end.getDate() - data.days + 1);
-      const formatDate = date => `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
-      query('#date-range').textContent = `${formatDate(start)} — ${formatDate(end)} · ${route.org === 'all' ? '全公司' : route.org}`;
-      root.querySelectorAll('[data-period]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.period === period)));
-      renderBusinessResults();
-      renderFeatures();
-      renderUsage();
-      renderOrgTree();
-      query('#overview-page').hidden = route.view !== 'home';
-      query('#detail-page').hidden = route.view === 'home';
-      if (route.view !== 'home') renderDetail();
-    }
-
-    function summary(items) {
-      return `<div class="detail-summary">${items.map(([label, value, unit]) => `<div><small>${label}</small><b>${number(value)} <small>${unit}</small></b></div>`).join('')}</div>`;
-    }
-
-    function table(headers, rows) {
-      const pages = Math.max(1, Math.ceil(rows.length / 10));
-      recordPage = Math.min(Math.max(1, recordPage), pages);
-      const visibleRows = rows.slice((recordPage - 1) * 10, recordPage * 10);
-      return `<div class="detail-table"><table><thead><tr>${headers.map(label => `<th>${label}</th>`).join('')}</tr></thead><tbody>${visibleRows.map(row => `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`).join('') || `<tr><td colspan="${headers.length}"><div class="detail-empty">所选条件下暂无记录</div></td></tr>`}</tbody></table></div>
-        <footer class="detail-pager"><span>共 ${rows.length} 条</span><div><button type="button" class="detail-button" data-page="${recordPage - 1}" ${recordPage === 1 ? 'disabled' : ''}>上一页</button><span>${recordPage} / ${pages}</span><button type="button" class="detail-button" data-page="${recordPage + 1}" ${recordPage === pages ? 'disabled' : ''}>下一页</button></div></footer>`;
-    }
-
-    function toolbar(placeholder, types = []) {
-      return `<div class="detail-toolbar"><form id="detail-filter"><input name="query" aria-label="${placeholder}" placeholder="${placeholder}" value="${escapeHtml(filters.query)}">${types.length ? `<select name="type" aria-label="记录类型"><option value="all">全部类型</option>${types.map(([value, label]) => `<option value="${value}" ${filters.type === value ? 'selected' : ''}>${label}</option>`).join('')}</select>` : ''}<button class="detail-button" type="submit">查询</button><button class="link" type="button" data-reset>重置</button></form></div>`;
-    }
-
-    function recordTable(records) {
-      const filtered = records.filter(record => `${record.employee.name}${record.employee.dept}${record.label}`.includes(filters.query) && (filters.type === 'all' || record.type === filters.type));
-      const typeNames = { tasks: '任务执行', tools: 'App 工具', material: '素材取用', hosting: 'AI托管' };
-      const sum = filtered.reduce((total, record) => total + record.count, 0);
-      return table(['完成时间', '员工', '部门', '功能 / 动作', '平台', '完成数量'], filtered.map(record => [
-        record.time, route.view === 'employee' ? record.employee.name : `<button type="button" class="link" data-employee="${record.employee.id}">${record.employee.name}</button>`, record.employee.dept,
-        record.feature === null || route.view === 'feature' ? record.label : `<button type="button" class="link" data-feature="${record.feature}">${record.label}</button>`,
-        record.platform, `${number(record.count)} ${record.type === 'tasks' ? '人次' : record.type === 'hosting' ? '条' : '次'}`
-      ])) + `<p class="footnote">筛选结果 ${filtered.length} 条记录${new Set(filtered.map(record => typeNames[record.type])).size <= 1 ? ` · 完成 ${number(sum)} ${filtered[0]?.type === 'tasks' ? '人次' : filtered[0]?.type === 'hosting' ? '条' : '次'}` : ''}。逐人、逐条记录为演示分配。</p>`;
-    }
-
-    function pieChart(title, items, action) {
-      const sum = items.reduce((total, item) => total + item.count, 0);
-      const positiveItems = items.filter(item => item.count > 0);
-      let angle = -Math.PI / 2;
-      const slices = positiveItems.map((item, index) => {
-        const share = item.count / sum;
-        const nextAngle = angle + share * Math.PI * 2;
-        const startX = 120 + 100 * Math.cos(angle);
-        const startY = 120 + 100 * Math.sin(angle);
-        const endX = 120 + 100 * Math.cos(nextAngle);
-        const endY = 120 + 100 * Math.sin(nextAngle);
-        const palette = ['#1677FF','#5AA7FF','#91CAFF','#BAE0FF','#D6E9FF','#E6F4FF'];
-        const shade = Math.round(130 + (index-6) * 70 / Math.max(1, positiveItems.length-7));
-        item.color = palette[index] || `rgb(${shade}, ${shade}, ${shade})`;
-        const shape = positiveItems.length === 1 ? '<circle cx="120" cy="120" r="100" />' :
-          `<path d="M 120 120 L ${startX} ${startY} A 100 100 0 ${share > .5 ? 1 : 0} 1 ${endX} ${endY} Z" />`;
-        angle = nextAngle;
-        return `<a href="#" data-chart-action data-${action}="${item.id}" aria-label="${item.label}，${number(item.count)}次，占${(share * 100).toFixed(1)}%，查看详情" fill="${item.color}" stroke="white" stroke-width="1.5"><title>${item.label} · ${number(item.count)} 次 · ${(share * 100).toFixed(1)}%</title>${shape}</a>`;
-      }).join('');
-      return `<section><h2>${title}</h2><p class="muted">按完成次数占比 · 合计 ${number(sum)} 次</p><div class="pie-content">
-        <svg class="pie-chart" viewBox="0 0 240 240" role="group" aria-label="${title}完成次数分布">${slices || '<circle class="pie-placeholder" cx="120" cy="120" r="100" /><text x="120" y="125" text-anchor="middle" fill="#686868" font-size="14">暂无完成记录</text>'}</svg>
-        <div class="pie-legend">${items.map(item => `<button type="button" data-${action}="${item.id}"><span class="pie-key" style="background: ${item.color || '#f5f5f5'}"></span><strong>${item.label}${item.description ? `<small>${item.description}</small>` : ''}</strong><span class="pie-value">${number(item.count)} 次<small>${sum ? (item.count / sum * 100).toFixed(1) : '0.0'}%</small></span></button>`).join('') || '<p class="muted">所选期间暂无参与员工</p>'}</div>
-        </div></section>`;
-    }
-
-    function renderDetail() {
-      const data = periods[period];
-      const records = scopedRecords();
-      const scopedPeople = scopedEmployees();
-      const total = (items, type) => items.filter(record => record.type === type).reduce((sum, record) => sum + record.count, 0);
-      const employeeLink = employee => `<button type="button" class="link" data-employee="${employee.id}">${employee.name}</button>`;
-      let title = '';
-      let body = '';
-
-      if (route.view === 'departments') {
-        title = '部门使用详情';
-        body = toolbar('搜索部门') + table(['部门', '已分配员工', '本期使用人数', '使用覆盖率', '本期记录量', '操作'], departmentData(records).filter(dept =>
-          (route.org === 'all' || dept.name === route.org) && dept.name.includes(filters.query)).map(dept => [dept.name, `${dept.assigned} 人`, `${dept.used} 人`, `${(dept.used / dept.assigned * 100).toFixed(1)}%`, number(dept.count), `<button type="button" class="link" data-dept="${dept.name}">查看员工 →</button>`]));
-      } else if (route.view === 'employees') {
-        const own = records.filter(record => (route.feature === undefined || record.feature === route.feature) && (route.group === undefined || record.group === route.group));
-        const usedIds = new Set(own.map(record => record.employee.id));
-        const toolScope = route.feature !== undefined || route.group !== undefined;
-        title = toolScope ? `${route.feature !== undefined ? featureNames[route.feature] : groups[route.group].name} · 使用详情` : '使用详情';
-        const statusButtons = [['all', '全部员工'], ['used', '本期有记录'], ['idle', '本期无记录']].map(([status, label]) => `<button type="button" data-status="${status}" aria-pressed="${route.status === status}">${label}</button>`).join('');
-        const people = scopedPeople.filter(employee => `${employee.name}${employee.dept}${employee.phone}`.includes(filters.query) &&
-          (route.status === 'all' || usedIds.has(employee.id) === (route.status === 'used')));
-        const overviewStats = [['任务执行', total(own, 'tasks'), '人次'], ['App 工具完成', total(own, 'tools'), '次'], ['素材取用', total(own, 'material'), '次'], ['AI托管执行', total(own, 'hosting'), '条']];
-        body = summary(toolScope ? [['完成次数', total(own, 'tools'), '次']] : overviewStats) +
-          `<p class="muted">${usedIds.size} / ${scopedPeople.length} 人本期有记录 · 点员工查看同页个人数据</p><div class="sort" style="width: fit-content; margin-top: 16px" role="group" aria-label="员工使用状态">${statusButtons}</div>` + toolbar('搜索姓名 / 手机号') +
-          table(toolScope ? ['员工', '部门', '当前版本', '本期使用情况', '完成次数'] : ['员工', '部门', '当前版本', '本期使用情况', '任务执行', '工具完成', '素材取用', '托管执行'], people.map(employee => {
-            const personRecords = own.filter(record => record.employee.id === employee.id);
-            const cells = [employeeLink(employee), employee.dept, tiers[employee.tier].name, usedIds.has(employee.id) ? '有记录' : '无记录'];
-            return cells.concat(toolScope ? [`${number(total(personRecords, 'tools'))} 次`] : [
-              `${number(total(personRecords, 'tasks'))} 人次`, `${number(total(personRecords, 'tools'))} 次`, `${number(total(personRecords, 'material'))} 次`, `${number(total(personRecords, 'hosting'))} 条`]);
-          }));
-      } else if (route.view === 'employee') {
-        const employee = employees[route.employee];
-        const own = records.filter(record => record.employee.id === employee.id && (route.feature === undefined || record.feature === route.feature) && (route.group === undefined || record.group === route.group));
-        const toolScope = route.feature !== undefined || route.group !== undefined;
-        title = `${employee.name}${toolScope ? ' · ' + (route.feature !== undefined ? featureNames[route.feature] : groups[route.group].name) : ''} · 使用详情`;
-        body = `<div class="identity"><button type="button" class="link" data-detail="employees">查看全部员工 →</button><p>${employee.dept} · ${tiers[employee.tier].name} · 分配于 ${employee.assignedOn} · ${own.length ? '本期有记录' : '本期无记录'}</p></div>` +
-          summary(toolScope ? [['工具完成', total(own, 'tools'), '次'], ['使用功能', new Set(own.map(record => record.feature)).size, '项']] : [['任务执行', total(own, 'tasks'), '人次'], ['App 工具完成', total(own, 'tools'), '次'], ['素材取用', total(own, 'material'), '次'], ['AI托管执行', total(own, 'hosting'), '条']]) +
-          '<h2>使用记录</h2>' + toolbar('搜索具体功能', [['tasks', '任务执行'], ['tools', 'App 工具'], ['material', '素材取用'], ['hosting', 'AI托管']]) + recordTable(own);
-      } else if (route.view === 'toolboard') {
-        const own = records.filter(record => record.type === 'tools');
-        const scenes = groupData(own);
-        const features = featureData(own).filter(feature => feature.count > 0).slice(0, 5);
-        title = 'App 工具看板';
-        body = summary([['App 工具完成', total(own, 'tools'), '次']]) +
-          `<div class="group-layout"><section><h2>业务场景分布</h2>${scenes.map((scene, index) => `<button type="button" class="feature-row" data-group="${scene.id}"><span class="rank">${index + 1}</span><span class="feature-name"><strong>${scene.name}</strong><span class="track"><i style="width: ${scene.count / Math.max(1, scenes[0].count) * 100}%"></i></span></span><span class="number">${number(scene.count)}</span><span>›</span></button>`).join('')}</section><section><div class="panel-head"><h2>热门功能 Top 5</h2><button type="button" class="link" data-detail="features">查看全部功能 →</button></div>${features.map((feature, index) => `<button type="button" class="feature-row" data-feature="${feature.id}"><span class="rank">${index + 1}</span><span class="feature-name"><strong>${feature.name}</strong><span class="track"><i style="width: ${feature.count / Math.max(1, features[0].count) * 100}%"></i></span></span><span class="number">${number(feature.count)}</span><span>›</span></button>`).join('') || '<p class="detail-empty">所选期间暂无完成记录</p>'}</section></div>` +
-          '<h2>工具完成记录</h2>' + toolbar('搜索员工或功能') + recordTable(own);
-      } else if (route.view === 'features') {
-        title = '全部 App 工具功能';
-        const features = featureData(records).filter(feature => feature.name.includes(filters.query));
-        body = '<p class="muted">按完成次数排序 · 点击功能查看完成记录</p>' + toolbar('搜索具体功能') +
-          table(['具体功能', '完成次数', '操作'], features.map(feature => [feature.name, `${number(feature.count)} 次`, `<button type="button" class="link" data-feature="${feature.id}">查看详情 →</button>`]));
-      } else if (route.view === 'group') {
-        const own = records.filter(record => record.group === route.group);
-        const features = featureData(own).filter(feature => groups[route.group].features.includes(feature.id));
-        const participants = scopedPeople.map(employee => ({ employee, count: own.filter(record => record.employee.id === employee.id).reduce((sum, record) => sum + record.count, 0) })).filter(person => person.count > 0).sort((a, b) => b.count - a.count);
-        title = `${groups[route.group].name} · 业务成果`;
-        body = '<p class="footnote" style="padding: 0 0 20px">两张饼图均按完成次数展示占比，点击扇区或图例查看详情。</p>' +
-          `<div class="group-layout">${pieChart('已完成事项', features.map(feature => ({ id: feature.id, label: outcomeLabels[feature.id], description: feature.name, count: feature.count })), 'feature')}${pieChart('参与员工', participants.map(({ employee, count }) => ({ id: employee.id, label: employee.name, description: employee.dept, count })), 'employee')}</div>` +
-          '<h2>完成记录</h2>' + toolbar('搜索员工或功能') + recordTable(own);
-      } else if (route.view === 'feature') {
-        const own = records.filter(record => record.feature === route.feature && (route.employee === undefined || record.employee.id === route.employee));
-        title = `${featureNames[route.feature]} · 使用详情`;
-        body = `<div class="identity"><button type="button" class="link" data-detail="features">查看全部功能 →</button><p>${route.employee === undefined ? (route.org === 'all' ? '全公司员工' : route.org + '员工') : employees[route.employee].name} · 按实际完成结果统计</p></div>` +
-          summary([['完成次数', total(own, 'tools'), '次']]) +
-          '<h2>完成记录</h2>' + toolbar('搜索员工或部门') + recordTable(own);
-      } else if (route.view === 'seats') {
-        const tier = tiers[route.tier];
-        title = tier ? `${tier.name}席位` : '版本席位分配';
-        if (tier) {
-          const people = employees.filter(employee => employee.tier === route.tier && `${employee.name}${employee.dept}`.includes(filters.query));
-          body = summary([['已购', tier.bought, '席'], ['已分配', tier.assigned, '席'], ['待分配', tier.bought - tier.assigned, '席'], ['分配率', (tier.assigned / tier.bought * 100).toFixed(1), '%']]) + toolbar('搜索员工或部门') +
-            table(['姓名', '手机号', '职位', '部门', '到期日期'], people.map(employee => [employee.name, employee.phone, employee.position, employee.dept, '2027.06.30']));
-        } else {
-          body = summary([['已购', 32, '席'], ['已分配', 30, '席'], ['待分配', 2, '席']]) +
-            table(['版本', '已购', '已分配', '待分配', '操作'], tiers.map((item, id) => [item.name, item.bought, item.assigned, item.bought - item.assigned, `<button type="button" class="link" data-tier="${id}">查看分配 →</button>`]));
-        }
-        body += `<p class="footnote">截至 ${dateLabel()}的当前有效授权。批次与到期日期为演示数据。</p>`;
-      } else if (route.view === 'points') {
-        title = 'AI 点数消耗明细';
-        const ledger = pointRecords().filter(record => pointNames[record.feature].includes(filters.query) && (filters.type === 'all' || record.type === filters.type));
-        body = summary([['当前剩余', 42000, '点'], ['本期消耗', data.net, '点']]) +
-          '<h2>点数流水</h2>' + toolbar('搜索功能') +
-          table(['发生时间', '流水号', '功能', '消耗点数'], ledger.map(record => [record.time, `DEMO-${period}-${record.feature}-${record.time.slice(-5).replace(':', '')}`, pointNames[record.feature], `${number(Math.abs(record.amount))} 点`])) +
-          `<p class="footnote">功能映射与逐笔流水均为方案演示。当前余额截至 ${dateLabel()}。</p>`;
-      }
-      query('#detail-page').innerHTML = `<button type="button" class="link detail-back" data-home>‹ 返回使用总览</button>
-        <header class="page-head"><div><h1 tabindex="-1">${title}</h1><p class="muted">${route.view === 'seats' ? `截至 ${dateLabel()}` : `${dateLabel(data.days - 1)} — ${dateLabel()}`} · ${route.org === 'all' ? '全公司' : route.org}</p>${['employee', 'feature', 'group'].includes(route.view) || route.group !== undefined || route.feature !== undefined ? '<button type="button" class="link" data-overall>‹ 整体数据</button>' : ''}</div>${route.view === 'seats' ? '<span class="tag">当前有效授权</span>' : query('#overview-page .period').outerHTML}</header>
-        <section class="panel">${body}<p class="footnote">员工使用统一按有效记录去重。总量沿用对应看板示例，逐人、逐条内容为演示数据。</p></section>`;
-    }
-
-    function openDetail(id) {
-      if (id === 'definitions') {
-        query('#dialog-title').textContent = '数据说明';
-        query('#dialog-content').innerHTML = '<ul class="dialog-facts"><li>本期使用人数为所选组织当前已分配员工中有任务执行、素材取用、App 工具完成或托管动作有效记录的人数，按员工去重。</li><li>业务数据跟随所选组织，企业资源区按全公司统计。</li><li>业务总量沿用对应看板示例，员工使用人数按四类记录合并去重。逐条记录及 AI 点数为方案演示。</li></ul>';
-        query('#detail-dialog').showModal();
-      } else if (['used', 'coverage', 'idle'].includes(id)) {
-        navigate('employees', { status: id === 'idle' ? 'idle' : 'used' });
-      } else if (id === 'employees') {
-        navigate('employees', { ...(route.group === undefined ? {} : { group: route.group }), ...(route.feature === undefined ? {} : { feature: route.feature }) });
-      } else {
-        navigate(id);
-      }
-    }
-
-    document.addEventListener('click', event => {
-      const button = event.target.closest('button, a[data-chart-action]');
-      if (!button) return;
-      if (button.hasAttribute('data-chart-action')) event.preventDefault();
-      if (button.dataset.board) {
-        navigate(button.dataset.board);
-      } else if (button.dataset.period) {
-        period = button.dataset.period;
-        navigate(route.view, Object.fromEntries(Object.entries(route).filter(([key]) => key !== 'view')));
-      } else if (button.dataset.usage) {
-        usageTab = button.dataset.usage;
-        renderUsage();
-      } else if (button.dataset.detail) {
-        openDetail(button.dataset.detail);
-      } else if (button.dataset.feature !== undefined) {
-        navigate('feature', { feature: button.dataset.feature, ...(route.employee === undefined ? {} : { employee: route.employee }) });
-      } else if (button.dataset.employee !== undefined) {
-        navigate('employee', { employee: button.dataset.employee, ...(route.group === undefined ? {} : { group: route.group }), ...(route.feature === undefined ? {} : { feature: route.feature }) });
-      } else if (button.dataset.group !== undefined) {
-        navigate('group', { group: button.dataset.group });
-      } else if (button.dataset.dept) {
-        navigate('employees', { org: button.dataset.dept });
-      } else if (button.dataset.org) {
-        navigate(route.view === 'employee' ? 'employees' : route.view, { org: button.dataset.org, ...(route.group === undefined ? {} : { group: route.group }), ...(route.feature === undefined ? {} : { feature: route.feature }) });
-      } else if (button.dataset.tier !== undefined) {
-        navigate('seats', { tier: button.dataset.tier });
-      } else if (button.hasAttribute('data-home')) {
-        navigate('home');
-      } else if (button.dataset.status) {
-        navigate('employees', { status: button.dataset.status, ...(route.group === undefined ? {} : { group: route.group }), ...(route.feature === undefined ? {} : { feature: route.feature }) });
-      } else if (button.hasAttribute('data-overall')) {
-        navigate('employees');
-      } else if (button.dataset.page) {
-        recordPage = Number(button.dataset.page);
-        renderDetail();
-      } else if (button.hasAttribute('data-reset')) {
-        filters = { query: '', type: 'all' };
-        recordPage = 1;
-        renderDetail();
+    totals.forEach((total, band) => {
+      const previous = band ? totals[band - 1] : 0;
+      const amount = total - previous;
+      const [start, end] = ranges[band];
+      const count = Math.min(amount, (end - start) * 6);
+      for (let index = 0; index < count; index++) {
+        const sequence = allRecords.length;
+        const ownerPool = options.host
+          ? hostIds.slice(0, hostData.windows[hostWindows[band]].cover)
+          : employees
+              .slice(0, [14, 19, 23, 27][band])
+              .map((employee) => employee.id);
+        const employee =
+          ownerPool[
+            !options.host && index % 4 < 2
+              ? [0, 3][index % 4]
+              : (index * 7 + metric.length * 3 + band) % ownerPool.length
+          ];
+        const record = {
+          id: `EV-${String(sequence + 1).padStart(6, "0")}`,
+          metric,
+          qty: portion(amount, count, index),
+          sources: sourceIds,
+          employee,
+          day: start + (index % (end - start)),
+          sequence,
+          active: !options.host,
+          platform: options.platform || "微信",
+          feature: options.feature || metrics[metric].name,
+          ...options.extra,
+        };
+        if (metric === "friendSend" || metric === "message")
+          record.messageCount = record.qty;
+        allRecords.push(record);
       }
     });
-    document.addEventListener('submit', event => {
-      if (event.target.id !== 'detail-filter') return;
-      event.preventDefault();
-      const form = new FormData(event.target);
-      filters = { query: String(form.get('query') || '').trim(), type: String(form.get('type') || 'all') };
+  }
+  // New result quantities are explicit prototype receipts. A hosting task carries both memberships and one event ID.
+  addSeries("publish", [12, 78, 264, 782], ["tasks"]);
+  addSeries("friendSend", [288, 1092, 4610, 13420], ["tasks"]);
+  addSeries("request", [36, 148, 532, 1650], ["tasks"]);
+  // The task board's completed assignees use this same roster order and assignment rule.
+  window.__REA_OVERVIEW_TASK_DATA.forEach((task) => {
+    if (task.day < -89 || task.day > 0) return;
+    const names = [task.creator];
+    let index = 0;
+    while (names.length < task.need) {
+      const name = employees[(task.id * 7 + index) % 24].name;
+      index++;
+      if (!names.includes(name)) names.push(name);
+    }
+    names.slice(0, task.done).forEach((name, index) => {
+      const employee = employees.find((person) => person.name === name);
+      const sequence = allRecords.length;
+      allRecords.push({
+        id: `TASK-${task.id}-${index}`,
+        metric: "taskExec",
+        qty: 1,
+        sources: ["tasks"],
+        employee: employee.id,
+        day: -task.day,
+        sequence,
+        active: false,
+        cohort: true,
+        platform: "多平台",
+        feature: "已执行任务",
+      });
+    });
+  });
+  addSeries(
+    "publish",
+    hostWindows.map((key) => hostData.windows[key].publish[0]),
+    ["tasks", "hosting"],
+    {
+      host: true,
+    },
+  );
+  addSeries(
+    "friendSend",
+    hostTotals("msgs").map((value) => Math.floor(value / 2)),
+    ["tasks", "hosting"],
+    {
+      host: true,
+    },
+  );
+  addSeries(
+    "message",
+    hostTotals("msgs").map((value) => value - Math.floor(value / 2)),
+    ["hosting"],
+    {
+      host: true,
+      platform: "微信 / 企业微信",
+      feature: "自动回复消息",
+    },
+  );
+  ["微信", "企业微信", "WhatsApp"].forEach((platform, index) =>
+    addSeries(
+      "added",
+      hostWindows.map((key) => hostData.windows[key].added[index]),
+      ["hosting"],
+      { host: true, platform, feature: "自动加好友成功确认" },
+    ),
+  );
+  hostData.employees.forEach((employee, index) => {
+    const owner = employees.find((person) => person.name === employee.n).id;
+    addSeries(
+      "hostingExec",
+      hostWindows.map((key) => hostData.allocations[key][index] || 0),
+      ["hosting"],
+      { host: true, platform: "多平台", extra: { employee: owner } },
+    );
+  });
+  const toolTargets = [
+    ["message", "发图文到好友", [7, 40, 96, 282]],
+    ["message", "群发助手", [4, 22, 48, 142]],
+    ["added", "群内好友", [5, 18, 44, 124]],
+    ["aiReply", "智能回复采纳", [2, 12, 30, 94]],
+    ["interact", "朋友圈互动", [4, 12, 24, 72]],
+    ["profile", "画像分析", [1, 6, 18, 56]],
+    ["clean", "消息检测死粉", [1, 6, 16, 43]],
+    ["sync", "客户同步", [1, 4, 11, 30]],
+    ["message", "发图文到群", [2, 14, 30, 88]],
+    ["added", "通讯录加人", [3, 11, 24, 67]],
+    ["intent", "意向客户识别", [1, 3, 6, 18]],
+    ["xhs", "小红书运营", [2, 7, 18, 54]],
+  ];
+  toolTargets.forEach(([metric, feature, totals]) =>
+    addSeries(metric, totals, ["tools"], {
+      feature,
+      platform: metric === "xhs" ? "小红书" : "微信",
+    }),
+  );
+  // Reuse the material board's own generated ledger and remap employee identity to this company roster.
+  const materialSource = window.__REA_OVERVIEW_MATERIAL_DATA;
+  materialSource.events.forEach(([material, name, offset, action]) => {
+    const employee = employees.find((person) => person.name === name);
+    const item = materialSource.materials.find((item) => item.id === material);
+    const sequence = allRecords.length;
+    allRecords.push({
+      id: `MAT-${sequence}`,
+      metric: "material",
+      qty: 1,
+      sources: ["material"],
+      employee: employee.id,
+      day: -offset,
+      sequence,
+      active: true,
+      platform: "微信",
+      material,
+      action,
+      feature: `${item.title} · ${action}`,
+    });
+  });
+  // AI point ownership is an explicit ledger field, independent of whether a reply was accepted.
+  [230, 1650, 7000, 19400].forEach((total, band) => {
+    const previous = band ? [230, 1650, 7000, 19400][band - 1] : 0;
+    const [start, end] = [
+      [0, 1],
+      [1, 7],
+      [7, 30],
+      [30, 90],
+    ][band];
+    const count = Math.min(90, (end - start) * 5);
+    const entries = Array.from({ length: count }, (_, index) => ({
+      id: `AI-${band}-${String(index + 1).padStart(4, "0")}`,
+      employee: index % 17 === 0 ? null : (index * 7 + band) % 24,
+      feature: index % 3,
+      day: start + (index % (end - start)),
+      sequence: index,
+    }));
+    const weight = (record) =>
+      record.employee === null
+        ? 0.3
+        : { 0: 3.6, 3: 2.8, 6: 2.2, 9: 1.9 }[record.employee] ||
+          0.4 + (record.employee % 5) * 0.15;
+    const totalWeight = entries.reduce(
+      (value, record) => value + weight(record),
+      0,
+    );
+    entries.forEach((record) => {
+      record.qty = Math.floor(
+        ((total - previous) * weight(record)) / totalWeight,
+      );
+    });
+    let remainder = total - previous - sum(entries);
+    for (let index = 0; index < remainder; index++)
+      entries[index % entries.length].qty++;
+    pointLedger.push(...entries);
+  });
+  const messageMetric = (record) =>
+    record.metric === "message" || record.metric === "friendSend";
+  function withinWindow(record) {
+    return record.day < periods[period].days;
+  }
+  function companyRecords() {
+    return allRecords.filter(withinWindow);
+  }
+  function scopedRecords() {
+    return companyRecords().filter(
+      (record) =>
+        route.org === "all" || employees[record.employee].dept === route.org,
+    );
+  }
+  function scopedEmployees() {
+    return employees.filter(
+      (employee) => route.org === "all" || employee.dept === route.org,
+    );
+  }
+  function selectMetric(records, metric) {
+    if (metric === "message") return records.filter(messageMetric);
+    if (["materialUsers", "materialCount", "materialSend"].includes(metric))
+      return records.filter(
+        (record) =>
+          record.metric === "material" &&
+          (metric !== "materialSend" ||
+            ["一键发送", "一键发圈"].includes(record.action)),
+      );
+    return records.filter((record) => record.metric === metric);
+  }
+  function metricValue(records, metric) {
+    const selected = selectMetric(records, metric);
+    if (metric === "message") return sum(selected, "messageCount");
+    if (metric === "materialUsers")
+      return new Set(selected.map((record) => record.employee)).size;
+    if (metric === "materialCount")
+      return new Set(selected.map((record) => record.material)).size;
+    return sum(selected);
+  }
+  function activeStats(employee, records = scopedRecords()) {
+    const own = records.filter(
+      (record) =>
+        record.employee === employee.id && record.active && !record.cohort,
+    );
+    const days = new Set(own.map((record) => record.day));
+    return {
+      employee,
+      days: days.size,
+      last: days.size ? Math.min(...days) : null,
+      records: own,
+    };
+  }
+  function usageStats(records = scopedRecords()) {
+    return scopedEmployees().map((employee) => activeStats(employee, records));
+  }
+  function inFrequency(days, frequency) {
+    if (frequency === "none") return days === 0;
+    if (frequency === "once") return days === 1;
+    if (frequency === "few")
+      return (
+        days >= 2 && days <= Math.max(2, Math.floor(periods[period].days / 2))
+      );
+    return days > Math.max(2, Math.floor(periods[period].days / 2));
+  }
+  function scroller() {
+    return root.closest(".ant-pro-grid-content") || document.scrollingElement;
+  }
+  function stateFor(next) {
+    return {
+      scheme,
+      period,
+      peopleTab,
+      pointsTab,
+      homeOrg,
+      scroll: homeScroll,
+      org: next.org,
+      start: dateLabel(periods[period].days - 1),
+      end: dateLabel(),
+      trail,
+      detail: next,
+    };
+  }
+  function navigate(next, back = false) {
+    if (route.view === "home") {
+      homeOrg = route.org;
+      homeScroll = scroller().scrollTop;
+    }
+    if (!back && route.view !== "home")
+      trail.push({
+        ...route,
+        filters: { ...filters },
+        recordPage,
+        scroll: scroller().scrollTop,
+      });
+    const org = ["points", "seats"].includes(next.view)
+      ? "all"
+      : next.org || route.org;
+    const detail = { org, ...next };
+    parent.postMessage(
+      {
+        reaPage:
+          detail.view === "home"
+            ? "使用总览"
+            : detail.view === "board" && detail.source === "tools"
+              ? "App 工具看板"
+              : "使用总览 · 使用详情",
+        reaOverview: stateFor(detail),
+      },
+      "*",
+    );
+  }
+  function goHome() {
+    trail = [];
+    navigate({ view: "home", org: homeOrg }, true);
+  }
+  function back() {
+    const previous = trail.pop();
+    if (previous) navigate(previous, true);
+    else goHome();
+  }
+  function openBoard(source) {
+    if (source === "tools") {
+      navigate({ view: "board", source });
+      return;
+    }
+    homeOrg = route.org;
+    homeScroll = scroller().scrollTop;
+    const next = { view: "home", org: homeOrg };
+    const overview = stateFor(next);
+    overview.source = source;
+    // Existing destination boards open at company scope. The return restores the selected department and layout.
+    overview.sourceWindows = Object.fromEntries(
+      Object.entries(periods).map(([key, window]) => [
+        key,
+        sources[source].metrics.map((metric) => ({
+          metric,
+          name: metrics[metric].name,
+          unit: metrics[metric].unit,
+          value: metricValue(
+            allRecords.filter(
+              (record) =>
+                record.day < window.days && record.sources.includes(source),
+            ),
+            metric,
+          ),
+        })),
+      ]),
+    );
+    parent.postMessage(
+      { reaPage: sources[source].page, reaOverview: overview },
+      "*",
+    );
+  }
+  function metricButton(metric, records, source, compact = false) {
+    const item = metrics[metric];
+    const value = metricValue(records, metric);
+    const memberships = [
+      ...new Set(
+        selectMetric(records, metric).flatMap((record) => record.sources),
+      ),
+    ];
+    return `<button type="button" class="${compact ? "ov-group-metric" : "ov-kpi"}" data-metric="${metric}" ${source ? `data-source="${source}"` : ""} data-value="${value}" title="${html(item.note)}"><span class="ov-kpi-title">${item.name}<i aria-hidden="true">↗</i></span><${compact ? "strong" : "span"} class="${compact ? "" : "ov-kpi-value"}">${number(value)} <small>${item.unit}</small></${compact ? "strong" : "span"}><span class="ov-source-caption">${compact ? { added: "加好友成功确认", publish: "发布成功回执", message: "按成功消息条数", aiReply: "员工主动采纳", material: "员工主动取用", hostingExec: "托管工作日志", friendSend: "实际发送成功目标", request: "已发出验证请求", taskExec: "按任务下发时间", profile: "分析完成回执", materialUsers: "取用员工去重", materialCount: "取用素材去重", materialSend: "一键发送＋一键发圈" }[metric] || "按完成回执统计" : memberships.map((id) => sources[id].name).join(" · ") || "本期暂无记录"}</span></button>`;
+  }
+  function renderResults() {
+    const records = scopedRecords();
+    $("#ov-scheme-description").textContent =
+      scheme === "A"
+        ? "同一业务结果跨来源汇总，托管代跑按事件去重"
+        : "按四个看板查看核心结果，组内可下钻，组间存在交叉统计";
+    if (scheme === "A") {
+      $("#ov-results").innerHTML =
+        `<div class="ov-kpis">${heroMetrics.map((metric) => metricButton(metric, records)).join("")}</div><p class="ov-explainer">各项保留原始单位。点击数字查看来源构成、参与员工与结果记录。</p><nav class="ov-board-links" aria-label="各看板入口"><span class="ov-muted">进一步分析</span>${Object.entries(
+          sources,
+        )
+          .map(
+            ([id, source]) =>
+              `<button type="button" class="ov-link" data-board="${id}">查看${source.board} →</button>`,
+          )
+          .join("")}</nav>`;
+    } else {
+      $("#ov-results").innerHTML = `<div class="ov-groups">${Object.entries(
+        sources,
+      )
+        .map(([id, source]) => {
+          const own = records.filter((record) => record.sources.includes(id));
+          return `<section class="ov-panel" data-source-group="${id}"><div class="ov-section-heading"><h3>${source.name}</h3><button type="button" class="ov-link" data-board="${id}">查看${source.board} →</button></div><div class="ov-group-grid">${source.metrics.map((metric) => metricButton(metric, own, id, true)).join("")}</div><p class="ov-group-foot">${source.note}</p></section>`;
+        })
+        .join(
+          "",
+        )}</div><p class="ov-explainer">托管代跑的任务同时出现在任务成果与 AI托管成果中。组间结果有交叉，按事件 ID 保留关联。</p>`;
+    }
+  }
+  function table(headers, rows, paginate = false, totalText = "") {
+    const pages = Math.max(1, Math.ceil(rows.length / 10));
+    recordPage = Math.max(1, Math.min(recordPage, pages));
+    const shown = paginate
+      ? rows.slice((recordPage - 1) * 10, recordPage * 10)
+      : rows;
+    return `<div class="ov-table-wrap"><table><thead><tr>${headers.map((header) => `<th>${header}</th>`).join("")}</tr></thead><tbody>${shown.map((row) => `<tr>${row.map((cell) => `<td>${cell}</td>`).join("")}</tr>`).join("") || `<tr><td colspan="${headers.length}"><div class="ov-empty">所选条件下暂无记录</div></td></tr>`}</tbody></table></div>${paginate ? `<div class="ov-pagination"><span>${totalText || `共 ${rows.length} 条记录`}</span><div><button type="button" class="ov-control" data-page="${recordPage - 1}" ${recordPage === 1 ? "disabled" : ""}>上一页</button><span>${recordPage} / ${pages}</span><button type="button" class="ov-control" data-page="${recordPage + 1}" ${recordPage === pages ? "disabled" : ""}>下一页</button></div></div>` : ""}`;
+  }
+  function employeeLink(id, action = "employee") {
+    return `<button type="button" class="ov-link" data-${action}="${id}">${html(employees[id].name)}</button>`;
+  }
+  function summary(items) {
+    return `<div class="ov-stats">${items.map(([name, value, unit, note = ""]) => `<div class="ov-stat"><span>${name}</span><b>${number(value)}<small>${unit}</small></b><small>${note}</small></div>`).join("")}</div>`;
+  }
+  function renderPeople() {
+    const stats = usageStats();
+    const used = stats.filter((item) => item.days > 0);
+    const average = used.length
+      ? (
+          used.reduce((total, item) => total + item.days, 0) / used.length
+        ).toFixed(1)
+      : 0;
+    const cards = [
+      ["活跃员工", used.length, "人", `${stats.length} 名已分配员工`, "used"],
+      [
+        "活跃覆盖率",
+        stats.length ? ((used.length / stats.length) * 100).toFixed(1) : 0,
+        "%",
+        "主动操作员工 / 已分配员工",
+        "used",
+      ],
+      ["人均活跃天数", average, "天", "活跃员工的活跃天数均值", "used"],
+      [
+        "无主动使用记录",
+        stats.length - used.length,
+        "人",
+        "包含仅有托管自动记录的员工",
+        "idle",
+      ],
+    ];
+    $("#ov-people-stats").innerHTML = cards
+      .map(
+        ([name, value, unit, note, status]) =>
+          `<button type="button" class="ov-stat" data-status="${status}"><span>${name}</span><b>${number(value)}<small>${unit}</small></b><small>${note}</small></button>`,
+      )
+      .join("");
+    const records = scopedRecords().filter(
+      (record) => record.active && !record.cohort,
+    );
+    const days = periods[period].days;
+    const bucketSize = days > 30 ? 7 : 1;
+    const buckets = [];
+    for (let offset = days - 1; offset >= 0; offset -= bucketSize) {
+      const end = Math.max(0, offset - bucketSize + 1);
+      const values = [];
+      for (let day = offset; day >= end; day--)
+        values.push(
+          new Set(
+            records
+              .filter((record) => record.day === day)
+              .map((record) => record.employee),
+          ).size,
+        );
+      buckets.push({
+        offset,
+        end,
+        value: sum(values.map((qty) => ({ qty }))) / values.length,
+      });
+    }
+    const max = Math.max(1, ...buckets.map((bucket) => bucket.value));
+    $("#ov-activity-chart").innerHTML =
+      `<div class="ov-bars" role="group" aria-label="${days > 30 ? "每段日均活跃员工" : "每日活跃员工"}">${buckets.map((bucket, index) => `<button type="button" class="ov-bar" data-day="${bucket.offset}" data-end="${bucket.end}" aria-label="${dateLabel(bucket.offset)}${bucket.end !== bucket.offset ? " 至 " + dateLabel(bucket.end) : ""}，${bucket.end !== bucket.offset ? "日均 " : ""}${number(Number(bucket.value.toFixed(1)))} 人" title="${dateLabel(bucket.offset)} · ${bucket.value.toFixed(1)} 人"><i style="height:${Math.max(2, (bucket.value / max) * 112)}px"></i><small>${index === 0 || index === buckets.length - 1 || index % Math.ceil(buckets.length / 5) === 0 ? dateLabel(bucket.offset).slice(5) : ""}</small></button>`).join("")}</div><p class="ov-footnote">${days > 30 ? "按 7 天分段展示日均活跃，末段按实际天数计算。" : "同一员工一天内主动使用多次，只计 1 人。"}</p>`;
+    const frequency = [
+      ["none", "未使用"],
+      ["once", "使用 1 天"],
+      ["few", `使用 2–${Math.max(2, Math.floor(days / 2))} 天`],
+      ["often", `使用超过 ${Math.max(2, Math.floor(days / 2))} 天`],
+    ].filter(([id]) => days > 1 || ["none", "once"].includes(id));
+    $("#ov-frequency").innerHTML =
+      frequency
+        .map(([id, name]) => {
+          const count = stats.filter((item) =>
+            inFrequency(item.days, id),
+          ).length;
+          return `<button type="button" class="ov-frequency-row" data-frequency="${id}"><span>${name}</span><span class="ov-track"><i style="width:${stats.length ? (count / stats.length) * 100 : 0}%"></i></span><span>${count} 人</span></button>`;
+        })
+        .join("") +
+      `<p class="ov-footnote">${
+        new Set(
+          scopedRecords()
+            .filter((record) => record.sources.includes("hosting"))
+            .map((record) => record.employee),
+        ).size
+      } 人本期有托管执行记录，单独计托管覆盖。</p>`;
+    if (peopleTab === "department") {
+      const departments = [
+        ...new Set(scopedEmployees().map((employee) => employee.dept)),
+      ]
+        .map((name) => {
+          const own = stats.filter((item) => item.employee.dept === name);
+          const active = own.filter((item) => item.days > 0);
+          return {
+            name,
+            assigned: own.length,
+            used: active.length,
+            average: active.length
+              ? active.reduce((total, item) => total + item.days, 0) /
+                active.length
+              : 0,
+          };
+        })
+        .sort(
+          (a, b) =>
+            b.used / b.assigned - a.used / a.assigned || b.average - a.average,
+        );
+      $("#ov-people-ranking").innerHTML = table(
+        ["部门", "活跃 / 已分配", "活跃覆盖率", "人均活跃天数", "操作"],
+        departments.map((item) => [
+          html(item.name),
+          `${item.used} / ${item.assigned} 人`,
+          `${((item.used / item.assigned) * 100).toFixed(1)}%`,
+          `${item.average.toFixed(1)} 天`,
+          `<button type="button" class="ov-link" data-department="${html(item.name)}">查看员工 →</button>`,
+        ]),
+      );
+    } else {
+      $("#ov-people-ranking").innerHTML =
+        table(
+          ["员工", "部门", "活跃天数", "最近主动使用", "托管记录"],
+          stats
+            .sort((a, b) => b.days - a.days || a.employee.id - b.employee.id)
+            .slice(0, 5)
+            .map((item) => [
+              employeeLink(item.employee.id),
+              html(item.employee.dept),
+              `${item.days} 天`,
+              item.last === null ? "暂无" : dateLabel(item.last),
+              `${number(
+                metricValue(
+                  scopedRecords().filter(
+                    (record) => record.employee === item.employee.id,
+                  ),
+                  "hostingExec",
+                ),
+              )} 条`,
+            ]),
+        ) +
+        '<p class="ov-footnote">按活跃天数展示前 5 名，完整名单可查看全部员工。</p>';
+    }
+  }
+  function pointRecords() {
+    return pointLedger.filter(withinWindow);
+  }
+  function pointGroups(field) {
+    const keys =
+      field === "employee"
+        ? [...employees.map((employee) => employee.id), null]
+        : [0, 1, 2];
+    return keys
+      .map((key) => ({
+        key,
+        qty: sum(pointRecords().filter((record) => record[field] === key)),
+      }))
+      .filter((item) => item.qty > 0)
+      .sort(
+        (a, b) => b.qty - a.qty || String(a.key).localeCompare(String(b.key)),
+      );
+  }
+  function renderResources() {
+    $("#ov-seats").innerHTML = tiers
+      .map(
+        (tier, id) =>
+          `<button type="button" class="ov-seat-row" data-tier="${id}"><span>${tier.name}</span><span class="ov-track"><i style="width:${(tier.assigned / tier.bought) * 100}%"></i></span><span>${tier.assigned} / ${tier.bought} 已分配 ›</span></button>`,
+      )
+      .join("");
+    const total = sum(pointRecords());
+    $("#ov-points-total").innerHTML = `${number(total)} <small>点</small>`;
+    $("#ov-point-ranking-title").textContent =
+      pointsTab === "employee" ? "员工消耗 Top 5" : "功能消耗分布";
+    const groups = pointGroups(pointsTab);
+    const display =
+      pointsTab === "employee"
+        ? groups.filter((item) => item.key !== null).slice(0, 5)
+        : groups;
+    $("#ov-points-ranking").innerHTML = display
+      .map(
+        (item) =>
+          `<button type="button" class="ov-point-row" data-point-${pointsTab}="${item.key}"><span>${pointsTab === "employee" ? html(employees[item.key].name) : pointFeatures[item.key]}${pointsTab === "employee" ? `<small>${html(employees[item.key].dept)}</small>` : ""}</span><span class="ov-track"><i style="width:${(item.qty / Math.max(1, total)) * 100}%"></i></span><strong>${number(item.qty)} 点<small>${((item.qty / Math.max(1, total)) * 100).toFixed(1)}%</small></strong></button>`,
+      )
+      .join("");
+    if (pointsTab === "employee") {
+      const other =
+        total - display.reduce((value, item) => value + item.qty, 0);
+      $("#ov-points-ranking").innerHTML +=
+        `<p class="ov-footnote">其余员工及公共调用 ${number(other)} 点，查看明细可核对全部归属。</p>`;
+    }
+  }
+  function form({ source = false, status = false, points = false } = {}) {
+    return `<form class="ov-form" id="ov-filter"><input name="query" aria-label="搜索员工或事项" placeholder="搜索员工、部门或事项" value="${html(filters.query)}">${
+      source
+        ? `<select name="source" aria-label="成果来源"><option value="all">全部来源</option>${Object.entries(
+            sources,
+          )
+            .map(
+              ([id, item]) =>
+                `<option value="${id}" ${filters.source === id ? "selected" : ""}>${item.name}</option>`,
+            )
+            .join("")}</select>`
+        : ""
+    }${
+      status
+        ? `<select name="status" aria-label="员工活跃状态">${[
+            ["all", "全部员工"],
+            ["used", "主动活跃"],
+            ["idle", "无主动使用记录"],
+          ]
+            .map(
+              ([id, name]) =>
+                `<option value="${id}" ${filters.status === id ? "selected" : ""}>${name}</option>`,
+            )
+            .join("")}</select>`
+        : ""
+    }${points ? `<select name="feature" aria-label="扣费功能"><option value="all">全部功能</option>${pointFeatures.map((name, id) => `<option value="${id}" ${String(filters.feature) === String(id) ? "selected" : ""}>${name}</option>`).join("")}</select>` : ""}<button type="submit" class="ov-control">查询</button><button type="button" class="ov-link" data-action="reset">重置</button></form>`;
+  }
+  function filteredRecords(records) {
+    return records.filter(
+      (record) =>
+        (filters.source === "all" || record.sources.includes(filters.source)) &&
+        `${employees[record.employee].name}${employees[record.employee].dept}${record.feature}${record.id}`.includes(
+          filters.query,
+        ),
+    );
+  }
+  function recordTable(records, metric) {
+    const item = metrics[metric];
+    const own = filteredRecords(records).sort(
+      (a, b) => a.day - b.day || a.sequence - b.sequence,
+    );
+    const quantity = metric ? metricValue(own, metric) : null;
+    return (
+      `<p class="ov-footnote" data-filtered-total="${quantity}">${item ? "筛选结果 " + number(quantity) + " " + item.unit + " · " : ""}${own.length} 条结果记录${metric === "materialUsers" || metric === "materialCount" ? "，汇总按对象去重" : ""}</p>` +
+      table(
+        ["发生时间", "员工", "事项", "来源", "结果数量"],
+        own.map((record) => [
+          `${timeLabel(record)}<small>${record.id}</small>`,
+          employeeLink(record.employee),
+          `${html(record.feature)}<small>${html(record.platform)}</small>`,
+          record.sources.map((id) => sources[id].name).join(" / "),
+          `${number(metric === "message" ? record.messageCount : record.qty)} ${metric === "message" ? "条" : metrics[record.metric].unit}`,
+        ]),
+        true,
+      )
+    );
+  }
+  function renderDetail() {
+    const records = scopedRecords();
+    let title = "使用详情",
+      body = "";
+    const scope = route.org === "all" ? "全公司" : route.org;
+    if (route.view === "metric") {
+      const metric = route.metric;
+      const selected = selectMetric(records, metric).filter(
+        (record) => !route.source || record.sources.includes(route.source),
+      );
+      title = metrics[metric].name;
+      body = summary([
+        [
+          title,
+          metricValue(selected, metric),
+          metrics[metric].unit,
+          metrics[metric].note,
+        ],
+        [
+          "参与员工",
+          new Set(selected.map((record) => record.employee)).size,
+          "人",
+          "员工 ID 去重",
+        ],
+      ]);
+      if (!route.source) {
+        body +=
+          '<h3 class="ov-detail-heading">来源构成</h3>' +
+          table(
+            ["来源", "结果", "操作"],
+            Object.entries(sources).map(([id, source]) => {
+              const own = selected.filter((record) =>
+                record.sources.includes(id),
+              );
+              return [
+                source.name,
+                `${number(metricValue(own, metric))} ${metrics[metric].unit}`,
+                `<button type="button" class="ov-link" data-metric="${metric}" data-source="${id}">查看记录 →</button>`,
+              ];
+            }),
+          ) +
+          '<p class="ov-footnote">同一托管代跑事件可归属任务与托管两组，上方总量按事件 ID 去重。</p>';
+      }
+      body +=
+        `<h3 class="ov-detail-heading">结果记录${route.source ? " · " + sources[route.source].name : ""}</h3>` +
+        form({ source: !route.source }) +
+        recordTable(selected, metric);
+    } else if (route.view === "board") {
+      const source = sources[route.source];
+      const own = records.filter((record) =>
+        record.sources.includes(route.source),
+      );
+      title = source.board;
+      body =
+        `<p class="ov-muted">${source.note}</p><div class="ov-group-grid">${source.metrics.map((metric) => metricButton(metric, own, route.source, true)).join("")}</div><h3 class="ov-detail-heading">工具完成记录</h3>` +
+        form() +
+        recordTable(own);
+    } else if (route.view === "employees") {
+      title =
+        route.day !== undefined
+          ? `${dateLabel(route.day)}${route.end !== route.day ? " 至 " + dateLabel(route.end) : ""} · 活跃员工`
+          : "员工使用明细";
+      const stats = usageStats();
+      const eligible = stats.filter((item) => {
+        const matches =
+          `${item.employee.name}${item.employee.dept}${item.employee.phone}`.includes(
+            filters.query,
+          );
+        const status =
+          filters.status === "all" ||
+          item.days > 0 === (filters.status === "used");
+        const frequency =
+          !route.frequency || inFrequency(item.days, route.frequency);
+        const day =
+          route.day === undefined ||
+          item.records.some(
+            (record) =>
+              record.day <= Number(route.day) &&
+              record.day >= Number(route.end),
+          );
+        return matches && status && frequency && day;
+      });
+      body =
+        summary([
+          ["活跃员工", stats.filter((item) => item.days > 0).length, "人"],
+          ["已分配员工", stats.length, "人"],
+          ["无主动记录", stats.filter((item) => !item.days).length, "人"],
+        ]) +
+        `<p class="ov-muted">${route.frequency ? "已按首页使用天数分布筛选 · " : ""}活跃依据为员工主动完成操作或素材取用，自动托管单独展示。</p>` +
+        form({ status: true }) +
+        table(
+          ["员工", "部门", "版本", "活跃天数", "最近主动使用", "托管执行"],
+          eligible.map((item) => [
+            employeeLink(item.employee.id),
+            html(item.employee.dept),
+            tiers[item.employee.tier].name,
+            `${item.days} 天`,
+            item.last === null ? "暂无" : dateLabel(item.last),
+            `${number(
+              metricValue(
+                records.filter(
+                  (record) => record.employee === item.employee.id,
+                ),
+                "hostingExec",
+              ),
+            )} 条`,
+          ]),
+          true,
+          `共 ${eligible.length} 名员工`,
+        );
+    } else if (route.view === "employee") {
+      const employee = employees[Number(route.employee)];
+      const own = records.filter((record) => record.employee === employee.id);
+      const active = activeStats(employee, records);
+      title = `${employee.name} · 使用详情`;
+      body =
+        `<p class="ov-muted">${html(employee.dept)} · ${tiers[employee.tier].name} · 分配于 ${employee.assignedOn}</p>` +
+        summary([
+          ["主动活跃", active.days, "天"],
+          ["托管执行", metricValue(own, "hostingExec"), "条"],
+          ["素材取用", metricValue(own, "material"), "次"],
+          ["AI 回复采纳", metricValue(own, "aiReply"), "次"],
+        ]);
+      const selected = route.metric
+        ? selectMetric(own, route.metric).filter(
+            (record) => !route.source || record.sources.includes(route.source),
+          )
+        : own;
+      body +=
+        `<h3 class="ov-detail-heading">${route.metric ? metrics[route.metric].name + " · " : ""}使用记录</h3>` +
+        form({ source: !route.source }) +
+        recordTable(selected, route.metric);
+    } else if (route.view === "points") {
+      title =
+        route.employee !== undefined
+          ? `${route.employee === "public" ? "公共调用" : employees[Number(route.employee)].name} · AI 点数明细`
+          : "AI 点数消耗明细";
+      let ledger = pointRecords().filter(
+        (record) =>
+          (route.employee === undefined ||
+            record.employee ===
+              (route.employee === "public" ? null : Number(route.employee))) &&
+          (route.feature === undefined ||
+            record.feature === Number(route.feature)),
+      );
+      const selectedTotal = sum(ledger);
+      body = summary([
+        ["当前范围消耗", selectedTotal, "点"],
+        ["企业本期消耗", sum(pointRecords()), "点"],
+        ["企业当前剩余", 42000, "点", "截至当前查询时点"],
+      ]);
+      if (route.employee === undefined && route.feature === undefined) {
+        body +=
+          '<h3 class="ov-detail-heading">员工与公共调用</h3>' +
+          table(
+            ["归属", "部门", "消耗点数", "占企业本期", "操作"],
+            pointGroups("employee").map((item) => [
+              item.key === null
+                ? "公共调用"
+                : employeeLink(item.key, "point-employee"),
+              item.key === null ? "企业资源池" : html(employees[item.key].dept),
+              `${number(item.qty)} 点`,
+              `${((item.qty / sum(pointRecords())) * 100).toFixed(1)}%`,
+              `<button type="button" class="ov-link" data-point-employee="${item.key === null ? "public" : item.key}">查看流水 →</button>`,
+            ]),
+          );
+      }
+      ledger = ledger.filter(
+        (record) =>
+          (filters.feature === "all" ||
+            record.feature === Number(filters.feature)) &&
+          `${record.employee === null ? "公共调用" : employees[record.employee].name + employees[record.employee].dept}${pointFeatures[record.feature]}${record.id}`.includes(
+            filters.query,
+          ),
+      );
+      body +=
+        '<h3 class="ov-detail-heading">点数流水</h3>' +
+        form({ points: true }) +
+        `<p class="ov-footnote" data-points-filtered-total="${sum(ledger)}">筛选消耗 ${number(sum(ledger))} 点，共 ${ledger.length} 笔。</p>` +
+        table(
+          ["发生时间", "流水号", "员工／归属", "功能", "消耗点数"],
+          ledger
+            .sort((a, b) => a.day - b.day)
+            .map((record) => [
+              timeLabel(record),
+              record.id,
+              record.employee === null
+                ? "公共调用"
+                : employeeLink(record.employee, "point-employee"),
+              pointFeatures[record.feature],
+              `${number(record.qty)} 点`,
+            ]),
+          true,
+        );
+    } else if (route.view === "seats") {
+      const tier = route.tier === undefined ? null : tiers[Number(route.tier)];
+      title = tier ? `${tier.name}席位` : "版本席位分配";
+      body = tier
+        ? summary([
+            ["已购", tier.bought, "席"],
+            ["已分配", tier.assigned, "席"],
+            ["待分配", tier.bought - tier.assigned, "席"],
+          ]) +
+          form() +
+          table(
+            ["员工", "手机号", "职位", "部门", "到期日期"],
+            employees
+              .filter(
+                (employee) =>
+                  employee.tier === Number(route.tier) &&
+                  `${employee.name}${employee.dept}${employee.phone}`.includes(
+                    filters.query,
+                  ),
+              )
+              .map((employee) => [
+                html(employee.name),
+                employee.phone,
+                employee.position,
+                html(employee.dept),
+                "2027.06.30",
+              ]),
+            true,
+          )
+        : summary([
+            ["已购", 32, "席"],
+            ["已分配", 30, "席"],
+            ["待分配", 2, "席"],
+          ]) +
+          table(
+            ["版本", "已购", "已分配", "待分配", "操作"],
+            tiers.map((item, id) => [
+              item.name,
+              `${item.bought} 席`,
+              `${item.assigned} 席`,
+              `${item.bought - item.assigned} 席`,
+              `<button type="button" class="ov-link" data-tier="${id}">查看员工 →</button>`,
+            ]),
+          );
+      body +=
+        '<p class="ov-footnote">版本、分配关系与批次到期日期均为演示数据。</p>';
+    }
+    $("#ov-detail").innerHTML =
+      `<nav class="ov-detail-back" aria-label="返回导航"><button type="button" class="ov-link" data-action="back">‹ 返回上一层</button><button type="button" class="ov-link" data-action="home">返回使用总览</button></nav><header class="ov-heading"><div><h1 tabindex="-1">${html(title)}</h1><p class="ov-muted">${route.view === "seats" ? "截至 " + dateLabel() : dateLabel(periods[period].days - 1) + " — " + dateLabel()} · ${html(scope)} · 方案 ${scheme}</p></div>${route.view === "seats" ? "" : $("#ov-home .ov-periods").outerHTML}</header><section class="ov-panel">${body}<p class="ov-footnote">方案演示数据。同一指标的首页、员工与明细由同一份记录汇总。</p></section>`;
+  }
+  function renderTree() {
+    const tree = document.querySelector(".yk-lefttree .ant-tree");
+    if (!tree) return;
+    const panel = tree.closest(".yk-lefttree");
+    panel.classList.add("rea-ov-org-tree");
+    panel.style.display = ["points", "seats"].includes(route.view)
+      ? "none"
+      : "";
+    tree.setAttribute("aria-label", "部门架构");
+    tree.innerHTML = [
+      "all",
+      ...new Set(employees.map((employee) => employee.dept)),
+    ]
+      .map(
+        (org) =>
+          `<button type="button" class="ov-org-button" data-org="${html(org)}" aria-pressed="${route.org === org}">${org === "all" ? "全公司" : html(org)}</button>`,
+      )
+      .join("");
+    const input = panel.querySelector("input");
+    if (input) {
+      input.placeholder = "搜索部门";
+      input.oninput = () =>
+        tree.querySelectorAll("button").forEach((button) => {
+          button.hidden = !button.textContent.includes(input.value.trim());
+        });
+    }
+  }
+  function syncPressed() {
+    root
+      .querySelectorAll("[data-scheme]")
+      .forEach((button) =>
+        button.setAttribute("aria-pressed", button.dataset.scheme === scheme),
+      );
+    root
+      .querySelectorAll("[data-period]")
+      .forEach((button) =>
+        button.setAttribute("aria-pressed", button.dataset.period === period),
+      );
+    root
+      .querySelectorAll("[data-people-tab]")
+      .forEach((button) =>
+        button.setAttribute(
+          "aria-pressed",
+          button.dataset.peopleTab === peopleTab,
+        ),
+      );
+    root
+      .querySelectorAll("[data-points-tab]")
+      .forEach((button) =>
+        button.setAttribute(
+          "aria-pressed",
+          button.dataset.pointsTab === pointsTab,
+        ),
+      );
+  }
+  function render() {
+    $("#ov-home").hidden = route.view !== "home";
+    $("#ov-detail").hidden = route.view === "home";
+    $("#ov-range").textContent =
+      `${dateLabel(periods[period].days - 1)} — ${dateLabel()} · ${route.org === "all" ? "全公司" : route.org}`;
+    $("#ov-updated").textContent = new Date().toLocaleString("zh-CN", {
+      hour12: false,
+    });
+    if (route.view === "home") {
+      renderResults();
+      renderPeople();
+      renderResources();
+    } else renderDetail();
+    syncPressed();
+    renderTree();
+  }
+  function definitions() {
+    $("#ov-dialog-body").innerHTML =
+      "<p>方案 A 按结果跨来源汇总。方案 B 按任务、App 工具、素材、AI托管分组。两种方案查询同一批演示记录。</p><p>托管代跑的任务具有同一个事件 ID，可以同时属于两个看板。跨来源汇总只计一次，组间存在交叉。不同单位的指标分别阅读。</p><p>主动活跃按员工主动完成操作或取用素材的日期去重，自动托管执行单独展示覆盖情况。人均活跃天数以本期活跃员工为分母。</p><p>业务成果按回执发生时间统计。已执行任务沿用任务下发时间口径。发出好友申请与加好友成功确认分别记录。</p><p>AI 点数按扣费流水统计，员工采纳次数与扣费次数分别记账。员工归属、公共调用与功能汇总能对上企业本期消耗。</p><p>新增结果、主动活跃、逐人点数和逐条记录均为方案演示。查看现有独立看板时，页头摘要显示同口径成果；原有分析区按各页现行口径展开。目标页全公司范围在页头标明，返回恢复来源部门与方案。</p>";
+    $("#ov-dialog").showModal();
+  }
+  document.addEventListener("click", (event) => {
+    const button = event.target.closest("button");
+    if (!button || button.disabled) return;
+    const data = button.dataset;
+    if (data.scheme) {
+      scheme = data.scheme;
+      renderResults();
+      syncPressed();
+    } else if (data.period) {
+      period = data.period;
+      filters = {
+        query: "",
+        source: "all",
+        feature: "all",
+        status: route.status || "all",
+      };
+      recordPage = 1;
+      trail = [];
+      render();
+    } else if (data.peopleTab) {
+      peopleTab = data.peopleTab;
+      renderPeople();
+      syncPressed();
+    } else if (data.pointsTab) {
+      pointsTab = data.pointsTab;
+      renderResources();
+      syncPressed();
+    } else if (data.board) openBoard(data.board);
+    else if (data.metric)
+      navigate({
+        view: "metric",
+        metric: data.metric,
+        ...(data.source ? { source: data.source } : {}),
+      });
+    else if (data.pointEmployee !== undefined)
+      navigate({
+        view: "points",
+        employee: data.pointEmployee === "null" ? "public" : data.pointEmployee,
+        ...(route.feature === undefined ? {} : { feature: route.feature }),
+      });
+    else if (data.pointFeature !== undefined)
+      navigate({ view: "points", feature: data.pointFeature });
+    else if (data.employee !== undefined)
+      navigate({
+        view: "employee",
+        employee: Number(data.employee),
+        ...(route.metric ? { metric: route.metric } : {}),
+        ...(route.source ? { source: route.source } : {}),
+      });
+    else if (data.status) navigate({ view: "employees", status: data.status });
+    else if (data.frequency)
+      navigate({ view: "employees", frequency: data.frequency });
+    else if (data.day !== undefined)
+      navigate({
+        view: "employees",
+        day: Number(data.day),
+        end: Number(data.end),
+      });
+    else if (data.department)
+      navigate({ view: "employees", org: data.department });
+    else if (data.org) {
+      route.org = data.org;
+      if (route.view === "home") homeOrg = data.org;
+      filters = {
+        query: "",
+        source: "all",
+        feature: "all",
+        status: route.status || "all",
+      };
+      recordPage = 1;
+      trail = [];
+      render();
+    } else if (data.tier !== undefined)
+      navigate({ view: "seats", tier: Number(data.tier) });
+    else if (data.page) {
+      recordPage = Number(data.page);
+      renderDetail();
+      syncPressed();
+    } else if (data.action === "home") goHome();
+    else if (data.action === "back") back();
+    else if (data.action === "employees") navigate({ view: "employees" });
+    else if (["points", "seats"].includes(data.action))
+      navigate({ view: data.action });
+    else if (data.action === "definitions") definitions();
+    else if (data.action === "close-dialog") $("#ov-dialog").close();
+    else if (data.action === "reset") {
+      filters = {
+        query: "",
+        source: "all",
+        feature: "all",
+        status: route.status || "all",
+      };
       recordPage = 1;
       renderDetail();
-    });
-    query('#close-dialog').addEventListener('click', () => query('#detail-dialog').close());
-    query('#detail-dialog').addEventListener('click', event => {
-      const bounds = event.currentTarget.getBoundingClientRect();
-      if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) {
-        event.currentTarget.close();
-      }
-    });
-    // 校验各时间窗的总量、员工并集与明细，避免演示数据在不同入口间失配。
-    {
-      const initialPeriod = period;
-      for (const [key, data] of Object.entries(periods)) {
-        period = key;
-        if (!Number.isInteger(data.used) || data.used < 0 || data.used > 30) {
-          throw new Error(`${data.label}员工人数不一致`);
-        }
-        if (data.counts.length !== featureNames.length || data.people.length !== featureNames.length ||
-            data.people.some((people, index) => people > data.used || people > data.counts[index])) {
-          throw new Error(`${data.label}具体功能人数与完成次数不一致`);
-        }
-        const records = usageRecords();
-        if (hostingCounts[period].reduce((sum, count) => sum + count, 0) !== data.hosting) {
-          throw new Error(`${data.label}托管执行与完整看板不一致`);
-        }
-        const groupedFeatures = groups.flatMap(group => group.features);
-        if (outcomeLabels.length !== featureNames.length || new Set(groupedFeatures).size !== featureNames.length || groupedFeatures.length !== featureNames.length) {
-          throw new Error('业务场景与完成事项映射不一致');
-        }
-        if (new Set(records.map(record => record.employee.id)).size !== data.used) {
-          throw new Error(`${data.label}员工详情与总览人数不一致`);
-        }
-        const totals = { tasks: data.exec, material: data.material, hosting: data.hosting, tools: data.counts.reduce((sum, count) => sum + count, 0) };
-        for (const [type, expected] of Object.entries(totals)) {
-          if (records.filter(record => record.type === type).reduce((sum, record) => sum + record.count, 0) !== expected) {
-            throw new Error(`${data.label}${type}明细与总览不一致`);
-          }
-        }
-        for (const group of groupData(records)) {
-          if (group.people !== groupPeople[period][group.id]) {
-            throw new Error(`${data.label}${group.name}参与人数与 v318 不一致`);
-          }
-        }
-        if (pointRecords().reduce((sum, record) => sum + record.amount, 0) !== -data.net) {
-          throw new Error(`${data.label}点数流水与总览不一致`);
-        }
-      }
-      period = initialPeriod;
-      console.info('使用总览原型数据自检通过');
+      syncPressed();
     }
-    readRoute();
-
+  });
+  document.addEventListener("submit", (event) => {
+    if (event.target.id !== "ov-filter") return;
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    filters = {
+      query: String(formData.get("query") || "").trim(),
+      source: formData.get("source") || "all",
+      feature: formData.get("feature") || "all",
+      status: formData.get("status") || "all",
+    };
+    recordPage = 1;
+    renderDetail();
+    syncPressed();
+  });
+  if (route.filters) filters = route.filters;
+  else if (route.status) filters.status = route.status;
+  recordPage = route.recordPage || 1;
+  render();
+  requestAnimationFrame(() => {
+    scroller().scrollTop =
+      route.view === "home" ? homeScroll : route.scroll || 0;
+  });
 })();</script>
 <!-- 载体③·AI托管看板覆盖块（2026-11-05）：视图③「数据看板」组第五页，注册表页名仍是
      「AI托管数据看板」，显示名由 REA_NAME 换成「AI托管看板」；二级页「托管工作日志」
@@ -11405,6 +12661,13 @@ function buildRows(d){
   }
   rows.sort(function(a,b){return b.t-a.t});
   return rows;
+}
+if(window.__REA_OVERVIEW_HOST_CAPTURE){
+  window.__REA_OVERVIEW_HOST_DATA={windows:W,employees:EMPLOYEES,allocations:{}};
+  Object.keys(W).forEach(function(key){
+    window.__REA_OVERVIEW_HOST_DATA.allocations[key]=splitBy(W[key].exec,EMPLOYEES.slice(0,W[key].cover));
+  });
+  return;
 }
 var CACHE={};
 function rowsOf(key){
@@ -20670,6 +21933,7 @@ for(i=0;i<rows.length;i++){
      页面不写死任何日期，换时间范围就是换一份聚合。
      ============================================================ */
   function reaBoardMatJs(){
+   var forOverview=arguments[0]===true;
    return `
 (function(){
 var DETAIL=${reaJson(REA_MB_DETAIL)};
@@ -20833,6 +22097,9 @@ for(i=0;i<34;i++){
   var sent=80+(i*53)%320,rate=ref?(.22+((i*13)%9)/100):(.14+((i*7)%11)/100);   /* 未引用的那批不进页面 */
   TASKS.push({day:-Math.round(i*2.6),ref:ref,mat:mat,sent:sent,replied:Math.round(sent*rate)});
 }
+
+/* The overview reuses this ledger without rendering the material board. */
+${forOverview ? 'window.__REA_OVERVIEW_MATERIAL_DATA={materials:MATS,events:EVENTS};return;' : ''}
 
 /* ================= 时间与口径 ================= */
 var WIN={today:[0,0],w7:[-6,0],m1:[-29,0],m3:[-89,0]};
@@ -22447,10 +23714,25 @@ if(ST){
 `;
   }
 
+  function reaOverviewDataJs(){
+    var tree=document.createElement('div');
+    tree.innerHTML=docOf('srcBoard');
+    var rows=Array.from(tree.querySelectorAll('[data-bd-row]')).map(function(row){
+      return {id:+row.getAttribute('data-bd-row'),day:+row.getAttribute('data-bd-day'),
+        done:+row.getAttribute('data-bd-done'),need:+row.getAttribute('data-bd-need'),
+        creator:row.querySelectorAll('td')[2].textContent.trim(),
+        platform:row.getAttribute('data-bd-plat')};
+    });
+    return 'window.__REA_OVERVIEW_TASK_DATA='+reaJson(rows)+';'
+      +reaBoardMatJs(true)
+      +'window.__REA_OVERVIEW_HOST_CAPTURE=true;'+docOf('srcHostingScript')
+      +'window.__REA_OVERVIEW_HOST_CAPTURE=false;';
+  }
+
   var REA_COVER = {
-    '使用总览': { html: 'srcOverview', css: docOf('srcOverviewStyle'), js: function(){ return docOf('srcOverviewScript'); } },
-    '使用总览 · 使用详情': { html: 'srcOverview', css: docOf('srcOverviewStyle'), js: function(){ return 'window.__REA_USAGE_DETAIL=true;'+docOf('srcOverviewScript'); } },
-    'App 工具看板': { html: 'srcOverview', css: docOf('srcOverviewStyle'), js: function(){ return 'window.__REA_TOOL_BOARD=true;'+docOf('srcOverviewScript'); } },
+    '使用总览': { html: 'srcOverview', css: docOf('srcOverviewStyle'), js: function(){ return reaOverviewDataJs()+docOf('srcOverviewScript'); } },
+    '使用总览 · 使用详情': { html: 'srcOverview', css: docOf('srcOverviewStyle'), js: function(){ return 'window.__REA_USAGE_DETAIL=true;'+reaOverviewDataJs()+docOf('srcOverviewScript'); } },
+    'App 工具看板': { html: 'srcOverview', css: docOf('srcOverviewStyle'), js: function(){ return 'window.__REA_TOOL_BOARD=true;'+reaOverviewDataJs()+docOf('srcOverviewScript'); } },
     /* AI托管看板与它的二级页「托管工作日志」：正文各一块，样式与脚本两页共用 */
     [REA_HOST_PAGE]: { html: 'srcHostingDash', css: REA_BOARD_CSS + docOf('srcHostingStyle'), js: function(){ return docOf('srcHostingScript'); } },
     [REA_HOST_LOG]:  { html: 'srcHostingLog',  css: REA_BOARD_CSS + docOf('srcHostingStyle'), js: function(){ return docOf('srcHostingScript'); } },
@@ -23349,7 +24631,70 @@ if(ST){
   }
   function reaOverviewBackJs(name){
     if(!reaOverviewNav||name!==reaOverviewTarget||[REA_BOARD_PAGE,REA_MB_PAGE,REA_HOST_PAGE].indexOf(name)<0)return '';
-    return '(function(){var root=document.querySelector(".rea-bd-page"),button=document.createElement("button");if(!root)return;button.type="button";button.textContent="‹ 返回使用总览";button.setAttribute("data-overview-return","");button.style.cssText="display:block;margin:0 0 16px;padding:0;border:0;background:none;color:#1677FF;font:14px -apple-system,PingFang SC,Microsoft YaHei,sans-serif;cursor:pointer";button.onclick=function(){parent.postMessage({reaPage:"使用总览",reaOverviewBack:true},"*")};root.insertBefore(button,root.firstChild);var range=document.createElement("p");range.textContent='+reaJson('来源：使用总览 · '+reaOverviewNav.start+' — '+reaOverviewNav.end+' · 全公司')+';range.style.cssText="font-size:12px;color:#646A73;margin:0 0 16px";button.after(range);})();';
+    return String.raw`(function(){
+var nav=${reaJson(reaOverviewNav)};
+var root=document.querySelector('.rea-bd-page');
+if(!root)return;
+var button=document.createElement('button');
+button.type='button';button.textContent='‹ 返回使用总览';button.setAttribute('data-overview-return','');
+button.style.cssText='display:block;margin:0 0 16px;padding:0;border:0;background:none;color:#1677FF;font:14px -apple-system,PingFang SC,Microsoft YaHei,sans-serif;cursor:pointer';
+button.onclick=function(){parent.postMessage({reaPage:'使用总览',reaOverviewBack:true},'*')};
+root.insertBefore(button,root.firstChild);
+if(!nav.sourceWindows)return;
+var section=document.createElement('section');
+section.setAttribute('data-overview-source-summary','');
+section.className='rea-ov-source-summary';
+var style=document.createElement('style');
+style.textContent='.rea-ov-source-summary button:hover{color:#1677FF!important}.rea-ov-source-summary button:active{opacity:.7}.rea-ov-source-summary button:focus-visible{outline:2px solid #1677FF;outline-offset:3px}';
+document.head.appendChild(style);
+section.style.cssText='background:#fff;border:1px solid #E9EEF6;border-radius:12px;padding:24px;margin:0 0 24px;font:14px -apple-system,PingFang SC,Microsoft YaHei,sans-serif;color:#1F2329';
+button.after(section);
+var currentPeriod=nav.period;
+function draw(){
+  section.replaceChildren();
+  var caption=document.createElement('p');
+  var days={day:1,week:7,month:30,quarter:90}[currentPeriod];
+  var start=new Date();start.setDate(start.getDate()-(days||1)+1);
+  var range=days?start.toLocaleDateString('zh-CN')+' — '+new Date().toLocaleDateString('zh-CN')+' · ':'';
+  caption.textContent='使用总览 · 业务成果摘要 · '+range+'全公司 · 方案 '+nav.scheme;
+  caption.style.cssText='margin:0 0 16px;font-size:12px;color:#646A73';
+  section.appendChild(caption);
+  var values=nav.sourceWindows[currentPeriod];
+  if(!values){caption.textContent='当前自定义区间暂无总览成果摘要。下方为本看板原有分析。';return;}
+  var grid=document.createElement('div');
+  grid.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px';
+  values.forEach(function(item){
+    var metric=document.createElement('button');
+    metric.type='button';metric.setAttribute('data-overview-source-metric',item.metric);
+    metric.style.cssText='display:block;text-align:left;padding:16px;background:#E6F4FF;border:0;border-radius:8px;color:#1F2329;font:14px -apple-system,PingFang SC,Microsoft YaHei,sans-serif;cursor:pointer';
+    var label=document.createElement('span');label.textContent=item.name+' ↗';
+    var value=document.createElement('strong');value.textContent=Number(item.value).toLocaleString('zh-CN')+' '+item.unit;
+    value.style.cssText='display:block;margin-top:8px;font-size:24px;font-weight:600';
+    metric.append(label,value);
+    metric.onclick=function(){
+      var next=JSON.parse(JSON.stringify(nav));
+      next.period=currentPeriod;next.org='all';next.trail=[];
+      next.detail={view:'metric',metric:item.metric,source:nav.source,org:'all'};
+      parent.postMessage({reaPage:'使用总览 · 使用详情',reaOverview:next},'*');
+    };
+    grid.appendChild(metric);
+  });
+  section.appendChild(grid);
+  var note=document.createElement('p');
+  note.style.cssText='margin:16px 0 0;font-size:12px;color:#646A73';
+  note.textContent='新增成果采用成功回执演示数据。下方原有分析按本看板现行口径展开；原首页部门范围为 '+(nav.homeOrg==='all'?'全公司':nav.homeOrg)+'。返回恢复来源筛选。';
+  section.appendChild(note);
+}
+draw();
+document.addEventListener('click',function(event){
+  var control=event.target.closest('[data-bd-win],[data-mb-win],[data-hd-win]');
+  if(!control)return;
+  var key=control.getAttribute('data-bd-win')||control.getAttribute('data-mb-win')||control.getAttribute('data-hd-win');
+  if(control.classList.contains('rea-bd-win-off'))return;
+  currentPeriod={today:'day',w7:'week',m1:'month',m3:'quarter'}[key]||'custom';
+  draw();
+});
+})();`;
   }
 
   function reaDoc(i){
