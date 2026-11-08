@@ -18446,8 +18446,9 @@ tb.addEventListener("click",function(e){
     + '.rea-qf-rd input:checked+.rea-qf-rddot:after{content:"";position:absolute;left:3px;top:3px;width:8px;height:8px;border-radius:50%;background:#1677FF}'
     + '.rea-qf-rd input:focus-visible+.rea-qf-rddot{box-shadow:0 0 0 2px #E6F4FF}'
     + '.rea-qf-help{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;flex:none;border:1px solid #C9CDD4;border-radius:50%;color:#8F959E;font-size:10px;line-height:1;cursor:help}'
+    + '.rea-qf-mini{position:relative;display:inline-block}'
     + '.rea-qf-select.rea-qf-minisel{width:140px;color:#1F2329}'
-    + '.rea-qf-minisel .rea-qf-selmenu{width:140px}'
+    + '.rea-qf-mini .rea-qf-selmenu{width:140px}'
     + '.rea-qf-tagin{display:flex;align-items:center;box-sizing:border-box;width:100%;height:32px;padding:0 11px;border:1px solid #E5E8EF;border-radius:8px;background:#fff}'
     + '.rea-qf-tagin:focus-within{border-color:#1677FF;box-shadow:0 0 0 2px #E6F4FF}'
     + '.rea-qf-tagin input{flex:1;min-width:0;border:0;outline:0;background:transparent;font-size:14px;color:#1F2329}'
@@ -19186,12 +19187,19 @@ function initQf(){
     +'<div class="rea-qf-trow"><div class="rea-qf-mini">'
     +'<button type="button" class="rea-qf-select rea-qf-minisel" aria-haspopup="listbox" aria-expanded="false">'
     +'<span class="rea-qf-seltext">精确搜索</span><span class="rea-qf-selcaret">▾</span></button>'
-    +'<div class="rea-qf-selmenu" role="listbox"><button type="button" class="rea-qf-opt" role="option" aria-selected="true">精确搜索</button></div>'
+    +'<div class="rea-qf-selmenu" role="listbox">'
+    +'<button type="button" class="rea-qf-opt" role="option" data-mode="exact" aria-selected="true">精确搜索</button>'
+    +'<button type="button" class="rea-qf-opt" role="option" data-mode="fuzzy" aria-selected="false">模糊匹配</button></div>'
     +'</div></div>'
     +'<div class="rea-qf-trow"><label class="rea-qf-tagin"><input type="text" aria-label="标签名称"></label></div>';
   var tagSel=tagPanel.querySelector('.rea-qf-select'),tagMenu=tagPanel.querySelector('.rea-qf-selmenu'),
-      tagInput=tagPanel.querySelector('.rea-qf-tagin input');
+      tagInput=tagPanel.querySelector('.rea-qf-tagin input'),
+      tagSelText=tagPanel.querySelector('.rea-qf-seltext');
   tagInput.placeholder="请输入标签名称，多个标签请用';'隔开";
+  /* 精确搜索＝标签名与填写内容完全一致才算命中；模糊匹配＝标签名包含填写内容即命中。 */
+  var matchMode='exact';
+  var MATCH_LABEL={exact:'精确搜索',fuzzy:'模糊匹配'},
+      MATCH_TIP={exact:'标签名要完全一致才算命中',fuzzy:'标签名包含这几个字就算命中'};
   tagSel.addEventListener('click',function(e){
     e.preventDefault();
     var on=!tagMenu.classList.contains('on');
@@ -19199,8 +19207,16 @@ function initQf(){
     tagSel.setAttribute('aria-expanded',on?'true':'false');
   });
   tagMenu.addEventListener('click',function(e){
-    if(!e.target.closest('.rea-qf-opt'))return;
-    e.preventDefault();tagMenu.classList.remove('on');tagSel.setAttribute('aria-expanded','false');
+    var o=e.target.closest('.rea-qf-opt');
+    if(!o)return;
+    e.preventDefault();
+    matchMode=o.getAttribute('data-mode')||'exact';
+    tagSelText.textContent=MATCH_LABEL[matchMode];
+    qa('.rea-qf-opt',tagMenu).forEach(function(b){
+      b.setAttribute('aria-selected',b===o?'true':'false');
+    });
+    tagMenu.classList.remove('on');tagSel.setAttribute('aria-expanded','false');
+    render();
   });
   document.addEventListener('click',function(e){
     if(!tagPanel.contains(e.target)){tagMenu.classList.remove('on');tagSel.setAttribute('aria-expanded','false')}
@@ -19435,7 +19451,7 @@ function initQf(){
     var names=tagNames(),n=names.length;
     var st=sendType();
     sumWho.textContent=all?'全部好友 · 人数执行时统计'
-      :(n?('标签：'+names.join(';')):'按微信标签 · 未填');
+      :(n?('标签：'+names.join(';')+' · '+MATCH_LABEL[matchMode]):'按微信标签 · 未填');
     sumWho.title=sumWho.textContent;
     var how;
     if(st==='assistant')how='群发助手 · 每批最多 200 人';
@@ -19453,8 +19469,8 @@ function initQf(){
     var stName=st==='assistant'?'群发助手':st==='search'?'搜索发送':'文件传输助手转发';
     actSum.textContent=(all?'全部好友':(n?n+' 个标签':'标签未填'))+' · '+stName;
     if(!all){
-      tagHint.textContent=n?('已填 '+n+' 个标签；标签按名称匹配，人数以各销售手机为准。')
-        :'标签在各销售自己的微信里，后台按名称匹配，人数以各人手机为准。';
+      tagHint.textContent=n?('已填 '+n+' 个标签，'+MATCH_TIP[matchMode]+'；人数以各人手机为准。')
+        :('标签在各销售自己的微信里，'+MATCH_TIP[matchMode]+'；人数以各人手机为准。');
     }else{
       tagHint.textContent='每位执行人员发给自己微信里的全部好友；人数以各人手机为准，后台不预先统计。';
     }
