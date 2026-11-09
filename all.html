@@ -11912,6 +11912,13 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     const cards = [
       ["活跃员工", used.length, "人", `共 ${stats.length} 名已分配员工`, "used"],
       [
+        "未使用",
+        stats.length - used.length,
+        "人",
+        "含仅有托管记录的员工",
+        "idle",
+      ],
+      [
         "活跃覆盖率",
         stats.length ? ((used.length / stats.length) * 100).toFixed(1) : 0,
         "%",
@@ -11919,13 +11926,6 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
         "used",
       ],
       ["人均活跃天数", average, "天", "", "used"],
-      [
-        "未使用",
-        stats.length - used.length,
-        "人",
-        "含仅有托管记录的员工",
-        "idle",
-      ],
     ];
     $("#ov-people-stats").innerHTML = cards
       .map(
