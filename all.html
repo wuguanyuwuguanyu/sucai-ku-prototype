@@ -8471,6 +8471,8 @@ function pickRa(){closeBallMenu();openAiPanel()}
    出现条件只有两条：①这个模块开过（aiBallOn——没开过不凭空长出一颗球）；②当前没展开（aiOpen=false）。
    浮层里那枚「关闭」（ADR-0091）会把 aiBallOn 落回 false——那一下不留球，下次从入口打开再收起才回来。
    不贴边、不半隐藏：产品口径「独立拖到任意位置」，位置由内联 left/top 记住，收起再开还在原处。
+   （ADR-0092 补一条：把浮层横向推出屏外收起时，球会落在**那一侧边缘**（4px）与你松手同高——
+   是动作的落点，不是常态；仍整颗可见，不做半隐藏。）
    ADR-0090 起：48px（＋4px 透明外环）、闪电＋右上绿点、可聚焦；收起时面板缩向它的圆心，
    不是淡出后另起一颗球——用户得看见「这块面板变成了这颗球」。 */
 var aiBallOn=false;
@@ -8630,7 +8632,14 @@ function closePanel(instant){
 }
 function placePanel(){}
 function panelDrag(el){
-  var sx,sy,ox,oy,inner,down=false,captured=false;
+  var sx,sy,ox,oy,inner,down=false,captured=false,pn=null,legalL=0,dxL=0,dyL=0;
+  /* 推出去收起的判据（ADR-0092），满足任一条即收起：
+     ①手指横移 ≥ 96 ≈ 面板宽 1/4；
+     ②手指**真的到了屏边**（离左右缘 ≤18）且横移 ≥32、以横向为主。
+     取**手指位移**不取"浮层露在屏外的量"：浮层本来就只有 14px 外边距，露出量比手指位移少一截，
+     拿它当阈值会要求横拖近 200px。②补的是①够不着的情形——从头部左段起手（离左缘不到 128）时
+     手指拖到屏边也只横移了百来像素，按「拖到页边」的字面意思该算数。 */
+  var DROP=96,EDGE=18,MIN2=32;
   el._swallowUntil=0; /* 时刻窗口的初值。别处只读不写，故在这里落一笔：
                          undefined 与时刻比大小恒为 false，那会变成「每一次 click 都吞」。 */
   /* 拖过阈值这一下不再算点击（用户 2026-10-16 点名的那条手势）：
@@ -8651,9 +8660,11 @@ function panelDrag(el){
     el._swallowUntil=0;e.stopPropagation();e.preventDefault();
   },true);
   el.addEventListener('pointerdown',function(e){
-    down=true;captured=false;el._swallowUntil=0;sx=e.clientX;sy=e.clientY;
-    var pn=el.closest('.panel');var r=pn.getBoundingClientRect();ox=r.left;oy=r.top;
+    down=true;captured=false;el._swallowUntil=0;sx=e.clientX;sy=e.clientY;dxL=0;
+    pn=el.closest('.panel');var r=pn.getBoundingClientRect();ox=r.left;oy=r.top;
     inner=pn.closest('.phone-inner').getBoundingClientRect();
+    pn.style.transition=''; /* 上一轮弹回的过渡可能还没到点：新一次按下先撤掉，否则跟手会拖泥带水 */
+    legalL=Math.max(4,Math.min(pn.offsetLeft,412-pn.offsetWidth-4)); /* 浮层眼下站的那个合法位 */
   });
   el.addEventListener('pointermove',function(e){
     if(!down)return;
@@ -8676,12 +8687,43 @@ function panelDrag(el){
     var maxL=412-pn.offsetWidth-4;
     var minT=34;
     var maxT=916-pn.offsetHeight-4;
-    pn.style.left=Math.max(4,Math.min((ox+(e.clientX-sx)-inner.left)/k,maxL))+'px';
+    var nx=(ox+(e.clientX-sx)-inner.left)/k;
+    dxL=(e.clientX-sx)/k;dyL=(e.clientY-sy)/k;
+    if(pn.id==='aiPanel'){
+      /* 横向**不夹取**（ADR-0092）：推出去就是收起的手势，浮层得跟手滑出屏外（.phone-inner 裁掉）。
+         这里只记「最后一个合法位」——收起动画跑完、display 落 none 之后拿它复位，
+         否则下次从入口打开会停在半截屏外。 */
+      pn.style.left=nx+'px';
+      legalL=Math.max(4,Math.min(nx,maxL));
+    }else{
+      pn.style.left=Math.max(4,Math.min(nx,maxL))+'px';
+    }
     pn.style.top=Math.max(minT,Math.min((oy+(e.clientY-sy)-inner.top)/k,maxT))+'px';
   });
+  /* 没推够＝弹回：纵向拖动时一直是实时夹取的，横向这次放开了，松手后得把浮层送回墙里 */
+  function snapBack(){
+    var maxL=412-pn.offsetWidth-4;
+    pn.style.transition='left .18s var(--emph)';
+    pn.style.left=Math.max(4,Math.min(pn.offsetLeft,maxL))+'px';
+    setTimeout(function(){if(pn)pn.style.transition=''},220);
+  }
   /* 松手（或手势被引擎掐掉）即开窗口，上面那条吞 click 的判据就靠它：只有真的拖过（captured）才开 */
-  el.addEventListener('pointerup',function(){if(captured)el._swallowUntil=Date.now()+150;down=false;captured=false});
-  el.addEventListener('pointercancel',function(){if(captured)el._swallowUntil=Date.now()+150;down=false;captured=false});
+  function dragEnd(allowDrop,e){
+    if(captured)el._swallowUntil=Date.now()+150;
+    var was=captured;down=false;captured=false;
+    if(!was||!pn)return;
+    if(allowDrop&&pn.id==='aiPanel'){
+      var kk=inner.width/412; /* k 在 pointermove 里；这里另算一次，别跨闭包借 */
+      var atEdge=e&&(e.clientX-inner.left<=EDGE*kk||inner.right-e.clientX<=EDGE*kk);
+      var drop=Math.abs(dxL)>=DROP||(atEdge&&Math.abs(dxL)>=MIN2&&Math.abs(dxL)>Math.abs(dyL));
+      if(drop){
+        aiDropToEdge(dxL<0?-1:1,pn.offsetTop+pn.offsetHeight/2,legalL);return;
+      }
+    }
+    if(pn.offsetLeft<4||pn.offsetLeft>412-pn.offsetWidth-4)snapBack(); /* 手势被掐掉也走这条：只回位，不收起 */
+  }
+  el.addEventListener('pointerup',function(e){dragEnd(true,e)});
+  el.addEventListener('pointercancel',function(e){dragEnd(false,e)});
 }
 /* 面板内容架构：头部（一排一级视图 ＋ 筛选／搜索／✕ 三枚 icon）→ 统一列表（搜索条常态收进头部，点开才占一行）。
    **没有页内导航那一层了**（ADR-0075 ①）：容器里只有搜索条、列表与筛选 popover 三件——
@@ -9610,7 +9652,26 @@ function aiCollapseToBall(p){
   p.classList.add('to-ball');
   p._pt=setTimeout(function(){
     p._pt=null;p.style.display='none';p.classList.remove('to-ball');
+    aiReopenRestore(p); /* 被推出屏外的那次收起：落地后再复位，别在动画里把浮层拽回墙里 */
   },PMOT.out);
+}
+/* 推出去收起的落点（ADR-0092）：球贴在你推出去的那一侧（4px，**整颗可见**，不做半隐藏）、与松手同高。
+   side：-1 左、1 右；cy＝松手时浮层中心的 y（调用方按 412×916 布局像素算好）。
+   先把球摆好再走 closeAiPanel(toBall)：面板缩向的就是这颗球，用的是「收起 ⌄」同一条落法。
+   legalL＝浮层最后一个合法 left，收起落地后由 aiReopenRestore 复位。 */
+function aiDropToEdge(side,cy,legalL){
+  var p=$('aiPanel'),b=$('aiBall');if(!p)return;
+  if(b){
+    b.style.left=(side<0?4:412-48-4)+'px';
+    b.style.top=Math.max(44,Math.min(cy-24,916-48-16))+'px';
+    b.style.right='auto';b.style.bottom='auto';b.classList.remove('edge');
+  }
+  p._reopenLeft=legalL;
+  closeAiPanel(false,true);
+}
+function aiReopenRestore(p){
+  p=p||$('aiPanel');if(!p||p._reopenLeft==null)return;
+  p.style.left=p._reopenLeft+'px';p._reopenLeft=null;
 }
 function closeAiPanel(instant,toBall){
   aiOpen=false;
@@ -9622,7 +9683,12 @@ function closeAiPanel(instant,toBall){
      被别的浮层顶掉（openPanel → closeAiPanel，不带 toBall）仍走原来的淡出——屏上另有一块面板正在进场，
      再飞一颗球会抢动作线。两条路都收成同一颗球，只是动作不同。 */
   if(toBall&&!instant&&!pmotOff()&&PMOT.out>0&&S.floatOn&&aiBallOn)aiCollapseToBall(p);
-  else panelHide(p,instant); /* 120ms 淡出后才落 display（ADR-0088） */
+  else{ /* 120ms 淡出后才落 display（ADR-0088） */
+    panelHide(p,instant);
+    /* 被推出屏外的那次收起若走了这条（别的浮层顶掉／减弱动效）：退场落地后同样得复位 */
+    if(instant||pmotOff()||PMOT.out<=0)aiReopenRestore(p);
+    else setTimeout(function(){aiReopenRestore(p)},PMOT.out);
+  }
   /* 收起＝**收成它自己的小球**（ADR-0078／0090，产品口径），不是整个关死；全局素材球照旧不动。
      被别的浮层顶掉时也是同一个去向。 */
   aiBallShow();
