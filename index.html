@@ -12981,23 +12981,19 @@ render();
     <div class="rea-bd-metrics" id="rea-bd-metrics" aria-label="任务指标">
       <div class="rea-bd-card rea-bd-metric is-pending">
         <div class="rea-bd-metric-head"><div class="rea-bd-metric-label">待完成<span class="rea-bd-help" tabindex="0" role="img" aria-label="待完成统计口径" data-tip="截至数据更新时间，仍未做满且有效期未过的全部任务，含本期以前下发的任务。按条计，切换时间窗时保持当前存量。">?</span></div><span class="rea-bd-metric-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2"/></svg></span></div>
-        <button type="button" class="rea-bd-metric-value" data-bd-metric="pending" aria-label="查看待完成任务"><b data-bd-metric-count="pending">—</b><span>条</span><i aria-hidden="true">›</i></button>
-        <span class="rea-bd-metric-note" data-bd-metric-note="pending">截至目前，尚未到期</span>
+        <div class="rea-bd-metric-value"><b data-bd-metric-count="pending">—</b><span>条</span></div>
       </div>
       <div class="rea-bd-card rea-bd-metric is-completed">
         <div class="rea-bd-metric-head"><div class="rea-bd-metric-label">已完成<span class="rea-bd-help" tabindex="0" role="img" aria-label="已完成统计口径" data-tip="全体执行人员做满的时间落在所选区间内，每条任务计一次，含本期以前下发的任务。与执行趋势的已完成合计一致。">?</span></div><span class="rea-bd-metric-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="m8 12 3 3 5-6"/></svg></span></div>
-        <button type="button" class="rea-bd-metric-value" data-bd-metric="completed" aria-label="查看已完成任务"><b data-bd-metric-count="completed">—</b><span>条</span><i aria-hidden="true">›</i></button>
-        <span class="rea-bd-metric-note" data-bd-metric-note="completed">近一周完成，含此前下发</span>
+        <div class="rea-bd-metric-value"><b data-bd-metric-count="completed">—</b><span>条</span></div>
       </div>
       <div class="rea-bd-card rea-bd-metric is-overdue">
         <div class="rea-bd-metric-head"><div class="rea-bd-metric-label">已逾期<span class="rea-bd-help" tabindex="0" role="img" aria-label="已逾期统计口径" data-tip="有效期在所选区间内结束，且到期时未做满的任务，每条任务计一次，含本期以前下发的任务。与执行趋势的已逾期合计一致。">?</span></div><span class="rea-bd-metric-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m10.3 4.9-7 12.2A2 2 0 0 0 5 20h14a2 2 0 0 0 1.7-2.9l-7-12.2a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4m0 3h.01"/></svg></span></div>
-        <button type="button" class="rea-bd-metric-value" data-bd-metric="overdue" aria-label="查看已逾期任务"><b data-bd-metric-count="overdue">—</b><span>条</span><i aria-hidden="true">›</i></button>
-        <span class="rea-bd-metric-note" data-bd-metric-note="overdue">近一周到期且未完成</span>
+        <div class="rea-bd-metric-value"><b data-bd-metric-count="overdue">—</b><span>条</span></div>
       </div>
       <div class="rea-bd-card rea-bd-metric is-issued">
         <div class="rea-bd-metric-head"><div class="rea-bd-metric-label">已下发<span class="rea-bd-help" tabindex="0" role="img" aria-label="已下发统计口径" data-tip="下发时间落在所选区间内的任务，每条任务计一次，含待推送任务。与任务类型分布、任务列表前置的总条数一致。">?</span></div><span class="rea-bd-metric-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m21 3-7 18-4-8-8-4 19-6Z"/><path d="m10 13 11-10"/></svg></span></div>
-        <button type="button" class="rea-bd-metric-value" data-bd-metric="issued" aria-label="查看已下发任务"><b data-bd-metric-count="issued">—</b><span>条</span><i aria-hidden="true">›</i></button>
-        <span class="rea-bd-metric-note" data-bd-metric-note="issued">近一周下发，含待推送</span>
+        <div class="rea-bd-metric-value"><b data-bd-metric-count="issued">—</b><span>条</span></div>
       </div>
     </div>
 
@@ -14510,13 +14506,12 @@ render();
 <script type="text/plain" id="srcBoardTasks">
 <div class="_board_gf4go_1 rea-bd-page rea-bd-sec">
   <div class="_title_gf4go_8 rea-bd-pagehead">
-    <h6><span id="rea-tasks-title">任务列表</span><span class="rea-bd-help" tabindex="0" role="img" aria-label="数据来源与统计口径" data-tip="按统计口径选任务，待完成取当前存量，已完成按完成时间，已逾期按到期时间，本期下发按下发时间。大类、类型、状态、部门进一步筛选。条数按任务去重，进度按人次计。">?</span></h6>
+    <h6>任务列表<span class="rea-bd-help" tabindex="0" role="img" aria-label="数据来源与统计口径" data-tip="按下发时间选出所选区间内的任务，含待推送任务。大类、类型、状态、部门可进一步筛选。条数按任务去重，逐条进度按人次计。">?</span></h6>
     <a href="#" data-rea="微小助看板" class="rea-bd-back">← 返回看板</a>
   </div>
   <div class="ant-divider css-vgijab ant-divider-horizontal" role="separator" style="margin: 0px;"></div>
   <div class="rea-bd-row rea-bd-filters">
-    <label class="rea-bd-filter"><span class="rea-bd-lab">统计口径</span><select class="rea-bd-sel" id="rea-tasks-metric"><option value="pending">待完成</option><option value="completed">已完成</option><option value="overdue">已逾期</option><option value="issued" selected>已下发</option></select></label>
-    <span class="rea-bd-lab" id="rea-tasks-time-label">时间窗</span>
+    <span class="rea-bd-lab">时间窗</span>
     <div class="ant-radio-group ant-radio-group-solid css-vgijab rea-bd-window" id="rea-tasks-win">
       <div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small">
               <div class="ant-space-item">
@@ -14621,7 +14616,6 @@ render();
     </label>
     <span class="rea-bd-count" id="rea-tasks-count">共 9 条</span>
   </div>
-  <div class="rea-bd-scope" id="rea-tasks-scope"></div>
   <div id="rea-tasks-bad" class="rea-bd-bad" hidden></div>
   <div class="ant-table-wrapper css-vgijab rea-bd-table" style="margin-top: 12px;">
     <div class="ant-spin-nested-loading css-vgijab"><div class="ant-spin-container">
@@ -14634,7 +14628,7 @@ render();
               <th scope="col" class="ant-table-cell">任务类型</th>
               <th scope="col" class="ant-table-cell">创建人</th>
               <th scope="col" class="ant-table-cell" title="该任务的执行人员人数；执行人员可跨部门（「部门完成情况」按创建人所属部门聚合，两种口径不同）">执行人员</th>
-              <th scope="col" class="ant-table-cell" id="rea-tasks-date-title">下发时间</th>
+              <th scope="col" class="ant-table-cell">下发时间</th>
               <th scope="col" class="ant-table-cell">任务有效期</th>
               <th scope="col" class="ant-table-cell" title="该任务已执行人数 / 应执行人数（人次）；占比图与部门完成情况按任务条数算">进度</th>
               <th scope="col" class="ant-table-cell">状态</th>
@@ -14982,24 +14976,17 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px;margin-top:16px}
 .rea-bd-card{display:flex;flex-direction:column;min-width:0;padding:16px 20px 18px;background:#fff;border:1px solid #E9EEF6;border-radius:12px;box-shadow:0 1px 2px rgba(19,44,82,.04)}
 .rea-bd-metrics{grid-column:span 12;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
-.rea-bd-metric{--metric-accent:#1677FF;--metric-tint:#E6F4FF;padding:16px 24px;transition:border-color .16s ease-out}
+.rea-bd-metric{--metric-accent:#1677FF;--metric-tint:#E6F4FF;padding:16px 24px}
 .rea-bd-metric.is-completed{--metric-accent:#52C41A;--metric-tint:rgba(82,196,26,.08)}
 .rea-bd-metric.is-overdue{--metric-accent:#FAAD14;--metric-tint:rgba(250,173,20,.10)}
 .rea-bd-metric.is-issued{--metric-accent:#646A73;--metric-tint:#F7F8FA}
-.rea-bd-metric:hover,.rea-bd-metric:focus-within{border-color:var(--metric-accent)}
 .rea-bd-metric-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .rea-bd-metric-icon{display:flex;align-items:center;justify-content:center;width:40px;height:40px;flex:0 0 40px;border-radius:8px;background:var(--metric-tint);color:var(--metric-accent)}
 .rea-bd-metric-icon svg{width:24px;height:24px;display:block}
 .rea-bd-metric-label{display:flex;align-items:center;color:#1F2329;font-size:14px;font-weight:500}
-.rea-bd-metric-value{display:flex;align-items:baseline;gap:8px;width:100%;margin:8px 0;padding:0;border:0;background:transparent;color:#1F2329;text-align:left;cursor:pointer;border-radius:8px}
+.rea-bd-metric-value{display:flex;align-items:baseline;gap:8px;margin-top:8px;color:#1F2329}
 .rea-bd-metric-value b{font-size:32px;line-height:48px;font-weight:600;font-variant-numeric:tabular-nums}
 .rea-bd-metric-value span{font-size:14px;color:#646A73}
-.rea-bd-metric-value i{margin-left:auto;color:#8F959E;font-size:20px;font-style:normal}
-.rea-bd-metric-value:hover i{color:var(--metric-accent)}
-.rea-bd-metric-value:active{background:var(--metric-tint)}
-.rea-bd-metric-note,.rea-bd-scope{color:#646A73;font-size:12px;line-height:20px}
-.rea-bd-scope{padding:8px 0 16px}
-.rea-bd-event-time{display:block;font-size:12px;white-space:nowrap;line-height:20px}
 @media(max-width:1279px){.rea-bd-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:767px){.rea-bd-metrics{grid-template-columns:1fr}}
 .rea-bd-card--w8{grid-column:span 8}
@@ -16311,11 +16298,8 @@ function taskScope(rs,metric,range){
     '/* 指标与趋势均直接从完整台账取数，完成/到期时间先于下发日期筛选。 */',
     'function renderMetrics(w){',
     '  var rs=dumpRows(),range=WIN[w]||WIN[DEFW],keys=["pending","completed","overdue","issued"],i,k;',
-    '  var period={today:"今日",w7:"近一周",m1:"近一月",m3:"近三月"}[w]||(mdOf(range[0])+"—"+mdOf(range[1]));',
-    '  var notes={pending:"截至目前，尚未到期",completed:period+"完成，含此前下发",overdue:period+"到期且未完成",issued:period+"下发，含待推送"};',
     '  for(i=0;i<keys.length;i++){',
     '    k=keys[i];',
-    '    document.querySelector(\'[data-bd-metric-note="\'+k+\'"]\').textContent=notes[k];',
     '    document.querySelector(\'[data-bd-metric-count="\'+k+\'"]\').textContent=String(taskScope(rs,k,range).length);',
     '  }',
     '}',
@@ -16502,13 +16486,6 @@ function taskScope(rs,metric,range){
     '  e.preventDefault();',
     '  parent.postMessage({reaPage:' + reaJson(REA_TASKS_PAGE) + ',reaWin:CURW,reaWinRange:(CURW==="custom"?WIN.custom:null),reaRows:dumpRows()},"*");',
     '});',
-    '/* 四张卡使用同一任务列表，随入口带入统计口径。 */',
-    'var kw=document.getElementById("rea-bd-metrics");',
-    'if(kw)kw.addEventListener("click",function(e){',
-    '  var n=e.target.closest("[data-bd-metric]");',
-    '  if(!n)return;',
-    '  parent.postMessage({reaPage:' + reaJson(REA_TASKS_PAGE) + ',reaWin:CURW,reaWinRange:(CURW==="custom"?WIN.custom:null),reaRows:dumpRows(),reaMetric:n.getAttribute("data-bd-metric")},"*");',
-    '});',
     '/* 部门行与列头支持 Enter / 空格。 */',
     'document.addEventListener("keydown",function(e){',
     '  if(e.key!=="Enter"&&e.key!==" ")return;',
@@ -16598,9 +16575,7 @@ function taskScope(rs,metric,range){
     '      name:((c[0]&&c[0].getAttribute("title"))||(c[0]&&c[0].textContent)||"").trim(),',
     '      creator:cr,',
     '      completedDay:r.hasAttribute("data-bd-completed-day")?+r.getAttribute("data-bd-completed-day"):null,',
-    '      completedAt:r.hasAttribute("data-bd-completed-day")?when(dayAt(+r.getAttribute("data-bd-completed-day")),"09:"+PAD(id%60)):"",',
     '      overdueDay:over>0?offOfDate((r.querySelector("[data-bd-end]").textContent||"").slice(0,10)):null,',
-    '      overdueAt:over>0?(r.querySelector("[data-bd-end]").textContent||"").trim():"",',
     '      created:createdOf(r),',
     '      people:((c[3]&&c[3].textContent)||"").trim(),',
     '      span:((c[4]&&c[4].textContent)||"").replace(/\\s+/g," ").trim(),',
@@ -17594,8 +17569,6 @@ function taskScope(rs,metric,range){
     '}',
     'function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}',
     'var ROWS=window.__REA_ROWS||[],WIN=window.__REA_WIN||"today",RANGE=window.__REA_RANGE||null;',
-    'var METRIC=window.__REA_METRIC||"issued";',
-    reaTaskScopeJs(),
     '/* 时间窗＝相对今天第几天的一段区间（与看板页同一套：今日／近一周／近一月／近三月）。',
     '   自定义区间不在这里重选，只跟着看板带过来的起止偏移开一档。 */',
     'var WINR={today:[0,0],w7:[-6,0],m1:[-29,0],m3:[-89,0]};',
@@ -17615,7 +17588,10 @@ function taskScope(rs,metric,range){
     '  return a>0?String(t).slice(0,a):(PLAT_BY_TYPE[t]||"wx");',
     '}',
     'function typeName(t){var a=String(t||"").indexOf("|");return a>0?String(t).slice(a+1):t}',
-    'function winRows(w){return taskScope(ROWS,METRIC,WINR[w]||WINR.today)}',
+    'function winRows(w){',
+    '  var range=WINR[w]||WINR.today;',
+    '  return ROWS.filter(function(r){return +r.day>=range[0]&&+r.day<=range[1]});',
+    '}',
     'function stateOf(r){return r.left<=0?"已完成":(r.over>0?"已结束":"进行中")}',
     '/* 有效期列在 9 列表格里最窄：先省掉今年，再把同一天的首尾并成「10-25 09:00 ~ 23:59」。',
     '   完整值留在 title 里，列宽不够时不再截成半句。 */',
@@ -17680,10 +17656,6 @@ function taskScope(rs,metric,range){
     '    out.push({r:r,i:i});',
     '  }',
     '  out.sort(function(a,b){',
-    '    if(METRIC==="completed"||METRIC==="overdue"){',
-    '      var key=METRIC==="completed"?"completedAt":"overdueAt";',
-    '      return String(b.r[key]||"").localeCompare(String(a.r[key]||""))||a.r.id-b.r.id;',
-    '    }',
     '    if(a.r.left!==b.r.left)return b.r.left-a.r.left;',
     '    return a.i-b.i;',
     '  });',
@@ -17699,7 +17671,7 @@ function taskScope(rs,metric,range){
     '      +"<td class=\\"ant-table-cell\\">"+esc(r.type)+"</td>"',
     '      +"<td class=\\"ant-table-cell\\"><span class=\\"rea-bd-creator\\">"+esc(r.creator)+"<em>"+esc(r.org)+"</em></span></td>"',
     '      +"<td class=\\"ant-table-cell\\"><span class=\\"rea-bd-people\\" title=\\""+esc(r.people)+"\\">"+esc(r.people)+"</span></td>"',
-    '      +"<td class=\\"ant-table-cell\\"><span class=\\"rea-bd-event-time\\">"+esc(r.created||"—")+"</span>"+((METRIC==="completed"||METRIC==="overdue")?"<span class=\\"rea-bd-event-time\\">"+(METRIC==="completed"?"完成 ":"逾期 ")+esc(METRIC==="completed"?r.completedAt:r.overdueAt)+"</span>":"")+"</td>"',
+    '      +"<td class=\\"ant-table-cell\\"><span class=\\"rea-bd-created\\">"+esc(r.created||"—")+"</span></td>"',
     '      +"<td class=\\"ant-table-cell\\"><span class=\\"rea-bd-span\\" title=\\""+esc(r.span)+"\\">"+esc(shortSpan(r.span))+"</span></td>"',
     '      +"<td class=\\"ant-table-cell\\"><div class=\\"rea-bd-pg\\"><span class=\\"n\\"><span>"+r.done+" / "+r.need+"</span><em>"+(r.need?Math.round(r.done/r.need*100)+"%":"")+"</em></span>"+seg(r.need,r.done,r.left,r.over)+"</div></td>"',
     '      +"<td class=\\"ant-table-cell\\">"+tag(state)+"</td>"',
@@ -17739,18 +17711,6 @@ function taskScope(rs,metric,range){
     '  el.innerHTML="<b>任务列表自检未通过（"+msgs.length+" 处）</b><br>"+msgs.join("<br>");',
     '}',
     '',
-    'var METRIC_LABEL={pending:"待完成",completed:"已完成",overdue:"已逾期",issued:"已下发"};',
-    'function setScopeUi(){',
-    '  var pending=METRIC==="pending",title=document.getElementById("rea-tasks-title");',
-    '  title.textContent=METRIC_LABEL[METRIC]+"任务";',
-    '  document.getElementById("rea-tasks-metric").value=METRIC;',
-    '  document.getElementById("rea-tasks-win").hidden=pending;',
-    '  document.getElementById("rea-tasks-time-label").hidden=pending;',
-    '  document.getElementById("rea-tasks-scope").textContent=pending?"截至数据更新时间，未完成且未到期的全部任务，含此前下发。":(METRIC==="completed"?"按任务整体完成时间统计，含此前下发；按完成时间从近到远。":(METRIC==="overdue"?"按有效期结束时间统计，含此前下发；按逾期时间从近到远。":"按下发时间统计，含待推送任务。"));',
-    '  document.getElementById("rea-tasks-date-title").textContent=METRIC==="completed"?"下发 / 完成时间":(METRIC==="overdue"?"下发 / 逾期时间":"下发时间");',
-    '}',
-    'var metricSelect=document.getElementById("rea-tasks-metric");',
-    'metricSelect.addEventListener("change",function(){METRIC=this.value;CURS="all";seedSel("rea-tasks-state","all");setScopeUi();paint()});',
     'function setWinUi(){',
     '  var ls=document.querySelectorAll("[data-tasks-win]"),i,on;',
     '  for(i=0;i<ls.length;i++){',
@@ -17836,7 +17796,7 @@ function taskScope(rs,metric,range){
     '  if(ci)ci.hidden=false;',
     '  if(cl)cl.textContent=mdOff(RANGE[0])+" ~ "+mdOff(RANGE[1]);',
     '}',
-    'stamp();setScopeUi();setWinUi();paint();',
+    'stamp();setWinUi();paint();',
     '})();'
    ].join('\n');
   }
@@ -23710,8 +23670,7 @@ if(ST){
     if (name === REA_TASKS_PAGE){
       /* 任务列表的四轴筛选：从部门行点进来时带一个预选值，从类型占比卡点进来带平台、',
          或平台＋类型，其余从「任务列表」链接进来全是 all。 */
-      js += 'window.__REA_METRIC=' + reaJson(reaMetricSel || 'issued') + ';'
-        + 'window.__REA_PLAT=' + reaJson(reaPlatSel || 'all') + ';'
+      js += 'window.__REA_PLAT=' + reaJson(reaPlatSel || 'all') + ';'
         + 'window.__REA_TYPE=' + reaJson(reaTypeSel || 'all') + ';'
         + 'window.__REA_STATE=' + reaJson(reaStateSel || 'all') + ';'
         + 'window.__REA_ORG=' + reaJson(reaOrgSel || 'all') + ';';
@@ -24232,7 +24191,6 @@ if(ST){
   var reaHostWinSel = 'w7', reaHostPreset = null; // AI托管看板：窗口 ＋ 日志页的预选（员工／类型）
   var reaPlatSel = 'all'; // 任务列表的预选筛选：大类（从任务类型分布卡的一段／横条点进来时有值）
   var reaTypeSel = 'all'; // 同上：任务类型（从外环一段点进来时，平台和类型一起带上）
-  var reaMetricSel = 'issued'; // 任务列表统计口径
   var reaStateSel = 'all';// 同上：状态
   var reaOrgSel = 'all';  // 同上：部门（从部门完成情况的一行点进来时有值）
   var reaSortSel = 'debt';// 执行人明细的排序：debt（旧口径）/ done（完成人次）/ rate（完成率）
@@ -24746,7 +24704,6 @@ document.addEventListener('click',function(event){
          进来带大类，从下钻后的类型条进来带大类＋类型；从「任务列表」链接进来全 all；
          从排行进来带 done/rate，从「执行人明细」链接进来回到 debt。
          执行人明细自己点过列头时会把列与方向一起带过来（详情页往返用）。 */
-      reaMetricSel = d.reaMetric || 'issued';
       reaPlatSel = d.reaPlat || 'all';
       reaTypeSel = d.reaType || 'all'; reaStateSel = d.reaState || 'all'; reaOrgSel = d.reaOrg || 'all';
       reaSortSel = d.reaSort || 'debt'; reaFocusSel = d.reaFocus || '';
