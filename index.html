@@ -10741,7 +10741,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   border-radius: 12px;
   background: #fff;
   padding: 20px 24px;
-  min-height: 160px;
+  min-height: 136px;
   transition:
     border-color 0.15s,
     background 0.15s;
@@ -10800,7 +10800,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   letter-spacing: -0.5px;
   font-variant-numeric: tabular-nums;
   font-weight: 600;
-  margin: 16px 0 8px;
+  margin: 16px 0 0;
 }
 .rea-ov-page .ov-kpi-value small,
 .rea-ov-page .ov-stat b small,
@@ -10813,23 +10813,8 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 }
 .rea-ov-page .ov-source-caption {
   display: block;
-  margin-top: auto;
   font-size: 12px;
   color: #646a73;
-}
-.rea-ov-page .ov-source-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-.rea-ov-page .ov-source-caption .ov-source-name {
-  padding: 1px 8px;
-  border-radius: 6px;
-  background: #e6f4ff;
-  color: #1677ff;
-  font-size: 12px;
-  line-height: 20px;
-  white-space: nowrap;
 }
 .rea-ov-page .ov-source-overview {
   margin-top: 16px;
@@ -12151,21 +12136,14 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   function metricButton(metric, records, source, compact = false) {
     const item = metrics[metric];
     const value = metricValue(records, metric);
-    const memberships = [
-      ...new Set(
-        selectMetric(records, metric).flatMap((record) => record.sources),
-      ),
-    ];
     const icon = ovIcon(METRIC_ICONS[metric] || METRIC_ICONS.message, compact ? 16 : 18);
     const title = compact
       ? `<span class="ov-kpi-title"><span class="ov-kpi-name"><span class="ov-metric-ic">${icon}</span>${item.name}</span><i aria-hidden="true">↗</i></span>`
       : `<span class="ov-kpi-head"><span class="ov-kpi-icon">${icon}</span><span class="ov-kpi-title">${item.name}<i aria-hidden="true">↗</i></span></span>`;
     const caption = compact
       ? { added: "加好友成功确认", publish: "发布成功回执", message: "按成功消息条数", aiReply: "员工主动采纳", material: "员工主动取用", hostingTask: "托管完成回执", autoReply: "自动回复记录", firstTouch: "新好友首条消息", friendSend: "实际发送成功目标", request: "已发出验证请求", taskExec: "按任务下发时间", profile: "分析完成回执", materialUsers: "取用员工去重", materialCount: "取用素材去重", materialSend: "一键发送＋一键发圈" }[metric] || "按完成回执统计"
-      : memberships.length
-        ? `<span class="ov-source-tags">${memberships.map((id) => `<span class="ov-source-name">${sources[id].name}</span>`).join("")}</span>`
-        : "本期暂无记录";
-    return `<button type="button" class="${compact ? "ov-group-metric" : "ov-kpi"}" data-metric="${metric}" ${source ? `data-source="${source}"` : ""} data-value="${value}" title="${html(item.note)}">${title}<${compact ? "strong" : "span"} class="${compact ? "" : "ov-kpi-value"}">${number(value)} <small>${item.unit}</small></${compact ? "strong" : "span"}><span class="ov-source-caption">${caption}</span></button>`;
+      : "";
+    return `<button type="button" class="${compact ? "ov-group-metric" : "ov-kpi"}" data-metric="${metric}" ${source ? `data-source="${source}"` : ""} data-value="${value}" title="${html(item.note)}">${title}<${compact ? "strong" : "span"} class="${compact ? "" : "ov-kpi-value"}">${number(value)} <small>${item.unit}</small></${compact ? "strong" : "span"}>${caption ? `<span class="ov-source-caption">${caption}</span>` : ""}</button>`;
   }
   function renderResults() {
     const records = scopedRecords();
