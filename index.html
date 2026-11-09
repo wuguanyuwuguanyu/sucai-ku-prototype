@@ -10746,6 +10746,16 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 16px;
 }
+.rea-ov-page .ov-panel .ov-kpi {
+  border: 0;
+  background: none;
+  min-height: 0;
+  padding: 0;
+}
+.rea-ov-page .ov-panel .ov-kpi:hover {
+  background: none;
+  color: #1677ff;
+}
 .rea-ov-page .ov-kpi {
   display: flex;
   flex-direction: column;
@@ -11436,6 +11446,15 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 .ov-org-button:focus-visible {
   outline: 2px solid #1677ff;
   outline-offset: -2px;
+}
+@media (max-width: 1360px) {
+  .rea-ov-page .ov-kpi-value {
+    font-size: 26px;
+  }
+  .rea-ov-page .ov-kpi-value .ov-mom {
+    margin-left: 8px;
+    font-size: 12px;
+  }
 }
 @media (max-width: 1240px) {
   .rea-ov-page .ov-kpis {
@@ -12275,11 +12294,11 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     const tone = rate < 0 ? " down" : "";
     return `<em class="ov-mom${tone}" title="较上一等长周期 ${arrow}${Math.abs(rate).toFixed(1)}%">${arrow} ${Math.abs(rate).toFixed(1)}%</em>`;
   }
-  function metricButton(metric, records) {
+  function metricButton(metric, records, source, showMom = true) {
     const item = metrics[metric];
     const value = metricValue(records, metric);
     const icon = ovIcon(METRIC_ICONS[metric] || METRIC_ICONS.message, 18);
-    return `<button type="button" class="ov-kpi" data-metric="${metric}" data-value="${value}" title="${html(item.note)}"><span class="ov-kpi-head"><span class="ov-kpi-icon">${icon}</span><span class="ov-kpi-title">${item.name}<i aria-hidden="true">↗</i></span></span><span class="ov-kpi-value">${number(value)} <small>${item.unit}</small>${momText(metric)}</span></button>`;
+    return `<button type="button" class="ov-kpi" data-metric="${metric}" ${source ? `data-source="${source}"` : ""} data-value="${value}" title="${html(item.note)}"><span class="ov-kpi-head"><span class="ov-kpi-icon">${icon}</span><span class="ov-kpi-title">${item.name}<i aria-hidden="true">↗</i></span></span><span class="ov-kpi-value">${number(value)} <small>${item.unit}</small>${showMom ? momText(metric) : ""}</span></button>`;
   }
   function renderResults() {
     const records = scopedRecords();
@@ -12680,7 +12699,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
       );
       title = source.board;
       body =
-        `<p class="ov-muted">${source.note}</p><div class="ov-group-grid">${source.metrics.map((metric) => metricButton(metric, own, route.source, true)).join("")}</div><h3 class="ov-detail-heading">工具完成记录</h3>` +
+        `<p class="ov-muted">${source.note}</p><div class="ov-kpis">${source.metrics.map((metric) => metricButton(metric, own, route.source, false)).join("")}</div><h3 class="ov-detail-heading">工具完成记录</h3>` +
         form() +
         recordTable(own);
     } else if (route.view === "features") {
