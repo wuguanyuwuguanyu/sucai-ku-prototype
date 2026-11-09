@@ -10366,7 +10366,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
       <section class="ov-results-section" aria-labelledby="ov-results-title">
         <div class="ov-section-heading">
           <h2 id="ov-results-title">
-            本期业务成果<span
+            业务成果<span
               class="ov-help"
               id="ov-results-help"
               tabindex="0"
@@ -10386,8 +10386,8 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
               class="ov-help"
               tabindex="0"
               role="img"
-              aria-label="主动活跃按员工去重，同一员工一天多次只计 1 天；托管自动执行单独统计，不计入活跃。点日期或使用天数分组可查看对应员工。"
-              data-tip="主动活跃按员工去重，同一员工一天多次只计 1 天；托管自动执行单独统计，不计入活跃。点日期或使用天数分组可查看对应员工。"
+              aria-label="主动活跃按员工去重，同一员工一天多次只计 1 天；托管自动执行单独统计，不计入活跃。点日期可查看对应员工。"
+              data-tip="主动活跃按员工去重，同一员工一天多次只计 1 天；托管自动执行单独统计，不计入活跃。点日期可查看对应员工。"
               >?</span
             >
           </h2>
@@ -10403,12 +10403,6 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
               <span class="ov-muted" id="ov-activity-note"></span>
             </div>
             <div id="ov-activity-chart"></div>
-          </section>
-          <section>
-            <div class="ov-section-heading">
-              <h3>使用天数分布</h3>
-            </div>
-            <div id="ov-frequency"></div>
           </section>
         </div>
         <div class="ov-section-heading ov-ranking-heading">
@@ -10863,22 +10857,51 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   font-size: 12px;
 }
 .rea-ov-page .ov-activity-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(240px, 1fr);
-  gap: 32px;
   padding-top: 24px;
   border-top: 1px solid #e5e8ef;
 }
+.rea-ov-page .ov-chart {
+  position: relative;
+  padding-left: 36px;
+}
+.rea-ov-page .ov-y-axis {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 160px;
+  width: 30px;
+  pointer-events: none;
+}
+.rea-ov-page .ov-y-axis span {
+  position: absolute;
+  right: 4px;
+  transform: translateY(50%);
+  font-size: 11px;
+  line-height: 1;
+  color: #8f959e;
+  font-variant-numeric: tabular-nums;
+}
 .rea-ov-page .ov-bars {
+  position: relative;
   height: 160px;
   display: flex;
   align-items: stretch;
+  justify-content: center;
   gap: 4px;
   padding-top: 16px;
 }
+.rea-ov-page .ov-grid-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #eef1f6;
+}
 .rea-ov-page .ov-bar {
+  position: relative;
   flex: 1;
   min-width: 0;
+  max-width: 88px;
   border: 0;
   border-radius: 6px 6px 0 0;
   background: none;
@@ -10888,6 +10911,17 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   justify-content: flex-end;
   align-items: center;
   gap: 8px;
+}
+.rea-ov-page .ov-bar-value {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  line-height: 1;
+  color: #646a73;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  pointer-events: none;
 }
 .rea-ov-page .ov-bar i {
   display: block;
@@ -10903,21 +10937,6 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   font-size: 12px;
   color: #646a73;
   height: 24px;
-}
-.rea-ov-page .ov-frequency-row {
-  display: grid;
-  grid-template-columns: 80px 1fr 40px;
-  gap: 8px;
-  align-items: center;
-  width: 100%;
-  padding: 8px 0;
-  background: none;
-  border: 0;
-  font-size: 12px;
-  text-align: left;
-}
-.rea-ov-page .ov-frequency-row:hover {
-  color: #1677ff;
 }
 .rea-ov-page .ov-track {
   display: block;
@@ -11184,7 +11203,6 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   .rea-ov-page .ov-main {
     padding: 16px;
   }
-  .rea-ov-page .ov-activity-layout,
   .rea-ov-page .ov-resources {
     grid-template-columns: 1fr;
   }
@@ -11342,12 +11360,12 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
       note: "按成功发布回执计，托管代跑在汇总时只计一次",
     },
     message: {
-      name: "消息发送成功",
+      name: "主动触达客户",
       unit: "条",
       note: "群发、自动回复和工具发送的成功消息条数",
     },
     aiReply: {
-      name: "AI 回复采纳",
+      name: "AI辅助员工",
       unit: "次",
       note: "员工将 AI 建议填入、复制或发送计一次采纳，同次建议去重",
     },
@@ -11902,7 +11920,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
       ],
       ["人均活跃天数", average, "天", "", "used"],
       [
-        "无主动使用记录",
+        "未使用",
         stats.length - used.length,
         "人",
         "含仅有托管记录的员工",
@@ -11939,31 +11957,46 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
       });
     }
     const max = Math.max(1, ...buckets.map((bucket) => bucket.value));
-    $("#ov-activity-note").textContent = days > 30 ? "每段为日均" : "";
+    const rawStep = max / 4;
+    const stepPower = Math.pow(10, Math.floor(Math.log10(rawStep)));
+    const stepNorm = rawStep / stepPower;
+    const tickStep =
+      (stepNorm <= 1 ? 1 : stepNorm <= 2 ? 2 : stepNorm <= 5 ? 5 : 10) *
+      stepPower;
+    const axisTop = Math.ceil(max / tickStep) * tickStep;
+    const plotHeight = 112;
+    const ticks = [];
+    for (let value = 0; value <= axisTop + tickStep / 2; value += tickStep)
+      ticks.push(value);
+    const tickText = (value) =>
+      value === 0
+        ? "0"
+        : number(
+            Number(
+              value.toFixed(tickStep < 1 ? (tickStep < 0.1 ? 2 : 1) : 0),
+            ),
+          );
+    const tickBottom = (value) => 32 + (value / axisTop) * plotHeight;
+    $("#ov-activity-note").textContent =
+      days > 30 ? "每段为日均 · 单位：人" : "单位：人";
     $("#ov-activity-chart").innerHTML =
-      `<div class="ov-bars" role="group" aria-label="${days > 30 ? "每段日均活跃员工" : "每日活跃员工"}">${buckets.map((bucket, index) => `<button type="button" class="ov-bar" data-day="${bucket.offset}" data-end="${bucket.end}" aria-label="${dateLabel(bucket.offset)}${bucket.end !== bucket.offset ? " 至 " + dateLabel(bucket.end) : ""}，${bucket.end !== bucket.offset ? "日均 " : ""}${number(Number(bucket.value.toFixed(1)))} 人" title="${dateLabel(bucket.offset)} · ${bucket.value.toFixed(1)} 人"><i style="height:${Math.max(2, (bucket.value / max) * 112)}px"></i><small>${index === 0 || index === buckets.length - 1 || index % Math.ceil(buckets.length / 5) === 0 ? dateLabel(bucket.offset).slice(5) : ""}</small></button>`).join("")}</div>`;
-    const frequency = [
-      ["none", "未使用"],
-      ["once", "使用 1 天"],
-      ["few", `使用 2–${Math.max(2, Math.floor(days / 2))} 天`],
-      ["often", `使用超过 ${Math.max(2, Math.floor(days / 2))} 天`],
-    ].filter(([id]) => days > 1 || ["none", "once"].includes(id));
-    $("#ov-frequency").innerHTML =
-      frequency
-        .map(([id, name]) => {
-          const count = stats.filter((item) =>
-            inFrequency(item.days, id),
-          ).length;
-          return `<button type="button" class="ov-frequency-row" data-frequency="${id}"><span>${name}</span><span class="ov-track"><i style="width:${stats.length ? (count / stats.length) * 100 : 0}%"></i></span><span>${count} 人</span></button>`;
+      `<div class="ov-chart"><div class="ov-y-axis" aria-hidden="true">${ticks
+        .map(
+          (value) =>
+            `<span style="bottom:${tickBottom(value)}px">${tickText(value)}</span>`,
+        )
+        .join("")}</div><div class="ov-bars" role="group" aria-label="${days > 30 ? "每段日均活跃员工" : "每日活跃员工"}">${ticks
+        .map(
+          (value) =>
+            `<span class="ov-grid-line" style="bottom:${tickBottom(value)}px"></span>`,
+        )
+        .join("")}${buckets
+        .map((bucket, index) => {
+          const value = Number(bucket.value.toFixed(1));
+          const height = Math.max(2, (bucket.value / axisTop) * plotHeight);
+          return `<button type="button" class="ov-bar" data-day="${bucket.offset}" data-end="${bucket.end}" aria-label="${dateLabel(bucket.offset)}${bucket.end !== bucket.offset ? " 至 " + dateLabel(bucket.end) : ""}，${bucket.end !== bucket.offset ? "日均 " : ""}${number(value)} 人" title="${dateLabel(bucket.offset)} · ${value} 人"><span class="ov-bar-value" style="bottom:${height + 36}px">${number(value)}</span><i style="height:${height}px"></i><small>${index === 0 || index === buckets.length - 1 || index % Math.ceil(buckets.length / 5) === 0 ? dateLabel(bucket.offset).slice(5) : ""}</small></button>`;
         })
-        .join("") +
-      `<p class="ov-footnote">另有 ${
-        new Set(
-          scopedRecords()
-            .filter((record) => record.sources.includes("hosting"))
-            .map((record) => record.employee),
-        ).size
-      } 人有托管执行记录。</p>`;
+        .join("")}</div></div>`;
     if (peopleTab === "department") {
       const departments = [
         ...new Set(scopedEmployees().map((employee) => employee.dept)),
@@ -12083,7 +12116,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
         ? `<select name="status" aria-label="员工活跃状态">${[
             ["all", "全部员工"],
             ["used", "主动活跃"],
-            ["idle", "无主动使用记录"],
+            ["idle", "未使用"],
           ]
             .map(
               ([id, name]) =>
@@ -12206,7 +12239,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
         summary([
           ["活跃员工", stats.filter((item) => item.days > 0).length, "人"],
           ["已分配员工", stats.length, "人"],
-          ["无主动记录", stats.filter((item) => !item.days).length, "人"],
+          ["未使用", stats.filter((item) => !item.days).length, "人"],
         ]) +
         (route.frequency
           ? `<p class="ov-filter-chip"><span>使用天数 · ${frequencyLabel(route.frequency)}</span><button type="button" class="ov-chip-x" data-action="clear-frequency" aria-label="清除使用天数筛选">×</button></p>`
@@ -12243,7 +12276,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
           ["主动活跃", active.days, "天"],
           ["托管执行", metricValue(own, "hostingExec"), "条"],
           ["素材取用", metricValue(own, "material"), "次"],
-          ["AI 回复采纳", metricValue(own, "aiReply"), "次"],
+          ["AI辅助员工", metricValue(own, "aiReply"), "次"],
         ]);
       const selected = route.metric
         ? selectMetric(own, route.metric).filter(
