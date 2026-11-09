@@ -12929,7 +12929,7 @@ render();
 
   <!-- 时间窗（PRD §2.2）· 本期指标与趋势按各自时间字段取数；类型、完成情况、回复和任务列表按下发时间取任务。最多统计近三个月，四档全部可点；自定义区间点开是起止日期，与固定档互斥。 -->
   <div class="rea-bd-fbar">
-    <span class="rea-bd-lab">任务时间窗<span class="rea-bd-help" tabindex="0" role="img" aria-label="数据来源与统计口径" data-tip="本期已完成按完成时间、本期已逾期按到期时间、本期已下发按下发时间统计，含待推送任务。当前待完成统计截至数据更新时间仍未完成且未到期的全部任务；配置／资产按自身周期。自定义区间含首尾两天，最多回看三个月。">?</span></span>
+    <span class="rea-bd-lab">任务时间窗<span class="rea-bd-help" tabindex="0" role="img" aria-label="数据来源与统计口径" data-tip="已完成按完成时间、已逾期按到期时间、已下发按下发时间统计，含待推送任务。待完成统计截至数据更新时间仍未完成且未到期的全部任务；配置／资产按自身周期。自定义区间含首尾两天，最多回看三个月。">?</span></span>
     <div class="ant-radio-group ant-radio-group-solid css-vgijab rea-bd-window" id="rea-bd-window">
         <div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small">
           <div class="ant-space-item">
@@ -12977,27 +12977,27 @@ render();
   <!-- 首行四项任务指标，下一行执行趋势通栏，其后为类型分布、完成情况、回复与列表。 -->
   <div class="rea-bd-grid" id="rea-bd-grid">
 
-    <!-- 四个独立指标：当前待完成是存量，其余按各自事件时间取本期发生量。 -->
+    <!-- 四个独立指标：待完成是存量，其余按各自事件时间取本期发生量。 -->
     <div class="rea-bd-metrics" id="rea-bd-metrics" aria-label="任务指标">
-      <div class="rea-bd-card rea-bd-metric">
-        <div class="rea-bd-metric-label">当前待完成<span class="rea-bd-help" tabindex="0" role="img" aria-label="当前待完成统计口径" data-tip="截至数据更新时间，仍未做满且有效期未过的全部任务，含本期以前下发的任务。按条计，切换时间窗时保持当前存量。">?</span></div>
-        <button type="button" class="rea-bd-metric-value" data-bd-metric="pending" aria-label="查看当前待完成任务"><b data-bd-metric-count="pending">—</b><span>条</span><i aria-hidden="true">›</i></button>
-        <span class="rea-bd-metric-note">截至数据更新时间</span>
+      <div class="rea-bd-card rea-bd-metric is-pending">
+        <div class="rea-bd-metric-head"><div class="rea-bd-metric-label">待完成<span class="rea-bd-help" tabindex="0" role="img" aria-label="待完成统计口径" data-tip="截至数据更新时间，仍未做满且有效期未过的全部任务，含本期以前下发的任务。按条计，切换时间窗时保持当前存量。">?</span></div><span class="rea-bd-metric-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2"/></svg></span></div>
+        <button type="button" class="rea-bd-metric-value" data-bd-metric="pending" aria-label="查看待完成任务"><b data-bd-metric-count="pending">—</b><span>条</span><i aria-hidden="true">›</i></button>
+        <span class="rea-bd-metric-note" data-bd-metric-note="pending">截至目前，尚未到期</span>
       </div>
-      <div class="rea-bd-card rea-bd-metric">
-        <div class="rea-bd-metric-label">本期已完成<span class="rea-bd-help" tabindex="0" role="img" aria-label="本期已完成统计口径" data-tip="全体执行人员做满的时间落在所选区间内，每条任务计一次，含本期以前下发的任务。与执行趋势的本期完成合计一致。">?</span></div>
-        <button type="button" class="rea-bd-metric-value" data-bd-metric="completed" aria-label="查看本期已完成任务"><b data-bd-metric-count="completed">—</b><span>条</span><i aria-hidden="true">›</i></button>
-        <span class="rea-bd-metric-note">按完成时间 · 含此前下发</span>
+      <div class="rea-bd-card rea-bd-metric is-completed">
+        <div class="rea-bd-metric-head"><div class="rea-bd-metric-label">已完成<span class="rea-bd-help" tabindex="0" role="img" aria-label="已完成统计口径" data-tip="全体执行人员做满的时间落在所选区间内，每条任务计一次，含本期以前下发的任务。与执行趋势的已完成合计一致。">?</span></div><span class="rea-bd-metric-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="m8 12 3 3 5-6"/></svg></span></div>
+        <button type="button" class="rea-bd-metric-value" data-bd-metric="completed" aria-label="查看已完成任务"><b data-bd-metric-count="completed">—</b><span>条</span><i aria-hidden="true">›</i></button>
+        <span class="rea-bd-metric-note" data-bd-metric-note="completed">近一周完成，含此前下发</span>
       </div>
-      <div class="rea-bd-card rea-bd-metric">
-        <div class="rea-bd-metric-label">本期已逾期<span class="rea-bd-help" tabindex="0" role="img" aria-label="本期已逾期统计口径" data-tip="有效期在所选区间内结束，且到期时未做满的任务，每条任务计一次，含本期以前下发的任务。与执行趋势的本期逾期合计一致。">?</span></div>
-        <button type="button" class="rea-bd-metric-value" data-bd-metric="overdue" aria-label="查看本期已逾期任务"><b data-bd-metric-count="overdue">—</b><span>条</span><i aria-hidden="true">›</i></button>
-        <span class="rea-bd-metric-note">按到期时间 · 含此前下发</span>
+      <div class="rea-bd-card rea-bd-metric is-overdue">
+        <div class="rea-bd-metric-head"><div class="rea-bd-metric-label">已逾期<span class="rea-bd-help" tabindex="0" role="img" aria-label="已逾期统计口径" data-tip="有效期在所选区间内结束，且到期时未做满的任务，每条任务计一次，含本期以前下发的任务。与执行趋势的已逾期合计一致。">?</span></div><span class="rea-bd-metric-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m10.3 4.9-7 12.2A2 2 0 0 0 5 20h14a2 2 0 0 0 1.7-2.9l-7-12.2a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4m0 3h.01"/></svg></span></div>
+        <button type="button" class="rea-bd-metric-value" data-bd-metric="overdue" aria-label="查看已逾期任务"><b data-bd-metric-count="overdue">—</b><span>条</span><i aria-hidden="true">›</i></button>
+        <span class="rea-bd-metric-note" data-bd-metric-note="overdue">近一周到期且未完成</span>
       </div>
-      <div class="rea-bd-card rea-bd-metric">
-        <div class="rea-bd-metric-label">本期已下发<span class="rea-bd-help" tabindex="0" role="img" aria-label="本期已下发统计口径" data-tip="下发时间落在所选区间内的任务，每条任务计一次，含待推送任务。与任务类型分布、任务列表前置的总条数一致。">?</span></div>
-        <button type="button" class="rea-bd-metric-value" data-bd-metric="issued" aria-label="查看本期已下发任务"><b data-bd-metric-count="issued">—</b><span>条</span><i aria-hidden="true">›</i></button>
-        <span class="rea-bd-metric-note">按下发时间 · 含待推送</span>
+      <div class="rea-bd-card rea-bd-metric is-issued">
+        <div class="rea-bd-metric-head"><div class="rea-bd-metric-label">已下发<span class="rea-bd-help" tabindex="0" role="img" aria-label="已下发统计口径" data-tip="下发时间落在所选区间内的任务，每条任务计一次，含待推送任务。与任务类型分布、任务列表前置的总条数一致。">?</span></div><span class="rea-bd-metric-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m21 3-7 18-4-8-8-4 19-6Z"/><path d="m10 13 11-10"/></svg></span></div>
+        <button type="button" class="rea-bd-metric-value" data-bd-metric="issued" aria-label="查看已下发任务"><b data-bd-metric-count="issued">—</b><span>条</span><i aria-hidden="true">›</i></button>
+        <span class="rea-bd-metric-note" data-bd-metric-note="issued">近一周下发，含待推送</span>
       </div>
     </div>
 
@@ -13006,7 +13006,7 @@ render();
          折线用直线段：条数是整数，平滑会把 0 → 3 连成一段不存在的缓坡。 -->
     <div class="rea-bd-card rea-bd-card--w12">
       <div class="rea-bd-ch">
-        <h6>执行趋势<span class="rea-bd-help" tabindex="0" role="img" aria-label="数据来源与统计口径" data-tip="按终态发生时间统计任务条数，含本期以前下发的任务。完成记在全体执行人员做满的日期，逾期记在有效期结束的日期。七天内按日，超过七天按周；两条线各格合计分别等于本期已完成、本期已逾期。">?</span></h6>
+        <h6>执行趋势<span class="rea-bd-help" tabindex="0" role="img" aria-label="数据来源与统计口径" data-tip="按终态发生时间统计任务条数，含本期以前下发的任务。完成记在全体执行人员做满的日期，逾期记在有效期结束的日期。七天内按日，超过七天按周；两条线各格合计分别等于已完成、已逾期。">?</span></h6>
       </div>
       <div class="rea-tr-chart" id="rea-tr-chart"></div>
     </div>
@@ -13016,7 +13016,7 @@ render();
          大类名字在右排横条上，悬停环上一段也有小窗。
          右排横条默认排六个大类，点环上一段或某一条横条就换成这个大类的细分类型，
          再点「返回全部大类」回来；类型共 28 个，铺不满卡片，单独开一层「查看全部类型」。
-         一条任务只有一个大类、一个类型，各段合计等于「本期已下发」（PRD §2.3）。 -->
+         一条任务只有一个大类、一个类型，各段合计等于「已下发」（PRD §2.3）。 -->
     <div class="rea-bd-card rea-bd-card--w7" id="rea-bd-type">
       <div class="rea-bd-ch"><h6>任务类型分布<span class="rea-bd-help" tabindex="0" role="img" aria-label="数据来源与统计口径" data-tip="来源：同一批任务台账。口径：按任务条数计，一条任务只归一个大类、一个类型，各段相加＝窗口内任务总数；点环段或大类横条可下钻到类型。">?</span></h6></div>
       <div class="rea-td" id="rea-bd-tring">
@@ -14510,12 +14510,12 @@ render();
 <script type="text/plain" id="srcBoardTasks">
 <div class="_board_gf4go_1 rea-bd-page rea-bd-sec">
   <div class="_title_gf4go_8 rea-bd-pagehead">
-    <h6><span id="rea-tasks-title">任务列表</span><span class="rea-bd-help" tabindex="0" role="img" aria-label="数据来源与统计口径" data-tip="按统计口径选任务，当前待完成取当前存量，本期完成按完成时间，本期逾期按到期时间，本期下发按下发时间。大类、类型、状态、部门进一步筛选。条数按任务去重，进度按人次计。">?</span></h6>
+    <h6><span id="rea-tasks-title">任务列表</span><span class="rea-bd-help" tabindex="0" role="img" aria-label="数据来源与统计口径" data-tip="按统计口径选任务，待完成取当前存量，已完成按完成时间，已逾期按到期时间，本期下发按下发时间。大类、类型、状态、部门进一步筛选。条数按任务去重，进度按人次计。">?</span></h6>
     <a href="#" data-rea="微小助看板" class="rea-bd-back">← 返回看板</a>
   </div>
   <div class="ant-divider css-vgijab ant-divider-horizontal" role="separator" style="margin: 0px;"></div>
   <div class="rea-bd-row rea-bd-filters">
-    <label class="rea-bd-filter"><span class="rea-bd-lab">统计口径</span><select class="rea-bd-sel" id="rea-tasks-metric"><option value="pending">当前待完成</option><option value="completed">本期已完成</option><option value="overdue">本期已逾期</option><option value="issued" selected>本期已下发</option></select></label>
+    <label class="rea-bd-filter"><span class="rea-bd-lab">统计口径</span><select class="rea-bd-sel" id="rea-tasks-metric"><option value="pending">待完成</option><option value="completed">已完成</option><option value="overdue">已逾期</option><option value="issued" selected>已下发</option></select></label>
     <span class="rea-bd-lab" id="rea-tasks-time-label">时间窗</span>
     <div class="ant-radio-group ant-radio-group-solid css-vgijab rea-bd-window" id="rea-tasks-win">
       <div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small">
@@ -14982,14 +14982,21 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px;margin-top:16px}
 .rea-bd-card{display:flex;flex-direction:column;min-width:0;padding:16px 20px 18px;background:#fff;border:1px solid #E9EEF6;border-radius:12px;box-shadow:0 1px 2px rgba(19,44,82,.04)}
 .rea-bd-metrics{grid-column:span 12;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
-.rea-bd-metric{padding:16px 24px}
-.rea-bd-metric-label{display:flex;align-items:center;color:#646A73;font-size:14px}
+.rea-bd-metric{--metric-accent:#1677FF;--metric-tint:#E6F4FF;padding:16px 24px;transition:border-color .16s ease-out}
+.rea-bd-metric.is-completed{--metric-accent:#52C41A;--metric-tint:rgba(82,196,26,.08)}
+.rea-bd-metric.is-overdue{--metric-accent:#FAAD14;--metric-tint:rgba(250,173,20,.10)}
+.rea-bd-metric.is-issued{--metric-accent:#646A73;--metric-tint:#F7F8FA}
+.rea-bd-metric:hover,.rea-bd-metric:focus-within{border-color:var(--metric-accent)}
+.rea-bd-metric-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.rea-bd-metric-icon{display:flex;align-items:center;justify-content:center;width:40px;height:40px;flex:0 0 40px;border-radius:8px;background:var(--metric-tint);color:var(--metric-accent)}
+.rea-bd-metric-icon svg{width:24px;height:24px;display:block}
+.rea-bd-metric-label{display:flex;align-items:center;color:#1F2329;font-size:14px;font-weight:500}
 .rea-bd-metric-value{display:flex;align-items:baseline;gap:8px;width:100%;margin:8px 0;padding:0;border:0;background:transparent;color:#1F2329;text-align:left;cursor:pointer;border-radius:8px}
 .rea-bd-metric-value b{font-size:32px;line-height:48px;font-weight:600;font-variant-numeric:tabular-nums}
 .rea-bd-metric-value span{font-size:14px;color:#646A73}
 .rea-bd-metric-value i{margin-left:auto;color:#8F959E;font-size:20px;font-style:normal}
-.rea-bd-metric-value:hover,.rea-bd-metric-value:hover i{color:#1677FF}
-.rea-bd-metric-value:active{background:#E6F4FF}
+.rea-bd-metric-value:hover i{color:var(--metric-accent)}
+.rea-bd-metric-value:active{background:var(--metric-tint)}
 .rea-bd-metric-note,.rea-bd-scope{color:#646A73;font-size:12px;line-height:20px}
 .rea-bd-scope{padding:8px 0 16px}
 .rea-bd-event-time{display:block;font-size:12px;white-space:nowrap;line-height:20px}
@@ -15942,10 +15949,10 @@ function renderTrTrend(){
   g+="<g transform='translate("+(L+40)+","+(T-10)+")'>"
     +"<line x1='0' y1='0' x2='16' y2='0' stroke='#52C41A' stroke-width='2'/>"
     +"<circle cx='8' cy='0' r='3' fill='#ffffff' stroke='#52C41A' stroke-width='2'/>"
-    +"<text x='22' y='4' fill='#646A73' font-size='12'>本期完成</text>"
+    +"<text x='22' y='4' fill='#646A73' font-size='12'>已完成</text>"
     +"<line x1='102' y1='0' x2='118' y2='0' stroke='#FAAD14' stroke-width='2'/>"
     +"<circle cx='110' cy='0' r='3' fill='#ffffff' stroke='#FAAD14' stroke-width='2'/>"
-    +"<text x='124' y='4' fill='#646A73' font-size='12'>本期逾期</text></g>";
+    +"<text x='124' y='4' fill='#646A73' font-size='12'>已逾期</text></g>";
   /* 最后一格还没走完：底色压淡、左边一道虚线，别让它冒充完整一期。
      只有一格时（今日＋按日／按周）整张图就是那一格，底色会把画布涂满、虚线正好压在左轴上，
      反倒像画坏了——这一格不画。 */
@@ -16304,8 +16311,11 @@ function taskScope(rs,metric,range){
     '/* 指标与趋势均直接从完整台账取数，完成/到期时间先于下发日期筛选。 */',
     'function renderMetrics(w){',
     '  var rs=dumpRows(),range=WIN[w]||WIN[DEFW],keys=["pending","completed","overdue","issued"],i,k;',
+    '  var period={today:"今日",w7:"近一周",m1:"近一月",m3:"近三月"}[w]||(mdOf(range[0])+"—"+mdOf(range[1]));',
+    '  var notes={pending:"截至目前，尚未到期",completed:period+"完成，含此前下发",overdue:period+"到期且未完成",issued:period+"下发，含待推送"};',
     '  for(i=0;i<keys.length;i++){',
     '    k=keys[i];',
+    '    document.querySelector(\'[data-bd-metric-note="\'+k+\'"]\').textContent=notes[k];',
     '    document.querySelector(\'[data-bd-metric-count="\'+k+\'"]\').textContent=String(taskScope(rs,k,range).length);',
     '  }',
     '}',
@@ -16485,7 +16495,7 @@ function taskScope(rs,metric,range){
     '  renderOrg(CURW);',
     '  var o=document.getElementById("rea-bd-org");if(o)o.scrollTop=0;',
     '});',
-    '/* 部门视图右下角的「查看全部」：进本期已下发任务列表，不带额外筛选。',
+    '/* 部门视图右下角的「查看全部」：进已下发任务列表，不带额外筛选。',
     '   页顶筛选栏那枚「任务列表 ›」撤掉后，看全部任务就从这里进（PRD §2.1）。 */',
     'var oa=document.querySelectorAll("[data-bd-org-all]");',
     'for(var oi=0;oi<oa.length;oi++)oa[oi].addEventListener("click",function(e){',
@@ -16668,7 +16678,7 @@ function taskScope(rs,metric,range){
     '   右边一排横条：默认排六个大类；点圆环一段或某一条横条，就换成这个大类的细分类型，',
     '   「返回」回到大类排名。类型一共 28 个，塞不进环里也不该把卡片撑长，所以「查看全部类型」',
     '   开一层浮层。',
-    '   颜色跟着任务大类走、不跟着名次走（ADR-0085）；单位是条，与「本期已下发」是同一批任务。 */',
+    '   颜色跟着任务大类走、不跟着名次走（ADR-0085）；单位是条，与「已下发」是同一批任务。 */',
     'var PLAT_ORDER=["wx","wecom","xhs","dy","wa","wabiz"];',
     'var PLAT_NM={wx:"微信营销任务",wecom:"企业微信任务",xhs:"小红书营销任务",dy:"抖音营销任务",wa:"WhatsApp 营销任务",wabiz:"WhatsApp 商业版"};',
     'var PLAT_SN={wx:"微信",wecom:"企业微信",xhs:"小红书",dy:"抖音",wa:"WhatsApp",wabiz:"WhatsApp 商业版"};',
@@ -17729,7 +17739,7 @@ function taskScope(rs,metric,range){
     '  el.innerHTML="<b>任务列表自检未通过（"+msgs.length+" 处）</b><br>"+msgs.join("<br>");',
     '}',
     '',
-    'var METRIC_LABEL={pending:"当前待完成",completed:"本期已完成",overdue:"本期已逾期",issued:"本期已下发"};',
+    'var METRIC_LABEL={pending:"待完成",completed:"已完成",overdue:"已逾期",issued:"已下发"};',
     'function setScopeUi(){',
     '  var pending=METRIC==="pending",title=document.getElementById("rea-tasks-title");',
     '  title.textContent=METRIC_LABEL[METRIC]+"任务";',
