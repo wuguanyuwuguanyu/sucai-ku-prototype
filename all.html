@@ -2681,6 +2681,16 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
    58px 宽＝两字 11px ＋ 3px 间隙 ＋ 12px 箭头 ＋ 两侧留白；高度仍与头部齐平（40），
    角块自身的圆角才不会伸到面板圆角外被裁。命中浮层的角块仍是 ✕（那条链路是真关掉、没有球）。 */
 #aiPanel .ai-close{width:58px;gap:3px;font-size:11px;font-weight:500;color:#587AD9;transition:background .12s}
+/* 「关闭」并排在角块左侧（ADR-0091）：收起＝留球（就地放一边）、关闭＝不留球（入口退回九宫格），
+   两枚并排才分得清去向。它是次要动作，故不占角块、只做文字钮：11px / on-surface-variant，
+   视觉压在「收起」之下，按压反馈与角块同一套。
+   右距 64＝角块 58＋6 的缝，两枚按压面不贴在一起；高 40 跟头部齐平（理由同角块——
+   只跟头部齐高才不会伸出面板圆角），宽 48 是 M3 触控下限、两字之外的余量留给手指。 */
+.ai-close-all{position:absolute;right:64px;top:0;width:48px;height:40px;padding:0;border:none;
+  background:none;border-radius:8px;font-size:11px;font-weight:500;color:var(--on-surface-variant);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .12s}
+.ai-close-all:active{background:rgba(255,255,255,.82)}
+.ai-close-all:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
 /* 内容白卡：设计稿是白 90% + 0 2px 15px 的浅蓝投影。必须是 flex 列且 min-height:0，
    否则里面 #aiBody 的 flex:1 撑不出高度、列表不滚；position:relative + overflow:hidden 是
    滚动指示层（SB_RULES 的 .panel-list 那条）的宿主条件——sbMount 取的是 el.parentElement，
@@ -3644,7 +3654,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
                内容区仍是 #aiBody.panel-list，**id 与类名一个字都不能改**：
                  · tools/smoke.js 断言 `[id="aiBody"]` 全仓唯一、且类名含 panel-list；
                  · 滚动指示层只按 .panel-list 这个类选择器挂载（SB_RULES），宿主由新加的 .ai-content 承担。
-               结构：.panel-head（副标题／收起，两件全绝对定位）
+               结构：.panel-head（副标题／关闭／收起，三件全绝对定位）
                      → .ai-content（内容白卡，内嵌滚动区）→ .ai-drag（底部药丸，纯装饰）。
                2026-10-14 按用户要求头部瘦身（ADR-0044）：头像、主标题「实时辅助」、「重置为本会话」三件
                删除，只剩副标题——它顶到头部左上角，头部高度随之从 65.4 收到 19.8（＝副标题自身行高，
@@ -3654,6 +3664,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
           <div class="panel ai-panel" id="aiPanel" style="display:none;left:14px;top:47px">
             <div class="panel-head" id="aiHead">
               <span class="ai-sub"><i></i>已就位，正在辅助中...</span>
+              <button class="ai-close-all" onclick="aiCloseAll()" title="关闭聊天辅助" aria-label="关闭聊天辅助">关闭</button>
               <button class="ai-close" onclick="closeAiPanel(false,true)" title="收起为悬浮球" aria-label="收起为悬浮球"><span>收起</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button>
             </div>
             <div class="ai-content"><div id="aiBody" class="panel-list"></div></div>
@@ -8458,6 +8469,7 @@ function pickRa(){closeBallMenu();openAiPanel()}
    聊天辅助浮层收起后不再「整个关死」，而是收成**它自己的**一颗小球；全局素材球不受影响、恒在。
    两颗球是**并列的两个模块折叠态**，不是「主球＋卫星」：都能独立拖、都能直接点开各自那块浮层。
    出现条件只有两条：①这个模块开过（aiBallOn——没开过不凭空长出一颗球）；②当前没展开（aiOpen=false）。
+   浮层里那枚「关闭」（ADR-0091）会把 aiBallOn 落回 false——那一下不留球，下次从入口打开再收起才回来。
    不贴边、不半隐藏：产品口径「独立拖到任意位置」，位置由内联 left/top 记住，收起再开还在原处。
    ADR-0090 起：48px（＋4px 透明外环）、闪电＋右上绿点、可聚焦；收起时面板缩向它的圆心，
    不是淡出后另起一颗球——用户得看见「这块面板变成了这颗球」。 */
@@ -9614,6 +9626,19 @@ function closeAiPanel(instant,toBall){
   /* 收起＝**收成它自己的小球**（ADR-0078／0090，产品口径），不是整个关死；全局素材球照旧不动。
      被别的浮层顶掉时也是同一个去向。 */
   aiBallShow();
+}
+/* 关闭（ADR-0091）＝浮层和它自己的球一起收走，入口退回九宫格「聊天辅助」与悬浮球两选一菜单。
+   与「收起」分工：收起留球（就地放一边），关闭不留球；功能本身没关，随时能从入口再开。
+   aiBallOn 先落 false 再收面板：后面 aiBallShow 就不会把球拉出来，面板淡出的 120ms 里也不会闪一下球。 */
+function aiCloseAll(){
+  aiOpen=false;
+  if(hpChild)closeHpPanel(false); /* 下钻的清单是它的下一层（ADR-0089）：这一层收，那一层不能留在屏上裸着 */
+  raStreamStop(); /* 浮层都不在了，流式链必须掐断——否则 timer 会继续在隐藏的卡片上敲字 */
+  raBatchReset();  /* 关闭＝没人看着这一问了：停掉 3 秒计时，重开时按会话重建 */
+  aiBallOn=false; /* 这一关不再留落点；下次从入口打开后按收起，球才回来 */
+  panelHide($('aiPanel'),false); /* 与收起同一条退场（120ms 淡出），只是不再接球 */
+  aiBallShow();    /* 幂等同步一次：球若正亮着（理论上不会，浮层开着时球是隐藏的）也一并收掉 */
+  toast('已关闭聊天辅助 · 点九宫格「聊天辅助」可重新打开');
 }
 function raSwap(i){
   /* i＝要换的那一轮（每一轮的问句右上角都有一枚「换一组」，见 aiRender）。省略参数时退回最新一轮。
