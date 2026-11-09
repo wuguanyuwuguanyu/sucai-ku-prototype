@@ -10716,7 +10716,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 }
 .rea-ov-page .ov-kpis {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 16px;
 }
 .rea-ov-page .ov-kpi {
@@ -10773,6 +10773,9 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   display: block;
   font-size: 12px;
   color: #646a73;
+}
+.rea-ov-page .ov-source-caption .ov-source-name {
+  white-space: nowrap;
 }
 .rea-ov-page .ov-source-overview {
   margin-top: 16px;
@@ -11199,6 +11202,11 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   outline: 2px solid #1677ff;
   outline-offset: -2px;
 }
+@media (max-width: 1240px) {
+  .rea-ov-page .ov-kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
 @media (max-width: 1100px) {
   .rea-ov-page .ov-main {
     padding: 16px;
@@ -11331,7 +11339,14 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
       board: "AI托管看板",
       page: "AI托管数据看板",
       note: "自动执行按成功回执计，托管时长按账号累加",
-      metrics: ["hostingExec", "message", "publish", "added"],
+      metrics: [
+        "hostingTask",
+        "autoReply",
+        "firstTouch",
+        "message",
+        "publish",
+        "added",
+      ],
     },
     tools: {
       name: "App 工具成果",
@@ -11374,10 +11389,20 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
       unit: "次",
       note: "员工主动复制、保存、一键发送或一键发圈",
     },
-    hostingExec: {
-      name: "托管执行记录",
+    hostingTask: {
+      name: "托管完成任务",
       unit: "条",
-      note: "任务、消息回复与员工自建能力的执行日志条数",
+      note: "托管代跑的任务与员工自建能力的执行记录，按完成回执计",
+    },
+    autoReply: {
+      name: "AI自动回复",
+      unit: "条",
+      note: "托管自动回复客户消息的记录条数",
+    },
+    firstTouch: {
+      name: "自动首次触达",
+      unit: "人",
+      note: "好友申请通过后，托管自动发出首条消息的客户数",
     },
     friendSend: {
       name: "群发好友发送",
@@ -11434,7 +11459,9 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     "message",
     "aiReply",
     "material",
-    "hostingExec",
+    "hostingTask",
+    "autoReply",
+    "firstTouch",
   ];
   const pointFeatures = ["智能回复", "画像分析", "意向客户识别"];
   const root = document.querySelector(".rea-ov-page");
@@ -11604,14 +11631,58 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
       { host: true, platform, feature: "自动加好友成功确认" },
     ),
   );
+  const hostAllocations = hostWindows.map((key) =>
+    hostData.employees.map((_, index) => hostData.allocations[key][index] || 0),
+  );
+  const hostReplies = hostWindows.map((key, band) => {
+    const window = hostData.windows[key];
+    const replies = hostAllocations[band].map((value) =>
+      Math.round((value * window.groups[3]) / window.exec),
+    );
+    let gap =
+      window.groups[3] - replies.reduce((total, value) => total + value, 0);
+    for (let index = 0; gap !== 0; index = (index + 1) % replies.length) {
+      if (gap > 0 && replies[index] < hostAllocations[band][index]) {
+        replies[index]++;
+        gap--;
+      } else if (gap < 0 && replies[index] > 0) {
+        replies[index]--;
+        gap++;
+      }
+    }
+    return replies;
+  });
   hostData.employees.forEach((employee, index) => {
     const owner = employees.find((person) => person.name === employee.n).id;
     addSeries(
-      "hostingExec",
-      hostWindows.map((key) => hostData.allocations[key][index] || 0),
+      "hostingTask",
+      hostWindows.map(
+        (key, band) => hostAllocations[band][index] - hostReplies[band][index],
+      ),
       ["hosting"],
-      { host: true, platform: "多平台", extra: { employee: owner } },
+      {
+        host: true,
+        platform: "多平台",
+        feature: "托管完成任务",
+        extra: { employee: owner },
+      },
     );
+    addSeries(
+      "autoReply",
+      hostWindows.map((key, band) => hostReplies[band][index]),
+      ["hosting"],
+      {
+        host: true,
+        platform: "微信 / 企业微信",
+        feature: "自动回复消息",
+        extra: { employee: owner },
+      },
+    );
+  });
+  addSeries("firstTouch", [34, 196, 790, 2410], ["hosting"], {
+    host: true,
+    platform: "微信 / 企业微信 / WhatsApp",
+    feature: "通过好友自动首次触达",
   });
   const toolTargets = [
     ["message", "发图文到好友", [7, 40, 96, 282]],
@@ -11728,6 +11799,11 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     if (metric === "materialCount")
       return new Set(selected.map((record) => record.material)).size;
     return sum(selected);
+  }
+  function hostingLog(records) {
+    return (
+      metricValue(records, "hostingTask") + metricValue(records, "autoReply")
+    );
   }
   function activeStats(employee, records = scopedRecords()) {
     const own = records.filter(
@@ -11860,7 +11936,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
         selectMetric(records, metric).flatMap((record) => record.sources),
       ),
     ];
-    return `<button type="button" class="${compact ? "ov-group-metric" : "ov-kpi"}" data-metric="${metric}" ${source ? `data-source="${source}"` : ""} data-value="${value}" title="${html(item.note)}"><span class="ov-kpi-title">${item.name}<i aria-hidden="true">↗</i></span><${compact ? "strong" : "span"} class="${compact ? "" : "ov-kpi-value"}">${number(value)} <small>${item.unit}</small></${compact ? "strong" : "span"}><span class="ov-source-caption">${compact ? { added: "加好友成功确认", publish: "发布成功回执", message: "按成功消息条数", aiReply: "员工主动采纳", material: "员工主动取用", hostingExec: "托管工作日志", friendSend: "实际发送成功目标", request: "已发出验证请求", taskExec: "按任务下发时间", profile: "分析完成回执", materialUsers: "取用员工去重", materialCount: "取用素材去重", materialSend: "一键发送＋一键发圈" }[metric] || "按完成回执统计" : memberships.map((id) => sources[id].name).join(" · ") || "本期暂无记录"}</span></button>`;
+    return `<button type="button" class="${compact ? "ov-group-metric" : "ov-kpi"}" data-metric="${metric}" ${source ? `data-source="${source}"` : ""} data-value="${value}" title="${html(item.note)}"><span class="ov-kpi-title">${item.name}<i aria-hidden="true">↗</i></span><${compact ? "strong" : "span"} class="${compact ? "" : "ov-kpi-value"}">${number(value)} <small>${item.unit}</small></${compact ? "strong" : "span"}><span class="ov-source-caption">${compact ? { added: "加好友成功确认", publish: "发布成功回执", message: "按成功消息条数", aiReply: "员工主动采纳", material: "员工主动取用", hostingTask: "托管完成回执", autoReply: "自动回复记录", firstTouch: "新好友首条消息", friendSend: "实际发送成功目标", request: "已发出验证请求", taskExec: "按任务下发时间", profile: "分析完成回执", materialUsers: "取用员工去重", materialCount: "取用素材去重", materialSend: "一键发送＋一键发圈" }[metric] || "按完成回执统计" : memberships.map((id) => `<span class="ov-source-name">${sources[id].name}</span>`).join(" · ") || "本期暂无记录"}</span></button>`;
   }
   function renderResults() {
     const records = scopedRecords();
@@ -12041,11 +12117,10 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
               `${item.days} 天`,
               item.last === null ? "暂无" : dateLabel(item.last),
               `${number(
-                metricValue(
+                hostingLog(
                   scopedRecords().filter(
                     (record) => record.employee === item.employee.id,
                   ),
-                  "hostingExec",
                 ),
               )} 条`,
             ]),
@@ -12254,11 +12329,10 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
             `${item.days} 天`,
             item.last === null ? "暂无" : dateLabel(item.last),
             `${number(
-              metricValue(
+              hostingLog(
                 records.filter(
                   (record) => record.employee === item.employee.id,
                 ),
-                "hostingExec",
               ),
             )} 条`,
           ]),
@@ -12274,7 +12348,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
         `<p class="ov-muted">${html(employee.dept)} · ${tiers[employee.tier].name} · 分配于 ${employee.assignedOn}</p>` +
         summary([
           ["主动活跃", active.days, "天"],
-          ["托管执行", metricValue(own, "hostingExec"), "条"],
+          ["托管执行", hostingLog(own), "条"],
           ["素材取用", metricValue(own, "material"), "次"],
           ["AI辅助员工", metricValue(own, "aiReply"), "次"],
         ]);
