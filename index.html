@@ -14915,10 +14915,14 @@ render();
      同样是克隆看板外壳合成，正文来自载体块 srcBoardMatDetail。 */
   var REA_MB_MAT_DETAIL = '企业微信看板 · 素材使用详情';
 
-  /* 侧栏「数据看板」一组改叫三块看板（2026-10-26 与产品经理对齐）：任务看板／悬浮窗看板／素材看板。
+  /* 侧栏「数据看板」一组改叫「看板」（2026-10-26 与产品经理对齐）；2026-11-09 起删去「悬浮窗看板」，
+     组内只剩 使用总览／任务看板／App 工具看板／素材看板／AI托管看板（见下面 REA_HIDDEN）。
      页名是注册表主键（REA_COVER、子页、落地页都按它查），一个字节都不能改；
      只在显示层换名——侧栏文字、页内 h6、浏览器标题。名字表放这儿，nav 与 reaDoc 共用。 */
   var REA_NAME = { '微小助看板': '任务看板', '企业微信看板': '素材看板', 'AI托管数据看板': 'AI托管看板' };
+  /* 已下线页：快照载体里还有这一页（_online-admin.js 是生成物，不许改），但原型不再登记、
+     不再出现在任何导航里。2026-11-09 删除「悬浮窗看板」。 */
+  var REA_HIDDEN = { '悬浮窗看板': 1 };
   function reaName(n){
     var m = /^([^ ]+)/.exec(n || '');
     return m && REA_NAME[m[1]] ? REA_NAME[m[1]] + n.slice(m[1].length) : n;
@@ -23797,6 +23801,8 @@ if(ST){
   function reaSynthPages(){
     if (reaSynthDone || !window.__REAL_ADMIN__) return;
     var P = window.__REAL_ADMIN__, i;
+    /* 已下线页从注册表里摘掉：不参与页序、反查表与换页；快照载体本身不动 */
+    P.pages = P.pages.filter(function(pg){ return !REA_HIDDEN[pg.name]; });
     function find(name){
       for (var k = 0; k < P.pages.length; k++) if (P.pages[k].name === name) return P.pages[k];
       return null;
@@ -24381,11 +24387,11 @@ if(ST){
 
   var REA_HDR = 'ykSideTwoColSecondaryHeader">';        // 侧栏二级列表的标题
   var REA_LIST = 'ykSideTwoColSecondaryList">';        // 侧栏二级列表本体
-  /* 侧栏一级项「数据看板」只展开菜单；二级按 总览／任务／悬浮窗／素材 排列。
+  /* 侧栏一级项「数据看板」只展开菜单；二级按 总览／任务／App 工具／素材／AI托管 排列。
      不在表里的项原序跟在后面。组名「数据看板」在稿子里显示成「看板」。
      这两条原先写在页内脚本里、只管当前这一页的右列；现在折叠态的悬停浮层也要用，
      挪到 reaMenuIndex() 一处维护，两边共用同一份。 */
-  var REA_MENU_ORDER = { '数据看板': ['使用总览', '微小助看板', 'App 工具看板', '悬浮窗看板', '企业微信看板', 'AI托管数据看板'] };
+  var REA_MENU_ORDER = { '数据看板': ['使用总览', '微小助看板', 'App 工具看板', '企业微信看板', 'AI托管数据看板'] };
   var REA_MENU_TITLE = { '数据看板': '看板' };
   var REA_TOPBAR = 'ant-pro-top-nav-header-base-menu'; // 顶栏一级导航的本体
   var reaCatFirst = {};   // 一级分类名 → 该分类第一个模块页名（由数据推导，不写死）
@@ -24817,6 +24823,8 @@ document.addEventListener('click',function(event){
       if (!c || seen[c]) continue;
       seen[c] = 1;
       names = reaSeqOf(P.pages[i].rest).slice();
+      /* 已下线页不铺进导航（快照侧栏里还写着它，这里按 REA_HIDDEN 摘掉） */
+      names = names.filter(function(n){ return !REA_HIDDEN[n]; });
       if (c === '数据看板' && byName[REA_OVERVIEW_PAGE]){names.unshift(REA_OVERVIEW_PAGE);if(names.indexOf('App 工具看板')<0)names.push('App 工具看板');if(names.indexOf('AI托管数据看板')<0)names.push('AI托管数据看板');}
       ord = REA_MENU_ORDER[c];
       if (ord){
