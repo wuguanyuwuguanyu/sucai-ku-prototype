@@ -11210,21 +11210,6 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 .rea-ov-page .ov-point-row > strong small {
   font-weight: 400;
 }
-.rea-ov-page .ov-point-rest {
-  display: grid;
-  grid-template-columns: 1fr 104px;
-  gap: 16px;
-  align-items: center;
-  padding: 8px 0;
-  font-size: 12px;
-  color: #646a73;
-}
-.rea-ov-page .ov-point-rest strong {
-  text-align: right;
-  font-size: 14px;
-  font-weight: 500;
-  color: #1f2329;
-}
 .rea-ov-page .ov-filter-chip {
   display: inline-flex;
   align-items: center;
@@ -12194,13 +12179,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
       : 0;
     const cards = [
       ["活跃员工", used.length, "人", `共 ${stats.length} 名已分配员工`, "used"],
-      [
-        "未使用",
-        stats.length - used.length,
-        "人",
-        "含仅有托管记录的员工",
-        "idle",
-      ],
+      ["未使用", stats.length - used.length, "人", "", "idle"],
       [
         "活跃覆盖率",
         stats.length ? ((used.length / stats.length) * 100).toFixed(1) : 0,
@@ -12392,12 +12371,6 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
           `<button type="button" class="ov-point-row" data-point-${pointsTab}="${item.key}"><span>${pointsTab === "employee" ? html(employees[item.key].name) : pointFeatures[item.key]}${pointsTab === "employee" ? `<small>${html(employees[item.key].dept)}</small>` : ""}</span><span class="ov-track"><i style="width:${(item.qty / Math.max(1, total)) * 100}%"></i></span><strong>${number(item.qty)} 点<small>${((item.qty / Math.max(1, total)) * 100).toFixed(1)}%</small></strong></button>`,
       )
       .join("");
-    if (pointsTab === "employee") {
-      const other =
-        total - display.reduce((value, item) => value + item.qty, 0);
-      $("#ov-points-ranking").innerHTML +=
-        `<div class="ov-point-rest"><span>其余员工及公共调用</span><strong>${number(other)} 点</strong></div>`;
-    }
   }
   function form({ source = false, status = false, points = false } = {}) {
     return `<form class="ov-form" id="ov-filter"><input name="query" aria-label="搜索员工或事项" placeholder="搜索员工、部门或事项" value="${html(filters.query)}">${
