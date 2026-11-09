@@ -10349,13 +10349,6 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
         </button>
       </header>
       <div class="ov-toolbar">
-        <div class="ov-schemes" role="group" aria-label="总览方案">
-          <button type="button" data-scheme="A" aria-pressed="true">
-            方案 A · 业务结果</button
-          ><button type="button" data-scheme="B" aria-pressed="false">
-            方案 B · 看板分组
-          </button>
-        </div>
         <div class="ov-periods" role="group" aria-label="统计时间范围">
           <button type="button" data-period="day">今日</button
           ><button type="button" data-period="week">近一周</button
@@ -10378,54 +10371,69 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
           </h2>
         </div>
         <div id="ov-results"></div>
+        <div class="ov-board-links" aria-label="查看对应看板">
+          <button type="button" class="ov-link" data-board="tasks">
+            任务看板 →</button
+          ><button type="button" class="ov-link" data-board="tools">
+            App 工具看板 →</button
+          ><button type="button" class="ov-link" data-board="material">
+            素材看板 →</button
+          ><button type="button" class="ov-link" data-board="hosting">
+            AI托管看板 →
+          </button>
+        </div>
       </section>
-      <section class="ov-panel ov-people" aria-labelledby="ov-people-title">
+      <section class="ov-people" aria-labelledby="ov-people-title">
         <div class="ov-section-heading">
-          <h2 id="ov-people-title">
-            员工使用<span
-              class="ov-help"
-              tabindex="0"
-              role="img"
-              aria-label="活跃天数按日期去重；使用次数按主动操作去重，一次批量操作计一次。托管自动执行单独统计。点日期可查看对应员工。"
-              data-tip="活跃天数按日期去重；使用次数按主动操作去重，一次批量操作计一次。托管自动执行单独统计。点日期可查看对应员工。"
-              >?</span
-            >
-          </h2>
+          <div>
+            <h2 id="ov-people-title">
+              员工使用<span
+                class="ov-help"
+                tabindex="0"
+                role="img"
+                aria-label="活跃天数按日期去重；使用次数按主动操作去重，一次批量操作计一次。托管自动执行单独统计。点日期可查看对应员工。"
+                data-tip="活跃天数按日期去重；使用次数按主动操作去重，一次批量操作计一次。托管自动执行单独统计。点日期可查看对应员工。"
+                >?</span
+              >
+            </h2>
+          </div>
           <button type="button" class="ov-link" data-action="employees">
             查看全部员工 →
           </button>
         </div>
-        <div id="ov-people-stats" class="ov-stats"></div>
-        <div class="ov-activity-layout">
-          <section>
-            <div class="ov-section-heading">
-              <h3>每日活跃员工</h3>
-              <span class="ov-muted" id="ov-activity-note"></span>
-            </div>
-            <div id="ov-activity-chart"></div>
-          </section>
-        </div>
-        <div class="ov-usage-layout ov-ranking-heading">
-          <section aria-labelledby="ov-usage-title">
-            <div class="ov-section-heading">
-              <h3 id="ov-usage-title">使用情况</h3>
-              <div class="ov-tabs" role="group" aria-label="使用情况维度">
-                <button type="button" data-people-tab="department">部门</button
-                ><button type="button" data-people-tab="employee">员工</button>
+        <div class="ov-panel">
+          <div id="ov-people-stats" class="ov-stats"></div>
+          <div class="ov-activity-layout">
+            <section>
+              <div class="ov-section-heading">
+                <h3>每日活跃员工</h3>
+                <span class="ov-muted" id="ov-activity-note"></span>
               </div>
-            </div>
-            <div id="ov-people-ranking"></div>
-          </section>
-          <section aria-labelledby="ov-features-title">
-            <div class="ov-section-heading">
-              <h3 id="ov-features-title">热门功能 Top 5<span class="ov-help" tabindex="0" role="img" aria-label="App 工具按主动使用次数从高到低展示前五项" data-tip="App 工具按主动使用次数从高到低展示前五项">?</span></h3>
-              <button type="button" class="ov-link" data-action="features">
-                查看全部功能 →
-              </button>
-            </div>
-            <div class="ov-feature-head"><span>排名</span><span>功能</span><span class="ov-feature-count">使用次数</span><span></span></div>
-            <div id="ov-feature-ranking"></div>
-          </section>
+              <div id="ov-activity-chart"></div>
+            </section>
+          </div>
+          <div class="ov-usage-layout ov-ranking-heading">
+            <section aria-labelledby="ov-usage-title">
+              <div class="ov-section-heading">
+                <h3 id="ov-usage-title">使用情况</h3>
+                <div class="ov-tabs" role="group" aria-label="使用情况维度">
+                  <button type="button" data-people-tab="department">部门</button
+                  ><button type="button" data-people-tab="employee">员工</button>
+                </div>
+              </div>
+              <div id="ov-people-ranking"></div>
+            </section>
+            <section aria-labelledby="ov-features-title">
+              <div class="ov-section-heading">
+                <h3 id="ov-features-title">热门功能 Top 5<span class="ov-help" tabindex="0" role="img" aria-label="App 工具按主动使用次数从高到低展示前五项" data-tip="App 工具按主动使用次数从高到低展示前五项">?</span></h3>
+                <button type="button" class="ov-link" data-action="features">
+                  查看全部功能 →
+                </button>
+              </div>
+              <div class="ov-feature-head"><span>排名</span><span>功能</span><span class="ov-feature-count">使用次数</span><span></span></div>
+              <div id="ov-feature-ranking"></div>
+            </section>
+          </div>
         </div>
       </section>
       <div class="ov-section-heading ov-resource-heading">
@@ -10453,7 +10461,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
             <b>30 <small>/ 32 席已分配</small></b
             ><span class="ov-tag">2 席待分配</span>
           </div>
-          <div id="ov-seats"></div>
+          <div id="ov-seats" class="ov-tiers"></div>
         </section>
         <section class="ov-panel" aria-labelledby="ov-points-title">
           <div class="ov-section-heading">
@@ -10462,10 +10470,19 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
               查看消耗明细 →
             </button>
           </div>
-          <div class="ov-point-stats">
-            <div><span>本期消耗</span><b id="ov-points-total"></b></div>
-            <div>
-              <span>当前剩余</span><b>42,000 <small>点</small></b>
+          <div class="ov-point-meter">
+            <div class="ov-point-meter-head">
+              <span
+                >本期消耗 <b id="ov-points-total">0</b><small>点</small
+                ><em id="ov-points-used-share"></em
+              ></span>
+              <span
+                >当前剩余 <b>42,000</b><small>点</small
+                ><em id="ov-points-rest-share"></em
+              ></span>
+            </div>
+            <div class="ov-point-meter-bar" role="img" aria-label="本期消耗与当前剩余占比">
+              <i id="ov-points-used-bar" class="used"></i><i class="rest"></i>
             </div>
           </div>
           <div class="ov-section-heading">
@@ -10602,14 +10619,12 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   margin-bottom: 24px;
   flex-wrap: wrap;
 }
-.rea-ov-page .ov-schemes,
 .rea-ov-page .ov-periods,
 .rea-ov-page .ov-tabs {
   display: inline-flex;
   gap: 8px;
   flex-wrap: wrap;
 }
-.rea-ov-page .ov-schemes button,
 .rea-ov-page .ov-periods button,
 .rea-ov-page .ov-tabs button,
 .rea-ov-page .ov-control {
@@ -10618,7 +10633,6 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   border-radius: 8px;
   padding: 8px 16px;
 }
-.rea-ov-page .ov-schemes button[aria-pressed="true"],
 .rea-ov-page .ov-periods button[aria-pressed="true"],
 .rea-ov-page .ov-tabs button[aria-pressed="true"] {
   background: #e6f4ff;
@@ -10626,7 +10640,6 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   color: #1677ff;
   font-weight: 500;
 }
-.rea-ov-page .ov-schemes button:hover,
 .rea-ov-page .ov-periods button:hover,
 .rea-ov-page .ov-tabs button:hover,
 .rea-ov-page .ov-control:hover {
@@ -10755,8 +10768,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   flex: 1;
   min-width: 0;
 }
-.rea-ov-page .ov-kpi-icon,
-.rea-ov-page .ov-group-icon {
+.rea-ov-page .ov-kpi-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -10767,18 +10779,15 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   background: #e6f4ff;
   color: #1677ff;
 }
-.rea-ov-page .ov-kpi-icon svg,
-.rea-ov-page .ov-group-icon svg {
+.rea-ov-page .ov-kpi-icon svg {
   width: 18px;
   height: 18px;
 }
-.rea-ov-page .ov-kpi:hover,
-.rea-ov-page .ov-group-metric:hover {
+.rea-ov-page .ov-kpi:hover {
   background: #e6f4ff;
   border-color: #1677ff;
 }
-.rea-ov-page .ov-kpi:active,
-.rea-ov-page .ov-group-metric:active {
+.rea-ov-page .ov-kpi:active {
   background: #e6f4ff;
 }
 .rea-ov-page .ov-kpi-title {
@@ -10804,102 +10813,44 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 }
 .rea-ov-page .ov-kpi-value small,
 .rea-ov-page .ov-stat b small,
-.rea-ov-page .ov-point-stats small {
+.rea-ov-page .ov-point-meter small {
   font-size: 12px;
   font-weight: 400;
   color: #646a73;
   margin-left: 4px;
   letter-spacing: 0;
 }
-.rea-ov-page .ov-source-caption {
-  display: block;
-  font-size: 12px;
-  color: #646a73;
-}
-.rea-ov-page .ov-source-overview {
-  margin-top: 16px;
-}
-.rea-ov-page .ov-source-row {
-  display: grid;
-  grid-template-columns: 120px 1fr 80px;
-  gap: 16px;
-  align-items: center;
-  padding: 8px 0;
-  font-size: 12px;
-}
-.rea-ov-page .ov-groups {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  align-items: start;
-  gap: 16px;
-}
-.rea-ov-page .ov-group-heading {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 0;
-}
-.rea-ov-page .ov-group-heading h3 {
-  margin: 0;
-}
-.rea-ov-page .ov-group-icon {
-  width: 32px;
-  height: 32px;
-}
-.rea-ov-page .ov-group-icon svg {
-  width: 17px;
-  height: 17px;
-}
-.rea-ov-page .ov-kpi-name {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  min-width: 0;
-}
-.rea-ov-page .ov-metric-ic {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 auto;
-  width: 16px;
-  height: 16px;
+.rea-ov-page .ov-kpi-value .ov-mom {
+  margin-left: 10px;
   color: #1677ff;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: 0;
+  vertical-align: 2px;
+  white-space: nowrap;
 }
-.rea-ov-page .ov-metric-ic svg {
-  width: 16px;
-  height: 16px;
+.rea-ov-page .ov-kpi-value .ov-mom.down {
+  color: #faad14;
 }
-.rea-ov-page .ov-group-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
+.rea-ov-page .ov-kpi-value .ov-mom.muted {
+  color: #8f959e;
 }
-.rea-ov-page .ov-group-metric {
-  border: 1px solid transparent;
-  text-align: left;
-  border-radius: 8px;
-  padding: 16px 8px;
-  background: #fff;
-  min-width: 0;
-}
-.rea-ov-page .ov-group-metric strong {
-  display: block;
-  font-size: 24px;
-  line-height: 1.4;
-  margin-top: 8px;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-}
-.rea-ov-page .ov-group-metric small {
+.rea-ov-page .ov-board-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  margin-top: 14px;
   font-size: 12px;
-  color: #646a73;
-  font-weight: 400;
-}
-.rea-ov-page .ov-group-metric .ov-source-caption {
-  margin-top: 4px;
 }
 .rea-ov-page .ov-people {
   margin-top: 24px;
+}
+.rea-ov-page .ov-people > .ov-section-heading {
+  margin-bottom: 16px;
+}
+.rea-ov-page .ov-people .ov-stats {
+  margin-top: 0;
 }
 .rea-ov-page .ov-stats {
   display: grid;
@@ -10975,6 +10926,50 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   right: 0;
   height: 1px;
   background: #eef1f6;
+}
+.rea-ov-page .ov-ref-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-top: 1px dashed #faad14;
+  pointer-events: none;
+  z-index: 2;
+}
+.rea-ov-page .ov-ref-line span {
+  position: absolute;
+  right: 0;
+  bottom: 3px;
+  padding: 0 4px;
+  background: #fff;
+  color: #d48806;
+  font-size: 11px;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.rea-ov-page .ov-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: 0;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.rea-ov-page .ov-sort:hover {
+  color: #1677ff;
+}
+.rea-ov-page .ov-sort i {
+  font-style: normal;
+  font-size: 10px;
+  color: #b8bec7;
+}
+.rea-ov-page .ov-sort[data-active="true"] {
+  color: #1677ff;
+}
+.rea-ov-page .ov-sort[data-active="true"] i {
+  color: #1677ff;
 }
 .rea-ov-page .ov-bar {
   position: relative;
@@ -11137,75 +11132,193 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 }
 .rea-ov-page .ov-seat-summary {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 24px 0;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0 0 16px;
 }
 .rea-ov-page .ov-seat-summary b {
-  font-size: 32px;
+  font-size: 24px;
   font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
 .rea-ov-page .ov-seat-summary small {
   font-size: 12px;
   font-weight: 400;
   color: #646a73;
 }
-.rea-ov-page .ov-seat-row {
+.rea-ov-page .ov-resources > .ov-panel {
+  display: flex;
+  flex-direction: column;
+}
+.rea-ov-page .ov-tiers {
   display: grid;
-  grid-template-columns: 80px 1fr 112px;
-  gap: 16px;
-  align-items: center;
-  background: none;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: 1fr;
+  gap: 8px;
+  flex: 1;
+  margin-top: 4px;
+}
+.rea-ov-page .ov-tier {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  background: #f7f9fc;
   border: 0;
-  border-top: 1px solid #e5e8ef;
-  padding: 16px 0;
-  width: 100%;
+  border-radius: 12px;
+  padding: 16px 14px;
   text-align: left;
+  min-width: 0;
+  transition: background 0.15s ease;
 }
-.rea-ov-page .ov-seat-row:hover {
-  color: #1677ff;
+.rea-ov-page .ov-tier:hover {
+  background: #eef5ff;
 }
-.rea-ov-page .ov-point-stats {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+.rea-ov-page .ov-tier:active {
+  background: #e6f4ff;
+}
+.rea-ov-page .ov-tier-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.rea-ov-page .ov-tier-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+.rea-ov-page .ov-tier-icon svg {
+  width: 14px;
+  height: 14px;
+}
+.rea-ov-page .ov-tier[data-tier="0"] .ov-tier-icon {
+  background: #eef4ff;
+  color: #6b8cff;
+}
+.rea-ov-page .ov-tier[data-tier="1"] .ov-tier-icon {
+  background: #e8f7f2;
+  color: #16a37c;
+}
+.rea-ov-page .ov-tier[data-tier="2"] .ov-tier-icon {
+  background: #fff4e6;
+  color: #d4791a;
+}
+.rea-ov-page .ov-tier-name {
+  font-size: 13px;
+  color: #646a73;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.rea-ov-page .ov-tier b {
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+.rea-ov-page .ov-tier b small {
+  font-size: 12px;
+  font-weight: 400;
+  color: #8f959e;
+  margin-left: 2px;
+}
+.rea-ov-page .ov-tier-track {
+  display: flex;
+  height: 4px;
+  border-radius: 999px;
+  background: #eef1f6;
+  overflow: hidden;
+}
+.rea-ov-page .ov-tier-track i {
+  display: block;
+  background: #1677ff;
+  border-radius: inherit;
+}
+.rea-ov-page .ov-tier-note {
+  font-size: 12px;
+  color: #8f959e;
+}
+.rea-ov-page .ov-point-meter {
+  margin: 0 0 16px;
+}
+.rea-ov-page .ov-point-meter-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
   gap: 16px;
-  margin: 24px 0;
-}
-.rea-ov-page .ov-point-stats span {
   font-size: 12px;
   color: #646a73;
+  margin-bottom: 10px;
 }
-.rea-ov-page .ov-point-stats b {
-  display: block;
-  font-size: 24px;
+.rea-ov-page .ov-point-meter-head b {
+  font-size: 22px;
   font-weight: 600;
-  margin-top: 8px;
+  color: #1f2329;
+  margin-left: 6px;
   font-variant-numeric: tabular-nums;
+}
+.rea-ov-page .ov-point-meter-head em {
+  font-style: normal;
+  margin-left: 6px;
+  color: #8f959e;
+}
+.rea-ov-page .ov-point-meter-bar {
+  display: flex;
+  height: 8px;
+  border-radius: 999px;
+  background: #eee;
+  overflow: hidden;
+}
+.rea-ov-page .ov-point-meter-bar i {
+  display: block;
+  height: 100%;
+}
+.rea-ov-page .ov-point-meter-bar .used {
+  background: #1677ff;
+  border-radius: 999px 0 0 999px;
+}
+.rea-ov-page .ov-point-meter-bar .rest {
+  background: #cfe2ff;
+  border-radius: 0 999px 999px 0;
 }
 .rea-ov-page .ov-point-row {
   width: 100%;
   display: grid;
   grid-template-columns: 96px 1fr 104px;
-  gap: 16px;
+  gap: 12px;
   align-items: center;
   border: 0;
   background: none;
   text-align: left;
-  padding: 8px 0;
+  padding: 6px 0;
   font-size: 12px;
 }
 .rea-ov-page .ov-point-row:hover {
   color: #1677ff;
 }
 .rea-ov-page .ov-point-row small {
-  display: block;
-  color: #646a73;
+  display: inline;
+  margin-left: 6px;
+  color: #8f959e;
   font-size: 12px;
+}
+.rea-ov-page .ov-point-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rea-ov-page .ov-point-row .ov-track {
+  height: 4px;
 }
 .rea-ov-page .ov-point-row > strong {
   text-align: right;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
+  white-space: nowrap;
 }
 .rea-ov-page .ov-point-row > strong small {
   font-weight: 400;
@@ -11350,9 +11463,6 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   }
   .rea-ov-page .ov-kpis {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .rea-ov-page .ov-groups {
-    grid-template-columns: 1fr;
   }
   .rea-ov-page .ov-stats {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -11607,10 +11717,15 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   const sum = (records, field = "qty") =>
     records.reduce((total, record) => total + record[field], 0);
   const saved = window.__REA_OVERVIEW_NAV || {};
-  let scheme = saved.scheme === "B" ? "B" : "A";
   let period = periods[saved.period] ? saved.period : "month";
   let peopleTab = saved.peopleTab || "department";
   let pointsTab = saved.pointsTab || "employee";
+  const savedPeopleSort = saved.peopleSort || {};
+  let peopleSort = {
+    tab: savedPeopleSort.tab === "employee" ? "employee" : "department",
+    key: savedPeopleSort.key || "",
+    dir: savedPeopleSort.dir === "asc" ? "asc" : "desc",
+  };
   let homeOrg = saved.homeOrg || saved.org || "all";
   if (!employees.some((employee) => employee.dept === homeOrg)) homeOrg = "all";
   let homeScroll = saved.scroll || 0;
@@ -11993,10 +12108,10 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   }
   function stateFor(next) {
     return {
-      scheme,
       period,
       peopleTab,
       pointsTab,
+      peopleSort,
       homeOrg,
       scroll: homeScroll,
       org: next.org,
@@ -12108,49 +12223,73 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     materialSend:
       '<path d="M21 3L10.5 13.5"/><path d="M21 3l-6.5 18-4-8.5L2 8.5z"/>',
   };
-  const SOURCE_ICONS = {
-    tasks:
-      '<rect x="4" y="3.5" width="16" height="17" rx="2.5"/><path d="M8 8.5h8M8 12h8M8 15.5h5"/>',
-    hosting: METRIC_ICONS.hostingTask,
-    tools:
-      '<rect x="3.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.8"/>',
-    material: METRIC_ICONS.material,
-  };
   const ovIcon = (paths, size) =>
     `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths}</svg>`;
-  function metricButton(metric, records, source, compact = false) {
+  // 环比示意值：与上一等长周期（今日→昨日，近一周→前 7 天，近一月→前 30 天，近三月→前 90 天）相比。
+  const momRates = {
+    day: {
+      added: 6.2,
+      publish: -3.1,
+      message: 4.8,
+      aiReply: 12.4,
+      material: 1.8,
+      hostingTask: 5.6,
+      autoReply: -2.4,
+      firstTouch: 8.3,
+    },
+    week: {
+      added: 9.6,
+      publish: 4.2,
+      message: -1.7,
+      aiReply: 6.5,
+      material: 11.2,
+      hostingTask: -3.8,
+      autoReply: 2.9,
+      firstTouch: 5.1,
+    },
+    month: {
+      added: 12.4,
+      publish: 8.7,
+      message: 5.3,
+      aiReply: -2.6,
+      material: 15.8,
+      hostingTask: 7.4,
+      autoReply: 3.2,
+      firstTouch: -1.4,
+    },
+    quarter: {
+      added: 18.3,
+      publish: 14.1,
+      message: 9.8,
+      aiReply: 4.7,
+      material: 22.6,
+      hostingTask: 12.9,
+      autoReply: -6.2,
+      firstTouch: 3.5,
+    },
+  };
+  function momText(metric) {
+    const rate = momRates[period] ? momRates[period][metric] : null;
+    if (rate === null || rate === undefined) return "";
+    const arrow = rate < 0 ? "↓" : "↑";
+    const tone = rate < 0 ? " down" : "";
+    return `<em class="ov-mom${tone}" title="较上一等长周期 ${arrow}${Math.abs(rate).toFixed(1)}%">${arrow} ${Math.abs(rate).toFixed(1)}%</em>`;
+  }
+  function metricButton(metric, records) {
     const item = metrics[metric];
     const value = metricValue(records, metric);
-    const icon = ovIcon(METRIC_ICONS[metric] || METRIC_ICONS.message, compact ? 16 : 18);
-    const title = compact
-      ? `<span class="ov-kpi-title"><span class="ov-kpi-name"><span class="ov-metric-ic">${icon}</span>${item.name}</span><i aria-hidden="true">↗</i></span>`
-      : `<span class="ov-kpi-head"><span class="ov-kpi-icon">${icon}</span><span class="ov-kpi-title">${item.name}<i aria-hidden="true">↗</i></span></span>`;
-    const caption = compact
-      ? { added: "加好友成功确认", publish: "发布成功回执", message: "按成功消息条数", aiReply: "员工主动采纳", material: "员工主动取用", hostingTask: "托管完成回执", autoReply: "自动回复记录", firstTouch: "新好友首条消息", friendSend: "实际发送成功目标", request: "已发出验证请求", taskExec: "按任务下发时间", profile: "分析完成回执", materialUsers: "取用员工去重", materialCount: "取用素材去重", materialSend: "一键发送＋一键发圈" }[metric] || "按完成回执统计"
-      : "";
-    return `<button type="button" class="${compact ? "ov-group-metric" : "ov-kpi"}" data-metric="${metric}" ${source ? `data-source="${source}"` : ""} data-value="${value}" title="${html(item.note)}">${title}<${compact ? "strong" : "span"} class="${compact ? "" : "ov-kpi-value"}">${number(value)} <small>${item.unit}</small></${compact ? "strong" : "span"}>${caption ? `<span class="ov-source-caption">${caption}</span>` : ""}</button>`;
+    const icon = ovIcon(METRIC_ICONS[metric] || METRIC_ICONS.message, 18);
+    return `<button type="button" class="ov-kpi" data-metric="${metric}" data-value="${value}" title="${html(item.note)}"><span class="ov-kpi-head"><span class="ov-kpi-icon">${icon}</span><span class="ov-kpi-title">${item.name}<i aria-hidden="true">↗</i></span></span><span class="ov-kpi-value">${number(value)} <small>${item.unit}</small>${momText(metric)}</span></button>`;
   }
   function renderResults() {
     const records = scopedRecords();
     const help =
-      scheme === "A"
-        ? "同一业务结果跨来源汇总；托管代跑按事件 ID 去重，只计一次。点击卡片查看来源、员工与记录。"
-        : "按四个看板查看核心结果，组间存在交叉统计；同一笔托管代跑可同时属于任务成果与 AI托管成果。";
+      "同一业务结果跨来源汇总；托管代跑按事件 ID 去重，只计一次。点击卡片查看来源、员工与记录。";
     $("#ov-results-help").dataset.tip = help;
     $("#ov-results-help").setAttribute("aria-label", help);
-    if (scheme === "A") {
-      $("#ov-results").innerHTML =
-        `<div class="ov-kpis">${heroMetrics.map((metric) => metricButton(metric, records)).join("")}</div>`;
-    } else {
-      $("#ov-results").innerHTML = `<div class="ov-groups">${Object.entries(
-        sources,
-      )
-        .map(([id, source]) => {
-          const own = records.filter((record) => record.sources.includes(id));
-          return `<section class="ov-panel" data-source-group="${id}"><div class="ov-section-heading"><div class="ov-group-heading"><span class="ov-group-icon">${ovIcon(SOURCE_ICONS[id] || SOURCE_ICONS.tasks, 17)}</span><h3>${source.name}</h3></div><button type="button" class="ov-link" data-board="${id}">查看${source.board} →</button></div><div class="ov-group-grid">${source.metrics.map((metric) => metricButton(metric, own, id, true)).join("")}</div></section>`;
-        })
-        .join("")}</div>`;
-    }
+    $("#ov-results").innerHTML = `<div class="ov-kpis">${heroMetrics
+      .map((metric) => metricButton(metric, records))
+      .join("")}</div>`;
   }
   function table(headers, rows, paginate = false, totalText = "") {
     const pages = Math.max(1, Math.ceil(rows.length / 10));
@@ -12158,7 +12297,15 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     const shown = paginate
       ? rows.slice((recordPage - 1) * 10, recordPage * 10)
       : rows;
-    return `<div class="ov-table-wrap"><table><thead><tr>${headers.map((header) => `<th>${header}</th>`).join("")}</tr></thead><tbody>${shown.map((row) => `<tr>${row.map((cell) => `<td>${cell}</td>`).join("")}</tr>`).join("") || `<tr><td colspan="${headers.length}"><div class="ov-empty">所选条件下暂无记录</div></td></tr>`}</tbody></table></div>${paginate ? `<div class="ov-pagination"><span>${totalText || `共 ${rows.length} 条记录`}</span><div><button type="button" class="ov-control" data-page="${recordPage - 1}" ${recordPage === 1 ? "disabled" : ""}>上一页</button><span>${recordPage} / ${pages}</span><button type="button" class="ov-control" data-page="${recordPage + 1}" ${recordPage === pages ? "disabled" : ""}>下一页</button></div></div>` : ""}`;
+    const head = headers
+      .map((header) => {
+        if (typeof header === "string") return `<th>${header}</th>`;
+        if (!header.sortKey) return `<th>${header.label}</th>`;
+        const active = header.sortKey === header.activeKey;
+        return `<th aria-sort="${active ? (header.dir === "asc" ? "ascending" : "descending") : "none"}"><button type="button" class="ov-sort" data-sort="${header.sortKey}" data-active="${active ? "true" : "false"}">${header.label}<i aria-hidden="true">${active ? (header.dir === "asc" ? "↑" : "↓") : "↕"}</i></button></th>`;
+      })
+      .join("");
+    return `<div class="ov-table-wrap"><table><thead><tr>${head}</tr></thead><tbody>${shown.map((row) => `<tr>${row.map((cell) => `<td>${cell}</td>`).join("")}</tr>`).join("") || `<tr><td colspan="${headers.length}"><div class="ov-empty">所选条件下暂无记录</div></td></tr>`}</tbody></table></div>${paginate ? `<div class="ov-pagination"><span>${totalText || `共 ${rows.length} 条记录`}</span><div><button type="button" class="ov-control" data-page="${recordPage - 1}" ${recordPage === 1 ? "disabled" : ""}>上一页</button><span>${recordPage} / ${pages}</span><button type="button" class="ov-control" data-page="${recordPage + 1}" ${recordPage === pages ? "disabled" : ""}>下一页</button></div></div>` : ""}`;
   }
   function employeeLink(id, action = "employee") {
     return `<button type="button" class="ov-link" data-${action}="${id}">${html(employees[id].name)}</button>`;
@@ -12216,7 +12363,12 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
         value: sum(values.map((qty) => ({ qty }))) / values.length,
       });
     }
-    const max = Math.max(1, ...buckets.map((bucket) => bucket.value));
+    const assigned = scopedEmployees().length;
+    const max = Math.max(
+      1,
+      assigned * 1.15,
+      ...buckets.map((bucket) => bucket.value),
+    );
     const rawStep = max / 4;
     const stepPower = Math.pow(10, Math.floor(Math.log10(rawStep)));
     const stepNorm = rawStep / stepPower;
@@ -12250,43 +12402,71 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
           (value) =>
             `<span class="ov-grid-line" style="bottom:${tickBottom(value)}px"></span>`,
         )
-        .join("")}${buckets
+        .join("")}<span class="ov-ref-line" style="bottom:${tickBottom(assigned)}px" title="已分配员工 ${assigned} 人"><span>已分配 ${assigned} 人</span></span>${buckets
         .map((bucket, index) => {
           const value = Number(bucket.value.toFixed(1));
           const height = Math.max(2, (bucket.value / axisTop) * plotHeight);
           return `<button type="button" class="ov-bar" data-day="${bucket.offset}" data-end="${bucket.end}" aria-label="${dateLabel(bucket.offset)}${bucket.end !== bucket.offset ? " 至 " + dateLabel(bucket.end) : ""}，${bucket.end !== bucket.offset ? "日均 " : ""}${number(value)} 人" title="${dateLabel(bucket.offset)} · ${value} 人"><span class="ov-bar-value" style="bottom:${height + 36}px">${number(value)}</span><i style="height:${height}px"></i><small>${index === 0 || index === buckets.length - 1 || index % Math.ceil(buckets.length / 5) === 0 ? dateLabel(bucket.offset).slice(5) : ""}</small></button>`;
         })
         .join("")}</div></div>`;
+    const defaultSort =
+      peopleTab === "department"
+        ? { key: "rate", dir: "desc" }
+        : { key: "days", dir: "desc" };
+    const sort = peopleSort.tab === peopleTab && peopleSort.key
+      ? { key: peopleSort.key, dir: peopleSort.dir }
+      : defaultSort;
+    const allowed =
+      peopleTab === "department"
+        ? ["used", "rate", "average", "count"]
+        : ["days", "count", "last", "hosting"];
+    if (!allowed.includes(sort.key)) {
+      sort.key = defaultSort.key;
+      sort.dir = "desc";
+    }
+    const compare = (rows, key) =>
+      rows.sort((a, b) => {
+        const left = a[key] ?? 0;
+        const right = b[key] ?? 0;
+        const diff =
+          typeof left === "number" && typeof right === "number"
+            ? left - right
+            : String(left).localeCompare(String(right), "zh-CN");
+        return sort.dir === "asc" ? diff : -diff;
+      });
+    const header = (label, sortKey) => ({
+      label,
+      sortKey,
+      activeKey: sort.key,
+      dir: sort.dir,
+    });
     if (peopleTab === "department") {
       const departments = [
         ...new Set(scopedEmployees().map((employee) => employee.dept)),
-      ]
-        .map((name) => {
-          const own = stats.filter((item) => item.employee.dept === name);
-          const active = own.filter((item) => item.days > 0);
-          return {
-            name,
-            assigned: own.length,
-            used: active.length,
-            count: own.reduce((total, item) => total + item.count, 0),
-            average: active.length
-              ? active.reduce((total, item) => total + item.days, 0) /
-                active.length
-              : 0,
-          };
-        })
-        .sort(
-          (a, b) =>
-            b.used / b.assigned - a.used / a.assigned || b.average - a.average,
-        );
+      ].map((name) => {
+        const own = stats.filter((item) => item.employee.dept === name);
+        const active = own.filter((item) => item.days > 0);
+        return {
+          name,
+          assigned: own.length,
+          used: active.length,
+          rate: own.length ? active.length / own.length : 0,
+          count: own.reduce((total, item) => total + item.count, 0),
+          average: active.length
+            ? active.reduce((total, item) => total + item.days, 0) /
+              active.length
+            : 0,
+        };
+      });
+      compare(departments, sort.key);
       $("#ov-people-ranking").innerHTML = table(
         [
-          "部门",
-          "活跃 / 已分配",
-          "活跃覆盖率",
-          "人均活跃天数",
-          "使用次数",
-          "操作",
+          header("部门", ""),
+          header("活跃 / 已分配", "used"),
+          header("活跃覆盖率", "rate"),
+          header("人均活跃天数", "average"),
+          header("使用次数", "count"),
+          header("操作", ""),
         ],
         departments.slice(0, 5).map((item) => [
           html(item.name),
@@ -12298,25 +12478,35 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
         ]),
       );
     } else {
+      const people = stats.map((item) => ({
+        item,
+        days: item.days,
+        count: item.count,
+        last: item.last === null ? -1e9 : -item.last,
+        hosting: hostingLog(
+          scopedRecords().filter(
+            (record) => record.employee === item.employee.id,
+          ),
+        ),
+      }));
+      compare(people, sort.key);
       $("#ov-people-ranking").innerHTML = table(
-        ["员工", "部门", "活跃天数", "使用次数", "最近主动使用", "托管记录"],
-        stats
-          .sort((a, b) => b.days - a.days || a.employee.id - b.employee.id)
-          .slice(0, 5)
-          .map((item) => [
-            employeeLink(item.employee.id),
-            html(item.employee.dept),
-            `${item.days} 天`,
-            `${number(item.count)} 次`,
-            item.last === null ? "暂无" : dateLabel(item.last),
-            `${number(
-              hostingLog(
-                scopedRecords().filter(
-                  (record) => record.employee === item.employee.id,
-                ),
-              ),
-            )} 条`,
-          ]),
+        [
+          header("员工", ""),
+          header("部门", ""),
+          header("活跃天数", "days"),
+          header("使用次数", "count"),
+          header("最近主动使用", "last"),
+          header("托管记录", "hosting"),
+        ],
+        people.slice(0, 5).map(({ item, hosting }) => [
+          employeeLink(item.employee.id),
+          html(item.employee.dept),
+          `${item.days} 天`,
+          `${number(item.count)} 次`,
+          item.last === null ? "暂无" : dateLabel(item.last),
+          `${number(hosting)} 条`,
+        ]),
       );
     }
   }
@@ -12349,15 +12539,25 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
         (a, b) => b.qty - a.qty || String(a.key).localeCompare(String(b.key)),
       );
   }
+  const TIER_ICONS = [
+    '<circle cx="12" cy="8" r="3.2"/><path d="M5 20v-1.5a4.5 4.5 0 0 1 4.5-4.5h5a4.5 4.5 0 0 1 4.5 4.5V20"/>',
+    '<path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8L3.5 9.7l5.9-.9z"/>',
+    '<path d="M3.5 8l4 3.5L12 5l4.5 6.5 4-3.5-1.8 10.5H5.3z"/>',
+  ];
   function renderResources() {
     $("#ov-seats").innerHTML = tiers
       .map(
         (tier, id) =>
-          `<button type="button" class="ov-seat-row" data-tier="${id}"><span>${tier.name}</span><span class="ov-track"><i style="width:${(tier.assigned / tier.bought) * 100}%"></i></span><span>${tier.assigned} / ${tier.bought} 已分配 ›</span></button>`,
+          `<button type="button" class="ov-tier" data-tier="${id}" title="${tier.name}：已分配 ${tier.assigned} 席，共 ${tier.bought} 席"><span class="ov-tier-top"><span class="ov-tier-icon">${ovIcon(TIER_ICONS[id], 14)}</span><span class="ov-tier-name">${tier.name}</span></span><b>${tier.assigned}<small>/ ${tier.bought} 席</small></b><span class="ov-tier-track"><i style="width:${(tier.assigned / tier.bought) * 100}%"></i></span><span class="ov-tier-note">${tier.bought - tier.assigned ? `待分配 ${tier.bought - tier.assigned} 席` : "已满"}</span></button>`,
       )
       .join("");
     const total = sum(pointRecords());
-    $("#ov-points-total").innerHTML = `${number(total)} <small>点</small>`;
+    const rest = 42000;
+    const usedShare = total + rest ? total / (total + rest) : 0;
+    $("#ov-points-total").textContent = number(total);
+    $("#ov-points-used-share").textContent = `${(usedShare * 100).toFixed(0)}%`;
+    $("#ov-points-rest-share").textContent = `${((1 - usedShare) * 100).toFixed(0)}%`;
+    $("#ov-points-used-bar").style.width = `${usedShare * 100}%`;
     $("#ov-point-ranking-title").textContent =
       pointsTab === "employee" ? "员工消耗 Top 5" : "功能消耗分布";
     const groups = pointGroups(pointsTab);
@@ -12368,7 +12568,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     $("#ov-points-ranking").innerHTML = display
       .map(
         (item) =>
-          `<button type="button" class="ov-point-row" data-point-${pointsTab}="${item.key}"><span>${pointsTab === "employee" ? html(employees[item.key].name) : pointFeatures[item.key]}${pointsTab === "employee" ? `<small>${html(employees[item.key].dept)}</small>` : ""}</span><span class="ov-track"><i style="width:${(item.qty / Math.max(1, total)) * 100}%"></i></span><strong>${number(item.qty)} 点<small>${((item.qty / Math.max(1, total)) * 100).toFixed(1)}%</small></strong></button>`,
+          `<button type="button" class="ov-point-row" data-point-${pointsTab}="${item.key}"><span class="ov-point-name">${pointsTab === "employee" ? html(employees[item.key].name) : pointFeatures[item.key]}${pointsTab === "employee" ? `<small>${html(employees[item.key].dept)}</small>` : ""}</span><span class="ov-track"><i style="width:${(item.qty / Math.max(1, total)) * 100}%"></i></span><strong>${number(item.qty)} 点<small>${((item.qty / Math.max(1, total)) * 100).toFixed(1)}%</small></strong></button>`,
       )
       .join("");
   }
@@ -12708,7 +12908,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     }
     const help = route.view === "metric" ? metrics[route.metric].note : "";
     $("#ov-detail").innerHTML =
-      `<nav class="ov-detail-back" aria-label="返回导航"><button type="button" class="ov-link" data-action="back">‹ 返回上一层</button><button type="button" class="ov-link" data-action="home">返回使用总览</button></nav><header class="ov-heading"><div><h1 tabindex="-1">${html(title)}${help ? helpSpan(help) : ""}</h1><p class="ov-muted">${route.view === "seats" ? "截至 " + dateLabel() : dateLabel(periods[period].days - 1) + " — " + dateLabel()} · ${html(scope)} · 方案 ${scheme}</p></div>${route.view === "seats" ? "" : $("#ov-home .ov-periods").outerHTML}</header><section class="ov-panel">${body}</section>`;
+      `<nav class="ov-detail-back" aria-label="返回导航"><button type="button" class="ov-link" data-action="back">‹ 返回上一层</button><button type="button" class="ov-link" data-action="home">返回使用总览</button></nav><header class="ov-heading"><div><h1 tabindex="-1">${html(title)}${help ? helpSpan(help) : ""}</h1><p class="ov-muted">${route.view === "seats" ? "截至 " + dateLabel() : dateLabel(periods[period].days - 1) + " — " + dateLabel()} · ${html(scope)}</p></div>${route.view === "seats" ? "" : $("#ov-home .ov-periods").outerHTML}</header><section class="ov-panel">${body}</section>`;
   }
   function renderTree() {
     const tree = document.querySelector(".yk-lefttree .ant-tree");
@@ -12738,11 +12938,6 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     }
   }
   function syncPressed() {
-    root
-      .querySelectorAll("[data-scheme]")
-      .forEach((button) =>
-        button.setAttribute("aria-pressed", button.dataset.scheme === scheme),
-      );
     root
       .querySelectorAll("[data-period]")
       .forEach((button) =>
@@ -12784,17 +12979,30 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   }
   function definitions() {
     $("#ov-dialog-body").innerHTML =
-      "<p>方案 A 按结果跨来源汇总。方案 B 按任务、App 工具、素材、AI托管分组。两种方案查询同一批演示记录。</p><p>托管代跑的任务具有同一个事件 ID，可以同时属于两个看板。跨来源汇总只计一次，组间存在交叉。不同单位的指标分别阅读。</p><p>主动活跃按员工主动完成操作或取用素材的日期去重，自动托管执行单独展示覆盖情况。人均活跃天数以本期活跃员工为分母。使用次数按员工主动操作标识去重，一次批量操作计一次，重复回执只计一次。自动托管执行与任务台账汇总另计。热门功能只统计 App 工具的主动使用次数。</p><p>业务成果按回执发生时间统计。已执行任务沿用任务下发时间口径。发出好友申请与加好友成功确认分别记录。</p><p>AI 点数按扣费流水统计，员工采纳次数与扣费次数分别记账。员工归属、公共调用与功能汇总能对上企业本期消耗。</p><p>新增结果、主动活跃、逐人点数和逐条记录均为方案演示。查看现有独立看板时，页头摘要显示同口径成果；原有分析区按各页现行口径展开。目标页全公司范围在页头标明，返回恢复来源部门与方案。</p>";
+      "<p>业务成果按结果跨来源汇总。托管代跑的任务具有同一个事件 ID，可以同时属于两个看板，跨来源汇总只计一次。不同单位的指标分别阅读。</p><p>环比对比的是上一等长周期：今日对昨日，近一周、近一月、近三月分别对前 7、30、90 天。</p><p>主动活跃按员工主动完成操作或取用素材的日期去重，自动托管执行单独展示覆盖情况。人均活跃天数以本期活跃员工为分母。使用次数按员工主动操作标识去重，一次批量操作计一次，重复回执只计一次。自动托管执行与任务台账汇总另计。热门功能只统计 App 工具的主动使用次数。</p><p>业务成果按回执发生时间统计。已执行任务沿用任务下发时间口径。发出好友申请与加好友成功确认分别记录。</p><p>每日活跃员工按当日主动使用去重人数计；虚线为当期已分配员工数，用来对照当天有多少人用上了。</p><p>AI 点数按扣费流水统计，员工采纳次数与扣费次数分别记账。员工归属与功能汇总能对上企业本期消耗。横条按本期消耗与当前剩余的相对比例绘制。</p><p>新增结果、主动活跃、逐人点数和逐条记录均为演示数据。查看现有独立看板时，页头摘要显示同口径成果；原有分析区按各页现行口径展开。目标页全公司范围在页头标明，返回恢复来源部门。</p>";
     $("#ov-dialog").showModal();
   }
   document.addEventListener("click", (event) => {
     const button = event.target.closest("button");
     if (!button || button.disabled) return;
     const data = button.dataset;
-    if (data.scheme) {
-      scheme = data.scheme;
-      renderResults();
-      syncPressed();
+    if (data.sort) {
+      const active =
+        peopleSort.tab === peopleTab && peopleSort.key
+          ? peopleSort
+          : {
+              key: peopleTab === "department" ? "rate" : "days",
+              dir: "desc",
+            };
+      peopleSort =
+        active.key === data.sort
+          ? {
+              tab: peopleTab,
+              key: data.sort,
+              dir: active.dir === "desc" ? "asc" : "desc",
+            }
+          : { tab: peopleTab, key: data.sort, dir: "desc" };
+      renderPeople();
     } else if (data.period) {
       period = data.period;
       filters = {
@@ -20112,7 +20320,7 @@ tb.addEventListener("click",function(e){
     /* ---- 群发好友 · 新建：四段决策 ＋ 右栏回显（2026-11-09） ----
        版式按 ADR-0082：白底、无卡片框、留白加分节线，蓝只给主操作与选中态。
        行仍是快照原节点，这里只收拾它们的横向节奏，并给新增件上本页标记类。 */
-    + '.rea-qf{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:40px;max-width:1180px;align-items:start}'
+    + '.rea-qf{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,380px);gap:40px;max-width:none;align-items:start}'
     + '.rea-qf-main{min-width:0}'
     + '.rea-qf-side{position:sticky;top:0;padding-top:4px}'
     + '.rea-qf-sec{padding:0 0 8px;margin-bottom:16px;border-bottom:1px solid #E5E8EF}'
@@ -20169,13 +20377,9 @@ tb.addEventListener("click",function(e){
     + '.rea-qf-opt:hover{background:#F7F8FA}'
     + '.rea-qf-optn{font-size:12px;color:#8F959E}'
     + '.rea-qf-more{margin-top:8px;border-top:1px solid #E5E8EF}'
-    + '.rea-qf-moretog{display:flex;align-items:center;gap:8px;width:100%;padding:12px 0;border:0;background:transparent;font-size:14px;color:#646A73;text-align:left;cursor:pointer}'
-    + '.rea-qf-moretog:hover{color:#1677FF}'
+    + '.rea-qf-moretog{display:flex;align-items:center;gap:8px;width:100%;padding:12px 0;font-size:14px;color:#646A73;text-align:left}'
     + '.rea-qf-moresub{font-size:12px;color:#8F959E}'
-    + '.rea-qf-caret{margin-left:auto;font-size:12px;color:#8F959E;transition:transform .15s}'
-    + '.rea-qf-more.on .rea-qf-caret{transform:rotate(180deg)}'
-    + '.rea-qf-morebd{display:none;padding-top:8px}'
-    + '.rea-qf-more.on .rea-qf-morebd{display:block}'
+    + '.rea-qf-morebd{padding-top:8px}'
     + '.rea-qf-rec{margin-left:6px;padding:0 4px;border-radius:4px;background:#E6F4FF;color:#1677FF;font-size:11px;line-height:16px;vertical-align:1px}'
     /* bottom:-20px 抵掉快照滚动容器（._con_）自带的 20px 下内边距：
        sticky 的 bottom:0 量的是内容盒下沿，不抵的话操作条会吊在底部上方 20px，
@@ -20203,6 +20407,9 @@ tb.addEventListener("click",function(e){
     + '.rea-qf-sumrow span{flex:none;color:#8F959E}'
     + '.rea-qf-sumrow b{max-width:66%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500;color:#1F2329;text-align:right}'
     + '.rea-qf-side .rea-qf-hint{margin-left:0}'
+    + '.rea-qf .rea-wxt-ta{max-width:640px}'
+    + '.rea-qf-morebd .ant-input{max-width:640px}'
+    + '.rea-qs-sheet{background:#fff;border-radius:6px;padding:16px 20px 0}'
     + '.rea-qs .rea-qf-act{bottom:0}'
     + '.rea-qf-sw{position:relative;flex:none;box-sizing:border-box;width:40px;height:22px;padding:0;border:0;border-radius:11px;background:#C9CDD4;cursor:pointer;transition:background .15s}'
     + '.rea-qf-sw:after{content:"";position:absolute;left:2px;top:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .15s}'
@@ -20966,6 +21173,10 @@ function initQf(){
   if(!space||!tempBtn)return;
   var btn=cloneSrcBtn(space,'从素材库选择');
   if(!btn)return;
+  /* 本页两枚来源的次序：临时创建在左、从素材库选择在右
+     （cloneSrcBtn 统一插在「临时创建」前面，这里把克隆出来的那枚挪到最后） */
+  var srcItem=btn.closest('.ant-space-item');
+  if(srcItem&&srcItem.parentNode===space)space.appendChild(srcItem);
   space.classList.add('rea-qf-src');
   var host=document.createElement('div');host.className='rea-wxt-host';
   space.parentNode.insertBefore(host,space.nextSibling);
@@ -21056,18 +21267,10 @@ function initQf(){
 
   /* ---------- 更多设置：任务名称、发送类型、全局弹窗 ---------- */
   var more=document.createElement('div');more.className='rea-qf-more';
-  var moreTog=document.createElement('button');
-  moreTog.type='button';moreTog.className='rea-qf-moretog';
-  moreTog.innerHTML='<span>更多设置</span><span class="rea-qf-moresub">任务名称 · 发送类型 · 全局弹窗</span>'
-    +'<span class="rea-qf-caret">▾</span>';
+  var moreTog=document.createElement('div');moreTog.className='rea-qf-moretog';
+  moreTog.innerHTML='<span>更多设置</span><span class="rea-qf-moresub">任务名称 · 发送类型 · 全局弹窗</span>';
   var moreBd=document.createElement('div');moreBd.className='rea-qf-morebd';
   more.appendChild(moreTog);more.appendChild(moreBd);main.appendChild(more);
-  moreTog.setAttribute('aria-expanded','false');
-  moreTog.addEventListener('click',function(e){
-    e.preventDefault();
-    var on=more.classList.toggle('on');
-    moreTog.setAttribute('aria-expanded',on?'true':'false');
-  });
   put(rName,moreBd,true);
   put(rSend,moreBd,true);
   var stTip=hint('');moreBd.appendChild(stTip);
@@ -21271,7 +21474,9 @@ function initQs(){
   crumb.querySelector('.rea-wxt-crumb').addEventListener('click',function(e){
     e.preventDefault();parent.postMessage({reaPage:'群发群组'},'*');
   });
-  rc.insertBefore(crumb,rc.firstChild);
+  /* 页面底色是灰的（与快照页不同，这一页没有 _con_ 那块白底），整页另铺一层白纸 */
+  var sheet=document.createElement('div');sheet.className='rea-qs-sheet';
+  rc.insertBefore(sheet,rc.firstChild);sheet.appendChild(crumb);
 
   function radio(name,val,label,on){
     return '<label class="ant-radio-wrapper'+(on?' ant-radio-wrapper-checked':'')+' css-vgijab">'
@@ -21283,7 +21488,7 @@ function initQs(){
 
   var form=document.createElement('div');form.className='rea-qf rea-qs';
   form.innerHTML='<div class="rea-qf-main"></div><aside class="rea-qf-side"></aside>';
-  rc.insertBefore(form,crumb.nextSibling);
+  sheet.appendChild(form);
   var main=q('.rea-qf-main',form),side=q('.rea-qf-side',form);
 
   function sec(no,t,sub){
@@ -21337,8 +21542,8 @@ function initQs(){
   var b2=sec('2','发什么','');
   var s2=row(b2,'任务内容',true,
      '<div class="rea-wxt-src">'
-     +'<button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined rea-wxt-srcbtn">从素材库选择</button>'
-     +'<button type="button" class="ant-btn css-vgijab ant-btn-primary ant-btn-color-primary ant-btn-variant-solid rea-wxt-tempbtn">临时创建</button></div>'
+     +'<button type="button" class="ant-btn css-vgijab ant-btn-primary ant-btn-color-primary ant-btn-variant-solid rea-wxt-tempbtn">临时创建</button>'
+     +'<button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined rea-wxt-srcbtn">从素材库选择</button></div>'
      +'<div class="rea-wxt-host"></div>'
      +'<div class="rea-wxt-temp">'
      +'<div class="ant-radio-group ant-radio-group-outline css-vgijab">'
@@ -21412,18 +21617,10 @@ function initQs(){
 
   /* ---------- 更多设置 ---------- */
   var more=document.createElement('div');more.className='rea-qf-more';
-  var moreTog=document.createElement('button');
-  moreTog.type='button';moreTog.className='rea-qf-moretog';
-  moreTog.innerHTML='<span>更多设置</span><span class="rea-qf-moresub">任务名称 · 发送类型 · 全局弹窗</span>'
-    +'<span class="rea-qf-caret">▾</span>';
-  moreTog.setAttribute('aria-expanded','false');
+  var moreTog=document.createElement('div');moreTog.className='rea-qf-moretog';
+  moreTog.innerHTML='<span>更多设置</span><span class="rea-qf-moresub">任务名称 · 发送类型 · 全局弹窗</span>';
   var moreBd=document.createElement('div');moreBd.className='rea-qf-morebd';
   more.appendChild(moreTog);more.appendChild(moreBd);main.appendChild(more);
-  moreTog.addEventListener('click',function(e){
-    e.preventDefault();
-    var on=more.classList.toggle('on');
-    moreTog.setAttribute('aria-expanded',on?'true':'false');
-  });
   row(moreBd,'任务名称',false,
      '<input type="text" class="ant-input css-vgijab ant-input-outlined rea-wxt-inp" value="群发群组任务20261013">');
   row(moreBd,'发送类型',false,
@@ -25301,7 +25498,7 @@ function draw(){
   var days={day:1,week:7,month:30,quarter:90}[currentPeriod];
   var start=new Date();start.setDate(start.getDate()-(days||1)+1);
   var range=days?start.toLocaleDateString('zh-CN')+' — '+new Date().toLocaleDateString('zh-CN')+' · ':'';
-  caption.textContent='使用总览 · 业务成果摘要 · '+range+'全公司 · 方案 '+nav.scheme;
+  caption.textContent='使用总览 · 业务成果摘要 · '+range+'全公司';
   caption.style.cssText='margin:0 0 16px;font-size:12px;color:#646A73';
   section.appendChild(caption);
   var values=nav.sourceWindows[currentPeriod];
