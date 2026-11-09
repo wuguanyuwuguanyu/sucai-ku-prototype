@@ -12929,7 +12929,7 @@ render();
 
   <!-- 时间窗（PRD §2.2）· 本期指标与趋势按各自时间字段取数；类型、完成情况、回复和任务列表按下发时间取任务。最多统计近三个月，四档全部可点；自定义区间点开是起止日期，与固定档互斥。 -->
   <div class="rea-bd-fbar">
-    <span class="rea-bd-lab">任务时间窗<span class="rea-bd-help" tabindex="0" role="img" aria-label="数据来源与统计口径" data-tip="已完成按完成时间、已逾期按到期时间、已下发按下发时间统计，含待推送任务。待完成统计截至数据更新时间仍未完成且未到期的全部任务；配置／资产按自身周期。自定义区间含首尾两天，最多回看三个月。">?</span></span>
+    <span class="rea-bd-lab">任务时间窗<span class="rea-bd-help" tabindex="0" role="img" aria-label="数据来源与统计口径" data-tip="已完成按完成时间统计；已逾期取所选区间内创建且当前已过期未完成的任务；已下发按创建（下发）时间统计，含待推送任务。待完成统计截至数据更新时间仍未完成且未到期的全部任务；配置／资产按自身周期。自定义区间含首尾两天，最多回看三个月。">?</span></span>
     <div class="ant-radio-group ant-radio-group-solid css-vgijab rea-bd-window" id="rea-bd-window">
         <div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small">
           <div class="ant-space-item">
@@ -12979,21 +12979,21 @@ render();
 
     <!-- 四个独立指标：待完成是存量，其余按各自事件时间取本期发生量。 -->
     <div class="rea-bd-metrics" id="rea-bd-metrics" aria-label="任务指标">
-      <div class="rea-bd-card rea-bd-metric is-pending">
+      <div class="rea-bd-card rea-bd-metric is-pending" data-bd-metric="pending">
         <div class="rea-bd-metric-head"><div class="rea-bd-metric-label">待完成<span class="rea-bd-help" tabindex="0" role="img" aria-label="待完成统计口径" data-tip="截至数据更新时间，仍未做满且有效期未过的全部任务，含本期以前下发的任务。按条计，切换时间窗时保持当前存量。">?</span></div><span class="rea-bd-metric-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2"/></svg></span></div>
-        <div class="rea-bd-metric-value"><b data-bd-metric-count="pending">—</b><span>条</span></div>
+        <button type="button" class="rea-bd-metric-value" aria-label="查看待完成任务"><b data-bd-metric-count="pending">—</b><span>条</span><i aria-hidden="true">›</i></button>
       </div>
-      <div class="rea-bd-card rea-bd-metric is-completed">
+      <div class="rea-bd-card rea-bd-metric is-completed" data-bd-metric="completed">
         <div class="rea-bd-metric-head"><div class="rea-bd-metric-label">已完成<span class="rea-bd-help" tabindex="0" role="img" aria-label="已完成统计口径" data-tip="全体执行人员做满的时间落在所选区间内，每条任务计一次，含本期以前下发的任务。与执行趋势的已完成合计一致。">?</span></div><span class="rea-bd-metric-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="m8 12 3 3 5-6"/></svg></span></div>
-        <div class="rea-bd-metric-value"><b data-bd-metric-count="completed">—</b><span>条</span></div>
+        <button type="button" class="rea-bd-metric-value" aria-label="查看已完成任务"><b data-bd-metric-count="completed">—</b><span>条</span><i aria-hidden="true">›</i></button>
       </div>
-      <div class="rea-bd-card rea-bd-metric is-overdue">
-        <div class="rea-bd-metric-head"><div class="rea-bd-metric-label">已逾期<span class="rea-bd-help" tabindex="0" role="img" aria-label="已逾期统计口径" data-tip="有效期在所选区间内结束，且到期时未做满的任务，每条任务计一次，含本期以前下发的任务。与执行趋势的已逾期合计一致。">?</span></div><span class="rea-bd-metric-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m10.3 4.9-7 12.2A2 2 0 0 0 5 20h14a2 2 0 0 0 1.7-2.9l-7-12.2a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4m0 3h.01"/></svg></span></div>
-        <div class="rea-bd-metric-value"><b data-bd-metric-count="overdue">—</b><span>条</span></div>
+      <div class="rea-bd-card rea-bd-metric is-overdue" data-bd-metric="overdue">
+        <div class="rea-bd-metric-head"><div class="rea-bd-metric-label">已逾期<span class="rea-bd-help" tabindex="0" role="img" aria-label="已逾期统计口径" data-tip="创建时间在所选区间内，且截至数据更新时间已过期、仍未做满的任务，每条任务计一次。点击查看该范围的已逾期任务。">?</span></div><span class="rea-bd-metric-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m10.3 4.9-7 12.2A2 2 0 0 0 5 20h14a2 2 0 0 0 1.7-2.9l-7-12.2a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4m0 3h.01"/></svg></span></div>
+        <button type="button" class="rea-bd-metric-value" aria-label="查看已逾期任务"><b data-bd-metric-count="overdue">—</b><span>条</span><i aria-hidden="true">›</i></button>
       </div>
-      <div class="rea-bd-card rea-bd-metric is-issued">
+      <div class="rea-bd-card rea-bd-metric is-issued" data-bd-metric="issued">
         <div class="rea-bd-metric-head"><div class="rea-bd-metric-label">已下发<span class="rea-bd-help" tabindex="0" role="img" aria-label="已下发统计口径" data-tip="下发时间落在所选区间内的任务，每条任务计一次，含待推送任务。与任务类型分布、任务列表前置的总条数一致。">?</span></div><span class="rea-bd-metric-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m21 3-7 18-4-8-8-4 19-6Z"/><path d="m10 13 11-10"/></svg></span></div>
-        <div class="rea-bd-metric-value"><b data-bd-metric-count="issued">—</b><span>条</span></div>
+        <button type="button" class="rea-bd-metric-value" aria-label="查看已下发任务"><b data-bd-metric-count="issued">—</b><span>条</span><i aria-hidden="true">›</i></button>
       </div>
     </div>
 
@@ -13002,7 +13002,7 @@ render();
          折线用直线段：条数是整数，平滑会把 0 → 3 连成一段不存在的缓坡。 -->
     <div class="rea-bd-card rea-bd-card--w12">
       <div class="rea-bd-ch">
-        <h6>执行趋势<span class="rea-bd-help" tabindex="0" role="img" aria-label="数据来源与统计口径" data-tip="按终态发生时间统计任务条数，含本期以前下发的任务。完成记在全体执行人员做满的日期，逾期记在有效期结束的日期。七天内按日，超过七天按周；两条线各格合计分别等于已完成、已逾期。">?</span></h6>
+        <h6>执行趋势<span class="rea-bd-help" tabindex="0" role="img" aria-label="数据来源与统计口径" data-tip="按终态发生时间统计任务条数，含本期以前下发的任务。完成记在全体执行人员做满的日期，逾期记在有效期结束的日期。七天内按日，超过七天按周；完成线合计等于已完成卡。逾期线统计区间内到期的任务，已逾期卡统计区间内创建且当前逾期的任务。">?</span></h6>
       </div>
       <div class="rea-tr-chart" id="rea-tr-chart"></div>
     </div>
@@ -14504,14 +14504,15 @@ render();
      部门不用下拉，走左侧那棵部门树（与模块页的「部门选择」是同一块）。
      数据由看板页在点进来时随 postMessage 带过来（dumpRows），不另编一份。 -->
 <script type="text/plain" id="srcBoardTasks">
-<div class="_board_gf4go_1 rea-bd-page rea-bd-sec">
+<div class="_board_gf4go_1 rea-bd-page rea-bd-sec" id="rea-tasks-page">
   <div class="_title_gf4go_8 rea-bd-pagehead">
-    <h6>任务列表<span class="rea-bd-help" tabindex="0" role="img" aria-label="数据来源与统计口径" data-tip="按下发时间选出所选区间内的任务，含待推送任务。大类、类型、状态、部门可进一步筛选。条数按任务去重，逐条进度按人次计。">?</span></h6>
+    <h6><span id="rea-tasks-title">任务列表</span><span class="rea-bd-help" tabindex="0" role="img" id="rea-tasks-help" aria-label="数据来源与统计口径" data-tip="按下发时间选出所选区间内的任务，含待推送任务。大类、类型、状态、部门可进一步筛选。条数按任务去重，逐条进度按人次计。">?</span></h6>
     <a href="#" data-rea="微小助看板" class="rea-bd-back">← 返回看板</a>
   </div>
   <div class="ant-divider css-vgijab ant-divider-horizontal" role="separator" style="margin: 0px;"></div>
+  <div class="rea-bd-detail-context" id="rea-tasks-context" hidden></div>
   <div class="rea-bd-row rea-bd-filters">
-    <span class="rea-bd-lab">时间窗</span>
+    <span class="rea-bd-lab" id="rea-tasks-time-label">时间窗</span>
     <div class="ant-radio-group ant-radio-group-solid css-vgijab rea-bd-window" id="rea-tasks-win">
       <div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small">
               <div class="ant-space-item">
@@ -14605,7 +14606,7 @@ render();
         </optgroup>
       </select>
     </label>
-    <label class="rea-bd-filter">
+    <label class="rea-bd-filter" id="rea-tasks-state-filter">
       <span class="rea-bd-lab">状态</span>
       <select class="rea-bd-sel" id="rea-tasks-state">
         <option value="all">全部</option>
@@ -14628,7 +14629,7 @@ render();
               <th scope="col" class="ant-table-cell">任务类型</th>
               <th scope="col" class="ant-table-cell">创建人</th>
               <th scope="col" class="ant-table-cell" title="该任务的执行人员人数；执行人员可跨部门（「部门完成情况」按创建人所属部门聚合，两种口径不同）">执行人员</th>
-              <th scope="col" class="ant-table-cell">下发时间</th>
+              <th scope="col" class="ant-table-cell" id="rea-tasks-date-title">下发时间</th>
               <th scope="col" class="ant-table-cell">任务有效期</th>
               <th scope="col" class="ant-table-cell" title="该任务已执行人数 / 应执行人数（人次）；占比图与部门完成情况按任务条数算">进度</th>
               <th scope="col" class="ant-table-cell">状态</th>
@@ -14883,6 +14884,7 @@ render();
   /* 任务看板的二级页「任务列表」：同样由 reaSynthPages() 克隆看板外壳合成，
      正文来自载体块 srcBoardTasks。筛任务类型／状态／部门，时间窗与看板共用。 */
   var REA_TASKS_PAGE = '微小助看板 · 任务列表';
+  var REA_METRIC_PAGE = '微小助看板 · 指标明细';
   /* AI托管看板（2026-11-05）：数据看板组的第五页。注册表页名还是「AI托管数据看板」，
      显示名由 REA_NAME 换成「AI托管看板」（与任务看板／素材看板同一套叫法）。
      二级页「托管工作日志」不在快照里，同样由 reaSynthPages() 克隆看板外壳合成，
@@ -14976,7 +14978,8 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px;margin-top:16px}
 .rea-bd-card{display:flex;flex-direction:column;min-width:0;padding:16px 20px 18px;background:#fff;border:1px solid #E9EEF6;border-radius:12px;box-shadow:0 1px 2px rgba(19,44,82,.04)}
 .rea-bd-metrics{grid-column:span 12;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
-.rea-bd-metric{--metric-accent:#1677FF;--metric-tint:#E6F4FF;padding:16px 24px}
+.rea-bd-metric{--metric-accent:#1677FF;--metric-tint:#E6F4FF;padding:16px 24px;cursor:pointer}
+.rea-bd-metric:hover,.rea-bd-metric:focus-within{border-color:var(--metric-accent)}
 .rea-bd-metric.is-completed{--metric-accent:#52C41A;--metric-tint:rgba(82,196,26,.08)}
 .rea-bd-metric.is-overdue{--metric-accent:#FAAD14;--metric-tint:rgba(250,173,20,.10)}
 .rea-bd-metric.is-issued{--metric-accent:#646A73;--metric-tint:#F7F8FA}
@@ -14984,7 +14987,13 @@ body .subapp{background:#F6F8FB!important}
 .rea-bd-metric-icon{display:flex;align-items:center;justify-content:center;width:40px;height:40px;flex:0 0 40px;border-radius:8px;background:var(--metric-tint);color:var(--metric-accent)}
 .rea-bd-metric-icon svg{width:24px;height:24px;display:block}
 .rea-bd-metric-label{display:flex;align-items:center;color:#1F2329;font-size:14px;font-weight:500}
-.rea-bd-metric-value{display:flex;align-items:baseline;gap:8px;margin-top:8px;color:#1F2329}
+.rea-bd-metric-value{display:flex;align-items:baseline;gap:8px;width:100%;margin-top:8px;padding:0;border:0;background:transparent;text-align:left;color:#1F2329;font:inherit;cursor:pointer}
+.rea-bd-metric-value i{margin-left:auto;color:#8F959E;font-size:20px;font-style:normal}
+.rea-bd-metric:hover .rea-bd-metric-value i{color:var(--metric-accent)}
+.rea-bd-metric-value:active{background:var(--metric-tint)}
+.rea-bd-detail-context{margin:16px 0 0;color:#646A73;font-size:12px;line-height:20px}
+.rea-bd-detail-context[hidden],.rea-bd-filters [hidden]{display:none!important}
+.rea-bd-event-time{display:block;font-size:12px;line-height:20px;white-space:nowrap}
 .rea-bd-metric-value b{font-size:32px;line-height:48px;font-weight:600;font-variant-numeric:tabular-nums}
 .rea-bd-metric-value span{font-size:14px;color:#646A73}
 @media(max-width:1279px){.rea-bd-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -15878,9 +15887,9 @@ window.addEventListener("resize",function(){
      所有日期均从同一份演示任务台账计算。 */
   function reaTrendJs(){
     return `
-/* ---- 执行趋势（已完成 / 已逾期，随页顶时间窗） ----
+/* ---- 执行趋势（已完成 / 到期未完成，随页顶时间窗） ----
    按任务条数统计。完成按整体做满的日期归格，逾期按有效期结束日期归格。
-   遍历完整台账，包含所选期间以前下发的任务。各格合计分别与两张本期指标卡一致。
+   遍历完整台账，包含所选期间以前下发的任务。完成合计与已完成卡一致，到期未完成按到期事件统计。
    卡内档位由「近 N 周」改成按日／按周，统计范围不再自带，跟着页顶时间窗走。
    2026-11-04：最多统计近三个月。粒度随页顶时间窗的跨度自动定——七天内按日，超过七天按周。 */
 var TRMODE="day";
@@ -15896,7 +15905,7 @@ function trBuckets(mode){
     if(!b){b=map[key]={s:d,e:dayAt(off),done:0,over:0,n:0};out.push(b)}
     b.e=dayAt(off);
   }
-  ["completed","overdue"].forEach(function(metric){
+  ["completed","expired"].forEach(function(metric){
     var events=taskScope(rs,metric,w),k=metric==="completed"?"done":"over";
     for(i=0;i<events.length;i++){
       r=events[i];off=metric==="completed"?r.completedDay:r.overdueDay;
@@ -15916,8 +15925,8 @@ function renderTrTrend(){
   var box=document.getElementById("rea-tr-chart");if(!box)return;
   var view=trBuckets(TRMODE),n=view.length,i;
   ["done","over"].forEach(function(k){
-    var total=view.reduce(function(sum,b){return sum+b[k]},0),metric=k==="done"?"completed":"overdue";
-    if(total!==taskScope(dumpRows(),metric,WIN[CURW]||WIN[DEFW]).length)bad("趋势与指标合计不一致："+metric);
+    var total=view.reduce(function(sum,b){return sum+b[k]},0),metric=k==="done"?"completed":"expired";
+    if(total!==taskScope(dumpRows(),metric,WIN[CURW]||WIN[DEFW]).length)bad("趋势与事件合计不一致："+metric);
   });
   var cw=box.clientWidth||900;
   var w=Math.max(380,cw),L=44,R=16,T=34,B=28,h=220,pw=w-L-R,ph=h-T-B;
@@ -15939,7 +15948,7 @@ function renderTrTrend(){
     +"<text x='22' y='4' fill='#646A73' font-size='12'>已完成</text>"
     +"<line x1='102' y1='0' x2='118' y2='0' stroke='#FAAD14' stroke-width='2'/>"
     +"<circle cx='110' cy='0' r='3' fill='#ffffff' stroke='#FAAD14' stroke-width='2'/>"
-    +"<text x='124' y='4' fill='#646A73' font-size='12'>已逾期</text></g>";
+    +"<text x='124' y='4' fill='#646A73' font-size='12'>到期未完成</text></g>";
   /* 最后一格还没走完：底色压淡、左边一道虚线，别让它冒充完整一期。
      只有一格时（今日＋按日／按周）整张图就是那一格，底色会把画布涂满、虚线正好压在左轴上，
      反倒像画坏了——这一格不画。 */
@@ -15972,7 +15981,7 @@ function renderTrTrend(){
   for(i=0;i<n;i++){
     g+="<rect class='tr-band' data-tr-i='"+i+"' x='"+(L+i*band).toFixed(1)+"' y='"+T+"' width='"+band.toFixed(1)+"' height='"+ph+"' fill='transparent'/>";
   }
-  box.innerHTML="<svg viewBox='0 0 "+w+" "+h+"' width='"+w+"' height='"+h+"' role='img' aria-label='已完成与已逾期任务数趋势'>"
+  box.innerHTML="<svg viewBox='0 0 "+w+" "+h+"' width='"+w+"' height='"+h+"' role='img' aria-label='已完成与到期未完成任务数趋势'>"
     +"<g>"+g+"</g></svg>";
   var tip=document.createElement("div");
   tip.className="rea-qft-tip rea-tr-tip";
@@ -15986,7 +15995,7 @@ function renderTrTrend(){
       if(hov){hov.setAttribute("x",bx.toFixed(1));hov.setAttribute("opacity","0.05")}
       tip.innerHTML="<div class='d'>"+trLab(v)+(idx===n-1?(TRMODE==="week"?" · 本周":" · 今日"):"")+"</div>"
         +"<div class='r done'><i></i>已完成<b>"+v.done+" 条</b></div>"
-        +"<div class='r over'><i></i>已逾期<b>"+v.over+" 条</b></div>";
+        +"<div class='r over'><i></i>到期未完成<b>"+v.over+" 条</b></div>";
       tip.style.display="block";
       var tw=tip.offsetWidth,th=tip.offsetHeight,left=x+14;
       if(left+tw>w-4)left=x-tw-14;
@@ -16193,10 +16202,12 @@ for(var li=0;li<las.length;li++)las[li].addEventListener("click",function(e){
      写成一行行的数组再 join，同样是为了让最终落进 srcdoc 的那段代码肉眼可读。 */
   function reaTaskScopeJs(){
     return `
+/* overdue 为创建区间内当前逾期，expired 为区间内发生的到期事件。 */
 function taskScope(rs,metric,range){
   return rs.filter(function(r){
     if(metric==="pending")return r.left>0&&r.over===0;
-    var day=metric==="completed"?r.completedDay:(metric==="overdue"?r.overdueDay:+r.day);
+    if(metric==="overdue"&&!(r.over>0))return false;
+    var day=metric==="completed"?r.completedDay:(metric==="expired"?r.overdueDay:+r.day);
     return typeof day==="number"&&isFinite(day)&&day>=range[0]&&day<=range[1];
   });
 }
@@ -16486,6 +16497,15 @@ function taskScope(rs,metric,range){
     '  e.preventDefault();',
     '  parent.postMessage({reaPage:' + reaJson(REA_TASKS_PAGE) + ',reaWin:CURW,reaWinRange:(CURW==="custom"?WIN.custom:null),reaRows:dumpRows()},"*");',
     '});',
+    '/* 卡片进入各自明细；问号只展示统计说明。 */',
+    'var metricCards=document.getElementById("rea-bd-metrics");',
+    'if(metricCards)metricCards.addEventListener("click",function(e){',
+    '  if(e.target.closest(".rea-bd-help"))return;',
+    '  var card=e.target.closest("[data-bd-metric]");',
+    '  if(!card)return;',
+    '  var metric=card.getAttribute("data-bd-metric");',
+    '  parent.postMessage({reaPage:metric==="issued"?' + reaJson(REA_TASKS_PAGE) + ':' + reaJson(REA_METRIC_PAGE) + ',reaWin:CURW,reaWinRange:CURW==="custom"?WIN.custom:null,reaRows:dumpRows(),reaMetricDetail:metric==="issued"?null:{metric:metric,updatedAt:document.querySelector(".rea-bd-upd").textContent.replace("数据更新于","").trim()}},"*");',
+    '});',
     '/* 部门行与列头支持 Enter / 空格。 */',
     'document.addEventListener("keydown",function(e){',
     '  if(e.key!=="Enter"&&e.key!==" ")return;',
@@ -16575,6 +16595,7 @@ function taskScope(rs,metric,range){
     '      name:((c[0]&&c[0].getAttribute("title"))||(c[0]&&c[0].textContent)||"").trim(),',
     '      creator:cr,',
     '      completedDay:r.hasAttribute("data-bd-completed-day")?+r.getAttribute("data-bd-completed-day"):null,',
+    '      completedAt:r.hasAttribute("data-bd-completed-day")?when(dayAt(+r.getAttribute("data-bd-completed-day")),"09:"+PAD(id%60)):"",',
     '      overdueDay:over>0?offOfDate((r.querySelector("[data-bd-end]").textContent||"").slice(0,10)):null,',
     '      created:createdOf(r),',
     '      people:((c[3]&&c[3].textContent)||"").trim(),',
@@ -17569,6 +17590,8 @@ function taskScope(rs,metric,range){
     '}',
     'function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}',
     'var ROWS=window.__REA_ROWS||[],WIN=window.__REA_WIN||"today",RANGE=window.__REA_RANGE||null;',
+    'var DETAIL=window.__REA_METRIC_DETAIL||null;',
+    reaTaskScopeJs(),
     '/* 时间窗＝相对今天第几天的一段区间（与看板页同一套：今日／近一周／近一月／近三月）。',
     '   自定义区间不在这里重选，只跟着看板带过来的起止偏移开一档。 */',
     'var WINR={today:[0,0],w7:[-6,0],m1:[-29,0],m3:[-89,0]};',
@@ -17577,7 +17600,7 @@ function taskScope(rs,metric,range){
     'var CURW=WINR[WIN]&&WIRED[WIN]?WIN:"today";',
     'var CURP=window.__REA_PLAT||"all",',
     '    CURT=window.__REA_TYPE&&window.__REA_TYPE!=="all"?(CURP!=="all"?CURP:typePlat(window.__REA_TYPE))+"|"+window.__REA_TYPE:"all",',
-    '    CURS=window.__REA_STATE||"all",CURO=window.__REA_ORG||"all";',
+    '    CURS=DETAIL?"all":(window.__REA_STATE||"all"),CURO=window.__REA_ORG||"all";',
     '/* 大类与类型是两级、不是两条平行的轴：一个类型只属于一个大类，但类型名会跨大类重名',
     '   （自动回复在 WhatsApp 营销任务与 WhatsApp 商业版下各有一条），所以下拉的取值写成',
     '   「大类|类型」，过滤时两级一起比，重名的那两条不会搅在一起。',
@@ -17590,7 +17613,7 @@ function taskScope(rs,metric,range){
     'function typeName(t){var a=String(t||"").indexOf("|");return a>0?String(t).slice(a+1):t}',
     'function winRows(w){',
     '  var range=WINR[w]||WINR.today;',
-    '  return ROWS.filter(function(r){return +r.day>=range[0]&&+r.day<=range[1]});',
+    '  return taskScope(ROWS,DETAIL?DETAIL.metric:"issued",range);',
     '}',
     'function stateOf(r){return r.left<=0?"已完成":(r.over>0?"已结束":"进行中")}',
     '/* 有效期列在 9 列表格里最窄：先省掉今年，再把同一天的首尾并成「10-25 09:00 ~ 23:59」。',
@@ -17656,6 +17679,7 @@ function taskScope(rs,metric,range){
     '    out.push({r:r,i:i});',
     '  }',
     '  out.sort(function(a,b){',
+    '    if(DETAIL&&DETAIL.metric==="completed")return String(b.r.completedAt||"").localeCompare(String(a.r.completedAt||""))||a.r.id-b.r.id;',
     '    if(a.r.left!==b.r.left)return b.r.left-a.r.left;',
     '    return a.i-b.i;',
     '  });',
@@ -17671,7 +17695,7 @@ function taskScope(rs,metric,range){
     '      +"<td class=\\"ant-table-cell\\">"+esc(r.type)+"</td>"',
     '      +"<td class=\\"ant-table-cell\\"><span class=\\"rea-bd-creator\\">"+esc(r.creator)+"<em>"+esc(r.org)+"</em></span></td>"',
     '      +"<td class=\\"ant-table-cell\\"><span class=\\"rea-bd-people\\" title=\\""+esc(r.people)+"\\">"+esc(r.people)+"</span></td>"',
-    '      +"<td class=\\"ant-table-cell\\"><span class=\\"rea-bd-created\\">"+esc(r.created||"—")+"</span></td>"',
+    '      +"<td class=\\"ant-table-cell\\"><span class=\\"rea-bd-event-time\\">"+esc(r.created||"—")+"</span>"+(DETAIL&&DETAIL.metric==="completed"?"<span class=\\"rea-bd-event-time\\">完成 "+esc(r.completedAt)+"</span>":"")+"</td>"',
     '      +"<td class=\\"ant-table-cell\\"><span class=\\"rea-bd-span\\" title=\\""+esc(r.span)+"\\">"+esc(shortSpan(r.span))+"</span></td>"',
     '      +"<td class=\\"ant-table-cell\\"><div class=\\"rea-bd-pg\\"><span class=\\"n\\"><span>"+r.done+" / "+r.need+"</span><em>"+(r.need?Math.round(r.done/r.need*100)+"%":"")+"</em></span>"+seg(r.need,r.done,r.left,r.over)+"</div></td>"',
     '      +"<td class=\\"ant-table-cell\\">"+tag(state)+"</td>"',
@@ -17711,6 +17735,25 @@ function taskScope(rs,metric,range){
     '  el.innerHTML="<b>任务列表自检未通过（"+msgs.length+" 处）</b><br>"+msgs.join("<br>");',
     '}',
     '',
+    'function setDetailUi(){',
+    '  if(!DETAIL)return;',
+    '  var metric=DETAIL.metric,names={pending:"待完成任务",completed:"已完成任务",overdue:"已逾期任务"};',
+    '  document.getElementById("rea-tasks-page").setAttribute("data-metric-detail",metric);',
+    '  document.getElementById("rea-tasks-title").textContent=names[metric];',
+    '  document.getElementById("rea-tasks-win").hidden=true;',
+    '  document.getElementById("rea-tasks-time-label").hidden=true;',
+    '  document.getElementById("rea-tasks-state-filter").hidden=true;',
+    '  var separator=document.querySelector(".rea-bd-filters .rea-bd-sep");if(separator)separator.hidden=true;',
+    '  var range=WINR[CURW]||WINR.today,start=new Date(),end=new Date();',
+    '  start.setDate(start.getDate()+range[0]);end.setDate(end.getDate()+range[1]);',
+    '  var period=when(start)+" — "+when(end),text;',
+    '  if(metric==="pending")text="截至 "+DETAIL.updatedAt+" 的全部待完成任务，含此前创建且仍有效的任务。";',
+    '  else if(metric==="completed")text=period+" 完成的任务，含此前创建的任务。";',
+    '  else text=period+" 创建，且截至 "+DETAIL.updatedAt+" 已逾期未完成的任务。";',
+    '  var context=document.getElementById("rea-tasks-context");context.hidden=false;context.textContent=text;',
+    '  document.getElementById("rea-tasks-help").setAttribute("data-tip",text+"任务数按条统计，进度按人次统计；可按部门、大类和类型进一步筛选。");',
+    '  if(metric==="completed")document.getElementById("rea-tasks-date-title").textContent="下发 / 完成时间";',
+    '}',
     'function setWinUi(){',
     '  var ls=document.querySelectorAll("[data-tasks-win]"),i,on;',
     '  for(i=0;i<ls.length;i++){',
@@ -17722,7 +17765,7 @@ function taskScope(rs,metric,range){
     '  }',
     '}',
     'var wg=document.getElementById("rea-tasks-win");',
-    'if(wg)wg.addEventListener("click",function(e){',
+    'if(wg&&!DETAIL)wg.addEventListener("click",function(e){',
     '  var n=e.target,id=null;',
     '  while(n&&n!==wg&&n.nodeType===1){',
     '    if(n.getAttribute&&n.getAttribute("data-tasks-win")){id=n.getAttribute("data-tasks-win");break}',
@@ -17753,7 +17796,7 @@ function taskScope(rs,metric,range){
     '  CURP=v;',
     '  if(CURT!=="all"&&typePlat(CURT)!==v){CURT="all";seedSel("rea-tasks-type","all")}',
     '});',
-    'bindSel("rea-tasks-state",function(v){CURS=v});',
+    'if(!DETAIL)bindSel("rea-tasks-state",function(v){CURS=v});',
     '',
     '/* ---------- 左侧部门树＝本页的部门轴 ----------',
     '   快照那棵树写的是演示用例的「测试二级三部／测试3级」，与台账的 8 个部门对不上；',
@@ -17796,7 +17839,7 @@ function taskScope(rs,metric,range){
     '  if(ci)ci.hidden=false;',
     '  if(cl)cl.textContent=mdOff(RANGE[0])+" ~ "+mdOff(RANGE[1]);',
     '}',
-    'stamp();setWinUi();paint();',
+    'stamp();setDetailUi();setWinUi();paint();',
     '})();'
    ].join('\n');
   }
@@ -23531,6 +23574,7 @@ if(ST){
     /* 素材库列表只补一列「使用情况」，正文仍是快照（不带 html） */
     '素材库': { css: REA_MLUSE_CSS, js: reaMatListUseJs },
     '微小助看板 · 任务列表': { html: 'srcBoardTasks', css: REA_BOARD_CSS, js: reaBoardTasksJs },
+    [REA_METRIC_PAGE]: { html: 'srcBoardTasks', css: REA_BOARD_CSS, js: reaBoardTasksJs },
     '微小助看板 · 执行人明细': { html: 'srcBoardTask', css: REA_BOARD_CSS, js: reaBoardTaskJs },
     '微小助看板 · 执行人详情': { html: 'srcBoardPerson', css: REA_BOARD_CSS, js: reaBoardPersonJs },
     '素材库 · 新建': { css: REA_MAT_CSS, js: reaMatJs },
@@ -23592,7 +23636,7 @@ if(ST){
     }
     var board = find(REA_BOARD_PAGE);
     if (board){
-      var add = [REA_OVERVIEW_PAGE, '使用总览 · 使用详情', 'App 工具看板', REA_HOST_PAGE, REA_HOST_LOG, REA_TASKS_PAGE, REA_DETAIL_TASK, REA_PERSON_PAGE];
+      var add = [REA_OVERVIEW_PAGE, '使用总览 · 使用详情', 'App 工具看板', REA_HOST_PAGE, REA_HOST_LOG, REA_TASKS_PAGE, REA_METRIC_PAGE, REA_DETAIL_TASK, REA_PERSON_PAGE];
       for (i = 0; i < add.length; i++){
         P.pages.push({
           name: add[i],
@@ -23663,11 +23707,12 @@ if(ST){
         + 'window.__REA_HOST=' + reaJson(reaHostPreset || null) + ';';
     }
     if (name === REA_BOARD_PAGE && reaRows) return 'window.__REA_WIN=' + reaJson(reaWinSel) + ';window.__REA_RANGE=' + reaJson(reaWinRange) + ';';
-    if (name !== REA_DETAIL_TASK && name !== REA_TASKS_PAGE && name !== REA_PERSON_PAGE) return '';
+    if (name !== REA_DETAIL_TASK && name !== REA_TASKS_PAGE && name !== REA_METRIC_PAGE && name !== REA_PERSON_PAGE) return '';
     var js = 'window.__REA_ROWS=' + reaJson(reaRows || []) + ';'
       + 'window.__REA_WIN=' + reaJson(reaWinSel || 'w7') + ';'
       + 'window.__REA_RANGE=' + reaJson(reaWinSel === 'custom' ? (reaWinRange || null) : null) + ';';
-    if (name === REA_TASKS_PAGE){
+    if (name === REA_METRIC_PAGE) js += 'window.__REA_METRIC_DETAIL=' + reaJson(reaMetricDetail) + ';';
+    if (name === REA_TASKS_PAGE || name === REA_METRIC_PAGE){
       /* 任务列表的四轴筛选：从部门行点进来时带一个预选值，从类型占比卡点进来带平台、',
          或平台＋类型，其余从「任务列表」链接进来全是 all。 */
       js += 'window.__REA_PLAT=' + reaJson(reaPlatSel || 'all') + ';'
@@ -24191,6 +24236,7 @@ if(ST){
   var reaHostWinSel = 'w7', reaHostPreset = null; // AI托管看板：窗口 ＋ 日志页的预选（员工／类型）
   var reaPlatSel = 'all'; // 任务列表的预选筛选：大类（从任务类型分布卡的一段／横条点进来时有值）
   var reaTypeSel = 'all'; // 同上：任务类型（从外环一段点进来时，平台和类型一起带上）
+  var reaMetricDetail = null; // 指标明细的固定范围与数据更新时间
   var reaStateSel = 'all';// 同上：状态
   var reaOrgSel = 'all';  // 同上：部门（从部门完成情况的一行点进来时有值）
   var reaSortSel = 'debt';// 执行人明细的排序：debt（旧口径）/ done（完成人次）/ rate（完成率）
@@ -24704,6 +24750,7 @@ document.addEventListener('click',function(event){
          进来带大类，从下钻后的类型条进来带大类＋类型；从「任务列表」链接进来全 all；
          从排行进来带 done/rate，从「执行人明细」链接进来回到 debt。
          执行人明细自己点过列头时会把列与方向一起带过来（详情页往返用）。 */
+      reaMetricDetail = d.reaMetricDetail || null;
       reaPlatSel = d.reaPlat || 'all';
       reaTypeSel = d.reaType || 'all'; reaStateSel = d.reaState || 'all'; reaOrgSel = d.reaOrg || 'all';
       reaSortSel = d.reaSort || 'debt'; reaFocusSel = d.reaFocus || '';
