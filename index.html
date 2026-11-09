@@ -11071,14 +11071,6 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   }
 }
 
-.rea-ov-page .ov-board-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 24px;
-  align-items: center;
-  margin: 16px 0 24px;
-}
-
 .rea-ov-page .ov-resources {
   align-items: start;
 }</script>
@@ -11707,14 +11699,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     $("#ov-results-help").setAttribute("aria-label", help);
     if (scheme === "A") {
       $("#ov-results").innerHTML =
-        `<div class="ov-kpis">${heroMetrics.map((metric) => metricButton(metric, records)).join("")}</div><nav class="ov-board-links" aria-label="各看板入口">${Object.entries(
-          sources,
-        )
-          .map(
-            ([id, source]) =>
-              `<button type="button" class="ov-link" data-board="${id}">查看${source.board} →</button>`,
-          )
-          .join("")}</nav>`;
+        `<div class="ov-kpis">${heroMetrics.map((metric) => metricButton(metric, records)).join("")}</div>`;
     } else {
       $("#ov-results").innerHTML = `<div class="ov-groups">${Object.entries(
         sources,
