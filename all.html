@@ -2335,15 +2335,23 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .ball.glide{transition:left .2s var(--emph),top .2s var(--emph),right .2s var(--emph),bottom .2s var(--emph)}
 .ball.hit{animation:pulse 1s var(--emph) 2}
 @keyframes pulse{0%{box-shadow:var(--e3),0 0 0 4px rgba(255,255,255,.7)}50%{box-shadow:0 4px 12px 2px rgba(186,26,26,.45),0 0 0 9px rgba(186,26,26,.18)}100%{box-shadow:var(--e3),0 0 0 4px rgba(255,255,255,.7)}}
-/* AI 模块球（ADR-0078）＝聊天辅助浮层收起后的**自己的**折叠态，与全局素材球是两颗独立的球：
+/* AI 模块球（ADR-0078／0090）＝聊天辅助浮层收起后的**自己的**折叠态，与全局素材球是两颗独立的球：
    全局球恒在、只有单击＋拖动；这一颗在辅助浮层被收起/顶掉后出现、点它＝重开辅助浮层。
-   42px（比 54 的全局球小一档，避免两颗球等权）、tertiary-container 与菜单里那枚「聊天辅助」同一套色；
-   **自由拖拽、不贴边**（产品口径「独立拖到任意位置」）：位置只由 left/top 记住，不做 edge 半隐藏。 */
-.mball{position:absolute;right:14px;top:100px;width:42px;height:42px;border-radius:50%;
+   48px＝M3 的最小可点尺寸（原 42 小于 48，点起来发飘），仍比 54 的全局球小一档、避免两颗球等权；
+   另有 4px 的透明外环把实际可点面做到 56，球本身不再长胖。tertiary-container 与菜单里那枚
+   「聊天辅助」同一套色，右上角那枚绿点跟浮层头部的「已就位」同色——一眼认得出是同一模块的折叠态。
+   默认落在 **Dock 下方**（top 147＝Dock 底 135 ＋ 12）的右侧空白：不压 Dock 的「聊天辅助」按钮、
+   不压输入框，也不压左对齐的客户气泡；**自由拖拽、不贴边**（产品口径「独立拖到任意位置」），
+   位置只由 left/top 记住，不做 edge 半隐藏。 */
+.mball{position:absolute;right:14px;top:147px;width:48px;height:48px;border-radius:50%;
   background:var(--tertiary-container);color:var(--on-tertiary-container);z-index:73;
   display:flex;align-items:center;justify-content:center;cursor:grab;touch-action:none;user-select:none;
   box-shadow:var(--e3),0 0 0 1px rgba(255,255,255,.7)}
+.mball::before{content:'';position:absolute;inset:-4px;border-radius:50%} /* 透明外环：视觉 48、可点 56 */
+.mball:focus-visible{outline:2px solid var(--primary);outline-offset:3px}
 .mball.drag{cursor:grabbing}
+.mball-live{position:absolute;right:7px;top:7px;width:8px;height:8px;border-radius:50%;
+  background:#00D991;box-shadow:0 0 0 2px var(--tertiary-container);pointer-events:none}
 /* 模块球「等旧面板淡完再出现」（ADR-0088）：时长与延迟由 aiBallShow() 按 PMOT 写成内联，
    这里只定名字与填充方式——类摘掉即回到常态，不会把球留在半透明。 */
 @keyframes mballIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:none}}
@@ -2545,8 +2553,15 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 @keyframes panelSwapIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
 .panel.anim-out{animation:panelSwapOut .12s var(--emph) forwards;pointer-events:none}
 .panel.anim-in{animation:panelSwapIn .22s var(--emph) .04s both}
+/* 收起成球（ADR-0090）：面板不是淡掉，是**缩到模块球的位置**——落点由 JS 写成 --bx/--by/--sx/--sy。
+   时长与 PMOT.out 一致（120ms）；球在 120ms 后按 PMOT.aiBallDelay 接上，两者正好交班。
+   终点要是一个 48px 的圆：缩放后的宽高就是球的 48，圆角取 50% 才收得圆；
+   transform-origin 默认中心，translate 移动的是缩放后的中心，所以终点圆心＝球的圆心。 */
+@keyframes panelToBall{from{opacity:1;transform:none;border-radius:16.5px}
+  to{opacity:0;transform:translate(var(--bx,0),var(--by,0)) scale(var(--sx,.12),var(--sy,.12));border-radius:50%}}
+#aiPanel.to-ball{animation:panelToBall .12s var(--emph) forwards;pointer-events:none}
 /* 系统开了「减弱动效」时全部瞬切；JS 侧 pmotOff() 也会直接走同步分支，这里是第二道保险 */
-@media (prefers-reduced-motion:reduce){.panel.anim-out,.panel.anim-in,.bmenu.anim-out,.mball.anim-in,.ball.glide{animation:none;transition:none}}
+@media (prefers-reduced-motion:reduce){.panel.anim-out,.panel.anim-in,.panel.to-ball,.bmenu.anim-out,.mball.anim-in,.ball.glide{animation:none;transition:none}}
 .panel-head{flex:none;display:flex;align-items:center;gap:8px;padding:10px 14px 8px;background:var(--sc-low);border-bottom:1px solid var(--outline-variant);cursor:grab;touch-action:none;user-select:none}
 /* 面板搜索条：常态不占行（收进头部一枚 icon），点开才摊在头部下方——面板列表因此常态多一行 */
 .panel-search{flex:none;display:flex;align-items:center;gap:8px;background:var(--sc-high);border-radius:999px;height:44px;padding:0 16px;color:var(--on-surface-variant);font-size:13px;animation:fade .15s}
@@ -2648,16 +2663,24 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
    不是正确性的一部分（tools/smoke.js 第 5e 组有一条照这个口径的反向断言：强行把类加回外壳，
    标题仍必须是一行、宽度仍须 > 60px）。 */
 #hpPanel #hpTitle>.ra-hit-sec{position:absolute;left:14.8px;top:10.1px;height:19.8px;padding:0}
-/* 关闭：贴着面板右上角的角块，白 50%。左上/右下取直、右上/左下取 16.5 圆角——
+/* 角块：贴着面板右上角，白 50%。左上/右下取直、右上/左下取 16.5 圆角——
    右上那 16.5 是**跟着面板自身的圆角走**的（设计稿路径：M0 0 L28 0 C…58 30 V36 H30 C…0 6 Z）。
-   ✕ 用设计稿原路径（#AAC1E5 实心），不复用 .iconbtn：它是 48px 圆形，压不住这个角块形状。
+   不复用 .iconbtn：它是 48px 圆形，压不住这个角块形状。
    高度＝头部高（ADR-0046 由 19.8 随头部一起改到 40）：块子只跟头部齐高才吃得住面板那个 16.5 圆角
    ——只把高度留在 19.8、往下挪 10 的话，块子自己的右上圆角会伸到面板圆角之外被 .panel 裁掉。
-   ✕ 由 flex 居中，落点恰在头部中线上，与左边那行副标题同一水平线。 */
+   内容由 flex 居中，落点恰在头部中线上，与左边那行副标题同一水平线。
+   **同副壳的两个浮层在这里分叉**：命中浮层的 ✕ 是真关掉（照设计稿原路径、#AAC1E5 实心）；
+   聊天辅助浮层写「收起 ⌄」，因为它收进自己的小球、并没有被关掉（ADR-0090）。 */
 .ai-close{position:absolute;right:0;top:0;width:31.9px;height:40px;border-radius:0 16.5px 0 16.5px;
   background:rgba(255,255,255,.5);border:none;cursor:pointer;padding:0;overflow:hidden;
   display:flex;align-items:center;justify-content:center}
 .ai-close svg{display:block}
+.ai-close:active{background:rgba(255,255,255,.82)}
+/* 聊天辅助浮层的角块＝「收起」，不是「关闭」（ADR-0090）：它收进自己的模块球，浮层没被关掉。
+   ✕ 的通用词义是"关掉"，这里写「收起 ⌄」把去向说清——字是主操作名，不是装饰文案。
+   58px 宽＝两字 11px ＋ 3px 间隙 ＋ 12px 箭头 ＋ 两侧留白；高度仍与头部齐平（40），
+   角块自身的圆角才不会伸到面板圆角外被裁。命中浮层的角块仍是 ✕（那条链路是真关掉、没有球）。 */
+#aiPanel .ai-close{width:58px;gap:3px;font-size:11px;font-weight:500;color:#587AD9;transition:background .12s}
 /* 内容白卡：设计稿是白 90% + 0 2px 15px 的浅蓝投影。必须是 flex 列且 min-height:0，
    否则里面 #aiBody 的 flex:1 撑不出高度、列表不滚；position:relative + overflow:hidden 是
    滚动指示层（SB_RULES 的 .panel-list 那条）的宿主条件——sbMount 取的是 el.parentElement，
@@ -3564,10 +3587,10 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
             <button class="wx-send" onclick="wxSend()">发送</button>
           </div>
           <div class="ball" id="ball" style="right:12px;bottom:120px"></div>
-          <!-- AI 模块球（ADR-0078）：聊天辅助浮层收起/被顶掉后的**自己的**折叠态。
+          <!-- AI 模块球（ADR-0078／0090）：聊天辅助浮层收起/被顶掉后的**自己的**折叠态。
                与全局素材球是两颗独立的球——全局球恒在（素材面板开时也不收起），这一颗只在
                辅助浮层开过之后、且当前没展开时出现；点它＝重开辅助浮层（与菜单里的「聊天辅助」同一落点）。
-               位置自由拖拽、不贴边，默认落在右侧上方（避开会话输入框与素材面板的常态位置）。 -->
+               位置自由拖拽、不贴边，默认落在 Dock 下方的右侧空白（避开 Dock、输入框与客户气泡）。 -->
           <div class="mball" id="aiBall" style="display:none"></div>
           <!-- 原「命中推荐弹卡」#recPop 已于 2026-10-15 整块删除（ADR-0061）：未开启聊天辅助时的命中
                改由下面的 #hpTip ＋ #hpPanel 承担（横幅先说一声、点开才看清单），微信屏里不再有第二套「命中展示」。 -->
@@ -3621,7 +3644,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
                内容区仍是 #aiBody.panel-list，**id 与类名一个字都不能改**：
                  · tools/smoke.js 断言 `[id="aiBody"]` 全仓唯一、且类名含 panel-list；
                  · 滚动指示层只按 .panel-list 这个类选择器挂载（SB_RULES），宿主由新加的 .ai-content 承担。
-               结构：.panel-head（副标题／关闭，两件全绝对定位）
+               结构：.panel-head（副标题／收起，两件全绝对定位）
                      → .ai-content（内容白卡，内嵌滚动区）→ .ai-drag（底部药丸，纯装饰）。
                2026-10-14 按用户要求头部瘦身（ADR-0044）：头像、主标题「实时辅助」、「重置为本会话」三件
                删除，只剩副标题——它顶到头部左上角，头部高度随之从 65.4 收到 19.8（＝副标题自身行高，
@@ -3631,7 +3654,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
           <div class="panel ai-panel" id="aiPanel" style="display:none;left:14px;top:47px">
             <div class="panel-head" id="aiHead">
               <span class="ai-sub"><i></i>已就位，正在辅助中...</span>
-              <button class="ai-close" onclick="closeAiPanel()" title="收起"><svg width="11" height="11" viewBox="0 0 20.0017 20" fill="#AAC1E5" aria-hidden="true"><path d="M10.0008 7.94717L2.48033 0.424977C1.9137 -0.141659 0.994998 -0.141659 0.428363 0.424977C-0.138273 0.991612 -0.138273 1.91031 0.428363 2.47695L7.94717 9.99914L0.424977 17.5196C-0.141659 18.0863 -0.141659 19.005 0.424977 19.5716C0.991612 20.1382 1.91031 20.1382 2.47694 19.5716L10.0008 12.0528L17.5213 19.575C17.8879 19.9415 18.4221 20.0847 18.9228 19.9505C19.4236 19.8164 19.8147 19.4253 19.9488 18.9245C20.083 18.4238 19.9398 17.8896 19.5733 17.523L12.0545 9.99914L19.5767 2.47864C19.9432 2.11209 20.0864 1.57783 19.9522 1.07712C19.8181 0.576403 19.4269 0.185299 18.9262 0.0511333C18.4255 -0.0830329 17.8913 0.0601208 17.5247 0.42667L10.0008 7.94548V7.94717Z"/></svg></button>
+              <button class="ai-close" onclick="closeAiPanel(false,true)" title="收起为悬浮球" aria-label="收起为悬浮球"><span>收起</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button>
             </div>
             <div class="ai-content"><div id="aiBody" class="panel-list"></div></div>
             <div class="ai-drag"></div>
@@ -8431,15 +8454,24 @@ function closeBallMenu(instant){ /* 幂等：元素缺失、本来没开都不�
 }
 function pickLib(){closeBallMenu();openPanel()}
 function pickRa(){closeBallMenu();openAiPanel()}
-/* ---------- AI 模块球（ADR-0078）----------
+/* ---------- AI 模块球（ADR-0078／0090）----------
    聊天辅助浮层收起后不再「整个关死」，而是收成**它自己的**一颗小球；全局素材球不受影响、恒在。
    两颗球是**并列的两个模块折叠态**，不是「主球＋卫星」：都能独立拖、都能直接点开各自那块浮层。
    出现条件只有两条：①这个模块开过（aiBallOn——没开过不凭空长出一颗球）；②当前没展开（aiOpen=false）。
-   不贴边、不半隐藏：产品口径「独立拖到任意位置」，位置由内联 left/top 记住，收起再开还在原处。 */
+   不贴边、不半隐藏：产品口径「独立拖到任意位置」，位置由内联 left/top 记住，收起再开还在原处。
+   ADR-0090 起：48px（＋4px 透明外环）、闪电＋右上绿点、可聚焦；收起时面板缩向它的圆心，
+   不是淡出后另起一颗球——用户得看见「这块面板变成了这颗球」。 */
 var aiBallOn=false;
 function aiBallInit(){
   var b=$('aiBall');if(!b)return;
-  b.innerHTML=I('sparkle',19,2.1);
+  /* 绿点＝「辅助还在跑」，与浮层头部那枚「已就位」同色同义；不是未读数（未读另有语义，别混用） */
+  b.innerHTML=I('sparkle',21,2.1)+'<span class="mball-live" aria-hidden="true"></span>';
+  b.setAttribute('role','button');
+  b.setAttribute('tabindex','0');
+  b.setAttribute('aria-label','打开辅助回复');
+  b.addEventListener('keydown',function(e){
+    if(e.key==='Enter'||e.key===' '){e.preventDefault();openAiPanel()}
+  });
   aiBallDrag(b);
   aiBallShow();
 }
@@ -8476,8 +8508,8 @@ function aiBallDrag(b){
     if(Math.abs(e.clientX-sx)>5||Math.abs(e.clientY-sy)>5)moved=true;
     if(!moved)return;
     var k=(inner.width||412)/412;
-    b.style.left=Math.max(0,Math.min((ox+(e.clientX-sx)-inner.left)/k,412-42))+'px';
-    b.style.top=Math.max(44,Math.min((oy+(e.clientY-sy)-inner.top)/k,916-42-16))+'px';
+    b.style.left=Math.max(0,Math.min((ox+(e.clientX-sx)-inner.left)/k,412-48))+'px';
+    b.style.top=Math.max(44,Math.min((oy+(e.clientY-sy)-inner.top)/k,916-48-16))+'px';
     b.style.right='auto';
   });
   b.addEventListener('pointerup',function(){
@@ -8486,6 +8518,15 @@ function aiBallDrag(b){
     openAiPanel();                /* 单击＝主操作：收起的那块浮层重新展开 */
   });
   b.addEventListener('pointercancel',function(){down=false;moved=false;b.classList.remove('drag')});
+}
+/* 模块球的圆心（412×916 布局像素）＝收起动画的落点。**不能量 rect**：球 display:none 时 rect 全 0，
+   而且外层 .phone 带 scale，rect 是视觉像素。默认位置跟 CSS 的 right:14/top:147 是同一对数，改那边要同改这里。 */
+function aiBallCenter(){
+  var b=$('aiBall'),w=48,h=48,l,t;
+  l=parseFloat(b&&b.style.left);t=parseFloat(b&&b.style.top);
+  if(!isFinite(l))l=412-14-w;
+  if(!isFinite(t))t=147;
+  return {x:l+w/2,y:t+h/2};
 }
 /* 命中角标：未处理命中数（打开面板即视为已处理，清零隐藏） */
 function ballBadge(){
@@ -8513,7 +8554,7 @@ function panelShow(el,swap){
   if(!el)return;
   var already=el.style.display!=='none'&&!el.classList.contains('anim-out'); /* 已亮着＝重开同一块，不重播动效 */
   if(el._pt){clearTimeout(el._pt);el._pt=null}
-  el.classList.remove('anim-out');
+  el.classList.remove('anim-out','to-ball');
   if(already){el.style.display='flex';return}
   if(swap&&!pmotOff()&&PMOT.in>0)el.classList.add('anim-in');
   else el.classList.remove('anim-in');           /* 首次打开：清掉旧类，让基类 popCard 接手 */
@@ -8522,7 +8563,7 @@ function panelShow(el,swap){
 function panelHide(el,instant){
   if(!el)return;
   if(el._pt){clearTimeout(el._pt);el._pt=null}
-  el.classList.remove('anim-in');
+  el.classList.remove('anim-in','to-ball');
   if(el.style.display==='none')return;           /* 本来就没开：不排定时器，也不留退场类 */
   if(instant||pmotOff()||PMOT.out<=0){el.classList.remove('anim-out');el.style.display='none';return}
   el.classList.add('anim-out');
@@ -8532,7 +8573,7 @@ function panelHide(el,instant){
 function panelFinish(el){
   if(!el)return;
   if(el._pt){clearTimeout(el._pt);el._pt=null}
-  el.classList.remove('anim-out','anim-in');
+  el.classList.remove('anim-out','anim-in','to-ball');
   el.style.display='none';
 }
 function ballGlide(b){
@@ -9514,7 +9555,7 @@ function raAnsFor(msg,v){
 /* _txt＝填进输入框/发出去的那一整段。刻意拼成**单行**：微信输入框是单行 input（按规范会把 \n 抹掉），
    真实用户也不可能在微信里发换行——卡片上分行的导语/要点/收束句，发出去就是一句话带序号。 */
 function raFull(s){return s.lead+' '+s.pts.map(function(t,i){return (i+1)+'. '+t}).join(' ')+' '+s.tail}
-function aiToggle(){ if(aiOpen)closeAiPanel(); else openAiPanel(); }
+function aiToggle(){ if(aiOpen)closeAiPanel(false,true); else openAiPanel(); }
 function openAiPanel(){
   closeBallMenu();                    /* 同上：浮层开＝菜单收 */
   var swap=panelOpen||hpOpen;         /* 捕获在关闭之前：有另一块在场＝这次是"换掉"，走并叠（ADR-0088） */
@@ -9541,14 +9582,37 @@ function openAiPanel(){
   var ph=$('aiHead'); if(ph&&!ph._dragged){panelDrag(ph);ph._dragged=true} /* 复用面板头部拖拽（closest('.panel') 成立） */
   if(!S.aiTipsSeen)aiTipsShow();       /* 首次说明弹窗 */
 }
-function closeAiPanel(instant){
+/* 收起成球（ADR-0090）：把面板的中心一路缩到模块球的圆心，球就是这块面板的折叠态，不是新冒出来的东西。
+   落点与尺寸都按 412×916 布局像素算，不受外层 .phone 的 scale 影响；时长＝PMOT.out（120ms），
+   球的进场延迟＝PMOT.aiBallDelay（120ms）——面板落 display:none 的同一下，球开始淡入，正好交班。
+   减弱动效或时长为 0 时不走这条，由 closeAiPanel 落回 panelHide 的同步分支。 */
+function aiCollapseToBall(p){
+  if(!p)return;
+  if(p._pt){clearTimeout(p._pt);p._pt=null}
+  p.classList.remove('anim-in','anim-out');
+  var bc=aiBallCenter(),pcx=p.offsetLeft+p.offsetWidth/2,pcy=p.offsetTop+p.offsetHeight/2;
+  p.style.setProperty('--bx',(bc.x-pcx).toFixed(1)+'px');
+  p.style.setProperty('--by',(bc.y-pcy).toFixed(1)+'px');
+  p.style.setProperty('--sx',(48/Math.max(1,p.offsetWidth)).toFixed(4));
+  p.style.setProperty('--sy',(48/Math.max(1,p.offsetHeight)).toFixed(4));
+  p.classList.add('to-ball');
+  p._pt=setTimeout(function(){
+    p._pt=null;p.style.display='none';p.classList.remove('to-ball');
+  },PMOT.out);
+}
+function closeAiPanel(instant,toBall){
   aiOpen=false;
   if(hpChild)closeHpPanel(instant); /* 下钻的清单是它的下一层（ADR-0089）：这一层收，那一层不能留在屏上裸着 */
   raStreamStop(); /* 浮层都不在了，流式链必须掐断——否则 timer 会继续在隐藏的卡片上敲字 */
   raBatchReset();  /* 收起＝没人看着这一问了：停掉 3 秒计时，重开时按会话重建（收口的流不会在隐藏卡片上跑） */
-  panelHide($('aiPanel'),instant); /* 120ms 淡出后才落 display（ADR-0088） */
-  /* 收起＝**收成它自己的小球**（ADR-0078，产品口径），不是整个关死；全局素材球照旧不动。
-     被别的浮层顶掉时走的也是这里（openPanel → closeAiPanel），所以"顶掉"与"收起"同一个去向。 */
+  var p=$('aiPanel');
+  /* 用户按「收起」或 Dock 开关（toBall=true）：面板缩到模块球；
+     被别的浮层顶掉（openPanel → closeAiPanel，不带 toBall）仍走原来的淡出——屏上另有一块面板正在进场，
+     再飞一颗球会抢动作线。两条路都收成同一颗球，只是动作不同。 */
+  if(toBall&&!instant&&!pmotOff()&&PMOT.out>0&&S.floatOn&&aiBallOn)aiCollapseToBall(p);
+  else panelHide(p,instant); /* 120ms 淡出后才落 display（ADR-0088） */
+  /* 收起＝**收成它自己的小球**（ADR-0078／0090，产品口径），不是整个关死；全局素材球照旧不动。
+     被别的浮层顶掉时也是同一个去向。 */
   aiBallShow();
 }
 function raSwap(i){
