@@ -20262,11 +20262,45 @@ return {open:open,friends:friends};
 `;
   }
 
-  /* 「群发好友 · 详情」的覆盖脚本：把「群发好友数」那一列接到共用弹窗上。
-     好友行按数字生成，发送时间从页内「任务信息」的有效期起算。 */
+  /* 「群发好友 · 详情」的覆盖脚本：① 补任务信息的只读回显；② 把「群发好友数」
+     那一列接到共用弹窗上。好友行按数字生成，发送时间从页内「任务信息」的有效期起算。 */
   function reaQfDetailJs(){
     return `(function(){
 ${reaQfListJs()}
+/* 任务信息只读回显（2026-11-10）：创建页重排后，发送类型、群发范围与按微信标签
+   那三项、循环方式在详情页都没有落点。照「群发群组 · 详情」的做法在快照的
+   p 行后补只读行，不动 _online-admin.js。快照只有一条演示任务，值按演示口径写；
+   拿到真实任务数据后换成读字段即可。三个标签行只在「按微信标签」时才有值。 */
+(function(){
+  var BODY=document.querySelector('[class*="_task_information_body_"]');
+  if(!BODY||BODY.querySelector("[data-rea-qf-info]"))return;
+  function nm(s){return String(s==null?"":s).replace(/\\s+/g,"")}
+  function findRow(t){
+    var ps=BODY.querySelectorAll("p"),k;
+    for(k=0;k<ps.length;k++){if(nm(ps[k].textContent).indexOf(t)===0)return ps[k]}
+    return null;
+  }
+  function add(ref,label,value){
+    var p=document.createElement("p");
+    p.setAttribute("data-rea-qf-info","1");
+    var a=document.createElement("span");a.textContent=label+"：";
+    var b=document.createElement("span");b.textContent=value;
+    p.appendChild(a);p.appendChild(b);
+    ref.parentNode.insertBefore(p,ref.nextSibling);
+    return p;
+  }
+  var rType=findRow("任务类型："),rExec=findRow("执行人员：");
+  if(!rType||!rExec)return;
+  /* 详情里「任务类型」是任务大类（群发好友），创建页的同名字段是循环方式，
+     这里换一个标签名，免得同一块里出现两行「任务类型」。 */
+  add(rType,"循环方式","单次任务");
+  var ref=rExec;
+  ref=add(ref,"发送类型","群发助手");
+  ref=add(ref,"群发范围","按微信标签");
+  ref=add(ref,"是否按照整个标签发送","按照整个标签");
+  ref=add(ref,"匹配方式","精确搜索");
+  ref=add(ref,"标签名称","老客户;双十一");
+})();
 function txt(n){return ((n&&n.textContent)||"").replace(/\\s+/g,"")}
 function infoVal(label){
   var ps=document.querySelectorAll("p"),i;
