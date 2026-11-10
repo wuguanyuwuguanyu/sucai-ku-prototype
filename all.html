@@ -9149,8 +9149,9 @@ function pRowHtml(m){
       +'<button class="pc-btn pur" onclick="event.stopPropagation();momentsA(\''+m.id+'\')" title="保存素材（下载全部附件＋复制文案）">'+I('download',13,2.2)+'</button>'
     :'<button class="pc-btn" onclick="event.stopPropagation();oneKeySend(\''+m.id+'\')" title="一键发送（文字＋附件）">'+I('send',13,2.2)+'</button>'
       +'<button class="pc-btn pur" onclick="event.stopPropagation();quickCopy(\''+m.id+'\')" title="'+(ft?'复制并填入输入框':'这条素材没有文字内容，附件可直接发送')+'">'+I('copy',13,2.2)+'</button>';
+  /* 摊开后副标题让位：展开区已经把完整内容摊在眼前，标题下再留一行摘要＝同一件事说两遍（2026-11-10） */
   return '<div class="p-card" onclick="pRowTap(\''+m.id+'\')">'+tag
-    +'<div class="pc-b"><h5>'+esc(t)+'</h5><p>'+sub+'</p></div>'
+    +'<div class="pc-b"><h5>'+esc(t)+'</h5>'+(open?'':'<p>'+sub+'</p>')+'</div>'
     +'<div class="pc-acts">'+acts+'</div>'
     +'</div>'
     +(open?pExpHtml(m):'');
@@ -9526,8 +9527,9 @@ function hpRow(m){
   var sub='<span class="rah-kw">命中「'+esc(ks.length?ks.join('」「'):m.keywords[0])+'」</span>'
     +' · <span class="ra-hit-src">'+(m.personal?'个人':'企业')+'</span>'+(m.date?' · '+esc(m.date):'')
     +' · '+(ft?cut(ft,26):'这条素材只有附件、没有文字内容');
+  /* 摊开后副标题让位（与素材面板 .p-card 同一条）：展开区已把内容摊全，摘要行不再重复 */
   return '<div class="ra-hit-row">'
-    +'<div class="rah-b" onclick="hpTap(\''+m.id+'\')"><h5>'+esc(matTitle(real))+'</h5><p>'+sub+'</p></div>'
+    +'<div class="rah-b" onclick="hpTap(\''+m.id+'\')"><h5>'+esc(matTitle(real))+'</h5>'+(open?'':'<p>'+sub+'</p>')+'</div>'
     +'<span class="rah-q">'
       +'<button class="psend" onclick="oneKeySend(\''+m.id+'\')" title="一键发送（文字＋附件）">'+I('send',12,2.2)+'</button>'
       +'<button class="rp-btn ghost'+(ft?'':' dim')+'" style="flex:none;padding:0 12px" onclick="quickCopy(\''+m.id+'\')" title="'+(ft?'复制并填入输入框':'这条素材没有文字内容，附件可直接发送')+'">'+I('copy',12,2.2)+'</button>'
@@ -10069,8 +10071,9 @@ function raHitRow(m,fresh,i,r){
   var kwh=kws.length?' · 命中<span class="rah-kw">'+kws.map(function(k){return '「'+esc(k)+'」'}).join('')+'</span>':'';
   var sub='<span class="ra-hit-src">'+(m.personal?'个人':'企业')+'</span>'+kwh
     +' · '+(ft?cut(ft,30):'这条素材只有附件、没有文字内容');
+  /* 摊开后副标题让位（与素材面板 .p-card 同一条）：展开区已把内容摊全，摘要行不再重复 */
   return '<div class="ra-hit-row'+(fresh?' fresh':'')+'">'
-    +'<div class="rah-b" onclick="raHitTap('+i+',\''+m.id+'\')"><h5>'+esc(matTitle(real))+'</h5><p>'+sub+'</p></div>'
+    +'<div class="rah-b" onclick="raHitTap('+i+',\''+m.id+'\')"><h5>'+esc(matTitle(real))+'</h5>'+(open?'':'<p>'+sub+'</p>')+'</div>'
     /* 行尾双快取＝与素材面板行同一套动线（发送在内侧、复制守右缘），换成 AI 浮层里也一样是肌肉记忆 */
     +'<span class="rah-q">'
       +'<button class="psend" onclick="oneKeySend(\''+m.id+'\')" title="一键发送（文字＋附件）">'+I('send',12,2.2)+'</button>'
