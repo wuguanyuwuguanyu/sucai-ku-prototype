@@ -2482,10 +2482,12 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .ra-hit-badge{font-size:9.5px;font-weight:600;color:var(--on-primary-container);background:var(--primary-container);border-radius:999px;padding:2px 7px;flex:none}
 .ra-hit-badge.new{background:var(--primary);color:#fff}
 .ra-hit-n{font-weight:400;color:var(--on-surface-variant)}
-.ra-hit-row{display:flex;align-items:center;gap:11px;background:var(--sc);border-radius:var(--shape-m);padding:11px 13px;margin-bottom:9px;position:relative;overflow:hidden;cursor:pointer;z-index:1;
+.ra-hit-row{display:flex;align-items:flex-start;gap:11px;background:var(--sc);border-radius:var(--shape-m);padding:11px 13px;margin-bottom:9px;position:relative;overflow:hidden;cursor:pointer;z-index:1;
   transition:border-radius .18s var(--emph)} /* 展开时下圆角收掉、和展开区拼成同一块「翻开的卡」；z-index 让展开区收回时藏到卡底下。
     整行都是开合开关（点击绑在行上，不是标题块）：收起态点它展开，展开态点它收起，同一个位置。
-    不给静态暗示——没有箭头、没有小舌、没有悬停（手机没有鼠标）；可点性交给按下水波纹＋开合动效。 */
+    不给静态暗示——没有箭头、没有小舌、没有悬停（手机没有鼠标）；可点性交给按下水波纹＋开合动效。
+    标题块顶对齐、不随行高居中：展开时副标题让位、行矮 8px，若整体居中标题会往下掉 5px——
+    开合之间标题必须钉在原地，所以标题块吃 padding-top，右侧两枚快捷钮单独居中（.rah-q）。 */
 .ra-hit-row .rah-b{flex:1;min-width:0}
 .ra-hit-row .rah-b h5{font-size:16px;font-weight:500;color:var(--on-surface);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ra-hit-row .rah-b p{font-size:10.5px;color:var(--on-surface-variant);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -2498,7 +2500,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .ra-hit-more{display:block;width:100%;box-sizing:border-box;margin:0 0 9px;padding:9px 0;border:none;
   border-radius:var(--shape-m);background:var(--sc);color:var(--primary);font-family:inherit;
   font-size:11px;font-weight:500;cursor:pointer}
-.rah-q{flex:none;display:flex;align-items:center;gap:6px}
+.rah-q{flex:none;display:flex;align-items:center;gap:6px;align-self:center}
 /* 展开态：卡片只留上圆角、展开区只留下圆角，两截严丝合缝拼成一块完整的「翻开的卡」；
    展开区从卡底抽出来（往下 10px 滑入＋淡入），收起时原路缩回去（.closing，见 raHitTap／hpTap）。 */
 .ra-hit-row.open{border-radius:var(--shape-m) var(--shape-m) 0 0;margin-bottom:0}
