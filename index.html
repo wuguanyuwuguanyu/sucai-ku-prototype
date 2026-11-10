@@ -19973,9 +19973,9 @@ function taskScope(rs,metric,range){
 
   /* 「发圈 · 详情」的覆盖脚本（2026-11-10）：创建页重排后，把详情页缺的配置补成只读行。
      快照的「任务信息」原先只有任务名称、大类、状态、有效期、素材分类、执行人员、已发送、素材；
-     脚本在「执行人员」后补六行——可见范围、提醒谁看、任务内容（点标题开弹窗看）、所在位置、
-     循环方式、自动发送。全局弹窗不回显。任务内容不在这行里铺开，点开弹窗看，与发圈列表
-     「群发内容」那一列的读法一致；弹窗里的卡片就是客户在朋友圈看到的那张图文。
+     脚本在「执行人员」后补六行——可见范围、提醒谁看、任务内容（行内固定写「查看」）、所在位置、
+     循环方式、自动发送。全局弹窗不回显。任务内容不在这行里铺开，点「查看」抬弹窗，
+     弹窗里就是这条朋友圈最终发出去的样子：昵称、正文或文章卡、所在位置，照朋友圈的排版。
      正文仍是快照，脚本只插 <p><span>标签：</span><span>值</span></p>，不抄整页；
      按「执行人员：」定位，不认行序——重抓快照后行序变了也不会插错。
      值按快照那条演示任务的口径写（全部好友／重点客户、老客户／文章「撒打算」／
@@ -20005,7 +20005,8 @@ for(i=0;i<ps.length;i++){
   if(t.indexOf('执行人员：')===0){anchor=ps[i];break}
 }
 if(!anchor)return;
-var THUMB='<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#98a2b3" stroke-width="1.5" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="M21 15l-4.6-4.6L7 20"/></svg>';
+var THUMB='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#98a2b3" stroke-width="1.5" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="M21 15l-4.6-4.6L7 20"/></svg>';
+var PIN='<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>';
 function row(label,value,attr){
   var p=document.createElement('p');p.setAttribute(attr,'1');
   var a=document.createElement('span');a.textContent=label;
@@ -20017,7 +20018,7 @@ function contentRow(){
   var a=document.createElement('span');a.textContent='任务内容：';
   var b=document.createElement('span');
   var lnk=document.createElement('button');
-  lnk.type='button';lnk.className='rea-fqc-link';lnk.textContent='撒打算';
+  lnk.type='button';lnk.className='rea-fqc-link';lnk.textContent='查看';
   lnk.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();openContent()});
   b.appendChild(lnk);p.appendChild(a);p.appendChild(b);return p;
 }
@@ -20030,14 +20031,22 @@ function openContent(){
   w.innerHTML=[
     '<div class="ant-modal-mask"></div>',
     '<div class="ant-modal-wrap ant-modal-centered">',
-    '<div class="ant-modal css-vgijab rea-fqc-modal" role="dialog" aria-modal="true" aria-label="发圈内容" style="width:560px">',
+    '<div class="ant-modal css-vgijab rea-fqc-modal" role="dialog" aria-modal="true" aria-label="朋友圈预览" style="width:560px">',
     '<div class="ant-modal-content">',
     '<button type="button" class="ant-modal-close" aria-label="关闭"><span class="ant-modal-close-x">×</span></button>',
-    '<div class="ant-modal-header"><div class="ant-modal-title">发圈内容</div></div>',
+    '<div class="ant-modal-header"><div class="ant-modal-title">朋友圈预览</div></div>',
     '<div class="ant-modal-body">',
-    '<div class="rea-fqc-card"><div class="rea-fqc-thumb">'+THUMB+'</div>',
-    '<div class="rea-fqc-meta"><div class="rea-fqc-title">撒打算</div>',
-    '<div class="rea-fqc-sub">文章 · 链接跟踪</div></div></div>',
+    '<div class="rea-fqc-moments">',
+    '<div class="rea-fqc-mrow">',
+    '<div class="rea-fqc-mava" aria-hidden="true">张</div>',
+    '<div class="rea-fqc-mbody">',
+    '<div class="rea-fqc-mname">张伯阳</div>',
+    '<div class="rea-fqc-mlink"><div class="rea-fqc-mthumb">'+THUMB+'</div>',
+    '<div class="rea-fqc-mmeta"><div class="rea-fqc-mtitle">撒打算</div>',
+    '<div class="rea-fqc-msrc">云小助</div></div></div>',
+    '<div class="rea-fqc-mloc">'+PIN+'<span>上海静安嘉里中心</span></div>',
+    '<div class="rea-fqc-mfoot"><span>1分钟前</span><span class="rea-fqc-mact">赞　评论</span></div>',
+    '</div></div></div>',
     '</div>',
     '<div class="ant-modal-footer">',
     '<button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-rea-fq-close><span>关 闭</span></button>',
@@ -20072,16 +20081,25 @@ for(i=0;i<rows.length;i++){
   }
 
   /* 「发圈 · 详情」补的只读行与内容弹窗样式。前缀用 rea-fqc-（content），
-     避开新建页那组 rea-fq-*（四段结构、下拉、时间控件），两页的样式互不相干。 */
+     避开新建页那组 rea-fq-*（四段结构、下拉、时间控件），两页的样式互不相干。
+     弹窗按朋友圈的排版画单条动态：头像＋昵称、正文或文章卡、所在位置、时间与赞／评论。 */
   var REA_FQ_DETAIL_CSS=[
     '.rea-fqc-link{border:0;background:none;padding:0;font:inherit;color:#1677ff;cursor:pointer}',
     '.rea-fqc-link:hover{text-decoration:underline}',
     '.rea-fqc-modal .ant-modal-body{padding-top:4px}',
-    '.rea-fqc-card{display:flex;align-items:center;gap:14px;padding:14px;background:#f7f9fc;border-radius:8px}',
-    '.rea-fqc-thumb{flex:none;width:88px;height:88px;border-radius:6px;background:#e9edf4;display:flex;align-items:center;justify-content:center}',
-    '.rea-fqc-meta{min-width:0}',
-    '.rea-fqc-title{font-size:16px;line-height:24px;color:#1f2329;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
-    '.rea-fqc-sub{margin-top:6px;font-size:13px;line-height:20px;color:#646a73}'
+    '.rea-fqc-moments{border-top:1px solid #ededed;border-bottom:1px solid #ededed;background:#fff}',
+    '.rea-fqc-mrow{display:flex;gap:10px;padding:16px 4px 14px}',
+    '.rea-fqc-mava{flex:none;display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:4px;background:#2e448f;color:#fff;font-size:16px;line-height:1}',
+    '.rea-fqc-mbody{flex:1;min-width:0}',
+    '.rea-fqc-mname{margin-bottom:6px;font-size:15px;line-height:20px;color:#2e448f;font-weight:500}',
+    '.rea-fqc-mlink{display:flex;gap:8px;width:100%;padding:6px;border-radius:4px;background:#f7f7f7;box-sizing:border-box}',
+    '.rea-fqc-mthumb{flex:none;display:flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:3px;background:#e5e5e5}',
+    '.rea-fqc-mmeta{display:flex;flex-direction:column;justify-content:space-between;min-width:0;padding:2px 0}',
+    '.rea-fqc-mtitle{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px;line-height:20px;color:#181818}',
+    '.rea-fqc-msrc{font-size:12px;line-height:16px;color:#999}',
+    '.rea-fqc-mloc{display:flex;align-items:center;gap:3px;margin-top:8px;font-size:13px;line-height:18px;color:#576b95}',
+    '.rea-fqc-mfoot{display:flex;align-items:center;justify-content:space-between;margin-top:10px;font-size:13px;line-height:20px;color:#b2b2b2}',
+    '.rea-fqc-mact{padding:2px 10px;border-radius:4px;background:#f7f7f7;font-size:13px;line-height:20px;color:#576b95}'
   ].join('\n');
 
   /* 「新小红书运营 · 详情」的覆盖脚本：把「查看任务配置快照」接回原型里的快照页。
