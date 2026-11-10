@@ -10338,24 +10338,24 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
           <h1>使用总览</h1>
           <p id="ov-range" class="ov-muted"></p>
         </div>
-        <button
-          type="button"
-          class="ov-help ov-help-button ov-help-right"
-          data-action="definitions"
-          aria-label="数据说明"
-          data-tip="数据说明"
-        >
-          ?
-        </button>
-      </header>
-      <div class="ov-toolbar">
-        <div class="ov-periods" role="group" aria-label="统计时间范围">
-          <button type="button" data-period="day">今日</button
-          ><button type="button" data-period="week">近一周</button
-          ><button type="button" data-period="month">近一月</button
-          ><button type="button" data-period="quarter">近三月</button>
+        <div class="ov-toolbar">
+          <div class="ov-periods" role="group" aria-label="统计时间范围">
+            <button type="button" data-period="day">今日</button
+            ><button type="button" data-period="week">近一周</button
+            ><button type="button" data-period="month">近一月</button
+            ><button type="button" data-period="quarter">近三月</button>
+          </div>
+          <button
+            type="button"
+            class="ov-help ov-help-button ov-help-right"
+            data-action="definitions"
+            aria-label="数据说明"
+            data-tip="数据说明"
+          >
+            ?
+          </button>
         </div>
-      </div>
+      </header>
       <section class="ov-results-section" aria-labelledby="ov-results-title">
         <div class="ov-section-heading">
           <h2 id="ov-results-title">
@@ -10370,7 +10370,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
             >
           </h2>
         </div>
-        <div id="ov-results"></div>
+        <div id="ov-results" class="ov-panel"></div>
       </section>
       <section class="ov-people" aria-labelledby="ov-people-title">
         <div class="ov-section-heading">
@@ -10568,10 +10568,10 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 }
 .rea-ov-page .ov-heading {
   margin-bottom: 24px;
-  align-items: flex-start;
+  align-items: center;
 }
 .rea-ov-page .ov-heading p {
-  margin-top: 8px;
+  margin-top: 4px;
 }
 .rea-ov-page .ov-muted,
 .rea-ov-page .ov-footnote,
@@ -10601,11 +10601,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   color: #1f2329;
 }
 .rea-ov-page .ov-toolbar {
-  padding: 16px;
-  background: #fff;
-  border: 1px solid #e9eef6;
-  border-radius: 12px;
-  margin-bottom: 24px;
+  gap: 16px;
   flex-wrap: wrap;
 }
 .rea-ov-page .ov-periods,
@@ -10622,15 +10618,33 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   border-radius: 8px;
   padding: 8px 16px;
 }
+.rea-ov-page .ov-periods,
+.rea-ov-page .ov-tabs {
+  gap: 4px;
+  padding: 4px;
+  border-radius: 8px;
+  background: #e6f4ff;
+}
+.rea-ov-page .ov-periods button,
+.rea-ov-page .ov-tabs button {
+  border-color: transparent;
+  background: none;
+  padding: 4px 16px;
+  color: #646a73;
+  transition: background 0.15s, color 0.15s;
+}
 .rea-ov-page .ov-periods button[aria-pressed="true"],
 .rea-ov-page .ov-tabs button[aria-pressed="true"] {
-  background: #e6f4ff;
-  border-color: #1677ff;
+  background: #fff;
+  border-color: transparent;
   color: #1677ff;
   font-weight: 500;
 }
 .rea-ov-page .ov-periods button:hover,
-.rea-ov-page .ov-tabs button:hover,
+.rea-ov-page .ov-tabs button:hover {
+  background: #fff;
+  color: #1677ff;
+}
 .rea-ov-page .ov-control:hover {
   border-color: #1677ff;
 }
@@ -10661,14 +10675,14 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 15px;
-  height: 15px;
-  flex: 0 0 15px;
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
   margin-left: 6px;
   border: 1px solid #c9ced6;
   border-radius: 50%;
   color: #8f959e;
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1;
   font-weight: 600;
   font-style: normal;
@@ -10724,7 +10738,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 }
 .rea-ov-page .ov-panel {
   background: #fff;
-  border: 1px solid #e9eef6;
+  border: 1px solid transparent;
   border-radius: 12px;
   padding: 24px;
   box-shadow: 0 1px 2px rgba(19, 44, 82, 0.04);
@@ -10733,16 +10747,21 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 .rea-ov-page .ov-kpis {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 16px;
+  gap: 0;
 }
-.rea-ov-page .ov-panel .ov-kpi {
+.rea-ov-page #ov-results {
+  padding: 8px;
+}
+.rea-ov-page #ov-results .ov-kpi {
   border: 0;
   background: none;
-  min-height: 0;
-  padding: 0;
+  min-height: 120px;
+  padding: 16px 24px;
+  border-radius: 8px;
 }
-.rea-ov-page .ov-panel .ov-kpi:hover {
-  background: none;
+.rea-ov-page #ov-results .ov-kpi:hover,
+.rea-ov-page #ov-results .ov-kpi:active {
+  background: #e6f4ff;
   color: #1677ff;
 }
 .rea-ov-page .ov-kpi {
@@ -10761,7 +10780,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 .rea-ov-page .ov-kpi-head {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
 }
 .rea-ov-page .ov-kpi-head .ov-kpi-title {
   flex: 1;
@@ -10772,15 +10791,15 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   align-items: center;
   justify-content: center;
   flex: 0 0 auto;
-  width: 36px;
-  height: 36px;
+  width: 24px;
+  height: 24px;
   border-radius: 8px;
   background: #e6f4ff;
   color: #1677ff;
 }
 .rea-ov-page .ov-kpi-icon svg {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
 }
 .rea-ov-page .ov-kpi:hover {
   background: #e6f4ff;
@@ -10794,7 +10813,8 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  font-weight: 500;
+  font-weight: 400;
+  color: #646a73;
 }
 .rea-ov-page .ov-kpi-title i {
   font-style: normal;
@@ -10803,12 +10823,12 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 }
 .rea-ov-page .ov-kpi-value {
   display: block;
-  font-size: 32px;
+  font-size: 30px;
   line-height: 1.3;
   letter-spacing: -0.5px;
   font-variant-numeric: tabular-nums;
   font-weight: 600;
-  margin: 16px 0 0;
+  margin: 12px 0 0;
 }
 .rea-ov-page .ov-kpi-value small,
 .rea-ov-page .ov-stat b small,
@@ -10843,6 +10863,23 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 }
 .rea-ov-page .ov-people .ov-stats {
   margin-top: 0;
+  padding: 16px 24px;
+  background: #e6f4ff;
+  border-radius: 8px;
+}
+.rea-ov-page .ov-people .ov-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  border-right: 0;
+}
+.rea-ov-page .ov-people .ov-stat > span {
+  color: #646a73;
+}
+.rea-ov-page .ov-people .ov-stat b {
+  color: #1677ff;
+  margin: 4px 0;
 }
 .rea-ov-page .ov-stats {
   display: grid;
@@ -10879,8 +10916,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   font-size: 12px;
 }
 .rea-ov-page .ov-activity-layout {
-  padding-top: 24px;
-  border-top: 1px solid #e5e8ef;
+  padding-top: 0;
 }
 .rea-ov-page .ov-chart {
   position: relative;
@@ -10898,7 +10934,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   position: absolute;
   right: 4px;
   transform: translateY(50%);
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1;
   color: #8f959e;
   font-variant-numeric: tabular-nums;
@@ -10934,7 +10970,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   padding: 0 4px;
   background: #fff;
   color: #d48806;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.4;
   white-space: nowrap;
 }
@@ -10982,7 +11018,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1;
   color: #646a73;
   font-variant-numeric: tabular-nums;
@@ -10992,7 +11028,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 .rea-ov-page .ov-bar i {
   display: block;
   background: #9cceff;
-  width: 80%;
+  width: 56%;
   min-height: 2px;
   border-radius: 6px 6px 0 0;
 }
@@ -11020,7 +11056,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 .rea-ov-page .ov-ranking-heading {
   margin-top: 24px;
   padding-top: 24px;
-  border-top: 1px solid #e5e8ef;
+  border-top: 1px solid #e9eef6;
 }
 .rea-ov-page #ov-detail .ov-stats {
   grid-template-columns: repeat(auto-fit, minmax(144px, 1fr));
@@ -11034,7 +11070,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   min-width: 0;
 }
 .rea-ov-page .ov-usage-layout > section > .ov-section-heading {
-  min-height: 36px;
+  min-height: 40px;
 }
 .rea-ov-page #ov-people-ranking tr {
   height: 56px;
@@ -11055,7 +11091,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   min-height: 56px;
   padding: 8px 0;
   border: 0;
-  border-bottom: 1px solid #e5e8ef;
+  border-bottom: 1px solid #e9eef6;
   background: none;
   text-align: left;
 }
@@ -11073,7 +11109,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 }
 .rea-ov-page .ov-feature-name strong {
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 400;
 }
 .rea-ov-page .ov-feature-row .ov-track {
   margin-top: 8px;
@@ -11101,7 +11137,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 .rea-ov-page th,
 .rea-ov-page td {
   padding: 16px;
-  border-bottom: 1px solid #e5e8ef;
+  border-bottom: 1px solid #e9eef6;
   min-height: 48px;
   font-size: 14px;
 }
@@ -11146,7 +11182,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   grid-auto-rows: 1fr;
-  gap: 8px;
+  gap: 0;
   flex: 1;
   margin-top: 4px;
 }
@@ -11155,16 +11191,20 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   flex-direction: column;
   justify-content: center;
   gap: 10px;
-  background: #f7f9fc;
+  background: none;
   border: 0;
-  border-radius: 12px;
+  border-right: 1px solid #e9eef6;
+  border-radius: 0;
   padding: 16px 14px;
   text-align: left;
   min-width: 0;
   transition: background 0.15s ease;
 }
+.rea-ov-page .ov-tier:last-child {
+  border-right: 0;
+}
 .rea-ov-page .ov-tier:hover {
-  background: #eef5ff;
+  background: #e6f4ff;
 }
 .rea-ov-page .ov-tier:active {
   background: #e6f4ff;
@@ -11188,16 +11228,16 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   height: 14px;
 }
 .rea-ov-page .ov-tier[data-tier="0"] .ov-tier-icon {
-  background: #eef4ff;
-  color: #6b8cff;
+  background: #e6f4ff;
+  color: #1677ff;
 }
 .rea-ov-page .ov-tier[data-tier="1"] .ov-tier-icon {
-  background: #e8f7f2;
-  color: #16a37c;
+  background: #e6f4ff;
+  color: #1677ff;
 }
 .rea-ov-page .ov-tier[data-tier="2"] .ov-tier-icon {
-  background: #fff4e6;
-  color: #d4791a;
+  background: #e6f4ff;
+  color: #1677ff;
 }
 .rea-ov-page .ov-tier-name {
   font-size: 13px;
@@ -11636,9 +11676,9 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
       note: "托管自动回复客户消息的记录条数",
     },
     firstTouch: {
-      name: "自动首次触达",
+      name: "自动打招呼",
       unit: "人",
-      note: "好友申请通过后，托管自动发出首条消息的客户数",
+      note: "好友申请通过后，托管自动发出打招呼消息的客户数",
     },
     friendSend: {
       name: "群发好友发送",
@@ -11693,11 +11733,11 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     "added",
     "publish",
     "message",
-    "aiReply",
+    "firstTouch",
     "material",
     "hostingTask",
     "autoReply",
-    "firstTouch",
+    "aiReply",
   ];
   const pointFeatures = ["智能回复", "画像分析", "意向客户识别"];
   const root = document.querySelector(".rea-ov-page");
@@ -11923,7 +11963,7 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
   addSeries("firstTouch", [34, 196, 790, 2410], ["hosting"], {
     host: true,
     platform: "微信 / 企业微信 / WhatsApp",
-    feature: "通过好友自动首次触达",
+    feature: "通过好友自动打招呼",
   });
   const toolTargets = [
     ["message", "发图文到好友", [7, 40, 96, 282]],
