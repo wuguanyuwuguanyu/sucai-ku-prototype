@@ -2352,8 +2352,8 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .mball.drag{cursor:grabbing}
 .mball-live{position:absolute;right:7px;top:7px;width:8px;height:8px;border-radius:50%;
   background:#00D991;box-shadow:0 0 0 2px var(--tertiary-container);pointer-events:none}
-/* 模块球「等旧面板淡完再出现」（ADR-0088）：时长与延迟由 aiBallShow() 按 PMOT 写成内联，
-   这里只定名字与填充方式——类摘掉即回到常态，不会把球留在半透明。 */
+/* 模块球「等旧面板淡完再出现」（ADR-0088）：时长与延迟由 aiBallShow() 按 PMOT 写成内联
+   （240ms 延迟 + 200ms 淡入放大），这里只定名字与填充方式——类摘掉即回到常态，不会把球留在半透明。 */
 @keyframes mballIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:none}}
 .mball.anim-in{animation-name:mballIn;animation-fill-mode:both;animation-timing-function:var(--emph)}
 .ball-badge{position:absolute;top:-4px;right:-4px;min-width:19px;height:19px;border-radius:10px;background:var(--error);color:#fff;
@@ -2541,28 +2541,34 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .hp-tip-chev{flex:none;margin-top:-9px;color:#B6C3DA;position:relative}
 
 /* 悬浮素材面板（球 = 折叠态 · M3 浮层） */
+/* 首次打开的入场不用 popCard：贴边小 popover 那套 300ms／12px／.94 放在整块浮层上几乎读不出来。
+   面板这一族单独放大一档——上移 20px、从 .9 弹回 1，时长 360ms；popCard 留给 .pop／.bmenu。 */
+@keyframes panelEnter{from{opacity:0;transform:translateY(20px) scale(.9)}to{opacity:1;transform:none}}
 .panel{position:absolute;width:330px;height:46%;background:var(--sc-low);border-radius:var(--shape-xl);
-  box-shadow:var(--e3);display:flex;flex-direction:column;animation:popCard .3s var(--emph);z-index:72;overflow:hidden}
+  box-shadow:var(--e3);display:flex;flex-direction:column;animation:panelEnter .36s var(--emph);z-index:72;overflow:hidden}
 /* ===== 浮层交接（ADR-0088）：三块面板同一套 =====
-   切换＝"换掉"不是"关一个再开一个"：旧面板 120ms 淡出＋缩到 .96，新面板从 40ms 起、220ms 淡入
-   从 .96 放大回 1（并叠约 80ms，总 260ms）；单独关闭走同一条退场。**首次打开仍用基类的 popCard**
-   （上移 12px 的落点感）——两类入场各自说清一件事，不合并。
+   切换＝"换掉"不是"关一个再开一个"：旧面板 180ms 淡出＋缩到 .96，新面板从 60ms 起、360ms 淡入
+   从 .96 放大回 1（并叠约 120ms，总 420ms）；单独关闭走同一条退场。**首次打开仍用基类的 panelEnter**
+   （上移 20px、缩放 .9 的落点感）——两类入场各自说清一件事，不合并。
    毫秒数与 JS 里的 PMOT 是同一组数：CSS 定动画、JS 起"退场到点落 display"的定时器，**改一处必须同改**。
    anim-out 期间 pointer-events:none——淡出中的面板不该再吃点击。 */
 @keyframes panelSwapOut{from{opacity:1;transform:none}to{opacity:0;transform:scale(.96)}}
 @keyframes panelSwapIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
-.panel.anim-out{animation:panelSwapOut .12s var(--emph) forwards;pointer-events:none}
-.panel.anim-in{animation:panelSwapIn .22s var(--emph) .04s both}
+.panel.anim-out{animation:panelSwapOut .18s var(--emph) forwards;pointer-events:none}
+.panel.anim-in{animation:panelSwapIn .36s var(--emph) .06s both}
 /* 收起成球（ADR-0090）：面板不是淡掉，是**缩到模块球的位置**——落点由 JS 写成 --bx/--by/--sx/--sy。
-   时长与 PMOT.out 一致（120ms）；球在 120ms 后按 PMOT.aiBallDelay 接上，两者正好交班。
+   时长与 PMOT.toBall 一致（240ms）；球在 240ms 后按 PMOT.aiBallDelay 接上，两者正好交班。
+   前 55% 保持不透明：先让面板一路缩成圆，再淡出——中途就透明的话，读不出「这块面板变成了这颗球」。
    终点要是一个 48px 的圆：缩放后的宽高就是球的 48，圆角取 50% 才收得圆；
    transform-origin 默认中心，translate 移动的是缩放后的中心，所以终点圆心＝球的圆心。 */
 @keyframes panelToBall{from{opacity:1;transform:none;border-radius:16.5px}
+  55%{opacity:1}
   to{opacity:0;transform:translate(var(--bx,0),var(--by,0)) scale(var(--sx,.12),var(--sy,.12));border-radius:50%}}
 /* #hpPanel 也在列（ADR-0093）：从二级页收起时屏上那张卡就是清单，缩成球的是它，不是被它盖住的辅助浮层 */
-#aiPanel.to-ball,#hpPanel.to-ball{animation:panelToBall .12s var(--emph) forwards;pointer-events:none}
-/* 系统开了「减弱动效」时全部瞬切；JS 侧 pmotOff() 也会直接走同步分支，这里是第二道保险 */
-@media (prefers-reduced-motion:reduce){.panel.anim-out,.panel.anim-in,.panel.to-ball,.bmenu.anim-out,.mball.anim-in,.ball.glide{animation:none;transition:none}}
+#aiPanel.to-ball,#hpPanel.to-ball{animation:panelToBall .24s var(--emph) forwards;pointer-events:none}
+/* 系统开了「减弱动效」时全部瞬切；JS 侧 pmotOff() 也会直接走同步分支，这里是第二道保险。
+   .panel／.bmenu 也要列进去：它们首次打开走的是基类的入场动画，不归 panelShow 管。 */
+@media (prefers-reduced-motion:reduce){.panel,.bmenu,.panel.anim-out,.panel.anim-in,.panel.to-ball,.bmenu.anim-out,.mball.anim-in,.ball.glide{animation:none;transition:none}}
 .panel-head{flex:none;display:flex;align-items:center;gap:8px;padding:10px 14px 8px;background:var(--sc-low);border-bottom:1px solid var(--outline-variant);cursor:grab;touch-action:none;user-select:none}
 /* 面板搜索条：常态不占行（收进头部一枚 icon），点开才摊在头部下方——面板列表因此常态多一行 */
 .panel-search{flex:none;display:flex;align-items:center;gap:8px;background:var(--sc-high);border-radius:999px;height:44px;padding:0 16px;color:var(--on-surface-variant);font-size:13px;animation:fade .15s}
@@ -8518,7 +8524,7 @@ function aiBallShow(){
   if(b.style.display==='flex')return;   /* 已亮着＝不重播入场（updateBall／dkRefresh 会反复调到这里） */
   b.style.display='flex';
   if(pmotOff()||PMOT.aiBall<=0){b.classList.remove('anim-in');return}
-  /* 等旧面板淡完再出现（ADR-0088）：120ms 延迟 + 150ms 淡入放大。它和面板占同一块区域，
+  /* 等旧面板落定再出现（ADR-0088）：240ms 延迟 + 200ms 淡入放大。它和面板占同一块区域，
      同时淡出淡入会互相稀释——错开半拍才读得出「面板收起来了，入口在这儿」。 */
   b.style.animationDuration=PMOT.aiBall+'ms';
   b.style.animationDelay=PMOT.aiBallDelay+'ms';
@@ -8580,12 +8586,12 @@ var panelOpen=false,pHitMsgs=[],aiOpen=false,pHitNew=0; /* aiOpen=辅助回复�
    （取用任一命中／关面板／✕）才结束；中间不再一条顶一条。 */
 /* ---------- 浮层交接状态机（ADR-0088）----------
    三块面板（#panel／#aiPanel／#hpPanel）共用一个开合函数对：panelShow 管进场、panelHide 管退场。
-   **切换**（有另一块在场）＝两块并叠：旧面板加 .anim-out 后仍留在屏上 120ms，新面板加 .anim-in 从 40ms 起淡入；
-   **首次打开**＝不加类，走 .panel 基类自带的 popCard（上移 12px 的落点感）。
+   **切换**（有另一块在场）＝两块并叠：旧面板加 .anim-out 后仍留在屏上 180ms，新面板加 .anim-in 从 60ms 起淡入；
+   **首次打开**＝不加类，走 .panel 基类自带的 panelEnter（上移 20px、缩放 .9 的落点感）。
    **单独关闭**＝同一条退场。退场到点才 display:none——所以"display 已经是 none 了吗"不能当"关没关"用，
    开关状态一律看 panelOpen／aiOpen／hpOpen 三个布尔。
    毫秒数必须与 CSS 里 .anim-out/.anim-in 的时长一致（CSS 那边有同样的提醒）。 */
-var PMOT={out:120,in:220,delay:40,ball:200,aiBall:150,aiBallDelay:120,menu:100};
+var PMOT={out:180,in:360,delay:60,toBall:240,ball:200,aiBall:200,aiBallDelay:240,menu:100};
 function pmotOff(){ try{return !!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)}catch(e){return false} }
 function panelShow(el,swap){
   if(!el)return;
@@ -8648,7 +8654,7 @@ function openPanel(){
 function closePanel(instant){
   panelOpen=false;
   pHitMsgs=[];pHitNew=0;              /* 关面板即收（ADR-0080）：命中推荐不跨开合残留，也结束这一批 */
-  panelHide($('panel'),instant);      /* 120ms 淡出后才落 display（ADR-0088）；resetDemo 传 true 走瞬切 */
+  panelHide($('panel'),instant);      /* 180ms 淡出后才落 display（ADR-0088）；resetDemo 传 true 走瞬切 */
   ballUnliftForPanel();               /* 面板关了：球回原位（用户拖过就不回，见 ballLift） */
   aiBallShow();                       /* 顶掉辅助浮层时它已收了球；这里再同步一次，幂等 */
   var b=$('ball');if(b)b.style.display=S.floatOn?'flex':'none';
@@ -9725,8 +9731,8 @@ function hpResumeChild(){
   var ph=$('hpHead');if(ph&&!ph._dragged){panelDrag(ph);ph._dragged=true}
 }
 /* 收起成球（ADR-0090）：把面板的中心一路缩到模块球的圆心，球就是这块面板的折叠态，不是新冒出来的东西。
-   落点与尺寸都按 412×916 布局像素算，不受外层 .phone 的 scale 影响；时长＝PMOT.out（120ms），
-   球的进场延迟＝PMOT.aiBallDelay（120ms）——面板落 display:none 的同一下，球开始淡入，正好交班。
+   落点与尺寸都按 412×916 布局像素算，不受外层 .phone 的 scale 影响；时长＝PMOT.toBall（240ms），
+   球的进场延迟＝PMOT.aiBallDelay（240ms）——面板落 display:none 的同一下，球开始淡入，正好交班。
    减弱动效或时长为 0 时不走这条，由 closeAiPanel 落回 panelHide 的同步分支。 */
 function aiCollapseToBall(p){
   if(!p)return;
@@ -9741,7 +9747,7 @@ function aiCollapseToBall(p){
   p._pt=setTimeout(function(){
     p._pt=null;p.style.display='none';p.classList.remove('to-ball');
     aiReopenRestore(p); /* 被推出屏外的那次收起：落地后再复位，别在动画里把浮层拽回墙里 */
-  },PMOT.out);
+  },PMOT.toBall||PMOT.out);
 }
 /* 推出去收起的落点（ADR-0092）：球贴在你推出去的那一侧（4px，**整颗可见**，不做半隐藏）、与松手同高。
    side：-1 左、1 右；cy＝松手时浮层中心的 y（调用方按 412×916 布局像素算好）。
@@ -9785,7 +9791,7 @@ function closeAiPanel(instant,toBall){
     if(toBall&&!pmotOff()&&PMOT.out>0&&S.floatOn&&aiBallOn)aiCollapseToBall(hp);
     else panelFinish(hp);
   }else if(toBall&&!instant&&!pmotOff()&&PMOT.out>0&&S.floatOn&&aiBallOn)aiCollapseToBall(p);
-  else{ /* 120ms 淡出后才落 display（ADR-0088） */
+  else{ /* 180ms 淡出后才落 display（ADR-0088） */
     panelHide(p,instant);
     /* 被推出屏外的那次收起若走了这条（别的浮层顶掉／减弱动效）：退场落地后同样得复位 */
     if(instant||pmotOff()||PMOT.out<=0)aiReopenRestore(p);
@@ -9797,14 +9803,14 @@ function closeAiPanel(instant,toBall){
 }
 /* 关闭（ADR-0091）＝浮层和它自己的球一起收走，入口退回九宫格「聊天辅助」与悬浮球两选一菜单。
    与「收起」分工：收起留球（就地放一边），关闭不留球；功能本身没关，随时能从入口再开。
-   aiBallOn 先落 false 再收面板：后面 aiBallShow 就不会把球拉出来，面板淡出的 120ms 里也不会闪一下球。 */
+   aiBallOn 先落 false 再收面板：后面 aiBallShow 就不会把球拉出来，面板淡出的 180ms 里也不会闪一下球。 */
 function aiCloseAll(){
   aiOpen=false;
   if(hpChild)closeHpPanel(false); /* 下钻的清单是它的下一层（ADR-0089）：这一层收，那一层不能留在屏上裸着 */
   raStreamStop(); /* 浮层都不在了，流式链必须掐断——否则 timer 会继续在隐藏的卡片上敲字 */
   raBatchReset();  /* 关闭＝没人看着这一问了：停掉 3 秒计时，重开时按会话重建 */
   aiBallOn=false; /* 这一关不再留落点；下次从入口打开后按收起，球才回来 */
-  panelHide($('aiPanel'),false); /* 与收起同一条退场（120ms 淡出），只是不再接球 */
+  panelHide($('aiPanel'),false); /* 与收起同一条退场（180ms 淡出），只是不再接球 */
   aiBallShow();    /* 幂等同步一次：球若正亮着（理论上不会，浮层开着时球是隐藏的）也一并收掉 */
   toast('已关闭聊天辅助 · 点九宫格「聊天辅助」可重新打开');
 }
