@@ -22258,7 +22258,14 @@ else if(PAGE==='群发群组 · 新建')initQs();
     +   'border-radius:50%;background:rgba(0,0,0,.45);color:#ffffff;display:flex;align-items:center;'
     +   'justify-content:center;font-size:14px}'
     /* 「从素材库选择」跟在「添加回复内容」右边，同一枚工具栏里的次按钮 */
-    + '.rea-zd-srcbtn{margin-left:8px}';
+    + '.rea-zd-srcbtn{margin-left:8px}'
+    /* 模版弹窗里补的三行配置（好友验证方式／设置标签／选择备注），行距与快照那两行一致 */
+    + '.rea-zd-frow{display:flex;align-items:center;margin-bottom:12px;font-size:14px;'
+    +   'color:rgba(0,0,0,.88)}'
+    + '.rea-zd-cflab{flex:none;margin-right:12px;font-weight:400;font-size:14px}'
+    + '.rea-zd-cfg .ant-radio-wrapper{margin-inline-end:16px}'
+    + '.rea-zd-cinp{width:200px}'
+    + '.rea-zd-cinp-note{margin-left:16px}';
 
   /* 注入脚本。**不动 _online-admin.js、不重跑构建**：模版弹窗的 DOM 是快照自带的，
      这一笔只补它缺的二级弹窗、表格行与预览。 */
@@ -22318,8 +22325,67 @@ else if(PAGE==='群发群组 · 新建')initQs();
     '  MW.appendChild(d);setTimeout(function(){if(d.parentNode)d.parentNode.removeChild(d)},2400);',
     '}',
     '',
-    'var ST={name:"",msgs:[]};',
+    'var ST={name:"",msgs:[],verify:"被动验证（客户主动添加我）",tag:"",note:"备注后缀",noteText:""};',
     'if(NAME){NAME.value=ST.name;NAME.addEventListener("input",function(){ST.name=NAME.value})}',
+    '',
+    '/* ---- 模版自己的三项配置（2026-11-10 照 App 的「自动打招呼 · 设置」补齐） ----',
+    '   快照那张模版弹窗只留了模版名称、回复内容与一枚名片开关；好友验证方式、设置标签、',
+    '   选择备注原本只在 App 侧的员工设置页里。这一笔把它们补进模版表单：',
+    '   好友验证方式／备注都是单选，默认值与 App 侧一致（被动验证、备注后缀），标签与备注内容可空。 */',
+    'function cfgRadioHtml(key,opts,cur){',
+    '  var h=\'<div class="ant-radio-group ant-radio-group-outline css-vgijab" data-zd-rg="\'+key+\'">\',i,on;',
+    '  for(i=0;i<opts.length;i++){on=opts[i]===cur;',
+    '    h+=\'<label class="ant-radio-wrapper css-vgijab\'+(on?" ant-radio-wrapper-checked":"")+\'">\'',
+    '      +\'<span class="ant-radio ant-wave-target\'+(on?" ant-radio-checked":"")+\'">\'',
+    '      +\'<input class="ant-radio-input" type="radio" name="rea-zd-\'+key+\'" value="\'+opts[i]+\'"\'+(on?" checked":"")+\'>\'',
+    '      +\'<span class="ant-radio-inner"></span></span>\'',
+    '      +\'<span class="ant-radio-label">\'+opts[i]+\'</span></label>\';',
+    '  }',
+    '  return h+"</div>";',
+    '}',
+    'function cfgHtml(){',
+    '  return \'<div class="rea-zd-frow"><span class="rea-zd-cflab">好友验证方式：</span>\'',
+    '    +cfgRadioHtml("verify",["被动验证（客户主动添加我）","主动验证（我主动添加客户）"],ST.verify)+"</div>"',
+    '    +\'<div class="rea-zd-frow"><span class="rea-zd-cflab">设置标签：</span>\'',
+    '    +\'<input id="rea-zd-tag" class="ant-input css-vgijab ant-input-outlined rea-zd-cinp"\'',
+    '    +\' placeholder="请输入" value="\'+esc(ST.tag)+\'"></div>\'',
+    '    +\'<div class="rea-zd-frow"><span class="rea-zd-cflab">选择备注：</span>\'',
+    '    +cfgRadioHtml("note",["备注前缀","备注后缀"],ST.note)',
+    '    +\'<input id="rea-zd-notetext" class="ant-input css-vgijab ant-input-outlined rea-zd-cinp rea-zd-cinp-note"\'',
+    '    +\' placeholder="请输入" value="\'+esc(ST.noteText)+\'"></div>\';',
+    '}',
+    'function syncRadios(rg,cur){',
+    '  var ls=rg.querySelectorAll(".ant-radio-wrapper"),j,on,txt,rd,ip;',
+    '  for(j=0;j<ls.length;j++){',
+    '    txt=(ls[j].querySelector(".ant-radio-label")||{}).textContent||"";on=txt===cur;',
+    '    ls[j].classList.toggle("ant-radio-wrapper-checked",on);',
+    '    rd=ls[j].querySelector(".ant-radio");if(rd)rd.classList.toggle("ant-radio-checked",on);',
+    '    ip=ls[j].querySelector("input");if(ip)ip.checked=on;',
+    '  }',
+    '}',
+    'function paintCfg(){if(CFGR)CFGR.innerHTML=cfgHtml()}',
+    'function bindCfg(w){',
+    '  w.addEventListener("click",function(e){',
+    '    var lab=e.target.closest?e.target.closest(".ant-radio-wrapper"):null;',
+    '    if(!lab||!w.contains(lab))return;',
+    '    var rg=lab.closest("[data-zd-rg]");if(!rg)return;',
+    '    var k=rg.getAttribute("data-zd-rg");',
+    '    ST[k]=(lab.querySelector(".ant-radio-label")||{}).textContent||"";',
+    '    syncRadios(rg,ST[k]);',
+    '  });',
+    '  w.addEventListener("input",function(e){',
+    '    if(e.target.id==="rea-zd-tag")ST.tag=e.target.value;',
+    '    else if(e.target.id==="rea-zd-notetext")ST.noteText=e.target.value;',
+    '  });',
+    '}',
+    'var CFGR=null;',
+    'if(NAME&&NAME.parentNode&&NAME.parentNode.parentNode){',
+    '  var nrow=NAME.parentNode;',
+    '  CFGR=document.createElement("div");CFGR.className="rea-zd-cfg";',
+    '  CFGR.innerHTML=cfgHtml();',
+    '  nrow.parentNode.insertBefore(CFGR,nrow.nextSibling);',
+    '  bindCfg(CFGR);',
+    '}',
     '',
     '/* ---- 回复内容表：行是运行时造的，快照那行空表态留着来回换 ---- */',
     'function hover(tr){',
@@ -22555,6 +22621,8 @@ else if(PAGE==='群发群组 · 新建')initQs();
     '/* 每次重新打开都是「新建」：关掉（取消／X）或保存后清空，别让上一次的稿子留在里头 */',
     'function reset(){',
     '  ST.name="";ST.msgs=[];if(NAME)NAME.value="";',
+    '  ST.verify="被动验证（客户主动添加我）";ST.tag="";ST.note="备注后缀";ST.noteText="";',
+    '  paintCfg();',
     '  closeEditor();drawMsgs();drawPreview();',
     '}',
     /* 用委托而不是按元素绑：列表页那枚「新建模版」在快照里带图标、是模板按钮，
