@@ -2505,14 +2505,17 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
    展开区从卡底抽出来（往下 10px 滑入＋淡入），收起时原路缩回去（.closing，见 raHitTap／hpTap）。 */
 .ra-hit-row.open{border-radius:var(--shape-m) var(--shape-m) 0 0;margin-bottom:0}
 .ra-hit-exp{background:var(--sc-high);border-radius:0 0 var(--shape-m) var(--shape-m);margin:0 0 9px;padding:11px 13px;
-  animation:raHitOpen .22s var(--emph);transition:transform .12s var(--emph),filter .12s var(--emph),background-color .18s var(--emph),box-shadow .18s var(--emph)}
+  animation:raHitOpen .34s var(--emph);will-change:transform,opacity;
+  transition:transform .16s var(--emph),filter .16s var(--emph),background-color .18s var(--emph),box-shadow .18s var(--emph)}
 /* 按下头部即反馈（展开态）：展开区跟着上收 4px、略压暗，手指一碰就知道「头 + 内容」是同一个开关。
    .pressed 由 ripInit 的 pointerdown 挂上（点两枚快捷钮时不挂），不用 :active / :has——
    安卓 WebView 上 :active 不稳，且 :has 在老版本里不认。 */
 .ra-hit-row.open.pressed + .ra-hit-exp{transform:translateY(-4px);filter:brightness(.985)}
-.ra-hit-exp.closing{animation:raHitShut .16s var(--emph) forwards}
-@keyframes raHitOpen{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
-@keyframes raHitShut{from{opacity:1;transform:none}to{opacity:0;transform:translateY(-10px)}}
+.ra-hit-exp.closing{animation:raHitShut .24s var(--emph) forwards}
+/* 开合都放慢、滑程略加长：抽出/收回读得出「同一块卡在动」，而不是一闪就换页。
+   展开 .34s／收起 .24s（收得比开略快，不拖泥带水）；JS 那边等收起播完再重绘，时长要跟着改（hpTap／raHitTap）。 */
+@keyframes raHitOpen{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:none}}
+@keyframes raHitShut{from{opacity:1;transform:none}to{opacity:0;transform:translateY(-12px)}}
 .ra-hit-exp .ra-hit-acts{display:flex;gap:8px;flex-wrap:wrap}
 @keyframes raHitIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
 .ra-hit-row.fresh{animation:raHitIn .34s var(--emph);box-shadow:0 0 0 1.5px var(--primary)}
@@ -9580,13 +9583,13 @@ function hpRow(m){
     +'</div>'+(open?raHitExp(m):'');
 }
 function hpTap(id){ /* 手风琴：开新行收旧行，再点同一行收起——与 pRowTap／raHitTap 同义。
-  再点同一行＝收起：先让展开区缩回卡底（.closing，160ms），到点再重排；开口仍是先落状态、后重绘。 */
+  再点同一行＝收起：先让展开区缩回卡底（.closing，240ms），到点再重排；开口仍是先落状态、后重绘。 */
   if(hpExpId===id){
     var box0=$('hpRow-'+id),el0=box0?box0.querySelector('.ra-hit-exp'):null;
     if(el0){
       el0.classList.add('closing');
       hpExpId=null;
-      setTimeout(function(){hpPaint()},160);
+      setTimeout(function(){hpPaint()},240);
       return;
     }
   }
@@ -10167,13 +10170,13 @@ function raSave(id){
 function raHitTap(i,id){ /* 手风琴：开新行收旧行，再点同一行收起——与素材面板 pRowTap 同义，作用域是整个时间线 */
   /* 复合键 i:id：同一件素材可能同时命中两轮（客户连着问了两次同类问题），只按素材 id 记展开态会让两处一起张开 */
   var key=i+':'+id;
-  /* 再点同一行＝收起：让展开区先缩回卡底（.closing，160ms）再重排，不在半空里直接消失 */
+  /* 再点同一行＝收起：让展开区先缩回卡底（.closing，240ms）再重排，不在半空里直接消失 */
   if(raExpId===key){
     var box0=$('aiHits-'+i),el0=box0?box0.querySelector('.ra-hit-exp'):null;
     if(el0){
       el0.classList.add('closing');
       raExpId=null;
-      setTimeout(function(){raHitsDraw()},160);
+      setTimeout(function(){raHitsDraw()},240);
       return;
     }
   }
