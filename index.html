@@ -20652,6 +20652,11 @@ tb.addEventListener("click",function(e){
     + '.rea-baf-row+.rea-baf-row{margin-top:19px}'
     + '.rea-baf-lab{padding-top:9px;font-size:12px;line-height:1.6;color:#253048;white-space:nowrap}'
     + '.rea-baf-lab.req:before{content:"*";margin-right:4px;color:#D75455}'
+    /* 分配规则的 ? ：悬停／聚焦浮一条说明，不占正文 */
+    + '.rea-baf-q{position:relative;display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;width:14px;height:14px;margin-left:4px;border:1px solid #DCE2EB;border-radius:50%;background:#fff;font-size:10px;line-height:1;font-weight:500;color:#7C879B;cursor:help;vertical-align:1px}'
+    + '.rea-baf-q:hover,.rea-baf-q:focus{border-color:#7C879B;color:#253048;outline:none}'
+    + '.rea-baf-q:after{content:attr(data-tip);position:absolute;left:-10px;top:21px;z-index:9;box-sizing:border-box;width:226px;padding:9px 11px;border:1px solid #E9EDF3;border-radius:6px;background:#fff;box-shadow:0 6px 18px rgba(37,48,72,.12);font-size:11px;line-height:1.7;font-weight:400;color:#253048;text-align:left;white-space:normal;opacity:0;visibility:hidden;transition:opacity .12s;pointer-events:none}'
+    + '.rea-baf-q:hover:after,.rea-baf-q:focus:after{opacity:1;visibility:visible}'
     + '.rea-baf-ctl{min-width:0}'
     + '@media(min-width:1250px){.rea-baf-sec{padding:28px 32px}.rea-baf-row{grid-template-columns:92px minmax(0,1fr);gap:22px}}'
     /* 控件统一 38px 高：输入、下拉、标签框、群组／地区选择器都停同一条线 */
@@ -23552,7 +23557,7 @@ startI.addEventListener('change',function(){
 
 /* ---- ④ 谁来加 ---- */
 var ORGS=[{n:'华东销售组',c:12},{n:'华南销售组',c:8},{n:'销售支持组',c:5},{n:'全员',c:25}];
-var execRow=bafTake(b4,ROW_EXEC,'执行人员',true),execSel=null;
+var execRow=bafTake(b4,ROW_EXEC,'执行人员',true),execSel=null,eqTip=null;
 if(execRow){
   execRow.ctl.innerHTML='';
   execRow.ctl.classList.add('rea-baf-exec');
@@ -23573,6 +23578,14 @@ if(execRow){
   eh.textContent='如果需要特殊分配，请为该员工创建单独的任务。';
   execRow.ctl.appendChild(eh);
   var ee=document.createElement('p');ee.className='rea-baf-err';execRow.ctl.appendChild(ee);
+  /* 分配规则只对「这堆号怎么分」有影响：连着分、余数轮流多给一人。
+     不写成行下说明，挂一枚 ? 悬停看，正文保持干净。 */
+  var eq=eqTip=document.createElement('span');eq.className='rea-baf-q';eq.tabIndex=0;
+  eq.setAttribute('role','img');
+  eq.setAttribute('aria-label','名单按顺序连着分给执行人员，每人一段；除不尽时轮流多分一人。');
+  eq.setAttribute('data-tip','名单按顺序连着分，每人一段；除不尽时轮流多分一人。');
+  eq.textContent='?';
+  execRow.lab.appendChild(eq);
   selBtn.addEventListener('click',function(e){
     e.preventDefault();e.stopPropagation();
     var on=selMenu.classList.toggle('on');
@@ -23683,6 +23696,7 @@ function bafRender(){
   else if(k==='file')l1=fileName?('已选文件 '+fileName):'未选文件';
   else l1='已录入 '+n+' 位好友';
   if(k!=='group')l1+=' · '+typ;
+  if(eqTip)eqTip.style.display=(k==='group')?'none':'';
   actSum1.textContent=l1;
   actSum2.textContent=bafDtCn(sv)+' 通知 · '+(execSel?(execSel.n+' · '+execSel.c+' 人'):'执行人待选择');
   if(promiseTxt){
@@ -23697,7 +23711,12 @@ function validate(){
   bafErr(gRow,'');bafErr(nRow,'');bafErr(rRow,'');bafErr(iRow,'');
   bafErr(phoneRow,'');bafErr(fileObj,'');bafErr(execRow,'');bafErr(stRow,'');bafErr(enRow,'');
   bafErr(nameRow,'');
-  if(k==='manual'&&!phoneCount()){bafErr(phoneRow,'请填写手机号');ok=false}
+  if(k==='manual'){
+    var pc=phoneCount();
+    if(!pc){bafErr(phoneRow,'请填写手机号');ok=false}
+    /* 执行人数多于号码数，下发时凑不出每人一个——当场拦下，别等执行侧报错 */
+    else if(execSel&&execSel.c>pc){bafErr(execRow,'执行人员 '+execSel.c+' 人，号码只有 '+pc+' 个');ok=false}
+  }
   if(k==='file'&&!fileName){bafErr(fileObj,'请选择号码文件');ok=false}
   if(k==='group'){
     if(gRow&&!groupPicker.get().length){bafErr(gRow,'请至少选择一个群');ok=false}
@@ -26303,9 +26322,34 @@ bar.style.display='none';
 .rea-freq-k{font-weight:500;color:#1F2329}
 .rea-freq-v{min-width:0}
 .rea-freq-v em{font-style:normal;color:#1F2329}
-.rea-freq-a{margin-left:auto;color:#1677FF;text-decoration:none;white-space:nowrap}
+.rea-freq-a{margin-left:auto;padding:0;border:0;background:none;font:inherit;color:#1677FF;cursor:pointer;white-space:nowrap}
 .rea-freq-a:hover{color:#0958D9;text-decoration:underline}
 .rea-freq-a:focus-visible{outline:2px solid #1677FF;outline-offset:2px;border-radius:4px}
+.rea-freq-mask{position:fixed;inset:0;z-index:1100;background:rgba(31,35,41,.35);opacity:0;visibility:hidden;transition:opacity .2s,visibility .2s}
+.rea-freq-mask.on{opacity:1;visibility:visible}
+.rea-freq-drawer{position:fixed;top:0;right:0;bottom:0;z-index:1101;display:flex;flex-direction:column;width:440px;max-width:92vw;background:#fff;box-shadow:-8px 0 24px rgba(31,35,41,.10);transform:translateX(100%);transition:transform .22s}
+.rea-freq-drawer.on{transform:none}
+.rea-freq-hd{flex:none;display:flex;align-items:flex-start;gap:12px;padding:20px 24px 14px;border-bottom:1px solid #F0F2F5}
+.rea-freq-hd h3{margin:0;font-size:16px;line-height:24px;font-weight:600;color:#1F2329}
+.rea-freq-sub{margin:4px 0 0;font-size:12px;line-height:18px;color:#8F959E}
+.rea-freq-x{flex:none;margin-left:auto;width:24px;height:24px;padding:0;border:0;border-radius:4px;background:none;color:#8F959E;font-size:18px;line-height:24px;cursor:pointer}
+.rea-freq-x:hover{background:#F2F3F5;color:#1F2329}
+.rea-freq-bd{flex:1;overflow:auto;padding:4px 24px 20px}
+.rea-freq-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px solid #F5F6F8}
+.rea-freq-row:last-of-type{border-bottom:0}
+.rea-freq-lab{font-size:13px;line-height:20px;color:#1F2329}
+.rea-freq-ctl{flex:none;display:flex;align-items:center;gap:6px}
+.rea-freq-num{width:92px;height:32px;padding:0 10px;border:1px solid #D9D9D9;border-radius:6px;background:#fff;color:#1F2329;font-size:13px;line-height:30px;text-align:right;outline:none}
+.rea-freq-num:focus{border-color:#1677FF;box-shadow:0 0 0 2px rgba(22,119,255,.12)}
+.rea-freq-dash{color:#C9CDD4;font-size:12px}
+.rea-freq-unit{min-width:36px;font-size:12px;color:#8F959E}
+.rea-freq-err{display:none;margin:10px 0 0;font-size:12px;line-height:18px;color:#FF4D4F;text-align:right}
+.rea-freq-err.on{display:block}
+.rea-freq-ft{flex:none;display:flex;justify-content:flex-end;gap:8px;padding:14px 24px;border-top:1px solid #F0F2F5}
+.rea-freq-btn{height:32px;padding:0 16px;border:1px solid #D9D9D9;border-radius:6px;background:#fff;color:#1F2329;font-size:13px;cursor:pointer}
+.rea-freq-btn:hover{border-color:#1677FF;color:#1677FF}
+.rea-freq-btn.pri{border-color:#1677FF;background:#1677FF;color:#fff}
+.rea-freq-btn.pri:hover{background:#4096FF;border-color:#4096FF;color:#fff}
 `;
 
   /* 默认值与快照那一页逐项对齐；设置页保存后才覆盖。 */
