@@ -24952,6 +24952,707 @@ if(ST){
 `;
   }
 
+
+  /* ============================================================
+     微信营销任务 · 智能回复（2026-11-10）
+     快照只带了两张空表，「关键词应答方案」页签点不动，也没有新建方案的抽屉。
+     正文仍是快照那一页（页头、页签、默认方案表），覆盖件只做两件事：
+     ① 关键词页签换成方案列表（筛方案名称／状态、分页、预览、编辑、启停、删除）；
+     ② 新建／编辑走右侧抽屉：精准／模糊关键词、最多 5 条应答内容、回复时间、
+        延迟分钟数、自定义后缀；保存后就地落回列表（只在本次页面会话里）。
+     视觉按 ADR-0082 的瑞士极简：白底、浅蓝主操作、少框线、表格去竖线。
+     登记在 docs/09 §2.3；不改 _online-admin.js，也不用覆盖块的 html 缝。
+     ============================================================ */
+  var REA_SMR_CSS = `
+/* ---------- 页面骨架：白底、去卡片框 ---------- */
+.rea-smr{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;color:#1F2329}
+.rea-smr #subapp-viewport{background:#fff}
+.rea-smr .ant-page-header{background:transparent;border-radius:0;padding:16px 12px 0}
+.rea-smr .ant-page-header-heading-title{font-size:20px;font-weight:600;color:#1F2329}
+.rea-smr .ant-page-header-content{padding:0}
+.rea-smr .ant-tabs-nav{margin:12px 0 0}
+.rea-smr .ant-tabs-tab{padding:10px 0;font-size:14px;color:#646A73}
+.rea-smr .ant-tabs-tab+.ant-tabs-tab{margin-left:32px}
+.rea-smr .ant-tabs-tab-active .ant-tabs-tab-btn{color:#1677FF!important;font-weight:600}
+.rea-smr .ant-tabs-ink-bar{background:#1677FF;height:2px}
+.rea-smr .ant-pro-grid-content,.rea-smr .rightcontent,.rea-smr #content,.rea-smr .pagecontent{background:#fff}
+.rea-smr .ant-pro-card{background:#fff;box-shadow:none;border:0}
+
+/* 默认页签那张快照表也统一成轻量表格 */
+.rea-smr .ant-table{font-size:14px;border-radius:0}
+.rea-smr .ant-table-thead>tr>th::before{display:none!important}
+.rea-smr .ant-table-container{border:0}
+.rea-smr .ant-table-thead>tr>th{background:#F7F8FA;color:#646A73;font-weight:500;font-size:13px;border-bottom:1px solid #E5E8EF}
+.rea-smr .ant-table-tbody>tr>td{border-bottom:1px solid #EEF1F6}
+.rea-smr .ant-table-tbody>tr.ant-table-placeholder:hover>td{background:#fff}
+
+/* ---------- 筛选栏 ---------- */
+.rea-smr-filter{display:flex;align-items:center;flex-wrap:wrap;gap:12px;padding:16px 12px 16px;border-bottom:1px solid #E5E8EF}
+.rea-smr-flabel{flex:none;font-size:14px;color:#646A73}
+.rea-smr-filter .rea-smr-nameq{flex:none;width:200px}
+.rea-smr-filter .rea-smr-statusq{flex:none;width:150px}
+.rea-smr-fbtns{display:flex;flex:none;align-items:center;gap:8px;margin-left:auto}
+.rea-smr-input,.rea-smr-select,.rea-smr-textarea{box-sizing:border-box;width:100%;border:1px solid #E5E8EF;border-radius:8px;background:#fff;color:#1F2329;font-family:inherit;font-size:14px;outline:none;transition:border-color .15s,box-shadow .15s}
+.rea-smr-input,.rea-smr-select{height:36px;padding:0 12px}
+.rea-smr-textarea{min-height:96px;padding:10px 12px;resize:vertical;line-height:22px}
+.rea-smr-input:focus,.rea-smr-select:focus,.rea-smr-textarea:focus{border-color:#1677FF;box-shadow:0 0 0 2px #E6F4FF}
+.rea-smr-input::placeholder,.rea-smr-textarea::placeholder{color:#8F959E}
+.rea-smr-btn{display:inline-flex;align-items:center;justify-content:center;height:36px;padding:0 16px;border:1px solid transparent;border-radius:8px;font-family:inherit;font-size:14px;cursor:pointer;transition:background .15s,color .15s,border-color .15s}
+.rea-smr-btn.primary{background:#1677FF;color:#fff}
+.rea-smr-btn.primary:hover{background:#4096FF}
+.rea-smr-btn.secondary{background:#E6F4FF;color:#1677FF}
+.rea-smr-btn.secondary:hover{background:#D6EAFF}
+.rea-smr-btn.ghost{background:#fff;color:#646A73;border-color:#E5E8EF}
+.rea-smr-btn.ghost:hover{color:#1677FF;border-color:#1677FF}
+.rea-smr-btn.danger{background:#FF4D4F;color:#fff}
+.rea-smr-btn.danger:hover{background:#FF7875}
+
+/* ---------- 方案表 ---------- */
+.rea-smr-tablewrap{background:#fff;overflow-x:auto}
+.rea-smr-table{width:100%;border-collapse:collapse;table-layout:fixed}
+.rea-smr-table th{background:#F7F8FA;color:#646A73;font-size:13px;font-weight:500;text-align:left;padding:12px 16px;border-bottom:1px solid #E5E8EF;white-space:nowrap}
+.rea-smr-table td{padding:14px 16px;border-bottom:1px solid #EEF1F6;font-size:14px;color:#1F2329;vertical-align:middle}
+.rea-smr-table tbody tr:hover td{background:#F7FAFF}
+.rea-smr-idx,.rea-smr-time{color:#646A73}
+.rea-smr-sname{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500}
+.rea-smr-kw{display:flex;flex-direction:column;gap:6px}
+.rea-smr-kwline{display:flex;align-items:center;gap:6px;font-size:13px;line-height:20px;color:#646A73;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rea-smr-kwline b{flex:none;font-weight:500;color:#1F2329}
+.rea-smr-kwline.muted{color:#8F959E}
+.rea-smr-dot{flex:none;width:6px;height:6px;border-radius:50%}
+.rea-smr-dot.exact{background:#52C41A}
+.rea-smr-dot.fuzzy{background:#FAAD14}
+.rea-smr-status{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#52C41A}
+.rea-smr-status i{width:6px;height:6px;border-radius:50%;background:currentColor}
+.rea-smr-status.off{color:#8F959E}
+.rea-smr-act{border:0;background:none;padding:0;margin-right:14px;font-family:inherit;font-size:13px;color:#1677FF;cursor:pointer}
+.rea-smr-ops .rea-smr-act:last-child{margin-right:0}
+.rea-smr-act:hover{color:#4096FF;text-decoration:underline}
+.rea-smr-act.danger{color:#FF4D4F}
+.rea-smr-act.danger:hover{color:#FF7875}
+.rea-smr-empty td{text-align:center;padding:56px 16px;color:#646A73;border-bottom:0}
+.rea-smr-empty p{margin:0 0 12px}
+.rea-smr-foot{display:flex;align-items:center;justify-content:space-between;padding:16px 4px 8px;color:#646A73;font-size:13px}
+.rea-smr-pager{display:flex;align-items:center;gap:6px}
+.rea-smr-page{min-width:32px;height:32px;padding:0 8px;border:1px solid #E5E8EF;border-radius:6px;background:#fff;color:#646A73;font-family:inherit;font-size:13px;cursor:pointer}
+.rea-smr-page.on{border-color:#1677FF;background:#E6F4FF;color:#1677FF}
+.rea-smr-page[disabled]{color:#C9CDD4;cursor:default}
+.rea-smr-pagesize{margin-left:6px;color:#8F959E}
+
+/* ---------- 抽屉 ---------- */
+/* 默认页签那条快照筛选栏：只把观感扳到同一套，不动它的行为（新建仍走「智能回复 · 新建」页） */
+.rea-smr .searchform .ant-form-item-label>label{color:#646A73;font-weight:400}
+.rea-smr .searchform .ant-input-affix-wrapper,.rea-smr .searchform .ant-select-selector{border-radius:8px;border-color:#E5E8EF}
+.rea-smr .searchform .ant-btn{height:36px;border-radius:8px;box-shadow:none;font-size:14px}
+.rea-smr .searchform .ant-btn.rea-smr-snap-filter{background:#E6F4FF;color:#1677FF;border-color:transparent}
+.rea-smr .searchform .ant-btn.rea-smr-snap-filter:hover{background:#D6EAFF;color:#1677FF}
+.rea-smr .searchform .ant-btn.rea-smr-snap-reset{background:#fff;color:#646A73;border-color:#E5E8EF}
+.rea-smr .searchform .ant-btn.rea-smr-snap-reset:hover{color:#1677FF;border-color:#1677FF}
+.rea-smr .searchform .ant-btn.rea-smr-snap-new{background:#1677FF;color:#fff;border-color:transparent}
+.rea-smr .searchform .ant-btn.rea-smr-snap-new:hover{background:#4096FF;color:#fff}
+.rea-smr .rea-smr-input[type="number"]{-moz-appearance:textfield;appearance:textfield}
+.rea-smr .rea-smr-input[type="number"]::-webkit-inner-spin-button,.rea-smr .rea-smr-input[type="number"]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+
+.rea-smr-mask{position:fixed;inset:0;z-index:1000;background:rgba(31,35,41,.45);opacity:0;visibility:hidden;transition:opacity .18s}
+.rea-smr-mask.on{opacity:1;visibility:visible}
+.rea-smr-drawer{position:fixed;top:0;right:0;bottom:0;z-index:1001;display:flex;flex-direction:column;width:720px;max-width:calc(100vw - 48px);background:#fff;box-shadow:0 6px 16px rgba(0,0,0,.08);transform:translateX(100%);transition:transform .18s ease}
+.rea-smr-drawer.on{transform:translateX(0)}
+.rea-smr-dhead{display:flex;align-items:center;justify-content:space-between;flex:none;padding:20px 24px;border-bottom:1px solid #E5E8EF}
+.rea-smr-dhead h3{margin:0;font-size:16px;font-weight:600;color:#1F2329}
+.rea-smr-x{width:32px;height:32px;border:0;border-radius:6px;background:none;font-family:inherit;font-size:22px;line-height:1;color:#8F959E;cursor:pointer}
+.rea-smr-x:hover{background:#F7F8FA;color:#1F2329}
+.rea-smr-dbody{flex:1;overflow:auto;padding:24px}
+.rea-smr-dfoot{display:flex;justify-content:flex-end;flex:none;gap:8px;padding:16px 24px;border-top:1px solid #E5E8EF}
+.rea-smr-field{margin-bottom:24px}
+.rea-smr-label{display:block;margin-bottom:8px;font-size:14px;font-weight:500;color:#1F2329}
+.rea-smr-req{margin-left:2px;color:#FF4D4F}
+.rea-smr-sec{margin-bottom:24px;padding-top:20px;border-top:1px solid #E5E8EF}
+.rea-smr-sec h4{margin:0 0 16px;font-size:14px;font-weight:600;color:#1F2329}
+.rea-smr-sub{margin-left:8px;font-size:12px;font-weight:400;color:#8F959E}
+.rea-smr-kwlabel{margin:12px 0 6px;font-size:13px;color:#646A73}
+.rea-smr-kwlabel:first-of-type{margin-top:0}
+.rea-smr-addrow{display:flex;gap:8px}
+.rea-smr-kwin{flex:1}
+.rea-smr-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.rea-smr-tags:empty{display:none}
+.rea-smr-tag{display:inline-flex;align-items:center;gap:4px;height:26px;padding:0 8px;border-radius:6px;background:#E6F4FF;color:#1677FF;font-size:13px}
+.rea-smr-tag button{border:0;background:none;padding:0 0 0 2px;font-family:inherit;font-size:15px;line-height:1;color:#1677FF;cursor:pointer;opacity:.7}
+.rea-smr-tag button:hover{opacity:1}
+.rea-smr-block{margin-top:16px;padding-top:16px;border-top:1px solid #EEF1F6}
+.rea-smr-block:first-child{margin-top:0;padding-top:0;border-top:0}
+.rea-smr-blockhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;font-size:13px;color:#646A73}
+.rea-smr-addcontent{margin-top:12px;padding:8px 16px;border:1px dashed #C9CDD4;border-radius:8px;background:#fff;color:#1677FF;font-family:inherit;font-size:14px;cursor:pointer}
+.rea-smr-addcontent:hover{border-color:#1677FF;background:#F7FAFF}
+.rea-smr-upload{display:flex;align-items:center;justify-content:center;min-height:88px;border:1px dashed #C9CDD4;border-radius:8px;background:#F7F8FA;color:#8F959E;font-size:13px;cursor:pointer}
+.rea-smr-upload:hover{border-color:#1677FF;color:#1677FF}
+.rea-smr-fname{color:#1F2329}
+.rea-smr-time{display:flex;align-items:center;gap:8px;color:#646A73;font-size:14px}
+.rea-smr-time .rea-smr-input{width:150px}
+.rea-smr-unitwrap{display:flex;align-items:center;gap:8px}
+.rea-smr-unitwrap .rea-smr-input{flex:none;width:140px}
+.rea-smr-unitwrap span{flex:none;white-space:nowrap;font-size:13px;color:#646A73}
+.rea-smr-hint{margin:6px 0 0;font-size:12px;line-height:20px;color:#8F959E}
+.rea-smr-switchrow{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.rea-smr-switchrow .rea-smr-label{margin:0}
+.rea-smr-switch{position:relative;width:40px;height:22px;padding:0;border:0;border-radius:11px;background:#C9CDD4;cursor:pointer;transition:background .15s}
+.rea-smr-switch:after{content:"";position:absolute;left:2px;top:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .15s}
+.rea-smr-switch[aria-checked="true"]{background:#1677FF}
+.rea-smr-switch[aria-checked="true"]:after{left:20px}
+.rea-smr-err{display:none;margin:6px 0 0;font-size:12px;line-height:18px;color:#FF4D4F}
+.rea-smr-err.on{display:block}
+
+/* ---------- 通用小弹窗（预览／删除确认） ---------- */
+.rea-smr-mask.modal{z-index:1100}
+.rea-smr-modal{position:fixed;left:50%;top:16%;z-index:1101;display:flex;flex-direction:column;width:520px;max-width:calc(100vw - 48px);max-height:72vh;background:#fff;border-radius:12px;box-shadow:0 6px 16px rgba(0,0,0,.08);opacity:0;visibility:hidden;transform:translate(-50%,-8px);transition:opacity .18s,transform .18s}
+.rea-smr-modal.on{opacity:1;visibility:visible;transform:translate(-50%,0)}
+.rea-smr-mbody{flex:1;overflow:auto;padding:20px 24px;font-size:14px;color:#1F2329}
+.rea-smr-pitem{padding:12px 0;border-top:1px solid #EEF1F6}
+.rea-smr-pitem:first-child{padding-top:0;border-top:0}
+.rea-smr-ptype{margin-bottom:4px;font-size:12px;color:#8F959E}
+.rea-smr-ptext{line-height:22px;white-space:pre-wrap;word-break:break-word}
+.rea-smr-phint{margin:16px 0 0;font-size:12px;color:#8F959E}
+.rea-smr-confirm{margin:0;line-height:22px;color:#646A73}
+
+/* ---------- 提示条 ---------- */
+.rea-smr-toast{position:fixed;left:50%;top:24px;z-index:1200;padding:10px 16px;border:1px solid #E5E8EF;border-radius:8px;background:#fff;box-shadow:0 6px 16px rgba(0,0,0,.08);font-size:14px;color:#1F2329;opacity:0;transform:translate(-50%,-8px);transition:opacity .18s,transform .18s}
+.rea-smr-toast:before{content:"";display:inline-block;width:6px;height:6px;margin-right:8px;border-radius:50%;background:#52C41A;vertical-align:2px}
+.rea-smr-toast.on{opacity:1;transform:translate(-50%,0)}
+`;
+
+  function reaSmrJs(){
+    return String.raw`
+(function(){
+'use strict';
+document.body.classList.add('rea-smr');
+
+var content=document.getElementById('content');
+if(!content)return;
+var search=document.querySelector('.searchform');
+var tabs=Array.prototype.slice.call(document.querySelectorAll('.ant-tabs-tab'));
+var tabDefault=null,tabKeyword=null,i;
+for(i=0;i<tabs.length;i++){
+  var tt=(tabs[i].textContent||'').replace(/\s+/g,'');
+  if(tt==='默认应答方案')tabDefault=tabs[i];
+  else if(tt==='关键词应答方案')tabKeyword=tabs[i];
+}
+if(!tabKeyword)return;
+var DEFAULT_HTML=content.innerHTML;
+var oldFoot=document.querySelector('.yk-page-right-content-footer');
+var seq=100;
+var page=1,PAGE_SIZE=10;
+
+function esc(s){
+  return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function pad(n){return (n<10?'0':'')+n}
+function nowStr(){
+  var d=new Date();
+  return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+' '
+    +pad(d.getHours())+':'+pad(d.getMinutes());
+}
+function clone(o){return JSON.parse(JSON.stringify(o))}
+
+var SCHEMES=[
+  {id:1,name:'产品咨询',exact:['产品','价格'],fuzzy:['多少钱','怎么买'],
+   contents:[{type:'文本',text:'您好，请问您想了解哪款产品？',file:''},
+             {type:'文本',text:'我把产品资料发您，方便留个联系方式吗？',file:''}],
+   time:['09:00','18:00'],status:'启用',updated:'2026-11-06 10:24',delay:1,suffix:''},
+  {id:2,name:'售后咨询',exact:['售后','退换'],fuzzy:['坏了','退款','维修'],
+   contents:[{type:'文本',text:'您好，请描述一下遇到的问题，我帮您处理。',file:''}],
+   time:['09:00','20:00'],status:'启用',updated:'2026-11-04 16:08',delay:3,suffix:''},
+  {id:3,name:'活动咨询',exact:['活动'],fuzzy:['优惠','折扣'],
+   contents:[{type:'文本',text:'您好，当前活动详情如下：',file:''}],
+   time:['10:00','22:00'],status:'禁用',updated:'2026-10-28 09:12',delay:1,suffix:''}
+];
+seq=100;
+
+/* ---------- 筛选栏（只在关键词页签露出；默认页签沿用快照那一条） ---------- */
+var bar=document.createElement('div');
+bar.className='rea-smr-filter';
+bar.innerHTML='<label class="rea-smr-flabel" for="reaSmrNameQ">方案名称</label>'
+ +'<input id="reaSmrNameQ" class="rea-smr-input rea-smr-nameq" placeholder="搜索方案名称">'
+ +'<label class="rea-smr-flabel" for="reaSmrStatusQ">状态</label>'
+ +'<select id="reaSmrStatusQ" class="rea-smr-select rea-smr-statusq"><option value="all">全部状态</option><option value="启用">启用</option><option value="禁用">禁用</option></select>'
+ +'<div class="rea-smr-fbtns">'
+ +'<button type="button" class="rea-smr-btn secondary" data-filter>筛选</button>'
+ +'<button type="button" class="rea-smr-btn ghost" data-reset>重置</button>'
+ +'<button type="button" class="rea-smr-btn primary" data-new>新建</button>'
+ +'</div>';
+search.parentNode.insertBefore(bar,search.nextSibling);
+bar.style.display='none';
+var qName=bar.querySelector('.rea-smr-nameq'),qStatus=bar.querySelector('.rea-smr-statusq');
+
+var state={name:'',status:'all'};
+
+/* ---------- 关键词页签的正文骨架 ---------- */
+function viewHTML(){
+  return '<div class="pagecontent rea-smr-pagecontent">'
+   +'<div class="rea-smr-tablewrap">'
+   +'<table class="rea-smr-table"><colgroup>'
+   +'<col style="width:64px"><col style="width:150px"><col style="width:88px"><col>'
+   +'<col style="width:126px"><col style="width:78px"><col style="width:156px"><col style="width:88px"><col style="width:168px">'
+   +'</colgroup><thead><tr>'
+   +'<th>序号</th><th>方案名称</th><th>应答内容</th><th>关键词</th><th>回复时间</th>'
+   +'<th>状态</th><th>最后更新时间</th><th>回复延迟</th><th>操作</th>'
+   +'</tr></thead><tbody class="rea-smr-body"></tbody></table>'
+   +'</div>'
+   +'<div class="rea-smr-foot"><span class="rea-smr-total"></span>'
+   +'<div class="rea-smr-pager"></div></div>'
+   +'</div>';
+}
+
+function findScheme(id){
+  for(var k=0;k<SCHEMES.length;k++)if(SCHEMES[k].id===id)return SCHEMES[k];
+  return null;
+}
+function kwLines(s){
+  var out='';
+  if(s.exact.length)out+='<span class="rea-smr-kwline"><i class="rea-smr-dot exact"></i><b>精准</b>：'+esc(s.exact.join('、'))+'</span>';
+  if(s.fuzzy.length)out+='<span class="rea-smr-kwline"><i class="rea-smr-dot fuzzy"></i><b>模糊</b>：'+esc(s.fuzzy.join('、'))+'</span>';
+  return out||'<span class="rea-smr-kwline muted">—</span>';
+}
+function rowHTML(s,idx){
+  var on=s.status==='启用';
+  return '<tr data-id="'+s.id+'">'
+   +'<td class="rea-smr-idx">'+idx+'</td>'
+   +'<td><span class="rea-smr-sname">'+esc(s.name)+'</span></td>'
+   +'<td><button type="button" class="rea-smr-act" data-act="preview" data-id="'+s.id+'">预览</button></td>'
+   +'<td><div class="rea-smr-kw">'+kwLines(s)+'</div></td>'
+   +'<td>'+esc(s.time[0])+' - '+esc(s.time[1])+'</td>'
+   +'<td><span class="rea-smr-status'+(on?'':' off')+'"><i></i>'+(on?'启用':'禁用')+'</span></td>'
+   +'<td class="rea-smr-time">'+esc(s.updated)+'</td>'
+   +'<td>'+s.delay+' 分钟</td>'
+   +'<td class="rea-smr-ops">'
+     +'<button type="button" class="rea-smr-act" data-act="edit" data-id="'+s.id+'">编辑</button>'
+     +'<button type="button" class="rea-smr-act" data-act="toggle" data-id="'+s.id+'">'+(on?'禁用':'启用')+'</button>'
+     +'<button type="button" class="rea-smr-act danger" data-act="del" data-id="'+s.id+'">删除</button>'
+   +'</td></tr>';
+}
+function filtered(){
+  var t=state.name.trim().toLowerCase();
+  return SCHEMES.filter(function(s){
+    if(t&&s.name.toLowerCase().indexOf(t)<0)return false;
+    if(state.status!=='all'&&s.status!==state.status)return false;
+    return true;
+  });
+}
+function renderList(){
+  var body=content.querySelector('.rea-smr-body');
+  if(!body)return;
+  var rows=filtered();
+  var pages=Math.max(1,Math.ceil(rows.length/PAGE_SIZE));
+  if(page>pages)page=pages;
+  var cur=rows.slice((page-1)*PAGE_SIZE,page*PAGE_SIZE);
+  var h='',k;
+  if(!cur.length){
+    var none=SCHEMES.length===0;
+    h='<tr class="rea-smr-empty"><td colspan="9"><p>'+(none?'还没有关键词应答方案':'没有匹配的关键词应答方案')+'</p>'
+      +'<button type="button" class="rea-smr-act" data-act="'+(none?'new':'clearfilter')+'">'+(none?'新建方案':'清空筛选')+'</button></td></tr>';
+  }else{
+    for(k=0;k<cur.length;k++)h+=rowHTML(cur[k],(page-1)*PAGE_SIZE+k+1);
+  }
+  body.innerHTML=h;
+  content.querySelector('.rea-smr-total').textContent='共 '+rows.length+' 条记录';
+  var ph='';
+  if(rows.length){
+    ph+='<button type="button" class="rea-smr-page" data-page="'+(page-1)+'"'+(page<=1?' disabled':'')+'>‹</button>';
+    for(k=1;k<=pages;k++)ph+='<button type="button" class="rea-smr-page'+(k===page?' on':'')+'" data-page="'+k+'">'+k+'</button>';
+    ph+='<button type="button" class="rea-smr-page" data-page="'+(page+1)+'"'+(page>=pages?' disabled':'')+'>›</button>';
+  }
+  ph+='<span class="rea-smr-pagesize">10 条/页</span>';
+  content.querySelector('.rea-smr-pager').innerHTML=ph;
+}
+
+function setTab(k){
+  state.tab=k;
+  var pair=[[tabDefault,k!=='keyword'],[tabKeyword,k==='keyword']],n;
+  for(n=0;n<pair.length;n++){
+    var t=pair[n][0],on=pair[n][1];
+    if(!t)continue;
+    t.classList.toggle('ant-tabs-tab-active',on);
+    t.setAttribute('aria-selected',on?'true':'false');
+    var b=t.querySelector('[role="tab"]');
+    if(b){b.setAttribute('aria-selected',on?'true':'false');b.setAttribute('tabindex',on?'0':'-1');}
+  }
+  var act=k==='keyword'?tabKeyword:tabDefault,ink=document.querySelector('.ant-tabs-ink-bar');
+  if(act&&ink){
+    ink.style.width=act.offsetWidth+'px';
+    ink.style.left=(act.offsetLeft+act.offsetWidth/2)+'px';
+  }
+  if(k==='keyword'){
+    if(!content.querySelector('.rea-smr-pagecontent'))content.innerHTML=viewHTML();
+    search.style.display='none';
+    bar.style.display='flex';
+    if(oldFoot)oldFoot.style.display='none';
+    renderList();
+  }else{
+    content.innerHTML=DEFAULT_HTML;
+    search.style.display='';
+    bar.style.display='none';
+    if(oldFoot)oldFoot.style.display='';
+  }
+}
+
+/* ---------- 抽屉 ---------- */
+var drawerState=null,editingId=null;
+var mask=document.createElement('div');mask.className='rea-smr-mask';
+var drawer=document.createElement('aside');drawer.className='rea-smr-drawer';
+drawer.setAttribute('role','dialog');drawer.setAttribute('aria-modal','true');drawer.setAttribute('aria-labelledby','reaSmrTitle');
+drawer.innerHTML='<div class="rea-smr-dhead"><h3 id="reaSmrTitle">关键词应答方案配置</h3>'
+ +'<button type="button" class="rea-smr-x" data-close aria-label="关闭">×</button></div>'
+ +'<div class="rea-smr-dbody">'
+ +'<div class="rea-smr-field"><label class="rea-smr-label" for="reaSmrName">方案名称<span class="rea-smr-req">*</span></label>'
+ +'<input id="reaSmrName" class="rea-smr-input" maxlength="30" placeholder="请输入方案名称"><p class="rea-smr-err" data-err="name"></p></div>'
+ +'<section class="rea-smr-sec"><h4>关键词应答配置</h4>'
+ +'<div class="rea-smr-kwlabel">精准匹配关键词</div>'
+ +'<div class="rea-smr-addrow"><input class="rea-smr-input rea-smr-kwin" data-kwin="exact" aria-label="精准匹配关键词" placeholder="输入精准匹配关键词">'
+ +'<button type="button" class="rea-smr-btn secondary" data-addkw="exact">添加</button></div>'
+ +'<div class="rea-smr-tags" data-tags="exact"></div>'
+ +'<div class="rea-smr-kwlabel">模糊匹配关键词</div>'
+ +'<div class="rea-smr-addrow"><input class="rea-smr-input rea-smr-kwin" data-kwin="fuzzy" aria-label="模糊匹配关键词" placeholder="输入模糊匹配关键词">'
+ +'<button type="button" class="rea-smr-btn secondary" data-addkw="fuzzy">添加</button></div>'
+ +'<div class="rea-smr-tags" data-tags="fuzzy"></div>'
+ +'<p class="rea-smr-err" data-err="kw"></p></section>'
+ +'<section class="rea-smr-sec"><h4>应答内容配置<span class="rea-smr-sub">最多 5 条</span></h4>'
+ +'<div class="rea-smr-contents"></div>'
+ +'<button type="button" class="rea-smr-addcontent" data-addcontent>＋ 添加内容</button>'
+ +'<p class="rea-smr-err" data-err="content"></p></section>'
+ +'<section class="rea-smr-sec"><h4>回复时间<span class="rea-smr-req">*</span></h4>'
+ +'<div class="rea-smr-time"><input type="time" class="rea-smr-input rea-smr-t1" aria-label="开始时间">'
+ +'<span>至</span><input type="time" class="rea-smr-input rea-smr-t2" aria-label="结束时间"></div>'
+ +'<p class="rea-smr-err" data-err="time"></p></section>'
+ +'<div class="rea-smr-field"><label class="rea-smr-label" for="reaSmrDelay">智能回复延迟时间</label>'
+ +'<div class="rea-smr-unitwrap"><input id="reaSmrDelay" type="number" min="1" max="60" class="rea-smr-input rea-smr-delay"><span>分钟</span></div>'
+ +'<p class="rea-smr-hint">收到客户消息后延迟指定时间再回复，范围 1–60 分钟</p>'
+ +'<p class="rea-smr-err" data-err="delay"></p></div>'
+ +'<div class="rea-smr-field"><div class="rea-smr-switchrow"><span class="rea-smr-label">自定义后缀</span>'
+ +'<button type="button" class="rea-smr-switch" role="switch" aria-checked="false"><span></span></button></div>'
+ +'<input class="rea-smr-input rea-smr-suffix" maxlength="50" placeholder="请输入后缀" style="display:none">'
+ +'<p class="rea-smr-err" data-err="suffix"></p></div>'
+ +'</div>'
+ +'<div class="rea-smr-dfoot"><button type="button" class="rea-smr-btn ghost" data-close>取消</button>'
+ +'<button type="button" class="rea-smr-btn primary" data-save>保存配置</button></div>';
+document.body.appendChild(mask);document.body.appendChild(drawer);
+
+var dTitle=drawer.querySelector('#reaSmrTitle');
+var dName=drawer.querySelector('#reaSmrName');
+var dT1=drawer.querySelector('.rea-smr-t1'),dT2=drawer.querySelector('.rea-smr-t2');
+var dDelay=drawer.querySelector('.rea-smr-delay');
+var dSuffix=drawer.querySelector('.rea-smr-suffix');
+var dSwitch=drawer.querySelector('.rea-smr-switch');
+var contBox=drawer.querySelector('.rea-smr-contents');
+var addContentBtn=drawer.querySelector('[data-addcontent]');
+
+function setErr(key,msg){
+  var p=drawer.querySelector('[data-err="'+key+'"]');
+  if(p){p.textContent=msg||'';p.classList.toggle('on',!!msg);}
+}
+function clearErrs(){
+  var es=drawer.querySelectorAll('.rea-smr-err');
+  for(var k=0;k<es.length;k++){es[k].textContent='';es[k].classList.remove('on');}
+}
+function renderTags(kind){
+  var box=drawer.querySelector('[data-tags="'+kind+'"]');
+  var arr=drawerState[kind],h='',k;
+  for(k=0;k<arr.length;k++)
+    h+='<span class="rea-smr-tag">'+esc(arr[k])+'<button type="button" data-deltag="'+kind+'" data-i="'+k+'" aria-label="删除关键词 '+esc(arr[k])+'">×</button></span>';
+  box.innerHTML=h;
+}
+function contentBlock(c,idx){
+  var types=['文本','图片','视频','文件'],opts='',k;
+  for(k=0;k<types.length;k++)opts+='<option'+(c.type===types[k]?' selected':'')+'>'+types[k]+'</option>';
+  var isText=c.type==='文本';
+  var body=isText
+    ?'<textarea class="rea-smr-textarea" data-ctext="'+idx+'" aria-label="内容" placeholder="请输入文本">'+esc(c.text)+'</textarea>'
+    :'<div class="rea-smr-upload" data-cupload="'+idx+'" role="button" tabindex="0" aria-label="上传'+c.type+'">'+(c.file?'<span class="rea-smr-fname">'+esc(c.file)+'</span>':'<span>点击上传'+c.type+'</span>')
+      +'<input type="file" data-cfile="'+idx+'" hidden></div>';
+  return '<div class="rea-smr-block" data-ci="'+idx+'">'
+   +'<div class="rea-smr-blockhead"><span>内容 '+(idx+1)+'</span>'
+   +(drawerState.contents.length>1?'<button type="button" class="rea-smr-act danger" data-delcontent="'+idx+'">删除</button>':'')
+   +'</div>'
+   +'<label class="rea-smr-label">内容类型</label>'
+   +'<select class="rea-smr-select" data-ctype="'+idx+'" aria-label="内容类型">'+opts+'</select>'
+   +'<label class="rea-smr-label">内容</label>'+body+'</div>';
+}
+function renderContents(){
+  var h='',k;
+  for(k=0;k<drawerState.contents.length;k++)h+=contentBlock(drawerState.contents[k],k);
+  contBox.innerHTML=h;
+  addContentBtn.style.display=drawerState.contents.length>=5?'none':'inline-flex';
+}
+function syncContents(){
+  var blocks=contBox.querySelectorAll('.rea-smr-block'),k;
+  for(k=0;k<blocks.length;k++){
+    var idx=+blocks[k].getAttribute('data-ci'),c=drawerState.contents[idx];
+    if(!c)continue;
+    var ta=blocks[k].querySelector('textarea');
+    if(ta)c.text=ta.value;
+    var fn=blocks[k].querySelector('.rea-smr-fname');
+    if(fn)c.file=fn.textContent;
+  }
+}
+function updateSuffix(){
+  var on=dSwitch.getAttribute('aria-checked')==='true';
+  dSuffix.style.display=on?'block':'none';
+}
+function openDrawer(scheme){
+  editingId=scheme?scheme.id:null;
+  drawerState=scheme?clone(scheme):{id:0,name:'',exact:[],fuzzy:[],contents:[{type:'文本',text:'',file:''}],
+    time:['09:00','18:00'],status:'启用',updated:'',delay:1,suffix:''};
+  dTitle.textContent=scheme?'编辑关键词应答方案':'关键词应答方案配置';
+  dName.value=drawerState.name;
+  dT1.value=drawerState.time[0];dT2.value=drawerState.time[1];
+  dDelay.value=drawerState.delay;
+  dSwitch.setAttribute('aria-checked',drawerState.suffix?'true':'false');
+  dSuffix.value=drawerState.suffix||'';
+  updateSuffix();
+  renderTags('exact');renderTags('fuzzy');renderContents();clearErrs();
+  mask.classList.add('on');drawer.classList.add('on');
+  setTimeout(function(){dName.focus()},180);
+}
+function closeDrawer(){
+  mask.classList.remove('on');drawer.classList.remove('on');
+}
+function addKw(kind){
+  var inp=drawer.querySelector('[data-kwin="'+kind+'"]');
+  var v=(inp.value||'').trim();
+  if(!v)return;
+  if(v.length>30){setErr('kw','单个关键词不超过 30 个字');return;}
+  if(drawerState[kind].indexOf(v)>=0){inp.value='';return;}
+  drawerState[kind].push(v);inp.value='';setErr('kw','');renderTags(kind);inp.focus();
+}
+function collectErr(){
+  var e={};
+  var name=(dName.value||'').trim();
+  if(!name)e.name='请输入方案名称';
+  if(!drawerState.exact.length&&!drawerState.fuzzy.length)e.kw='请至少添加一个精准或模糊关键词';
+  syncContents();
+  var cs=drawerState.contents;
+  if(!cs.length)e.content='请至少添加一条回复内容';
+  for(var k=0;k<cs.length;k++){
+    if(cs[k].type==='文本'&&!(cs[k].text||'').trim()){e.content='请填写第 '+(k+1)+' 条回复内容';break;}
+    if(cs[k].type!=='文本'&&!cs[k].file){e.content='请上传第 '+(k+1)+' 条' + cs[k].type;break;}
+  }
+  if(!dT1.value||!dT2.value)e.time='请选择回复时间';
+  else if(dT1.value>=dT2.value)e.time='结束时间需晚于开始时间';
+  var dl=Number(dDelay.value);
+  if(!dDelay.value||!isFinite(dl)||dl<1||dl>60||Math.floor(dl)!==dl)e.delay='请输入 1–60 的整数';
+  var son=dSwitch.getAttribute('aria-checked')==='true';
+  if(son&&!(dSuffix.value||'').trim())e.suffix='请输入后缀内容';
+  return {errs:e,name:name};
+}
+function saveDrawer(){
+  var r=collectErr(),keys=Object.keys(r.errs),k;
+  clearErrs();
+  if(keys.length){for(k=0;k<keys.length;k++)setErr(keys[k],r.errs[keys[k]]);return;}
+  var son=dSwitch.getAttribute('aria-checked')==='true';
+  var target=editingId!=null?findScheme(editingId):null;
+  if(!target){
+    target={id:++seq,status:'启用',updated:''};
+    SCHEMES.unshift(target);
+  }
+  target.name=r.name;
+  target.exact=drawerState.exact.slice();
+  target.fuzzy=drawerState.fuzzy.slice();
+  target.contents=clone(drawerState.contents);
+  target.time=[dT1.value,dT2.value];
+  target.delay=Number(dDelay.value);
+  target.suffix=son?(dSuffix.value||'').trim():'';
+  target.updated=nowStr();
+  closeDrawer();
+  page=1;
+  if(state.tab==='keyword')renderList();
+  toast(editingId!=null?'方案已保存':'方案已创建');
+  editingId=null;
+}
+
+/* ---------- 通用弹窗（预览 / 删除确认） ---------- */
+var modalMask=document.createElement('div');modalMask.className='rea-smr-mask modal';
+var modal=document.createElement('div');modal.className='rea-smr-modal';modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');
+document.body.appendChild(modalMask);document.body.appendChild(modal);
+var modalOK=null;
+function closeModal(){modalMask.classList.remove('on');modal.classList.remove('on');modalOK=null;}
+function openModal(o){
+  modal.style.width=(o.width||520)+'px';
+  modal.innerHTML='<div class="rea-smr-dhead"><h3>'+esc(o.title)+'</h3>'
+   +'<button type="button" class="rea-smr-x" data-mclose aria-label="关闭">×</button></div>'
+   +'<div class="rea-smr-mbody">'+o.body+'</div>'
+   +'<div class="rea-smr-dfoot">'+(o.actions||'<button type="button" class="rea-smr-btn ghost" data-mclose>取消</button>'
+   +'<button type="button" class="rea-smr-btn primary" data-mok>确定</button>')+'</div>';
+  modalOK=o.onOk||null;
+  modalMask.classList.add('on');modal.classList.add('on');
+}
+function previewScheme(s){
+  var h='<div class="rea-smr-preview">',k;
+  for(k=0;k<s.contents.length;k++){
+    var c=s.contents[k];
+    h+='<div class="rea-smr-pitem"><div class="rea-smr-ptype">'+esc(c.type)+'</div>'
+      +'<div class="rea-smr-ptext">'+(c.type==='文本'?esc(c.text):esc(c.file||'未上传'))+'</div></div>';
+  }
+  h+='</div>';
+  if(s.suffix)h+='<p class="rea-smr-phint">回复时追加后缀：'+esc(s.suffix)+'</p>';
+  openModal({title:'应答内容 · '+s.name,width:560,body:h,
+    actions:'<button type="button" class="rea-smr-btn ghost" data-mclose>关闭</button>'});
+}
+function confirmDelete(s){
+  openModal({title:'删除方案',width:460,
+    body:'<p class="rea-smr-confirm">删除后「'+esc(s.name)+'」立即停止关键词回复，且不可恢复。</p>',
+    actions:'<button type="button" class="rea-smr-btn ghost" data-mclose>取消</button>'
+      +'<button type="button" class="rea-smr-btn danger" data-mok>删除</button>',
+    onOk:function(){
+      var idx=SCHEMES.indexOf(s);
+      if(idx>=0)SCHEMES.splice(idx,1);
+      closeModal();
+      if(state.tab==='keyword')renderList();
+      toast('方案已删除');
+    }});
+}
+
+/* ---------- 提示条 ---------- */
+function toast(msg){
+  var t=document.createElement('div');t.className='rea-smr-toast';t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(function(){t.classList.add('on')},10);
+  setTimeout(function(){t.classList.remove('on');setTimeout(function(){if(t.parentNode)t.parentNode.removeChild(t)},200)},2200);
+}
+
+/* ---------- 接线 ---------- */
+if(tabDefault)tabDefault.addEventListener('click',function(){setTab('default')});
+tabKeyword.addEventListener('click',function(){setTab('keyword')});
+[tabDefault,tabKeyword].forEach(function(t){
+  if(!t)return;
+  t.addEventListener('keydown',function(e){
+    if(e.key==='Enter'||e.key===' '){e.preventDefault();this.click();}
+  });
+});
+window.addEventListener('resize',function(){
+  if(state.tab!=='keyword'&&tabDefault){var ink2=document.querySelector('.ant-tabs-ink-bar');}
+});
+
+bar.addEventListener('click',function(e){
+  var b=e.target.closest('button');
+  if(!b)return;
+  if(b.hasAttribute('data-filter')){
+    state.name=qName.value;state.status=qStatus.value;page=1;renderList();
+  }else if(b.hasAttribute('data-reset')){
+    qName.value='';qStatus.value='all';state.name='';state.status='all';page=1;renderList();
+  }else if(b.hasAttribute('data-new')){
+    openDrawer(null);
+  }
+});
+qName.addEventListener('keydown',function(e){
+  if(e.key==='Enter'){e.preventDefault();state.name=this.value;state.status=qStatus.value;page=1;renderList();}
+});
+
+content.addEventListener('click',function(e){
+  var b=e.target.closest('[data-act],[data-page]');
+  if(!b)return;
+  if(b.hasAttribute('data-page')){
+    var p=+b.getAttribute('data-page');
+    if(p>=1){page=p;renderList();}
+    return;
+  }
+  var act=b.getAttribute('data-act');
+  if(act==='new'){openDrawer(null);return;}
+  if(act==='clearfilter'){qName.value='';qStatus.value='all';state.name='';state.status='all';page=1;renderList();return;}
+  var s=findScheme(+b.getAttribute('data-id'));
+  if(!s)return;
+  if(act==='edit')openDrawer(s);
+  else if(act==='preview')previewScheme(s);
+  else if(act==='toggle'){
+    s.status=s.status==='启用'?'禁用':'启用';
+    s.updated=nowStr();
+    renderList();toast(s.status==='启用'?'方案已启用':'方案已禁用');
+  }else if(act==='del'){confirmDelete(s);}
+});
+
+drawer.addEventListener('click',function(e){
+  var b=e.target.closest('button');
+  var tag=e.target.closest('[data-deltag]');
+  if(tag){
+    var kind=tag.getAttribute('data-deltag'),idx=+tag.getAttribute('data-i');
+    drawerState[kind].splice(idx,1);renderTags(kind);return;
+  }
+  if(!b)return;
+  if(b.hasAttribute('data-close')){closeDrawer();return;}
+  if(b.hasAttribute('data-addkw')){addKw(b.getAttribute('data-addkw'));return;}
+  if(b.hasAttribute('data-addcontent')){
+    if(drawerState.contents.length>=5)return;
+    syncContents();drawerState.contents.push({type:'文本',text:'',file:''});renderContents();return;
+  }
+  if(b.hasAttribute('data-delcontent')){
+    syncContents();
+    var di=+b.getAttribute('data-delcontent');
+    drawerState.contents.splice(di,1);renderContents();return;
+  }
+  if(b.hasAttribute('data-save')){saveDrawer();return;}
+});
+drawer.addEventListener('input',function(e){
+  var t=e.target;
+  if(t.hasAttribute('data-kwin')){setErr('kw','');}
+  if(t.id==='reaSmrName'){setErr('name','');}
+  if(t.classList.contains('rea-smr-delay')){setErr('delay','');}
+  if(t.classList.contains('rea-smr-suffix')){setErr('suffix','');}
+  if(t.classList.contains('rea-smr-t1')||t.classList.contains('rea-smr-t2')){setErr('time','');}
+  if(t.hasAttribute('data-ctext')){setErr('content','');}
+});
+drawer.addEventListener('keydown',function(e){
+  var t=e.target;
+  if(t.hasAttribute('data-kwin')&&e.key==='Enter'){e.preventDefault();addKw(t.getAttribute('data-kwin'));}
+});
+drawer.addEventListener('change',function(e){
+  var t=e.target;
+  if(t.hasAttribute('data-ctype')){
+    syncContents();
+    var idx=+t.getAttribute('data-ctype');
+    drawerState.contents[idx].type=t.value;
+    drawerState.contents[idx].file='';
+    renderContents();return;
+  }
+  if(t.hasAttribute('data-cfile')){
+    var fi=+t.getAttribute('data-cfile');
+    drawerState.contents[fi].file=t.files&&t.files[0]?t.files[0].name:'';
+    renderContents();return;
+  }
+});
+drawer.addEventListener('click',function(e){
+  var up=e.target.closest('[data-cupload]');
+  if(up){var inp=up.querySelector('input[type=file]');if(inp)inp.click();}
+});
+dSwitch.addEventListener('click',function(){
+  var on=this.getAttribute('aria-checked')!=='true';
+  this.setAttribute('aria-checked',on?'true':'false');
+  updateSuffix();if(on)setTimeout(function(){dSuffix.focus()},0);
+});
+mask.addEventListener('click',closeDrawer);
+modalMask.addEventListener('click',closeModal);
+modal.addEventListener('click',function(e){
+  var b=e.target.closest('button');if(!b)return;
+  if(b.hasAttribute('data-mclose')){closeModal();return;}
+  if(b.hasAttribute('data-mok')&&modalOK)modalOK();
+});
+document.addEventListener('keydown',function(e){
+  if(e.key!=='Escape')return;
+  if(drawer.classList.contains('on')){closeDrawer();return;}
+  if(modal.classList.contains('on'))closeModal();
+});
+
+/* 默认页签那条快照筛选栏的按钮挂上本页标记类，由样式统一成浅蓝／描边／主操作 */
+var sbs=document.querySelectorAll('.searchform .ant-btn'),si;
+for(si=0;si<sbs.length;si++){
+  var stxt=(sbs[si].textContent||'').replace(/\s+/g,'');
+  if(stxt==='筛选')sbs[si].classList.add('rea-smr-snap-filter');
+  else if(stxt==='重置')sbs[si].classList.add('rea-smr-snap-reset');
+  else if(stxt==='新建')sbs[si].classList.add('rea-smr-snap-new');
+}
+
+/* 默认页签原样；关键词页签的筛选栏平时收起 */
+bar.style.display='none';
+})();
+`;
+  }
+
   function reaOverviewDataJs(){
     var tree=document.createElement('div');
     tree.innerHTML=docOf('srcBoard');
@@ -24981,6 +25682,8 @@ if(ST){
     [REA_MB_MAT_DETAIL]: { html: 'srcBoardMatDetail', css: REA_BOARD_CSS + REA_MB_CSS, js: reaMatUsageJs },
     /* 素材库列表只补一列「使用情况」，正文仍是快照（不带 html） */
     '素材库': { css: REA_MLUSE_CSS, js: reaMatListUseJs },
+    /* 智能回复（2026-11-10）：关键词应答方案页签 ＋ 新建/编辑方案抽屉 */
+    '智能回复': { css: REA_SMR_CSS, js: reaSmrJs },
     '微小助看板 · 任务列表': { html: 'srcBoardTasks', css: REA_BOARD_CSS, js: reaBoardTasksJs },
     [REA_METRIC_PAGE]: { html: 'srcBoardTasks', css: REA_BOARD_CSS, js: reaBoardTasksJs },
     '微小助看板 · 执行人明细': { html: 'srcBoardTask', css: REA_BOARD_CSS, js: reaBoardTaskJs },
