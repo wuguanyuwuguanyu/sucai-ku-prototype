@@ -2559,7 +2559,8 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
    transform-origin 默认中心，translate 移动的是缩放后的中心，所以终点圆心＝球的圆心。 */
 @keyframes panelToBall{from{opacity:1;transform:none;border-radius:16.5px}
   to{opacity:0;transform:translate(var(--bx,0),var(--by,0)) scale(var(--sx,.12),var(--sy,.12));border-radius:50%}}
-#aiPanel.to-ball{animation:panelToBall .12s var(--emph) forwards;pointer-events:none}
+/* #hpPanel 也在列（ADR-0093）：从二级页收起时屏上那张卡就是清单，缩成球的是它，不是被它盖住的辅助浮层 */
+#aiPanel.to-ball,#hpPanel.to-ball{animation:panelToBall .12s var(--emph) forwards;pointer-events:none}
 /* 系统开了「减弱动效」时全部瞬切；JS 侧 pmotOff() 也会直接走同步分支，这里是第二道保险 */
 @media (prefers-reduced-motion:reduce){.panel.anim-out,.panel.anim-in,.panel.to-ball,.bmenu.anim-out,.mball.anim-in,.ball.glide{animation:none;transition:none}}
 .panel-head{flex:none;display:flex;align-items:center;gap:8px;padding:10px 14px 8px;background:var(--sc-low);border-bottom:1px solid var(--outline-variant);cursor:grab;touch-action:none;user-select:none}
@@ -2720,6 +2721,22 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
    同层里后画的压在上面；悬浮球是 73，照旧浮在清单上方（点球换到素材库面板＝一次正常的后开者胜）。
    曾经写成 74 想"压上去"，那会把球也盖住，与其它面板的观感不一致。
    `.stack` 只留在 JS 与冒烟里当"这次是下钻来的子层"的记号，不是靠它定层级的。 */
+/* ===== 二级页（ADR-0093）：从辅助时间线点「查看全部」进来的这一层，是**辅助浮层自己的一页** =====
+   不是"又开了一块"：站位抄父层、进场不播 popCard（"新开一块"的观感多半就是这两件事凑出来的）。
+   头部三件按页分工——
+     · 左上角一枚「‹」返回（标题顺移到 38），只褪这一层，时间线与滚动位置原样留着；
+     · 右上角换成父层同一枚「收起 ⌄」（收起为球，展开还落这一页）；
+     · 下钻页**不留「关闭」**：要关先返回，免得看素材时误关掉整块聊天辅助。
+   独立清单（横幅／素材库面板进来的那条）不吃这些规则：它没有父层，角块仍是 ✕。 */
+.hp-back{position:absolute;left:4px;top:0;width:30px;height:40px;padding:0;border:none;border-radius:8px;
+  display:none;align-items:center;justify-content:center;background:none;color:#587AD9;cursor:pointer}
+#hpPanel.stack .hp-back{display:flex}
+.hp-back:active{background:rgba(255,255,255,.82)}
+.hp-back:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+#hpPanel.stack #hpTitle>.ra-hit-sec{left:38px}
+#hpPanel .hp-fold{display:none;width:58px;gap:3px;font-size:11px;font-weight:500;color:#587AD9}
+#hpPanel.stack .hp-fold{display:flex}
+#hpPanel.stack .ai-close:not(.hp-fold){display:none}
 
 /* ===== 素材库面板的卡（ADR-0075 ④）：标题（渐变色字）＋一行摘要＋行尾两枚取用钮、右上角一枚来源角标 =====
    稿 670×134、行距 146 → 368×73.6、行距 80.2（卡间距 6.6）；白卡 90% 底、圆角 26 → 14.3、
@@ -3695,7 +3712,13 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
                    它写不得宽泛的 `#hpPanel .ra-hit-sec`——壳若也带同一个类，两层都会被绝对定位、
                    外壳宽度塌成 0，标题会一个字一行竖排；2026-10-15 真实出现过，见 ADR-0061 决策 6）。
                    所以这里带不带这个类对渲染都没有影响，带上只是冗余。 -->
+              <!-- 二级页的返回（ADR-0093）：只在 .stack（从辅助时间线下的钻）时显示，压在标题左侧；
+                   独立清单没有父层可回，这一枚整块不出现（display:none）。 -->
+              <button class="hp-back" onclick="hpBack()" title="返回聊天辅助" aria-label="返回聊天辅助"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg></button>
               <span id="hpTitle"></span>
+              <!-- 下钻页的角块＝「收起 ⌄」，与父层同一枚、同一个去向（收进模块球，展开落回这一页）；
+                   独立清单的角块仍是 ✕（下面那枚），二者由 .stack 二选一显示。 -->
+              <button class="ai-close hp-fold" onclick="closeAiPanel(false,true)" title="收起为悬浮球" aria-label="收起为悬浮球"><span>收起</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button>
               <button class="ai-close" onclick="closeHpPanel()" title="收起"><svg width="11" height="11" viewBox="0 0 20.0017 20" fill="#AAC1E5" aria-hidden="true"><path d="M10.0008 7.94717L2.48033 0.424977C1.9137 -0.141659 0.994998 -0.141659 0.428363 0.424977C-0.138273 0.991612 -0.138273 1.91031 0.428363 2.47695L7.94717 9.99914L0.424977 17.5196C-0.141659 18.0863 -0.141659 19.005 0.424977 19.5716C0.991612 20.1382 1.91031 20.1382 2.47694 19.5716L10.0008 12.0528L17.5213 19.575C17.8879 19.9415 18.4221 20.0847 18.9228 19.9505C19.4236 19.8164 19.8147 19.4253 19.9488 18.9245C20.083 18.4238 19.9398 17.8896 19.5733 17.523L12.0545 9.99914L19.5767 2.47864C19.9432 2.11209 20.0864 1.57783 19.9522 1.07712C19.8181 0.576403 19.4269 0.185299 18.9262 0.0511333C18.4255 -0.0830329 17.8913 0.0601208 17.5247 0.42667L10.0008 7.94548V7.94717Z"/></svg></button>
             </div>
             <!-- 搜索条（ADR-0089）：恒在。它收窄的是**这一批命中**（标题／正文／关键词／附件名），不是全库——
@@ -8689,30 +8712,36 @@ function panelDrag(el){
     var maxT=916-pn.offsetHeight-4;
     var nx=(ox+(e.clientX-sx)-inner.left)/k;
     dxL=(e.clientX-sx)/k;dyL=(e.clientY-sy)/k;
-    if(pn.id==='aiPanel'){
+    if(pn.id==='aiPanel'||(pn.id==='hpPanel'&&hpChild)){
       /* 横向**不夹取**（ADR-0092）：推出去就是收起的手势，浮层得跟手滑出屏外（.phone-inner 裁掉）。
          这里只记「最后一个合法位」——收起动画跑完、display 落 none 之后拿它复位，
-         否则下次从入口打开会停在半截屏外。 */
+         否则下次从入口打开会停在半截屏外。
+         二级页（ADR-0093）走同一条：它看着就是辅助浮层那一格，拖它＝拖那块面板。 */
       pn.style.left=nx+'px';
       legalL=Math.max(4,Math.min(nx,maxL));
     }else{
       pn.style.left=Math.max(4,Math.min(nx,maxL))+'px';
     }
     pn.style.top=Math.max(minT,Math.min((oy+(e.clientY-sy)-inner.top)/k,maxT))+'px';
+    if(pn.id==='hpPanel'&&hpChild)hpMirror(pn); /* 两件同框同移，别拖出一条缝露出下面的时间线 */
   });
   /* 没推够＝弹回：纵向拖动时一直是实时夹取的，横向这次放开了，松手后得把浮层送回墙里 */
   function snapBack(){
     var maxL=412-pn.offsetWidth-4;
+    var L=Math.max(4,Math.min(pn.offsetLeft,maxL))+'px';
     pn.style.transition='left .18s var(--emph)';
-    pn.style.left=Math.max(4,Math.min(pn.offsetLeft,maxL))+'px';
-    setTimeout(function(){if(pn)pn.style.transition=''},220);
+    pn.style.left=L;
+    /* 二级页弹回时父层跟着用同一条过渡回来（ADR-0093）：只动前一件的话，动画期间边缘会露一条时间线 */
+    var a=(pn.id==='hpPanel'&&hpChild)?$('aiPanel'):null;
+    if(a){a.style.transition='left .18s var(--emph)';a.style.left=L}
+    setTimeout(function(){if(pn)pn.style.transition='';if(a)a.style.transition=''},220);
   }
   /* 松手（或手势被引擎掐掉）即开窗口，上面那条吞 click 的判据就靠它：只有真的拖过（captured）才开 */
   function dragEnd(allowDrop,e){
     if(captured)el._swallowUntil=Date.now()+150;
     var was=captured;down=false;captured=false;
     if(!was||!pn)return;
-    if(allowDrop&&pn.id==='aiPanel'){
+    if(allowDrop&&(pn.id==='aiPanel'||(pn.id==='hpPanel'&&hpChild))){
       var kk=inner.width/412; /* k 在 pointermove 里；这里另算一次，别跨闭包借 */
       var atEdge=e&&(e.clientX-inner.left<=EDGE*kk||inner.right-e.clientX<=EDGE*kk);
       var drop=Math.abs(dxL)>=DROP||(atEdge&&Math.abs(dxL)>=MIN2&&Math.abs(dxL)>Math.abs(dyL));
@@ -9246,8 +9275,11 @@ var hpOpen=false,hpHits=[],hpMsg='',hpMsgs=[],hpExpId=null,hpChild=false,hpQ='';
    hpMsgs＝这一批命中清单的触发原话（ADR-0081：与素材库面板区段同一套合并口径——区段还在时新消息追加合并、
    按素材去重，不按时间窗；清单关了＝这一批结束）。**为什么还要 hpMsg**：横幅只说最新一条，清单才是一阵子；
    行内「为什么命中」逐个素材回算，不再只认 hpMsg。hpExpId＝本浮层同一时刻唯一摊开的那一行（按素材 id，只手风琴本表）。
-   hpChild＝这一份清单是从**辅助浮层下钻**来的（ADR-0089）：叠在时间线上、关掉只褪这一层；
-   hpQ＝清单内的搜索词，只筛这一批。 */
+   hpChild＝这一份清单是从**辅助浮层下钻**来的（ADR-0093 起它是父层自己的一页）：叠在时间线上、返回只褪这一层；
+   hpQ＝清单内的搜索词，只筛这一批。
+   hpStash／hpScroll＝**收起为球**时把这一页留档（ADR-0093）：展开落回清单、滚动位置照旧；
+   hpPosedChild／hpOwnL／hpOwnT＝二级页与独立清单两种站位——下钻抄父层的位置，独立清单回自己的位置。 */
+var hpStash=false,hpScroll=0,hpPosedChild=false,hpOwnL=14,hpOwnT=47;
 /* ---------- 命中两个浮层元素：横幅 #hpTip（先说一声）与浮层 #hpPanel（点开才看） ----------
    未开启聊天辅助时的命中链路＝**悬浮球（折叠态）→ 横幅 #hpTip → 浮层 #hpPanel**，三段是同一件事的三步：
    引擎发现了 → 告诉你有这件事 → 你要看才摊开清单。中途那一跳是用户点名要的（原先是命中即自动展开浮层）。 */
@@ -9340,20 +9372,57 @@ function hpOpenPanel(){
 /* 打开命中清单（ADR-0089 起有三条入口，正文只有这一份）：
    ① 屏顶横幅（未开辅助）：清单占屏，问的就是"这一阵子命中了什么"；
    ② 素材库面板的「查看全部 N 条 ›」：面板让位，清单接替（后开者胜，ADR-0028 决策 3）；
-   ③ 辅助浮层的「查看全部 N 条 ›」：清单**叠在时间线上**（child=1），关掉只褪这一层——
+   ③ 辅助浮层的「查看全部 N 条 ›」：清单**叠在时间线上**（child=1），返回只褪这一层——
       时间线、问句块、话术卡、滚动位置一个都不动，员工看完还能接着发。
-   child 只影响"能不能共存 + 层级"，正文、行、取用、搜索全共用。 */
+   child 只影响"站位与要不要播进场动画"（ADR-0093：下钻＝辅助浮层自己的一页，不新开一块），
+   正文、行、取用、搜索全共用。 */
 function hpOpenList(msgs,child){
   hpOpen=true;hpChild=!!child;hpExpId=null;
+  hpStash=false;                       /* 新开一批＝收起时留的旧档作废 */
   hpSearchReset();
   hpMsgs=(msgs||[]).slice();
   hpHits=hpMerged();
   var p=$('hpPanel');if(!p)return;
   p.classList.toggle('stack',hpChild);
+  hpPose(p);
   panelShow(p,false);
   hpRender();
   var ph=$('hpHead');if(ph&&!ph._dragged){panelDrag(ph);ph._dragged=true}
 }
+/* 清单的站位（ADR-0093）：
+   · 下钻（hpChild）＝站到辅助浮层那一格。两个节点是兄弟，不抄位置的话，辅助浮层被拖到别处、
+     清单还在默认位——一眼就看出"这是又开了一块"；拖清单时由 panelDrag 把父层同步带走。
+     进场也不播 popCard（就地换页），inline animation:none 压到关闭／收起时再清掉。
+   · 独立清单＝回自己的位置（上次拖到的合法位；从没拖过就是 HTML 里那对默认值 14/47）。 */
+function hpPose(p){
+  p=p||$('hpPanel');if(!p)return;
+  if(hpChild){
+    if(!hpPosedChild){
+      var l=parseFloat(p.style.left),t=parseFloat(p.style.top);
+      if(isFinite(l))hpOwnL=l;
+      if(isFinite(t))hpOwnT=t;
+      hpPosedChild=true;
+    }
+    var a=$('aiPanel');
+    if(a){
+      var al=parseFloat(a.style.left),at=parseFloat(a.style.top);
+      if(isFinite(al))p.style.left=al+'px';
+      if(isFinite(at))p.style.top=at+'px';
+    }
+    p.style.animation='none';
+  }else{
+    if(hpPosedChild){p.style.left=hpOwnL+'px';p.style.top=hpOwnT+'px';hpPosedChild=false}
+    p.style.animation='';
+  }
+}
+/* 把下钻页的移动同步给父层：两件同尺寸、父子同框，只动前一件的话拖开一条缝就露出下面的时间线 */
+function hpMirror(p){
+  var a=$('aiPanel');if(!a)return;
+  a.style.left=p.style.left;a.style.top=p.style.top;
+}
+/* 二级页的「‹」＝只褪清单这一层（ADR-0093）：时间线原样还在，这一批到此结束——
+   再点「查看全部」是重新起一批、搜索词也复位（与 ✕ 同一条收尾，不跨页残留）。 */
+function hpBack(){if(hpChild)closeHpPanel()}
 /* 清单内搜索：只筛**这一批**（标题／正文／关键词／附件名，与库内搜索同一个谓词）。
    它不换视图、不碰会话，清空即回全量——所以不需要"搜索态"那一套，输入即筛。 */
 function hpSearch2(v){hpQ=(v||'').trim();hpExpId=null;hpSearchClrSync();hpRender()}
@@ -9387,9 +9456,13 @@ function hpAdd(msg){
 }
 function closeHpPanel(instant){
   hpOpen=false;hpExpId=null;hpMsgs=[]; /* 清单关了＝这一批结束（ADR-0081）；再来的命中从横幅重新起一批 */
-  hpChild=false;
+  hpChild=false;hpStash=false;          /* 收起时留的档也一并作废——点了返回／✕ 就是这一页到此为止 */
   hpSearchReset();
-  var p=$('hpPanel');if(p)p.classList.remove('stack');
+  var p=$('hpPanel');
+  if(p){
+    p.classList.remove('stack');
+    p.style.animation='';               /* 下钻页开时用 inline none 压过 popCard；退场要交还给 .anim-out */
+  }
   hpTipHide();                          /* 横幅是这份清单的**前一态**：浮层都不在了，横幅更没有留着的理由 */
   panelHide(p,instant);                 /* 与另两块同一条退场（ADR-0088） */
   /* 与 closeAiPanel 同一条口径：不动悬浮球。球是素材库的折叠态、存活条件是「微信前台」，
@@ -9612,9 +9685,12 @@ function raFull(s){return s.lead+' '+s.pts.map(function(t,i){return (i+1)+'. '+t
 function aiToggle(){ if(aiOpen)closeAiPanel(false,true); else openAiPanel(); }
 function openAiPanel(){
   closeBallMenu();                    /* 同上：浮层开＝菜单收 */
+  /* 收起为球时若停在二级页，这一页不销毁（ADR-0093）：再展开还落清单，滚动位置照旧 */
+  var resume=hpStash&&hpMsgs.length&&hpChild;
   var swap=panelOpen||hpOpen;         /* 捕获在关闭之前：有另一块在场＝这次是"换掉"，走并叠（ADR-0088） */
   if(panelOpen)closePanel();          /* 后开者胜：素材库面板让位（两个方向都成立的关键） */
-  closeHpPanel();                     /* 同上：命中浮层也让位——开着辅助时不留在屏上（与 matchKw 的分流同一条口径） */
+  if(!resume)closeHpPanel();          /* 同上：命中浮层也让位——开着辅助时不留在屏上（与 matchKw 的分流同一条口径） */
+  hpTipHide();                        /* 辅助一开，命中就走时间线：横幅（若有）不该再挂着 */
   aiOpen=true;aiBallOn=true;          /* 开过一次就记住：收起时才有那颗模块球，没开过不凭空出现 */
   aiBallHide();
   for(var i=0;i<pendingHits.length;i++)pendingHits[i].done=true; /* 打开浮层＝命中已阅、角标清零（与素材面板 openPanel 同一口径） */
@@ -9634,7 +9710,19 @@ function openAiPanel(){
   var b=$('aiBody'),lr=b?b.querySelector('.ra-round.last'):null;
   if(b){b.scrollTop=0;if(lr)raPin(lr);else b.scrollTop=b.scrollHeight}
   var ph=$('aiHead'); if(ph&&!ph._dragged){panelDrag(ph);ph._dragged=true} /* 复用面板头部拖拽（closest('.panel') 成立） */
+  if(resume)hpResumeChild();           /* 收起前停在二级页：展开仍落清单（ADR-0093），时间线在下面照常重建 */
   if(!S.aiTipsSeen)aiTipsShow();       /* 首次说明弹窗 */
+}
+/* 收起为球后再展开，落回二级页（ADR-0093，产品 2026-11-10 口径）：
+   DOM 原样留着（不重画），滚动位置还原；站位重新对一次父层——收起期间它可能被拖过、被 aiReopenRestore 复位过。 */
+function hpResumeChild(){
+  var p=$('hpPanel');if(!p||!hpStash)return;
+  hpStash=false;hpOpen=true;hpChild=true;
+  p.classList.add('stack');
+  hpPose(p);
+  panelShow(p,false);
+  var b=$('hpBody');if(b)b.scrollTop=hpScroll;
+  var ph=$('hpHead');if(ph&&!ph._dragged){panelDrag(ph);ph._dragged=true}
 }
 /* 收起成球（ADR-0090）：把面板的中心一路缩到模块球的圆心，球就是这块面板的折叠态，不是新冒出来的东西。
    落点与尺寸都按 412×916 布局像素算，不受外层 .phone 的 scale 影响；时长＝PMOT.out（120ms），
@@ -9675,14 +9763,28 @@ function aiReopenRestore(p){
 }
 function closeAiPanel(instant,toBall){
   aiOpen=false;
-  if(hpChild)closeHpPanel(instant); /* 下钻的清单是它的下一层（ADR-0089）：这一层收，那一层不能留在屏上裸着 */
+  /* 二级页遇到「收起」（ADR-0093，产品 2026-11-10）：这一页**不销毁**，展开还落回清单。
+     其余三条都不留档——被别的浮层顶掉（不带 toBall）、关闭（aiCloseAll）、重置：那几条都走 closeHpPanel。 */
+  var keepChild=hpChild&&toBall&&!instant;
+  if(hpChild&&!keepChild)closeHpPanel(instant); /* 下钻的清单是它的下一层（ADR-0089）：这一层收，那一层不能留在屏上裸着 */
   raStreamStop(); /* 浮层都不在了，流式链必须掐断——否则 timer 会继续在隐藏的卡片上敲字 */
   raBatchReset();  /* 收起＝没人看着这一问了：停掉 3 秒计时，重开时按会话重建（收口的流不会在隐藏卡片上跑） */
   var p=$('aiPanel');
   /* 用户按「收起」或 Dock 开关（toBall=true）：面板缩到模块球；
      被别的浮层顶掉（openPanel → closeAiPanel，不带 toBall）仍走原来的淡出——屏上另有一块面板正在进场，
      再飞一颗球会抢动作线。两条路都收成同一颗球，只是动作不同。 */
-  if(toBall&&!instant&&!pmotOff()&&PMOT.out>0&&S.floatOn&&aiBallOn)aiCollapseToBall(p);
+  if(keepChild){
+    /* 屏上那张卡是二级页：缩成球的是**它**。辅助浮层直接落隐藏、不跟动画（两张同尺寸的卡一起缩就是重影）；
+       档案里只留清单这一页本身（msgs／搜索／滚动位置），时间线照常由下次 openAiPanel 重建。 */
+    hpStash=true;hpOpen=false;
+    var hb=$('hpBody');hpScroll=hb?hb.scrollTop:0;
+    panelHide(p,true);
+    aiReopenRestore(p);                 /* 推出屏外那次收起：先把父层位置复位（legalL 在拖拽里已夹过，跳不了） */
+    var hp=$('hpPanel');
+    if(hp)hp.style.animation='';        /* 下钻页用 inline none 压着 popCard，别把收起动画也压掉 */
+    if(toBall&&!pmotOff()&&PMOT.out>0&&S.floatOn&&aiBallOn)aiCollapseToBall(hp);
+    else panelFinish(hp);
+  }else if(toBall&&!instant&&!pmotOff()&&PMOT.out>0&&S.floatOn&&aiBallOn)aiCollapseToBall(p);
   else{ /* 120ms 淡出后才落 display（ADR-0088） */
     panelHide(p,instant);
     /* 被推出屏外的那次收起若走了这条（别的浮层顶掉／减弱动效）：退场落地后同样得复位 */
