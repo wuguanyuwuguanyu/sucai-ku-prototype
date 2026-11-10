@@ -20614,7 +20614,52 @@ tb.addEventListener("click",function(e){
        只给这行加，别动快照的正文 */
     + '.rea-baf-tip-label{flex:none;white-space:nowrap}'
     + '.rea-baf-err{display:none;margin:4px 0 0;max-width:560px;font-size:12px;line-height:20px;color:#ff4d4f}'
-    + '.rea-baf-err.on{display:block}';
+    + '.rea-baf-err.on{display:block}'
+    /* ---- 2026-11-10 四段重排：分节、行壳、底栏与新增控件 ----
+       版式照 ADR-0082：白底、无卡片框、留白加分节线，蓝只给主操作与选中态。
+       配色、行距与群发／发圈两页同一套，别在这里另起一套。 */
+    + '.rea-baf-sec{padding:0 0 8px;margin-bottom:16px;border-bottom:1px solid #E5E8EF}'
+    + '.rea-baf-sec:last-of-type{border-bottom:0}'
+    + '.rea-baf-sechd{display:flex;align-items:center;gap:8px;margin:8px 0 18px}'
+    + '.rea-baf-no{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:#E6F4FF;color:#1677FF;font-size:12px;font-weight:600;flex:none}'
+    + '.rea-baf-sechd h3{margin:0;font-size:16px;font-weight:600;color:#1F2329}'
+    + '.rea-baf-secsub{font-size:12px;color:#8F959E}'
+    + '.rea-baf-row{display:flex;align-items:flex-start;margin:0 0 18px}'
+    + '.rea-baf-lab{flex:0 0 96px;width:96px;box-sizing:border-box;padding-right:16px;text-align:right;font-size:14px;line-height:32px;color:#646A73;white-space:nowrap}'
+    + '.rea-baf-lab.req:before{content:"*";margin-right:4px;color:#FF4D4F;font-family:SimSun,sans-serif}'
+    + '.rea-baf-ctl{flex:1 1 auto;min-width:0}'
+    + '.rea-baf-wide input.ant-input,.rea-baf-wide textarea.ant-input{box-sizing:border-box;width:100%;max-width:560px}'
+    + '.rea-baf-more{margin-top:8px;border-top:1px solid #E5E8EF}'
+    + '.rea-baf-moretog{display:flex;align-items:center;gap:8px;padding:12px 0;font-size:14px;color:#646A73}'
+    + '.rea-baf-moresub{font-size:12px;color:#8F959E}'
+    + '.rea-baf-morebd{padding-top:8px}'
+    + '.rea-baf-exec{position:relative}'
+    + '.rea-baf-select{position:relative;display:flex;align-items:center;box-sizing:border-box;width:280px;max-width:100%;height:32px;padding:0 32px 0 11px;border:1px solid #E5E8EF;border-radius:8px;background:#fff;font-size:14px;color:#8F959E;text-align:left;cursor:pointer}'
+    + '.rea-baf-select:hover{border-color:#1677FF}'
+    + '.rea-baf-seltext{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
+    + '.rea-baf-selcaret{position:absolute;right:10px;top:50%;margin-top:-6px;font-size:10px;line-height:12px;color:#8F959E;pointer-events:none}'
+    + '.rea-baf-selmenu{position:absolute;z-index:30;left:0;top:calc(100% + 4px);box-sizing:border-box;display:none;width:280px;max-width:100%;padding:6px;border:1px solid #E5E8EF;border-radius:8px;background:#fff;box-shadow:0 6px 16px rgba(0,0,0,.08)}'
+    + '.rea-baf-selmenu.on{display:block}'
+    + '.rea-baf-eopt{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:8px 10px;border:0;border-radius:6px;background:transparent;font-size:14px;color:#1F2329;text-align:left;cursor:pointer}'
+    + '.rea-baf-eopt:hover{background:#F7F8FA}'
+    + '.rea-baf-eoptn{font-size:12px;color:#8F959E}'
+    + '.rea-baf-dt{width:240px;max-width:100%}'
+    + '.rea-baf-promise{max-width:560px;margin:0 0 8px 112px;padding:8px 12px;border-radius:8px;background:#F7F8FA;font-size:13px;line-height:20px;color:#1F2329}'
+    /* bottom:-20px 抵掉快照滚动容器（._con_）自带的 20px 下内边距，操作条才贴得住下沿 */
+    + '.rea-baf-act{position:sticky;bottom:-20px;z-index:6;display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:8px;padding:14px 0;border-top:1px solid #E5E8EF;background:#fff}'
+    + '.rea-baf-actsum{font-size:13px;color:#646A73}'
+    + '.rea-baf-actbtns{display:flex;gap:8px}'
+    + '.rea-baf-file{display:flex;align-items:center;gap:12px;font-size:13px;color:#646A73}'
+    + '.rea-baf-filename{max-width:360px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
+    + '.rea-baf-filex{border:0;background:transparent;padding:0 4px;font-size:14px;line-height:16px;color:#999;cursor:pointer}'
+    + '.rea-baf-filex:hover{color:#FF4D4F}'
+    + '.rea-baf-tags{box-sizing:border-box;display:flex;align-items:center;flex-wrap:wrap;gap:4px;width:100%;max-width:560px;min-height:32px;padding:2px 8px;border:1px solid #E5E8EF;border-radius:8px;background:#fff;cursor:text}'
+    + '.rea-baf-tags:focus-within{border-color:#1677FF;box-shadow:0 0 0 2px #E6F4FF}'
+    + '.rea-baf-tags input{flex:1;min-width:140px;border:0;outline:0;background:transparent;font-size:14px;line-height:24px;color:#1F2329}'
+    + '.rea-baf-tags input::placeholder{color:#C9CDD4}'
+    + '.rea-baf-chip2{display:inline-flex;align-items:center;gap:2px;height:24px;padding:0 4px 0 8px;border-radius:4px;background:#F7F8FA;font-size:12px;line-height:24px;color:#1F2329}'
+    + '.rea-baf-chipx2{border:0;background:transparent;padding:0 2px;font-size:13px;line-height:16px;color:#8F959E;cursor:pointer}'
+    + '.rea-baf-chipx2:hover{color:#FF4D4F}';
 
   /* 素材库弹窗的注入脚本（四页共用一份，别各页再抄一遍）。各页只传这几枚口径参数：
        tip      弹窗标题下那句说明（各页口径不同，照实说清自己列的是什么）
@@ -22760,6 +22805,7 @@ else if(PAGE==='群发群组 · 新建')initQs();
 'use strict';
 function norm(s){return String(s==null?'':s).replace(/\s+/g,'')}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function qa(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
 
 /* 与「微信群管理」演示台账对齐：只取状态「正常」的 8 个群（「wogf」被踢出群，不列）；
    台账里「二组测试号培养互动」有两条（36 人 / 102 人），按两条群记录保留，靠人数区分。 */
@@ -22969,12 +23015,6 @@ function makePicker(opts){
 }
 
 function show(el,on){if(el)el.style.display=on?'':'none'}
-function setErr(row,msg){
-  var e=row.querySelector('.rea-baf-err');
-  if(!e)return;
-  e.textContent=msg||'';
-  e.className='rea-baf-err'+(msg?' on':'');
-}
 
 /* ---- 第三枚单选钮 ---- */
 var mg=METHOD_ROW.querySelector('.ant-radio-group');
@@ -23074,23 +23114,30 @@ if(iRow){
   var ie=document.createElement('p');ie.className='rea-baf-err';iRow.box.appendChild(ie);
 }
 
-function isGroup(){
-  return selectedLabel(METHOD_ROW)==='添加群内好友';
+/* 三种添加好友方式：manual（手动输入）/ file（文件导入）/ group（添加群内好友）。
+   方式本身没变——仍是快照那三枚单选，这里只读选中文字，再决定哪几行露出来。 */
+function modeKind(){
+  var l=selectedLabel(METHOD_ROW);
+  if(l==='添加群内好友')return 'group';
+  if(l==='文件导入')return 'file';
+  return 'manual';
 }
-var phoneDisp=PHONE_ROW?PHONE_ROW.style.display:'',typeDisp=TYPE_ROW?TYPE_ROW.style.display:'';
+var fileRowEl=null,bafReady=false;
 function syncMethod(){
-  var g=isGroup();
+  var k=modeKind(),g=k==='group';
   if(gRow)show(gRow.row,g);
   if(nRow)show(nRow.row,g);
   if(rRow)show(rRow.row,g);
   if(iRow)show(iRow.row,g);
-  if(PHONE_ROW)PHONE_ROW.style.display=g?'none':phoneDisp;
-  if(TYPE_ROW)TYPE_ROW.style.display=g?'none':typeDisp;
+  if(PHONE_ROW)show(PHONE_ROW,k==='manual');
+  if(fileRowEl)show(fileRowEl,k==='file');
+  if(TYPE_ROW)show(TYPE_ROW,!g);
   /* 整行收起时把开着的下拉一并关掉，免得切回来还是一副开着的样 */
   if(!g){
     groupPicker.close();
     if(regionPicker)regionPicker.close();
   }
+  if(bafReady){bafMethodHint(k);bafRender()}
 }
 function syncModes(){
   if(nRow)show(nVal,modeOf(nRow.row)!=='不限');
@@ -23118,40 +23165,386 @@ function toast(t){
   setTimeout(function(){if(w.parentNode)w.parentNode.removeChild(w)},2400);
 }
 function back(){parent.postMessage({reaPage:'批量加好友'},'*')}
-function validate(){
-  if(gRow)setErr(gRow.row,'');
-  if(nRow)setErr(nRow.row,'');
-  if(rRow)setErr(rRow.row,'');
-  if(iRow)setErr(iRow.row,'');
-  var ok=true;
-  if(gRow&&!groupPicker.get().length){setErr(gRow.row,'请至少选择一个群');ok=false}
-  if(nRow&&modeOf(nRow.row)!=='不限'&&!nInput.value.replace(/\s+/g,'')){setErr(nRow.row,'请填写昵称关键词');ok=false}
-  if(rRow&&modeOf(rRow.row)!=='不限'&&!regionPicker.get().length){setErr(rRow.row,'请选择地区');ok=false}
-  if(iRow){
-    var a=Number(gmin.value),b=Number(gmax.value);
-    if(!isFinite(a)||!isFinite(b)||Math.floor(a)!==a||Math.floor(b)!==b||a<30||b>600||a>b){
-      setErr(iRow.row,'间隔需为整数秒，30 ≤ 最短 ≤ 最长 ≤ 600');ok=false;
+
+/* ---------- 2026-11-10 四段重排 ----------
+   快照把 15 行平铺在一张表里：任务名称挡在最前，执行人员、两个时间夹在中段，
+   方式一换下面几行跟着增减，却没有一段告诉用户现在在定什么；
+   执行人员、两个时间、设置标签还是点不动的静态件，保存按钮压在最底下。
+   这里照群发／发圈同一套走法重排：① 加谁 → ② 怎么加 → ③ 什么时候加 → ④ 谁来加，
+   任务名称与全局弹窗收进常驻的「更多设置」，底部补一条贴在滚动盒下沿的操作条。
+   行仍是快照原节点——单选、开关、输入框的接线不动，这里只搬位置、补几个可点控件。 */
+var FORM=METHOD_ROW.parentNode;
+var wrap=document.createElement('div');wrap.className='rea-baf-form';
+FORM.appendChild(wrap);
+
+var titleBar=document.querySelector('[class*="_titleBar_"]');
+if(titleBar&&norm(titleBar.textContent)==='新建任务')titleBar.textContent='新建批量加好友任务';
+
+/* 其余几行照标签现找，找到才搬；找不到就原样留在旧表里，不硬拼 */
+var ROW_VERIFY=rowOf('验证消息'),ROW_MEMO=rowOf('好友备忘'),ROW_MASK=rowOf('是否遮挡'),
+    ROW_TAGS=rowOf('设置标签'),ROW_EXEC=rowOf('执行人员'),ROW_POPUP=rowOf('全局弹窗'),
+    ROW_START=rowOf('通知时间'),ROW_END=rowOf('截止时间');
+
+function bafNewRow(body,label,req){
+  var r=document.createElement('div');r.className='rea-baf-row';
+  var l=document.createElement('div');l.className='rea-baf-lab'+(req?' req':'');
+  l.textContent=label;
+  var c=document.createElement('div');c.className='rea-baf-ctl';
+  r.appendChild(l);r.appendChild(c);body.appendChild(r);
+  return {row:r,lab:l,ctl:c};
+}
+/* 搬一行：只取快照行的内容盒，行壳与标签重画——快照的标签宽度与负边距写死在行上，
+   跟着搬会把新行撑歪。内容盒里的控件原封不动，已有的事件与 REA_FX 接线都不受影响。 */
+function bafTake(body,row,label,req){
+  if(!row)return null;
+  var lab=row.querySelector('span[class*="_must_"]');
+  var box=lab?lab.nextElementSibling:null;
+  var o=bafNewRow(body,label,req);
+  if(box)o.ctl.appendChild(box);
+  if(row.parentNode)row.parentNode.removeChild(row);
+  return o;
+}
+
+var b1=bafSec('1','加谁','手动输号码、导入名单，或从微信群里挑人');
+var b2=bafSec('2','怎么加','申请里写什么、加上之后怎么标');
+var b3=bafSec('3','什么时候加','到点通知执行人员，截止时间前要加完');
+var b4=bafSec('4','谁来加','执行这条任务的销售分组');
+function bafSec(no,t,sub){
+  var s=document.createElement('section');s.className='rea-baf-sec';
+  s.innerHTML='<div class="rea-baf-sechd"><span class="rea-baf-no">'+no+'</span><h3></h3>'
+    +(sub?'<span class="rea-baf-secsub"></span>':'')+'</div>';
+  s.querySelector('h3').textContent=t;
+  if(sub)s.querySelector('.rea-baf-secsub').textContent=sub;
+  var bd=document.createElement('div');bd.className='rea-baf-secbd';
+  s.appendChild(bd);wrap.appendChild(s);return bd;
+}
+
+/* ---- ① 加谁 ---- */
+var mRow=bafTake(b1,METHOD_ROW,'添加好友方式',true);
+if(mRow){
+  METHOD_ROW=mRow.row;
+  var methodHint=document.createElement('p');methodHint.className='rea-baf-hint';
+  mRow.ctl.appendChild(methodHint);
+  if(TIP_ROW){
+    var tipLab=TIP_ROW.querySelector('span[class*="_must_"]');
+    var tipBox=tipLab?tipLab.nextElementSibling:null;
+    if(tipBox)mRow.ctl.appendChild(tipBox);
+    if(TIP_ROW.parentNode)TIP_ROW.parentNode.removeChild(TIP_ROW);
+  }
+}
+var METHOD_HINTS={
+  manual:'一行一个手机号；执行人员逐个搜索，找到后发好友申请。',
+  file:'上传整理好的号码文件；执行人员按文件里的顺序逐个添加。',
+  group:'从所选微信群里挑人；每个群由它的所属员工执行。'
+};
+function bafMethodHint(k){
+  if(methodHint)methodHint.textContent=METHOD_HINTS[k]||METHOD_HINTS.manual;
+}
+
+var phoneRow=bafTake(b1,PHONE_ROW,'手机号',true);
+if(phoneRow){PHONE_ROW=phoneRow.row;phoneRow.ctl.classList.add('rea-baf-wide')}
+
+/* 文件导入：快照里这枚单选钮没有配任何控件，选中后仍露出手机号输入框。
+   这里补一行「名单文件」，文件导入时替换掉手机号，不让这条路空着。 */
+var fileObj=null,fileInp=null,fileNameEl=null,fileX=null,fileName='';
+(function(){
+  var o=bafNewRow(b1,'名单文件',true);
+  fileObj=o;fileRowEl=o.row;
+  var box=document.createElement('div');box.className='rea-baf-file';
+  fileInp=document.createElement('input');fileInp.type='file';fileInp.style.display='none';
+  var btn=document.createElement('button');
+  btn.type='button';btn.className='ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined';
+  btn.textContent='选择文件';
+  fileNameEl=document.createElement('span');fileNameEl.className='rea-baf-filename';fileNameEl.textContent='未选择文件';
+  fileX=document.createElement('button');fileX.type='button';fileX.className='rea-baf-filex';
+  fileX.textContent='×';fileX.setAttribute('aria-label','移除文件');fileX.style.display='none';
+  box.appendChild(btn);box.appendChild(fileNameEl);box.appendChild(fileX);box.appendChild(fileInp);
+  o.ctl.appendChild(box);
+  var err=document.createElement('p');err.className='rea-baf-err';o.ctl.appendChild(err);
+  btn.addEventListener('click',function(e){e.preventDefault();fileInp.click()});
+  fileInp.addEventListener('change',function(){
+    fileName=fileInp.files&&fileInp.files[0]?fileInp.files[0].name:'';
+    fileNameEl.textContent=fileName||'未选择文件';
+    fileX.style.display=fileName?'':'none';
+    bafErr(o,'');bafRender();
+  });
+  fileX.addEventListener('click',function(e){
+    e.preventDefault();
+    fileName='';fileInp.value='';fileNameEl.textContent='未选择文件';fileX.style.display='none';bafRender();
+  });
+})();
+
+var g1=bafTake(b1,gRow.row,'群组名称',true);if(g1)gRow.row=g1.row;
+var n1=bafTake(b1,nRow.row,'昵称筛选',false);if(n1)nRow.row=n1.row;
+var r1=bafTake(b1,rRow.row,'地区筛选',false);if(r1)rRow.row=r1.row;
+var i1=bafTake(b1,iRow.row,'添加间隔',false);if(i1)iRow.row=i1.row;
+
+/* ---- ② 怎么加 ---- */
+var t1=bafTake(b2,TYPE_ROW,'类型',false);if(t1)TYPE_ROW=t1.row;
+
+var v1=bafTake(b2,ROW_VERIFY,'验证消息',false);
+if(v1)v1.ctl.classList.add('rea-baf-wide');
+var o1=bafTake(b2,ROW_OPT,'备注名',false);
+if(o1)o1.ctl.classList.add('rea-baf-wide');
+var e1=bafTake(b2,ROW_MEMO,'好友备忘',false);
+if(e1)e1.ctl.classList.add('rea-baf-wide');
+bafTake(b2,ROW_MASK,'是否遮挡',false);
+
+/* 设置标签：快照是点不动的 AntD 多选框，换成能敲能删的标签输入 */
+var tagRow=bafTake(b2,ROW_TAGS,'设置标签',false),tags=[],tagInp=null,tagBox=null;
+if(tagRow){
+  tagRow.ctl.innerHTML='';
+  tagBox=document.createElement('div');tagBox.className='rea-baf-tags';
+  tagInp=document.createElement('input');tagInp.type='text';
+  tagInp.placeholder="输入标签名称，多个用「,」隔开";
+  tagInp.setAttribute('aria-label','设置标签');
+  tagBox.appendChild(tagInp);tagRow.ctl.appendChild(tagBox);
+}
+function drawTags(){
+  if(!tagBox)return;
+  tagBox.querySelectorAll('.rea-baf-chip2').forEach(function(c){c.parentNode.removeChild(c)});
+  for(var i=0;i<tags.length;i++){
+    var c=document.createElement('span');c.className='rea-baf-chip2';
+    var s=document.createElement('span');s.textContent=tags[i];
+    var x=document.createElement('button');x.type='button';x.className='rea-baf-chipx2';x.textContent='×';
+    x.setAttribute('data-tag',tags[i]);x.setAttribute('aria-label','移除标签 '+tags[i]);
+    c.appendChild(s);c.appendChild(x);
+    tagBox.insertBefore(c,tagInp);
+  }
+}
+function addTags(raw){
+  var parts=String(raw||'').split(/[,，;；]/),i,t;
+  for(i=0;i<parts.length;i++){
+    t=parts[i].replace(/\s+/g,'');
+    if(t&&tags.indexOf(t)<0)tags.push(t);
+  }
+  drawTags();bafRender();
+}
+if(tagBox){
+  tagBox.addEventListener('click',function(e){
+    var x=e.target.closest?e.target.closest('.rea-baf-chipx2'):null;
+    if(x){
+      e.preventDefault();
+      var t=x.getAttribute('data-tag'),i=tags.indexOf(t);
+      if(i>=0)tags.splice(i,1);
+      drawTags();bafRender();return;
     }
+    if(e.target===tagBox&&tagInp)tagInp.focus();
+  });
+  tagInp.addEventListener('input',function(){
+    if(/[,，]/.test(tagInp.value)){addTags(tagInp.value);tagInp.value=''}
+  });
+  tagInp.addEventListener('keydown',function(e){
+    if(e.key==='Enter'||e.keyCode===13){e.preventDefault();addTags(tagInp.value);tagInp.value=''}
+    if((e.key==='Backspace'||e.keyCode===8)&&!tagInp.value&&tags.length){
+      tags.pop();drawTags();bafRender();
+    }
+  });
+}
+
+/* ---- ③ 什么时候加 ---- */
+var stRow=bafTake(b3,ROW_START,'通知时间',true),enRow=bafTake(b3,ROW_END,'截止时间',true);
+function bafDt(o,val,hint){
+  if(!o)return null;
+  o.ctl.innerHTML='';
+  var inp=document.createElement('input');
+  inp.type='datetime-local';
+  inp.className='ant-input css-vgijab ant-input-outlined rea-baf-dt';
+  inp.value=val;
+  o.ctl.appendChild(inp);
+  if(hint){
+    var p=document.createElement('p');p.className='rea-baf-hint';p.textContent=hint;
+    o.ctl.appendChild(p);
+  }
+  var err=document.createElement('p');err.className='rea-baf-err';o.ctl.appendChild(err);
+  return inp;
+}
+function two(n){return (n<10?'0':'')+n}
+function dtVal(d){return d.getFullYear()+'-'+two(d.getMonth()+1)+'-'+two(d.getDate())+'T'+two(d.getHours())+':'+two(d.getMinutes())}
+var stD=new Date();stD.setHours(16,5,0,0);
+if(stD.getTime()<Date.now())stD.setDate(stD.getDate()+1);
+var enD=new Date(stD.getTime());enD.setDate(enD.getDate()+7);
+var startI=bafDt(stRow,dtVal(stD),'到达通知时间会给执行人员推送提醒。');
+var endI=bafDt(enRow,dtVal(enD),'到截止时间任务停止，没加完的目标记为未执行。');
+var promise=document.createElement('p');promise.className='rea-baf-promise';b3.appendChild(promise);
+
+/* ---- ④ 谁来加 ---- */
+var ORGS=[{n:'华东销售组',c:12},{n:'华南销售组',c:8},{n:'销售支持组',c:5},{n:'全员',c:25}];
+var execRow=bafTake(b4,ROW_EXEC,'执行人员',true),execSel=null;
+if(execRow){
+  execRow.ctl.innerHTML='';
+  execRow.ctl.classList.add('rea-baf-exec');
+  var selBtn=document.createElement('button');
+  selBtn.type='button';selBtn.className='rea-baf-select';
+  selBtn.innerHTML='<span class="rea-baf-seltext">请选择组织架构</span><span class="rea-baf-selcaret">▾</span>';
+  var selMenu=document.createElement('div');selMenu.className='rea-baf-selmenu';
+  var oh='',oi;
+  for(oi=0;oi<ORGS.length;oi++){
+    oh+='<button type="button" class="rea-baf-eopt" data-org="'+oi+'"><span>'+esc(ORGS[oi].n)
+      +'</span><span class="rea-baf-eoptn">'+ORGS[oi].c+' 人</span></button>';
+  }
+  selMenu.innerHTML=oh;
+  selBtn.setAttribute('aria-haspopup','listbox');
+  selBtn.setAttribute('aria-expanded','false');
+  execRow.ctl.appendChild(selBtn);execRow.ctl.appendChild(selMenu);
+  var eh=document.createElement('p');eh.className='rea-baf-hint';
+  eh.textContent='如果需要特殊分配，请为该员工创建单独的任务。';
+  execRow.ctl.appendChild(eh);
+  var ee=document.createElement('p');ee.className='rea-baf-err';execRow.ctl.appendChild(ee);
+  selBtn.addEventListener('click',function(e){
+    e.preventDefault();e.stopPropagation();
+    var on=selMenu.classList.toggle('on');
+    selBtn.setAttribute('aria-expanded',on?'true':'false');
+  });
+  selMenu.addEventListener('click',function(e){
+    var b=e.target.closest?e.target.closest('.rea-baf-eopt'):null;
+    if(!b)return;
+    e.preventDefault();e.stopPropagation();
+    execSel=ORGS[+b.getAttribute('data-org')];
+    var sp=selBtn.querySelector('.rea-baf-seltext');
+    if(sp)sp.textContent=execSel.n+'（'+execSel.c+' 人）';
+    selMenu.classList.remove('on');selBtn.setAttribute('aria-expanded','false');
+    bafErr(execRow,'');bafRender();
+  });
+  document.addEventListener('click',function(e){
+    if(selMenu.classList.contains('on')&&!execRow.ctl.contains(e.target))selMenu.classList.remove('on');
+  });
+}
+
+/* ---- 更多设置 ---- */
+var more=document.createElement('div');more.className='rea-baf-more';
+var moreTog=document.createElement('div');moreTog.className='rea-baf-moretog';
+moreTog.innerHTML='<span>更多设置</span><span class="rea-baf-moresub">任务名称 · 全局弹窗</span>';
+var moreBd=document.createElement('div');moreBd.className='rea-baf-morebd';
+more.appendChild(moreTog);more.appendChild(moreBd);wrap.appendChild(more);
+var nameRow=bafTake(moreBd,ROW_NAME,'任务名称',false);
+if(nameRow)nameRow.ctl.classList.add('rea-baf-wide');
+var popupRow=bafTake(moreBd,ROW_POPUP,'全局弹窗',false);
+
+/* ---- 底部操作条 ---- */
+var actRow=null;
+qa('[class*="_form_input_"]',FORM).forEach(function(r){
+  if(!actRow&&r.querySelector('button.ant-btn')&&norm(r.textContent).indexOf('保')===0)actRow=r;
+});
+var act=document.createElement('div');act.className='rea-baf-act';
+var actSum=document.createElement('div');actSum.className='rea-baf-actsum';
+var actBtns=document.createElement('div');actBtns.className='rea-baf-actbtns';
+var saveBtn=null,cancelBtn=null;
+if(actRow){
+  qa('button',actRow).forEach(function(b){
+    var t=norm(b.textContent);
+    if(t==='保存')saveBtn=b;
+    else if(t==='取消')cancelBtn=b;
+  });
+}
+if(cancelBtn){
+  cancelBtn.classList.remove('ant-btn-primary','ant-btn-color-primary','ant-btn-variant-solid');
+  cancelBtn.classList.add('ant-btn-default','ant-btn-color-default','ant-btn-variant-outlined');
+  actBtns.appendChild(cancelBtn);
+}
+if(saveBtn)actBtns.appendChild(saveBtn);
+act.appendChild(actSum);act.appendChild(actBtns);wrap.appendChild(act);
+
+/* 没搬进新结构的行（旧操作行等）一并清掉 */
+qa('[class*="_form_input_"]',FORM).forEach(function(r){
+  if(!wrap.contains(r)&&r.parentNode)r.parentNode.removeChild(r);
+});
+
+function bafErr(o,msg){
+  if(!o)return;
+  var host=o.ctl||o.box;if(!host)return;
+  var e=host.querySelector('.rea-baf-err');
+  if(!e){e=document.createElement('p');e.className='rea-baf-err';host.appendChild(e)}
+  e.textContent=msg||'';
+  e.className='rea-baf-err'+(msg?' on':'');
+}
+function phoneCount(){
+  var t=PHONE_ROW?PHONE_ROW.querySelector('textarea'):null;
+  if(!t)return 0;
+  return t.value.split(/[\s,，;；]+/).filter(function(x){return !!x}).length;
+}
+function bafDtLabel(v){
+  if(!v)return '';
+  var d=v.slice(0,10).split('-'),t=v.slice(11,16);
+  return (d[1]||'')+'-'+(d[2]||'')+' '+t;
+}
+function bafGap(a,b){
+  if(!a||!b)return 0;
+  var n=Math.round((new Date(b)-new Date(a))/86400000);
+  return n>0?n:0;
+}
+function bafRender(){
+  var k=modeKind(),src,typ='';
+  if(k==='group')src=(groupPicker.get().length||0)+' 个群';
+  else if(k==='file')src=fileName||'未选文件';
+  else{
+    var n=phoneCount();
+    src=n?(n+' 个号码'):'未填号码';
+  }
+  if(k!=='group'&&TYPE_ROW)typ=selectedLabel(TYPE_ROW)||'批量添加好友';
+  var sv=startI?startI.value:'',ev=endI?endI.value:'';
+  var when=sv?(bafDtLabel(sv)+' 通知'):'未设置';
+  if(sv&&ev)when+='，'+bafGap(sv,ev)+' 天内加完';
+  var exec=execSel?(execSel.n+' '+execSel.c+' 人'):'执行人员未选';
+  actSum.textContent=src+(typ?' · '+typ:'')+' · '+when+' · '+exec;
+  if(promise){
+    promise.textContent=sv
+      ?('在 '+bafDtLabel(sv)+' 通知执行人员加好友'+(ev?('，'+bafDtLabel(ev)+' 前加完'):''))
+      :'先选通知时间';
+  }
+}
+
+function validate(){
+  var k=modeKind(),ok=true;
+  bafErr(gRow,'');bafErr(nRow,'');bafErr(rRow,'');bafErr(iRow,'');
+  bafErr(phoneRow,'');bafErr(fileObj,'');bafErr(execRow,'');bafErr(stRow,'');bafErr(enRow,'');
+  bafErr(nameRow,'');
+  if(k==='manual'&&!phoneCount()){bafErr(phoneRow,'请填写手机号');ok=false}
+  if(k==='file'&&!fileName){bafErr(fileObj,'请选择号码文件');ok=false}
+  if(k==='group'){
+    if(gRow&&!groupPicker.get().length){bafErr(gRow,'请至少选择一个群');ok=false}
+    if(nRow&&modeOf(nRow.row)!=='不限'&&!nInput.value.replace(/\s+/g,'')){bafErr(nRow,'请填写昵称关键词');ok=false}
+    if(rRow&&modeOf(rRow.row)!=='不限'&&!regionPicker.get().length){bafErr(rRow,'请选择地区');ok=false}
+    if(iRow){
+      var a=Number(gmin.value),b=Number(gmax.value);
+      if(!isFinite(a)||!isFinite(b)||Math.floor(a)!==a||Math.floor(b)!==b||a<30||b>600||a>b){
+        bafErr(iRow,'间隔需为整数秒，30 ≤ 最短 ≤ 最长 ≤ 600');ok=false;
+      }
+    }
+  }
+  if(!execSel){bafErr(execRow,'请选择执行人员');ok=false}
+  var sv=startI?startI.value:'',ev=endI?endI.value:'';
+  if(!sv){bafErr(stRow,'请选择通知时间');ok=false}
+  if(!ev){bafErr(enRow,'请选择截止时间');ok=false}
+  if(sv&&ev&&ev<=sv){bafErr(enRow,'截止时间要晚于通知时间');ok=false}
+  if(nameRow){
+    var nm=nameRow.ctl.querySelector('input');
+    if(nm&&!nm.value.replace(/\s+/g,'')){bafErr(nameRow,'请填写任务名称');ok=false}
   }
   return ok;
 }
-var btns=document.querySelectorAll('button.ant-btn');
-for(var k=0;k<btns.length;k++){
-  var bt=norm(btns[k].textContent);
-  if(bt==='取消')btns[k].addEventListener('click',function(e){e.preventDefault();back()});
-  if(bt==='保存')btns[k].addEventListener('click',function(e){
-    if(!isGroup())return;
-    e.preventDefault();
-    if(!validate()){
-      var bad=document.querySelector('.rea-baf-err.on');
-      if(bad&&bad.scrollIntoView){try{bad.scrollIntoView({block:'center',behavior:'smooth'})}catch(_){}}
-      toast('请先补全群内好友配置');
-      return;
-    }
-    toast('批量加好友任务已保存（演示）');
-    setTimeout(back,900);
-  });
-}
+if(saveBtn)saveBtn.addEventListener('click',function(e){
+  e.preventDefault();
+  if(!validate()){
+    var bad=document.querySelector('.rea-baf-err.on');
+    if(bad&&bad.scrollIntoView){try{bad.scrollIntoView({block:'center',behavior:'smooth'})}catch(_){}}
+    toast('请先补全必填项');
+    return;
+  }
+  toast('批量加好友任务已保存（演示）');
+  setTimeout(back,900);
+});
+if(cancelBtn)cancelBtn.addEventListener('click',function(e){e.preventDefault();back()});
+
+/* 输入、单选、开关都走 document 级监听统一重画底栏汇总。
+   用捕获阶段：群组／地区选择器点选项时会 stopPropagation（免得把弹层关掉），
+   冒泡阶段收不到，汇总就会晚一拍；捕获阶段照收，setTimeout 再读改完的状态。 */
+document.addEventListener('click',function(){setTimeout(bafRender,0)},true);
+document.addEventListener('input',function(){setTimeout(bafRender,0)},true);
+document.addEventListener('change',function(){setTimeout(bafRender,0)},true);
+
+bafReady=true;
+syncMethod();syncModes();drawTags();bafRender();
 })();`;
   }
 
