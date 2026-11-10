@@ -20621,58 +20621,143 @@ tb.addEventListener("click",function(e){
     + '.rea-baf-tip-label{flex:none;white-space:nowrap}'
     + '.rea-baf-err{display:none;margin:4px 0 0;max-width:680px;font-size:12px;line-height:20px;color:#ff4d4f}'
     + '.rea-baf-err.on{display:block}'
-    /* ---- 2026-11-10 四段重排：分节、行壳、底栏与新增控件 ----
-       版式照 ADR-0082：白底、无卡片框、留白加分节线，蓝只给主操作与选中态。
-       配色、行距与群发／发圈两页同一套，别在这里另起一套。 */
-    /* 单列：表单限宽后整体居中，左右留白对称；底栏跟着同一条中线 */
-    + '.rea-baf-form{max-width:820px;margin:0 auto}'
-    + '.rea-baf-sec{padding:0 0 20px;margin-bottom:20px;border-bottom:1px solid #E5E8EF}'
-    + '.rea-baf-sec:last-of-type{border-bottom:0}'
-    + '.rea-baf-sechd{display:flex;align-items:center;gap:8px;margin:4px 0 16px}'
-    + '.rea-baf-no{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:#E6F4FF;color:#1677FF;font-size:12px;font-weight:600;flex:none}'
-    + '.rea-baf-sechd h3{margin:0;font-size:16px;font-weight:600;color:#1F2329}'
-    + '.rea-baf-secsub{font-size:12px;color:#8F959E}'
-    /* 单列：一行一项，行距统一 */
+    /* ---- 2026-11-10 复刻「好友任务创建页」线框稿 ----
+       版式：灰底 ＋ 白色纸面 ＋ 右栏任务概览 ＋ 贴在底部的操作条。
+       配色照线框稿：主色 #4A7AFF，正文 #253048，次要 #7C879B，
+       分隔线 #E9EDF3，控件边 #DCE2EB，浅底 #EDF3FF，页底 #F5F7FA。 */
+    /* 快照容器（._con_）是白底，铺成灰底，白纸面才立得出来 */
+    + '[class*="_con_"]{background:#F5F7FA}'
+    + '.rea-baf-form{max-width:1200px;margin:0 auto}'
+    + '.rea-baf-page{padding:6px 0 0;font-size:13px;line-height:1.6;color:#253048}'
+    + '.rea-baf-hd{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin:0 0 22px}'
+    + '.rea-baf-hd h1{margin:0;font-size:24px;line-height:1.4;font-weight:600;letter-spacing:-.6px;color:#253048}'
+    + '.rea-baf-hd p{margin:6px 0 0;font-size:12px;color:#7C879B}'
+    + '.rea-baf-badge{flex:none;margin-top:5px;padding:3px 9px;border:1px solid #E9EDF3;border-radius:5px;background:#fff;font-size:11px;line-height:1.6;color:#7C879B;white-space:nowrap}'
+    /* 执行上限：共用那条在别页是灰底无框，这里照线框稿落成白底细边的一条 */
+    + '.rea-baf-page .rea-freq{margin:0 0 20px;padding:10px 13px;border:1px solid #E9EDF3;border-radius:7px;background:#fff;font-size:11px;line-height:1.6;color:#7C879B;gap:2px 8px;align-items:center}'
+    + '.rea-baf-page .rea-freq-k{font-weight:500;color:#253048}'
+    + '.rea-baf-page .rea-freq-v em{font-style:normal;color:#253048}'
+    + '.rea-baf-page .rea-freq-a{color:#4A7AFF;font-size:11px}'
+    + '.rea-baf-page .rea-freq-a:hover{color:#3E68E0}'
+    + '.rea-baf-page .rea-freq>svg{width:14px;height:14px;flex:none;color:#4A7AFF}'
+    + '.rea-baf-layout{display:grid;grid-template-columns:minmax(0,1fr) 210px;gap:24px;align-items:start}'
+    + '.rea-baf-sheet{min-width:0;border:1px solid #E9EDF3;border-radius:7px;background:#fff}'
+    + '.rea-baf-sec{padding:28px 24px;border-bottom:1px solid #E9EDF3}'
+    + '.rea-baf-sechd{display:flex;align-items:center;gap:10px;margin:0 0 22px}'
+    + '.rea-baf-no{display:inline-flex;align-items:center;justify-content:center;flex:none;width:24px;height:24px;border-radius:7px;background:#EDF3FF;color:#4A7AFF;font:600 12px/1 Arial,sans-serif}'
+    + '.rea-baf-sechd h3{margin:0;font-size:15px;font-weight:600;line-height:1.6;color:#253048}'
+    + '.rea-baf-secsub{margin-left:auto;font-size:11px;color:#7C879B}'
     + '.rea-baf-secbd{display:block}'
-    + '.rea-baf-row{display:flex;align-items:flex-start;margin:0 0 20px}'
-    + '.rea-baf-row:last-child{margin-bottom:0}'
-    + '.rea-baf-lab{flex:0 0 96px;width:96px;box-sizing:border-box;padding-right:16px;text-align:right;font-size:14px;line-height:32px;color:#646A73;white-space:nowrap}'
-    + '.rea-baf-lab.req:before{content:"*";margin-right:4px;color:#FF4D4F;font-family:SimSun,sans-serif}'
-    + '.rea-baf-ctl{flex:1 1 auto;min-width:0}'
-    + '.rea-baf-ctl .ant-input,.rea-baf-ctl textarea.ant-input{box-sizing:border-box;width:100%;max-width:none}'
-    /* 单选组撑到 32px 高，文字才和左栏标签停在同一基线 */
-    + '.rea-baf-ctl .ant-radio-group{display:inline-flex;align-items:center;min-height:32px}'
-    + '.rea-baf-more{margin-top:8px;border-top:1px solid #E5E8EF}'
-    + '.rea-baf-moretog{display:flex;align-items:center;gap:8px;padding:12px 0;font-size:14px;color:#646A73}'
-    + '.rea-baf-moresub{font-size:12px;color:#8F959E}'
-    + '.rea-baf-morebd{padding-top:12px}'
+    + '.rea-baf-row{display:grid;grid-template-columns:78px minmax(0,1fr);gap:15px;align-items:start}'
+    + '.rea-baf-row+.rea-baf-row{margin-top:19px}'
+    + '.rea-baf-lab{padding-top:9px;font-size:12px;line-height:1.6;color:#253048;white-space:nowrap}'
+    + '.rea-baf-lab.req:before{content:"*";margin-right:4px;color:#D75455}'
+    + '.rea-baf-ctl{min-width:0}'
+    + '@media(min-width:1250px){.rea-baf-sec{padding:28px 32px}.rea-baf-row{grid-template-columns:92px minmax(0,1fr);gap:22px}}'
+    /* 控件统一 38px 高：输入、下拉、标签框、群组／地区选择器都停同一条线 */
+    + '.rea-baf-ctl .ant-input,.rea-baf-ctl textarea.ant-input{box-sizing:border-box;display:block;width:100%;max-width:none;min-height:38px;padding:9px 11px;border:1px solid #DCE2EB;border-radius:6px;background:#fff;font-size:13px;line-height:1.5;color:#253048;transition:border-color .15s}'
+    + '.rea-baf-ctl .ant-input:hover{border-color:#7C879B}'
+    + '.rea-baf-ctl .ant-input:focus,.rea-baf-ctl .ant-input.ant-input-focused{border-color:#4A7AFF;box-shadow:0 0 0 2px #EDF3FF;outline:none}'
+    + '.rea-baf-ctl input.ant-input::placeholder,.rea-baf-ctl textarea.ant-input::placeholder{color:#7C879B;opacity:.85}'
+    + '.rea-baf-ctl .ant-input.rea-baf-inp{max-width:none}'
+    /* 昵称／地区的三选一：一行排开，和 38px 的控件同高 */
+    + '.rea-baf-mode{display:flex;align-items:center;flex-wrap:wrap;gap:18px;min-height:38px}'
+    /* 添加方式：三块等宽卡片，选中换浅底蓝边，圆点藏掉 */
+    + '.rea-baf-tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}'
+    + '.rea-baf-tiles .ant-radio-wrapper{position:relative;display:flex;align-items:center;justify-content:center;gap:6px;box-sizing:border-box;min-height:38px;margin:0;padding:0 8px;border:1px solid #DCE2EB;border-radius:6px;background:#fff;font-size:12px;line-height:1.6;color:#253048;white-space:nowrap;cursor:pointer}'
+    + '.rea-baf-tiles .ant-radio-wrapper:hover{border-color:#7C879B}'
+    + '.rea-baf-tiles .ant-radio-wrapper-checked{border-color:#4A7AFF;background:#EDF3FF;color:#4A7AFF}'
+    + '.rea-baf-tiles .ant-radio{position:absolute;width:1px;height:1px;margin:0;opacity:0;pointer-events:none}'
+    + '.rea-baf-tiles .ant-radio-label{padding:0}'
+    + '.rea-baf-ctl .ant-radio-label svg{width:14px;height:14px;flex:none;vertical-align:-2px}'
+    + '.rea-baf-tiles .ant-radio-label svg{margin-right:6px}'
+    + '.rea-baf-hint{margin:6px 0 0;font-size:11px;line-height:1.6;color:#7C879B}'
+    /* 快照自带的说明行上下各留 8px 内边距，比新版的说明重了一倍，压回一行的高度 */
+    + '.rea-baf-ctl [class*="_upload_box_"]>p{margin:4px 0 0;padding:0;font-size:11px;line-height:1.6;color:#7C879B}'
+    /* 单选圆点换成页面主色 */
+    + '.rea-baf-ctl .ant-radio-checked .ant-radio-inner{border-color:#4A7AFF;background:#4A7AFF}'
+    + '.rea-baf-tip{box-sizing:border-box;margin-top:8px;padding:10px 12px;border-radius:6px;background:#F5F7FA;font-size:11px;line-height:1.6;color:#7C879B}'
+    + '.rea-baf-tip-label{flex:none;white-space:nowrap}'
+    + '.rea-baf-err{display:none;margin:6px 0 0;font-size:11px;line-height:1.6;color:#D75455}'
+    + '.rea-baf-err.on{display:block}'
+    /* 群组／地区选择器的触发框跟着 38px 走 */
+    + '.rea-baf-tagbox{min-height:38px;border-color:#DCE2EB;border-radius:6px;font-size:13px}'
+    + '.rea-baf-tagbox:hover{border-color:#7C879B}'
+    + '.rea-baf-wrap.on .rea-baf-tagbox{border-color:#4A7AFF;box-shadow:0 0 0 2px #EDF3FF}'
+    + '.rea-baf-dd,.rea-baf-search input,.rea-baf-opt{font-size:13px}'
+    + '.rea-baf-opt.on{background:#EDF3FF;color:#4A7AFF}'
+    + '.rea-baf-clear{color:#4A7AFF}'
+    + '.rea-baf-gap{display:flex;align-items:center;gap:8px;font-size:13px;color:#253048}'
+    + '.rea-baf-gap .rea-baf-num,.rea-baf-ctl .ant-input.rea-baf-num{width:110px;max-width:110px;text-align:center}'
     + '.rea-baf-exec{position:relative}'
-    + '.rea-baf-select{position:relative;display:flex;align-items:center;box-sizing:border-box;width:100%;max-width:320px;height:32px;padding:0 32px 0 11px;border:1px solid #E5E8EF;border-radius:8px;background:#fff;font-size:14px;color:#8F959E;text-align:left;cursor:pointer}'
-    + '.rea-baf-select:hover{border-color:#1677FF}'
+    + '.rea-baf-select{position:relative;display:flex;align-items:center;box-sizing:border-box;width:100%;max-width:none;height:38px;padding:0 32px 0 11px;border:1px solid #DCE2EB;border-radius:6px;background:#fff;font-size:13px;color:#7C879B;text-align:left;cursor:pointer;transition:border-color .15s}'
+    + '.rea-baf-select:hover{border-color:#7C879B}'
     + '.rea-baf-seltext{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
-    + '.rea-baf-selcaret{position:absolute;right:10px;top:50%;margin-top:-6px;font-size:10px;line-height:12px;color:#8F959E;pointer-events:none}'
-    + '.rea-baf-selmenu{position:absolute;z-index:30;left:0;top:calc(100% + 4px);box-sizing:border-box;display:none;width:100%;min-width:240px;max-width:320px;padding:6px;border:1px solid #E5E8EF;border-radius:8px;background:#fff;box-shadow:0 6px 16px rgba(0,0,0,.08)}'
+    + '.rea-baf-selcaret{position:absolute;right:10px;top:50%;margin-top:-6px;font-size:10px;line-height:12px;color:#7C879B;pointer-events:none}'
+    + '.rea-baf-selmenu{position:absolute;z-index:30;left:0;top:calc(100% + 4px);box-sizing:border-box;display:none;width:100%;min-width:240px;max-width:none;padding:6px;border:1px solid #E9EDF3;border-radius:6px;background:#fff;box-shadow:0 6px 16px rgba(25,38,62,.12)}'
     + '.rea-baf-selmenu.on{display:block}'
-    + '.rea-baf-eopt{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:8px 10px;border:0;border-radius:6px;background:transparent;font-size:14px;color:#1F2329;text-align:left;cursor:pointer}'
-    + '.rea-baf-eopt:hover{background:#F7F8FA}'
-    + '.rea-baf-eoptn{font-size:12px;color:#8F959E}'
-    + '.rea-baf-ctl .ant-input.rea-baf-dt{width:100%;max-width:260px}'
-    + '.rea-baf-promise{margin:0 0 0 96px;padding:8px 12px;border-radius:8px;background:#F7F8FA;font-size:13px;line-height:20px;color:#1F2329}'
-    /* bottom:-20px 抵掉快照滚动容器（._con_）自带的 20px 下内边距，操作条才贴得住下沿 */
-    + '.rea-baf-act{position:sticky;bottom:-20px;z-index:6;display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:8px;padding:14px 0;border-top:1px solid #E5E8EF;background:#fff}'
-    + '.rea-baf-actsum{font-size:13px;color:#646A73}'
-    + '.rea-baf-actbtns{display:flex;gap:8px}'
-    + '.rea-baf-file{display:flex;align-items:center;gap:12px;font-size:13px;color:#646A73}'
-    + '.rea-baf-filename{max-width:420px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
-    + '.rea-baf-filex{border:0;background:transparent;padding:0 4px;font-size:14px;line-height:16px;color:#999;cursor:pointer}'
-    + '.rea-baf-filex:hover{color:#FF4D4F}'
-    + '.rea-baf-tags{box-sizing:border-box;display:flex;align-items:center;flex-wrap:wrap;gap:4px;width:100%;min-height:32px;padding:2px 8px;border:1px solid #E5E8EF;border-radius:8px;background:#fff;cursor:text}'
-    + '.rea-baf-tags:focus-within{border-color:#1677FF;box-shadow:0 0 0 2px #E6F4FF}'
-    + '.rea-baf-tags input{flex:1;min-width:140px;border:0;outline:0;background:transparent;font-size:14px;line-height:24px;color:#1F2329}'
-    + '.rea-baf-tags input::placeholder{color:#C9CDD4}'
-    + '.rea-baf-chip2{display:inline-flex;align-items:center;gap:2px;height:24px;padding:0 4px 0 8px;border-radius:4px;background:#F7F8FA;font-size:12px;line-height:24px;color:#1F2329}'
-    + '.rea-baf-chipx2{border:0;background:transparent;padding:0 2px;font-size:13px;line-height:16px;color:#8F959E;cursor:pointer}'
-    + '.rea-baf-chipx2:hover{color:#FF4D4F}';
+    + '.rea-baf-eopt{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:8px 10px;border:0;border-radius:4px;background:transparent;font-size:13px;color:#253048;text-align:left;cursor:pointer}'
+    + '.rea-baf-eopt:hover{background:#F5F7FA}'
+    + '.rea-baf-eoptn{font-size:12px;color:#7C879B}'
+    /* 通知／截止：并排两格，标签在控件上方 */
+    + '.rea-baf-dates{display:grid;grid-template-columns:1fr 1fr;gap:14px}'
+    + '.rea-baf-toplab{display:block;margin:0 0 7px;font-size:12px;line-height:1.6;color:#253048}'
+    + '.rea-baf-toplab.req:before{content:"*";margin-right:4px;color:#D75455}'
+    + '.rea-baf-date .ant-input{min-width:0;padding:9px 9px;font-size:12px}'
+    + '.rea-baf-promise{display:flex;align-items:flex-start;gap:7px;margin:13px 0 0;padding:10px 12px;border-radius:6px;background:#F5F7FA;font-size:11px;line-height:1.6;color:#7C879B}'
+    + '.rea-baf-promise svg{width:14px;height:14px;margin-top:2px;flex:none}'
+    + '.rea-baf-promise b{font-weight:500;color:#253048}'
+    /* 更多设置：一整行摘要，点开才铺两行 */
+    + '.rea-baf-moretog{display:flex;align-items:center;gap:9px;width:100%;padding:19px 24px;border:0;background:transparent;font-size:12px;font-weight:500;line-height:1.6;color:#253048;text-align:left;cursor:pointer}'
+    + '.rea-baf-moretog svg{width:14px;height:14px;flex:none;color:#253048;transition:transform .2s}'
+    + '.rea-baf-more.open .rea-baf-moretog svg{transform:rotate(90deg)}'
+    + '.rea-baf-moretog:hover{background:#F5F7FA}'
+    + '.rea-baf-moresub{margin-left:auto;font-size:11px;font-weight:400;color:#7C879B}'
+    + '.rea-baf-morebd{display:none;padding:0 24px 24px}'
+    + '.rea-baf-more.open .rea-baf-morebd{display:block}'
+    /* 右栏：任务概览 */
+    + '.rea-baf-aside{position:sticky;top:0;min-width:0}'
+    + '.rea-baf-sum{padding:18px 15px;border:1px solid #E9EDF3;border-radius:7px;background:#fff}'
+    + '.rea-baf-sumhd{display:flex;align-items:center;gap:7px;margin:0 0 20px;font-size:12px;font-weight:500;line-height:1.6;color:#253048}'
+    + '.rea-baf-sumhd svg{width:14px;height:14px;flex:none;color:#7C879B}'
+    + '.rea-baf-sumlab{font-size:11px;color:#7C879B}'
+    + '.rea-baf-sumnum{margin-top:7px;font:500 32px/1.2 Arial,sans-serif;letter-spacing:-1px;color:#253048}'
+    + '.rea-baf-sumnum span{margin-left:5px;font-size:11px;font-weight:400;letter-spacing:0;color:#7C879B}'
+    + '.rea-baf-sum hr{margin:20px 0;border:0;border-top:1px solid #E9EDF3}'
+    + '.rea-baf-sum dl{margin:0;display:grid;gap:14px}'
+    + '.rea-baf-sum dt{margin:0 0 3px;font-size:11px;color:#7C879B}'
+    + '.rea-baf-sum dd{margin:0;font-size:11px;line-height:1.6;color:#253048;overflow-wrap:anywhere}'
+    + '.rea-baf-tl{display:grid;gap:18px;margin-left:4px;padding-left:14px;border-left:1px solid #E9EDF3}'
+    + '.rea-baf-tp{position:relative;font-size:11px;line-height:1.6;color:#253048}'
+    + '.rea-baf-tp p{margin:0 0 3px;color:#7C879B}'
+    + '.rea-baf-tp:before{content:"";position:absolute;left:-18px;top:6px;width:7px;height:7px;box-sizing:border-box;border:2px solid #4A7AFF;border-radius:50%;background:#fff}'
+    + '.rea-baf-tp:last-child:before{border-color:#7C879B}'
+    + '.rea-baf-sumfoot{margin-top:18px;font-size:11px;line-height:1.8;color:#7C879B}'
+    /* 导入名单：虚线框收起后换成一条浅底回显 */
+    + '.rea-baf-upload{padding:19px 12px;border:1px dashed #DCE2EB;border-radius:7px;background:#F5F7FA;text-align:center;cursor:pointer}'
+    + '.rea-baf-upload:hover{border-color:#4A7AFF}'
+    + '.rea-baf-upload svg{width:22px;height:22px;margin:0 auto 8px;color:#4A7AFF}'
+    + '.rea-baf-upload p{margin:0 0 5px;font-size:12px;line-height:1.6;color:#253048}'
+    + '.rea-baf-upsub{font-size:11px;color:#7C879B}'
+    + '.rea-baf-fileres{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px;border-radius:6px;background:#EDF3FF;font-size:12px;color:#4A7AFF;overflow-wrap:anywhere}'
+    + '.rea-baf-filename{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
+    + '.rea-baf-filex{border:0;background:transparent;padding:0 2px;font-size:14px;line-height:16px;color:inherit;cursor:pointer}'
+    + '.rea-baf-filex:hover{color:#D75455}'
+    + '.rea-baf-tags{box-sizing:border-box;display:flex;align-items:center;flex-wrap:wrap;gap:6px;width:100%;min-height:38px;padding:6px 9px;border:1px solid #DCE2EB;border-radius:6px;background:#fff;cursor:text}'
+    + '.rea-baf-tags:focus-within{border-color:#4A7AFF}'
+    + '.rea-baf-tags input{flex:1;min-width:140px;border:0;outline:0;background:transparent;font-size:13px;line-height:1.6;color:#253048}'
+    + '.rea-baf-tags input::placeholder{color:#7C879B;opacity:.85}'
+    + '.rea-baf-chip2{display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 6px;border-radius:4px;background:#EDF3FF;font-size:11px;line-height:24px;color:#4A7AFF}'
+    + '.rea-baf-chipx2{border:0;background:transparent;padding:0 1px;font-size:13px;line-height:16px;color:inherit;cursor:pointer}'
+    + '.rea-baf-chipx2:hover{color:#D75455}'
+    /* 底部操作条：bottom:-20px 抵掉快照滚动容器的下内边距，条子才贴得住下沿 */
+    + '.rea-baf-act{position:sticky;bottom:-20px;z-index:6;display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:24px;padding:17px 24px;border-top:1px solid #E9EDF3;background:#fff}'
+    + '.rea-baf-actsum{font-size:11px;line-height:1.9;color:#7C879B}'
+    + '.rea-baf-actbtns{display:flex;flex:none;gap:9px}'
+    + '.rea-baf-actbtns .ant-btn{height:34px;padding:0 18px;border-radius:6px;font-size:12px}'
+    + '.rea-baf-actbtns .ant-btn-primary,.rea-baf-actbtns .ant-btn-primary:not(:disabled){border-color:#4A7AFF;background:#4A7AFF;color:#fff}'
+    + '.rea-baf-actbtns .ant-btn-primary:hover{border-color:#3E68E0;background:#3E68E0}'
+    + '.rea-baf-actbtns .ant-btn svg{width:14px;height:14px;margin-right:6px;vertical-align:-2px}';
 
   /* 素材库弹窗的注入脚本（四页共用一份，别各页再抄一遍）。各页只传这几枚口径参数：
        tip      弹窗标题下那句说明（各页口径不同，照实说清自己列的是什么）
@@ -23185,25 +23270,60 @@ function toast(t){
 }
 function back(){parent.postMessage({reaPage:'批量加好友'},'*')}
 
-/* ---------- 2026-11-10 四段重排 ----------
-   快照把 15 行平铺在一张表里：任务名称挡在最前，执行人员、两个时间夹在中段，
-   方式一换下面几行跟着增减，却没有一段告诉用户现在在定什么；
-   执行人员、两个时间、设置标签还是点不动的静态件，保存按钮压在最底下。
-   这里照群发／发圈同一套走法重排：① 加谁 → ② 怎么加 → ③ 什么时候加 → ④ 谁来加，
-   任务名称与全局弹窗收进常驻的「更多设置」，底部补一条贴在滚动盒下沿的操作条。
+/* ---------- 2026-11-10 复刻「好友任务创建页」线框稿 ----------
+   版式照线框稿：页头（标题＋说明＋新建标记）→ 执行上限的一条 → 白纸面表单 ＋ 右栏任务概览
+   → 贴着下沿的操作条。四段仍是 ① 加谁 → ② 怎么加 → ③ 什么时候加 → ④ 谁来加，
+   任务名称与全局弹窗收进「更多设置」，点开才铺。
    行仍是快照原节点——单选、开关、输入框的接线不动，这里只搬位置、补几个可点控件。 */
 var FORM=METHOD_ROW.parentNode;
 var wrap=document.createElement('div');wrap.className='rea-baf-form';
 FORM.appendChild(wrap);
-/* 执行上限：只回显操作频率设置里那组数，右边跳过去改 */
-wrap.insertAdjacentHTML('afterbegin',${reaJson(reaFreqNote('add'))});
 
+/* 快照自带一个居中标题，这里换成页头那一套，别两处标题并排 */
 var titleBar=document.querySelector('[class*="_titleBar_"]');
-if(titleBar&&norm(titleBar.textContent)==='新建任务'){
-  titleBar.textContent='新建批量加好友任务';
-  /* 表单居中后标题跟着同一条中线，别独自留在最左边 */
-  titleBar.style.maxWidth='820px';titleBar.style.margin='0 auto';
+if(titleBar)titleBar.style.display='none';
+
+var page=document.createElement('div');page.className='rea-baf-page';wrap.appendChild(page);
+var hd=document.createElement('div');hd.className='rea-baf-hd';
+var hd1=document.createElement('h1');hd1.textContent='新建批量加好友任务';
+var hd2=document.createElement('p');hd2.textContent='设置添加对象、执行规则与时间，分配给团队成员。';
+var hdL=document.createElement('div');hdL.appendChild(hd1);hdL.appendChild(hd2);
+var hdBadge=document.createElement('span');hdBadge.className='rea-baf-badge';hdBadge.textContent='新建任务';
+hd.appendChild(hdL);hd.appendChild(hdBadge);page.appendChild(hd);
+
+/* 执行上限：只回显操作频率设置里那组数，右边跳过去改 */
+var limitBox=document.createElement('div');
+limitBox.innerHTML=${reaJson(reaFreqNote('add'))};
+var limitNote=limitBox.querySelector('.rea-freq');
+if(limitNote){
+  limitNote.insertAdjacentHTML('afterbegin',
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+    +'<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>'
+    +'<path d="m9 12 2 2 4-4"/></svg>');
+  page.appendChild(limitNote);
 }
+
+/* 白纸面 ＋ 右栏任务概览 */
+var layout=document.createElement('div');layout.className='rea-baf-layout';page.appendChild(layout);
+var sheet=document.createElement('div');sheet.className='rea-baf-sheet';layout.appendChild(sheet);
+var aside=document.createElement('aside');aside.className='rea-baf-aside';
+aside.setAttribute('aria-label','任务配置概览');layout.appendChild(aside);
+/* 右栏：一眼核对这次任务加谁、怎么加、谁来加、什么时候加；值由 bafRender 同步 */
+aside.innerHTML='<div class="rea-baf-sum">'
+  +'<div class="rea-baf-sumhd">'
+  +'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+  +'<rect width="8" height="4" x="8" y="2" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>'
+  +'<path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg>任务概览</div>'
+  +'<div class="rea-baf-sumlab" data-k="lab">待添加好友</div>'
+  +'<div class="rea-baf-sumnum"><b data-k="num">0</b><span data-k="unit">人</span></div>'
+  +'<hr><dl>'
+  +'<div><dt>添加方式</dt><dd data-k="src">手动输入</dd></div>'
+  +'<div><dt>任务类型</dt><dd data-k="type">批量添加好友</dd></div>'
+  +'<div><dt>执行人员</dt><dd data-k="exec">待选择</dd></div>'
+  +'</dl><hr><div class="rea-baf-tl">'
+  +'<div class="rea-baf-tp"><p>通知执行</p><div data-k="start">待设置</div></div>'
+  +'<div class="rea-baf-tp"><p>任务截止</p><div data-k="end">待设置</div></div>'
+  +'</div><div class="rea-baf-sumfoot">保存前可在此核对配置</div></div>';
 
 /* 其余几行照标签现找，找到才搬；找不到就原样留在旧表里，不硬拼 */
 var ROW_VERIFY=rowOf('验证消息'),ROW_MEMO=rowOf('好友备忘'),ROW_MASK=rowOf('是否遮挡'),
@@ -23230,10 +23350,10 @@ function bafTake(body,row,label,req){
   return o;
 }
 
-var b1=bafSec('1','加谁','手动输号码、导入名单，或从微信群里挑人');
-var b2=bafSec('2','怎么加','申请里写什么、加上之后怎么标');
-var b3=bafSec('3','什么时候加','到点通知执行人员，截止时间前要加完');
-var b4=bafSec('4','谁来加','执行这条任务的销售分组');
+var b1=bafSec('01','加谁','选择本次添加的对象');
+var b2=bafSec('02','怎么加','设置添加规则与好友信息');
+var b3=bafSec('03','什么时候加','安排通知与完成时间');
+var b4=bafSec('04','谁来加','指定任务执行范围');
 function bafSec(no,t,sub){
   var s=document.createElement('section');s.className='rea-baf-sec';
   s.innerHTML='<div class="rea-baf-sechd"><span class="rea-baf-no">'+no+'</span><h3></h3>'
@@ -23241,13 +23361,26 @@ function bafSec(no,t,sub){
   s.querySelector('h3').textContent=t;
   if(sub)s.querySelector('.rea-baf-secsub').textContent=sub;
   var bd=document.createElement('div');bd.className='rea-baf-secbd';
-  s.appendChild(bd);wrap.appendChild(s);return bd;
+  s.appendChild(bd);sheet.appendChild(s);return bd;
 }
 
 /* ---- ① 加谁 ---- */
+/* 三块方式卡片各配一枚图标（线框稿的 text-cursor-input / file-up / users-round） */
+var METHOD_ICONS={
+  '手动输入':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7V5h16v2"/><path d="M12 5v14"/><path d="M9 19h6"/></svg>',
+  '文件导入':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.7.7l3.6 3.6A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M12 12v6"/><path d="m15 15-3-3-3 3"/></svg>',
+  '添加群内好友':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 21a8 8 0 0 0-16 0"/><circle cx="10" cy="8" r="5"/><path d="M22 20c0-3.4-2-6.5-4-8a5 5 0 0 0-.5-8.3"/></svg>'
+};
 var mRow=bafTake(b1,METHOD_ROW,'添加好友方式',true);
 if(mRow){
   METHOD_ROW=mRow.row;
+  /* 快照的单选组套上卡片壳：三枚等宽盒子，圆点藏掉，只留图标和文字 */
+  var mgEl=METHOD_ROW.querySelector('.ant-radio-group');
+  if(mgEl)mgEl.classList.add('rea-baf-mode','rea-baf-tiles');
+  qa('.ant-radio-label',METHOD_ROW).forEach(function(l){
+    var ic=METHOD_ICONS[norm(l.textContent)];
+    if(ic)l.insertAdjacentHTML('afterbegin',ic);
+  });
   var methodHint=document.createElement('p');methodHint.className='rea-baf-hint';
   mRow.ctl.appendChild(methodHint);
   if(TIP_ROW){
@@ -23277,32 +23410,38 @@ var phoneRow=bafTake(b1,PHONE_ROW,'手机号',true);
 if(phoneRow){PHONE_ROW=phoneRow.row}
 
 /* 文件导入：快照里这枚单选钮没有配任何控件，选中后仍露出手机号输入框。
-   这里补一行「名单文件」，文件导入时替换掉手机号，不让这条路空着。 */
-var fileObj=null,fileInp=null,fileNameEl=null,fileX=null,fileName='';
+   这里补一行「名单文件」：一块虚线导入区，选中后换成一条带文件名的浅底回显。 */
+var fileObj=null,fileInp=null,fileNameEl=null,fileX=null,fileName='',uploadArea=null,fileRes=null;
 (function(){
   var o=bafNewRow(b1,'名单文件',true);
   fileObj=o;fileRowEl=o.row;
-  var box=document.createElement('div');box.className='rea-baf-file';
+  uploadArea=document.createElement('div');uploadArea.className='rea-baf-upload';
+  uploadArea.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+    +'<path d="M12 13v8"/><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="m8 17 4-4 4 4"/></svg>'
+    +'<p>导入好友名单</p><span class="rea-baf-upsub">支持 CSV、TXT，每行一个手机号</span>';
   fileInp=document.createElement('input');fileInp.type='file';fileInp.style.display='none';
-  var btn=document.createElement('button');
-  btn.type='button';btn.className='ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined';
-  btn.textContent='选择文件';
-  fileNameEl=document.createElement('span');fileNameEl.className='rea-baf-filename';fileNameEl.textContent='未选择文件';
+  uploadArea.appendChild(fileInp);
+  fileRes=document.createElement('div');fileRes.className='rea-baf-fileres';fileRes.style.display='none';
+  fileNameEl=document.createElement('span');fileNameEl.className='rea-baf-filename';
   fileX=document.createElement('button');fileX.type='button';fileX.className='rea-baf-filex';
-  fileX.textContent='×';fileX.setAttribute('aria-label','移除文件');fileX.style.display='none';
-  box.appendChild(btn);box.appendChild(fileNameEl);box.appendChild(fileX);box.appendChild(fileInp);
-  o.ctl.appendChild(box);
+  fileX.textContent='×';fileX.setAttribute('aria-label','移除文件');
+  fileRes.appendChild(fileNameEl);fileRes.appendChild(fileX);
+  o.ctl.appendChild(uploadArea);o.ctl.appendChild(fileRes);
   var err=document.createElement('p');err.className='rea-baf-err';o.ctl.appendChild(err);
-  btn.addEventListener('click',function(e){e.preventDefault();fileInp.click()});
+  uploadArea.addEventListener('click',function(e){e.preventDefault();fileInp.click()});
   fileInp.addEventListener('change',function(){
     fileName=fileInp.files&&fileInp.files[0]?fileInp.files[0].name:'';
-    fileNameEl.textContent=fileName||'未选择文件';
-    fileX.style.display=fileName?'':'none';
+    uploadArea.style.display=fileName?'none':'';
+    fileRes.style.display=fileName?'':'none';
+    fileNameEl.textContent=fileName;
     bafErr(o,'');bafRender();
   });
   fileX.addEventListener('click',function(e){
     e.preventDefault();
-    fileName='';fileInp.value='';fileNameEl.textContent='未选择文件';fileX.style.display='none';bafRender();
+    fileName='';fileInp.value='';
+    uploadArea.style.display='';
+    fileRes.style.display='none';
+    bafRender();
   });
 })();
 
@@ -23373,30 +23512,43 @@ if(tagBox){
 }
 
 /* ---- ③ 什么时候加 ---- */
-var stRow=bafTake(b3,ROW_START,'通知时间',true),enRow=bafTake(b3,ROW_END,'截止时间',true);
-function bafDt(o,val,hint){
-  if(!o)return null;
-  o.ctl.innerHTML='';
+/* 两个时间并排，标签落在控件上方；快照那两行整行去掉，换成自己的两格 */
+var dates=document.createElement('div');dates.className='rea-baf-dates';b3.appendChild(dates);
+function bafDtCell(label,val,hint){
+  var cell=document.createElement('div');cell.className='rea-baf-date';
+  var lab=document.createElement('label');lab.className='rea-baf-toplab req';lab.textContent=label;
   var inp=document.createElement('input');
   inp.type='datetime-local';
   inp.className='ant-input css-vgijab ant-input-outlined rea-baf-dt';
   inp.value=val;
-  o.ctl.appendChild(inp);
-  if(hint){
-    var p=document.createElement('p');p.className='rea-baf-hint';p.textContent=hint;
-    o.ctl.appendChild(p);
-  }
-  var err=document.createElement('p');err.className='rea-baf-err';o.ctl.appendChild(err);
-  return inp;
+  inp.id='rea-baf-dt-'+(label==='通知时间'?'start':'end');lab.htmlFor=inp.id;
+  cell.appendChild(lab);cell.appendChild(inp);
+  if(hint){var hp=document.createElement('p');hp.className='rea-baf-hint';hp.textContent=hint;cell.appendChild(hp)}
+  var err=document.createElement('p');err.className='rea-baf-err';cell.appendChild(err);
+  dates.appendChild(cell);
+  return {row:cell,ctl:cell,input:inp,lab:lab};
 }
+[ROW_START,ROW_END].forEach(function(r){if(r&&r.parentNode)r.parentNode.removeChild(r)});
 function two(n){return (n<10?'0':'')+n}
 function dtVal(d){return d.getFullYear()+'-'+two(d.getMonth()+1)+'-'+two(d.getDate())+'T'+two(d.getHours())+':'+two(d.getMinutes())}
 var stD=new Date();stD.setHours(16,5,0,0);
 if(stD.getTime()<Date.now())stD.setDate(stD.getDate()+1);
 var enD=new Date(stD.getTime());enD.setDate(enD.getDate()+7);
-var startI=bafDt(stRow,dtVal(stD),'到达通知时间会给执行人员推送提醒。');
-var endI=bafDt(enRow,dtVal(enD),'到截止时间任务停止，没加完的目标记为未执行。');
-var promise=document.createElement('p');promise.className='rea-baf-promise';b3.appendChild(promise);
+var stRow=bafDtCell('通知时间',dtVal(stD),'到达通知时间会给执行人员推送提醒。'),startI=stRow.input;
+var enRow=bafDtCell('截止时间',dtVal(enD),'到截止时间任务停止，没加完的目标记为未执行。'),endI=enRow.input;
+var promise=document.createElement('p');promise.className='rea-baf-promise';
+promise.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+  +'<circle cx="12" cy="12" r="10"/><path d="M12 6v6h4"/></svg><span></span>';
+var promiseTxt=promise.querySelector('span');
+b3.appendChild(promise);
+/* 改通知时间时，截止时间跟着顺延 7 天——两个时间分开填容易填反 */
+startI.addEventListener('change',function(){
+  if(!startI.value)return;
+  var d=new Date(startI.value);
+  d.setDate(d.getDate()+7);
+  endI.value=dtVal(d);
+  bafErr(enRow,'');bafRender();
+});
 
 /* ---- ④ 谁来加 ---- */
 var ORGS=[{n:'华东销售组',c:12},{n:'华南销售组',c:8},{n:'销售支持组',c:5},{n:'全员',c:25}];
@@ -23441,12 +23593,19 @@ if(execRow){
   });
 }
 
-/* ---- 更多设置 ---- */
+/* ---- 更多设置：一行摘要，点开才铺 ---- */
 var more=document.createElement('div');more.className='rea-baf-more';
-var moreTog=document.createElement('div');moreTog.className='rea-baf-moretog';
-moreTog.innerHTML='<span>更多设置</span><span class="rea-baf-moresub">任务名称 · 全局弹窗</span>';
+var moreTog=document.createElement('button');moreTog.type='button';moreTog.className='rea-baf-moretog';
+moreTog.setAttribute('aria-expanded','false');
+moreTog.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>'
+  +'<span>更多设置</span><span class="rea-baf-moresub">任务名称 · 全局弹窗</span>';
 var moreBd=document.createElement('div');moreBd.className='rea-baf-morebd';
-more.appendChild(moreTog);more.appendChild(moreBd);wrap.appendChild(more);
+more.appendChild(moreTog);more.appendChild(moreBd);sheet.appendChild(more);
+moreTog.addEventListener('click',function(e){
+  e.preventDefault();
+  var on=more.classList.toggle('open');
+  moreTog.setAttribute('aria-expanded',on?'true':'false');
+});
 var nameRow=bafTake(moreBd,ROW_NAME,'任务名称',false);
 var popupRow=bafTake(moreBd,ROW_POPUP,'全局弹窗',false);
 
@@ -23457,6 +23616,9 @@ qa('[class*="_form_input_"]',FORM).forEach(function(r){
 });
 var act=document.createElement('div');act.className='rea-baf-act';
 var actSum=document.createElement('div');actSum.className='rea-baf-actsum';
+var actSum1=document.createElement('div');actSum1.className='rea-baf-actl1';
+var actSum2=document.createElement('div');actSum2.className='rea-baf-actl2';
+actSum.appendChild(actSum1);actSum.appendChild(actSum2);
 var actBtns=document.createElement('div');actBtns.className='rea-baf-actbtns';
 var saveBtn=null,cancelBtn=null;
 if(actRow){
@@ -23471,8 +23633,11 @@ if(cancelBtn){
   cancelBtn.classList.add('ant-btn-default','ant-btn-color-default','ant-btn-variant-outlined');
   actBtns.appendChild(cancelBtn);
 }
-if(saveBtn)actBtns.appendChild(saveBtn);
-act.appendChild(actSum);act.appendChild(actBtns);wrap.appendChild(act);
+if(saveBtn){
+  saveBtn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>保存任务';
+  actBtns.appendChild(saveBtn);
+}
+act.appendChild(actSum);act.appendChild(actBtns);page.appendChild(act);
 
 /* 没搬进新结构的行（旧操作行等）一并清掉 */
 qa('[class*="_form_input_"]',FORM).forEach(function(r){
@@ -23492,33 +23657,37 @@ function phoneCount(){
   if(!t)return 0;
   return t.value.split(/[\s,，;；]+/).filter(function(x){return !!x}).length;
 }
-function bafDtLabel(v){
-  if(!v)return '';
+/* 时间一律写成「11月10日 16:05」，右栏、承诺句、底栏同一套 */
+function bafDtCn(v){
+  if(!v)return '待设置';
   var d=v.slice(0,10).split('-'),t=v.slice(11,16);
-  return (d[1]||'')+'-'+(d[2]||'')+' '+t;
+  return (+d[1])+'月'+(+d[2])+'日 '+t;
 }
-function bafGap(a,b){
-  if(!a||!b)return 0;
-  var n=Math.round((new Date(b)-new Date(a))/86400000);
-  return n>0?n:0;
+function setSum(key,val){
+  var el=aside.querySelector('[data-k="'+key+'"]');
+  if(el)el.textContent=val;
 }
 function bafRender(){
-  var k=modeKind(),src,typ='';
-  if(k==='group')src=(groupPicker.get().length||0)+' 个群';
-  else if(k==='file')src=fileName||'未选文件';
-  else{
-    var n=phoneCount();
-    src=n?(n+' 个号码'):'未填号码';
-  }
+  var k=modeKind(),src,typ='批量添加好友',n=0,unit='人',lab='待添加好友';
+  if(k==='group'){n=groupPicker.get().length||0;unit='个';lab='已选群组';src='添加群内好友'}
+  else if(k==='file'){n=fileName?1:0;unit='份';lab='名单文件';src='文件导入'}
+  else{n=phoneCount();src='手动输入'}
   if(k!=='group'&&TYPE_ROW)typ=selectedLabel(TYPE_ROW)||'批量添加好友';
   var sv=startI?startI.value:'',ev=endI?endI.value:'';
-  var when=sv?(bafDtLabel(sv)+' 通知'):'未设置';
-  if(sv&&ev)when+='，'+bafGap(sv,ev)+' 天内加完';
-  var exec=execSel?(execSel.n+' '+execSel.c+' 人'):'执行人员未选';
-  actSum.textContent=src+(typ?' · '+typ:'')+' · '+when+' · '+exec;
-  if(promise){
-    promise.textContent=sv
-      ?('在 '+bafDtLabel(sv)+' 通知执行人员加好友'+(ev?('，'+bafDtLabel(ev)+' 前加完'):''))
+  var exec=execSel?(execSel.n+' · '+execSel.c+' 人'):'待选择';
+  setSum('lab',lab);setSum('num',String(n));setSum('unit',unit);
+  setSum('src',src);setSum('type',typ);setSum('exec',exec);
+  setSum('start',bafDtCn(sv));setSum('end',bafDtCn(ev));
+  var l1;
+  if(k==='group')l1='已选 '+n+' 个群组 · 人数待执行时核算';
+  else if(k==='file')l1=fileName?('已选文件 '+fileName):'未选文件';
+  else l1='已录入 '+n+' 位好友';
+  if(k!=='group')l1+=' · '+typ;
+  actSum1.textContent=l1;
+  actSum2.textContent=bafDtCn(sv)+' 通知 · '+(execSel?(execSel.n+' · '+execSel.c+' 人'):'执行人待选择');
+  if(promiseTxt){
+    promiseTxt.innerHTML=sv
+      ?('<b>'+bafDtCn(sv)+'</b> 通知执行人员加好友'+(ev?(('，<b>'+bafDtCn(ev)+'</b> 前加完')):''))
       :'先选通知时间';
   }
 }
