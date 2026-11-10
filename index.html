@@ -10371,17 +10371,6 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
           </h2>
         </div>
         <div id="ov-results"></div>
-        <div class="ov-board-links" aria-label="查看对应看板">
-          <button type="button" class="ov-link" data-board="tasks">
-            任务看板 →</button
-          ><button type="button" class="ov-link" data-board="tools">
-            App 工具看板 →</button
-          ><button type="button" class="ov-link" data-board="material">
-            素材看板 →</button
-          ><button type="button" class="ov-link" data-board="hosting">
-            AI托管看板 →
-          </button>
-        </div>
       </section>
       <section class="ov-people" aria-labelledby="ov-people-title">
         <div class="ov-section-heading">
@@ -10845,13 +10834,6 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
 }
 .rea-ov-page .ov-kpi-value .ov-mom.muted {
   color: #8f959e;
-}
-.rea-ov-page .ov-board-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 24px;
-  margin-top: 14px;
-  font-size: 12px;
 }
 .rea-ov-page .ov-people {
   margin-top: 24px;
@@ -12178,39 +12160,6 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     if (previous) navigate(previous, true);
     else goHome();
   }
-  function openBoard(source) {
-    if (source === "tools") {
-      navigate({ view: "board", source });
-      return;
-    }
-    homeOrg = route.org;
-    homeScroll = scroller().scrollTop;
-    const next = { view: "home", org: homeOrg };
-    const overview = stateFor(next);
-    overview.source = source;
-    // Existing destination boards open at company scope. The return restores the selected department and layout.
-    overview.sourceWindows = Object.fromEntries(
-      Object.entries(periods).map(([key, window]) => [
-        key,
-        sources[source].metrics.map((metric) => ({
-          metric,
-          name: metrics[metric].name,
-          unit: metrics[metric].unit,
-          value: metricValue(
-            allRecords.filter(
-              (record) =>
-                record.day < window.days && record.sources.includes(source),
-            ),
-            metric,
-          ),
-        })),
-      ]),
-    );
-    parent.postMessage(
-      { reaPage: sources[source].page, reaOverview: overview },
-      "*",
-    );
-  }
   const METRIC_ICONS = {
     added:
       '<circle cx="9" cy="7.5" r="3.5"/><path d="M2.5 20.5v-1.6a5 5 0 0 1 5-5h3a5 5 0 0 1 5 5v1.6"/><path d="M18.5 7.5v6M15.5 10.5h6"/>',
@@ -13044,7 +12993,6 @@ setTimeout(function(){toast('素材库已就绪 · 点击九宫格「素材库�
     } else if (data.usageFeature)
       navigate({ view: "features", feature: data.usageFeature });
     else if (data.action === "features") navigate({ view: "features" });
-    else if (data.board) openBoard(data.board);
     else if (data.metric)
       navigate({
         view: "metric",
