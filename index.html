@@ -20551,6 +20551,10 @@ tb.addEventListener("click",function(e){
     + '.rea-qf-morebd .ant-input{max-width:640px}'
     + '.rea-qs-sheet{background:#fff;border-radius:6px;padding:16px 20px 0}'
     + '.rea-qs .rea-qf-act{bottom:0}'
+    /* ---- 发圈 · 新建：四段重排（2026-11-10） ----
+       这页的表单区本身就是一个 706px 高的滚动盒（._addCONleft_），底栏贴它的下沿，
+       所以 bottom 是 0，不是群发两页那个抵掉 20px 内边距的 -20px。 */
+    + '.rea-fq .rea-qf-act{bottom:0;margin-top:12px}'
     + '.rea-qf-sw{position:relative;flex:none;box-sizing:border-box;width:40px;height:22px;padding:0;border:0;border-radius:11px;background:#C9CDD4;cursor:pointer;transition:background .15s}'
     + '.rea-qf-sw:after{content:"";position:absolute;left:2px;top:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .15s}'
     + '.rea-qf-sw[aria-checked="true"]{background:#1677FF}'
@@ -20879,6 +20883,10 @@ function initFq(){
   for(i=0;i<bs.length;i++)if(norm(bs[i].textContent)==='临时创建')tempBtn=bs[i];
   if(!tempBtn)return;
   var btn=cloneSrcBtn(space,'从素材库选择');if(!btn)return;
+  /* 两枚来源的次序与群发两页对齐：临时创建在左、从素材库选择在右。
+     cloneSrcBtn 统一把克隆件插在「临时创建」前面，这里再把它挪到末尾。 */
+  var srcItem=btn.closest('.ant-space-item');
+  if(srcItem&&srcItem.parentNode===space)space.appendChild(srcItem);
   var host=document.createElement('div');host.className='rea-wxt-host';
   box.appendChild(host);
   var picked=null;
@@ -21125,6 +21133,234 @@ function initFq(){
       p.textContent='销售转发至朋友圈编辑页面后不可手动修改内容、所在位置与提醒对象，自动完成发布操作';
     }
   });
+
+  /* ---------- 2026-11-10 四段重排 ----------
+     快照把 11 行平铺在一个 706px 高的滚动盒（._addCONleft_）里：任务名称与执行人员挡在最前，
+     两个时间排在最后，控件之间没有先后；执行人员下拉与两个时间选择器还是点不动的静态件。
+     这里照群发两页的同一套走法重排：① 发给谁看 → ② 发什么 → ③ 什么时候发 → ④ 谁来发，
+     任务名称／自动发送／全局弹窗收进常驻的「更多设置」，底部补一条贴在滚动盒下沿的操作条。
+     行仍是快照原节点——单选、开关、富文本的 REA_FX 接线不动，这里只搬位置、补两个可点控件。 */
+  var FQ_L=document.querySelector('[class*="_addCONleft_"]');
+  if(FQ_L){
+    var fqTitle=document.querySelector('[class*="_titleBar_"]');
+    if(fqTitle&&norm(fqTitle.textContent)==='新建任务')fqTitle.textContent='新建发圈任务';
+    function fqGroup(t){
+      var l=findLabel(t);return l?upClass(l,'_addgroup_'):null;
+    }
+    function fqSec(no,t,sub){
+      var s=document.createElement('section');s.className='rea-qf-sec';
+      s.innerHTML='<div class="rea-qf-sechd"><span class="rea-qf-no">'+no+'</span><h3></h3>'
+        +(sub?'<span class="rea-qf-secsub"></span>':'')+'</div>';
+      s.querySelector('h3').textContent=t;
+      if(sub)s.querySelector('.rea-qf-secsub').textContent=sub;
+      var bd=document.createElement('div');bd.className='rea-qf-secbd';
+      s.appendChild(bd);wrap.appendChild(s);return bd;
+    }
+    function fqPut(row,body,noreq){
+      if(!row)return null;
+      row.classList.add('rea-qf-row');
+      row.style.display='';
+      var lb=row.querySelector('[class*="_addtitle"]');
+      var ctl=row.querySelector('[class*="_addright_"]');
+      if(lb){lb.classList.add('rea-qf-lab');lb.classList.add(noreq?'rea-qf-noreq':'rea-qf-req')}
+      if(ctl)ctl.classList.add('rea-qf-ctl');
+      body.appendChild(row);return row;
+    }
+    function fqHint(t){
+      var p=document.createElement('p');p.className='rea-qf-hint';p.textContent=t;return p;
+    }
+    function fqSubHint(t){
+      var p=document.createElement('p');p.className='rea-wxt-hintline';p.textContent=t;return p;
+    }
+    function fqChecked(g){
+      if(!g)return '';
+      var grp=g.querySelector('.ant-radio-group')||g,
+          ws=qa('.ant-radio-wrapper',grp),x,on;
+      for(x=0;x<ws.length;x++){
+        on=!!ws[x].querySelector('.ant-radio.ant-radio-checked');
+        ws[x].classList.toggle('ant-radio-wrapper-checked',on);
+      }
+      var w=grp.querySelector('.ant-radio-wrapper-checked');
+      return w?norm(w.textContent):'';
+    }
+    var gName=fqGroup('任务名称'),gContent=fqGroup('任务内容'),gLoc=fqGroup('所在位置'),
+        gExec=fqGroup('执行人员'),gScope=fqGroup('选择可见好友'),gRem=fqGroup('提醒谁看'),
+        gAuto=fqGroup('自动发送'),gType=fqGroup('任务类型'),gStart=fqGroup('通知时间'),
+        gEnd=fqGroup('截止时间'),gPopup=fqGroup('全局弹窗');
+    /* 两行没有标题的快照行：一行空壳，一行是截止时间下面的提示，搬完统一清掉 */
+    var gAct=null,gEndHint='',k;
+    qa('[class*="_addgroup_"]',FQ_L).forEach(function(g){
+      if(!gAct&&g.querySelector('button.ant-btn')&&norm(g.textContent).indexOf('保存')===0)gAct=g;
+      if(!gEndHint&&norm(g.textContent).indexOf('未到达开始时间')>=0)gEndHint=(g.textContent||'').replace(/\s+/g,' ').trim();
+    });
+    if(!gEndHint)gEndHint='未到达开始时间的任务在员工任务列表中不可见。';
+
+    /* 执行人员：静态树形下拉点不动，换成与群发两页同一枚下拉 */
+    var ORGS=[{n:'华东销售组',c:12},{n:'华南销售组',c:8},{n:'销售支持组',c:5},{n:'全员',c:25}];
+    var execSel=null;
+    if(gExec){
+      var execCtl=gExec.querySelector('[class*="_addright_"]');
+      if(execCtl){
+        execCtl.innerHTML='';
+        execCtl.classList.add('rea-qf-exec');
+        var selBtn=document.createElement('button');
+        selBtn.type='button';selBtn.className='rea-qf-select';
+        selBtn.innerHTML='<span class="rea-qf-seltext">请选择组织架构</span><span class="rea-qf-selcaret">▾</span>';
+        var selMenu=document.createElement('div');selMenu.className='rea-qf-selmenu';
+        var oh='',oi;
+        for(oi=0;oi<ORGS.length;oi++){
+          oh+='<button type="button" class="rea-qf-opt" data-org="'+oi+'"><span>'+esc(ORGS[oi].n)
+            +'</span><span class="rea-qf-optn">'+ORGS[oi].c+' 人</span></button>';
+        }
+        selMenu.innerHTML=oh;
+        selBtn.setAttribute('aria-haspopup','listbox');
+        selBtn.setAttribute('aria-expanded','false');
+        execCtl.appendChild(selBtn);execCtl.appendChild(selMenu);
+        execCtl.appendChild(fqSubHint('如果需要特殊分配，请为该员工创建单独的任务。'));
+        selBtn.addEventListener('click',function(e){
+          e.preventDefault();e.stopPropagation();
+          var on=selMenu.classList.toggle('on');
+          selBtn.setAttribute('aria-expanded',on?'true':'false');
+        });
+        selMenu.addEventListener('click',function(e){
+          var b=e.target.closest?e.target.closest('.rea-qf-opt'):null;
+          if(!b)return;
+          e.preventDefault();e.stopPropagation();
+          execSel=ORGS[+b.getAttribute('data-org')];
+          var sp=selBtn.querySelector('.rea-qf-seltext');
+          if(sp)sp.textContent=execSel.n+'（'+execSel.c+' 人）';
+          selMenu.classList.remove('on');selBtn.setAttribute('aria-expanded','false');
+          fqSetErr(gExec,'');fqRender();
+        });
+        document.addEventListener('click',function(e){
+          if(selMenu.classList.contains('on')&&!execCtl.contains(e.target))selMenu.classList.remove('on');
+        });
+      }
+    }
+
+    /* 两个时间：静态的 ant-picker 换成可改的 datetime-local */
+    function fqDt(g,val,label){
+      if(!g)return null;
+      var c=g.querySelector('[class*="_addright_"]');
+      if(!c)return null;
+      c.innerHTML='';
+      var inp=document.createElement('input');
+      inp.type='datetime-local';
+      inp.className='ant-input css-vgijab ant-input-outlined rea-qf-dt';
+      inp.value=val;
+      c.appendChild(inp);
+      if(label)c.appendChild(fqSubHint(label));
+      return inp;
+    }
+    var startI=fqDt(gStart,'2026-10-13T16:05','到达通知时间会给执行人员推送提醒。');
+    var endI=fqDt(gEnd,'2026-10-20T16:05','');
+
+    /* ---- 四段 ＋ 更多设置 ＋ 底栏 ---- */
+    var wrap=document.createElement('div');wrap.className='rea-fq';
+    FQ_L.appendChild(wrap);
+
+    var b1=fqSec('1','发给谁看','先定客户是谁，再定他们能看到什么');
+    fqPut(gScope,b1);
+    if(gRem){gRem.classList.add('rea-qf-subrow');fqPut(gRem,b1,true)}
+
+    var b2=fqSec('2','发什么','文章、素材库，或让销售现场写');
+    fqPut(gContent,b2);
+    fqPut(gLoc,b2,true);
+
+    var b3=fqSec('3','什么时候发','到点通知销售，截止时间前要发完');
+    fqPut(gType,b3);
+    fqPut(gStart,b3);
+    fqPut(gEnd,b3);
+    b3.appendChild(fqHint(gEndHint));
+    var promise=document.createElement('p');promise.className='rea-qf-promise';b3.appendChild(promise);
+
+    var b4=fqSec('4','谁来发','执行这条任务的销售分组');
+    fqPut(gExec,b4);
+
+    var more=document.createElement('div');more.className='rea-qf-more';
+    var moreTog=document.createElement('div');moreTog.className='rea-qf-moretog';
+    moreTog.innerHTML='<span>更多设置</span><span class="rea-qf-moresub">任务名称 · 自动发送 · 全局弹窗</span>';
+    var moreBd=document.createElement('div');moreBd.className='rea-qf-morebd';
+    more.appendChild(moreTog);more.appendChild(moreBd);wrap.appendChild(more);
+    fqPut(gName,moreBd,true);
+    fqPut(gAuto,moreBd,true);
+    fqPut(gPopup,moreBd,true);
+
+    var act=document.createElement('div');act.className='rea-qf-act';
+    var actSum=document.createElement('div');actSum.className='rea-qf-actsum';
+    var actBtns=document.createElement('div');actBtns.className='rea-qf-actbtns';
+    var saveBtn=null,draftBtn=null,cancelBtn=null;
+    if(gAct){
+      qa('button',gAct).forEach(function(b){
+        var t=norm(b.textContent);
+        if(t==='保存')saveBtn=b;
+        else if(t==='保存草稿箱')draftBtn=b;
+        else if(t==='取消')cancelBtn=b;
+      });
+    }
+    function fqSecondary(b){
+      if(!b)return;
+      b.classList.remove('ant-btn-primary','ant-btn-color-primary','ant-btn-variant-solid');
+      b.classList.add('ant-btn-default','ant-btn-color-default','ant-btn-variant-outlined');
+    }
+    fqSecondary(cancelBtn);fqSecondary(draftBtn);
+    if(cancelBtn)actBtns.appendChild(cancelBtn);
+    if(draftBtn)actBtns.appendChild(draftBtn);
+    if(saveBtn)actBtns.appendChild(saveBtn);
+    act.appendChild(actSum);act.appendChild(actBtns);wrap.appendChild(act);
+
+    /* 没搬进新结构的行（空壳、旧操作行、截止提示行）一并清掉 */
+    qa('[class*="_addgroup_"]',FQ_L).forEach(function(g){
+      if(!wrap.contains(g)&&g.parentNode)g.parentNode.removeChild(g);
+    });
+
+    function fqSetErr(g,msg){
+      if(!g)return;
+      var ctl=g.querySelector('[class*="_addright_"]');if(!ctl)return;
+      var e=ctl.querySelector('.rea-qf-err');
+      if(!e){e=document.createElement('p');e.className='rea-qf-err';ctl.appendChild(e)}
+      e.textContent=msg||'';e.style.display=msg?'block':'none';
+    }
+    function fqDtLabel(v){
+      if(!v)return '';
+      var d=v.slice(0,10).split('-'),t=v.slice(11,16);
+      return (d[1]||'')+'-'+(d[2]||'')+' '+t;
+    }
+    function fqGap(a,b){
+      if(!a||!b)return 0;
+      var n=Math.round((new Date(b)-new Date(a))/86400000);
+      return n>0?n:0;
+    }
+    function fqRender(){
+      var content=picked?('素材库 · '+picked.title):'临时创建';
+      var scope=fqChecked(gScope)||'全部好友';
+      var rep=fqChecked(gType)||'单次任务';
+      var sv=startI?startI.value:'',ev=endI?endI.value:'';
+      var when=sv?fqDtLabel(sv):'未设置';
+      if(sv&&rep!=='单次任务')when+=' 起 · '+rep;else when+=' 通知';
+      if(ev)when+='，'+fqGap(sv,ev)+' 天内发完';
+      var execWord=execSel?(execSel.n+' '+execSel.c+' 人'):'执行人员未选';
+      actSum.textContent=content+' · '+scope+(selected.length?(' · 提醒 '+selected.length+' 个标签'):'')+' · '+when+' · '+execWord;
+      promise.textContent=sv?(rep==='单次任务'
+        ?('在 '+fqDtLabel(sv)+' 通知执行人员发圈'+(ev?('，'+fqDtLabel(ev)+' 前发完'):''))
+        :(fqDtLabel(sv)+' 起按'+rep+'重复'+(ev?('，'+fqDtLabel(ev)+' 截止'):''))):'先选通知时间';
+    }
+    if(saveBtn)saveBtn.addEventListener('click',function(e){
+      e.preventDefault();
+      var ok=true;
+      if(!execSel){fqSetErr(gExec,'请选择执行人员');ok=false}else fqSetErr(gExec,'');
+      if(!startI||!startI.value){fqSetErr(gStart,'请选择通知时间');ok=false}else fqSetErr(gStart,'');
+      if(!endI||!endI.value){fqSetErr(gEnd,'请选择截止时间');ok=false}
+      else if(startI&&startI.value&&endI.value<=startI.value){fqSetErr(gEnd,'截止时间要晚于通知时间');ok=false}
+      else fqSetErr(gEnd,'');
+      if(!ok){toast('请先补全必填项');return}
+      toast('发圈任务已保存（演示）');
+      setTimeout(function(){parent.postMessage({reaPage:'发圈'},'*')},900);
+    });
+    document.addEventListener('click',function(){setTimeout(fqRender,0)});
+    document.addEventListener('input',function(){setTimeout(fqRender,0)});
+    fqRender();
+  }
 
   if(locInput)locInput.addEventListener('input',drawLoc);
   fqDrawTags();
