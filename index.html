@@ -3,7 +3,7 @@
      切换 = 顶部分段按钮 / 快捷键 1·2 / URL #app·#real（认不出的 hash —— 含旧 #admin —— 落默认视图）。
      （原自研「管理后台原型」视图②已下线：素材库后台并入线上后台复刻的「素材库」列表页与「素材库 · 新建」页，ADR-0048。）
      销售端 App 以原文内嵌在下方 <script type="text/plain"> 载体块内（运行时还原写入 iframe srcdoc，文档级隔离，样式与 JS 互不可见）。
-     线上后台复刻是线上后台 36 页（18 个模块页 ＋ 11 个新建页 ＋ 7 个详情页）的逐页静态快照，体积约 8.4MB，
+     线上后台复刻是线上后台 37 页（19 个模块页 ＋ 11 个新建页 ＋ 7 个详情页）的逐页静态快照，体积约 8.4MB，
      故**不内嵌**而外挂在同级 _online-admin.js（由 tools/build_online_admin.py 生成），首次切到该视图才按需加载（另一视图不受拖累）。
      其中若干页按 ADR-0043 被**逐页覆盖**（微小助看板换新稿、素材库 · 新建加交互、
      小红书运营四页改配置口径并补「任务配置快照」页）：
@@ -84,7 +84,7 @@ body{font-family:var(--f);background:var(--surface);color:var(--on-surface);
 #srcApp,#srcBoard{display:none}
 
 /* 视图③（线上后台复刻）：iframe 撑满整块，不再另挂一条页签栏——
-   线上后台**自带的导航（侧边菜单 ＋ 顶部一级导航）**就是换页入口（36 页全部可达，见下方第 1 件事）。
+   线上后台**自带的导航（侧边菜单 ＋ 顶部一级导航）**就是换页入口（37 页全部可达，见下方第 1 件事）。
    旧版那条 chip 栏已删：它与真实后台的观感不搭，且菜单本来就在。
    注：#viewsReal 靠 .view 的 absolute+inset:0 撑满整块，**别在这里再写 position**
    ——id 选择器优先，会把它打回普通流，高度塌成内容高（这个坑踩过一次）。
@@ -14970,7 +14970,7 @@ render();
 </script>
 
 <!-- ============ 覆盖页之外的「详细数据」子页 ============
-     现网「任务执行 › 详细数据」指向 board/wxz/task，这条路由**不在 36 页快照里**（抓存件没有它），
+     现网「任务执行 › 详细数据」指向 board/wxz/task，这条路由**不在 37 页快照里**（抓存件没有它），
      所以点原来那条 href 会把 iframe 导航到现网测试地址、在原型里表现为空白页。这里按 ADR-0043
      的覆盖机制补一张子页：页名与正文由外壳脚本在运行时合成（克隆 微小助看板 的侧栏／顶栏外壳，
      只换正文区），行数据由看板页在点「详细数据」时一并带过来，**不另编一份**。 -->
@@ -15460,6 +15460,253 @@ render();
 </div>
 </script>
 
+<!-- ============ 操作频率设置（2026-11-10） ============
+     现网「微小助设置 / 操作频率设置」页的正文。页头（标题、统一执行开关、保存）仍是快照，
+     正文整段换成 srcBoardOpfreq：五组上限按业务分节，默认不用卡片框，行只用发丝线分隔。
+     交互见 reaOpfJs：步进／手输夹取、区间两端联动、不限制开关、群发每小时≤每日、
+     统一执行状态条、保存前校验＋toast。状态只活在本次页面会话里，不落盘。 -->
+<script type="text/plain" id="srcBoardOpfreq">
+<div class="rea-opf-form">
+  <div class="rea-opf-status" data-status>
+    <span class="rea-opf-status-i" aria-hidden="true"></span>
+    <span data-status-text>未开启统一执行，员工可在手机端自行修改各项上限。</span>
+  </div>
+
+  <section class="rea-opf-sec">
+    <h3 class="rea-opf-h">AI功能每日使用点数限额</h3>
+    <div class="rea-opf-row">
+      <div class="rea-opf-label" id="reaOpfLabelAi">每人每日使用点数不得超过</div>
+      <div class="rea-opf-ctrl">
+        <span class="rea-opf-step">
+          <input class="rea-opf-input" id="reaOpfAi" type="text" inputmode="numeric" autocomplete="off"
+                 data-key="aiPoints" data-min="0" data-max="99999" value="200"
+                 aria-labelledby="reaOpfLabelAi" aria-describedby="reaOpfErrAi">
+          <span class="rea-opf-arrows">
+            <button type="button" class="up" data-step="1" aria-label="增加每人每日点数" tabindex="-1"></button>
+            <button type="button" class="down" data-step="-1" aria-label="减少每人每日点数" tabindex="-1"></button>
+          </span>
+        </span>
+        <span class="rea-opf-unit">点</span>
+        <label class="rea-opf-check">
+          <input type="checkbox" data-unlimited>
+          <span class="rea-opf-box" aria-hidden="true"></span>
+          <span>不限制</span>
+        </label>
+      </div>
+    </div>
+    <p class="rea-opf-err" id="reaOpfErrAi" data-err="aiPoints"></p>
+  </section>
+
+  <section class="rea-opf-sec">
+    <h3 class="rea-opf-h">主动加好友<button type="button" class="rea-opf-info" data-info aria-label="主动加好友的批次与间隔如何执行">i</button></h3>
+    <div class="rea-opf-row">
+      <div class="rea-opf-label" id="reaOpfLabelAddDaily">主动发起请求，每个微信每日总上限</div>
+      <div class="rea-opf-ctrl">
+        <span class="rea-opf-step">
+          <input class="rea-opf-input" id="reaOpfAddDaily" type="text" inputmode="numeric" autocomplete="off"
+                 data-key="addDaily" data-min="0" data-max="200" value="100" aria-labelledby="reaOpfLabelAddDaily">
+          <span class="rea-opf-arrows">
+            <button type="button" class="up" data-step="1" aria-label="增加每日总上限" tabindex="-1"></button>
+            <button type="button" class="down" data-step="-1" aria-label="减少每日总上限" tabindex="-1"></button>
+          </span>
+        </span>
+        <span class="rea-opf-unit">人</span>
+      </div>
+    </div>
+    <div class="rea-opf-row">
+      <div class="rea-opf-label" id="reaOpfLabelAddBatch">每个微信号添加批次数量</div>
+      <div class="rea-opf-ctrl">
+        <span class="rea-opf-step">
+          <input class="rea-opf-input" id="reaOpfAddBatch" type="text" inputmode="numeric" autocomplete="off"
+                 data-key="addBatch" data-min="0" data-max="100" value="35" aria-labelledby="reaOpfLabelAddBatch">
+          <span class="rea-opf-arrows">
+            <button type="button" class="up" data-step="1" aria-label="增加添加批次数量" tabindex="-1"></button>
+            <button type="button" class="down" data-step="-1" aria-label="减少添加批次数量" tabindex="-1"></button>
+          </span>
+        </span>
+        <span class="rea-opf-unit">人/批次</span>
+      </div>
+    </div>
+    <div class="rea-opf-row">
+      <div class="rea-opf-label" id="reaOpfLabelSearchBatch">每个微信号搜索批次数量</div>
+      <div class="rea-opf-ctrl">
+        <span class="rea-opf-step">
+          <input class="rea-opf-input" id="reaOpfSearchBatch" type="text" inputmode="numeric" autocomplete="off"
+                 data-key="searchBatch" data-min="0" data-max="70" value="65" aria-labelledby="reaOpfLabelSearchBatch">
+          <span class="rea-opf-arrows">
+            <button type="button" class="up" data-step="1" aria-label="增加搜索批次数量" tabindex="-1"></button>
+            <button type="button" class="down" data-step="-1" aria-label="减少搜索批次数量" tabindex="-1"></button>
+          </span>
+        </span>
+        <span class="rea-opf-unit">人/批次</span>
+      </div>
+    </div>
+    <div class="rea-opf-row">
+      <div class="rea-opf-label">每批次间隔时间，范围内随机</div>
+      <div class="rea-opf-ctrl">
+        <span class="rea-opf-step rea-opf-step-sm">
+          <input class="rea-opf-input" type="text" inputmode="numeric" autocomplete="off"
+                 data-key="addGap" data-idx="0" data-min="1" data-max="18" value="1" aria-label="每批次间隔时间下限">
+          <span class="rea-opf-arrows">
+            <button type="button" class="up" data-step="1" aria-label="增加间隔下限" tabindex="-1"></button>
+            <button type="button" class="down" data-step="-1" aria-label="减少间隔下限" tabindex="-1"></button>
+          </span>
+        </span>
+        <span class="rea-opf-tilde">~</span>
+        <span class="rea-opf-step rea-opf-step-sm">
+          <input class="rea-opf-input" type="text" inputmode="numeric" autocomplete="off"
+                 data-key="addGap" data-idx="1" data-min="1" data-max="18" value="2" aria-label="每批次间隔时间上限">
+          <span class="rea-opf-arrows">
+            <button type="button" class="up" data-step="1" aria-label="增加间隔上限" tabindex="-1"></button>
+            <button type="button" class="down" data-step="-1" aria-label="减少间隔上限" tabindex="-1"></button>
+          </span>
+        </span>
+        <span class="rea-opf-unit">分钟</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="rea-opf-sec">
+    <h3 class="rea-opf-h">自动打招呼</h3>
+    <div class="rea-opf-row">
+      <div class="rea-opf-label" id="reaOpfLabelGreet">单个微信每日总上限</div>
+      <div class="rea-opf-ctrl">
+        <span class="rea-opf-step">
+          <input class="rea-opf-input" id="reaOpfGreet" type="text" inputmode="numeric" autocomplete="off"
+                 data-key="greetDaily" data-min="1" data-max="180" value="180" aria-labelledby="reaOpfLabelGreet">
+          <span class="rea-opf-arrows">
+            <button type="button" class="up" data-step="1" aria-label="增加自动打招呼每日上限" tabindex="-1"></button>
+            <button type="button" class="down" data-step="-1" aria-label="减少自动打招呼每日上限" tabindex="-1"></button>
+          </span>
+        </span>
+        <span class="rea-opf-unit">人</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="rea-opf-sec">
+    <h3 class="rea-opf-h">群发消息</h3>
+    <div class="rea-opf-row">
+      <div class="rea-opf-label" id="reaOpfLabelMsgDaily">每日群发总数不得超过</div>
+      <div class="rea-opf-ctrl">
+        <span class="rea-opf-step">
+          <input class="rea-opf-input" id="reaOpfMsgDaily" type="text" inputmode="numeric" autocomplete="off"
+                 data-key="msgDaily" data-min="1" data-max="5000" value="5000" aria-labelledby="reaOpfLabelMsgDaily">
+          <span class="rea-opf-arrows">
+            <button type="button" class="up" data-step="1" aria-label="增加每日群发总数" tabindex="-1"></button>
+            <button type="button" class="down" data-step="-1" aria-label="减少每日群发总数" tabindex="-1"></button>
+          </span>
+        </span>
+        <span class="rea-opf-unit">条</span>
+      </div>
+    </div>
+    <div class="rea-opf-row">
+      <div class="rea-opf-label" id="reaOpfLabelMsgHourly">每小时群发消息数上限</div>
+      <div class="rea-opf-ctrl">
+        <span class="rea-opf-step">
+          <input class="rea-opf-input" id="reaOpfMsgHourly" type="text" inputmode="numeric" autocomplete="off"
+                 data-key="msgHourly" data-min="1" data-max="5000" value="700"
+                 aria-labelledby="reaOpfLabelMsgHourly" aria-describedby="reaOpfErrMsgHourly">
+          <span class="rea-opf-arrows">
+            <button type="button" class="up" data-step="1" aria-label="增加每小时群发数" tabindex="-1"></button>
+            <button type="button" class="down" data-step="-1" aria-label="减少每小时群发数" tabindex="-1"></button>
+          </span>
+        </span>
+        <span class="rea-opf-unit">条</span>
+      </div>
+    </div>
+    <p class="rea-opf-err" id="reaOpfErrMsgHourly" data-err="msgHourly"></p>
+    <div class="rea-opf-row">
+      <div class="rea-opf-label">多条消息时，每条消息间隔时间，范围内随机</div>
+      <div class="rea-opf-ctrl">
+        <span class="rea-opf-step rea-opf-step-sm">
+          <input class="rea-opf-input" type="text" inputmode="numeric" autocomplete="off"
+                 data-key="msgGap" data-idx="0" data-min="3" data-max="3600" value="3" aria-label="每条消息间隔下限">
+          <span class="rea-opf-arrows">
+            <button type="button" class="up" data-step="1" aria-label="增加每条消息间隔下限" tabindex="-1"></button>
+            <button type="button" class="down" data-step="-1" aria-label="减少每条消息间隔下限" tabindex="-1"></button>
+          </span>
+        </span>
+        <span class="rea-opf-tilde">~</span>
+        <span class="rea-opf-step rea-opf-step-sm">
+          <input class="rea-opf-input" type="text" inputmode="numeric" autocomplete="off"
+                 data-key="msgGap" data-idx="1" data-min="4" data-max="3600" value="6" aria-label="每条消息间隔上限">
+          <span class="rea-opf-arrows">
+            <button type="button" class="up" data-step="1" aria-label="增加每条消息间隔上限" tabindex="-1"></button>
+            <button type="button" class="down" data-step="-1" aria-label="减少每条消息间隔上限" tabindex="-1"></button>
+          </span>
+        </span>
+        <span class="rea-opf-unit">秒</span>
+      </div>
+    </div>
+    <div class="rea-opf-row">
+      <div class="rea-opf-label">多个对象间隔时间，范围内随机</div>
+      <div class="rea-opf-ctrl">
+        <span class="rea-opf-step rea-opf-step-sm">
+          <input class="rea-opf-input" type="text" inputmode="numeric" autocomplete="off"
+                 data-key="objGap" data-idx="0" data-min="3" data-max="3600" value="10" aria-label="多个对象间隔下限">
+          <span class="rea-opf-arrows">
+            <button type="button" class="up" data-step="1" aria-label="增加对象间隔下限" tabindex="-1"></button>
+            <button type="button" class="down" data-step="-1" aria-label="减少对象间隔下限" tabindex="-1"></button>
+          </span>
+        </span>
+        <span class="rea-opf-tilde">~</span>
+        <span class="rea-opf-step rea-opf-step-sm">
+          <input class="rea-opf-input" type="text" inputmode="numeric" autocomplete="off"
+                 data-key="objGap" data-idx="1" data-min="4" data-max="3600" value="20" aria-label="多个对象间隔上限">
+          <span class="rea-opf-arrows">
+            <button type="button" class="up" data-step="1" aria-label="增加对象间隔上限" tabindex="-1"></button>
+            <button type="button" class="down" data-step="-1" aria-label="减少对象间隔上限" tabindex="-1"></button>
+          </span>
+        </span>
+        <span class="rea-opf-unit">秒</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="rea-opf-sec">
+    <h3 class="rea-opf-h">关联好友</h3>
+    <div class="rea-opf-row">
+      <div class="rea-opf-label" id="reaOpfLabelRelHourly">每小时操作关联账号上限</div>
+      <div class="rea-opf-ctrl">
+        <span class="rea-opf-step">
+          <input class="rea-opf-input" id="reaOpfRelHourly" type="text" inputmode="numeric" autocomplete="off"
+                 data-key="relHourly" data-min="1" data-max="50" value="50" aria-labelledby="reaOpfLabelRelHourly">
+          <span class="rea-opf-arrows">
+            <button type="button" class="up" data-step="1" aria-label="增加每小时关联账号上限" tabindex="-1"></button>
+            <button type="button" class="down" data-step="-1" aria-label="减少每小时关联账号上限" tabindex="-1"></button>
+          </span>
+        </span>
+        <span class="rea-opf-unit">人</span>
+      </div>
+    </div>
+    <div class="rea-opf-row">
+      <div class="rea-opf-label">每个账号间隔时间，范围内随机</div>
+      <div class="rea-opf-ctrl">
+        <span class="rea-opf-step rea-opf-step-sm">
+          <input class="rea-opf-input" type="text" inputmode="numeric" autocomplete="off"
+                 data-key="relGap" data-idx="0" data-min="3" data-max="3600" value="10" aria-label="账号间隔下限">
+          <span class="rea-opf-arrows">
+            <button type="button" class="up" data-step="1" aria-label="增加账号间隔下限" tabindex="-1"></button>
+            <button type="button" class="down" data-step="-1" aria-label="减少账号间隔下限" tabindex="-1"></button>
+          </span>
+        </span>
+        <span class="rea-opf-tilde">~</span>
+        <span class="rea-opf-step rea-opf-step-sm">
+          <input class="rea-opf-input" type="text" inputmode="numeric" autocomplete="off"
+                 data-key="relGap" data-idx="1" data-min="4" data-max="60" value="30" aria-label="账号间隔上限">
+          <span class="rea-opf-arrows">
+            <button type="button" class="up" data-step="1" aria-label="增加账号间隔上限" tabindex="-1"></button>
+            <button type="button" class="down" data-step="-1" aria-label="减少账号间隔上限" tabindex="-1"></button>
+          </span>
+        </span>
+        <span class="rea-opf-unit">秒</span>
+      </div>
+    </div>
+  </section>
+</div>
+</script>
+
 <!-- ============ 微小助看板 · 任务列表（任务看板的二级页） ============
      「任务列表」原先摊在看板「任务执行」板块里，现在收成任务看板的二级页：
      占比图与部门完成情况回答「整体／哪个部门欠」，这一页回答「具体是哪几条」。
@@ -15707,7 +15954,7 @@ render();
 
   /* ============================================================
      视图③ · 线上后台复刻
-     线上后台 36 页（18 个模块页 ＋ 11 个新建页 ＋ 7 个详情页）的逐页静态快照存在同级 _online-admin.js 里
+     线上后台 37 页（19 个模块页 ＋ 11 个新建页 ＋ 7 个详情页）的逐页静态快照存在同级 _online-admin.js 里
      （window.__REAL_ADMIN__，由 tools/build_online_admin.py 生成），
      结构为 {css: 全站去重样式, shell: 各页共用的 DOM 前缀, pages[].rest: 各页剩余 DOM}。
      本视图做两件事：
@@ -15722,7 +15969,7 @@ render();
           不是在原型外壳上另挂一条导航——与下面那条「已删的 chip 栏」不是一回事。
           **入口仍然只有快照自带的这两级导航**——旧版另挂过一条顶部页签栏（那时 29 页），已删：
           线上后台的观感里不该有那条 M3 chip 栏，而导航本来就能走遍全部页。删前逐页验过可达性
-          （出口是「侧栏项 / 新建按钮 / 详情链接」三种，实测跑过 BFS）：18 个模块页靠侧栏，
+          （出口是「侧栏项 / 新建按钮 / 详情链接」三种，实测跑过 BFS）：19 个模块页靠侧栏，
           11 个「· 新建」页靠模块页那枚新建按钮，6 个「· 详情」页靠列表行的详情按钮，
           最远 3 跳到，没有一页变成孤儿。新增「客户唤醒 · 详情」同样按这三条入口自动接通
           （反查表由页名推导，不写死映射）。
@@ -15773,7 +16020,7 @@ render();
   /* 页内注入样式：交互态只挂类名，静置时零视觉改动（cursor 不进截图，:hover 只在悬停时生效）。
      **只有下面这组侧栏折叠态例外**（2026-10-28，登记在 docs/09 §5）：视图③的左侧菜单默认
      收起成 88px 的一级栏，二级菜单不再常驻右列，改成一级项右侧的悬停浮层。
-     折叠态在快照里没有——现网它是 React 按状态渲染的，抓到的 36 页都停在双列——
+     折叠态在快照里没有——现网它是 React 按状态渲染的，抓到的 37 页都停在双列——
      所以宽度／定位／显隐只能写在这里。全部挂在 .rea-collapsed 下：去掉这个类
      （点一级栏右缘那枚箭头）就逐像素回到快照的双列样子。 */
   var REA_CSS = 'li.ykMenuItemLi.rea-nav{cursor:pointer}'
@@ -15834,11 +16081,11 @@ render();
   var REA_MAT_LIST = REA_MAT_PAGE.split(' · ')[0];   // 它保存/取消后回落的那张列表页名
   var REA_XHS_PAGE = '新小红书运营';     // 小红书营销的模块页——「新小红书运营 · 新建」的「取消」回落到这里
   var REA_XHS_DETAIL = '新小红书运营 · 详情';   // 来源：线上后台页面/线上详情页html/新小红书运营.html（构建按「· 详情」收进载体）
-  /* 任务配置快照：现网路由 /snapshotTasks 不在 36 页快照里，也没有对应源目录，
+  /* 任务配置快照：现网路由 /snapshotTasks 不在 37 页快照里，也没有对应源目录，
      由 reaSynthPages() 克隆详情页外壳合成，正文来自载体块 srcXhsSnapshot。
      只读，回答「这次执行为什么这么发」（PRD §4.10）。 */
   var REA_XHS_SNAPSHOT = '新小红书运营 · 任务配置快照';
-  /* 「详细数据」子页：现网路由 board/wxz/task 不在 36 页快照里，
+  /* 「详细数据」子页：现网路由 board/wxz/task 不在 37 页快照里，
      由 reaSynthPages() 在运行时克隆看板页外壳合成，正文来自下面那个载体块。 */
   var REA_DETAIL_TASK = '微小助看板 · 执行人明细';
   /* 三级页「执行人详情」：从执行人明细点一行进来，同样是克隆看板外壳合成的，
@@ -17518,7 +17765,7 @@ function taskScope(rs,metric,range){
     '  if(ink)requestAnimationFrame(function(){ink.classList.add("is-anim")});',
     '}',
     '',
-    '/* 「详细数据」子页不在 36 页快照里（现网那条 href 指向 board/wxz/task，',
+    '/* 「详细数据」子页不在 37 页快照里（现网那条 href 指向 board/wxz/task，',
     '   抓存件没抓这条路由，直接点会把 iframe 导航出去、在原型里表现为空白页）。',
     '   这里改成在原型内开子页，并把**当前窗口**与任务表整行一起带过去——',
     '   子页不另编一份数，看到的就是这一页此刻的同一张表。 */',
@@ -18147,8 +18394,8 @@ function taskScope(rs,metric,range){
 
   /* ============================================================
      「详细数据」子页：执行人明细
-     现网看板「任务执行」那枚「详细数据」指向 board/wxz/task——**这条路由不在 36 页快照里**
-     （抓存件只抓了 18 个模块页 ＋ 11 个新建页 ＋ 7 个详情页），原来直接写死的 href
+     现网看板「任务执行」那枚「详细数据」指向 board/wxz/task——**这条路由不在 37 页快照里**
+     （抓存件只抓了 19 个模块页 ＋ 11 个新建页 ＋ 7 个详情页），原来直接写死的 href
      一点就把 iframe 导航到现网测试地址，在此视图里就是一张空白页。
      现在改为原型内的子页（页名由 reaSynthPages 合成，正文是 srcBoardTask）。
      数据全部由看板页点进来时随 postMessage 带过来（dumpRows），**不在这里另编一份**：
@@ -20012,7 +20259,7 @@ function taskScope(rs,metric,range){
 
   /* 「新小红书运营 · 任务配置快照」的覆盖脚本：运行时合成页没有正文缝，整段换掉 #subapp-viewport。
      只读页的正文来自载体块 srcXhsSnapshot（PRD §4.10 的逐行口径），不参与构建——现网 /snapshotTasks
-     不在 36 页快照里，源目录也没有这一页。壳（侧栏、顶栏、页签）仍由详情页克隆而来。 */
+     不在 37 页快照里，源目录也没有这一页。壳（侧栏、顶栏、页签）仍由详情页克隆而来。 */
   function reaXhsSnapshotJs(){
    return [
     '(function(){',
@@ -22732,7 +22979,7 @@ else if(PAGE==='群发群组 · 新建')initQs();
        新小红书运营 · 详情  补跳转——正文就是快照那一段；脚本把「查看任务配置快照」接到快照页
        新小红书运营 · 任务配置快照
                             合成页——外壳由 reaSynthPages() 克隆详情页，正文换 srcXhsSnapshot；
-                            现网 /snapshotTasks 不在 36 页快照里，也没有源目录
+                            现网 /snapshotTasks 不在 37 页快照里，也没有源目录
        群发好友 · 详情      补弹窗——**没有 html**，正文就是快照那一段；脚本给「群发好友数」补好友明细弹窗，
                             行为与样式见 reaQfDetailJs 上方注释
        发圈 · 详情          只读回显——**没有 html**，正文就是快照那一段；脚本在「任务信息」的
@@ -26069,6 +26316,263 @@ bar.style.display='none';
 `;
   }
 
+  /* ============================================================
+     操作频率设置（2026-11-10）
+     正文整段换成 srcBoardOpfreq；页头（标题、统一执行开关、保存）仍是快照。
+     覆盖件做三件事：
+     ① 五组上限按业务分节，去掉快照的卡片框，只留发丝线；
+     ② 数值控件可步进、可手输，失焦夹到 min/max；区间两端自动保序；
+     ③ 交互：不限制联动、群发每小时≤每日校验、统一执行状态条、保存校验＋toast。
+     视觉按 ADR-0082：白底、浅蓝强调、少框线、一屏一个主操作（保存留在页头）。
+     登记在 docs/09 §2.3；不改 _online-admin.js（该页由构建收进载体，页面 CSS 不进并集）。
+     ============================================================ */
+  var REA_OPF_CSS = `
+.rea-opf{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;color:#1F2329}
+.rea-opf .ant-page-header{background:#fff;padding:24px 24px 12px}
+.rea-opf .ant-page-header-heading{align-items:center}
+.rea-opf .ant-page-header-heading-title{font-size:20px;font-weight:600;line-height:28px;color:#1F2329}
+.rea-opf .ant-page-header-heading-sub-title{display:flex;align-items:center;margin-left:16px;font-weight:400}
+.rea-opf .ant-page-header-heading-sub-title .ant-space{gap:8px}
+.rea-opf .ant-page-header-heading-sub-title .ant-space-item:last-child>span{color:#646A73!important;font-size:13px;line-height:20px}
+.rea-opf .ant-page-header-heading-sub-title .ant-space-item:last-child{cursor:pointer;user-select:none}
+.rea-opf .ant-page-header-heading-extra .ant-btn{height:36px;padding:0 20px;border-radius:8px;font-size:14px;box-shadow:none}
+.rea-opf .ant-page-header-heading-extra .ant-btn-primary{background:#1677FF}
+.rea-opf .ant-page-header-heading-extra .ant-btn-primary:hover{background:#4096FF}
+.rea-opf .ant-switch-checked{background:#1677FF}
+.rea-opf .ant-switch:hover:not(.ant-switch-disabled){background:rgba(22,119,255,.32)}
+.rea-opf .ant-pro-page-container-children-container{padding:0}
+.rea-opf .rightcontent,.rea-opf #content,.rea-opf .pagecontent{background:#fff}
+
+.rea-opf-form{max-width:1040px;padding:4px 24px 56px;font-size:14px}
+.rea-opf-status{display:flex;align-items:flex-start;gap:8px;margin:4px 0 32px;padding:10px 12px;border-radius:8px;background:#F7F8FA;color:#646A73;font-size:13px;line-height:20px}
+.rea-opf-status.on{background:#E6F4FF;color:#1F2329}
+.rea-opf-status-i{flex:none;width:6px;height:6px;margin-top:7px;border-radius:50%;background:#8F959E}
+.rea-opf-status.on .rea-opf-status-i{background:#1677FF}
+
+.rea-opf-sec{margin:0 0 28px}
+.rea-opf-h{display:flex;align-items:center;margin:0 0 4px;font-size:16px;font-weight:600;line-height:24px;color:#1F2329}
+.rea-opf-info{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;margin-left:6px;padding:0;border:1px solid #C9CDD4;border-radius:50%;background:#fff;color:#8F959E;font-family:inherit;font-size:11px;font-weight:600;line-height:1;cursor:help;transition:color .15s,border-color .15s}
+.rea-opf-info:hover,.rea-opf-info:focus{border-color:#1677FF;color:#1677FF;outline:none}
+.rea-opf-row{display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:56px;padding:8px 12px;border-bottom:1px solid #EEF1F6;transition:background .15s}
+.rea-opf-row:hover{background:#F7FAFF}
+.rea-opf-label{flex:1 1 auto;min-width:0;font-size:14px;line-height:22px;color:#1F2329}
+.rea-opf-ctrl{flex:none;display:flex;align-items:center}
+.rea-opf-step{display:inline-flex;align-items:stretch;height:36px;overflow:hidden;border:1px solid #E5E8EF;border-radius:8px;background:#fff;transition:border-color .15s,box-shadow .15s}
+.rea-opf-step:focus-within{border-color:#1677FF;box-shadow:0 0 0 2px #E6F4FF}
+.rea-opf-step.is-off{background:#F7F8FA}
+.rea-opf-input{width:96px;padding:0 10px;border:0;background:transparent;color:#1F2329;font-family:inherit;font-size:14px;outline:none}
+.rea-opf-step-sm .rea-opf-input{width:64px}
+.rea-opf-input:disabled{color:#8F959E;background:transparent;-webkit-text-fill-color:#8F959E}
+.rea-opf-arrows{display:flex;flex:none;flex-direction:column;border-left:1px solid #E5E8EF}
+.rea-opf-arrows button{position:relative;width:24px;height:17px;padding:0;border:0;background:#fff;cursor:pointer}
+.rea-opf-arrows button:first-child{border-bottom:1px solid #E5E8EF}
+.rea-opf-arrows button::before{content:"";position:absolute;left:50%;top:50%;width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;transform:translate(-50%,-50%)}
+.rea-opf-arrows .up::before{border-bottom:5px solid #8F959E}
+.rea-opf-arrows .down::before{border-top:5px solid #8F959E}
+.rea-opf-arrows button:hover:not([disabled])::before{border-bottom-color:#1677FF;border-top-color:#1677FF}
+.rea-opf-arrows button[disabled]{background:#F7F8FA;cursor:default}
+.rea-opf-arrows button[disabled]::before{opacity:.35}
+.rea-opf-unit{flex:none;margin-left:8px;font-size:14px;line-height:20px;color:#646A73}
+.rea-opf-tilde{flex:none;margin:0 8px;font-size:14px;color:#8F959E}
+.rea-opf-check{display:inline-flex;align-items:center;gap:8px;margin-left:24px;font-size:14px;color:#1F2329;cursor:pointer;user-select:none}
+.rea-opf-check input{position:absolute;width:0;height:0;opacity:0}
+.rea-opf-box{position:relative;flex:none;width:16px;height:16px;border:1px solid #C9CDD4;border-radius:4px;background:#fff;transition:background .15s,border-color .15s,box-shadow .15s}
+.rea-opf-check input:checked+.rea-opf-box{border-color:#1677FF;background:#1677FF}
+.rea-opf-check input:checked+.rea-opf-box::after{content:"";position:absolute;left:4px;top:1px;width:5px;height:9px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.rea-opf-check input:focus-visible+.rea-opf-box{box-shadow:0 0 0 2px #E6F4FF}
+.rea-opf-err{display:none;margin:0;padding:6px 12px 0;font-size:12px;line-height:18px;color:#FF4D4F}
+.rea-opf-err.on{display:block}
+
+.rea-opf-tip{position:fixed;z-index:1200;display:none;max-width:380px;padding:12px 14px;border-radius:8px;background:#fff;box-shadow:0 6px 16px rgba(0,0,0,.08);color:#646A73;font-size:12px;line-height:20px;white-space:pre-line}
+.rea-opf-tip.on{display:block}
+.rea-opf-toast{position:fixed;top:24px;left:50%;z-index:1300;display:flex;align-items:center;gap:8px;padding:10px 16px;border-radius:8px;background:#fff;box-shadow:0 6px 16px rgba(0,0,0,.08);color:#1F2329;font-size:14px;line-height:20px;opacity:0;visibility:hidden;transform:translate(-50%,-8px);transition:opacity .18s,transform .18s,visibility .18s}
+.rea-opf-toast.on{opacity:1;visibility:visible;transform:translate(-50%,0)}
+.rea-opf-toast::before{content:"";flex:none;width:16px;height:16px;border-radius:50%;background:#52C41A}
+.rea-opf-toast.err::before{background:#FF4D4F}
+`;
+
+  function reaOpfJs(){
+    return String.raw`
+(function(){
+'use strict';
+document.body.classList.add('rea-opf');
+var root=document.querySelector('.rea-opf-form');
+if(!root)return;
+
+var inputs=Array.prototype.slice.call(root.querySelectorAll('.rea-opf-input'));
+var sw=document.querySelector('.ant-page-header-heading-sub-title .ant-switch');
+var swLabel=document.querySelector('.ant-page-header-heading-sub-title .ant-space-item:last-child');
+var saveBtn=document.querySelector('.ant-page-header-heading-extra .ant-btn-primary');
+var status=root.querySelector('[data-status]');
+var statusText=root.querySelector('[data-status-text]');
+
+function keyOf(inp){return inp.getAttribute('data-key')}
+function idxOf(inp){var i=inp.getAttribute('data-idx');return i===null?-1:+i}
+function num(inp){var n=parseInt(inp.value,10);return isNaN(n)?0:n}
+function find(key){for(var i=0;i<inputs.length;i++)if(inputs[i].getAttribute('data-key')===key&&idxOf(inputs[i])<0)return inputs[i];return null}
+function pairOf(inp,idx){for(var i=0;i<inputs.length;i++)if(inputs[i].getAttribute('data-key')===keyOf(inp)&&idxOf(inputs[i])===idx)return inputs[i];return null}
+
+function setErr(key,msg){
+  var p=root.querySelector('[data-err="'+key+'"]');
+  if(!p)return;
+  p.textContent=msg||'';
+  p.classList.toggle('on',!!msg);
+}
+function clearErr(inp){
+  var k=keyOf(inp);
+  if(k==='msgHourly')checkHourly();else setErr(k,'');
+}
+
+/* 夹到 min/max；区间两端保序（下限抬高就带上限，上限压低就带下限）。 */
+function norm(inp,quiet){
+  var mn=+inp.getAttribute('data-min'),mx=+inp.getAttribute('data-max');
+  var v=String(inp.value).replace(/[^\d]/g,'');
+  var n=v===''?num(inp):parseInt(v,10);
+  if(isNaN(n))n=mn;
+  n=Math.max(mn,Math.min(mx,n));
+  var idx=idxOf(inp),other;
+  if(idx===0){other=pairOf(inp,1);if(other&&n>num(other)){other.value=n;clearErr(other)}}
+  if(idx===1){other=pairOf(inp,0);if(other&&n<num(other)){other.value=n;clearErr(other)}}
+  inp.value=n;
+  if(!quiet)clearErr(inp);
+}
+
+function syncArrows(){
+  for(var i=0;i<inputs.length;i++){
+    var inp=inputs[i],step=inp.closest('.rea-opf-step');
+    if(!step)continue;
+    var v=num(inp),mn=+inp.getAttribute('data-min'),mx=+inp.getAttribute('data-max');
+    var up=step.querySelector('.up'),dn=step.querySelector('.down');
+    if(up)up.disabled=inp.disabled||v>=mx;
+    if(dn)dn.disabled=inp.disabled||v<=mn;
+  }
+}
+
+/* 群发：每小时上限不能高于每日总数。 */
+function checkHourly(){
+  var d=find('msgDaily'),h=find('msgHourly');
+  if(!d||!h)return true;
+  var bad=num(h)>num(d);
+  setErr('msgHourly',bad?'每小时上限不能高于每日群发总数':'');
+  return !bad;
+}
+
+/* 步进 */
+root.addEventListener('click',function(e){
+  var b=e.target.closest('.rea-opf-arrows button');
+  if(!b||b.disabled)return;
+  var step=b.closest('.rea-opf-step'),inp=step.querySelector('.rea-opf-input');
+  if(!inp||inp.disabled)return;
+  var v=num(inp)+(+b.getAttribute('data-step'));
+  inp.value=Math.max(+inp.getAttribute('data-min'),Math.min(+inp.getAttribute('data-max'),v));
+  clearErr(inp);syncArrows();
+});
+
+for(var i=0;i<inputs.length;i++)(function(inp){
+  inp.addEventListener('input',function(){
+    var v=this.value.replace(/[^\d]/g,'');
+    if(v!==this.value)this.value=v;
+    clearErr(this);
+  });
+  inp.addEventListener('blur',function(){norm(this);syncArrows();});
+  inp.addEventListener('keydown',function(e){
+    if(e.key==='Enter'){e.preventDefault();this.blur();}
+  });
+})(inputs[i]);
+
+/* 「不限制」：勾上就把点数输入与步进一起停用，数值保留，取消勾选原样回来。 */
+var ul=root.querySelector('[data-unlimited]'),ai=find('aiPoints');
+function syncUnlimited(){
+  var on=!!(ul&&ul.checked);
+  if(ai){ai.disabled=on;var step=ai.closest('.rea-opf-step');if(step)step.classList.toggle('is-off',on);}
+  if(on)setErr('aiPoints','');
+  syncArrows();
+}
+if(ul){ul.addEventListener('change',syncUnlimited);syncUnlimited();}
+
+/* 统一执行：开关本体仍归 REA_FX 翻类名，这里等它翻完再读状态。 */
+function applyStatus(){
+  var on=!!sw&&(sw.getAttribute('aria-checked')==='true'||sw.classList.contains('ant-switch-checked'));
+  status.classList.toggle('on',on);
+  statusText.textContent=on
+    ?'统一执行已开启，企业下所有微信号按下方配置执行，员工端不可修改。'
+    :'未开启统一执行，员工可在手机端自行修改各项上限。';
+}
+if(sw){
+  sw.addEventListener('click',function(){setTimeout(applyStatus,0)});
+  if(swLabel)swLabel.addEventListener('click',function(e){
+    if(e.target.closest('.ant-switch'))return;
+    sw.click();
+  });
+  applyStatus();
+}
+
+/* 主动加好友的信息点：原文照抄快照的 popover。 */
+var info=root.querySelector('[data-info]');
+var tip=document.createElement('div');tip.className='rea-opf-tip';
+tip.textContent='解释：多开 3 个微信，每批次添加 3 人，每批次间隔 2 分钟。\n即：微信 1 添加 3 人后，间隔 2 分钟，再微信 2 添加 3 人；再间隔 2 分钟，再微信 3 添加 3 人；再间隔 2 分钟后循环到微信 1，以此类推。';
+document.body.appendChild(tip);
+function showTip(){
+  if(!info)return;
+  tip.classList.add('on');
+  var r=info.getBoundingClientRect(),w=tip.offsetWidth,h=tip.offsetHeight;
+  var left=Math.min(Math.max(8,r.left),window.innerWidth-w-8);
+  var top=r.bottom+8;
+  if(top+h>window.innerHeight-8)top=Math.max(8,r.top-h-8);
+  tip.style.left=left+'px';tip.style.top=top+'px';
+}
+function hideTip(){tip.classList.remove('on')}
+if(info){
+  info.addEventListener('mouseenter',showTip);
+  info.addEventListener('focus',showTip);
+  info.addEventListener('mouseleave',hideTip);
+  info.addEventListener('blur',hideTip);
+  info.addEventListener('click',function(e){
+    e.preventDefault();
+    tip.classList.contains('on')?hideTip():showTip();
+  });
+}
+document.addEventListener('click',function(e){
+  if(info&&(e.target===info||info.contains(e.target)))return;
+  hideTip();
+});
+window.addEventListener('scroll',hideTip,true);
+
+/* 保存：先归一全部数值，再跑跨字段校验，过了才给成功反馈。 */
+var toast=document.createElement('div');toast.className='rea-opf-toast';toast.setAttribute('role','status');
+document.body.appendChild(toast);
+var toastT=null;
+function say(msg,err){
+  toast.textContent=msg;
+  toast.classList.toggle('err',!!err);
+  toast.classList.add('on');
+  clearTimeout(toastT);
+  toastT=setTimeout(function(){toast.classList.remove('on')},2200);
+}
+function save(){
+  for(var i=0;i<inputs.length;i++)norm(inputs[i],true);
+  syncArrows();
+  var ok=checkHourly();
+  if(!ok){
+    var h=find('msgHourly');if(h)h.focus();
+    say('请检查标红的设置',1);
+    return;
+  }
+  if(saveBtn.disabled)return;
+  var old=saveBtn.textContent;
+  saveBtn.disabled=true;saveBtn.textContent='保存中…';
+  setTimeout(function(){
+    saveBtn.disabled=false;saveBtn.textContent=old;
+    say('设置已保存');
+  },420);
+}
+if(saveBtn)saveBtn.addEventListener('click',function(e){e.preventDefault();save()});
+
+syncArrows();
+})();
+`;
+  }
+
   function reaOverviewDataJs(){
     var tree=document.createElement('div');
     tree.innerHTML=docOf('srcBoard');
@@ -26100,6 +26604,8 @@ bar.style.display='none';
     '素材库': { css: REA_MLUSE_CSS, js: reaMatListUseJs },
     /* 智能回复（2026-11-10）：关键词应答方案页签 ＋ 新建/编辑方案抽屉 */
     '智能回复': { css: REA_SMR_CSS, js: reaSmrJs },
+    /* 操作频率设置（2026-11-10）：正文整段另造，五组上限＋步进/校验/统一执行状态 */
+    '操作频率设置': { html: 'srcBoardOpfreq', css: REA_OPF_CSS, js: reaOpfJs },
     '微小助看板 · 任务列表': { html: 'srcBoardTasks', css: REA_BOARD_CSS, js: reaBoardTasksJs },
     [REA_METRIC_PAGE]: { html: 'srcBoardTasks', css: REA_BOARD_CSS, js: reaBoardTasksJs },
     '微小助看板 · 执行人明细': { html: 'srcBoardTask', css: REA_BOARD_CSS, js: reaBoardTaskJs },
@@ -26148,7 +26654,7 @@ bar.style.display='none';
     return 0;
   }
 
-  /* 「详细数据」子页在快照里没有对应路由（现网 board/wxz/task 不在 36 页内），
+  /* 「详细数据」子页在快照里没有对应路由（现网 board/wxz/task 不在 37 页内），
      所以克隆看板页的 shell/rest 造一页：外壳（侧栏、顶栏、选中态）与看板
      完全一致，只有正文区被 REA_COVER 的 html 换掉。**不能改 _online-admin.js**——
      那是构建产物，重跑 build 就没；合成放在运行时，重抓源目录后照样成立。 */
@@ -26851,7 +27357,7 @@ bar.style.display='none';
       + '}'
       /* ---- 侧栏两级菜单：默认折叠成一级栏，一级项悬停出二级浮层 ----
          快照只带了「当前这一组」的二级 DOM，悬停别的一级项时没有现成节点，所以用外壳按
-         36 页快照推出来的 MENU（见 reaMenuIndex），显示名与次序也在那张表里定。
+         37 页快照推出来的 MENU（见 reaMenuIndex），显示名与次序也在那张表里定。
          浮层就是右列那棵树换了摆放方式（样式在 REA_CSS 的 .rea-collapsed 下），内容按组重铺。 */
       + 'var SIDER=document.querySelector(".ykSideRoot");'
       + 'var SEC=document.querySelector("ul.ykSideTwoColSecondaryList");'
@@ -27168,7 +27674,7 @@ document.addEventListener('click',function(event){
   }
 
   /* 一级菜单 → 它那一组二级项（折叠态悬停浮层的数据源，reaNavJs 以 MENU 传进页里）。
-     来源仍是快照：每页的侧栏只带「当前这一组」的二级列表，把 36 页扫一遍就凑齐所有组；
+     来源仍是快照：每页的侧栏只带「当前这一组」的二级列表，把 37 页扫一遍就凑齐所有组；
      同一组取 pages[] 里最靠前那一页的那份，与 reaCatOf 判组、reaCatFirst 落地页同一条口径。
      项里带两样东西：t＝显示名（微小助看板 → 任务看板），p＝注册表页名（不是收录页就是 null）。 */
   function reaMenuIndex(){
