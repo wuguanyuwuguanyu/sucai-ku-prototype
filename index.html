@@ -20325,8 +20325,9 @@ tb.addEventListener("click",function(e){
     {id:'wm-6', title:'世界杯观赛攻略长图', group:'世界杯', dept:'销售一部', text:'', images:10, video:0},
     {id:'wm-7', title:'世界杯报名表', group:'世界杯', dept:'销售二部', text:'参赛报名的表格模板，填好回传即可。', images:0, video:0, files:1}
   ];
-  /* wm-6（10 张图）、wm-7（含文件）发不了朋友圈：发圈页的素材库看不到它们，群发页正常可选——
-     这条差异是故意留的，用来演示「为什么某个素材在这里搜不到」。 */
+  /* wm-6（10 张图）、wm-7（含文件）发不了朋友圈：发圈页的素材库看不到它们，群发页正常可选；
+     wm-7 在欢迎语模版里也不列（回复内容只支持文本／图片／视频）。这两条差异是故意留的，
+     用来演示「为什么某个素材在这里搜不到」。 */
 
   /* 素材库弹窗是**四页共用件**（发圈 · 新建／群发好友 · 新建／群发群组 · 新建／
      自动打招呼 · 新建的欢迎语模版）。这一半只管弹窗本身，另一半（已选卡、发圈预览、
@@ -20610,9 +20611,10 @@ tb.addEventListener("click",function(e){
     + '.rea-baf-err{display:none;margin:4px 0 0;max-width:560px;font-size:12px;line-height:20px;color:#ff4d4f}'
     + '.rea-baf-err.on{display:block}';
 
-  /* 素材库弹窗的注入脚本（四页共用一份，别各页再抄一遍）。各页只传三枚口径参数：
+  /* 素材库弹窗的注入脚本（四页共用一份，别各页再抄一遍）。各页只传这几枚口径参数：
        tip      弹窗标题下那句说明（各页口径不同，照实说清自己列的是什么）
        moments  是否按朋友圈可发口径过滤（只有发圈 · 新建为 true）
+       files    是否列含文件的素材（欢迎语模版传 false：回复内容只支持文本／图片／视频）
        counts   列表每行是否显示「n 条」消息数（只有欢迎语模版为 true）
      openPick(onOk, curId, max) 的 max＝调用方还能再放几条：传了就把超出的素材置灰、
      点了不改选、只在页脚说还差多少；任务三页不传，就没有上限这一说。 */
@@ -20620,6 +20622,7 @@ tb.addEventListener("click",function(e){
     return [
       'var MATS=' + reaJson(REA_WXT_MATS) + ',GROUPS=' + reaJson(REA_WXT_GROUPS) + ',DEPTS=' + reaJson(REA_WXT_DEPTS) + ';',
       'var PK_TIP=' + reaJson(cfg.tip) + ',PK_MOMENTS=' + (cfg.moments ? 'true' : 'false')
+        + ',PK_FILES=' + (cfg.files === false ? 'false' : 'true')
         + ',PK_COUNTS=' + (cfg.counts ? 'true' : 'false') + ';',
       'function pkEsc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}',
       'function pkQ(s,r){return (r||document).querySelector(s)}',
@@ -20638,9 +20641,10 @@ tb.addEventListener("click",function(e){
       'function mlen(m){return (m.text?1:0)+(m.images||0)+(m.video||0)+(m.files||0)}',
       '/* 朋友圈能不能发：只认文本 / 图片 / 视频三种消息（白名单，与 App 的 canMoments 同一口径），',
       '   且图片最多 9 张、图片与视频不混排、视频最多 1 条。**含文件的素材发不了朋友圈**——',
-      '   文件照样能发群，发圈页只是不列。发圈页只列过得了这一关的素材；欢迎语模版不设限。 */',
+      '   文件照样能发群，发圈页只是不列。 */',
+      '/* 欢迎语模版同理：回复内容只支持文本／图片／视频，含文件的素材整条不列（files:false）。 */',
       'function canMoment(m){return !m.files&&m.images<=9&&m.video<=1&&!(m.images&&m.video)}',
-      'function avail(m){return !PK_MOMENTS||canMoment(m)}',
+      'function avail(m){return (!PK_MOMENTS||canMoment(m))&&(PK_FILES||!m.files)}',
       'function pool(){',
       '  var d=PICK.dept,g=PICK.group,qq=PICK.q,out=[],i;',
       '  for(i=0;i<MATS.length;i++){',
@@ -22148,7 +22152,7 @@ else if(PAGE==='群发群组 · 新建')initQs();
      覆盖页『自动打招呼 · 新建』。快照已经把模版弹窗抓下来了（模版名称 ＋ 回复内容表 ＋ 右侧手机
      预览 ＋ 底部取消/确定），但「添加回复内容」点下去什么都没有：二级弹窗是加载后才挂上 body 的，
      抓存件里没有它的 DOM。本段照产品给的线上截图把这一层补上——
-       ① 二级弹窗『添加回复内容』：类型五档（文本／图片／视频／小程序／文件），文本档带
+       ① 二级弹窗『添加回复内容』：类型三档（文本／图片／视频），文本档带
           「支持插入变量」六枚词条，点词条按光标位置插进正文；
        ② 确定后落成回复内容表的一行（类型／内容／编辑·删除），右侧手机预览同步长出一枚绿气泡；
        ③ 编辑＝带着原值重开二级弹窗，删除＝直接移除该行并重画预览；
@@ -22159,8 +22163,7 @@ else if(PAGE==='群发群组 · 新建')initQs();
      会被 REA_FX 当成模版弹窗的取消，把底下那层一起关了。 */
   var REA_ZD_VARS = [['员工姓名', '王小明'], ['员工手机', '138****8000'], ['部门名称', '销售一部'],
                      ['企业名称', '云小助'], ['员工岗位', '销售顾问'], ['当前时间', '']];
-  var REA_ZD_TYPES = [['text', '文本'], ['image', '图片'], ['video', '视频'],
-                      ['miniapp', '小程序'], ['file', '文件']];
+  var REA_ZD_TYPES = [['text', '文本'], ['image', '图片'], ['video', '视频']];
 
   /* 预览与缩略图用的占位图：内联 SVG，不走网络（快照里没有这些图）。
      色取 #f0f0f2 / #d9d9d9 / #8c8c8c——三个都在快照里出现过。 */
@@ -22175,11 +22178,10 @@ else if(PAGE==='群发群组 · 新建')initQs();
     + "<path d='M132 58l60 32-60 32z' fill='#d9d9d9'/>");
   var REA_ZD_DEMO = {
     image: { name: '欢迎语配图.png', src: REA_ZD_PIC },
-    video: { name: '产品介绍.mp4', src: REA_ZD_VPOSTER },
-    file:  { name: '产品手册.pdf', size: '2.4 MB' }
+    video: { name: '产品介绍.mp4', src: REA_ZD_VPOSTER }
   };
 
-  /* 页签图标：快照里没有 picture／video-camera／file-text／appstore 这几支（那个弹窗没抓下来），
+  /* 页签图标：快照里没有 picture／video-camera 这几支（那个弹窗没抓下来），
      所以按同一套线框风格自画；只用 currentColor，不引新色。 */
   function reaZdIc(inner){
     return '<span class="anticon rea-zd-ic"><svg viewBox="0 0 24 24" width="1em" height="1em"'
@@ -22191,9 +22193,6 @@ else if(PAGE==='群发群组 · 新建')initQs();
     image: reaZdIc("<rect x='3.5' y='5' width='17' height='14' rx='2'/><circle cx='8.5' cy='10' r='1.4'/>"
       + "<path d='M4.5 16.5l4.6-4.6 3.4 3.4 3-3 4 4'/>"),
     video: reaZdIc("<rect x='3' y='6' width='12.5' height='12' rx='2'/><path d='M15.5 10.2l5-3.2v10l-5-3.2z'/>"),
-    miniapp: reaZdIc("<rect x='4' y='4' width='6' height='6' rx='1.4'/><rect x='14' y='4' width='6' height='6' rx='1.4'/>"
-      + "<rect x='4' y='14' width='6' height='6' rx='1.4'/><rect x='14' y='14' width='6' height='6' rx='1.4'/>"),
-    file: reaZdIc("<path d='M7 3.5h7l4 4V20.5H7z'/><path d='M14 3.5v4h4'/>"),
     close: reaZdIc("<path d='M6 6l12 12M18 6L6 18'/>"),
     plus: reaZdIc("<path d='M12 5v14M5 12h14'/>")
   };
@@ -22253,20 +22252,6 @@ else if(PAGE==='群发群组 · 新建')initQs();
     + '.rea-zd-play{position:absolute;left:50%;top:50%;width:40px;height:40px;margin:-20px 0 0 -20px;'
     +   'border-radius:50%;background:rgba(0,0,0,.45);color:#ffffff;display:flex;align-items:center;'
     +   'justify-content:center;font-size:14px}'
-    /* 文件／小程序在微信里是白卡片，不套绿底（绿底只留给文字与图片） */
-    + '.rea-zd-bub-file,.rea-zd-bub-miniapp{background:#ffffff;border:1px solid #e5e5e5}'
-    + '.rea-zd-bub-file{padding:10px}'
-    + '.rea-zd-fcard{display:flex;align-items:center;gap:8px;padding:10px;border-radius:4px;background:#ffffff}'
-    + '.rea-zd-fcard .anticon{font-size:22px;color:#8c8c8c}'
-    + '.rea-zd-fmeta{min-width:0}'
-    + '.rea-zd-fname{font-size:13px;line-height:18px;color:#333333;overflow:hidden;'
-    +   'text-overflow:ellipsis;white-space:nowrap;max-width:130px}'
-    + '.rea-zd-fsize{font-size:12px;line-height:16px;color:#999999}'
-    + '.rea-zd-mp{display:flex;flex-direction:column;width:100%}'
-    + '.rea-zd-mp img{display:block;width:100%;height:auto}'
-    + '.rea-zd-mptitle{padding:8px 10px;font-size:13px;line-height:18px;color:#333333;'
-    +   'overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
-    + '.rea-zd-mpfoot{padding:0 10px 8px;font-size:12px;line-height:16px;color:#6b6b6b}'
     /* 「从素材库选择」跟在「添加回复内容」右边，同一枚工具栏里的次按钮 */
     + '.rea-zd-srcbtn{margin-left:8px}';
 
@@ -22278,8 +22263,9 @@ else if(PAGE==='群发群组 · 新建')initQs();
     /* 素材库弹窗与任务三页共用一份（reaPickJs）：欢迎语模版不按朋友圈口径筛，
        列表行显示「n 条」，并且按表格剩余空位传上限。 */
     reaPickJs({
-      tip: '素材会按顺序铺成回复内容，选完后仍可逐条编辑。',
+      tip: '素材会按顺序铺成回复内容，选完后仍可逐条编辑。含文件的素材不在列表里。',
       moments: false,
+      files: false,
       counts: true
     }),
     'var VARS=' + reaJson(REA_ZD_VARS) + ',TYPES=' + reaJson(REA_ZD_TYPES) + ',',
@@ -22337,14 +22323,11 @@ else if(PAGE==='群发群组 · 新建')initQs();
     '  tr.addEventListener("mouseenter",on);tr.addEventListener("mouseleave",off);',
     '}',
     'function cellText(m){',
-    '  if(m.t==="text")return m.c;',
-    '  if(m.t==="miniapp")return m.title||"";',
     '  return m.c||"";',
     '}',
     'function rowThumb(m){',
     '  if(m.t==="image")return \'<img class="rea-zd-thumb" src="\'+m.src+\'" alt="">\';',
-    '  if(m.t==="video"||m.t==="file"||m.t==="miniapp")',
-    '    return \'<span class="rea-zd-thumb-ic">\'+ICON[m.t]+"</span>";',
+    '  if(m.t==="video")return \'<span class="rea-zd-thumb-ic">\'+ICON[m.t]+"</span>";',
     '  return "";',
     '}',
     'function rowHtml(m,i){',
@@ -22387,14 +22370,7 @@ else if(PAGE==='群发群组 · 新建')initQs();
     '  if(m.t==="image")return \'<div class="rea-zd-bub rea-zd-bub-media"><img src="\'+m.src+\'" alt=""></div>\';',
     '  if(m.t==="video")return \'<div class="rea-zd-bub rea-zd-bub-media rea-zd-bub-video"><img src="\'',
     '    +(m.src||PIC)+\'" alt=""><span class="rea-zd-play">▶</span></div>\';',
-    '  if(m.t==="miniapp")return \'<div class="rea-zd-bub rea-zd-bub-media rea-zd-bub-miniapp"><div class="rea-zd-mp">\'',
-    '    +\'<img src="\'+(m.src||PIC)+\'" alt="">\'',
-    '    +\'<div class="rea-zd-mptitle">\'+esc(m.title||"")+"</div>"',
-    '    +\'<div class="rea-zd-mpfoot">小程序</div></div></div>\';',
-    '  return \'<div class="rea-zd-bub rea-zd-bub-file"><div class="rea-zd-fcard">\'',
-    '    +\'<span class="anticon">\'+ICON.file+"</span>"',
-    '    +\'<div class="rea-zd-fmeta"><div class="rea-zd-fname">\'+esc(m.c||"")+"</div>"',
-    '    +\'<div class="rea-zd-fsize">\'+esc(m.size||DEMO.file.size)+"</div></div></div></div>";',
+    '  return "";',
     '}',
     'function drawPreview(){',
     '  if(!PVC)return;',
@@ -22461,7 +22437,6 @@ else if(PAGE==='群发群组 · 新建')initQs();
     '    +\'<textarea id="rea-zd-ta" class="ant-input css-vgijab ant-input-outlined rea-zd-ta"\'',
     '    +\' maxlength="600" placeholder="请输入文本内容，可插入变量...">\'+esc(E.c)+"</textarea>"',
     '    +\'<div class="rea-zd-vars"><span>支持插入变量：</span>\'+varTags()+"</div>";',
-    '  if(E.t==="miniapp")return \'<div class="rea-zd-lbl"><span class="rea-zd-req">*</span>小程序内容</div>\'+mpForm();',
     '  return \'<div class="rea-zd-lbl"><span class="rea-zd-req">*</span>\'+nameOf(E.t)+"内容</div>"+uploadBox();',
     '}',
     'function varTags(){',
@@ -22480,23 +22455,9 @@ else if(PAGE==='群发群组 · 新建')initQs();
     '    +\'<button type="button" class="rea-zd-filex" data-zd-repick>重新选择</button>\'',
     '    +\'<button type="button" class="rea-zd-filex" data-zd-unpick aria-label="移除">×</button></div>\';',
     '}',
-    'function mpForm(){',
-    '  return \'<div class="rea-zd-field"><span class="rea-zd-flbl"><span class="rea-zd-req">*</span>小程序标题</span>\'',
-    '    +\'<div class="rea-zd-fctl"><input id="rea-zd-mptitle" class="ant-input css-vgijab ant-input-outlined"\'',
-    '    +\' placeholder="请输入小程序标题" value="\'+esc(E.title||"")+\'"></div></div>\'',
-    '    +\'<div class="rea-zd-field"><span class="rea-zd-flbl"><span class="rea-zd-req">*</span>小程序封面</span>\'',
-    '    +\'<div class="rea-zd-fctl">\'+(E.src?\'<div class="rea-zd-file"><img src="\'+E.src+\'" alt="">\'',
-    '    +\'<div class="rea-zd-filemain">封面已上传</div><button type="button" class="rea-zd-filex" data-zd-unpick aria-label="移除">×</button></div>\'',
-    '    :\'<div class="rea-zd-drop rea-zd-drop-sm" data-zd-mpcover>\'+ICON.plus+"<span>点击上传封面</span></div>")+"</div></div>"',
-    '    +\'<div class="rea-zd-field"><span class="rea-zd-flbl">页面路径</span>\'',
-    '    +\'<div class="rea-zd-fctl"><input id="rea-zd-mppath" class="ant-input css-vgijab ant-input-outlined"\'',
-    '    +\' placeholder="请输入页面路径，如 pages/index/index" value="\'+esc(E.path||"")+\'"></div></div>\';',
-    '}',
     'function readEditor(){',
     '  if(!ED||!E)return;',
     '  var ta=q("#rea-zd-ta",ED);if(ta)E.c=ta.value;',
-    '  var mt=q("#rea-zd-mptitle",ED);if(mt)E.title=mt.value;',
-    '  var mp=q("#rea-zd-mppath",ED);if(mp)E.path=mp.value;',
     '}',
     'function bindEditor(){',
     '  var ts=ED.querySelectorAll(".ant-tabs-tab"),i;',
@@ -22520,10 +22481,6 @@ else if(PAGE==='群发群组 · 新建')initQs();
     '  if(pk)pk.addEventListener("click",pick);',
     '  var un=q("[data-zd-unpick]",ED);',
     '  if(un)un.addEventListener("click",function(){E.c="";E.src="";paintEditor()});',
-    '  var mc=q("[data-zd-mpcover]",ED);',
-    '  if(mc)mc.addEventListener("click",function(){E.src=PIC;paintEditor()});',
-    '  var mt=q("#rea-zd-mptitle",ED);if(mt)mt.addEventListener("input",function(){E.title=mt.value});',
-    '  var mp=q("#rea-zd-mppath",ED);if(mp)mp.addEventListener("input",function(){E.path=mp.value});',
     '  paintInk();',
     '}',
     'function paintInk(){',
@@ -22549,9 +22506,6 @@ else if(PAGE==='群发群组 · 新建')initQs();
     '  readEditor();if(!E)return;',
     '  if(E.t==="text"){',
     '    if(!E.c.trim()){msg("请填写文本内容");return}',
-    '  }else if(E.t==="miniapp"){',
-    '    if(!(E.title||"").trim()){msg("请填写小程序标题");return}',
-    '    if(!E.src){msg("请先上传小程序封面");return}',
     '  }else if(!E.c){msg("请先选择"+nameOf(E.t));return}',
     '  var it={t:E.t,c:(E.c||"").trim(),src:E.src||"",title:(E.title||"").trim(),',
     '    path:(E.path||"").trim(),size:E.size||""};',
@@ -22562,13 +22516,12 @@ else if(PAGE==='群发群组 · 新建')initQs();
     'ADDB.addEventListener("click",function(e){e.preventDefault();openEditor(-1)});',
     '',
     '/* 一条素材＝一段回复：素材的第 i 条消息铺成第 i 行，类型与内容照抄（**复制，不是引用**）。',
-    '   图片／视频用本页占位图；文件名按素材标题顺延编号，取两次就是两套行，不拦。 */',
+    '   图片／视频用本页占位图；取两次就是两套行，不拦。含文件的素材在本页不列（2026-11-10）。 */',
     'function matRows(m){',
     '  var rs=[],i,t=m.title||"素材";',
     '  if(m.text)rs.push({t:"text",c:m.text,src:"",title:"",path:"",size:""});',
     '  for(i=0;i<(m.images||0);i++)rs.push({t:"image",c:t+"-"+(i+1)+".png",src:PIC,title:"",path:"",size:""});',
     '  for(i=0;i<(m.video||0);i++)rs.push({t:"video",c:t+"-"+(i+1)+".mp4",src:VPOSTER,title:"",path:"",size:""});',
-    '  for(i=0;i<(m.files||0);i++)rs.push({t:"file",c:t+"-"+(i+1)+".pdf",src:"",title:"",path:"",size:(i?"1.6 MB":"2.4 MB")});',
     '  return rs;',
     '}',
     'function pour(m){',
