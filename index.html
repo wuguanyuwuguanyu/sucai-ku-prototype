@@ -24281,43 +24281,47 @@ for(i=0;i<rows.length;i++){
     }
   };
 
-  /* 进度卡与表格状态点的样式。色值取 ADR-0082 的 token（主色／成功／警告／危险／
-     文字三档／分隔线），圆角只用 6px（条、点所在的小件），不做卡片外框——
-     这张卡靠字号、留白和一条下分隔线与下面的任务信息分组。 */
+  /* 进度卡与表格状态点的样式。整块用 #F7F8FA 浅底托住（token 的「弱分区底」），
+     不加边框、不加阴影；完成率是唯一的大数字，有效期落在任务名下一行，
+     图例只报数。进度条 10px、段间不留白缝，色值仍取 ADR-0082 的 token。 */
   var REA_WX_DETAIL_CSS = [
-    '.rea-wxd{position:relative;margin:0 0 20px;padding:4px 0 20px;border-bottom:1px solid #E5E8EF;background:#fff}',
-    '.rea-wxd-top{display:flex;align-items:center;justify-content:space-between;gap:12px 24px;flex-wrap:wrap}',
+    '.rea-wxd{box-sizing:border-box;position:relative;margin:0 0 20px;padding:20px 24px 18px;border-radius:8px;background:#F7F8FA}',
+    '.rea-wxd-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap}',
     '.rea-wxd-id{display:flex;align-items:center;gap:12px;min-width:0}',
     '.rea-wxd-name{margin:0;font-size:20px;line-height:28px;font-weight:600;color:#1F2329;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}',
-    '.rea-wxd-state{display:inline-flex;align-items:center;gap:6px;flex:none;font-size:12px;line-height:18px;color:#646A73;white-space:nowrap}',
+    '.rea-wxd-state{display:inline-flex;align-items:center;gap:6px;flex:none;height:24px;padding:0 10px;border:1px solid #E5E8EF;border-radius:999px;background:#fff;font-size:13px;line-height:1;color:#646A73;white-space:nowrap}',
     '.rea-wxd-state i{width:7px;height:7px;border-radius:50%;background:#8F959E;flex:none}',
     '.rea-wxd-state.live i{background:#1677FF}',
-    '.rea-wxd-state.done i{background:#52C41A}',
-    '.rea-wxd-when{font-size:12px;line-height:18px;color:#646A73;white-space:nowrap}',
-    '.rea-wxd-prog{margin-top:16px}',
-    '.rea-wxd-line{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}',
-    '.rea-wxd-lbl{display:inline-flex;align-items:center;gap:4px;font-size:12px;line-height:18px;color:#646A73}',
-    '.rea-wxd-help{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border:1px solid #C9CED6;border-radius:50%;font-size:11px;line-height:1;color:#8F959E;cursor:help}',
-    '.rea-wxd-pct{font-size:20px;line-height:28px;font-weight:600;color:#1F2329;font-variant-numeric:tabular-nums}',
-    '.rea-wxd-sum{font-size:14px;line-height:22px;color:#646A73}',
-    '.rea-wxd-extra{margin-left:auto;font-size:12px;line-height:18px;color:#8F959E}',
-    '.rea-wxd-bar{display:flex;height:8px;margin-top:10px;border-radius:6px;overflow:hidden;background:#F2F4F7}',
+    '.rea-wxd-state.done i{background:#8F959E}',
+    '.rea-wxd-when{margin-top:8px;font-size:13px;line-height:20px;color:#646A73}',
+    '.rea-wxd-note{display:inline-flex;align-items:center;gap:6px;font-style:normal;font-weight:500;color:#1F2329;white-space:nowrap}',
+    '.rea-wxd-note i{width:6px;height:6px;border-radius:50%;background:#FAAD14;flex:none}',
+    '.rea-wxd-main{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-top:16px}',
+    '.rea-wxd-pct{font-size:32px;line-height:36px;font-weight:600;color:#1F2329;font-variant-numeric:tabular-nums;letter-spacing:-.5px}',
+    '.rea-wxd-cap{padding-bottom:3px;line-height:1.35}',
+    '.rea-wxd-cap small{display:flex;align-items:center;gap:5px;font-size:12px;line-height:18px;color:#8F959E}',
+    '.rea-wxd-cap b{display:block;margin-top:1px;font-size:14px;line-height:20px;font-weight:400;color:#646A73}',
+    '.rea-wxd-help{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border:1px solid #C9CED6;border-radius:50%;font-size:10px;line-height:1;color:#8F959E;cursor:help}',
+    '.rea-wxd-extra{margin-left:auto;padding-bottom:4px;font-size:13px;line-height:20px;color:#646A73}',
+    '.rea-wxd-bar{display:flex;height:10px;margin-top:14px;border-radius:5px;overflow:hidden;background:#E9EDF3}',
     '.rea-wxd-bar i{display:block;height:100%}',
-    '.rea-wxd-bar i+i{box-shadow:inset 2px 0 0 #fff}',
     '.rea-wxd-bar i.done{background:#1677FF}',
-    '.rea-wxd-bar i.open{background:#E5E8EF}',
+    '.rea-wxd-bar i.open{background:#C9CED6}',
     '.rea-wxd-bar i.warn{background:#FAAD14}',
     '.rea-wxd-bar i.fail{background:#FF4D4F}',
-    '.rea-wxd-legend{display:flex;align-items:center;justify-content:flex-start;gap:18px;flex-wrap:wrap;margin-top:10px;font-size:12px;line-height:18px;color:#646A73}',
+    '.rea-wxd-legend{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-top:10px;font-size:13px;line-height:20px;color:#646A73}',
     '.rea-wxd-legend span{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}',
-    '.rea-wxd-legend i{width:7px;height:7px;border-radius:50%;background:#8F959E;flex:none}',
+    '.rea-wxd-legend i{width:8px;height:8px;border-radius:50%;background:#8F959E;flex:none}',
     '.rea-wxd-legend .done i{background:#1677FF}',
     '.rea-wxd-legend .open i{background:#C9CED6}',
     '.rea-wxd-legend .warn i{background:#FAAD14}',
     '.rea-wxd-legend .fail i{background:#FF4D4F}',
+    '.rea-wxd-legend b{font-weight:600;color:#1F2329}',
+    '.rea-wxd-overdue{margin-left:auto;font-size:12px;color:#646A73}',
+    '@media(max-width:900px){.rea-wxd-extra{margin-left:0}}',
     '.rea-wxd-tb{display:inline-flex;align-items:center;gap:6px;font-size:14px;line-height:22px;color:#1F2329}',
     '.rea-wxd-tb i{width:6px;height:6px;border-radius:50%;background:#8F959E;flex:none}',
-    '.rea-wxd-tb.done i{background:#52C41A}',
+    '.rea-wxd-tb.done i{background:#1677FF}',
     '.rea-wxd-tb.warn i{background:#FAAD14}',
     '.rea-wxd-tb.fail i{background:#FF4D4F}',
     '.rea-wxd-tb.open{color:#646A73}'
@@ -24386,26 +24390,32 @@ var bar='';
 });
 var leg='';
 ['done','open','warn','fail'].forEach(function(v){
-  if(c[v])leg+='<span class="'+v+'"><i></i>'+lb(v)+' '+c[v]+'</span>';
+  if(c[v])leg+='<span class="'+v+'"><i></i>'+lb(v)+' <b>'+c[v]+'</b></span>';
 });
 var help=CFG.unit==='items'
   ?'按目标数统计：一位'+CFG.noun+'计 1 项；逾期含在未执行内。'
   :'按人次统计：一位执行人员计 1 次；逾期含在未执行内。';
+/* 已结束那句拆成两截：「已于 … 结束」照常，未完成人数前面加一枚琥珀色点，
+   颜色只落在点上，文字仍用主文字色，12–13px 下才读得清。 */
+var whenHtml=CFG.when;
+if(CFG.state==='ended'){
+  var wparts=whenHtml.split(' · ');
+  if(wparts.length>1)whenHtml=wparts[0]+' · <em class="rea-wxd-note"><i></i>'+wparts.slice(1).join(' · ')+'</em>';
+}
+var capTotal='共 '+n+(CFG.unit==='items'?(' 个'+CFG.noun):' 人');
+var overdue=(CFG.state==='ended'&&pending)?'<span class="rea-wxd-overdue">其中 '+pending+CU+'已逾期</span>':'';
 var html=''
 +'<div class="rea-wxd-top">'
 +'<div class="rea-wxd-id"><h2 class="rea-wxd-name"></h2><span class="rea-wxd-state '+CFG.state+'"><i></i>'+CFG.stateText+'</span></div>'
-+'<div class="rea-wxd-when">'+CFG.when+'</div>'
 +'</div>'
-+'<div class="rea-wxd-prog">'
-+'<div class="rea-wxd-line">'
-+'<span class="rea-wxd-lbl">'+(CFG.unit==='items'?'任务进度':'执行进度')+'<span class="rea-wxd-help" title="'+help+'">?</span></span>'
++'<div class="rea-wxd-when">'+whenHtml+'</div>'
++'<div class="rea-wxd-main">'
 +'<strong class="rea-wxd-pct">'+(n?pct+'%':'—')+'</strong>'
-+'<span class="rea-wxd-sum">'+summary+'</span>'
++'<span class="rea-wxd-cap"><small>'+(CFG.unit==='items'?'任务进度':'执行进度')+'<span class="rea-wxd-help" title="'+help+'">?</span></small><b>'+capTotal+'</b></span>'
 +(CFG.extra?'<span class="rea-wxd-extra">'+CFG.extra+'</span>':'')
 +'</div>'
 +'<div class="rea-wxd-bar" role="img" aria-label="'+summary+'">'+bar+'</div>'
-+'<div class="rea-wxd-legend">'+leg+'</div>'
-+'</div>';
++'<div class="rea-wxd-legend">'+leg+overdue+'</div>';
 var band=document.createElement('div');
 band.className='rea-wxd';
 band.setAttribute('data-rea-wxd','1');
