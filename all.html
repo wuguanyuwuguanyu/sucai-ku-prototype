@@ -19971,34 +19971,105 @@ function taskScope(rs,metric,range){
    ].join('\n');
   }
 
-  /* 「发圈 · 详情」的覆盖脚本：任务信息补两行只读回显（所在位置／提醒谁看）。
+  /* 「发圈 · 详情」的覆盖脚本（2026-11-10）：创建页重排后，把详情页缺的配置补成只读行。
+     快照的「任务信息」原先只有任务名称、大类、状态、有效期、素材分类、执行人员、已发送、素材；
+     脚本在「执行人员」后补六行——可见范围、提醒谁看、任务内容（点标题开弹窗看）、所在位置、
+     循环方式、自动发送。全局弹窗不回显。任务内容不在这行里铺开，点开弹窗看，与发圈列表
+     「群发内容」那一列的读法一致；弹窗里的卡片就是客户在朋友圈看到的那张图文。
      正文仍是快照，脚本只插 <p><span>标签：</span><span>值</span></p>，不抄整页；
-     按「执行人员：」定位，不认行序——重抓快照后行序变了也不会插错。 */
+     按「执行人员：」定位，不认行序——重抓快照后行序变了也不会插错。
+     值按快照那条演示任务的口径写（全部好友／重点客户、老客户／文章「撒打算」／
+     上海静安嘉里中心／单次任务／自动发送开启），拿到真实任务数据后换成读字段。 */
   function reaFqDetailJs(){
-   return [
-    '(function(){',
-    'var BODY=document.querySelector(\'[class*="_task_information_body_"]\');',
-    'if(!BODY)return;',
-    'if(BODY.querySelector("[data-rea-fq-loc]"))return;',
-    'var ps=BODY.querySelectorAll("p"),i,anchor=null;',
-    'for(i=0;i<ps.length;i++){',
-    '  var t=(ps[i].textContent||"").replace(/\\s+/g,"");',
-    '  if(t.indexOf("执行人员：")===0){anchor=ps[i];break}',
-    '}',
-    'if(!anchor)return;',
-    'function row(label,value,attr){',
-    '  var p=document.createElement("p");p.setAttribute(attr,"1");',
-    '  var a=document.createElement("span");a.textContent=label;',
-    '  var b=document.createElement("span");b.textContent=value;',
-    '  p.appendChild(a);p.appendChild(b);return p;',
-    '}',
-    'var loc=row("所在位置：","上海静安嘉里中心","data-rea-fq-loc");',
-    'var rem=row("提醒谁看：","重点客户、老客户","data-rea-fq-remind");',
-    'if(anchor.nextSibling){BODY.insertBefore(loc,anchor.nextSibling);BODY.insertBefore(rem,loc.nextSibling)}',
-    'else{BODY.appendChild(loc);BODY.appendChild(rem)}',
-    '})();'
-   ].join('\n');
+   return String.raw`(function(){
+'use strict';
+var BODY=document.querySelector('[class*="_task_information_body_"]');
+if(!BODY)return;
+if(BODY.querySelector('[data-rea-fq-loc]'))return;
+var ps=BODY.querySelectorAll('p'),i,anchor=null;
+for(i=0;i<ps.length;i++){
+  var t=(ps[i].textContent||'').replace(/\s+/g,'');
+  if(t.indexOf('执行人员：')===0){anchor=ps[i];break}
+}
+if(!anchor)return;
+var THUMB='<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#98a2b3" stroke-width="1.5" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="M21 15l-4.6-4.6L7 20"/></svg>';
+function row(label,value,attr){
+  var p=document.createElement('p');p.setAttribute(attr,'1');
+  var a=document.createElement('span');a.textContent=label;
+  var b=document.createElement('span');b.textContent=value;
+  p.appendChild(a);p.appendChild(b);return p;
+}
+function contentRow(){
+  var p=document.createElement('p');p.setAttribute('data-rea-fq-content-row','1');
+  var a=document.createElement('span');a.textContent='任务内容：';
+  var b=document.createElement('span');
+  var lnk=document.createElement('button');
+  lnk.type='button';lnk.className='rea-fqc-link';lnk.textContent='撒打算';
+  lnk.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();openContent()});
+  b.appendChild(lnk);p.appendChild(a);p.appendChild(b);return p;
+}
+function openContent(){
+  var old=document.querySelector('[data-rea-fq-content]');
+  if(old&&old.parentNode)old.parentNode.removeChild(old);
+  var w=document.createElement('div');
+  w.className='ant-modal-root css-vgijab';
+  w.setAttribute('data-rea-fq-content','1');
+  w.innerHTML=[
+    '<div class="ant-modal-mask"></div>',
+    '<div class="ant-modal-wrap ant-modal-centered">',
+    '<div class="ant-modal css-vgijab rea-fqc-modal" role="dialog" aria-modal="true" aria-label="发圈内容" style="width:560px">',
+    '<div class="ant-modal-content">',
+    '<button type="button" class="ant-modal-close" aria-label="关闭"><span class="ant-modal-close-x">×</span></button>',
+    '<div class="ant-modal-header"><div class="ant-modal-title">发圈内容</div></div>',
+    '<div class="ant-modal-body">',
+    '<div class="rea-fqc-card"><div class="rea-fqc-thumb">'+THUMB+'</div>',
+    '<div class="rea-fqc-meta"><div class="rea-fqc-title">撒打算</div>',
+    '<div class="rea-fqc-sub">文章 · 链接跟踪</div></div></div>',
+    '</div>',
+    '<div class="ant-modal-footer">',
+    '<button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-rea-fq-close><span>关 闭</span></button>',
+    '</div></div></div></div></div>'
+  ].join('');
+  document.body.appendChild(w);
+  function close(){
+    if(w.parentNode)w.parentNode.removeChild(w);
+    document.removeEventListener('keydown',onKey);
   }
+  function onKey(e){if(e.key==='Escape'||e.keyCode===27)close()}
+  w.querySelector('.ant-modal-close').addEventListener('click',close);
+  w.querySelector('[data-rea-fq-close]').addEventListener('click',close);
+  var mask=w.querySelector('.ant-modal-wrap');
+  if(mask)mask.addEventListener('click',function(e){if(e.target===mask)close()});
+  document.addEventListener('keydown',onKey);
+}
+var rows=[
+  row('可见范围：','全部好友','data-rea-fq-scope'),
+  row('提醒谁看：','重点客户、老客户','data-rea-fq-remind'),
+  contentRow(),
+  row('所在位置：','上海静安嘉里中心','data-rea-fq-loc'),
+  row('循环方式：','单次任务','data-rea-fq-cycle'),
+  row('自动发送：','开启','data-rea-fq-auto')
+];
+var ref=anchor;
+for(i=0;i<rows.length;i++){
+  BODY.insertBefore(rows[i],ref.nextSibling);
+  ref=rows[i];
+}
+})();`;
+  }
+
+  /* 「发圈 · 详情」补的只读行与内容弹窗样式。前缀用 rea-fqc-（content），
+     避开新建页那组 rea-fq-*（四段结构、下拉、时间控件），两页的样式互不相干。 */
+  var REA_FQ_DETAIL_CSS=[
+    '.rea-fqc-link{border:0;background:none;padding:0;font:inherit;color:#1677ff;cursor:pointer}',
+    '.rea-fqc-link:hover{text-decoration:underline}',
+    '.rea-fqc-modal .ant-modal-body{padding-top:4px}',
+    '.rea-fqc-card{display:flex;align-items:center;gap:14px;padding:14px;background:#f7f9fc;border-radius:8px}',
+    '.rea-fqc-thumb{flex:none;width:88px;height:88px;border-radius:6px;background:#e9edf4;display:flex;align-items:center;justify-content:center}',
+    '.rea-fqc-meta{min-width:0}',
+    '.rea-fqc-title{font-size:16px;line-height:24px;color:#1f2329;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+    '.rea-fqc-sub{margin-top:6px;font-size:13px;line-height:20px;color:#646a73}'
+  ].join('\n');
 
   /* 「新小红书运营 · 详情」的覆盖脚本：把「查看任务配置快照」接回原型里的快照页。
      详情页正文来自快照（构建脚本按「线上详情页html」收进载体），这里不抄副本，只补一个跳转属性——
@@ -20550,7 +20621,6 @@ tb.addEventListener("click",function(e){
     + '.rea-qf-tagin input{flex:1;min-width:0;border:0;outline:0;background:transparent;font-size:14px;color:#1F2329}'
     + '.rea-qf-tagin input::placeholder{color:#C9CDD4}'
     + '.rea-qf-dt{width:240px;max-width:100%}'
-    + '.rea-qf-promise{margin:0 0 8px 108px;padding:8px 12px;border-radius:8px;background:#F7F8FA;font-size:13px;line-height:20px;color:#1F2329;max-width:560px}'
     + '.rea-qf-exec{position:relative}'
     + '.rea-qf-select{display:flex;align-items:center;box-sizing:border-box;width:280px;max-width:100%;height:32px;padding:0 32px 0 11px;border:1px solid #E5E8EF;border-radius:8px;background:#fff;font-size:14px;color:#8F959E;cursor:pointer;position:relative;text-align:left}'
     + '.rea-qf-select:hover{border-color:#1677FF}'
@@ -20743,9 +20813,6 @@ tb.addEventListener("click",function(e){
     + '.rea-baf-toplab{display:block;margin:0 0 7px;font-size:12px;line-height:1.6;color:#253048}'
     + '.rea-baf-toplab.req:before{content:"*";margin-right:4px;color:#D75455}'
     + '.rea-baf-date .ant-input{min-width:0;padding:9px 9px;font-size:12px}'
-    + '.rea-baf-promise{display:flex;align-items:flex-start;gap:7px;margin:13px 0 0;padding:10px 12px;border-radius:6px;background:#F5F7FA;font-size:11px;line-height:1.6;color:#7C879B}'
-    + '.rea-baf-promise svg{width:14px;height:14px;margin-top:2px;flex:none}'
-    + '.rea-baf-promise b{font-weight:500;color:#253048}'
     /* 更多设置：一整行摘要，点开才铺两行 */
     + '.rea-baf-moretog{display:flex;align-items:center;gap:9px;width:100%;padding:19px 24px;border:0;background:transparent;font-size:12px;font-weight:500;line-height:1.6;color:#253048;text-align:left;cursor:pointer}'
     + '.rea-baf-moretog svg{width:14px;height:14px;flex:none;color:#253048;transition:transform .2s}'
@@ -21463,7 +21530,6 @@ function initFq(){
     fqPut(gStart,b3);
     fqPut(gEnd,b3);
     b3.appendChild(fqHint(gEndHint));
-    var promise=document.createElement('p');promise.className='rea-qf-promise';b3.appendChild(promise);
 
     var b4=fqSec('4','谁来发','执行这条任务的销售分组');
     fqPut(gExec,b4);
@@ -21532,9 +21598,6 @@ function initFq(){
       if(ev)when+='，'+fqGap(sv,ev)+' 天内发完';
       var execWord=execSel?(execSel.n+' '+execSel.c+' 人'):'执行人员未选';
       actSum.textContent=content+' · '+scope+(selected.length?(' · 提醒 '+selected.length+' 个标签'):'')+' · '+when+' · '+execWord;
-      promise.textContent=sv?(rep==='单次任务'
-        ?('在 '+fqDtLabel(sv)+' 通知执行人员发圈'+(ev?('，'+fqDtLabel(ev)+' 前发完'):''))
-        :(fqDtLabel(sv)+' 起按'+rep+'重复'+(ev?('，'+fqDtLabel(ev)+' 截止'):''))):'先选通知时间';
     }
     if(saveBtn)saveBtn.addEventListener('click',function(e){
       e.preventDefault();
@@ -21773,7 +21836,6 @@ function initQf(){
   if(rStart)b3.appendChild(hint('到达通知时间会给执行人员推送提醒。'));
   put(rEnd,b3);
   if(rEnd)b3.appendChild(hint('未到开始时间的任务在员工任务列表里不可见。'));
-  var promise=document.createElement('p');promise.className='rea-qf-promise';b3.appendChild(promise);
   function dtInput(row,val){
     if(!row)return null;
     var ctl=row.querySelector('[class*="_upload_box_"]');
@@ -21963,9 +22025,6 @@ function initQf(){
       :(st==='search'
         ?'逐人进会话发送，最慢；好处是能逐个看到发送结果。'
         :'先把内容发到文件传输助手，再按批转发；每批最多 9 个好友。适合小批量、指定标签，或群发助手发不了的内容。');
-    promise.textContent=sv?(rep==='单次任务'
-      ?('在 '+dtLabel(sv)+' 发出'+(ev?('，'+dtLabel(ev)+' 前发完'):''))
-      :(dtLabel(sv)+' 起按'+rep+'重复'+(ev?('，'+dtLabel(ev)+' 截止'):''))):'先选通知时间';
     var text=picked?picked.text:editorText();
     var media='';
     if(picked){
@@ -22149,7 +22208,6 @@ function initQs(){
      '<input type="datetime-local" class="ant-input css-vgijab ant-input-outlined rea-qf-dt rea-qs-end" value="2026-10-20T16:05">');
   b3.appendChild(hint('未到开始时间的任务在员工任务列表里不可见。'));
   var startI=q('.rea-qs-start',s3),endI=q('.rea-qs-end',s4);
-  var promise=document.createElement('p');promise.className='rea-qf-promise';b3.appendChild(promise);
 
   /* ---------- ④ 谁来发 ---------- */
   var b4=sec('4','谁来发','');
@@ -22268,9 +22326,6 @@ function initQs(){
     }else{warn.style.display='none';warn.textContent='';}
     stHint.style.display=file?'':'none';
     stHint.textContent=file?'先把内容发到文件传输助手，再按批转发；每批最多 9 个群。建议把「群发哪些群」写成能覆盖一批的群名关键词。':'';
-    promise.textContent=sv?(rep==='单次任务'
-      ?('在 '+dtLabel(sv)+' 发出'+(ev?('，'+dtLabel(ev)+' 前发完'):''))
-      :(dtLabel(sv)+' 起按'+rep+'重复'+(ev?('，'+dtLabel(ev)+' 截止'):''))):'先选通知时间';
     var text=picked?picked.text:(ta.value||'');
     var ct=ck('rea-qs-ctype'),media='';
     if(picked){
@@ -23575,11 +23630,6 @@ if(stD.getTime()<Date.now())stD.setDate(stD.getDate()+1);
 var enD=new Date(stD.getTime());enD.setDate(enD.getDate()+7);
 var stRow=bafDtCell('通知时间',dtVal(stD),'到达通知时间会给执行人员推送提醒。'),startI=stRow.input;
 var enRow=bafDtCell('截止时间',dtVal(enD),'到截止时间任务停止，没加完的目标记为未执行。'),endI=enRow.input;
-var promise=document.createElement('p');promise.className='rea-baf-promise';
-promise.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
-  +'<circle cx="12" cy="12" r="10"/><path d="M12 6v6h4"/></svg><span></span>';
-var promiseTxt=promise.querySelector('span');
-b3.appendChild(promise);
 /* 改通知时间时，截止时间跟着顺延 7 天——两个时间分开填容易填反 */
 startI.addEventListener('change',function(){
   if(!startI.value)return;
@@ -23733,11 +23783,6 @@ function bafRender(){
   if(eqTip)eqTip.style.display=(k==='group')?'none':'';
   actSum1.textContent=l1;
   actSum2.textContent=bafDtCn(sv)+' 通知 · '+(execSel?(execSel.n+' · '+execSel.c+' 人'):'执行人待选择');
-  if(promiseTxt){
-    promiseTxt.innerHTML=sv
-      ?('<b>'+bafDtCn(sv)+'</b> 通知执行人员加好友'+(ev?(('，<b>'+bafDtCn(ev)+'</b> 前加完')):''))
-      :'先选通知时间';
-  }
 }
 
 function validate(){
@@ -27051,7 +27096,7 @@ checkCross();
     '新小红书运营 · 详情': { js: reaXhsDetailJs },
     '新小红书运营 · 任务配置快照': { js: reaXhsSnapshotJs },
     '群发好友 · 详情': { css: REA_QF_CSS, js: reaQfDetailJs },
-    '发圈 · 详情': { js: reaFqDetailJs },
+    '发圈 · 详情': { css: REA_FQ_DETAIL_CSS, js: reaFqDetailJs },
     /* 微信营销任务 · 任务内容「从素材库选择」（2026-10-23）：三页共用一份弹窗与选材逻辑 */
     '发圈 · 新建': { css: REA_WXT_CSS, js: function(){ return reaWxtJs('发圈 · 新建'); } },
     '群发好友 · 新建': { css: REA_WXT_CSS + REA_FREQ_CSS, js: function(){ return reaWxtJs('群发好友 · 新建') + reaFreqDrawerJs('msg'); } },
