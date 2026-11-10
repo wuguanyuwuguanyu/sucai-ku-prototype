@@ -4235,6 +4235,11 @@ var VIP_ONLY={'host-ai':1,'host-ai-cfg':1,'host-ai-agent':1,'host-ai-set':1,'hos
 /* ---------- 路由（M3 fade-through 转场） ---------- */
 var stack=[]; var cur=null;
 function render(id,params){ if(REND[id]) REND[id](params||{}); }
+/* 把「当前在哪一屏」报给外壳，让它写进 URL hash——刷新后停在同一屏靠这一条。
+   屏内参数只带看得见的那种（目前只有 AI配置/选人 的 pick）；筛选、滚动、弹层不跟。 */
+function reportPage(id,params){
+  try{ parent.postMessage({appPage:id,appParams:{pick:(params&&params.pick)||''}},'*') }catch(e){}
+}
 function go(id,params){
   if(!isPro()&&VIP_ONLY[id]) id='host-ai-up';   /* 非旗舰版：旗舰版的屏一律落到升级提示页 */
   closeBallMenu(true); /* 切屏即收：两选一菜单只活在微信屏，别跟着切到别的页；瞬收，不留一段淡出到新屏上 */
@@ -4249,6 +4254,7 @@ function go(id,params){
   },320);
   stack.push({id:id,params:params||{}});
   cur=id; syncNav(id,params||{});
+  reportPage(id,params||{});
   sbScan(); /* 切屏只改 class、不触发 MutationObserver，且藏着的容器量不出尺寸——亮屏后补测一次 */
 }
 function back(){
@@ -4264,6 +4270,7 @@ function back(){
     if(from){from.classList.remove('active','anim-exit')}
   },340);
   cur=curS.id; syncNav(curS.id,curS.params);
+  reportPage(curS.id,curS.params);
   sbScan(); /* 同 go()：回退亮屏后补测滚动指示层 */
 }
 function syncNav(id,params){
@@ -10435,7 +10442,14 @@ document.addEventListener('scroll',function(e){
     .observe(document.body,{childList:true,subtree:true});
 })();
 
-go('host-home');
+/* 刷新后停在同一屏：外壳从 URL hash 读到上次的屏，经 parent.__APP_BOOT__ 交给这里；
+   认不出的屏（旧链接、历史版本快照里没有这一屏）回落首页。 */
+(function(){
+  var b=null;
+  try{ b=parent.__APP_BOOT__ }catch(e){}
+  if(b&&b.page&&$(b.page)) go(b.page,b.params||{});
+  else go('host-home');
+})();
 setTimeout(sbScan,120);
 <\/script>
 </body>
@@ -15702,9 +15716,29 @@ render();
     app:   '素材库 · 销售端 App 原型（总览）',
     real:  '素材库 · 线上后台复刻（总览）'
   };
+  /* ---------- 刷新后停在同一页 ----------
+     hash 记「当前视图 / 当前页」：`#app/<屏id>`、`#real/<页名>`，AI配置/选人另带 `?pick=`。
+     只认这两种；旧链接的 `#admin`、认不出的屏或页、历史版本快照里没有的那一屏，一律回落各自首页。
+     用 hash 而不是 localStorage：刷新就是 URL 自己，复制链接也能直接落到那一页。 */
+  var bootHash = (location.hash || '').replace(/^#/, '');
+  var bootBits = bootHash.split('/');
+  var bootView = bootBits[0] === 'real' ? 'real' : 'app';
+  var bootPage = '', bootPick = '';
+  (function(){
+    var rest = bootBits.slice(1).join('/'), q = '', qi = rest.indexOf('?');
+    if (qi >= 0){ q = rest.slice(qi + 1); rest = rest.slice(0, qi); }
+    try { bootPage = decodeURIComponent(rest); } catch (e) { bootPage = ''; }
+    var m = /(?:^|&)pick=([^&]*)/.exec(q);
+    if (m){ try { bootPick = decodeURIComponent(m[1]); } catch (e) {} }
+  })();
+  var appPage = bootView === 'app' ? bootPage : '';
+  var appParams = { pick: bootView === 'app' ? bootPick : '' };
+
   /* 销售端 App 是内嵌载体，照旧一次性还原；线上后台复刻见下方 reaLoad()（8.2MB，按需加载） */
   (function(){
     var f = document.createElement('iframe');
+    /* 先把待恢复的屏交给载体：srcdoc 一执行就要读，晚一步它已经落首页了 */
+    window.__APP_BOOT__ = appPage ? { page: appPage, params: appParams } : null;
     f.srcdoc = docOf('srcApp');
     f.title = '销售端 App 原型';
     views.app.appendChild(f);
@@ -15866,6 +15900,15 @@ render();
   /* 三级页「素材使用详情」：从看板的「素材使用」、明细的行尾或素材库列表的「使用情况」进来，
      同样是克隆看板外壳合成，正文来自载体块 srcBoardMatDetail。 */
   var REA_MB_MAT_DETAIL = '企业微信看板 · 素材使用详情';
+  /* 这些子页的正文数据是上一页经 postMessage 带过来的（reaRows / reaMat），刷新后外壳手里没有
+     那份数据，单凭页名重建出来是一张空表。刷新落在这类页时退回它的来源页。 */
+  var REA_NEEDS_DATA = {};
+  REA_NEEDS_DATA[REA_MB_DETAIL] = REA_MB_PAGE;
+  REA_NEEDS_DATA[REA_MB_MAT_DETAIL] = REA_MB_PAGE;
+  REA_NEEDS_DATA[REA_TASKS_PAGE] = REA_BOARD_PAGE;
+  REA_NEEDS_DATA[REA_METRIC_PAGE] = REA_BOARD_PAGE;
+  REA_NEEDS_DATA[REA_DETAIL_TASK] = REA_BOARD_PAGE;
+  REA_NEEDS_DATA[REA_PERSON_PAGE] = REA_BOARD_PAGE;
 
   /* 侧栏「数据看板」一组改叫「看板」（2026-10-26 与产品经理对齐）；2026-11-09 起删去「悬浮窗看板」，
      组内只剩 使用总览／任务看板／App 工具看板／素材看板／AI托管看板（见下面 REA_HIDDEN）。
@@ -20705,7 +20748,32 @@ tb.addEventListener("click",function(e){
     + '.rea-qf-sw:after{content:"";position:absolute;left:2px;top:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .15s}'
     + '.rea-qf-sw[aria-checked="true"]{background:#1677FF}'
     + '.rea-qf-sw[aria-checked="true"]:after{left:20px}'
-    + '.rea-qf-sw:focus-visible{box-shadow:0 0 0 2px #E6F4FF}';
+    + '.rea-qf-sw:focus-visible{box-shadow:0 0 0 2px #E6F4FF}'
+    /* ---- 发圈 · 临时创建：所属分类 / 描述文本 / 媒体（2026-11-10） ---- */
+    + '.rea-fq-temp{max-width:640px}'
+    + '.rea-fq-radios{display:flex;align-items:center;gap:24px;min-height:32px}'
+    + '.rea-fq-desc{position:relative;max-width:640px}'
+    + '.rea-fq-descbar{display:flex;align-items:center;justify-content:space-between;box-sizing:border-box;height:32px;padding:0 10px;border:1px solid #E5E8EF;border-bottom:0;border-radius:8px 8px 0 0;background:#F7F8FA}'
+    + '.rea-fq-emoji{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;padding:0;border:0;border-radius:6px;background:transparent;color:#646A73;cursor:pointer}'
+    + '.rea-fq-emoji:hover{background:#E5E8EF;color:#1F2329}'
+    + '.rea-fq-count{font-size:12px;color:#8F959E;font-variant-numeric:tabular-nums}'
+    + '.rea-fq-ta{display:block;box-sizing:border-box;width:100%;min-height:132px;padding:10px 12px;border:1px solid #E5E8EF;border-radius:0 0 8px 8px;outline:none;resize:vertical;background:#fff;font:inherit;font-size:14px;line-height:22px;color:#1F2329}'
+    + '.rea-fq-ta:focus{border-color:#1677FF;box-shadow:0 0 0 2px #E6F4FF}'
+    + '.rea-fq-thumbs{display:flex;flex-wrap:wrap;gap:8px}'
+    + '.rea-fq-thumb{position:relative;box-sizing:border-box;width:104px;height:104px;border:1px solid #E5E8EF;border-radius:8px;overflow:hidden;background:#F7F8FA}'
+    + '.rea-fq-thumb img{display:block;width:100%;height:100%;object-fit:cover}'
+    + '.rea-fq-thumbx{position:absolute;right:4px;top:4px;display:flex;align-items:center;justify-content:center;width:20px;height:20px;padding:0;border:0;border-radius:50%;background:rgba(0,0,0,.5);color:#fff;font-size:14px;line-height:1;cursor:pointer}'
+    + '.rea-fq-up{display:flex;align-items:center;justify-content:center;box-sizing:border-box;width:104px;height:104px;padding:0;border:1px dashed #C9CDD4;border-radius:8px;background:#fff;color:#646A73;font-size:13px;cursor:pointer}'
+    + '.rea-fq-up:hover{border-color:#1677FF;color:#1677FF}'
+    + '.rea-fq-file{display:flex;align-items:center;gap:10px;max-width:420px;padding:10px 12px;border:1px solid #E5E8EF;border-radius:8px;background:#F7F8FA;font-size:13px;color:#1F2329}'
+    + '.rea-fq-file>span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
+    + '.rea-fq-file .rea-fq-thumbx{position:static;flex:none;background:transparent;color:#8F959E;font-size:18px}'
+    + '.rea-fq-file .rea-fq-thumbx:hover{color:#FF4D4F}'
+    + '.rea-fq-uphint{margin:8px 0 0;font-size:12px;line-height:18px;color:#8F959E}'
+    + '.rea-fq-emojipop{position:absolute;z-index:40;top:36px;left:0;display:none;grid-template-columns:repeat(8,28px);gap:2px;padding:8px;border:1px solid #E5E8EF;border-radius:8px;background:#fff;box-shadow:0 6px 16px rgba(0,0,0,.08)}'
+    + '.rea-fq-emojipop.on{display:grid}'
+    + '.rea-fq-emojipop button{display:flex;align-items:center;justify-content:center;width:28px;height:28px;padding:0;border:0;border-radius:6px;background:transparent;font-size:17px;cursor:pointer}'
+    + '.rea-fq-emojipop button:hover{background:#F0F4FF}';
 
   /* 批量加好友 · 新建专用样式（2026-10-27「添加群内好友」）。
      只写新增件：多选标签控件、下拉、模式单选后的值区、间隔数字框；行壳仍 clone 快照现成的行，
@@ -21178,8 +21246,10 @@ function initFq(){
   if(srcItem&&srcItem.parentNode===space)space.appendChild(srcItem);
   var host=document.createElement('div');host.className='rea-wxt-host';
   box.appendChild(host);
-  var picked=null;
+  var picked=null,tempPrev=null;
   function preview(m){
+    /* 临时创建也有内容（描述文本、图片、视频），没有素材时交给本页自己画预览 */
+    if(!m&&tempPrev){tempPrev();return}
     var pr=document.querySelector('[class*="preview-module_previewRight"]')||document;
     var ts=pr.querySelector?pr.querySelector('.textShow'):null;
     if(ts)ts.textContent=m?m.text:'';
@@ -21200,6 +21270,8 @@ function initFq(){
     picked=m;
     setPrimary(btn,!!m);
     setPrimary(tempBtn,false);
+    /* 临时创建的填写区只在「临时创建」这个来源下出现 */
+    if(tempBox)tempBox.style.display=m?'none':'';
     showCard(host,m,function(){apply(null)});
     preview(m);
   }
@@ -21554,6 +21626,173 @@ function initFq(){
 
     var b2=fqSec('2','发什么','文章、素材库，或让销售现场写');
     fqPut(gContent,b2);
+
+    /* ---- 临时创建：所属分类 / 描述文本 / 媒体（2026-11-10） ----
+       截图口径：所属分类三选一（文本、图片、视频；链接不做），描述文本 1000 字带计数，
+       图片／视频按分类露出上传位。只在「临时创建」这个来源下出现，选素材库时整块收起。 */
+    var fqCat='图片',fqImgs=[],fqVid=null;
+    var tempBox=document.createElement('div');tempBox.className='rea-fq-temp';b2.appendChild(tempBox);
+    function fqFormRow(labelText,req,cls){
+      var r=document.createElement('div');r.className='rea-qf-row'+(cls?' '+cls:'');
+      var lb=document.createElement('span');
+      lb.className='rea-qf-lab '+(req?'rea-qf-req':'rea-qf-noreq');
+      lb.textContent=labelText;
+      var ctl=document.createElement('div');ctl.className='rea-qf-ctl';
+      r.appendChild(lb);r.appendChild(ctl);
+      return {row:r,ctl:ctl};
+    }
+    function fqFormErr(r,msg){
+      var ctl=r.querySelector('.rea-qf-ctl');if(!ctl)return;
+      var e=ctl.querySelector('.rea-qf-err');
+      if(!e){e=document.createElement('p');e.className='rea-qf-err';ctl.appendChild(e)}
+      e.textContent=msg||'';e.style.display=msg?'block':'none';
+    }
+
+    /* 所属分类 */
+    var catR=fqFormRow('所属分类',true);catR.ctl.classList.add('rea-fq-radios');
+    ['文本','图片','视频'].forEach(function(v){
+      var l=document.createElement('label');l.className='rea-qf-rd';
+      l.innerHTML='<input type="radio" name="rea-fq-cat" value="'+v+'"'+(v===fqCat?' checked':'')+'><span class="rea-qf-rddot"></span>'+v;
+      catR.ctl.appendChild(l);
+    });
+    tempBox.appendChild(catR.row);
+
+    /* 描述文本：工具条上只放表情与计数，正文是普通 textarea */
+    var descR=fqFormRow('描述文本',false);descR.ctl.classList.add('rea-fq-desc');
+    var descBar=document.createElement('div');descBar.className='rea-fq-descbar';
+    var emojiBtn=document.createElement('button');
+    emojiBtn.type='button';emojiBtn.className='rea-fq-emoji';emojiBtn.setAttribute('aria-label','插入表情');
+    emojiBtn.innerHTML='<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.4 14.4a4.6 4.6 0 0 0 7.2 0"/><circle cx="9.2" cy="9.8" r=".9" fill="currentColor" stroke="none"/><circle cx="14.8" cy="9.8" r=".9" fill="currentColor" stroke="none"/></svg>';
+    var counter=document.createElement('span');counter.className='rea-fq-count';counter.textContent='0/1000';
+    descBar.appendChild(emojiBtn);descBar.appendChild(counter);
+    var descTa=document.createElement('textarea');
+    descTa.className='rea-fq-ta';descTa.maxLength=1000;descTa.rows=5;
+    descTa.setAttribute('aria-label','描述文本');
+    descR.ctl.appendChild(descBar);descR.ctl.appendChild(descTa);
+    var emojiPop=document.createElement('div');emojiPop.className='rea-fq-emojipop';
+    ['😀','😄','😊','😉','😍','🤩','😎','🥳','👍','👏','🙏','💪','❤️','🔥','🎉','✨','🌟','💰','🎁','✅','👌','🤝','📣','💬'].forEach(function(ch){
+      var b=document.createElement('button');b.type='button';b.textContent=ch;emojiPop.appendChild(b);
+    });
+    descR.ctl.appendChild(emojiPop);
+    tempBox.appendChild(descR.row);
+    function fqCount(){counter.textContent=descTa.value.length+'/1000'}
+    function fqInsertEmoji(ch){
+      var s=descTa.selectionStart||0,e=descTa.selectionEnd||0;
+      descTa.value=descTa.value.slice(0,s)+ch+descTa.value.slice(e);
+      descTa.selectionStart=descTa.selectionEnd=s+ch.length;
+      descTa.focus();fqCount();
+      if(!picked)tempPrev();
+      fqRender();
+    }
+    emojiBtn.addEventListener('click',function(e){
+      e.preventDefault();e.stopPropagation();
+      emojiPop.classList.toggle('on');
+    });
+    emojiPop.addEventListener('click',function(e){
+      var b=e.target.closest?e.target.closest('button'):null;if(!b)return;
+      e.preventDefault();e.stopPropagation();
+      fqInsertEmoji(b.textContent);
+      emojiPop.classList.remove('on');
+    });
+    document.addEventListener('click',function(e){
+      if(!descR.ctl.contains(e.target))emojiPop.classList.remove('on');
+    });
+    descTa.addEventListener('input',function(){
+      fqCount();
+      if(!picked)tempPrev();
+      fqRender();
+    });
+
+    /* 媒体：图片可多张（最多 9 张），视频单个 */
+    var mediaR=fqFormRow('图片',true,'rea-fq-media');
+    var mediaBody=document.createElement('div');mediaBody.className='rea-fq-mediabody';
+    var upInp=document.createElement('input');
+    upInp.type='file';upInp.accept='image/jpeg,image/png';upInp.multiple=true;upInp.hidden=true;
+    var upHint=document.createElement('p');upHint.className='rea-fq-uphint';
+    mediaR.ctl.appendChild(mediaBody);mediaR.ctl.appendChild(upInp);mediaR.ctl.appendChild(upHint);
+    tempBox.appendChild(mediaR.row);
+    function fqDrawMedia(){
+      var isImg=fqCat==='图片',lab=mediaR.row.querySelector('.rea-qf-lab');
+      mediaR.row.style.display=fqCat==='文本'?'none':'';
+      if(fqCat==='文本')return;
+      if(lab)lab.textContent=isImg?'图片':'视频';
+      upInp.accept=isImg?'image/jpeg,image/png':'video/mp4';
+      upInp.multiple=isImg;
+      upHint.textContent=isImg?'支持上传jpg/png格式，单个图片最大不超过10M':'支持上传mp4格式';
+      var h='',k;
+      if(isImg&&fqImgs.length){
+        h+='<div class="rea-fq-thumbs">';
+        for(k=0;k<fqImgs.length;k++){
+          h+='<span class="rea-fq-thumb"><img src="'+fqImgs[k].url+'" alt=""><button type="button" class="rea-fq-thumbx" data-i="'+k+'" aria-label="移除图片">×</button></span>';
+        }
+        if(fqImgs.length<9)h+='<button type="button" class="rea-fq-up" aria-label="继续添加图片">上传图片</button>';
+        h+='</div>';
+      }else if(!isImg&&fqVid){
+        h+='<div class="rea-fq-file"><span>'+esc(fqVid.name)+'</span><button type="button" class="rea-fq-thumbx" data-v="1" aria-label="移除视频">×</button></div>';
+      }else{
+        h+='<button type="button" class="rea-fq-up">'+(isImg?'上传图片':'上传视频')+'</button>';
+      }
+      mediaBody.innerHTML=h;
+    }
+    mediaBody.addEventListener('click',function(e){
+      var x=e.target.closest?e.target.closest('.rea-fq-thumbx'):null;
+      if(x){
+        e.preventDefault();e.stopPropagation();
+        if(x.hasAttribute('data-v'))fqVid=null;
+        else{
+          var i=+x.getAttribute('data-i');
+          if(!isNaN(i))fqImgs.splice(i,1);
+        }
+        fqDrawMedia();tempPrev();fqRender();return;
+      }
+      var up=e.target.closest?e.target.closest('.rea-fq-up'):null;
+      if(up){e.preventDefault();upInp.click()}
+    });
+    upInp.addEventListener('change',function(){
+      var fs=upInp.files||[],k,f;
+      if(fqCat==='图片'){
+        for(k=0;k<fs.length&&fqImgs.length<9;k++){
+          f=fs[k];
+          if(!/^image\\/(jpeg|png)$/.test(f.type)){toast('只支持 jpg、png 格式的图片');continue}
+          if(f.size>10*1024*1024){toast('单张图片不能超过 10M');continue}
+          fqImgs.push({name:f.name,url:URL.createObjectURL(f)});
+        }
+      }else if(fs[0]){
+        f=fs[0];
+        if(!/^video\\//.test(f.type))toast('只支持 mp4 格式的视频');
+        else fqVid={name:f.name,url:URL.createObjectURL(f)};
+      }
+      upInp.value='';
+      fqDrawMedia();tempPrev();fqRender();
+    });
+    catR.ctl.addEventListener('change',function(e){
+      if(!e.target||e.target.name!=='rea-fq-cat')return;
+      fqCat=e.target.value;
+      fqDrawMedia();tempPrev();fqRender();
+    });
+    /* 临时创建的右栏预览：文案取描述文本，媒体按分类给缩略格或视频块 */
+    tempPrev=function(){
+      var pr=document.querySelector('[class*="preview-module_previewRight"]');
+      if(!pr)return;
+      var ts=pr.querySelector('.textShow');
+      if(ts)ts.textContent=descTa.value;
+      var old=document.querySelector('.rea-wxt-pvmedia');
+      if(old&&old.parentNode)old.parentNode.removeChild(old);
+      var d=null,k;
+      if(fqCat==='图片'&&fqImgs.length){
+        d=document.createElement('div');d.className='rea-wxt-pvmedia';
+        var g='';
+        for(k=0;k<fqImgs.length;k++)g+='<span class="rea-wxt-pvcell" style="background-image:url('+fqImgs[k].url+');background-size:cover;background-position:center"></span>';
+        d.innerHTML='<div class="rea-wxt-pvgrid">'+g+'</div>';
+      }else if(fqCat==='视频'&&fqVid){
+        d=document.createElement('div');d.className='rea-wxt-pvmedia';
+        d.innerHTML='<div class="rea-wxt-pvvideo">▶<span>'+esc(fqVid.name)+'</span></div>';
+      }
+      if(d)pr.appendChild(d);
+      drawLoc();
+    };
+    fqDrawMedia();tempPrev();
+
     fqPut(gLoc,b2,true);
 
     var b3=fqSec('3','什么时候发','到点通知销售，截止时间前要发完');
@@ -21620,7 +21859,8 @@ function initFq(){
       return n>0?n:0;
     }
     function fqRender(){
-      var content=picked?('素材库 · '+picked.title):'临时创建';
+      var content=picked?('素材库 · '+picked.title)
+        :('临时创建 · '+fqCat+(fqCat==='文本'&&descTa.value.trim()?' · '+descTa.value.trim().split('\\n')[0].slice(0,10):''));
       var scope=fqChecked(gScope)||'全部好友';
       var rep=fqChecked(gType)||'单次任务';
       var sv=startI?startI.value:'',ev=endI?endI.value:'';
@@ -21633,6 +21873,13 @@ function initFq(){
     if(saveBtn)saveBtn.addEventListener('click',function(e){
       e.preventDefault();
       var ok=true;
+      /* 临时创建的三行：文本要有字，图片／视频要传文件 */
+      if(!picked){
+        if(fqCat==='文本'&&!descTa.value.trim()){fqFormErr(descR.row,'请填写描述文本');ok=false}else fqFormErr(descR.row,'');
+        if(fqCat==='图片'&&!fqImgs.length){fqFormErr(mediaR.row,'请上传图片');ok=false}
+        else if(fqCat==='视频'&&!fqVid){fqFormErr(mediaR.row,'请上传视频');ok=false}
+        else fqFormErr(mediaR.row,'');
+      }
       if(!execSel){fqSetErr(gExec,'请选择执行人员');ok=false}else fqSetErr(gExec,'');
       if(!startI||!startI.value){fqSetErr(gStart,'请选择通知时间');ok=false}else fqSetErr(gStart,'');
       if(!endI||!endI.value){fqSetErr(gEnd,'请选择截止时间');ok=false}
@@ -28225,17 +28472,27 @@ document.addEventListener('click',function(event){
     realFrame.srcdoc = reaDoc(i);
     /* 整份快照换掉，页内那套侧栏选中态是快照自带的，不用（也没法）另外去点亮 */
     document.title = titles.real.replace('（总览）', ' · ' + p.name);
+    if (cur === 'real') writeHash('real');
   }
 
   /* 切到本视图时：已加载则直接重进，未加载则拉载体文件。
      落地页是使用总览（管理员进入看板组的第一眼），
-     由 reaLanding() 按页名反查得来；之后一来一回都停在上次那一页。 */
+     由 reaLanding() 按页名反查得来；之后一来一回都停在上次那一页。
+     刷新进来时先按 hash 里那页名找：带数据才有内容的子页退回来源页，找不到也回落落地页。 */
   function reaEnter(){
     var P = window.__REAL_ADMIN__;
     if (!P) return;
     reaSynthPages();
     if (!reaIndexed) reaIndex();
-    if (reaIdx < 0) reaRender(reaLanding());
+    if (reaIdx < 0){
+      var want = bootView === 'real' && bootPage ? (REA_NEEDS_DATA[bootPage] || bootPage) : '';
+      var at = -1, k;
+      for (k = 0; want && k < P.pages.length; k++){
+        if (P.pages[k].name === want){ at = k; break; }
+      }
+      if (at < 0) reaRender(reaLanding());
+      else reaRender(at);
+    }
     else document.title = titles.real.replace('（总览）', ' · ' + P.pages[reaIdx].name);
   }
 
@@ -28278,6 +28535,13 @@ document.addEventListener('click',function(event){
      左侧「部门选择」面板收起／展开 → 只记状态，下次重建这页的 srcdoc 时按它摆好 */
   window.addEventListener('message', function(e){
     var d = e.data;
+    /* App 每换一屏报一次：记下来，只有当前正看着 App 时才写进 hash（在视图③里换屏不该改它） */
+    if (d && typeof d.appPage === 'string'){
+      appPage = d.appPage;
+      appParams = { pick: (d.appParams && d.appParams.pick) || '' };
+      if (cur === 'app') writeHash('app');
+      return;
+    }
     if (!d || !window.__REAL_ADMIN__) return;
     if (typeof d.reaTree === 'number'){ reaTreeClosed = !!d.reaTree; return; }
     if (typeof d.reaSide === 'number'){ reaSideOpen = !!d.reaSide; return; }
@@ -28338,6 +28602,18 @@ document.addEventListener('click',function(event){
   });
 
   var cur = null;
+  /* 把当前视图＋当前页写回 hash。App 的屏 id 与视图③的页名都编进路径，
+     AI配置/选人那一档再带 `?pick=`——刷新时照这份还原。replaceState 失败（某些 WebView 的
+     file:// 会拦）就只是不记忆，不拦原型本身。 */
+  function writeHash(k){
+    var h = '#' + k;
+    if (k === 'app'){
+      if (appPage) h += '/' + encodeURIComponent(appPage) + (appParams.pick ? '?pick=' + encodeURIComponent(appParams.pick) : '');
+    } else if (k === 'real' && window.__REAL_ADMIN__ && reaIdx >= 0){
+      h += '/' + encodeURIComponent(window.__REAL_ADMIN__.pages[reaIdx].name);
+    }
+    try { history.replaceState(null, '', h); } catch (e) {}
+  }
   function set(k){
     if (k === cur) return;
     cur = k;
@@ -28348,11 +28624,12 @@ document.addEventListener('click',function(event){
       bs[i].setAttribute('aria-selected', bs[i].dataset.k === k ? 'true' : 'false');
     }
     document.title = titles[k];
-    history.replaceState(null, '', '#' + k);
+    writeHash(k);
     if (k === 'real') reaLoad(reaEnter);
   }
-  /* 认得出的只剩 #app / #real；旧链接的 #admin 随视图②下线（ADR-0048），一律落默认视图 */
-  set(location.hash === '#real' ? 'real' : 'app');
+  /* 认得出的只剩 #app / #real；旧链接的 #admin 随视图②下线（ADR-0048），一律落默认视图。
+     视图后面的页名由上面的 boot 解析负责，认不出时各自回落首页。 */
+  set(bootView);
 
   var bs2 = document.querySelectorAll('.seg-b');
   for (var j = 0; j < bs2.length; j++){
