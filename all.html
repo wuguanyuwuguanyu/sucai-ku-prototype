@@ -2483,17 +2483,9 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .ra-hit-badge.new{background:var(--primary);color:#fff}
 .ra-hit-n{font-weight:400;color:var(--on-surface-variant)}
 .ra-hit-row{display:flex;align-items:center;gap:11px;background:var(--sc);border-radius:var(--shape-m);padding:11px 13px;margin-bottom:9px;position:relative;overflow:hidden;cursor:pointer;z-index:1;
-  transition:border-radius .18s var(--emph)} /* 展开时下圆角收小，和展开区拼成同一块「翻开的卡」；z-index 让展开区收回时藏到卡底下 */
-/* 收起态卡下那枚「抽手」：64×4 的圆头小舌露在卡底正中（主色 30%），像卡片下面还压着一层。
-   它占的是卡与卡之间本就有的 9px 行距（上下外边距 −7/＋3 抵掉），**不占任何横向空间**——
-   行尾那枚 › 撤掉后腾出来的宽度全留给标题与摘要。
-   桌面上悬停卡面时小舌加宽、加深（见下面的 hover 规则）：先给"这里能拉出来"一个可试的信号；
-   点开后它不再渲染——展开区自己从卡底长出来，两截拼成一块（见 .ra-hit-row.open）。 */
-.rah-peek{height:4px;width:64px;margin:-7px auto 3px;border-radius:0 0 4px 4px;background:rgba(90,84,249,.30);pointer-events:none;
-  transition:width .18s var(--emph),background .18s var(--emph)}
-@media (hover:hover){
-  .ra-hit-row:hover + .rah-peek{width:84px;background:rgba(90,84,249,.44)}
-}
+  transition:border-radius .18s var(--emph)} /* 展开时下圆角收掉、和展开区拼成同一块「翻开的卡」；z-index 让展开区收回时藏到卡底下。
+    整行都是开合开关（点击绑在行上，不是标题块）：收起态点它展开，展开态点它收起，同一个位置。
+    不给静态暗示——没有箭头、没有小舌、没有悬停（手机没有鼠标）；可点性交给按下水波纹＋开合动效。 */
 .ra-hit-row .rah-b{flex:1;min-width:0}
 .ra-hit-row .rah-b h5{font-size:16px;font-weight:500;color:var(--on-surface);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ra-hit-row .rah-b p{font-size:10.5px;color:var(--on-surface-variant);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -2511,7 +2503,11 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
    展开区从卡底抽出来（往下 10px 滑入＋淡入），收起时原路缩回去（.closing，见 raHitTap／hpTap）。 */
 .ra-hit-row.open{border-radius:var(--shape-m) var(--shape-m) 0 0;margin-bottom:0}
 .ra-hit-exp{background:var(--sc-high);border-radius:0 0 var(--shape-m) var(--shape-m);margin:0 0 9px;padding:11px 13px;
-  animation:raHitOpen .22s var(--emph)}
+  animation:raHitOpen .22s var(--emph);transition:transform .12s var(--emph),filter .12s var(--emph)}
+/* 按下头部即反馈（展开态）：展开区跟着上收 4px、略压暗，手指一碰就知道「头 + 内容」是同一个开关。
+   .pressed 由 ripInit 的 pointerdown 挂上（点两枚快捷钮时不挂），不用 :active / :has——
+   安卓 WebView 上 :active 不稳，且 :has 在老版本里不认。 */
+.ra-hit-row.open.pressed + .ra-hit-exp{transform:translateY(-4px);filter:brightness(.985)}
 .ra-hit-exp.closing{animation:raHitShut .16s var(--emph) forwards}
 @keyframes raHitOpen{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
 @keyframes raHitShut{from{opacity:1;transform:none}to{opacity:0;transform:translateY(-10px)}}
@@ -4298,7 +4294,7 @@ function syncNav(id,params){
 }
 
 /* ---------- Material ripple（统一按压反馈，替代缩放） ---------- */
-var RIP_SEL='.btn,.chip,.iconbtn,.cell,.wk-card,.p-card,.pc-btn,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.rah-b,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.hv-msg,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.hva-lockcard,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close,.hw-add';
+var RIP_SEL='.btn,.chip,.iconbtn,.cell,.wk-card,.p-card,.pc-btn,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.hv-msg,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.hva-lockcard,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close,.hw-add';
 function ripInit(){
   document.addEventListener('pointerdown',function(e){
     var t=e.target.closest ? e.target.closest(RIP_SEL) : null;
@@ -4312,6 +4308,14 @@ function ripInit(){
     s.style.top=((e.clientY-r.top)/k-d/2)+'px';
     t.appendChild(s);
     s.addEventListener('animationend',function(){s.remove()});
+    /* 展开态的整行是开合开关：按住头部时给展开区一个「被带住」的反馈（.pressed，见该条 CSS）。
+       t 是最近的 RIP_SEL——按在两枚快捷钮上时 t 是钮本身，不会给行挂这个态。 */
+    if(t.classList.contains('ra-hit-row')&&t.classList.contains('open')){
+      t.classList.add('pressed');
+      var rel=function(){t.classList.remove('pressed');document.removeEventListener('pointerup',rel);document.removeEventListener('pointercancel',rel)};
+      document.addEventListener('pointerup',rel);
+      document.addEventListener('pointercancel',rel);
+    }
   });
 }
 
@@ -9525,7 +9529,7 @@ function hpPaint(){
     box.innerHTML=hpRow(m);
   }
 }
-/* 行＝与时间线里的命中行**共用同一套类名与结构**（.ra-hit-row/.rah-b/.rah-q/.rah-peek ＋ raHitExp 展开区），
+/* 行＝与时间线里的命中行**共用同一套类名与结构**（.ra-hit-row/.rah-b/.rah-q ＋ raHitExp 展开区），
    视觉与动作不另起一套。行尾双快取（发送在内侧、复制守右缘）与时间线逐字一致——同一条素材在两个浮层里
    快取按钮的位置也必须一样，否则换一只手就点错。
    **不加 .fresh 脉冲**：脉冲在时间线里的职责是"在这几条里指出哪一条是新来的"，扁平清单一次只装一批、
@@ -9545,15 +9549,15 @@ function hpRow(m){
     +' · <span class="ra-hit-src">'+(m.personal?'个人':'企业')+'</span>'+(m.date?' · '+esc(m.date):'')
     +' · '+(ft?cut(ft,26):'这条素材只有附件、没有文字内容');
   /* 摊开后副标题让位（与素材面板 .p-card 同一条）：展开区已把内容摊全，摘要行不再重复 */
-  /* 行尾不再挂 ›：可展开这件事改由「卡下露出的那一层」＋展开时的抽出动效来说（见 .rah-peek 注释）。
-     收起态才渲染 peek；展开后展开区自己接上卡底，peek 让位。 */
-  return '<div class="ra-hit-row'+(open?' open':'')+'">'
-    +'<div class="rah-b" onclick="hpTap(\''+m.id+'\')"><h5>'+esc(matTitle(real))+'</h5>'+(open?'':'<p>'+sub+'</p>')+'</div>'
+  /* 整行都是开合开关：收起态点它展开、展开态点它收起，同一个位置（两枚快捷钮 stopPropagation 除外）。
+     不再挂 › / 小舌 / 悬停——可点性交给按下水波纹与抽出、收回两条对称动效。 */
+  return '<div class="ra-hit-row'+(open?' open':'')+'" onclick="hpTap(\''+m.id+'\')">'
+    +'<div class="rah-b"><h5>'+esc(matTitle(real))+'</h5>'+(open?'':'<p>'+sub+'</p>')+'</div>'
     +'<span class="rah-q">'
-      +'<button class="psend" onclick="oneKeySend(\''+m.id+'\')" title="一键发送（文字＋附件）">'+I('send',12,2.2)+'</button>'
-      +'<button class="rp-btn ghost'+(ft?'':' dim')+'" style="flex:none;padding:0 12px" onclick="quickCopy(\''+m.id+'\')" title="'+(ft?'复制并填入输入框':'这条素材没有文字内容，附件可直接发送')+'">'+I('copy',12,2.2)+'</button>'
+      +'<button class="psend" onclick="event.stopPropagation();oneKeySend(\''+m.id+'\')" title="一键发送（文字＋附件）">'+I('send',12,2.2)+'</button>'
+      +'<button class="rp-btn ghost'+(ft?'':' dim')+'" style="flex:none;padding:0 12px" onclick="event.stopPropagation();quickCopy(\''+m.id+'\')" title="'+(ft?'复制并填入输入框':'这条素材没有文字内容，附件可直接发送')+'">'+I('copy',12,2.2)+'</button>'
     +'</span>'
-    +'</div>'+(open?raHitExp(m):'<div class="rah-peek" aria-hidden="true"></div>');
+    +'</div>'+(open?raHitExp(m):'');
 }
 function hpTap(id){ /* 手风琴：开新行收旧行，再点同一行收起——与 pRowTap／raHitTap 同义。
   再点同一行＝收起：先让展开区缩回卡底（.closing，160ms），到点再重排；开口仍是先落状态、后重绘。 */
@@ -10100,15 +10104,15 @@ function raHitRow(m,fresh,i,r){
   var sub='<span class="ra-hit-src">'+(m.personal?'个人':'企业')+'</span>'+kwh
     +' · '+(ft?cut(ft,30):'这条素材只有附件、没有文字内容');
   /* 摊开后副标题让位（与素材面板 .p-card 同一条）：展开区已把内容摊全，摘要行不再重复 */
-  /* 行尾不再挂 ›：可展开这件事改由卡下那道「压着的一层」＋抽出动效来说（与 hpRow 同一套，见 .rah-peek） */
-  return '<div class="ra-hit-row'+(fresh?' fresh':'')+(open?' open':'')+'">'
-    +'<div class="rah-b" onclick="raHitTap('+i+',\''+m.id+'\')"><h5>'+esc(matTitle(real))+'</h5>'+(open?'':'<p>'+sub+'</p>')+'</div>'
+  /* 整行都是开合开关（与 hpRow 同一套）：点行内任意处收起／展开，同一个位置；两枚快捷钮 stopPropagation 除外 */
+  return '<div class="ra-hit-row'+(fresh?' fresh':'')+(open?' open':'')+'" onclick="raHitTap('+i+',\''+m.id+'\')">'
+    +'<div class="rah-b"><h5>'+esc(matTitle(real))+'</h5>'+(open?'':'<p>'+sub+'</p>')+'</div>'
     /* 行尾双快取＝与素材面板行同一套动线（发送在内侧、复制守右缘），换成 AI 浮层里也一样是肌肉记忆 */
     +'<span class="rah-q">'
-      +'<button class="psend" onclick="oneKeySend(\''+m.id+'\')" title="一键发送（文字＋附件）">'+I('send',12,2.2)+'</button>'
-      +'<button class="rp-btn ghost'+(ft?'':' dim')+'" style="flex:none;padding:0 12px" onclick="quickCopy(\''+m.id+'\')" title="'+(ft?'复制并填入输入框':'这条素材没有文字内容，附件可直接发送')+'">'+I('copy',12,2.2)+'</button>'
+      +'<button class="psend" onclick="event.stopPropagation();oneKeySend(\''+m.id+'\')" title="一键发送（文字＋附件）">'+I('send',12,2.2)+'</button>'
+      +'<button class="rp-btn ghost'+(ft?'':' dim')+'" style="flex:none;padding:0 12px" onclick="event.stopPropagation();quickCopy(\''+m.id+'\')" title="'+(ft?'复制并填入输入框':'这条素材没有文字内容，附件可直接发送')+'">'+I('copy',12,2.2)+'</button>'
     +'</span>'
-    +'</div>'+(open?raHitExp(m):'<div class="rah-peek" aria-hidden="true"></div>');
+    +'</div>'+(open?raHitExp(m):'');
 }
 /* 这一行是被哪（几）个词带进来的：拿本轮每一句原话回算，按句子先后收集、词不重复。
    命中排前的是后到消息，但**词序仍按句子先后**——读起来像"客户先说了 A，又说了 B"，与聊天顺序一致。 */
