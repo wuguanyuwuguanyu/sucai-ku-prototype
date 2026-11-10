@@ -19979,10 +19979,23 @@ function taskScope(rs,metric,range){
      正文仍是快照，脚本只插 <p><span>标签：</span><span>值</span></p>，不抄整页；
      按「执行人员：」定位，不认行序——重抓快照后行序变了也不会插错。
      值按快照那条演示任务的口径写（全部好友／重点客户、老客户／文章「撒打算」／
-     上海静安嘉里中心／单次任务／自动发送开启），拿到真实任务数据后换成读字段。 */
+     上海静安嘉里中心／单次任务／自动发送开启），拿到真实任务数据后换成读字段。
+     页签「员工完成情况 / 任务意向动态」只留前者：「任务意向动态」那枚页签连同它的表一起摘掉，
+     按页签文字定位（页签名与 tab id 都是快照生成物，不写死）。 */
   function reaFqDetailJs(){
    return String.raw`(function(){
 'use strict';
+/* 摘掉「任务意向动态」页签与其表格：先按 aria-controls 找到表格，再删页签 */
+var TABS=document.querySelectorAll('.ant-tabs-tab'),ti,tab=null;
+for(ti=0;ti<TABS.length;ti++){
+  if((TABS[ti].textContent||'').replace(/\s+/g,'')==='任务意向动态'){tab=TABS[ti];break}
+}
+if(tab){
+  var tb=tab.querySelector('[role="tab"]');
+  var pid=tb&&tb.getAttribute('aria-controls');
+  if(pid){var pane=document.getElementById(pid);if(pane&&pane.parentNode)pane.parentNode.removeChild(pane);}
+  if(tab.parentNode)tab.parentNode.removeChild(tab);
+}
 var BODY=document.querySelector('[class*="_task_information_body_"]');
 if(!BODY)return;
 if(BODY.querySelector('[data-rea-fq-loc]'))return;
