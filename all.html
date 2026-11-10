@@ -2482,7 +2482,18 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .ra-hit-badge{font-size:9.5px;font-weight:600;color:var(--on-primary-container);background:var(--primary-container);border-radius:999px;padding:2px 7px;flex:none}
 .ra-hit-badge.new{background:var(--primary);color:#fff}
 .ra-hit-n{font-weight:400;color:var(--on-surface-variant)}
-.ra-hit-row{display:flex;align-items:center;gap:11px;background:var(--sc);border-radius:var(--shape-m);padding:11px 13px;margin-bottom:9px;position:relative;overflow:hidden;cursor:pointer}
+.ra-hit-row{display:flex;align-items:center;gap:11px;background:var(--sc);border-radius:var(--shape-m);padding:11px 13px;margin-bottom:9px;position:relative;overflow:hidden;cursor:pointer;z-index:1;
+  transition:border-radius .18s var(--emph)} /* 展开时下圆角收小，和展开区拼成同一块「翻开的卡」；z-index 让展开区收回时藏到卡底下 */
+/* 收起态卡下那枚「抽手」：64×4 的圆头小舌露在卡底正中（主色 30%），像卡片下面还压着一层。
+   它占的是卡与卡之间本就有的 9px 行距（上下外边距 −7/＋3 抵掉），**不占任何横向空间**——
+   行尾那枚 › 撤掉后腾出来的宽度全留给标题与摘要。
+   桌面上悬停卡面时小舌加宽、加深（见下面的 hover 规则）：先给"这里能拉出来"一个可试的信号；
+   点开后它不再渲染——展开区自己从卡底长出来，两截拼成一块（见 .ra-hit-row.open）。 */
+.rah-peek{height:4px;width:64px;margin:-7px auto 3px;border-radius:0 0 4px 4px;background:rgba(90,84,249,.30);pointer-events:none;
+  transition:width .18s var(--emph),background .18s var(--emph)}
+@media (hover:hover){
+  .ra-hit-row:hover + .rah-peek{width:84px;background:rgba(90,84,249,.44)}
+}
 .ra-hit-row .rah-b{flex:1;min-width:0}
 .ra-hit-row .rah-b h5{font-size:16px;font-weight:500;color:var(--on-surface);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ra-hit-row .rah-b p{font-size:10.5px;color:var(--on-surface-variant);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -2496,8 +2507,14 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
   border-radius:var(--shape-m);background:var(--sc);color:var(--primary);font-family:inherit;
   font-size:11px;font-weight:500;cursor:pointer}
 .rah-q{flex:none;display:flex;align-items:center;gap:6px}
-.rah-chev{flex:none;display:flex;color:var(--on-surface-variant);transition:transform .15s}
-.ra-hit-exp{background:var(--sc-high);border-radius:var(--shape-m);margin:-5px 0 9px;padding:11px 13px;animation:fade .15s}
+/* 展开态：卡片只留上圆角、展开区只留下圆角，两截严丝合缝拼成一块完整的「翻开的卡」；
+   展开区从卡底抽出来（往下 10px 滑入＋淡入），收起时原路缩回去（.closing，见 raHitTap／hpTap）。 */
+.ra-hit-row.open{border-radius:var(--shape-m) var(--shape-m) 0 0;margin-bottom:0}
+.ra-hit-exp{background:var(--sc-high);border-radius:0 0 var(--shape-m) var(--shape-m);margin:0 0 9px;padding:11px 13px;
+  animation:raHitOpen .22s var(--emph)}
+.ra-hit-exp.closing{animation:raHitShut .16s var(--emph) forwards}
+@keyframes raHitOpen{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
+@keyframes raHitShut{from{opacity:1;transform:none}to{opacity:0;transform:translateY(-10px)}}
 .ra-hit-exp .ra-hit-acts{display:flex;gap:8px;flex-wrap:wrap}
 @keyframes raHitIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
 .ra-hit-row.fresh{animation:raHitIn .34s var(--emph);box-shadow:0 0 0 1.5px var(--primary)}
@@ -9508,7 +9525,7 @@ function hpPaint(){
     box.innerHTML=hpRow(m);
   }
 }
-/* 行＝与时间线里的命中行**共用同一套类名与结构**（.ra-hit-row/.rah-b/.rah-q/.rah-chev ＋ raHitExp 展开区），
+/* 行＝与时间线里的命中行**共用同一套类名与结构**（.ra-hit-row/.rah-b/.rah-q/.rah-peek ＋ raHitExp 展开区），
    视觉与动作不另起一套。行尾双快取（发送在内侧、复制守右缘）与时间线逐字一致——同一条素材在两个浮层里
    快取按钮的位置也必须一样，否则换一只手就点错。
    **不加 .fresh 脉冲**：脉冲在时间线里的职责是"在这几条里指出哪一条是新来的"，扁平清单一次只装一批、
@@ -9528,16 +9545,27 @@ function hpRow(m){
     +' · <span class="ra-hit-src">'+(m.personal?'个人':'企业')+'</span>'+(m.date?' · '+esc(m.date):'')
     +' · '+(ft?cut(ft,26):'这条素材只有附件、没有文字内容');
   /* 摊开后副标题让位（与素材面板 .p-card 同一条）：展开区已把内容摊全，摘要行不再重复 */
-  return '<div class="ra-hit-row">'
+  /* 行尾不再挂 ›：可展开这件事改由「卡下露出的那一层」＋展开时的抽出动效来说（见 .rah-peek 注释）。
+     收起态才渲染 peek；展开后展开区自己接上卡底，peek 让位。 */
+  return '<div class="ra-hit-row'+(open?' open':'')+'">'
     +'<div class="rah-b" onclick="hpTap(\''+m.id+'\')"><h5>'+esc(matTitle(real))+'</h5>'+(open?'':'<p>'+sub+'</p>')+'</div>'
     +'<span class="rah-q">'
       +'<button class="psend" onclick="oneKeySend(\''+m.id+'\')" title="一键发送（文字＋附件）">'+I('send',12,2.2)+'</button>'
       +'<button class="rp-btn ghost'+(ft?'':' dim')+'" style="flex:none;padding:0 12px" onclick="quickCopy(\''+m.id+'\')" title="'+(ft?'复制并填入输入框':'这条素材没有文字内容，附件可直接发送')+'">'+I('copy',12,2.2)+'</button>'
     +'</span>'
-    +'<span class="rah-chev" style="transform:rotate('+(open?90:0)+'deg)">'+I('chev',14,2.2)+'</span>'
-    +'</div>'+(open?raHitExp(m):'');
+    +'</div>'+(open?raHitExp(m):'<div class="rah-peek" aria-hidden="true"></div>');
 }
-function hpTap(id){ /* 手风琴：开新行收旧行，再点同一行收起——与 pRowTap／raHitTap 同义 */
+function hpTap(id){ /* 手风琴：开新行收旧行，再点同一行收起——与 pRowTap／raHitTap 同义。
+  再点同一行＝收起：先让展开区缩回卡底（.closing，160ms），到点再重排；开口仍是先落状态、后重绘。 */
+  if(hpExpId===id){
+    var box0=$('hpRow-'+id),el0=box0?box0.querySelector('.ra-hit-exp'):null;
+    if(el0){
+      el0.classList.add('closing');
+      hpExpId=null;
+      setTimeout(function(){hpPaint()},160);
+      return;
+    }
+  }
   hpExpId=hpExpId===id?null:id;
   hpPaint();
   if(hpExpId){
@@ -10072,15 +10100,15 @@ function raHitRow(m,fresh,i,r){
   var sub='<span class="ra-hit-src">'+(m.personal?'个人':'企业')+'</span>'+kwh
     +' · '+(ft?cut(ft,30):'这条素材只有附件、没有文字内容');
   /* 摊开后副标题让位（与素材面板 .p-card 同一条）：展开区已把内容摊全，摘要行不再重复 */
-  return '<div class="ra-hit-row'+(fresh?' fresh':'')+'">'
+  /* 行尾不再挂 ›：可展开这件事改由卡下那道「压着的一层」＋抽出动效来说（与 hpRow 同一套，见 .rah-peek） */
+  return '<div class="ra-hit-row'+(fresh?' fresh':'')+(open?' open':'')+'">'
     +'<div class="rah-b" onclick="raHitTap('+i+',\''+m.id+'\')"><h5>'+esc(matTitle(real))+'</h5>'+(open?'':'<p>'+sub+'</p>')+'</div>'
     /* 行尾双快取＝与素材面板行同一套动线（发送在内侧、复制守右缘），换成 AI 浮层里也一样是肌肉记忆 */
     +'<span class="rah-q">'
       +'<button class="psend" onclick="oneKeySend(\''+m.id+'\')" title="一键发送（文字＋附件）">'+I('send',12,2.2)+'</button>'
       +'<button class="rp-btn ghost'+(ft?'':' dim')+'" style="flex:none;padding:0 12px" onclick="quickCopy(\''+m.id+'\')" title="'+(ft?'复制并填入输入框':'这条素材没有文字内容，附件可直接发送')+'">'+I('copy',12,2.2)+'</button>'
     +'</span>'
-    +'<span class="rah-chev" style="transform:rotate('+(open?90:0)+'deg)">'+I('chev',14,2.2)+'</span>'
-    +'</div>'+(open?raHitExp(m):'');
+    +'</div>'+(open?raHitExp(m):'<div class="rah-peek" aria-hidden="true"></div>');
 }
 /* 这一行是被哪（几）个词带进来的：拿本轮每一句原话回算，按句子先后收集、词不重复。
    命中排前的是后到消息，但**词序仍按句子先后**——读起来像"客户先说了 A，又说了 B"，与聊天顺序一致。 */
@@ -10115,6 +10143,16 @@ function raSave(id){
 function raHitTap(i,id){ /* 手风琴：开新行收旧行，再点同一行收起——与素材面板 pRowTap 同义，作用域是整个时间线 */
   /* 复合键 i:id：同一件素材可能同时命中两轮（客户连着问了两次同类问题），只按素材 id 记展开态会让两处一起张开 */
   var key=i+':'+id;
+  /* 再点同一行＝收起：让展开区先缩回卡底（.closing，160ms）再重排，不在半空里直接消失 */
+  if(raExpId===key){
+    var box0=$('aiHits-'+i),el0=box0?box0.querySelector('.ra-hit-exp'):null;
+    if(el0){
+      el0.classList.add('closing');
+      raExpId=null;
+      setTimeout(function(){raHitsDraw()},160);
+      return;
+    }
+  }
   raExpId=raExpId===key?null:key;
   raHitsDraw();
   if(raExpId){
@@ -11773,38 +11811,19 @@ setTimeout(sbScan,120);
   const sources = {
     tasks: {
       name: "任务成果",
-      board: "任务看板",
-      page: "微小助看板",
       note: "含托管代跑的任务结果",
-      metrics: ["publish", "friendSend", "request", "taskExec"],
     },
     hosting: {
       name: "AI托管成果",
-      board: "AI托管看板",
-      page: "AI托管数据看板",
       note: "自动执行按成功回执计，托管时长按账号累加",
-      metrics: [
-        "hostingTask",
-        "autoReply",
-        "firstTouch",
-        "message",
-        "publish",
-        "added",
-      ],
     },
     tools: {
       name: "App 工具成果",
-      board: "App 工具看板",
-      page: "App 工具看板",
       note: "员工主动使用 App 工具完成的工作",
-      metrics: ["added", "message", "aiReply", "profile"],
     },
     material: {
       name: "素材使用",
-      board: "素材看板",
-      page: "企业微信看板",
       note: "复制、保存、一键发送与一键发圈均计取用",
-      metrics: ["material", "materialUsers", "materialCount", "materialSend"],
     },
   };
   const metrics = {
@@ -11938,11 +11957,9 @@ setTimeout(sbScan,120);
   if (!employees.some((employee) => employee.dept === homeOrg)) homeOrg = "all";
   let homeScroll = saved.scroll || 0;
   let trail = saved.trail || [];
-  let route = window.__REA_TOOL_BOARD
-    ? { view: "board", source: "tools", org: homeOrg, ...saved.detail }
-    : window.__REA_USAGE_DETAIL
-      ? { view: "employees", org: homeOrg, ...saved.detail }
-      : { view: "home", org: homeOrg };
+  let route = window.__REA_USAGE_DETAIL
+    ? { view: "employees", org: homeOrg, ...saved.detail }
+    : { view: "home", org: homeOrg };
   if (!employees.some((employee) => employee.dept === route.org))
     route.org = "all";
   let filters = { query: "", source: "all", feature: "all", status: "all" };
@@ -12348,11 +12365,7 @@ setTimeout(sbScan,120);
     parent.postMessage(
       {
         reaPage:
-          detail.view === "home"
-            ? "使用总览"
-            : detail.view === "board" && detail.source === "tools"
-              ? "App 工具看板"
-              : "使用总览 · 使用详情",
+          detail.view === "home" ? "使用总览" : "使用总览 · 使用详情",
         reaOverview: stateFor(detail),
       },
       "*",
@@ -12850,16 +12863,6 @@ setTimeout(sbScan,120);
         `<h3 class="ov-detail-heading">结果记录${route.source ? " · " + sources[route.source].name : ""}</h3>` +
         form({ source: !route.source }) +
         recordTable(selected, metric);
-    } else if (route.view === "board") {
-      const source = sources[route.source];
-      const own = records.filter((record) =>
-        record.sources.includes(route.source),
-      );
-      title = source.board;
-      body =
-        `<p class="ov-muted">${source.note}</p><div class="ov-kpis">${source.metrics.map((metric) => metricButton(metric, own, route.source, false)).join("")}</div><h3 class="ov-detail-heading">工具完成记录</h3>` +
-        form() +
-        recordTable(own);
     } else if (route.view === "features") {
       title = route.feature || "全部功能使用情况";
       const own = usageRecords(
@@ -15913,8 +15916,9 @@ render();
   REA_NEEDS_DATA[REA_DETAIL_TASK] = REA_BOARD_PAGE;
   REA_NEEDS_DATA[REA_PERSON_PAGE] = REA_BOARD_PAGE;
 
-  /* 侧栏「数据看板」一组改叫「看板」（2026-10-26 与产品经理对齐）；2026-11-09 起删去「悬浮窗看板」，
-     组内只剩 使用总览／任务看板／App 工具看板／素材看板／AI托管看板（见下面 REA_HIDDEN）。
+  /* 侧栏「数据看板」一组改叫「看板」（2026-10-26 与产品经理对齐）；2026-11-09 删去「悬浮窗看板」
+     （见下面 REA_HIDDEN），2026-11-10 删去「App 工具看板」，组内只剩
+     使用总览／任务看板／素材看板／AI托管看板。
      页名是注册表主键（REA_COVER、子页、落地页都按它查），一个字节都不能改；
      只在显示层换名——侧栏文字、页内 h6、浏览器标题。名字表放这儿，nav 与 reaDoc 共用。 */
   var REA_NAME = { '微小助看板': '任务看板', '企业微信看板': '素材看板', 'AI托管数据看板': 'AI托管看板' };
@@ -27682,7 +27686,6 @@ checkCross();
   var REA_COVER = {
     '使用总览': { html: 'srcOverview', css: docOf('srcOverviewStyle'), js: function(){ return reaOverviewDataJs()+docOf('srcOverviewScript'); } },
     '使用总览 · 使用详情': { html: 'srcOverview', css: docOf('srcOverviewStyle'), js: function(){ return 'window.__REA_USAGE_DETAIL=true;'+reaOverviewDataJs()+docOf('srcOverviewScript'); } },
-    'App 工具看板': { html: 'srcOverview', css: docOf('srcOverviewStyle'), js: function(){ return 'window.__REA_TOOL_BOARD=true;'+reaOverviewDataJs()+docOf('srcOverviewScript'); } },
     /* AI托管看板与它的二级页「托管工作日志」：正文各一块，样式与脚本两页共用 */
     [REA_HOST_PAGE]: { html: 'srcHostingDash', css: REA_BOARD_CSS + docOf('srcHostingStyle'), js: function(){ return docOf('srcHostingScript'); } },
     [REA_HOST_LOG]:  { html: 'srcHostingLog',  css: REA_BOARD_CSS + docOf('srcHostingStyle'), js: function(){ return docOf('srcHostingScript'); } },
@@ -27769,7 +27772,7 @@ checkCross();
     }
     var board = find(REA_BOARD_PAGE);
     if (board){
-      var add = [REA_OVERVIEW_PAGE, '使用总览 · 使用详情', 'App 工具看板', REA_HOST_PAGE, REA_HOST_LOG, REA_TASKS_PAGE, REA_METRIC_PAGE, REA_DETAIL_TASK, REA_PERSON_PAGE];
+      var add = [REA_OVERVIEW_PAGE, '使用总览 · 使用详情', REA_HOST_PAGE, REA_HOST_LOG, REA_TASKS_PAGE, REA_METRIC_PAGE, REA_DETAIL_TASK, REA_PERSON_PAGE];
       for (i = 0; i < add.length; i++){
         P.pages.push({
           name: add[i],
@@ -28349,11 +28352,11 @@ checkCross();
 
   var REA_HDR = 'ykSideTwoColSecondaryHeader">';        // 侧栏二级列表的标题
   var REA_LIST = 'ykSideTwoColSecondaryList">';        // 侧栏二级列表本体
-  /* 侧栏一级项「数据看板」只展开菜单；二级按 总览／任务／App 工具／素材／AI托管 排列。
+  /* 侧栏一级项「数据看板」只展开菜单；二级按 总览／任务／素材／AI托管 排列。
      不在表里的项原序跟在后面。组名「数据看板」在稿子里显示成「看板」。
      这两条原先写在页内脚本里、只管当前这一页的右列；现在折叠态的悬停浮层也要用，
      挪到 reaMenuIndex() 一处维护，两边共用同一份。 */
-  var REA_MENU_ORDER = { '数据看板': ['使用总览', '微小助看板', 'App 工具看板', '企业微信看板', 'AI托管数据看板'] };
+  var REA_MENU_ORDER = { '数据看板': ['使用总览', '微小助看板', '企业微信看板', 'AI托管数据看板'] };
   var REA_MENU_TITLE = { '数据看板': '看板' };
   var REA_TOPBAR = 'ant-pro-top-nav-header-base-menu'; // 顶栏一级导航的本体
   var reaCatFirst = {};   // 一级分类名 → 该分类第一个模块页名（由数据推导，不写死）
@@ -28788,7 +28791,7 @@ document.addEventListener('click',function(event){
       names = reaSeqOf(P.pages[i].rest).slice();
       /* 已下线页不铺进导航（快照侧栏里还写着它，这里按 REA_HIDDEN 摘掉） */
       names = names.filter(function(n){ return !REA_HIDDEN[n]; });
-      if (c === '数据看板' && byName[REA_OVERVIEW_PAGE]){names.unshift(REA_OVERVIEW_PAGE);if(names.indexOf('App 工具看板')<0)names.push('App 工具看板');if(names.indexOf('AI托管数据看板')<0)names.push('AI托管数据看板');}
+      if (c === '数据看板' && byName[REA_OVERVIEW_PAGE]){names.unshift(REA_OVERVIEW_PAGE);if(names.indexOf('AI托管数据看板')<0)names.push('AI托管数据看板');}
       ord = REA_MENU_ORDER[c];
       if (ord){
         /* 只在表里有的项之间换位；表里没提的项按原序排到后面（sort 在现代引擎里是稳定的） */
