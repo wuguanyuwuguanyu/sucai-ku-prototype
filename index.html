@@ -23796,6 +23796,42 @@ for(i=0;i<rows.length;i++){
 })();`;
   }
 
+  /* 群发群组 · 详情：补只读回显（2026-11-10）。
+     创建页重排后，「任务内容」与「发送类型」在详情页没有落点；在「群发内容数量」后补两行。
+     内容整行铺满并允许换行——快照的 p 是 33% 宽、单行省略，装不下正文。
+     群发群组只有单次任务，不补循环方式；群发哪些群、两个时间、执行人员照快照。
+     快照只有一条演示任务，值按演示口径写；拿到真实任务数据后换成读字段即可。 */
+  function reaQsDetailJs(){
+    return String.raw`(function(){
+'use strict';
+function norm(s){return String(s==null?'':s).replace(/\s+/g,'')}
+var ps=document.querySelectorAll('p'),anchor=null,i;
+for(i=0;i<ps.length;i++){
+  if(norm(ps[i].textContent).indexOf('群发内容数量：')===0){anchor=ps[i];break}
+}
+if(!anchor||!anchor.parentNode)return;
+var rows=[
+  ['任务内容','各位老板好，本周新品已到店，欢迎进店体验，老客户到店可享专属优惠。',true],
+  ['发送类型','逐群发送',false]
+];
+var ref=anchor;
+for(i=0;i<rows.length;i++){
+  var p=document.createElement('p');
+  if(rows[i][2]){
+    p.style.flex='0 0 100%';
+    p.style.whiteSpace='normal';
+    p.style.alignItems='flex-start';
+    p.style.overflow='visible';
+  }
+  var a=document.createElement('span');a.textContent=rows[i][0]+'：';
+  var b=document.createElement('span');b.textContent=rows[i][1];
+  p.appendChild(a);p.appendChild(b);
+  ref.parentNode.insertBefore(p,ref.nextSibling);
+  ref=p;
+}
+})();`;
+  }
+
   /* ============================================================
      素材看板（2026-10-28）：视图③ 的「企业微信看板」显示名是「素材看板」。
      正文整段换成 srcBoardMat（与任务看板同一套页头／筛选栏／卡网格），
@@ -26990,6 +27026,7 @@ checkCross();
     /* 批量加好友（2026-10-27）：新建页补「添加群内好友」与四行配置；详情页补只读回显 */
     '批量加好友 · 新建': { css: REA_BD_CSS + REA_FREQ_CSS, js: function(){ return reaBdJs() + reaFreqDrawerJs('add'); } },
     '批量加好友 · 详情': { js: reaBdDetailJs },
+    '群发群组 · 详情': { js: reaQsDetailJs },
     /* 关联好友 · 新建（2026-11-10）：正文仍是快照那张「添加任务」弹窗，只补执行上限回显 */
     '关联好友 · 新建': { css: REA_FREQ_CSS, js: reaRelJs }
   };
