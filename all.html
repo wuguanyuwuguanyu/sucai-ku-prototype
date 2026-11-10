@@ -22248,6 +22248,9 @@ else if(PAGE==='群发群组 · 新建')initQs();
     + '.rea-zd-ops .ant-btn+.ant-btn{margin-left:12px}'
     /* 右侧手机预览：绿气泡照微信自己那一套 */
     + '.rea-zd-pv{display:flex;flex-direction:column;align-items:flex-start;gap:10px}'
+    /* 右侧手机预览没内容时留一句灰字，不然空框看着像坏了 */
+    + '.rea-zd-pv-empty{padding:24px 24px 0;text-align:center;font-size:12px;'
+    +   'color:rgba(0,0,0,.35);line-height:1.6}'
     + '.rea-zd-bub{max-width:210px;padding:8px 10px;border-radius:4px;background:#95ec69;'
     +   'font-size:13px;line-height:20px;color:#333333;white-space:pre-wrap;word-break:break-word;'
     +   'box-sizing:border-box}'
@@ -22259,10 +22262,17 @@ else if(PAGE==='群发群组 · 新建')initQs();
     +   'justify-content:center;font-size:14px}'
     /* 「从素材库选择」跟在「添加回复内容」右边，同一枚工具栏里的次按钮 */
     + '.rea-zd-srcbtn{margin-left:8px}'
-    /* 模版弹窗里补的三行配置（好友验证方式／设置标签／选择备注），行距与快照那两行一致 */
+    /* 模版弹窗里的「好友设置」一组（好友验证方式／设置标签／选择备注＋快照那枚名片开关）：
+       组头带一条细分割线压住上面的回复内容区，标签列定宽，三行才对得齐 */
+    + '.rea-zd-sec{display:flex;align-items:center;margin:20px 0 14px;padding-top:16px;'
+    +   'border-top:1px solid rgba(5,5,5,.06);font-size:14px;font-weight:500;'
+    +   'color:rgba(0,0,0,.88)}'
+    + '.rea-zd-q{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;'
+    +   'margin-left:6px;border-radius:50%;border:1px solid rgba(0,0,0,.3);color:rgba(0,0,0,.4);'
+    +   'font-size:10px;font-weight:400;line-height:1;cursor:help}'
     + '.rea-zd-frow{display:flex;align-items:center;margin-bottom:12px;font-size:14px;'
     +   'color:rgba(0,0,0,.88)}'
-    + '.rea-zd-cflab{flex:none;margin-right:12px;font-weight:400;font-size:14px}'
+    + '.rea-zd-cflab{flex:none;width:98px;margin-right:12px;font-weight:400;font-size:14px}'
     + '.rea-zd-cfg .ant-radio-wrapper{margin-inline-end:16px}'
     + '.rea-zd-cinp{width:200px}'
     + '.rea-zd-cinp-note{margin-left:16px}';
@@ -22328,9 +22338,10 @@ else if(PAGE==='群发群组 · 新建')initQs();
     'var ST={name:"",msgs:[],verify:"被动验证（客户主动添加我）",tag:"",note:"备注后缀",noteText:""};',
     'if(NAME){NAME.value=ST.name;NAME.addEventListener("input",function(){ST.name=NAME.value})}',
     '',
-    '/* ---- 模版自己的三项配置（2026-11-10 照 App 的「自动打招呼 · 设置」补齐） ----',
+    '/* ---- 「好友设置」一组（2026-11-10 照 App 的「自动打招呼 · 设置」补齐，同日重排） ----',
     '   快照那张模版弹窗只留了模版名称、回复内容与一枚名片开关；好友验证方式、设置标签、',
-    '   选择备注原本只在 App 侧的员工设置页里。这一笔把它们补进模版表单：',
+    '   选择备注原本只在 App 侧的员工设置页里。这一组排在回复内容之后、和名片开关连成一块：',
+    '   上面是「这个模版说什么」，下面是「加好友时顺手做什么」，两件事分开读。',
     '   好友验证方式／备注都是单选，默认值与 App 侧一致（被动验证、备注后缀），标签与备注内容可空。 */',
     'function cfgRadioHtml(key,opts,cur){',
     '  var h=\'<div class="ant-radio-group ant-radio-group-outline css-vgijab" data-zd-rg="\'+key+\'">\',i,on;',
@@ -22344,15 +22355,17 @@ else if(PAGE==='群发群组 · 新建')initQs();
     '  return h+"</div>";',
     '}',
     'function cfgHtml(){',
-    '  return \'<div class="rea-zd-frow"><span class="rea-zd-cflab">好友验证方式：</span>\'',
+    '  return \'<div class="rea-zd-sec">好友设置\'',
+    '    +\'<span class="rea-zd-q" title="通过好友验证后自动打标签、写备注、推送名片；留空或关闭就不执行">?</span></div>\'',
+    '    +\'<div class="rea-zd-frow"><span class="rea-zd-cflab">好友验证方式：</span>\'',
     '    +cfgRadioHtml("verify",["被动验证（客户主动添加我）","主动验证（我主动添加客户）"],ST.verify)+"</div>"',
     '    +\'<div class="rea-zd-frow"><span class="rea-zd-cflab">设置标签：</span>\'',
     '    +\'<input id="rea-zd-tag" class="ant-input css-vgijab ant-input-outlined rea-zd-cinp"\'',
-    '    +\' placeholder="请输入" value="\'+esc(ST.tag)+\'"></div>\'',
+    '    +\' placeholder="请输入标签，可留空" value="\'+esc(ST.tag)+\'"></div>\'',
     '    +\'<div class="rea-zd-frow"><span class="rea-zd-cflab">选择备注：</span>\'',
     '    +cfgRadioHtml("note",["备注前缀","备注后缀"],ST.note)',
     '    +\'<input id="rea-zd-notetext" class="ant-input css-vgijab ant-input-outlined rea-zd-cinp rea-zd-cinp-note"\'',
-    '    +\' placeholder="请输入" value="\'+esc(ST.noteText)+\'"></div>\';',
+    '    +\' placeholder="请输入备注，可留空" value="\'+esc(ST.noteText)+\'"></div>\';',
     '}',
     'function syncRadios(rg,cur){',
     '  var ls=rg.querySelectorAll(".ant-radio-wrapper"),j,on,txt,rd,ip;',
@@ -22381,9 +22394,18 @@ else if(PAGE==='群发群组 · 新建')initQs();
     'var CFGR=null;',
     'if(NAME&&NAME.parentNode&&NAME.parentNode.parentNode){',
     '  var nrow=NAME.parentNode;',
+    '  /* 名片开关是快照自带的：本组插到它前面连成一块读，开关那句长文案换成 App 的叫法。',
+    '     认行必须带 .ant-switch——只按文字找会先撞上包住整列的外层 div。 */',
+    '  var SW=null,ds=BD.querySelectorAll("div"),q;',
+    '  for(q=0;q<ds.length;q++){',
+    '    if(ds[q].children.length===2&&ds[q].querySelector(".ant-switch")',
+    '      &&(ds[q].textContent||"").replace(/\\s+/g,"").indexOf("是否给指定企微发送微信名片")===0){SW=ds[q];break}',
+    '  }',
+    '  if(SW){var lb=SW.querySelector("span");if(lb)lb.textContent="推送名片至企业微信"}',
     '  CFGR=document.createElement("div");CFGR.className="rea-zd-cfg";',
     '  CFGR.innerHTML=cfgHtml();',
-    '  nrow.parentNode.insertBefore(CFGR,nrow.nextSibling);',
+    '  if(SW&&SW.parentNode)SW.parentNode.insertBefore(CFGR,SW);',
+    '  else nrow.parentNode.insertBefore(CFGR,nrow.nextSibling);',
     '  bindCfg(CFGR);',
     '}',
     '',
@@ -22445,7 +22467,8 @@ else if(PAGE==='群发群组 · 新建')initQs();
     '}',
     'function drawPreview(){',
     '  if(!PVC)return;',
-    '  if(!ST.msgs.length){PVC.innerHTML="";return}',
+    '  if(!ST.msgs.length){',
+    '    PVC.innerHTML=\'<div class="rea-zd-pv-empty">客户收到的效果会显示在这里</div>\';return}',
     '  var h=\'<div class="rea-zd-pv">\';',
     '  for(var i=0;i<ST.msgs.length;i++)h+=bub(ST.msgs[i]);',
     '  PVC.innerHTML=h+"</div>";',
