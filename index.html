@@ -20555,12 +20555,6 @@ tb.addEventListener("click",function(e){
     + '.rea-qf-side .rea-qf-hint{margin-left:0}'
     + '.rea-qf .rea-wxt-ta{max-width:640px}'
     + '.rea-qf-morebd .ant-input{max-width:640px}'
-    /* 间隔时间：秒数取 0–5，宽度够放一位数，右侧跟单位 */
-    + '.rea-qf-numrow .rea-qf-ctl{display:flex;align-items:center;flex-wrap:wrap;gap:8px}'
-    + '.rea-qf-num{box-sizing:border-box;width:96px;height:32px;padding:0 8px;border:1px solid #E5E8EF;border-radius:8px;background:#fff;font-size:14px;line-height:30px;color:#1F2329;text-align:center;outline:0}'
-    + '.rea-qf-num:focus{border-color:#1677FF;box-shadow:0 0 0 2px #E6F4FF}'
-    + '.rea-qf-unit{font-size:14px;color:#646A73}'
-    + '.rea-qf-numrow .rea-wxt-hintline{flex:1 0 100%;max-width:none}'
     + '.rea-qs-sheet{background:#fff;border-radius:6px;padding:16px 20px 0}'
     + '.rea-qs .rea-qf-act{bottom:0}'
     /* ---- 发圈 · 新建：四段重排（2026-11-10） ----
@@ -21339,26 +21333,11 @@ function initFq(){
 
     var more=document.createElement('div');more.className='rea-qf-more';
     var moreTog=document.createElement('div');moreTog.className='rea-qf-moretog';
-    moreTog.innerHTML='<span>更多设置</span><span class="rea-qf-moresub">任务名称 · 自动发送 · 间隔时间 · 全局弹窗</span>';
+    moreTog.innerHTML='<span>更多设置</span><span class="rea-qf-moresub">任务名称 · 自动发送 · 全局弹窗</span>';
     var moreBd=document.createElement('div');moreBd.className='rea-qf-morebd';
     more.appendChild(moreTog);more.appendChild(moreBd);wrap.appendChild(more);
     fqPut(gName,moreBd,true);
     fqPut(gAuto,moreBd,true);
-    /* 间隔时间（2026-11-10 产品加）：快照里没有这一行，自建。
-       每添加一批次后停顿这么多秒，用来降低微信风控风险；0–5 秒的整数，默认 0。 */
-    var gapRow=document.createElement('div');gapRow.className='rea-qf-row rea-qf-numrow';
-    gapRow.innerHTML='<div class="rea-qf-lab rea-qf-noreq">间隔时间</div>'
-      +'<div class="rea-qf-ctl"><input type="number" class="rea-qf-num" value="0" min="0" max="5" step="1" inputmode="numeric" aria-label="间隔时间（秒）"><span class="rea-qf-unit">秒</span></div>';
-    var gapInp=gapRow.querySelector('.rea-qf-num');
-    gapRow.querySelector('.rea-qf-ctl').appendChild(fqSubHint('每添加一批次后停顿一段时间，降低微信风控风险。'));
-    function fqGapVal(){
-      var n=Math.round(Number(gapInp.value));
-      if(!isFinite(n))n=0;
-      return n<0?0:(n>5?5:n);
-    }
-    /* 离开输入框时把超出 0–5 的值收回来，输入过程中不打断 */
-    gapInp.addEventListener('blur',function(){gapInp.value=fqGapVal()});
-    moreBd.appendChild(gapRow);
     fqPut(gPopup,moreBd,true);
 
     var act=document.createElement('div');act.className='rea-qf-act';
