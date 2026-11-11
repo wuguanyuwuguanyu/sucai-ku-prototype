@@ -896,14 +896,6 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .cust-copy{flex:none;width:22px;height:22px;margin:-4px 0 -4px -2px;border-radius:50%;color:#7E9ACA;
   display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
 .cust-meta{font-size:12.1px;font-weight:500;color:#95A3B8;line-height:1.2}
-/* 右上角飘带：左端全圆、右端贴卡边；::after 那一小块把下沿往下续 7px，形成稿子上的小尾巴 */
-.cust-tag{position:absolute;right:0;top:0;z-index:1;height:24.7px;padding:0 9px 0 7px;border-radius:999px 0 0 999px;
-  display:flex;align-items:center;gap:3px;font-size:11px;font-weight:600;color:#fff;letter-spacing:.01em}
-.cust-tag::after{content:"";position:absolute;right:0;bottom:-7px;width:11px;height:7px;
-  border-radius:0 0 0 7px;background:inherit}
-.cust-tag.red{background:linear-gradient(135deg,#FF7B70,#F2545B);box-shadow:-6px 6px 14px -12px rgba(242,84,91,.9)}
-.cust-tag.blue{background:linear-gradient(135deg,#4D9BFF,#2D6BFF);box-shadow:-6px 6px 14px -12px rgba(45,107,255,.9)}
-.cust-tag svg{flex:none}
 .cust-msg{margin-top:9px;padding:9px 11px 10px;border-radius:11px;background:#F2F7FF}
 .cust-msg-h{display:flex;align-items:center;gap:6px;font-size:13.2px;font-weight:600;line-height:1.2}
 .cust-hi{flex:none;width:17px;height:17px;border-radius:6px;background:linear-gradient(140deg,#FF7B70,#F2545B);
@@ -4782,43 +4774,42 @@ function taskJump(where){
    · 待唤醒：三档分段器（今日未回复／1天未回复／1周未回复），每档一套行；默认落在「今日未回复」（稿子那一屏）。
    · 待触达：卡里多一块「加好友打招呼语」——这页要回答的就是「这四个人该说什么」，缺了它卡片只剩人名。
    · 客户沟通／新增好友：只换时间口径（最近沟通／添加时间）。
-   数据仍是演示值（同今日概况那六个数），不接素材库；微信号统一是稿子上的 XX-8886666。
-   标签三档：intent＝高意向（红・拇指）、old＝老客户（蓝・人）、friend＝好友推荐（蓝・人）。 */
+   数据仍是演示值（同今日概况那六个数），不接素材库；微信号统一是稿子上的 XX-8886666。 */
 var CUST_SEG=0;
 var CUST_PAGES={
   'host-awake':{t:'待唤醒客户',label:'最后触达',tabs:['今日未回复','1天未回复','1周未回复'],lists:[
-    [{n:'李晓霞',tag:'intent',m:'今天10:00　未回复·3小时'},
-     {n:'李晓霞',tag:'intent',m:'今天10:00　未回复·3小时'},
-     {n:'张大强',tag:'old',   m:'今天10:00　未回复·3小时'},
-     {n:'张大强',tag:'old',   m:'今天10:00　未回复·3小时'},
-     {n:'李晓霞',tag:'intent',m:'今天10:00　未回复·3小时'},
-     {n:'李晓霞',tag:'intent',m:'今天10:00　未回复·3小时'}],
-    [{n:'张大强',tag:'old',   m:'昨天18:20　未回复·1天'},
-     {n:'李晓霞',tag:'intent',m:'昨天11:05　未回复·1天'},
-     {n:'张大强',tag:'old',   m:'昨天09:40　未回复·1天'}],
-    [{n:'李晓霞',tag:'intent',m:'9月27日 15:30　未回复·7天'},
-     {n:'张大强',tag:'old',   m:'9月27日 10:10　未回复·7天'}]]},
+    [{n:'李晓霞',m:'今天10:00　未回复·3小时'},
+     {n:'李晓霞',m:'今天10:00　未回复·3小时'},
+     {n:'张大强',m:'今天10:00　未回复·3小时'},
+     {n:'张大强',m:'今天10:00　未回复·3小时'},
+     {n:'李晓霞',m:'今天10:00　未回复·3小时'},
+     {n:'李晓霞',m:'今天10:00　未回复·3小时'}],
+    [{n:'张大强',m:'昨天18:20　未回复·1天'},
+     {n:'李晓霞',m:'昨天11:05　未回复·1天'},
+     {n:'张大强',m:'昨天09:40　未回复·1天'}],
+    [{n:'李晓霞',m:'9月27日 15:30　未回复·7天'},
+     {n:'张大强',m:'9月27日 10:10　未回复·7天'}]]},
   'host-reach':{t:'待触达新客户',label:'最后触达',msg:'你好呀，朋友推荐我来找你，说你们家售后很靠谱。',items:[
-    {n:'张大强',tag:'friend',m:'今天10:00　未回复·3小时'},
-    {n:'张大强',tag:'friend',m:'今天10:00　未回复·3小时'},
-    {n:'张大强',tag:'friend',m:'今天10:00　未回复·3小时'},
-    {n:'张大强',tag:'friend',m:'今天10:00　未回复·3小时'}]},
+    {n:'张大强',m:'今天10:00　未回复·3小时'},
+    {n:'张大强',m:'今天10:00　未回复·3小时'},
+    {n:'张大强',m:'今天10:00　未回复·3小时'},
+    {n:'张大强',m:'今天10:00　未回复·3小时'}]},
   'host-chat':{t:'客户沟通',label:'最近沟通',items:[
-    {n:'张大强',tag:'old',   m:'今天18:35'},
-    {n:'张大强',tag:'old',   m:'今天18:30'},
-    {n:'张大强',tag:'old',   m:'今天18:30'},
-    {n:'李晓霞',tag:'intent',m:'今天17:20'},
-    {n:'李晓霞',tag:'intent',m:'今天17:00'},
-    {n:'李晓霞',tag:'intent',m:'今天10:30'},
-    {n:'李晓霞',tag:'intent',m:'今天09:25'}]},
+    {n:'张大强',m:'今天18:35'},
+    {n:'张大强',m:'今天18:30'},
+    {n:'张大强',m:'今天18:30'},
+    {n:'李晓霞',m:'今天17:20'},
+    {n:'李晓霞',m:'今天17:00'},
+    {n:'李晓霞',m:'今天10:30'},
+    {n:'李晓霞',m:'今天09:25'}]},
   'host-newfriend':{t:'新增好友',label:'添加时间',items:[
-    {n:'宋雨彤',tag:'intent',m:'今天19:00'},
-    {n:'张明山',tag:'intent',m:'今天18:20'},
-    {n:'许志远',tag:'intent',m:'今天18:00'},
-    {n:'李晓霞',tag:'intent',m:'今天17:20'},
-    {n:'李晓霞',tag:'friend',m:'今天17:00'},
-    {n:'李晓霞',tag:'friend',m:'今天10:30'},
-    {n:'李晓霞',tag:'friend',m:'今天09:25'}]}
+    {n:'宋雨彤',m:'今天19:00'},
+    {n:'张明山',m:'今天18:20'},
+    {n:'许志远',m:'今天18:00'},
+    {n:'李晓霞',m:'今天17:20'},
+    {n:'李晓霞',m:'今天17:00'},
+    {n:'李晓霞',m:'今天10:30'},
+    {n:'李晓霞',m:'今天09:25'}]}
 };
 var CUST_DOM={
   'host-awake':['custAwakeBody','custAwakeBack','custWxAwake'],
@@ -4879,16 +4870,9 @@ function custAcctSync(pid){
 function custAcctToggle(){ CUST_ACCT_OPEN=!CUST_ACCT_OPEN; custAcctSync(CUST_DOM[cur]?cur:null); }
 function custAcctClose(){ CUST_ACCT_OPEN=false; custAcctSync(CUST_DOM[cur]?cur:null); }
 function custAcctPick(i){ CUST_ACCT=i; CUST_ACCT_OPEN=false; custAcctSync(CUST_DOM[cur]?cur:null); }
-/* 标签里的图标用**实心**白（稿子那两枚是面状图标，不是描边）：I() 只出描边，故这两枚就地画 */
-function custTag(tag){
-  var th='<svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7.2 10.6v9.6H4.5a1.5 1.5 0 0 1-1.5-1.5v-6.6a1.5 1.5 0 0 1 1.5-1.5zM9.2 20.2V10.4L13.6 3a2 2 0 0 1 2.9 2.3L15 9h4.5a2 2 0 0 1 2 2.4l-1.3 6.3a2 2 0 0 1-2 1.6H9.2z"/></svg>';
-  var us='<svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="8" r="3.8"/><path d="M4.4 20a7.6 7.6 0 0 1 15.2 0z"/></svg>';
-  if(tag==='intent')return '<span class="cust-tag red">'+th+'高意向</span>';
-  return '<span class="cust-tag blue">'+us+(tag==='friend'?'好友推荐':'老客户')+'</span>';
-}
 function custCard(it,p){
   var wx='XX-8886666';
-  return '<div class="cust-card'+(p.msg?' has-msg':'')+'">'+custTag(it.tag)
+  return '<div class="cust-card'+(p.msg?' has-msg':'')+'">'
     +'<div class="cust-top"><span class="cust-av">'+it.n.slice(0,1)+'</span>'
     +'<span class="cust-main"><b class="cust-name hv-gn">'+it.n+'</b>'
     +'<span class="cust-id">微信号：'+wx
@@ -10860,27 +10844,19 @@ setTimeout(sbScan,120);
           </button>
         </div>
       </header>
-      <section class="ov-results-section" aria-labelledby="ov-results-title">
-        <div class="ov-section-heading">
-          <h2 id="ov-results-title">
-            业务成果<span
-              class="ov-help"
-              id="ov-results-help"
-              tabindex="0"
-              role="img"
-              aria-label="业务成果统计口径"
-              data-tip="业务成果统计口径"
-              >?</span
-            >
-          </h2>
-        </div>
-        <div id="ov-results" class="ov-panel"></div>
+      <p class="ov-demo-note">演示数据 · 用于评审指标与交互</p>
+      <section class="ov-panel ov-value-coverage" id="ov-value-coverage" aria-label="团队使用覆盖"></section>
+      <section class="ov-value-section" aria-label="四项能力使用情况">
+        <div class="ov-section-heading"><h2>云小助帮上了哪些忙</h2><span class="ov-muted" id="ov-value-period"></span></div>
+        <div id="ov-value-scenes" class="ov-value-grid"></div>
       </section>
+      <section class="ov-panel ov-value-followup" id="ov-value-followup"></section>
+      <details class="ov-workload" id="ov-workload"><summary>查看全部工作量 <span>新增好友、发圈、消息与执行记录</span></summary><div id="ov-results" class="ov-panel"></div><span id="ov-results-help" hidden></span></details>
       <section class="ov-people" aria-labelledby="ov-people-title">
         <div class="ov-section-heading">
           <div>
             <h2 id="ov-people-title">
-              员工使用<span
+              主动使用情况<span
                 class="ov-help"
                 tabindex="0"
                 role="img"
@@ -10967,16 +10943,14 @@ setTimeout(sbScan,120);
             <div class="ov-point-meter-head">
               <span
                 >本期消耗 <b id="ov-points-total">0</b><small>点</small
-                ><em id="ov-points-used-share"></em
+                ><em hidden id="ov-points-used-share"></em
               ></span>
               <span
                 >当前剩余 <b>42,000</b><small>点</small
-                ><em id="ov-points-rest-share"></em
+                ><em hidden id="ov-points-rest-share"></em
               ></span>
             </div>
-            <div class="ov-point-meter-bar" role="img" aria-label="本期消耗与当前剩余占比">
-              <i id="ov-points-used-bar" class="used"></i><i class="rest"></i>
-            </div>
+
           </div>
           <div class="ov-section-heading">
             <h3 id="ov-point-ranking-title">员工消耗 Top 5</h3>
@@ -12073,7 +12047,72 @@ setTimeout(sbScan,120);
 
 .rea-ov-page .ov-resources {
   align-items: stretch;
-}</script>
+}
+/* Value overview: one company snapshot, four capability panels, then actionable records. */
+.rea-ov-page .ov-demo-note { color:#646A73; font-size:12px; margin:-16px 0 16px; }
+.rea-ov-page .ov-value-coverage { display:grid; grid-template-columns:minmax(260px,1fr) minmax(300px,1.2fr); gap:32px; align-items:center; margin-bottom:32px; }
+.rea-ov-page .ov-coverage-copy h2 { margin:8px 0; font-size:20px; font-weight:500; }
+.rea-ov-page .ov-coverage-copy strong { color:#1677FF; font-size:32px; font-weight:600; font-variant-numeric:tabular-nums; }
+.rea-ov-page .ov-coverage-copy p { color:#646A73; font-size:12px; margin-bottom:16px; }
+.rea-ov-page .ov-people-dots { display:grid; grid-template-columns:repeat(15,minmax(24px,1fr)); gap:8px; }
+.rea-ov-page .ov-person-dot { border:0; border-radius:6px; height:32px; padding:0; font-size:12px; background:#F7F8FA; color:#8F959E; }
+.rea-ov-page [data-kind="both"] { background:#1677FF; color:#FFFFFF; }
+.rea-ov-page [data-kind="active"] { background:#E6F4FF; color:#1677FF; }
+.rea-ov-page [data-kind="automatic"] { background:#FFFFFF; color:#1677FF; box-shadow:inset 0 0 0 1px #1677FF; }
+.rea-ov-page .ov-person-dot:hover { outline:2px solid #1677FF; outline-offset:2px; }
+.rea-ov-page .ov-person-dot:active { opacity:.7; }
+.rea-ov-page .ov-coverage-legend { display:flex; gap:8px 16px; flex-wrap:wrap; margin-top:16px; }
+.rea-ov-page .ov-coverage-legend button { display:flex; gap:8px; align-items:center; padding:0; border:0; background:none; color:#646A73; font-size:12px; }
+.rea-ov-page .ov-coverage-legend button:hover { color:#1677FF; }
+.rea-ov-page .ov-coverage-legend i { width:8px; height:8px; display:inline-block; background:#E5E8EF; border-radius:2px; }
+.rea-ov-page .ov-coverage-legend i[data-kind="both"] { background:#1677FF; }
+.rea-ov-page .ov-coverage-legend i[data-kind="active"] { background:#E6F4FF; }
+.rea-ov-page .ov-coverage-legend i[data-kind="automatic"] { background:#FFFFFF; }
+.rea-ov-page .ov-value-section { margin-bottom:24px; }
+.rea-ov-page .ov-value-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+.rea-ov-page .ov-value-scene { padding:24px; background:#FFFFFF; border:1px solid #E9EEF6; border-radius:12px; }
+.rea-ov-page .ov-value-scene h2 { display:flex; gap:8px; align-items:center; }
+.rea-ov-page .ov-scene-icon { color:#1677FF; display:flex; }
+.rea-ov-page .ov-scene-numbers { display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,1fr); gap:16px; align-items:center; }
+.rea-ov-page .ov-scene-numbers span { font-size:12px; color:#646A73; }
+.rea-ov-page .ov-scene-numbers b { display:block; font-size:32px; line-height:1.4; font-weight:600; font-variant-numeric:tabular-nums; margin:8px 0; }
+.rea-ov-page .ov-scene-numbers b small { font-size:14px; margin-left:8px; font-weight:400; color:#646A73; }
+.rea-ov-page .ov-scene-numbers p { color:#646A73; font-size:12px; }
+.rea-ov-page .ov-scene-secondary { border-left:1px solid #E5E8EF; padding-left:24px; }
+.rea-ov-page .ov-scene-secondary strong { display:block; font-size:20px; font-weight:600; margin:8px 0; }
+.rea-ov-page .ov-scene-foot { border-top:1px solid #E5E8EF; padding-top:16px; margin-top:24px; font-size:12px; color:#646A73; }
+.rea-ov-page .ov-value-followup { margin-bottom:24px; }
+.rea-ov-page .ov-followup-list { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:24px; }
+.rea-ov-page .ov-followup-list button { position:relative; border:0; border-right:1px solid #E5E8EF; padding:0 24px 0 0; text-align:left; background:none; }
+.rea-ov-page .ov-followup-list button:last-child { border-right:0; }
+.rea-ov-page .ov-followup-list button:hover b { color:#1677FF; }
+.rea-ov-page .ov-followup-list small { display:block; color:#646A73; margin-top:8px; font-size:12px; }
+.rea-ov-page .ov-followup-list i { position:absolute; right:8px; top:12px; font-style:normal; color:#1677FF; }
+.rea-ov-page .ov-workload { margin-bottom:32px; }
+.rea-ov-page .ov-workload summary { cursor:pointer; font-weight:500; padding:8px 0; }
+.rea-ov-page .ov-workload summary span { color:#646A73; font-size:12px; font-weight:400; margin-left:16px; }
+.rea-ov-page .ov-workload summary:focus-visible { outline:2px solid #1677FF; }
+.rea-ov-page .ov-workload[open] summary { margin-bottom:16px; }
+.rea-ov-page .ov-scene-definition { color:#646A73; margin-bottom:24px; max-width:960px; }
+.rea-ov-page .ov-scene-board { display:flex; align-items:center; gap:16px; border-top:1px solid #E5E8EF; margin-top:24px; padding-top:24px; }
+.rea-ov-page .ov-scene-board small { color:#646A73; font-size:12px; }
+.rea-ov-page .ov-point-meter-head { gap:24px; justify-content:flex-start; }
+.rea-ov-page .ov-point-meter-head > span { flex:1; }
+@media(max-width:1150px) {
+ .rea-ov-page .ov-value-coverage { grid-template-columns:1fr; gap:24px; }
+ .rea-ov-page .ov-value-grid { grid-template-columns:1fr; }
+ .rea-ov-page .ov-people-dots { max-width:680px; }
+}
+@media(max-width:640px) {
+ .rea-ov-page .ov-people-dots { grid-template-columns:repeat(10,minmax(20px,1fr)); }
+ .rea-ov-page .ov-followup-list { grid-template-columns:1fr; }
+ .rea-ov-page .ov-followup-list button { border-right:0; border-bottom:1px solid #E5E8EF; padding-bottom:16px; }
+ .rea-ov-page .ov-scene-numbers { grid-template-columns:1fr; }
+ .rea-ov-page .ov-scene-secondary { border-left:0; padding-left:0; }
+ .rea-ov-page .ov-value-coverage { grid-template-columns:minmax(0,1fr); }
+ .rea-ov-page .ov-scene-board { align-items:flex-start; flex-direction:column; }
+}
+</script>
 <script type="text/plain" id="srcOverviewScript">(function () {
   "use strict";
   const tiers = [
@@ -12147,15 +12186,15 @@ setTimeout(sbScan,120);
   };
   const sources = {
     tasks: {
-      name: "任务成果",
+      name: "任务执行",
       note: "含托管代跑的任务结果",
     },
     hosting: {
-      name: "AI托管成果",
+      name: "AI托管执行",
       note: "自动执行按成功回执计，托管时长按账号累加",
     },
     tools: {
-      name: "App 工具成果",
+      name: "App 工具",
       note: "员工主动使用 App 工具完成的工作",
     },
     material: {
@@ -12175,12 +12214,12 @@ setTimeout(sbScan,120);
       note: "按成功发布回执计，托管代跑在汇总时只计一次",
     },
     message: {
-      name: "主动触达客户",
+      name: "成功发送消息",
       unit: "条",
       note: "群发、自动回复和工具发送的成功消息条数",
     },
     aiReply: {
-      name: "AI辅助员工",
+      name: "AI建议采纳",
       unit: "次",
       note: "员工将 AI 建议填入、复制或发送计一次采纳，同次建议去重",
     },
@@ -12190,7 +12229,7 @@ setTimeout(sbScan,120);
       note: "员工主动复制、保存、一键发送或一键发圈",
     },
     hostingTask: {
-      name: "托管完成任务",
+      name: "托管执行记录",
       unit: "条",
       note: "托管代跑的任务与员工自建能力的执行记录，按完成回执计",
     },
@@ -12566,7 +12605,7 @@ setTimeout(sbScan,120);
   const messageMetric = (record) =>
     record.metric === "message" || record.metric === "friendSend";
   function withinWindow(record) {
-    return record.day < periods[period].days;
+    return record.day >= 0 && record.day < periods[period].days;
   }
   function companyRecords() {
     return allRecords.filter(withinWindow);
@@ -12750,62 +12789,123 @@ setTimeout(sbScan,120);
   };
   const ovIcon = (paths, size) =>
     `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths}</svg>`;
-  // 环比示意值：与上一等长周期（今日→昨日，近一周→前 7 天，近一月→前 30 天，近三月→前 90 天）相比。
-  const momRates = {
-    day: {
-      added: 6.2,
-      publish: -3.1,
-      message: 4.8,
-      aiReply: 12.4,
-      material: 1.8,
-      hostingTask: 5.6,
-      autoReply: -2.4,
-      firstTouch: 8.3,
-    },
-    week: {
-      added: 9.6,
-      publish: 4.2,
-      message: -1.7,
-      aiReply: 6.5,
-      material: 11.2,
-      hostingTask: -3.8,
-      autoReply: 2.9,
-      firstTouch: 5.1,
-    },
-    month: {
-      added: 12.4,
-      publish: 8.7,
-      message: 5.3,
-      aiReply: -2.6,
-      material: 15.8,
-      hostingTask: 7.4,
-      autoReply: 3.2,
-      firstTouch: -1.4,
-    },
-    quarter: {
-      added: 18.3,
-      publish: 14.1,
-      message: 9.8,
-      aiReply: 4.7,
-      material: 22.6,
-      hostingTask: 12.9,
-      autoReply: -6.2,
-      firstTouch: 3.5,
-    },
-  };
-  function momText(metric) {
-    const rate = momRates[period] ? momRates[period][metric] : null;
-    if (rate === null || rate === undefined) return "";
-    const arrow = rate < 0 ? "↓" : "↑";
-    const tone = rate < 0 ? " down" : "";
-    return `<em class="ov-mom${tone}" title="较上一等长周期 ${arrow}${Math.abs(rate).toFixed(1)}%">${arrow} ${Math.abs(rate).toFixed(1)}%</em>`;
-  }
-  function metricButton(metric, records, source, showMom = true) {
+  function metricButton(metric, records, source, showMom = false) {
     const item = metrics[metric];
     const value = metricValue(records, metric);
     const icon = ovIcon(METRIC_ICONS[metric] || METRIC_ICONS.message, 18);
-    return `<button type="button" class="ov-kpi" data-metric="${metric}" ${source ? `data-source="${source}"` : ""} data-value="${value}" title="${html(item.note)}"><span class="ov-kpi-head"><span class="ov-kpi-icon">${icon}</span><span class="ov-kpi-title">${item.name}<i aria-hidden="true">↗</i></span></span><span class="ov-kpi-value">${number(value)} <small>${item.unit}</small>${showMom ? momText(metric) : ""}</span></button>`;
+    return `<button type="button" class="ov-kpi" data-metric="${metric}" ${source ? `data-source="${source}"` : ""} data-value="${value}" title="${html(item.note)}"><span class="ov-kpi-head"><span class="ov-kpi-icon">${icon}</span><span class="ov-kpi-title">${item.name}<i aria-hidden="true">↗</i></span></span><span class="ov-kpi-value">${number(value)} <small>${item.unit}</small></span></button>`;
   }
+  // Supplemental demo evidence; these are new capture contracts, never inferred production telemetry.
+  const taskAssignments = [];
+  window.__REA_OVERVIEW_TASK_DATA.forEach((task) => {
+    const names = [task.creator];
+    for (let i = 0; names.length < task.need; i++) {
+      const name = employees[(task.id * 7 + i) % 24].name;
+      if (!names.includes(name)) names.push(name);
+    }
+    names.forEach((name, index) => taskAssignments.push({
+      id: `TASK-${task.id}-${index}`, task: task.id, day: -task.day,
+      employee: employees.find((person) => person.name === name).id,
+      done: index < task.done,
+    }));
+  });
+  const evidence = [];
+  allRecords.filter((r) => r.metric === 'aiReply' || (r.metric === 'material' && r.sequence % 3 === 0)).forEach((r) => {
+    const scene = r.metric === 'aiReply' ? 'assist' : 'material';
+    evidence.push({id: `SESSION-${r.id}`, scene, employee: r.employee, day: r.day,
+      shown: true, adopted: true, receipt: r.id,
+      action: r.action || ['填入输入框', '复制', '发送'][r.sequence % 3]});
+    if (r.sequence % 2 === 0) evidence.push({id: `NO-ADOPT-${r.id}`, scene, employee: r.employee,
+      day: r.day, shown: true, adopted: false, action: '未采纳'});
+  });
+  for (let day = 0; day < 90; day++) {
+    for (let i = 0; i < 12; i++) {
+      const n = day * 12 + i;
+      const success = n % 13 !== 0 && n % 17 !== 0;
+      evidence.push({id: `AUTO-ROUND-${n + 1}`, scene: 'auto', employee: hostIds[(day + i) % hostIds.length],
+        day, success, latency: success ? 4 + (n * 7 % 47) : null,
+        action: success ? '已回复' : n % 13 === 0 ? '生成失败' : '发送失败'});
+    }
+  }
+  const sceneNames = {material: '素材与销冠话术', tasks: '任务自动执行', auto: 'AI自动回复', assist: 'AI辅助回复'};
+  const sceneNotes = {
+    material: '取用人数统计主动复制、保存、一键发送与发圈。匹配采纳率仅看聊天中实际展示的匹配会话；同一会话至少取用一条匹配素材计为采纳。复制或保存不证明最终发送。',
+    tasks: '按本期下发任务统计执行人次，完成率为截至更新时间的已执行人次 ÷ 应执行人次。包含多平台任务；员工点击启动与旗舰版托管代跑不重复计数。',
+    auto: '统计已启用自动回复且命中回复规则的触发轮次。成功率为收到发送成功回执的轮次 ÷ 应回复轮次；一轮内多条回复只计一轮，失败重试沿用轮次 ID。成功表示发送成功，不代表客户满意。',
+    assist: '会话采纳率为至少采纳一条建议的辅助会话数 ÷ 实际展示过建议的辅助会话数。同一员工、同一聊天连续使用归一会话，切换聊天或连续 30 分钟无操作后结束。填入、复制与发送均计采纳，同一会话只计一次。采纳不等于回复质量或成交。',
+  };
+  const inScope = (r) => r.day >= 0 && r.day < periods[period].days &&
+    (route.org === 'all' || employees[r.employee].dept === route.org);
+  const sceneEvidence = (scene) => evidence.filter((r) => r.scene === scene && inScope(r));
+  const scopedAssignments = () => taskAssignments.filter(inScope);
+  const ratio = (a, b) => b ? `${(a / b * 100).toFixed(1)}%` : '—';
+  function valuePeople() {
+    const records = scopedRecords();
+    const active = new Set(records.filter((r) => r.metric === 'material' || r.metric === 'aiReply').map((r) => r.employee));
+    const automatic = new Set(records.filter((r) => !r.cohort && (r.sources.includes('tasks') || r.sources.includes('hosting'))).map((r) => r.employee));
+    sceneEvidence('auto').filter((r) => r.success).forEach((r) => automatic.add(r.employee));
+    return scopedEmployees().map((employee) => ({employee,
+      active: active.has(employee.id), automatic: automatic.has(employee.id),
+      kind: active.has(employee.id) ? automatic.has(employee.id) ? 'both' : 'active' : automatic.has(employee.id) ? 'automatic' : 'none'}));
+  }
+  const kindLabels = {both: '主动使用与自动执行都有', active: '仅主动使用', automatic: '仅自动执行', none: '暂无四项能力使用记录'};
+  function sceneStats(scene) {
+    const rows = sceneEvidence(scene);
+    if (scene === 'tasks') {
+      const assignments = scopedAssignments();
+      return {total: assignments.length, done: assignments.filter((r) => r.done).length,
+        users: new Set(assignments.filter((r) => r.done).map((r) => r.employee)).size};
+    }
+    return {total: rows.length, done: rows.filter((r) => scene === 'auto' ? r.success : r.adopted).length,
+      users: new Set(rows.filter((r) => scene === 'auto' ? r.success : r.adopted).map((r) => r.employee)).size};
+  }
+  function renderValue() {
+    const people = valuePeople(), used = people.filter((p) => p.kind !== 'none');
+    const n = people.length;
+    $('#ov-value-coverage').innerHTML = `<div class="ov-coverage-copy"><span class="ov-muted">团队有没有用起来</span><h2>已有 <strong>${used.length}</strong> / ${n} 名员工用上云小助</h2><p>主动取用素材、采纳建议，或有任务与自动回复的成功记录。</p><button class="ov-link" data-value-people="all">查看员工使用 →</button></div><div class="ov-coverage-people"><div class="ov-people-dots" aria-label="四项能力使用分布">${people.map((p) => `<button class="ov-person-dot" data-employee="${p.employee.id}" data-kind="${p.kind}" title="${html(p.employee.name)} · ${kindLabels[p.kind]}" aria-label="${html(p.employee.name)}，${kindLabels[p.kind]}">${html(p.employee.name.slice(-1))}</button>`).join('')}</div><div class="ov-coverage-legend">${Object.entries(kindLabels).map(([kind, label]) => `<button data-value-people="${kind}"><i data-kind="${kind}"></i>${label} <b>${people.filter((p) => p.kind === kind).length}</b></button>`).join('')}</div></div>`;
+    const records = scopedRecords(), mat = sceneStats('material'), task = sceneStats('tasks'), auto = sceneStats('auto'), assist = sceneStats('assist');
+    const cards = [
+      {id:'material', icon:'material', title:sceneNames.material, label:'取用员工', value:metricValue(records,'materialUsers'), unit:'人',
+        supporting:`${number(metricValue(records,'materialCount'))} 条素材被取用 · ${number(metricValue(records,'material'))} 次取用`,
+        label2:'聊天匹配采纳率', value2:ratio(mat.done,mat.total), note:`${mat.done} / ${mat.total} 次匹配会话有取用`,
+        foot:'只统计员工主动取用，任务机发另计。'},
+      {id:'tasks', icon:'taskExec', title:sceneNames.tasks, label:'任务完成率', value:ratio(task.done,task.total), unit:'',
+        supporting:`已执行 ${number(task.done)} / 应执行 ${number(task.total)} 人次`,
+        label2:'参与完成', value2:`${task.users} 人`, note:'点击启动与托管代跑均计入',
+        foot:'本期下发任务，截至更新时间的完成情况。'},
+      {id:'auto', icon:'autoReply', title:sceneNames.auto, label:'成功回复', value:auto.done, unit:'轮',
+        supporting:`应回复 ${number(auto.total)} 轮 · 成功率 ${ratio(auto.done,auto.total)}`,
+        label2:'未成功回复', value2:`${auto.total-auto.done} 轮`, note:'可查看生成失败与发送失败',
+        foot:'一轮多条消息只计一次，成功以发送回执为准。'},
+      {id:'assist', icon:'aiReply', title:sceneNames.assist, label:'会话采纳率', value:ratio(assist.done,assist.total), unit:'',
+        supporting:`${assist.done} / ${assist.total} 次辅助会话有采纳`,
+        label2:'采纳员工', value2:`${assist.users} 人`, note:`共采纳 ${number(metricValue(records,'aiReply'))} 次建议`,
+        foot:'填入、复制、发送计采纳；同次会话不重复。'},
+    ];
+    $('#ov-value-scenes').innerHTML = cards.map((c) => `<section class="ov-value-scene" data-scene-card="${c.id}"><div class="ov-section-heading"><h2><span class="ov-scene-icon">${ovIcon(METRIC_ICONS[c.icon],20)}</span>${c.title}${helpSpan(sceneNotes[c.id])}</h2><button class="ov-link" data-scene="${c.id}">查看详情 →</button></div><div class="ov-scene-numbers"><div><span>${c.label}</span><b>${typeof c.value === 'number' ? number(c.value) : c.value}<small>${c.unit}</small></b><p>${c.supporting}</p></div><div class="ov-scene-secondary"><span>${c.label2}</span><strong>${c.value2}</strong><p>${c.note}</p></div></div><p class="ov-scene-foot">${c.foot}</p></section>`).join('');
+    const none = people.filter((p) => p.kind === 'none').length;
+    const outstanding = task.total-task.done, failed = auto.total-auto.done;
+    $('#ov-value-followup').innerHTML = `<div class="ov-section-heading"><h2>值得跟进</h2><span class="ov-muted">先查看记录，再判断原因</span></div><div class="ov-followup-list"><button data-value-people="none"><span><b>${none} 人</b> 暂无四项能力使用记录</span><small>核实适用场景与配置</small><i>→</i></button><button data-scene="tasks" data-outcome="pending"><span><b>${number(outstanding)} 人次</b> 任务尚未完成</span><small>查看本期下发的任务</small><i>→</i></button><button data-scene="auto" data-outcome="failed"><span><b>${failed} 轮</b> 自动回复未成功</span><small>查看失败记录与原因</small><i>→</i></button></div>`;
+    $('#ov-value-period').textContent = `${dateLabel(periods[period].days-1)} — ${dateLabel()} · ${route.org === 'all' ? '全公司' : route.org}`;
+  }
+  function renderSceneDetail() {
+    const scene = route.scene, stats = sceneStats(scene);
+    let body = `<p class="ov-scene-definition">${sceneNotes[scene]}</p>`;
+    if (scene === 'tasks') {
+      body += summary([['已执行',stats.done,'人次'],['应执行',stats.total,'人次'],['完成率',stats.total ? (stats.done/stats.total*100).toFixed(1) : '—','%']]);
+      const rows = scopedAssignments().filter((r) => (!route.outcome || route.outcome !== 'pending' || !r.done) && `${employees[r.employee].name}${employees[r.employee].dept}任务 ${r.task}`.includes(filters.query));
+      body += `<h3 class="ov-detail-heading">${route.outcome === 'pending' ? '尚未完成的执行人次' : '任务执行人次'}</h3>` + form() + table(['任务','员工','下发日期','当前执行情况'], rows.map((r) => [`任务 #${r.task}`,employeeLink(r.employee),dateLabel(r.day),r.done?'已执行':'尚未完成']),true);
+      body += '<p class="ov-footnote">尚未完成包含仍在有效期内与已到期的任务，请进入任务看板核实有效期后安排跟进。</p>';
+    } else {
+      body += summary([[scene === 'auto' ? '成功回复' : '有采纳会话',stats.done,scene === 'auto'?'轮':'次'],[scene === 'auto'?'应回复':'已展示会话',stats.total,scene === 'auto'?'轮':'次'],['参与员工',stats.users,'人']]);
+      let rows = sceneEvidence(scene).filter((r) => (!route.outcome || route.outcome !== 'failed' || !r.success) && `${employees[r.employee].name}${employees[r.employee].dept}${r.id}${r.action}`.includes(filters.query));
+      body += `<h3 class="ov-detail-heading">${route.outcome === 'failed' ? '未成功回复的轮次' : scene === 'auto' ? '自动回复轮次' : '会话采纳记录'}</h3>` + form() + table(['日期','会话／轮次编号','员工','结果',scene === 'auto'?'回复耗时':'关联取用记录'], rows.sort((a,b)=>a.day-b.day).map((r) => [dateLabel(r.day),r.id,employeeLink(r.employee),r.action,scene === 'auto' ? r.success ? r.latency+' 秒' : '—' : r.receipt||'—']),true);
+      if (scene === 'material') body += `<h3 class="ov-detail-heading">全部主动取用</h3>${summary([['取用员工',metricValue(scopedRecords(),'materialUsers'),'人'],['被取用素材',metricValue(scopedRecords(),'materialCount'),'条']])}<button class="ov-link" data-metric="material">查看复制、保存与发送记录 →</button>`;
+    }
+    if (scene === 'material' || scene === 'tasks') body += `<div class="ov-scene-board"><button class="ov-link" data-value-board="${scene}">打开${scene === 'material'?'素材':'任务'}看板 →</button><small>专题看板以全公司范围打开，继承时间；返回保留当前部门。</small></div>`;
+    return body;
+  }
+
   function renderResults() {
     const records = scopedRecords();
     const help =
@@ -12856,7 +12956,7 @@ setTimeout(sbScan,120);
       : 0;
     const cards = [
       ["活跃员工", used.length, "人", "", "used"],
-      ["未使用", stats.length - used.length, "人", "", "idle"],
+      ["未主动使用", stats.length - used.length, "人", "", "idle"],
       [
         "活跃覆盖率",
         stats.length ? ((used.length / stats.length) * 100).toFixed(1) : 0,
@@ -13080,11 +13180,8 @@ setTimeout(sbScan,120);
       .join("");
     const total = sum(pointRecords());
     const rest = 42000;
-    const usedShare = total + rest ? total / (total + rest) : 0;
+    
     $("#ov-points-total").textContent = number(total);
-    $("#ov-points-used-share").textContent = `${(usedShare * 100).toFixed(0)}%`;
-    $("#ov-points-rest-share").textContent = `${((1 - usedShare) * 100).toFixed(0)}%`;
-    $("#ov-points-used-bar").style.width = `${usedShare * 100}%`;
     $("#ov-point-ranking-title").textContent =
       pointsTab === "employee" ? "员工消耗 Top 5" : "功能消耗分布";
     const groups = pointGroups(pointsTab);
@@ -13116,7 +13213,7 @@ setTimeout(sbScan,120);
         ? `<select name="status" aria-label="员工活跃状态">${[
             ["all", "全部员工"],
             ["used", "主动活跃"],
-            ["idle", "未使用"],
+            ["idle", "未主动使用"],
           ]
             .map(
               ([id, name]) =>
@@ -13161,7 +13258,14 @@ setTimeout(sbScan,120);
     let title = "使用详情",
       body = "";
     const scope = route.org === "all" ? "全公司" : route.org;
-    if (route.view === "metric") {
+    if (route.view === "scene") {
+      title = sceneNames[route.scene];
+      body = renderSceneDetail();
+    } else if (route.view === "valuePeople") {
+      title = route.kind && route.kind !== 'all' ? kindLabels[route.kind] : '四项能力使用员工';
+      const rows = valuePeople().filter((p) => (!route.kind || route.kind === 'all' || p.kind === route.kind) && `${p.employee.name}${p.employee.dept}`.includes(filters.query));
+      body = '<p class="ov-scene-definition">主动使用指素材取用与AI建议采纳；自动执行指成功任务结果、托管或AI自动回复。四种状态互斥，同一员工只计一次。</p>' + form() + table(['员工','部门','素材／AI建议主动使用','任务／AI自动回复','本期状态'],rows.map((p) => [employeeLink(p.employee.id),html(p.employee.dept),p.active?'有记录':'暂无',p.automatic?'有记录':'暂无',kindLabels[p.kind]]),true,`共 ${rows.length} 名员工`);
+    } else if (route.view === "metric") {
       const metric = route.metric;
       const selected = selectMetric(records, metric).filter(
         (record) => !route.source || record.sources.includes(route.source),
@@ -13259,7 +13363,7 @@ setTimeout(sbScan,120);
         summary([
           ["活跃员工", stats.filter((item) => item.days > 0).length, "人"],
           ["已分配员工", stats.length, "人"],
-          ["未使用", stats.filter((item) => !item.days).length, "人"],
+          ["未主动使用", stats.filter((item) => !item.days).length, "人"],
         ]) +
         (route.frequency
           ? `<p class="ov-filter-chip"><span>使用天数 · ${frequencyLabel(route.frequency)}</span><button type="button" class="ov-chip-x" data-action="clear-frequency" aria-label="清除使用天数筛选">×</button></p>`
@@ -13305,7 +13409,7 @@ setTimeout(sbScan,120);
           ["使用次数", active.count, "次"],
           ["托管执行", hostingLog(own), "条"],
           ["素材取用", metricValue(own, "material"), "次"],
-          ["AI辅助员工", metricValue(own, "aiReply"), "次"],
+          ["AI建议采纳", metricValue(own, "aiReply"), "次"],
         ]);
       const selected = route.metric
         ? selectMetric(own, route.metric).filter(
@@ -13486,6 +13590,7 @@ setTimeout(sbScan,120);
       hour12: false,
     });
     if (route.view === "home") {
+      renderValue();
       renderResults();
       renderPeople();
       renderFeatures();
@@ -13495,15 +13600,20 @@ setTimeout(sbScan,120);
     renderTree();
   }
   function definitions() {
-    $("#ov-dialog-body").innerHTML =
-      "<p>业务成果按结果跨来源汇总。托管代跑的任务具有同一个事件 ID，可以同时属于两个看板，跨来源汇总只计一次。不同单位的指标分别阅读。</p><p>环比对比的是上一等长周期：今日对昨日，近一周、近一月、近三月分别对前 7、30、90 天。</p><p>主动活跃按员工主动完成操作或取用素材的日期去重，自动托管执行单独展示覆盖情况。人均活跃天数以本期活跃员工为分母。使用次数按员工主动操作标识去重，一次批量操作计一次，重复回执只计一次。自动托管执行与任务台账汇总另计。热门功能只统计 App 工具的主动使用次数。</p><p>业务成果按回执发生时间统计。已执行任务沿用任务下发时间口径。发出好友申请与加好友成功确认分别记录。</p><p>每日活跃员工按当日主动使用去重人数计；虚线为当期已分配员工数，用来对照当天有多少人用上了。</p><p>AI 点数按扣费流水统计，员工采纳次数与扣费次数分别记账。员工归属与功能汇总能对上企业本期消耗。横条按本期消耗与当前剩余的相对比例绘制。</p><p>新增结果、主动活跃、逐人点数和逐条记录均为演示数据。查看现有独立看板时，页头摘要显示同口径成果；原有分析区按各页现行口径展开。目标页全公司范围在页头标明，返回恢复来源部门。</p>";
+    $("#ov-dialog-body").innerHTML = '<p>本页为演示数据。四项能力分别核对使用与执行情况，不合成价值分数，也不将执行量换算成收入或节省工时。</p><p>团队覆盖按素材取用、AI建议采纳、任务成功结果及AI自动回复记录去重员工。主动使用与自动执行可能重叠，分布以四种互斥状态展示。</p><p>聊天匹配会话、辅助会话与自动回复轮次是本次新增的采集设计，原型用独立演示记录展示分母、失败与未采纳。正式接入前需核实采集完整性；未接入显示“未接入”，不能显示为零。</p><p>素材取用和结果回执按发生时间筛选；任务完成率按本期下发任务统计截至更新时间的执行情况。成功发送消息统计条数，不代表去重客户或阅读人数。采纳不证明最终发送、回复质量或成交。</p><p>自动通过好友并打招呼属于规则触发的自动动作，工作量单列，不作为下发任务完成率的分母。</p><p>主动使用情况保留原有App工具范围。它比顶部四项能力的主动使用范围更宽，托管执行不计主动活跃。企业资源始终为全公司，消耗按所选期间、余额和席位为当前存量。</p>';
     $("#ov-dialog").showModal();
   }
   document.addEventListener("click", (event) => {
     const button = event.target.closest("button");
     if (!button || button.disabled) return;
     const data = button.dataset;
-    if (data.sort) {
+    if (data.scene) navigate({view:'scene',scene:data.scene,...(data.outcome ? {outcome:data.outcome} : {})});
+    else if (data.valuePeople) navigate({view:'valuePeople',kind:data.valuePeople});
+    else if (data.valueBoard) {
+      const key = data.valueBoard;
+      const target = key === 'material' ? '企业微信看板' : '微小助看板';
+      parent.postMessage({reaPage:target,reaOverview:stateFor({view:'home',org:homeOrg}),reaBoardWindow:{day:'today',week:'w7',month:'m1',quarter:'m3'}[period]},'*');
+    } else if (data.sort) {
       peopleSort = { tab: peopleTab, key: data.sort };
       renderPeople();
     } else if (data.period) {
@@ -13595,6 +13705,7 @@ setTimeout(sbScan,120);
         status: route.status || "all",
       };
       recordPage = 1;
+      if (route.outcome) delete route.outcome;
       renderDetail();
       syncPressed();
     }
