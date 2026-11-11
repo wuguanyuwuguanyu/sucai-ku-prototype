@@ -11175,8 +11175,10 @@ setTimeout(sbScan,120);
 }
 .rea-ov-page .ov-help::after {
   content: attr(data-tip);
+  display: none;
   position: absolute;
-  left: 0;
+  left: auto;
+  right: 0;
   top: calc(100% + 9px);
   z-index: 60;
   width: max-content;
@@ -11202,6 +11204,7 @@ setTimeout(sbScan,120);
 }
 .rea-ov-page .ov-help:hover::after,
 .rea-ov-page .ov-help:focus-visible::after {
+  display: block;
   opacity: 1;
   visibility: visible;
   transform: none;
@@ -12054,7 +12057,7 @@ setTimeout(sbScan,120);
 .rea-ov-page .ov-coverage-copy h2 { margin:8px 0; font-size:20px; font-weight:500; }
 .rea-ov-page .ov-coverage-copy strong { color:#1677FF; font-size:32px; font-weight:600; font-variant-numeric:tabular-nums; }
 .rea-ov-page .ov-coverage-copy p { color:#646A73; font-size:12px; margin-bottom:16px; }
-.rea-ov-page .ov-people-dots { display:grid; grid-template-columns:repeat(15,minmax(24px,1fr)); gap:8px; }
+.rea-ov-page .ov-people-dots { display:grid; grid-template-columns:repeat(15,minmax(0,1fr)); gap:8px; }
 .rea-ov-page .ov-person-dot { border:0; border-radius:6px; height:32px; padding:0; font-size:12px; background:#F7F8FA; color:#8F959E; }
 .rea-ov-page [data-kind="both"] { background:#1677FF; color:#FFFFFF; }
 .rea-ov-page [data-kind="active"] { background:#E6F4FF; color:#1677FF; }
@@ -12317,7 +12320,7 @@ setTimeout(sbScan,120);
           "'": "&#39;",
         })[character],
     );
-  const number = (value) => Number(value).toLocaleString("zh-CN");
+  const number = (value) => Number.isFinite(Number(value)) ? Number(value).toLocaleString("zh-CN") : String(value);
   const sum = (records, field = "qty") =>
     records.reduce((total, record) => total + record[field], 0);
   const saved = window.__REA_OVERVIEW_NAV || {};
@@ -12713,6 +12716,7 @@ setTimeout(sbScan,120);
       peopleTab,
       pointsTab,
       peopleSort,
+      workloadOpen: $("#ov-workload").open,
       homeOrg,
       scroll: homeScroll,
       org: next.org,
@@ -12804,7 +12808,7 @@ setTimeout(sbScan,120);
       if (!names.includes(name)) names.push(name);
     }
     names.forEach((name, index) => taskAssignments.push({
-      id: `TASK-${task.id}-${index}`, task: task.id, day: -task.day,
+      id: `TASK-${task.id}-${index}`, task: task.id, title: task.title || `任务 #${task.id}`, day: -task.day,
       employee: employees.find((person) => person.name === name).id,
       done: index < task.done,
     }));
@@ -12868,7 +12872,7 @@ setTimeout(sbScan,120);
       {id:'material', icon:'material', title:sceneNames.material, label:'取用员工', value:metricValue(records,'materialUsers'), unit:'人',
         supporting:`${number(metricValue(records,'materialCount'))} 条素材被取用 · ${number(metricValue(records,'material'))} 次取用`,
         label2:'聊天匹配采纳率', value2:ratio(mat.done,mat.total), note:`${mat.done} / ${mat.total} 次匹配会话有取用`,
-        foot:'只统计员工主动取用，任务机发另计。'},
+        foot:'只统计员工主动取用，自动任务发送另计。'},
       {id:'tasks', icon:'taskExec', title:sceneNames.tasks, label:'任务完成率', value:ratio(task.done,task.total), unit:'',
         supporting:`已执行 ${number(task.done)} / 应执行 ${number(task.total)} 人次`,
         label2:'参与完成', value2:`${task.users} 人`, note:'点击启动与托管代跑均计入',
@@ -12893,8 +12897,8 @@ setTimeout(sbScan,120);
     let body = `<p class="ov-scene-definition">${sceneNotes[scene]}</p>`;
     if (scene === 'tasks') {
       body += summary([['已执行',stats.done,'人次'],['应执行',stats.total,'人次'],['完成率',stats.total ? (stats.done/stats.total*100).toFixed(1) : '—','%']]);
-      const rows = scopedAssignments().filter((r) => (!route.outcome || route.outcome !== 'pending' || !r.done) && `${employees[r.employee].name}${employees[r.employee].dept}任务 ${r.task}`.includes(filters.query));
-      body += `<h3 class="ov-detail-heading">${route.outcome === 'pending' ? '尚未完成的执行人次' : '任务执行人次'}</h3>` + form() + table(['任务','员工','下发日期','当前执行情况'], rows.map((r) => [`任务 #${r.task}`,employeeLink(r.employee),dateLabel(r.day),r.done?'已执行':'尚未完成']),true);
+      const rows = scopedAssignments().filter((r) => (!route.outcome || route.outcome !== 'pending' || !r.done) && `${employees[r.employee].name}${employees[r.employee].dept}${r.title}`.includes(filters.query));
+      body += `<h3 class="ov-detail-heading">${route.outcome === 'pending' ? '尚未完成的执行人次' : '任务执行人次'}</h3>` + form() + table(['任务','员工','下发日期','当前执行情况'], rows.map((r) => [`${html(r.title)}<small>任务 #${r.task}</small>`,employeeLink(r.employee),dateLabel(r.day),r.done?'已执行':'尚未完成']),true);
       body += '<p class="ov-footnote">尚未完成包含仍在有效期内与已到期的任务，请进入任务看板核实有效期后安排跟进。</p>';
     } else {
       body += summary([[scene === 'auto' ? '成功回复' : '有采纳会话',stats.done,scene === 'auto'?'轮':'次'],[scene === 'auto'?'应回复':'已展示会话',stats.total,scene === 'auto'?'轮':'次'],['参与员工',stats.users,'人']]);
@@ -13179,8 +13183,6 @@ setTimeout(sbScan,120);
       )
       .join("");
     const total = sum(pointRecords());
-    const rest = 42000;
-    
     $("#ov-points-total").textContent = number(total);
     $("#ov-point-ranking-title").textContent =
       pointsTab === "employee" ? "员工消耗 Top 5" : "功能消耗分布";
@@ -13420,6 +13422,9 @@ setTimeout(sbScan,120);
         `<h3 class="ov-detail-heading">${route.metric ? metrics[route.metric].name + " · " : ""}使用记录${route.metric ? helpSpan(metrics[route.metric].note) : ""}</h3>` +
         form({ source: !route.source }) +
         recordTable(selected, route.metric);
+      const ownEvidence = evidence.filter((r) => inScope(r) && r.employee === employee.id && `${r.id}${r.action}${sceneNames[r.scene]}`.includes(filters.query));
+      body += '<h3 class="ov-detail-heading">匹配、辅助会话与自动回复轮次</h3>' + table(['日期','场景','会话／轮次','结果'], ownEvidence.sort((a,b)=>a.day-b.day).slice(0,10).map((r)=>[dateLabel(r.day),sceneNames[r.scene],r.id,r.action]));
+      body += `<p class="ov-footnote">最近 10 条会话或轮次 · 共 ${ownEvidence.length} 条</p><div class="ov-scene-board">${['material','assist','auto'].map((scene)=>`<button class="ov-link" data-scene="${scene}" data-scene-employee="${html(employee.name)}">查看${sceneNames[scene]}记录 →</button>`).join('')}</div>`;
     } else if (route.view === "points") {
       title =
         route.employee !== undefined
@@ -13607,12 +13612,12 @@ setTimeout(sbScan,120);
     const button = event.target.closest("button");
     if (!button || button.disabled) return;
     const data = button.dataset;
-    if (data.scene) navigate({view:'scene',scene:data.scene,...(data.outcome ? {outcome:data.outcome} : {})});
+    if (data.scene) navigate({view:'scene',scene:data.scene,...(data.outcome ? {outcome:data.outcome} : {}),...(data.sceneEmployee ? {filters:{query:data.sceneEmployee,source:'all',feature:'all',status:'all'}} : {})});
     else if (data.valuePeople) navigate({view:'valuePeople',kind:data.valuePeople});
     else if (data.valueBoard) {
       const key = data.valueBoard;
       const target = key === 'material' ? '企业微信看板' : '微小助看板';
-      parent.postMessage({reaPage:target,reaOverview:stateFor({view:'home',org:homeOrg}),reaBoardWindow:{day:'today',week:'w7',month:'m1',quarter:'m3'}[period]},'*');
+      parent.postMessage({reaPage:target,reaOverview:stateFor({view:'home',org:homeOrg})},'*');
     } else if (data.sort) {
       peopleSort = { tab: peopleTab, key: data.sort };
       renderPeople();
@@ -13727,6 +13732,7 @@ setTimeout(sbScan,120);
   if (route.filters) filters = route.filters;
   else if (route.status) filters.status = route.status;
   recordPage = route.recordPage || 1;
+  $("#ov-workload").open = saved.workloadOpen || false;
   render();
   requestAnimationFrame(() => {
     scroller().scrollTop =
@@ -27665,6 +27671,14 @@ function renderAll(){
 }
 function applyWin(w){
   CURW=w;
+  /* 来自总览的窗口与按钮选中态一起恢复，不能只改数据。 */
+  document.querySelectorAll('[data-mb-win]').forEach(function(label){
+    var selected=label.getAttribute('data-mb-win')===w;
+    label.classList.toggle('ant-radio-button-wrapper-checked',selected);
+    var radio=label.querySelector('.ant-radio-button'),input=label.querySelector('input');
+    if(radio)radio.classList.toggle('ant-radio-button-checked',selected);
+    if(input)input.checked=selected;
+  });
   /* 粒度跟跨度自动定：31 天以内按日，更长按周（PRD §2.3）。 */
   var span=(WIN[w][1]-WIN[w][0])+1;
   GRAN=span>31?"week":"day";
@@ -30574,6 +30588,7 @@ syncTip();drawRows();
       return {id:+row.getAttribute('data-bd-row'),day:+row.getAttribute('data-bd-day'),
         done:+row.getAttribute('data-bd-done'),need:+row.getAttribute('data-bd-need'),
         creator:row.querySelectorAll('td')[2].textContent.trim(),
+        title:row.querySelectorAll('td')[0].textContent.trim(),
         platform:row.getAttribute('data-bd-plat')};
     });
     return 'window.__REA_OVERVIEW_TASK_DATA='+reaJson(rows)+';'
@@ -31898,6 +31913,10 @@ document.addEventListener('click',function(event){
     if (name && name !== REA_MB_PAGE && name !== REA_MB_MAT_DETAIL) reaMbState = null;
     if(d.reaOverview){
       reaOverviewNav=d.reaOverview;reaOverviewTarget=name;
+      if(name===REA_BOARD_PAGE&&d.reaOverview.period){
+        reaWinSel={day:'today',week:'w7',month:'m1',quarter:'m3'}[d.reaOverview.period]||'m1';
+        reaWinRange=null;reaOrgSel='all';
+      }
       /* 从使用总览的成果格进来时，把这边的窗口落成来源那一档，免得来源写着近一月、页面却在近一周 */
       if(name===REA_HOST_PAGE&&d.reaOverview.period){
         reaHostWinSel={'day':'today','week':'w7','month':'m1','quarter':'m3'}[d.reaOverview.period]||reaHostWinSel;
