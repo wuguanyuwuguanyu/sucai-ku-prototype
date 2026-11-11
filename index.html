@@ -1104,13 +1104,35 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .cw-cfg span{display:flex;align-items:baseline;gap:4px;margin-right:14px}
 .cw-cfg i{font-style:normal;font-size:11.5px;font-weight:600;color:#95A3B8}
 /* AI 结果：一人一张卡，行尾三枚图标 */
-.cw-aicard{background:#fff;border-radius:16px;padding:12px 14px;margin-top:10px;
+.cw-aicard{position:relative;overflow:hidden;background:#fff;border-radius:16px;padding:12px 14px;margin-top:10px;
   box-shadow:0 12px 24px -24px rgba(40,70,150,.9)}
 .cw-aichd{display:flex;align-items:center;gap:8px}
 .cw-aichd .cw-av{width:28px;height:28px;font-size:12px}
 .cw-aichd .nm{flex:1;min-width:0;font-size:13.5px;font-weight:600;color:#152C50}
 .cw-aicard .tx{margin-top:6px;font-size:13.5px;font-weight:500;color:#3D5578;line-height:1.55;overflow-wrap:anywhere}
 .cw-aicard.bad .tx{color:#C2413A}
+/* 生成中 → 生成完：一批人是**并发**生成的（Prompt 规格 §1：并发 3–5），所以每张卡各自从骨架
+   走到正文，不是整批一起亮。生成中＝两行微光骨架＋行尾转圈；回来＝卡身上浮淡入，
+   再扫一道浅蓝光点出「这一张刚好了」。不做整批进度条：十来个人长短不一，条会一直卡在 99%。 */
+.cw-aispin{flex:none;width:15px;height:15px;border-radius:50%;
+  border:2px solid #D8E4FA;border-top-color:#2E6BFF;animation:cwSpin .8s linear infinite}
+.cw-skel{display:flex;flex-direction:column;gap:8px;margin-top:9px}
+.cw-skel i{display:block;height:10px;border-radius:5px;
+  background:linear-gradient(90deg,#EDF2FB 25%,#E2EBFA 45%,#EDF2FB 65%);background-size:220% 100%;
+  animation:cwShimmer 1.2s linear infinite}
+.cw-skel i:first-child{width:92%}
+.cw-skel i:last-child{width:58%}
+@keyframes cwSpin{to{transform:rotate(360deg)}}
+@keyframes cwShimmer{from{background-position:120% 0}to{background-position:-120% 0}}
+.cw-aicard.in{animation:cwCardIn .3s var(--emph) both}
+.cw-aicard.in::after{content:"";position:absolute;inset:0;border-radius:16px;pointer-events:none;
+  background:linear-gradient(100deg,rgba(255,255,255,0) 38%,rgba(206,224,255,.75) 50%,rgba(255,255,255,0) 62%);
+  background-size:250% 100%;animation:cwSweep .8s linear both}
+@keyframes cwCardIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes cwSweep{from{background-position:130% 0}to{background-position:-130% 0}}
+@media (prefers-reduced-motion:reduce){
+  .cw-aispin,.cw-skel i,.cw-aicard.in,.cw-aicard.in::after{animation:none}
+}
 /* 设置弹层：话术生成 / 发送 两组 */
 .cw-grp{font-size:11.5px;font-weight:700;color:#95A3B8;letter-spacing:.04em;margin:16px 0 2px}
 .cw-grp:first-of-type{margin-top:8px}
@@ -5185,6 +5207,11 @@ var CW_FIXED=[
   {t:'text',c:'要不要我拍两张细节图给你？'}
 ];
 var CW_AI={}, CW_FAIL={}, CW_AI_ROUND=0;
+/* AI 话术是**一人一条并发生成**的（Prompt 规格：并发 3–5）。原型用定时器把这件事演出来：
+   每张卡各自从骨架走到正文。令牌按人记——单人重生成／整批重来／×掉他，旧定时器回来时
+   令牌已经换了，结果直接丢掉，不会晚一步盖掉新内容。 */
+var CW_PEND={}, CW_TOK={}, CW_QUEUE=[], CW_JOBS=[], CW_RUNNING=0, CW_FLASH={}, CW_FLUSHING=false;
+var CW_MAXC=4;
 /* 内容主题：必填，预填上次用过的值。CW_GEN＝AI 这次已经点过「生成话术」，
    决定内容页画表单还是画结果；改主题就退回表单，结果不作数。 */
 var CW_TOPIC='秋季新品到店', CW_GEN=false;
@@ -5352,33 +5379,75 @@ function cwAiText(c,r){
   return T[(k+r*3)%T.length];
 }
 function cwAiOk(){ return cwSelIds().filter(function(id){return CW_AI[id]!=null&&!CW_FAIL[id]}); }
-function cwEnsureAi(){
-  cwSelIds().forEach(function(id){
-    if(CW_AI[id]!=null||CW_FAIL[id])return;
-    if(id==='a4'&&CW_AI_ROUND===0){ CW_FAIL[id]='聊天记录太少'; return; }
-    CW_AI[id]=cwAiText(cwCust(id),CW_AI_ROUND);
+function cwAiJobDur(id){
+  /* 时长按客户错开，快慢有别才像各自在跑；固定下来也方便冒烟复现。 */
+  var k=0,i; for(i=0;i<id.length;i++)k+=id.charCodeAt(i)*(i+3);
+  return 760+(k%8)*130;
+}
+function cwAiBegin(ids){
+  ids.forEach(function(id){
+    CW_QUEUE=CW_QUEUE.filter(function(j){return j.id!==id});
+    CW_TOK[id]=(CW_TOK[id]||0)+1;
+    CW_PEND[id]=1;
+    CW_QUEUE.push({id:id,tok:CW_TOK[id],dur:cwAiJobDur(id)});
   });
+  cwAiPump();
+}
+function cwAiPump(){
+  while(CW_RUNNING<CW_MAXC&&CW_QUEUE.length){
+    var job=CW_QUEUE.shift();
+    CW_RUNNING++; CW_JOBS.push(job);
+    job.tm=setTimeout(function(j){return function(){cwAiDone(j)}}(job),job.dur);
+  }
+}
+function cwAiDone(job){
+  clearTimeout(job.tm);
+  var k=CW_JOBS.indexOf(job); if(k>=0)CW_JOBS.splice(k,1);
+  if(CW_RUNNING>0)CW_RUNNING--;
+  if(CW_TOK[job.id]===job.tok){
+    delete CW_PEND[job.id];
+    if(job.id==='a4'&&CW_AI_ROUND===0)CW_FAIL[job.id]='聊天记录太少';
+    else CW_AI[job.id]=cwAiText(cwCust(job.id),CW_AI_ROUND);
+    CW_FLASH[job.id]=1;
+    if(!CW_FLUSHING&&cur==='cw-content'&&CW_GEN&&CW_STRAT==='ai')cwAiPatch(job.id);
+  }
+  cwAiPump();
+}
+function cwAiCancel(id){
+  CW_QUEUE=CW_QUEUE.filter(function(j){return j.id!==id});
+  delete CW_PEND[id];
+  CW_TOK[id]=(CW_TOK[id]||0)+1;
+}
+/* 冒烟用：把所有在排队／在跑的生成一次跑完（真机上是各自 setTimeout 回来）。 */
+function cwAiFlush(){
+  var guard=0; CW_FLUSHING=true;
+  while((CW_JOBS.length||CW_QUEUE.length)&&guard++<500){
+    if(CW_JOBS.length)cwAiDone(CW_JOBS[0]);
+    else cwAiPump();
+  }
+  CW_FLUSHING=false;
+  if(cur==='cw-content')REND['cw-content']();
 }
 /* 先填主题，再点生成。生成前不可能缺主题，也不会在用户没说「这次想说什么」时白花一次生成。 */
 function cwGen(){
   if(!CW_TOPIC.trim()){ toast('先写这次想说什么'); return; }
   /* 从结果页点「主题」退回表单再生成＝换了个说法，整批作废重来；第一次生成时不清。 */
-  var had=false, k; for(k in CW_AI)had=true;
+  var had=false, k; for(k in CW_AI)had=true; for(k in CW_FAIL)had=true;
   if(had){ CW_AI_ROUND++; CW_AI={}; CW_FAIL={}; }
-  CW_GEN=true; cwEnsureAi(); REND['cw-content']();
+  CW_GEN=true; cwAiBegin(cwSelIds()); REND['cw-content']();
 }
 function cwRegen(){
   CW_AI_ROUND++; CW_AI={}; CW_FAIL={};
-  cwEnsureAi(); REND['cw-content'](); toast('已全部重新生成');
+  cwAiBegin(cwSelIds()); REND['cw-content']();
 }
 function cwRegenOne(id){
-  CW_AI_ROUND++; delete CW_FAIL[id];
-  CW_AI[id]=cwAiText(cwCust(id),CW_AI_ROUND);
-  REND['cw-content'](); toast('已重新生成 '+cwCust(id).n+' 的话术');
+  CW_AI_ROUND++; delete CW_FAIL[id]; delete CW_AI[id];
+  cwAiBegin([id]); REND['cw-content']();
 }
 /* × ＝ 这次不唤醒他：卡片拿掉，名单里同步取消勾选。要找回来走「名单 → 勾上 → 补生成」。 */
 function cwDelAi(id){
   var c=cwCust(id), t=CW_AI[id], f=CW_FAIL[id], wasSel=CW_SEL[id]!==false;
+  cwAiCancel(id);
   delete CW_AI[id]; delete CW_FAIL[id]; CW_SEL[id]=false;
   REND['cw-content']();
   toast('这次不唤醒 '+c.n,'撤销',function(){
@@ -5464,6 +5533,41 @@ function cwSentRow(){
   return '<button class="cw-srow" onclick="cwEditList()"><span>发给</span><b>'+ids.length+' 人</b>'
     +'<span class="cw-sub">'+sub+'</span><span class="cw-chev">›</span></button>';
 }
+/* 一张 AI 结果卡：生成中画骨架，回来了落正文（成功）或原因（失败）。
+   data-aic 让并发回包能只换那一张，不必整页重绘——重绘会把其余骨架的微光一起打回起点。 */
+function cwAiCardHtml(id,fresh){
+  var c=cwCust(id), bad=!!CW_FAIL[id], run=!!CW_PEND[id];
+  if(run){
+    return '<div class="cw-aicard run" data-aic="'+id+'" role="status" aria-label="'+esc(c.n)+'，话术生成中">'
+      +'<div class="cw-aichd"><span class="cw-av">'+c.n.charAt(0)+'</span><span class="nm">'+esc(c.n)+'</span>'
+      +'<span class="cw-aispin" aria-hidden="true"></span></div>'
+      +'<div class="cw-skel" aria-hidden="true"><i></i><i></i></div></div>';
+  }
+  return '<div class="cw-aicard'+(bad?' bad':'')+(fresh?' in':'')+'" data-aic="'+id+'">'
+    +'<div class="cw-aichd"><span class="cw-av">'+c.n.charAt(0)+'</span><span class="nm">'+esc(c.n)+'</span>'
+    +'<span class="cw-cacts">'
+      +'<button onclick="cwEditAi(\''+id+'\')" aria-label="编辑 '+esc(c.n)+' 的话术">'+I('edit',15,2.1)+'</button>'
+      +'<button onclick="cwRegenOne(\''+id+'\')" aria-label="重新生成 '+esc(c.n)+' 的话术">'+I('refresh',15,2.1)+'</button>'
+      +'<button class="danger" onclick="cwDelAi(\''+id+'\')" aria-label="这次不唤醒 '+esc(c.n)+'">'+I('trash',15,2.1)+'</button>'
+    +'</span></div>'
+    +'<div class="tx">'+(bad?'生成失败 · '+esc(CW_FAIL[id]):esc(CW_AI[id]||''))+'</div></div>';
+}
+/* 动画放完就把 .in 摘掉：那层扫光是 ::after，留着虽然停在透明位置，
+   但在部分浏览器里会以最后一帧继续参与合成（截图里能看到一道淡蓝印子）。 */
+function cwAiUnmark(el){
+  setTimeout(function(){ if(el&&el.parentNode)el.classList.remove('in'); },780);
+}
+function cwAiPatch(id){
+  var old=$('cwContentBody').querySelector('.cw-aicard[data-aic="'+id+'"]');
+  if(!old){ REND['cw-content'](); return; }
+  var tmp=document.createElement('div');
+  tmp.innerHTML=cwAiCardHtml(id,true);
+  var node=tmp.firstChild;
+  old.parentNode.replaceChild(node,old);
+  cwAiUnmark(node);
+  delete CW_FLASH[id];
+  cwContentFoot();
+}
 function cwContentFoot(){
   var n=cwSelCount(), over=n>CW_SET.cap;
   var adj='间隔 '+CW_SET.gap+' 秒 · '+(CW_SET.skip?'跳过 7 天内唤醒过的':'不跳过已唤醒的');
@@ -5487,8 +5591,12 @@ function cwContentFoot(){
     sum='<div class="cw-sum">'+(empty?'还没写这次想说什么':'<b>'+n+'</b> 人 · 每人 1 条')+'</div>';
     btn='<button class="cw-btn"'+(empty?' disabled':'')+' onclick="cwGen()">生成话术</button>';
   }else{
+    var pend=0; cwSelIds().forEach(function(id){ if(CW_PEND[id])pend++; });
     var ok=cwAiOk().length;
-    if(!ok){
+    if(pend){
+      sum='<div class="cw-sum">正在生成 <b>'+pend+'</b>/'+n+' 人</div>';
+      btn='<button class="cw-btn" disabled>开始唤醒</button>';
+    }else if(!ok){
       sum='<div class="cw-sum bad">没有生成成功的内容<br><span>换个主题再试，或切回固定内容</span></div>';
       btn='<button class="cw-btn" disabled>开始唤醒</button>';
     }else{
@@ -5537,22 +5645,16 @@ REND['cw-content']=function(){
         +'<span><i>风格</i>'+CW_SET.style+'</span><span><i>角色</i>'+CW_SET.role+'</span>'
         +'<span><i>字数</i>'+CW_SET.words+'</span><span class="cw-chev">›</span></button>';
   }else{
-    /* 从名单回来时可能多了几个人：已经点过生成，就给新来的人补上，别让他们挂一张空卡。 */
-    cwEnsureAi();
-    cwSelIds().forEach(function(id){
-      var c=cwCust(id), bad=!!CW_FAIL[id];
-      h+='<div class="cw-aicard'+(bad?' bad':'')+'"><div class="cw-aichd">'
-        +'<span class="cw-av">'+c.n.charAt(0)+'</span><span class="nm">'+c.n+'</span>'
-        +'<span class="cw-cacts">'
-          +'<button onclick="cwEditAi(\''+id+'\')" aria-label="编辑 '+c.n+' 的话术">'+I('edit',15,2.1)+'</button>'
-          +'<button onclick="cwRegenOne(\''+id+'\')" aria-label="重新生成 '+c.n+' 的话术">'+I('refresh',15,2.1)+'</button>'
-          +'<button class="danger" onclick="cwDelAi(\''+id+'\')" aria-label="这次不唤醒 '+c.n+'">'+I('trash',15,2.1)+'</button>'
-        +'</span></div>'
-        +'<div class="tx">'+(bad?'生成失败 · '+CW_FAIL[id]:esc(CW_AI[id]||''))+'</div></div>';
-    });
+    /* 从名单回来时可能多了几个人：已经点过生成，就给新来的人排进生成队列，别让他们挂一张空卡。 */
+    var miss=cwSelIds().filter(function(id){ return CW_AI[id]==null&&!CW_FAIL[id]&&!CW_PEND[id]; });
+    if(miss.length)cwAiBegin(miss);
+    cwSelIds().forEach(function(id){ h+=cwAiCardHtml(id,!!CW_FLASH[id]); });
     h+='<button class="cw-addrow" onclick="cwRegen()">全部重新生成</button>';
   }
   $('cwContentBody').innerHTML=h;
+  CW_FLASH={};
+  var ins=$('cwContentBody').querySelectorAll('.cw-aicard.in');
+  for(var q=0;q<ins.length;q++)cwAiUnmark(ins[q]);
   cwContentFoot();
 };
 
