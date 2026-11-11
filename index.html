@@ -1119,6 +1119,10 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
   font-size:12.5px;font-weight:600;color:#3A5B8F;position:relative;overflow:hidden}
 .cw-opts button.on{background:#E8F0FF;border-color:#B9CDF6;color:#1B4AA8}
 .cw-ro{font-size:13px;font-weight:500;color:#95A3B8}
+/* 底栏第二行就是发送设置的入口：间隔与跳过规则都在这儿，点开同一个弹层 */
+.cw-fadj{display:block;width:100%;font-size:12px;font-weight:500;color:#6E86A8;line-height:1.45;
+  text-align:left;position:relative;overflow:hidden}
+.cw-fadj b{font-weight:600;color:#8FA3BE;margin-left:2px}
 
 /* ---------------- 宿主 App AI托管页（底部 Tab「AI托管」，居中抬起）· 逻辑照参考原型 APP-AI-001 ----------------
    口径说明：
@@ -5176,7 +5180,7 @@ var CW_SEL={};
 CW_CUST.forEach(function(c){ if(cwBand(c.h)>=0&&!c.w)CW_SEL[c.i]=true; });
 var CW_STRAT='fixed';
 var CW_FIXED=[
-  {t:'text',c:'好久不见，最近店里上了新款，给你留了一件。'},
+  {t:'text',c:'最近店里上了新款，给你留了一件。'},
   {t:'image',c:'秋季新品主图.png'},
   {t:'text',c:'要不要我拍两张细节图给你？'}
 ];
@@ -5338,7 +5342,7 @@ function cwStratN(s){ return s==='fixed'?'固定内容':'AI生成'; }
 function cwAiText(c,r){
   var T=['上次你说想要轻薄一点的，这批正好有新款到店，我给你留了一件。',
          '最近换季，店里到了几款适合你的外套，有空来看看？',
-         '好久没聊了，最近上了新款，想起你之前问过的那件，给你留了一件。',
+         '最近上了新款，想起你之前问过的那件，给你留了一件。',
          '上次说的那件到了，先发你看看，合适我再给你留。',
          '这批新到的颜色很衬你，要不要我拍两张细节图？',
          '上周那批你看着怎么样？这次又到了几款，发你参考。',
@@ -5358,6 +5362,9 @@ function cwEnsureAi(){
 /* 先填主题，再点生成。生成前不可能缺主题，也不会在用户没说「这次想说什么」时白花一次生成。 */
 function cwGen(){
   if(!CW_TOPIC.trim()){ toast('先写这次想说什么'); return; }
+  /* 从结果页点「主题」退回表单再生成＝换了个说法，整批作废重来；第一次生成时不清。 */
+  var had=false, k; for(k in CW_AI)had=true;
+  if(had){ CW_AI_ROUND++; CW_AI={}; CW_FAIL={}; }
   CW_GEN=true; cwEnsureAi(); REND['cw-content']();
 }
 function cwRegen(){
@@ -5472,7 +5479,7 @@ function cwContentFoot(){
       sum='<div class="cw-sum"><b>'+n+'</b> 人 · 还没有内容</div>';
       btn='<button class="cw-btn" disabled>开始唤醒</button>';
     }else{
-      sum='<div class="cw-sum"><b>'+n+'</b> 人 · '+CW_FIXED.length+' 条共 '+(n*CW_FIXED.length)+' 条<br><span>'+adj+'</span></div>';
+      sum='<div class="cw-sum"><b>'+n+'</b> 人 · '+CW_FIXED.length+' 条共 '+(n*CW_FIXED.length)+' 条<br><button class="cw-fadj" onclick="cwSetSheet()">'+adj+' <b>›</b></button></div>';
       btn='<button class="cw-btn" onclick="cwStart()">开始唤醒</button>';
     }
   }else if(!CW_GEN){
@@ -5485,7 +5492,7 @@ function cwContentFoot(){
       sum='<div class="cw-sum bad">没有生成成功的内容<br><span>换个主题再试，或切回固定内容</span></div>';
       btn='<button class="cw-btn" disabled>开始唤醒</button>';
     }else{
-      sum='<div class="cw-sum"><b>'+ok+'</b> 人 · 每人 1 条<br><span>'+adj+'</span></div>';
+      sum='<div class="cw-sum"><b>'+ok+'</b> 人 · 每人 1 条<br><button class="cw-fadj" onclick="cwSetSheet()">'+adj+' <b>›</b></button></div>';
       btn='<button class="cw-btn" onclick="cwStart()">开始唤醒</button>';
     }
   }
@@ -5522,7 +5529,7 @@ REND['cw-content']=function(){
         +'</span></div>';
     });
     h+='<button class="cw-addrow" onclick="cwEditFixed(-1)">＋ 添加一条</button></div>';
-    h+='<div class="cw-tip">开始后切到微信逐条发送，期间 App 不在前台，结果写进唤醒记录。</div>';
+    h+='<div class="cw-tip">开始后切到微信逐条发送，期间 App 不在前台，<br>结果写进唤醒记录。</div>';
   }else if(!CW_GEN){
     h+='<div class="cw-topic"><div class="lab">这次想说什么</div>'
       +'<input id="cwTopic" value="'+esc(CW_TOPIC)+'" placeholder="比如：秋季新品到店" oninput="cwTopicInput(this.value)"></div>'
