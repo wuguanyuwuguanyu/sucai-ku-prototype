@@ -29991,6 +29991,582 @@ checkCross();
     return '(function(){' + reaFreqMountJs('rel', target) + '})();' + reaFreqDrawerJs('rel');
   }
 
+  /* 客户唤醒 · 新建（2026-11-11）：快照只画了静态表单——「添加回复内容」弹窗、
+     唤醒人群的单位下拉、执行人员选择全是死的。这一笔只补交互，正文仍是快照，
+     弹窗照快照那套 AntD 画（本页没换设计语言）。
+     口径见 docs/prd/微信营销任务-配置快照-PRD.md §5.6；不动 _online-admin.js、不重跑构建。 */
+  var REA_HX_CSS = [
+    '.rea-hx-sub .ant-modal{max-width:calc(100vw - 32px)}',
+    '.rea-hx-sub .ant-modal-body{padding:20px 24px 4px;max-height:calc(100vh - 220px);overflow:auto}',
+    '.rea-hx-sub .ant-modal-footer{display:flex;justify-content:flex-end;gap:8px}',
+    '.rea-hx-sub .ant-modal-footer .ant-btn+.ant-btn{margin-left:0}',
+    '.rea-hx-frow{display:flex;align-items:flex-start;margin-bottom:18px}',
+    '.rea-hx-flab{flex:none;padding-right:16px;text-align:left;font-size:14px;line-height:32px;color:rgba(0,0,0,.88)}',
+    '.rea-hx-fctl{flex:1;min-width:0}',
+    '.rea-hx-fcol{margin-bottom:18px}',
+    '.rea-hx-fcol .rea-hx-flab{display:block;width:auto;padding:0;margin-bottom:8px;text-align:left;line-height:22px}',
+    '.rea-hx-req{color:#ff4d4f;margin-right:4px;font-style:normal}',
+    '.rea-hx-ta{width:100%;height:150px;min-height:80px;resize:vertical;box-sizing:border-box;padding:8px 11px 26px;font-size:14px;line-height:22px;font-family:inherit}',
+    '.rea-hx-tawrap{position:relative}',
+    '.rea-hx-tacount{position:absolute;right:10px;bottom:8px;font-size:12px;color:#bfbfbf;pointer-events:none}',
+    '.rea-hx-suffixwrap{position:relative}',
+    '.rea-hx-suffix{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:12px;color:#bfbfbf;pointer-events:none}',
+    '.rea-hx-suffixin{padding-right:64px}',
+    '.rea-hx-editbox{border:1px solid #d9d9d9;border-radius:6px;background:#fff;overflow:hidden}',
+    '.rea-hx-editbox:focus-within{border-color:#1677ff;box-shadow:0 0 0 2px rgba(5,145,255,.1)}',
+    '.rea-hx-editbar{display:flex;align-items:center;justify-content:space-between;padding:8px 10px 0}',
+    '.rea-hx-emoji{border:0;background:none;padding:0;color:#8c8c8c;cursor:pointer;font-size:16px;line-height:1}',
+    '.rea-hx-emoji:hover{color:#1677ff}',
+    '.rea-hx-emoji-wrap{position:relative;display:inline-flex}',
+    '.rea-hx-emoji-pop{position:absolute;left:0;bottom:26px;z-index:20;display:flex;gap:2px;padding:6px;border:1px solid #f0f0f0;border-radius:6px;background:#fff;box-shadow:0 6px 16px rgba(0,0,0,.12)}',
+    '.rea-hx-emoji-pop[hidden]{display:none}',
+    '.rea-hx-emoji-pop button{border:0;background:none;padding:2px;font-size:18px;line-height:1;cursor:pointer}',
+    '.rea-hx-editcount{font-size:12px;color:#bfbfbf}',
+    '.rea-hx-editarea{display:block;width:100%;height:200px;border:0;outline:none;resize:vertical;box-sizing:border-box;padding:10px 12px;font-size:14px;line-height:22px;color:rgba(0,0,0,.88);background:#fff;font-family:inherit}',
+    '.rea-hx-radios .ant-radio-wrapper{margin-inline-end:24px;margin-bottom:4px}',
+    '.rea-hx-range{display:flex;align-items:center;gap:10px}',
+    '.rea-hx-num{width:110px;text-align:center}',
+    '.rea-hx-dash{color:#bfbfbf}',
+    '.rea-hx-limit{width:220px}',
+    '.rea-hx-drop{display:flex;align-items:center;justify-content:center;gap:8px;min-height:96px;border:1px dashed #d9d9d9;border-radius:6px;background:#fafafa;color:#999;font-size:14px;cursor:pointer}',
+    '.rea-hx-drop:hover{border-color:#1677ff;color:#1677ff}',
+    '.rea-hx-file{display:flex;align-items:center;gap:10px;padding:8px 12px;border:1px solid #d9d9d9;border-radius:6px;background:#fff}',
+    '.rea-hx-file img{width:44px;height:44px;border-radius:4px;object-fit:cover;background:#f0f0f2}',
+    '.rea-hx-fileic{display:flex;width:44px;height:44px;border-radius:4px;background:#f0f0f0;color:#8c8c8c;align-items:center;justify-content:center;font-size:20px}',
+    '.rea-hx-filemain{flex:1;min-width:0;font-size:14px;color:rgba(0,0,0,.88);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+    '.rea-hx-filex{border:0;background:transparent;color:#999;cursor:pointer;font-size:13px;padding:0 2px}',
+    '.rea-hx-filex:hover{color:#ff4d4f}',
+    '.rea-hx-unit{position:relative}',
+    '.rea-hx-unitmenu{position:absolute;left:0;top:calc(100% + 4px);z-index:30;display:none;width:100%;min-width:80px;padding:4px 0;border:1px solid #f0f0f0;border-radius:6px;background:#fff;box-shadow:0 6px 16px rgba(0,0,0,.12)}',
+    '.rea-hx-unitmenu.on{display:block}',
+    '.rea-hx-opt{display:block;width:100%;padding:5px 12px;border:0;background:none;font-size:14px;line-height:22px;color:rgba(0,0,0,.88);text-align:left;cursor:pointer}',
+    '.rea-hx-opt:hover{background:#f5f5f5}',
+    '.rea-hx-opt.on{color:#1677ff;font-weight:600;background:#e6f4ff}',
+    '.rea-hx-exec{position:relative}',
+    '.rea-hx-execmenu{position:absolute;left:0;top:calc(100% + 4px);z-index:30;display:none;width:100%;min-width:240px;padding:4px;border:1px solid #f0f0f0;border-radius:6px;background:#fff;box-shadow:0 6px 16px rgba(0,0,0,.12)}',
+    '.rea-hx-execmenu.on{display:block}',
+    '.rea-hx-execmenu .rea-hx-opt{display:flex;align-items:center;justify-content:space-between;border-radius:4px}',
+    '.rea-hx-execn{font-size:12px;color:#8c8c8c}',
+    '.rea-hx-opt.on .rea-hx-execn{color:#1677ff}',
+    '.rea-hx-drag{color:#bfbfbf;cursor:grab;font-size:14px;user-select:none}',
+    '.rea-hx-ops .ant-btn{padding:0;height:22px;line-height:22px}',
+    '.rea-hx-ops .ant-btn+.ant-btn{margin-left:12px}',
+    '.rea-hx-bad{box-shadow:0 0 0 2px rgba(255,77,79,.16);border-radius:6px}',
+    '.rea-hx-ic{display:inline-flex;align-items:center;vertical-align:-2px;font-size:14px}',
+    '.ant-message.css-mncuj7{position:fixed;left:0;right:0;top:16px;z-index:2010;display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none}',
+    '.ant-message.css-mncuj7 .ant-message-notice-content{padding:9px 16px;border-radius:8px;background:#fff;box-shadow:0 6px 16px rgba(0,0,0,.08),0 3px 6px -4px rgba(0,0,0,.12);font-size:14px;line-height:22px;color:rgba(0,0,0,.88)}'
+  ].join('\n');
+
+  function reaHxJs(){
+    return String.raw`
+(function(){
+'use strict';
+var ROWS=document.querySelectorAll('div[class*="_form_input_"]');
+function rowLabel(r){var s=r?r.querySelector('span[class*="_must_"]'):null;return s?(s.textContent||'').replace(/\s+/g,''):''}
+function rowBy(k){for(var i=0;i<ROWS.length;i++)if(rowLabel(ROWS[i])===k)return ROWS[i];return null}
+var L={
+  name:rowBy('任务名称'),exec:rowBy('执行人员'),crowd:rowBy('唤醒人群'),tag:rowBy('微信标签'),
+  strategy:rowBy('内容生成策略'),content:rowBy('唤醒内容'),type:rowBy('任务类型'),
+  popup:rowBy('全局弹窗'),start:rowBy('通知时间'),end:rowBy('截止时间')
+};
+function up(n,c){while(n&&n.nodeType===1){if(n.classList&&n.classList.contains(c))return n;n=n.parentNode}return null}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function pad(n){return (n<10?'0':'')+n}
+
+/* AntD 的提示条只认 css-mncuj7 这枚 hash（与素材库新建页、自动打招呼同一套） */
+var MW=null;
+function msg(t){
+  if(!MW){MW=document.createElement('div');MW.className='ant-message css-mncuj7';document.body.appendChild(MW)}
+  var d=document.createElement('div');d.className='ant-message-notice-wrapper';
+  d.innerHTML='<div class="ant-message-notice"><div class="ant-message-notice-content"><div class="ant-message-custom-content ant-message-info"><span></span></div></div></div>';
+  d.querySelector('span').textContent=t;
+  MW.appendChild(d);setTimeout(function(){if(d.parentNode)d.parentNode.removeChild(d)},2400);
+}
+
+/* 弹窗里几枚线框图标：与自动打招呼那套同一笔触，只用 currentColor */
+function ic(inner){return '<span class="anticon rea-hx-ic"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'+inner+'</svg></span>'}
+var IC={
+  text:ic("<path d='M5 6h14M12 6v13M9 19h6'/>"),
+  image:ic("<rect x='3.5' y='5' width='17' height='14' rx='2'/><circle cx='8.5' cy='10' r='1.4'/><path d='M4.5 16.5l4.6-4.6 3.4 3.4 3-3 4 4'/>"),
+  video:ic("<rect x='3' y='6' width='12.5' height='12' rx='2'/><path d='M15.5 10.2l5-3.2v10l-5-3.2z'/>"),
+  file:ic("<path d='M6 3.5h7l5 5v12H6z'/><path d='M13 3.5v5h5'/>"),
+  close:ic("<path d='M6 6l12 12M18 6L6 18'/>"),
+  smile:ic("<circle cx='12' cy='12' r='9'/><path d='M8.5 14.4c1 1.5 2.2 2.2 3.5 2.2s2.5-.7 3.5-2.2'/><circle cx='9' cy='10' r='.9' fill='currentColor' stroke='none'/><circle cx='15' cy='10' r='.9' fill='currentColor' stroke='none'/>"),
+  plus:ic("<path d='M12 5v14M5 12h14'/>")
+};
+
+var TYPES=[['text','文本'],['image','图片'],['video','视频'],['file','文件']];
+var AI_MODES=[['aiwrite','AI仿写'],['aigen','AI生成']];
+var TYPENAME={text:'文本',image:'图片',video:'视频',file:'文件'};
+var STYLES=['亲切','专业','紧迫','幽默','轻松','自定义'];
+var ROLES=['客户经理','售前','营销人员'];
+
+function seg(name,opts,cur,disabled){
+  var h='<div class="ant-radio-group ant-radio-group-outline css-vgijab rea-hx-seg" data-hx-seg="'+name+'">',i,on;
+  for(i=0;i<opts.length;i++){
+    on=opts[i][0]===cur;
+    h+='<label class="ant-radio-button-wrapper css-vgijab'+(on?' ant-radio-button-wrapper-checked':'')+(disabled?' ant-radio-button-wrapper-disabled':'')+'">'
+      +'<span class="ant-radio-button'+(on?' ant-radio-button-checked':'')+'">'
+      +'<input class="ant-radio-button-input" type="radio" name="rea-hx-'+name+'" value="'+opts[i][0]+'"'+(on?' checked':'')+(disabled?' disabled':'')+'>'
+      +'<span class="ant-radio-button-inner"></span></span>'
+      +'<span class="ant-radio-button-label">'+esc(opts[i][1])+'</span></label>';
+  }
+  return h+'</div>';
+}
+function radios(name,opts,cur){
+  var h='<div class="ant-radio-group ant-radio-group-outline css-vgijab rea-hx-radios" data-hx-radio="'+name+'">',i,on;
+  for(i=0;i<opts.length;i++){
+    on=opts[i]===cur;
+    h+='<label class="ant-radio-wrapper css-vgijab'+(on?' ant-radio-wrapper-checked':'')+'">'
+      +'<span class="ant-radio ant-wave-target'+(on?' ant-radio-checked':'')+'">'
+      +'<input class="ant-radio-input" type="radio" name="rea-hx-'+name+'" value="'+esc(opts[i])+'"'+(on?' checked':'')+'>'
+      +'<span class="ant-radio-inner"></span></span>'
+      +'<span class="ant-radio-label">'+esc(opts[i])+'</span></label>';
+  }
+  return h+'</div>';
+}
+function cnt(v,max){return String((v||'').length)+'/'+max}
+function inputSuffix(id,ph,max,val){
+  return '<div class="rea-hx-suffixwrap"><input id="'+id+'" class="ant-input css-vgijab ant-input-outlined rea-hx-suffixin" maxlength="'+max+'" placeholder="'+esc(ph)+'" value="'+esc(val)+'"><span class="rea-hx-suffix" data-hx-for="'+id+'" data-hx-max="'+max+'">'+cnt(val,max)+'</span></div>';
+}
+function textareaCounter(id,ph,max,val,h){
+  return '<div class="rea-hx-tawrap"><textarea id="'+id+'" class="ant-input css-vgijab ant-input-outlined rea-hx-ta" maxlength="'+max+'" placeholder="'+esc(ph)+'"'+(h?' style="height:'+h+'px"':'')+'>'+esc(val)+'</textarea><span class="rea-hx-tacount" data-hx-for="'+id+'" data-hx-max="'+max+'">'+cnt(val,max)+'</span></div>';
+}
+function editorBox(val){
+  return '<div class="rea-hx-editbox"><div class="rea-hx-editbar">'
+    +'<span class="rea-hx-emoji-wrap"><button type="button" class="rea-hx-emoji" data-hx-emoji aria-label="插入表情">'+IC.smile+'</button>'
+    +'<span class="rea-hx-emoji-pop" data-hx-emojipop hidden>'
+    +['😊','😄','👍','🙏','🎉','❤️','🌹','🔥'].map(function(x){return '<button type="button" data-hx-em="'+x+'">'+x+'</button>'}).join('')
+    +'</span></span>'
+    +'<span class="rea-hx-editcount" data-hx-for="rea-hx-text" data-hx-max="1000">'+cnt(val,1000)+'</span></div>'
+    +'<textarea id="rea-hx-text" class="rea-hx-editarea" maxlength="1000" placeholder="请输入文本内容">'+esc(val)+'</textarea></div>';
+}
+function phSvg(kind){
+  var w=320,h=kind==='video'?180:320;
+  var body=kind==='video'
+    ?'<path d="M132 58l60 32-60 32z" fill="#d9d9d9"/>'
+    :'<circle cx="160" cy="132" r="62" fill="#d9d9d9"/><rect x="118" y="100" width="84" height="56" rx="14" fill="#ffffff"/><circle cx="142" cy="128" r="9" fill="#8c8c8c"/><circle cx="178" cy="128" r="9" fill="#8c8c8c"/><rect x="96" y="206" width="128" height="66" rx="18" fill="#d9d9d9"/>';
+  return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="'+w+'" height="'+h+'"><rect width="100%" height="100%" fill="#f0f0f2"/>'+body+'</svg>');
+}
+var DEMO={
+  image:{name:'唤醒配图.png',src:phSvg('image')},
+  video:{name:'唤醒视频.mp4',src:phSvg('video')},
+  file:{name:'产品资料.pdf',src:''}
+};
+
+/* ---------------- 唤醒内容表 ---------------- */
+var CONT=[];
+var TBL=L.content?L.content.querySelector('.ant-table'):null;
+var TB=TBL?TBL.querySelector('.ant-table-tbody'):null;
+var PH=TB?TB.querySelector('tr.ant-table-placeholder'):null;
+function rowType(e){return e.kind==='ai'?(e.mode==='aigen'?'AI生成':'AI仿写'):TYPENAME[e.type]||'文本'}
+function hover(tr){
+  function on(){for(var j=0;j<tr.children.length;j++)tr.children[j].classList.add('ant-table-cell-row-hover')}
+  function off(){for(var j=0;j<tr.children.length;j++)tr.children[j].classList.remove('ant-table-cell-row-hover')}
+  tr.addEventListener('mouseenter',on);tr.addEventListener('mouseleave',off);
+}
+function drawRows(){
+  if(!TB)return;
+  var old=TB.querySelectorAll('tr[data-hx-row]'),j;
+  for(j=0;j<old.length;j++)TB.removeChild(old[j]);
+  if(!CONT.length){
+    if(PH&&!PH.parentNode)TB.appendChild(PH);
+    if(PH)PH.style.display='';
+    if(TBL)TBL.classList.add('ant-table-empty');
+    return;
+  }
+  if(PH)PH.style.display='none';
+  if(TBL)TBL.classList.remove('ant-table-empty');
+  for(var k=0;k<CONT.length;k++){
+    var tr=document.createElement('tr');
+    tr.className='ant-table-row ant-table-row-level-0';
+    tr.setAttribute('data-hx-row',String(k));
+    tr.innerHTML='<td class="ant-table-cell"><span class="rea-hx-drag" aria-hidden="true">⠿</span></td>'
+      +'<td class="ant-table-cell">'+esc(rowType(CONT[k]))+'</td>'
+      +'<td class="ant-table-cell"><div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center rea-hx-ops">'
+      +'<div class="ant-space-item"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-hx-edit="'+k+'"><span>编辑</span></button></div>'
+      +'<div class="ant-space-item"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-link" data-hx-del="'+k+'"><span>删除</span></button></div>'
+      +'</div></td>';
+    hover(tr);TB.appendChild(tr);
+  }
+}
+
+/* ---------------- 内容生成策略 / 弹窗 ---------------- */
+function strategy(){
+  if(!L.strategy)return 'fixed';
+  var inp=L.strategy.querySelector('input[type=radio]:checked');
+  if(inp)return inp.value==='2'?'ai':'fixed';
+  var on=L.strategy.querySelector('.ant-radio-button-wrapper-checked .ant-radio-button-label');
+  return on&&(on.textContent||'').indexOf('AI')>=0?'ai':'fixed';
+}
+function newState(kind){
+  if(kind==='ai')return {kind:'ai',mode:'aiwrite',ref:'',topic:'',industry:'',style:'亲切',role:'客户经理',limit:'',taboo:'',hmin:'10',hmax:'150'};
+  return {kind:'fixed',type:'text',text:'',file:'',src:''};
+}
+function copy(o){var r={},k;for(k in o)if(Object.prototype.hasOwnProperty.call(o,k))r[k]=o[k];return r}
+
+var ED=null,E=null;
+function openEditor(i,kind){
+  if(i>=0){E=copy(CONT[i]);E.i=i}
+  else{E=newState(kind||strategy());E.i=-1}
+  paintEditor();
+}
+function closeEditor(){if(ED&&ED.parentNode)ED.parentNode.removeChild(ED);ED=null;E=null}
+function paintEditor(){
+  if(!E)return;
+  if(!ED){
+    var w=document.createElement('div');
+    w.className='ant-modal-root css-vgijab rea-hx-sub';
+    w.innerHTML='<div class="ant-modal-mask"></div><div class="ant-modal-wrap ant-modal-centered">'
+      +'<div class="ant-modal css-vgijab" role="dialog" aria-modal="true" style="width:860px;">'
+      +'<div class="ant-modal-content"><button type="button" class="ant-modal-close" aria-label="Close"><span class="ant-modal-close-x">'+IC.close+'</span></button>'
+      +'<div class="ant-modal-header"><div class="ant-modal-title" id="rea-hx-title">添加回复内容</div></div>'
+      +'<div class="ant-modal-body" id="rea-hx-body"></div>'
+      +'<div class="ant-modal-footer"><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-hx-cancel><span>取 消</span></button>'
+      +'<button type="button" class="ant-btn css-vgijab ant-btn-primary ant-btn-color-primary ant-btn-variant-solid" data-hx-ok><span>确 定</span></button></div>'
+      +'</div></div></div></div>';
+    document.body.appendChild(w);ED=w;
+    w.addEventListener('click',function(e){e.stopPropagation()});
+    w.querySelector('.ant-modal-close').addEventListener('click',closeEditor);
+    w.querySelector('.ant-modal-mask').addEventListener('click',closeEditor);
+    w.querySelector('.ant-modal-wrap').addEventListener('click',function(e){if(e.target===this)closeEditor()});
+    w.querySelector('[data-hx-cancel]').addEventListener('click',closeEditor);
+    w.querySelector('[data-hx-ok]').addEventListener('click',saveEditor);
+  }
+  var t=ED.querySelector('#rea-hx-title');if(t)t.textContent=E.i>=0?'编辑回复内容':'添加回复内容';
+  ED.querySelector('.ant-modal').style.width=E.kind==='ai'?'860px':'680px';
+  ED.querySelector('#rea-hx-body').innerHTML=bodyHtml();
+  bindEditor();
+}
+function bodyHtml(){
+  if(E.kind==='fixed'){
+    var h='<div class="rea-hx-frow"><span class="rea-hx-flab"><i class="rea-hx-req">*</i>类型</span>'
+      +'<div class="rea-hx-fctl">'+seg('type',TYPES,E.type)+'</div></div>';
+    if(E.type==='text'){
+      h+='<div class="rea-hx-fcol"><span class="rea-hx-flab"><i class="rea-hx-req">*</i>文本内容</span>'+editorBox(E.text)+'</div>';
+    }else{
+      h+='<div class="rea-hx-fcol"><span class="rea-hx-flab"><i class="rea-hx-req">*</i>'+TYPENAME[E.type]+'内容</span>'+uploadBox()+'</div>';
+    }
+    return h;
+  }
+  var h2='<div class="rea-hx-frow"><span class="rea-hx-flab">内容生成方式</span>'
+    +'<div class="rea-hx-fctl">'+seg('mode',AI_MODES,E.mode)+'</div></div>';
+  if(E.mode==='aiwrite'){
+    h2+='<div class="rea-hx-fcol"><span class="rea-hx-flab">参考文案</span>'+textareaCounter('rea-hx-ref','请输入参考文案',500,E.ref,120)+'</div>'
+      +'<div class="rea-hx-fcol"><span class="rea-hx-flab">内容主题</span>'+inputSuffix('rea-hx-topic','请描述你想写的内容的核心主题。例如拉新、推广等',50,E.topic)+'</div>';
+    return h2;
+  }
+  h2+='<div class="rea-hx-frow"><span class="rea-hx-flab"><i class="rea-hx-req">*</i>类型</span>'
+    +'<div class="rea-hx-fctl">'+seg('aitype',[['text','文本']],'text',true)+'</div></div>'
+    +'<div class="rea-hx-frow"><span class="rea-hx-flab"><i class="rea-hx-req">*</i>获取历史聊天记录条数</span>'
+    +'<div class="rea-hx-fctl"><div class="rea-hx-range">'
+    +'<input id="rea-hx-hmin" class="ant-input css-vgijab ant-input-outlined rea-hx-num" type="number" min="10" max="150" value="'+esc(E.hmin)+'">'
+    +'<span class="rea-hx-dash">-</span>'
+    +'<input id="rea-hx-hmax" class="ant-input css-vgijab ant-input-outlined rea-hx-num" type="number" min="10" max="150" value="'+esc(E.hmax)+'">'
+    +'</div></div></div>'
+    +'<div class="rea-hx-fcol"><span class="rea-hx-flab"><i class="rea-hx-req">*</i>参考文案</span>'+textareaCounter('rea-hx-ref','请输入参考文案...',500,E.ref,110)+'</div>'
+    +'<div class="rea-hx-fcol"><span class="rea-hx-flab"><i class="rea-hx-req">*</i>内容主题</span>'+inputSuffix('rea-hx-topic','输入要生成的文案主题',50,E.topic)+'</div>'
+    +'<div class="rea-hx-fcol"><span class="rea-hx-flab">所属行业</span>'+inputSuffix('rea-hx-industry','请输入所属行业',30,E.industry)+'</div>'
+    +'<div class="rea-hx-frow"><span class="rea-hx-flab"><i class="rea-hx-req">*</i>回复风格</span>'
+    +'<div class="rea-hx-fctl">'+radios('style',STYLES,E.style)+'</div></div>'
+    +'<div class="rea-hx-frow"><span class="rea-hx-flab"><i class="rea-hx-req">*</i>回复人角色</span>'
+    +'<div class="rea-hx-fctl">'+radios('role',ROLES,E.role)+'</div></div>'
+    +'<div class="rea-hx-frow"><span class="rea-hx-flab"><i class="rea-hx-req">*</i>回复内容字数限制</span>'
+    +'<div class="rea-hx-fctl"><input id="rea-hx-limit" class="ant-input css-vgijab ant-input-outlined rea-hx-limit" placeholder="请输入正整数" value="'+esc(E.limit)+'"></div></div>'
+    +'<div class="rea-hx-fcol"><span class="rea-hx-flab">禁忌词</span>'+textareaCounter('rea-hx-taboo','请输入避免提及的内容，比如竞品名称、营销等文字，以及敏感词，每个关键词之间用或或者、隔开',200,E.taboo,96)+'</div>';
+  return h2;
+}
+function uploadBox(){
+  var d=DEMO[E.type];if(!d)return '';
+  if(!E.file)return '<div class="rea-hx-drop" data-hx-pick>'+IC.plus+'<span>点击上传'+TYPENAME[E.type]+'</span></div>';
+  var prev=E.src?'<img src="'+E.src+'" alt="">':'<span class="rea-hx-fileic">'+IC[E.type]+'</span>';
+  return '<div class="rea-hx-file">'+prev+'<div class="rea-hx-filemain">'+esc(E.file)+'</div>'
+    +'<button type="button" class="rea-hx-filex" data-hx-repick>重新选择</button>'
+    +'<button type="button" class="rea-hx-filex" data-hx-unpick aria-label="移除">×</button></div>';
+}
+function syncCounters(){
+  if(!ED)return;
+  var out=ED.querySelectorAll('[data-hx-for]'),i,el,src;
+  for(i=0;i<out.length;i++){
+    el=out[i];src=ED.querySelector('#'+el.getAttribute('data-hx-for'));
+    if(src)el.textContent=cnt(src.value,el.getAttribute('data-hx-max'));
+  }
+}
+function readEditor(){
+  if(!ED||!E)return;
+  var v=function(id){var n=ED.querySelector('#'+id);return n?n.value:null};
+  if(E.kind==='fixed'){
+    var ta=ED.querySelector('#rea-hx-text');if(ta)E.text=ta.value;
+  }else{
+    var r=v('rea-hx-ref');if(r!=null)E.ref=r;
+    var t=v('rea-hx-topic');if(t!=null)E.topic=t;
+    var ind=v('rea-hx-industry');if(ind!=null)E.industry=ind;
+    var lim=v('rea-hx-limit');if(lim!=null)E.limit=lim;
+    var tb=v('rea-hx-taboo');if(tb!=null)E.taboo=tb;
+    var mn=v('rea-hx-hmin');if(mn!=null)E.hmin=mn;
+    var mx=v('rea-hx-hmax');if(mx!=null)E.hmax=mx;
+  }
+}
+function bindEditor(){
+  var body=ED.querySelector('#rea-hx-body');
+  if(!body.__hxBound){
+    body.__hxBound=1;
+    body.addEventListener('input',function(e){
+      syncCounters();
+      if(E&&E.kind==='fixed'&&e.target.id==='rea-hx-text')E.text=e.target.value;
+    });
+  }
+  var segs=body.querySelectorAll('[data-hx-seg]'),i;
+  for(i=0;i<segs.length;i++)(function(g){
+    g.addEventListener('click',function(e){
+      var lab=e.target.closest?e.target.closest('.ant-radio-button-wrapper'):null;
+      if(!lab||lab.classList.contains('ant-radio-button-wrapper-disabled'))return;
+      var inp=lab.querySelector('input');if(!inp)return;
+      readEditor();
+      var name=g.getAttribute('data-hx-seg'),val=inp.value;
+      if(name==='mode')E.mode=val;
+      else if(name==='type')E.type=val;
+      paintEditor();
+    });
+  })(segs[i]);
+  var rgs=body.querySelectorAll('[data-hx-radio]');
+  for(i=0;i<rgs.length;i++)(function(g){
+    g.addEventListener('click',function(e){
+      var lab=e.target.closest?e.target.closest('.ant-radio-wrapper'):null;if(!lab)return;
+      var inp=lab.querySelector('input');if(!inp)return;
+      var name=g.getAttribute('data-hx-radio');
+      if(name==='style')E.style=inp.value;else if(name==='role')E.role=inp.value;
+      var ls=g.querySelectorAll('.ant-radio-wrapper'),j,on,rd;
+      for(j=0;j<ls.length;j++){
+        on=ls[j]===lab;
+        ls[j].classList.toggle('ant-radio-wrapper-checked',on);
+        rd=ls[j].querySelector('.ant-radio');if(rd)rd.classList.toggle('ant-radio-checked',on);
+        var ri=ls[j].querySelector('input');if(ri)ri.checked=on;
+      }
+    });
+  })(rgs[i]);
+  var em=body.querySelector('[data-hx-emoji]');
+  if(em)em.addEventListener('click',function(e){
+    e.preventDefault();
+    var pop=body.querySelector('[data-hx-emojipop]');
+    if(pop)pop.hidden=!pop.hidden;
+  });
+  var ems=body.querySelectorAll('[data-hx-em]');
+  for(i=0;i<ems.length;i++)(function(b){
+    b.addEventListener('click',function(e){
+      e.preventDefault();
+      var ta=body.querySelector('#rea-hx-text');if(!ta)return;
+      var s=ta.selectionStart||0,t=ta.selectionEnd||0,ch=b.getAttribute('data-hx-em');
+      ta.value=ta.value.slice(0,s)+ch+ta.value.slice(t);
+      ta.selectionStart=ta.selectionEnd=s+ch.length;ta.focus();
+      E.text=ta.value;syncCounters();
+      var pop=body.querySelector('[data-hx-emojipop]');if(pop)pop.hidden=true;
+    });
+  })(ems[i]);
+  var pk=body.querySelector('[data-hx-pick]')||body.querySelector('[data-hx-repick]');
+  if(pk)pk.addEventListener('click',function(e){
+    e.preventDefault();
+    var d=DEMO[E.type];if(!d)return;
+    E.file=d.name;E.src=d.src;readEditor();paintEditor();
+  });
+  var un=body.querySelector('[data-hx-unpick]');
+  if(un)un.addEventListener('click',function(e){e.preventDefault();E.file='';E.src='';readEditor();paintEditor()});
+  syncCounters();
+}
+function saveEditor(){
+  readEditor();if(!E)return;
+  if(E.kind==='fixed'){
+    if(E.type==='text'&&!String(E.text||'').trim()){msg('请填写文本内容');return}
+    if(E.type!=='text'&&!E.file){msg('请先上传'+TYPENAME[E.type]);return}
+  }else if(E.mode==='aigen'){
+    if(!String(E.ref||'').trim()){msg('请填写参考文案');return}
+    if(!String(E.topic||'').trim()){msg('请填写内容主题');return}
+    var mn=Number(E.hmin),mx=Number(E.hmax);
+    if(!(mn>=10&&mn<=150&&mx>=10&&mx<=150)){msg('获取历史聊天记录条数需在 10–150 之间');return}
+    if(mn>mx){msg('获取历史聊天记录条数的起始值不能大于结束值');return}
+    if(!/^[1-9][0-9]*$/.test(String(E.limit||'').trim())){msg('回复内容字数限制请填正整数');return}
+  }
+  var it=copy(E),idx=E.i;delete it.i;
+  if(idx>=0)CONT.splice(idx,1,it);else CONT.push(it);
+  closeEditor();drawRows();
+  msg(idx>=0?'回复内容已更新':'已添加 1 条回复内容');
+}
+
+/* 表格里的编辑 / 删除 */
+if(TB)TB.addEventListener('click',function(e){
+  var n=up(e.target,'ant-btn');if(!n)return;
+  var ed=n.getAttribute('data-hx-edit'),dl=n.getAttribute('data-hx-del');
+  if(ed!=null){e.preventDefault();openEditor(Number(ed));return}
+  if(dl!=null){e.preventDefault();CONT.splice(Number(dl),1);drawRows();msg('已删除 1 条回复内容')}
+});
+var ADDB=null,abs=L.content?L.content.querySelectorAll('button.ant-btn'):[];
+for(var ai=0;ai<abs.length;ai++)if((abs[ai].textContent||'').replace(/\s+/g,'')==='添加回复内容')ADDB=abs[ai];
+if(ADDB)ADDB.addEventListener('click',function(e){e.preventDefault();openEditor(-1,strategy())});
+
+/* ---------------- 任务名称计数 ---------------- */
+var NAME=L.name?L.name.querySelector('input'):null;
+var NCNT=L.name?L.name.querySelector('.ant-input-show-count-suffix'):null;
+function syncName(){if(NAME&&NCNT)NCNT.textContent=String(NAME.value.length)+' / '+String(NAME.maxLength>0?NAME.maxLength:15)}
+if(NAME){NAME.addEventListener('input',syncName);syncName()}
+
+/* ---------------- 唤醒人群：数字步进 ＋ 单位下拉 ---------------- */
+var NUM=L.crowd?L.crowd.querySelector('.ant-input-number-input'):null;
+var NUP=L.crowd?L.crowd.querySelector('.ant-input-number-handler-up'):null;
+var NDN=L.crowd?L.crowd.querySelector('.ant-input-number-handler-down'):null;
+function setNum(v){
+  v=Math.max(1,Math.floor(v)||1);
+  if(NUM){NUM.value=String(v);NUM.setAttribute('aria-valuenow',String(v))}
+  if(NDN)NDN.classList.toggle('ant-input-number-handler-down-disabled',v<=1);
+}
+if(NUP)NUP.addEventListener('click',function(e){e.preventDefault();setNum((Number(NUM&&NUM.value)||1)+1)});
+if(NDN)NDN.addEventListener('click',function(e){e.preventDefault();setNum((Number(NUM&&NUM.value)||1)-1)});
+
+var SEL=L.crowd?L.crowd.querySelector('.ant-select'):null;
+var ITEM=L.crowd?L.crowd.querySelector('.ant-select-selection-item'):null;
+var UNIT=ITEM?(ITEM.textContent||'').trim():'小时';
+var UNITMENU=null;
+var TIP=(function(){
+  var ds=document.querySelectorAll('div'),i,t;
+  for(i=0;i<ds.length;i++){
+    t=(ds[i].textContent||'');
+    if(t.indexOf('未联系客户唤醒')>0&&ds[i].children.length===1&&ds[i].children[0].tagName==='BR')return ds[i];
+  }
+  return null;
+})();
+function syncTip(){
+  if(TIP)TIP.innerHTML='为防止唤醒客户数量过大，设置了默认上限时间为起始时间+5'
+    +'<br>若设置1'+UNIT+'未联系客户唤醒，则数据则为1-6'+UNIT+'内未联系客户。';
+}
+function paintUnitMenu(){
+  if(!UNITMENU&&SEL){
+    UNITMENU=document.createElement('div');UNITMENU.className='rea-hx-unitmenu';
+    UNITMENU.innerHTML=['小时','天'].map(function(u){
+      return '<button type="button" class="rea-hx-opt'+(u===UNIT?' on':'')+'" data-hx-unit="'+u+'">'+u+'</button>';
+    }).join('');
+    SEL.appendChild(UNITMENU);
+    UNITMENU.addEventListener('click',function(e){
+      var b=e.target.closest?e.target.closest('[data-hx-unit]'):null;if(!b)return;
+      e.preventDefault();e.stopPropagation();
+      UNIT=b.getAttribute('data-hx-unit');
+      if(ITEM){ITEM.textContent=UNIT;ITEM.setAttribute('title',UNIT)}
+      var os=UNITMENU.querySelectorAll('[data-hx-unit]'),j;
+      for(j=0;j<os.length;j++)os[j].classList.toggle('on',os[j].getAttribute('data-hx-unit')===UNIT);
+      UNITMENU.classList.remove('on');SEL.classList.remove('ant-select-open');
+      syncTip();
+    });
+  }
+}
+if(SEL){
+  SEL.classList.add('rea-hx-unit');
+  SEL.style.cursor='pointer';
+  SEL.addEventListener('click',function(e){
+    e.preventDefault();e.stopPropagation();
+    paintUnitMenu();
+    UNITMENU.classList.toggle('on');
+    SEL.classList.toggle('ant-select-open',UNITMENU.classList.contains('on'));
+  });
+}
+
+/* ---------------- 执行人员：快照是静态树选择，补一层演示组织 ---------------- */
+var ORGS=[{n:'华东销售组',c:12},{n:'华南销售组',c:8},{n:'销售支持组',c:5},{n:'全员',c:25}];
+var EXECSEL=null;
+var ETRIG=L.exec?L.exec.querySelector('.yk-tree-select-show'):null;
+var ETXT=L.exec?L.exec.querySelector('.yk-select-wrap span'):null;
+var EMENU=null;
+if(ETRIG){
+  ETRIG.classList.add('rea-hx-exec');
+  ETRIG.style.cursor='pointer';
+  ETRIG.addEventListener('click',function(e){
+    e.preventDefault();e.stopPropagation();
+    if(!EMENU){
+      EMENU=document.createElement('div');EMENU.className='rea-hx-execmenu';
+      EMENU.innerHTML=ORGS.map(function(o,i){
+        return '<button type="button" class="rea-hx-opt" data-hx-org="'+i+'"><span>'+o.n+'</span><span class="rea-hx-execn">'+o.c+' 人</span></button>';
+      }).join('');
+      ETRIG.appendChild(EMENU);
+      EMENU.addEventListener('click',function(ev){
+        var b=ev.target.closest?ev.target.closest('[data-hx-org]'):null;if(!b)return;
+        ev.preventDefault();ev.stopPropagation();
+        EXECSEL=ORGS[Number(b.getAttribute('data-hx-org'))];
+        if(ETXT){ETXT.textContent=EXECSEL.n+'（'+EXECSEL.c+' 人）';ETXT.style.color='rgba(0, 0, 0, 0.88)'}
+        var os=EMENU.querySelectorAll('.rea-hx-opt'),j;
+        for(j=0;j<os.length;j++)os[j].classList.toggle('on',os[j]===b);
+        EMENU.classList.remove('on');
+      });
+    }
+    EMENU.classList.toggle('on');
+  });
+}
+
+/* ---------------- 时间默认值 ---------------- */
+function pad2(n){return (n<10?'0':'')+n}
+function dstr(d){return d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate()}
+function tstr(d){return pad2(d.getHours())+':'+pad2(d.getMinutes())+':'+pad2(d.getSeconds())}
+function setWhen(row,date,time){
+  if(!row)return;
+  var ins=row.querySelectorAll('.ant-picker input');
+  if(ins[0])ins[0].value=date;
+  if(ins[1])ins[1].value=time;
+}
+var NOW=new Date();
+var END=new Date(NOW.getTime()+7*24*3600*1000);
+setWhen(L.start,dstr(NOW),tstr(NOW));
+setWhen(L.end,dstr(END),tstr(NOW));
+function whenOf(row){
+  if(!row)return null;
+  var ins=row.querySelectorAll('.ant-picker input');
+  if(!ins.length||!ins[0].value||!ins[1].value)return null;
+  var dp=ins[0].value.split(/[\/\-]/),tp=ins[1].value.split(':');
+  if(dp.length<3||tp.length<2)return null;
+  var d=new Date(Number(dp[0]),Number(dp[1])-1,Number(dp[2]),Number(tp[0])||0,Number(tp[1])||0,Number(tp[2])||0);
+  return isNaN(d.getTime())?null:d;
+}
+
+/* ---------------- 保存 / 取消 ---------------- */
+function bad(row,on){if(row)row.classList.toggle('rea-hx-bad',!!on)}
+function save(){
+  var err='',row=null;
+  if(NAME&&!NAME.value.trim()){err='请填写任务名称';row=L.name}
+  if(!err&&!EXECSEL){err='请选择执行人员';row=L.exec}
+  if(!err&&!CONT.length){err='请至少添加一条唤醒内容';row=L.content}
+  var st=whenOf(L.start),et=whenOf(L.end);
+  if(!err&&!st){err='请选择通知时间';row=L.start}
+  if(!err&&!et){err='请选择截止时间';row=L.end}
+  if(!err&&st&&et&&et<=st){err='截止时间要晚于通知时间';row=L.end}
+  bad(L.name,false);bad(L.exec,false);bad(L.content,false);bad(L.start,false);bad(L.end,false);
+  if(err){bad(row,true);msg(err);if(row&&row.scrollIntoView)try{row.scrollIntoView({block:'center'})}catch(ign){};return}
+  msg('客户唤醒任务已保存（演示）');
+  setTimeout(function(){parent.postMessage({reaPage:'客户唤醒'},'*')},900);
+}
+var btns=document.querySelectorAll('button.ant-btn'),SAVE=null,CANCEL=null;
+for(var bi=0;bi<btns.length;bi++){
+  var bt=(btns[bi].textContent||'').replace(/\s+/g,'');
+  if(bt==='保存')SAVE=btns[bi];
+  else if(bt==='取消')CANCEL=btns[bi];
+}
+if(SAVE)SAVE.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();save()});
+if(CANCEL)CANCEL.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();parent.postMessage({reaPage:'客户唤醒'},'*')});
+
+/* ---------------- 关闭浮层 ---------------- */
+document.addEventListener('click',function(e){
+  if(UNITMENU&&UNITMENU.classList.contains('on')&&SEL&&!SEL.contains(e.target)){
+    UNITMENU.classList.remove('on');SEL.classList.remove('ant-select-open');
+  }
+  if(EMENU&&EMENU.classList.contains('on')&&ETRIG&&!ETRIG.contains(e.target))EMENU.classList.remove('on');
+});
+document.addEventListener('keydown',function(e){
+  if(e.key!=='Escape')return;
+  if(ED){e.stopPropagation();closeEditor();return}
+  if(UNITMENU){UNITMENU.classList.remove('on');if(SEL)SEL.classList.remove('ant-select-open')}
+  if(EMENU)EMENU.classList.remove('on');
+},true);
+
+syncTip();drawRows();
+})();
+
+`;
+  }
+
   function reaOverviewDataJs(){
     var tree=document.createElement('div');
     tree.innerHTML=docOf('srcBoard');
@@ -30082,7 +30658,10 @@ checkCross();
     '关联好友 · 任务配置快照': { css: REA_WX_SNAP_CSS, js: function(){ return reaWxSnapshotJs('关联好友 · 任务配置快照'); } },
     '客户唤醒 · 任务配置快照': { css: REA_WX_SNAP_CSS, js: function(){ return reaWxSnapshotJs('客户唤醒 · 任务配置快照'); } },
     /* 关联好友 · 新建（2026-11-10）：正文仍是快照那张「添加任务」弹窗，只补执行上限回显 */
-    '关联好友 · 新建': { css: REA_FREQ_CSS, js: reaRelJs }
+    '关联好友 · 新建': { css: REA_FREQ_CSS, js: reaRelJs },
+    /* 客户唤醒 · 新建（2026-11-11）：单位下拉、执行人员、添加回复内容弹窗（固定内容／AI 两套）
+       ＋ 唤醒内容行的增删改；正文与设计语言都还是快照，只补交互 */
+    '客户唤醒 · 新建': { css: REA_HX_CSS, js: reaHxJs }
   };
 
   /* 把被覆盖页的正文区（contentStart..contentEnd，构建脚本给出的那道缝）换成它登记表里那个载体的内容。
