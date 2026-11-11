@@ -3577,11 +3577,11 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
           </div>
           <div class="scroll cust-scroll" id="custAwakeBody"></div>
           <!-- 吸底「一键唤醒」· 客户唤醒两个入口之一（另一个在工具页「高效发送」组）。
+               底栏只放这一枚主操作，不写三档人数。
                点它落在名单的「全部」视图、三档一起带过去、默认全选；当前停在哪一档只影响页面上的列表，
                不影响带过去的人数——想一次唤醒三档，不用在三个 Tab 里各点一次。 -->
           <div class="cw-foot" id="custAwakeFoot">
-            <div class="cw-sum" id="custAwakeSum">三档共 <b>11</b> 人<br><span>三档一起带过去</span></div>
-            <button class="cw-btn" onclick="cwFromAwake()">一键唤醒</button>
+            <button class="cw-btn block" onclick="cwFromAwake()">一键唤醒</button>
           </div>
         </section>
         <section class="screen" id="host-reach">
@@ -5096,12 +5096,6 @@ function custRender(id){
   for(var j=0;j<list.length;j++)lh+=custCard(list[j],p);
   h+='<div class="cust-list">'+(lh||'<div class="hv-empty">暂无记录</div>')+'</div>';
   $(dom[0]).innerHTML=h;
-  /* 吸底那条写「三档共 N 人」——N 由三档数据算，不写死：改演示数据时它跟着走 */
-  if(id==='host-awake'&&$('custAwakeSum')){
-    var ti,tot=0;
-    for(ti=0;ti<p.lists.length;ti++)tot+=p.lists[ti].length;
-    $('custAwakeSum').innerHTML='三档共 <b>'+tot+'</b> 人<br><span>三档一起带过去</span>';
-  }
   CUST_ACCT_OPEN=false; custAcctSync(id);
 }
 REND['host-awake']=function(){custRender('host-awake')};
