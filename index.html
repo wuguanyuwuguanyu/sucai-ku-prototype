@@ -1101,6 +1101,21 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
   box-shadow:0 12px 24px -24px rgba(40,70,150,.9);position:relative;overflow:hidden}
 .cw-cfg span{display:flex;align-items:baseline;gap:4px;margin-right:14px}
 .cw-cfg i{font-style:normal;font-size:11.5px;font-weight:600;color:#95A3B8}
+/* AI 表单：输入贴底，上方整块留给结果 */
+#cwContentBody.cw-form{display:flex;flex-direction:column;overflow:hidden;padding-bottom:0}
+.cw-mid{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:12px 0}
+.cw-empty{font-size:12.5px;font-weight:500;color:#A9B8CE;text-align:center;line-height:1.6}
+.cw-composer{flex:none;background:#fff;border-radius:16px;padding:14px;margin-bottom:16px;
+  box-shadow:0 12px 24px -24px rgba(40,70,150,.9)}
+.cw-composer .lab{display:flex;align-items:center;font-size:12px;font-weight:600;color:#7C8CA4;margin-bottom:3px}
+.cw-composer .lab .cnt{margin-left:auto;font-size:10.5px;font-weight:500;color:#A9B8CE}
+.cw-composer input{width:100%;border:0;background:transparent;font-size:16px;font-weight:600;
+  font-family:var(--f);color:#152C50;padding:0;line-height:1.4;letter-spacing:.01em}
+.cw-composer input::placeholder{color:#B4C1D6;font-weight:500}
+.cw-composer input:focus{outline:none}
+.cw-composer .expl{font-size:11.5px;font-weight:500;color:#95A3B8;margin-top:4px}
+.cw-composer .cw-cfg{margin-top:10px;padding:12px 0 0;border-top:1px solid #EEF2FA;
+  background:transparent;border-radius:0;box-shadow:none}
 /* AI 结果：一人一张卡，行尾三枚图标 */
 .cw-aicard{position:relative;overflow:hidden;background:#fff;border-radius:16px;padding:12px 14px;margin-top:10px;
   box-shadow:0 12px 24px -24px rgba(40,70,150,.9)}
@@ -5450,7 +5465,11 @@ function cwDelAi(id){
   });
 }
 function cwBackToForm(){ CW_GEN=false; REND['cw-content'](); }
-function cwTopicInput(v){ CW_TOPIC=v; cwContentFoot(); }
+function cwTopicInput(v){
+  CW_TOPIC=v;
+  var c=$('cwTopicCnt'); if(c)c.textContent=v.length+' / 50';
+  cwContentFoot();
+}
 function cwFixedSheet(i){
   var it=i>=0?CW_FIXED[i]:null, t=it?it.t:'text', c=it?it.c:'';
   return '<div class="cw-sh">'+(it?'编辑内容':'添加内容')+'</div>'
@@ -5604,15 +5623,10 @@ REND['cw-content']=function(){
   CW_LIST_MODE='root';
   $('cwContentBack').innerHTML=I('back',24,2);
   var act=$('cwContentAct');
-  /* 头栏只在 AI 这一支挂设置：三项生成参数在那一页起作用，固定内容没有可调的。 */
-  if(CW_STRAT==='ai'){
-    act.style.display='';
-    act.innerHTML=I('gear',20,2.1);
-    act.setAttribute('aria-label','设置'); act.setAttribute('title','设置');
-    act.setAttribute('onclick','cwSetSheet()');
-  }else{
-    act.style.display='none'; act.removeAttribute('onclick');
-  }
+  /* 设置不再挂头栏：表单态在输入卡里，结果态在底栏那行参数上。 */
+  act.style.display='none';
+  act.removeAttribute('onclick'); act.removeAttribute('aria-label');
+  act.removeAttribute('title'); act.innerHTML='';
   var h='';
   if(CW_STRAT==='ai'&&CW_GEN){
     h+='<button class="cw-srow" onclick="cwBackToForm()"><span>主题</span><b>'+esc(CW_TOPIC)+'</b><span class="cw-chev">›</span></button>';
@@ -5633,11 +5647,15 @@ REND['cw-content']=function(){
     h+='<button class="cw-addrow" onclick="cwEditFixed(-1)">＋ 添加一条</button></div>';
     h+='<div class="cw-tip">开始后切到微信逐条发送，期间 App 不在前台，<br>结果写进唤醒记录。</div>';
   }else if(!CW_GEN){
-    h+='<div class="cw-topic"><div class="lab">这次想说什么</div>'
-      +'<input id="cwTopic" value="'+esc(CW_TOPIC)+'" placeholder="比如：秋季新品到店" oninput="cwTopicInput(this.value)"></div>'
+    h+='<div class="cw-mid"><span class="cw-empty">生成后，'+cwSelIds().length+' 个人的话术出现在这里</span></div>'
+      +'<div class="cw-composer">'
+      +'<div class="lab">这次想说什么<span class="cnt" id="cwTopicCnt">'+CW_TOPIC.length+' / 50</span></div>'
+      +'<input id="cwTopic" maxlength="50" value="'+esc(CW_TOPIC)+'" placeholder="比如：秋季新品到店" oninput="cwTopicInput(this.value)">'
+      +'<div class="expl">按每个人的聊天记录各写一条</div>'
       +'<button class="cw-cfg" onclick="cwSetSheet()">'
         +'<span><i>风格</i>'+CW_SET.style+'</span><span><i>角色</i>'+CW_SET.role+'</span>'
-        +'<span><i>字数</i>'+CW_SET.words+'</span><span class="cw-chev">›</span></button>';
+        +'<span><i>字数</i>'+CW_SET.words+'</span><span class="cw-chev">›</span></button>'
+      +'</div>';
   }else{
     /* 从名单回来时可能多了几个人：已经点过生成，就给新来的人排进生成队列，别让他们挂一张空卡。 */
     var miss=cwSelIds().filter(function(id){ return CW_AI[id]==null&&!CW_FAIL[id]&&!CW_PEND[id]; });
@@ -5646,6 +5664,7 @@ REND['cw-content']=function(){
     h+='<button class="cw-addrow" onclick="cwRegen()">全部重新生成</button>';
   }
   $('cwContentBody').innerHTML=h;
+  $('cwContentBody').classList.toggle('cw-form', CW_STRAT==='ai'&&!CW_GEN);
   CW_FLASH={};
   var ins=$('cwContentBody').querySelectorAll('.cw-aicard.in');
   for(var q=0;q<ins.length;q++)cwAiUnmark(ins[q]);
