@@ -20908,11 +20908,6 @@ tb.addEventListener("click",function(e){
     + '.rea-baf-row+.rea-baf-row{margin-top:19px}'
     + '.rea-baf-lab{padding-top:9px;font-size:12px;line-height:1.6;color:#253048;white-space:nowrap}'
     + '.rea-baf-lab.req:before{content:"*";margin-right:4px;color:#D75455}'
-    /* 分配规则的 ? ：悬停／聚焦浮一条说明，不占正文 */
-    + '.rea-baf-q{position:relative;display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;width:14px;height:14px;margin-left:4px;border:1px solid #DCE2EB;border-radius:50%;background:#fff;font-size:10px;line-height:1;font-weight:500;color:#7C879B;cursor:help;vertical-align:1px}'
-    + '.rea-baf-q:hover,.rea-baf-q:focus{border-color:#7C879B;color:#253048;outline:none}'
-    + '.rea-baf-q:after{content:attr(data-tip);position:absolute;left:-10px;top:21px;z-index:9;box-sizing:border-box;width:226px;padding:9px 11px;border:1px solid #E9EDF3;border-radius:6px;background:#fff;box-shadow:0 6px 18px rgba(37,48,72,.12);font-size:11px;line-height:1.7;font-weight:400;color:#253048;text-align:left;white-space:normal;opacity:0;visibility:hidden;transition:opacity .12s;pointer-events:none}'
-    + '.rea-baf-q:hover:after,.rea-baf-q:focus:after{opacity:1;visibility:visible}'
     + '.rea-baf-ctl{min-width:0}'
     + '@media(min-width:1250px){.rea-baf-sec{padding:28px 32px}.rea-baf-row{grid-template-columns:92px minmax(0,1fr);gap:22px}}'
     /* 控件统一 38px 高：输入、下拉、标签框、群组／地区选择器都停同一条线 */
@@ -23703,6 +23698,7 @@ function syncMethod(){
   if(PHONE_ROW)show(PHONE_ROW,k==='manual');
   if(fileRowEl)show(fileRowEl,k==='file');
   if(TYPE_ROW)show(TYPE_ROW,!g);
+  if(allocRow)show(allocRow.row,!g);
   /* 整行收起时把开着的下拉一并关掉，免得切回来还是一副开着的样 */
   if(!g){
     groupPicker.close();
@@ -23723,6 +23719,8 @@ document.addEventListener('click',function(e){
   if(METHOD_ROW.contains(e.target)&&e.target.closest&&e.target.closest('.ant-radio-wrapper'))setTimeout(syncMethod,0);
   if((nRow&&nRow.row.contains(e.target)||rRow&&rRow.row.contains(e.target))
      &&e.target.closest&&e.target.closest('.ant-radio-wrapper'))setTimeout(syncModes,0);
+  if(allocRow&&allocRow.row.contains(e.target)
+     &&e.target.closest&&e.target.closest('.ant-radio-wrapper'))setTimeout(drawAllocHint,0);
 },false);
 
 function toast(t){
@@ -23787,6 +23785,7 @@ aside.innerHTML='<div class="rea-baf-sum">'
   +'<div><dt>添加方式</dt><dd data-k="src">手动输入</dd></div>'
   +'<div><dt>任务类型</dt><dd data-k="type">批量添加好友</dd></div>'
   +'<div><dt>执行人员</dt><dd data-k="exec">待选择</dd></div>'
+  +'<div><dt>分配方式</dt><dd data-k="alloc">平均分配</dd></div>'
   +'</dl><hr><div class="rea-baf-tl">'
   +'<div class="rea-baf-tp"><p>通知执行</p><div data-k="start">待设置</div></div>'
   +'<div class="rea-baf-tp"><p>任务截止</p><div data-k="end">待设置</div></div>'
@@ -24014,7 +24013,7 @@ startI.addEventListener('change',function(){
 
 /* ---- ④ 谁来加 ---- */
 var ORGS=[{n:'华东销售组',c:12},{n:'华南销售组',c:8},{n:'销售支持组',c:5},{n:'全员',c:25}];
-var execRow=bafTake(b4,ROW_EXEC,'执行人员',true),execSel=null,eqTip=null;
+var execRow=bafTake(b4,ROW_EXEC,'执行人员',true),execSel=null;
 if(execRow){
   execRow.ctl.innerHTML='';
   execRow.ctl.classList.add('rea-baf-exec');
@@ -24035,14 +24034,6 @@ if(execRow){
   eh.textContent='如果需要特殊分配，请为该员工创建单独的任务。';
   execRow.ctl.appendChild(eh);
   var ee=document.createElement('p');ee.className='rea-baf-err';execRow.ctl.appendChild(ee);
-  /* 分配规则只对「这堆号怎么分」有影响：连着分、余数轮流多给一人。
-     不写成行下说明，挂一枚 ? 悬停看，正文保持干净。 */
-  var eq=eqTip=document.createElement('span');eq.className='rea-baf-q';eq.tabIndex=0;
-  eq.setAttribute('role','img');
-  eq.setAttribute('aria-label','名单按顺序连着分给执行人员，每人一段；除不尽时轮流多分一人。');
-  eq.setAttribute('data-tip','名单按顺序连着分，每人一段；除不尽时轮流多分一人。');
-  eq.textContent='?';
-  execRow.lab.appendChild(eq);
   selBtn.addEventListener('click',function(e){
     e.preventDefault();e.stopPropagation();
     var on=selMenu.classList.toggle('on');
@@ -24062,6 +24053,22 @@ if(execRow){
     if(selMenu.classList.contains('on')&&!execRow.ctl.contains(e.target))selMenu.classList.remove('on');
   });
 }
+
+/* ---- 分配方式：这批号怎么分给执行人员，二选一 ----
+   只在手动输入／文件导入时出现；群内好友由各群所属员工执行，不出这一行。
+   两种方式每人拿到的条数一样多，差别只在号码是连续的一段还是一人一个轮着分。 */
+var ALLOC_HINTS={
+  '平均分配':'名单按顺序切成连续几段，每人一段；除不尽时轮流多分一人。',
+  '轮询分配':'名单按顺序一人一个轮流分，分完一轮再从头接着分。'
+};
+var allocRow=bafNewRow(b4,'分配方式',false),allocModes=null,allocHint=null;
+allocModes=modeRadios('rea-baf-alloc',['平均分配','轮询分配'],0);
+if(allocModes)allocRow.ctl.appendChild(allocModes);
+allocHint=document.createElement('p');allocHint.className='rea-baf-hint';
+allocRow.ctl.appendChild(allocHint);
+function allocOf(){return allocRow?(selectedLabel(allocRow.row)||'平均分配'):'平均分配'}
+function drawAllocHint(){allocHint.textContent=ALLOC_HINTS[allocOf()]||ALLOC_HINTS['平均分配']}
+drawAllocHint();
 
 /* ---- 更多设置：一行摘要，点开才铺 ---- */
 var more=document.createElement('div');more.className='rea-baf-more';
@@ -24147,13 +24154,13 @@ function bafRender(){
   var exec=execSel?(execSel.n+' · '+execSel.c+' 人'):'待选择';
   setSum('lab',lab);setSum('num',String(n));setSum('unit',unit);
   setSum('src',src);setSum('type',typ);setSum('exec',exec);
+  setSum('alloc',k==='group'?'按群所属员工':allocOf());
   setSum('start',bafDtCn(sv));setSum('end',bafDtCn(ev));
   var l1;
   if(k==='group')l1='已选 '+n+' 个群组 · 人数待执行时核算';
   else if(k==='file')l1=fileName?('已选文件 '+fileName):'未选文件';
   else l1='已录入 '+n+' 位好友';
   if(k!=='group')l1+=' · '+typ;
-  if(eqTip)eqTip.style.display=(k==='group')?'none':'';
   actSum1.textContent=l1;
   actSum2.textContent=bafDtCn(sv)+' 通知 · '+(execSel?(execSel.n+' · '+execSel.c+' 人'):'执行人待选择');
 }
@@ -24231,6 +24238,7 @@ for(i=0;i<ps.length;i++){
 if(!anchor||!anchor.parentNode)return;
 var rows=[
   ['添加好友方式','手动输入'],
+  ['分配方式','平均分配'],
   ['群组名称','—（手动输入方式不涉及）'],
   ['昵称筛选','—（手动输入方式不涉及）'],
   ['地区筛选','—（手动输入方式不涉及）'],
