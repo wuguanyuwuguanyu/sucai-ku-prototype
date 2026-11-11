@@ -6436,8 +6436,10 @@ REND['host-ai-act']=function(){
     h+='<div class="hva-form"><div class="hva-form-h">好友验证方式</div>'+hvaActRadios('verify')+'</div>';
     h+='<div class="hva-form"><div class="hva-form-h">设置标签</div>'+hvaActInp('tag','','请输入')+'</div>';
     /* 「选择备注」那卡：选的是这串备注**加在名字哪一头**，所以输入框跟着它、在同一张卡里——
-       拆到另一张卡上，读起来会像两个互不相干的设置。 */
-    h+='<div class="hva-form"><div class="hva-form-h">选择备注</div>'+hvaActRadios('note')+hvaActInp('noteText','','请输入')+'</div>';
+       拆到另一张卡上，读起来会像两个互不相干的设置。
+       备注文字留空＝用加好友那天的日期：前缀＝日期＋昵称，后缀＝昵称＋日期（占位里说清这件事，
+       不另起一行说明）。 */
+    h+='<div class="hva-form"><div class="hva-form-h">选择备注</div>'+hvaActRadios('note')+hvaActInp('noteText','','留空则用加好友日期')+'</div>';
     /* 「通过后自动打招呼」那一卡**不写卡标题**：行上就是「通过后自动打招呼」，
        再冠一行同名标题＝同一句话写两遍。下面那句灰字照现网原样留着，
        它说的是这条能力自己的欢迎语列表（长按可改），那一屏不在本次范围里。 */
@@ -6494,7 +6496,7 @@ function hvaActSave(){
     s=(nm.length?'平台 '+nm.length+'/'+HVA_REPLY_PLATS.length+'（'+nm.join('、')+'）':'还没选回复平台')
       +' · 更新时间 '+(c.upd==='自定义分钟'?(c.updMin?'每 '+c.updMin+' 分钟':'自定义（分钟数未填）'):c.upd);
   }else{
-    s=c.verify+' · 备注'+(c.note==='备注后缀'?'后缀':'前缀')+'「'+(c.noteText||'未填')+'」 · 通过后自动打招呼 '+(c.hello?'已开启':'已关闭')
+    s=c.verify+' · 备注'+(c.note==='备注后缀'?'后缀':'前缀')+'「'+(c.noteText||'加好友日期')+'」 · 通过后自动打招呼 '+(c.hello?'已开启':'已关闭')
       +' · 推送名片至企业微信 '+(c.card?'已开启':'已关闭')
       +' · 执行间隔 '+(c.freq==='自定义分钟'?(c.freqMin?'每 '+c.freqMin+' 分钟':'自定义（分钟数未填）'):c.freq);
   }
@@ -22967,7 +22969,7 @@ else if(PAGE==='群发群组 · 新建')initQs();
     '}',
     'function cfgHtml(){',
     '  return \'<div class="rea-zd-sec">好友设置\'',
-    '    +\'<span class="rea-zd-q" title="通过好友验证后自动打标签、写备注、推送名片；留空或关闭就不执行">?</span></div>\'',
+    '    +\'<span class="rea-zd-q" title="通过好友验证后自动打标签、写备注、推送名片；备注留空时用加好友日期，其余留空或关闭就不执行">?</span></div>\'',
     '    +\'<div class="rea-zd-frow"><span class="rea-zd-cflab">好友验证方式：</span>\'',
     '    +cfgRadioHtml("verify",["被动验证（客户主动添加我）","主动验证（我主动添加客户）"],ST.verify)+"</div>"',
     '    +\'<div class="rea-zd-frow"><span class="rea-zd-cflab">设置标签：</span>\'',
@@ -22976,7 +22978,7 @@ else if(PAGE==='群发群组 · 新建')initQs();
     '    +\'<div class="rea-zd-frow"><span class="rea-zd-cflab">选择备注：</span>\'',
     '    +cfgRadioHtml("note",["备注前缀","备注后缀"],ST.note)',
     '    +\'<input id="rea-zd-notetext" class="ant-input css-vgijab ant-input-outlined rea-zd-cinp rea-zd-cinp-note"\'',
-    '    +\' placeholder="请输入备注，可留空" value="\'+esc(ST.noteText)+\'"></div>\';',
+    '    +\' placeholder="留空则用加好友日期" value="\'+esc(ST.noteText)+\'"></div>\';',
     '}',
     'function syncRadios(rg,cur){',
     '  var ls=rg.querySelectorAll(".ant-radio-wrapper"),j,on,txt,rd,ip;',
