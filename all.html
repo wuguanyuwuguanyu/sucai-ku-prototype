@@ -2730,8 +2730,9 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .rah-q{flex:none;display:flex;align-items:center;gap:6px;align-self:center}
 /* 展开态：卡片只留上圆角、展开区只留下圆角，两截严丝合缝拼成一块完整的「翻开的卡」；
    展开区从卡底抽出来（往下 10px 滑入＋淡入），收起时原路缩回去（.closing，见 raHitTap／hpTap）。 */
-.ra-hit-row.open{border-radius:var(--shape-m) var(--shape-m) 0 0;margin-bottom:0}
-.ra-hit-exp{background:var(--sc-high);border-radius:0 0 var(--shape-m) var(--shape-m);margin:0 0 9px;padding:11px 13px;
+/* 展开态整块换 secondary-container（M3 的选中容器色），颜色 .18s 渐变过去（2026-11-12 产品定稿）。 */
+.ra-hit-row.open{border-radius:var(--shape-m) var(--shape-m) 0 0;margin-bottom:0;background:var(--secondary-container)}
+.ra-hit-exp{background:var(--secondary-container);border-radius:0 0 var(--shape-m) var(--shape-m);margin:0 0 9px;padding:11px 13px;
   animation:raHitOpen .34s var(--emph);will-change:transform,opacity;
   transition:transform .16s var(--emph),filter .16s var(--emph),background-color .18s var(--emph),box-shadow .18s var(--emph)}
 /* 按下头部即反馈（展开态）：展开区跟着上收 4px、略压暗，手指一碰就知道「头 + 内容」是同一个开关。
@@ -2746,24 +2747,6 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .ra-hit-exp .ra-hit-acts{display:flex;gap:8px;flex-wrap:wrap}
 @keyframes raHitIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
 .ra-hit-row.fresh{animation:raHitIn .34s var(--emph);box-shadow:0 0 0 1.5px var(--primary)}
-
-/* ── 临时 · 展开态配色对比（A/B/C/D）──────────────────────────────────────
-   给手机顶部那排小胶囊切的四套写法，**选定一种后连同脚本里的 .hitsw 整段删掉**。
-   四套都只改「展开态」：收起态的卡一律不动，展开时颜色 .18s 渐变过去。
-   A 容器＝整块换 secondary-container（M3 的选中容器色）；B 明度＝整块压到 sc-highest；
-   C 主色＝整块染 primary-container；D 描边＝底色不动、整块围一圈 1px 主色发丝边
-   （M3 卡片规范是「无描边无阴影」，D 属破例，只为对比）。
-   D 的边分两截画：头只画上／左／右、展开区只画下／左／右——接缝那 1px 不画，两截才连成整圈。 */
-body.hit-a .ra-hit-row.open,body.hit-a .ra-hit-exp{background:#E0E0F9}
-body.hit-b .ra-hit-row.open,body.hit-b .ra-hit-exp{background:#E3E1EB}
-body.hit-c .ra-hit-row.open,body.hit-c .ra-hit-exp{background:#E4E0FF}
-body.hit-d .ra-hit-row.open{box-shadow:-1px 0 0 0 rgba(90,84,249,.45),1px 0 0 0 rgba(90,84,249,.45),0 -1px 0 0 rgba(90,84,249,.45)}
-body.hit-d .ra-hit-exp{box-shadow:-1px 0 0 0 rgba(90,84,249,.45),1px 0 0 0 rgba(90,84,249,.45),0 1px 0 0 rgba(90,84,249,.45)}
-.hitsw{position:absolute;bottom:84px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;gap:3px;padding:3px;width:max-content;
-  border-radius:999px;background:rgba(255,255,255,.94);box-shadow:0 2px 10px rgba(26,27,33,.18)}
-.hitsw button{border:none;background:none;font-family:inherit;font-size:11px;font-weight:500;color:var(--on-surface-variant);
-  padding:5px 9px;border-radius:999px;cursor:pointer;white-space:nowrap}
-.hitsw button.on{background:var(--primary);color:#fff}
 
 /* 顶部命中横幅（#hpTip · 2026-10-15 新增，ADR-0061）：**未开启聊天辅助**时，客户消息命中素材关键词，
    先在屏顶弹这条通知；**点它才展开 #hpPanel**。
@@ -11511,24 +11494,6 @@ document.addEventListener('scroll',function(e){
 })();
 setTimeout(sbScan,120);
 
-/* ── 临时 · 展开态配色对比：手机顶部那排小胶囊（A 容器／B 明度／C 主色／D 描边）──────────
-   点一下给 body 挂 hit-a|b|c|d，四套样式见上面那段 CSS。**选定方案后本段与那段 CSS 一起删掉。** */
-(function(){
-  var bar=document.createElement('div');bar.className='hitsw';
-  bar.innerHTML=[['a','A 容器'],['b','B 明度'],['c','C 主色'],['d','D 描边']].map(function(o){
-    return '<button data-hit="'+o[0]+'">'+o[1]+'</button>';
-  }).join('');
-  (document.querySelector('.phone-inner')||document.body).appendChild(bar);
-  function setHit(v){
-    ['a','b','c','d'].forEach(function(k){document.body.classList.toggle('hit-'+k,k===v)});
-    Array.prototype.forEach.call(bar.children,function(b){b.classList.toggle('on',b.getAttribute('data-hit')===v)});
-  }
-  bar.addEventListener('click',function(e){
-    var b=e.target.closest?e.target.closest('button'):null;
-    if(b&&b.hasAttribute('data-hit'))setHit(b.getAttribute('data-hit'));
-  });
-  setHit('a');
-})();
 <\/script>
 </body>
 </html>
