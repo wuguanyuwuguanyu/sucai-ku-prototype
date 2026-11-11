@@ -1116,6 +1116,18 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .cw-composer .expl{font-size:11.5px;font-weight:500;color:#95A3B8;margin-top:4px}
 .cw-composer .cw-cfg{margin-top:10px;padding:12px 0 0;border-top:1px solid #EEF2FA;
   background:transparent;border-radius:0;box-shadow:none}
+/* AI 结果：结果在上方滚动，主题和生成参数收成贴底一条，不跟着结果跳走 */
+#cwContentBody.cw-result{display:flex;flex-direction:column;overflow:hidden;padding-bottom:0}
+.cw-results{flex:1;min-height:0;overflow-y:auto;padding-bottom:12px}
+.cw-mini{flex:none;display:block;width:100%;text-align:left;background:#fff;border-radius:16px;
+  padding:10px 14px;margin-bottom:16px;box-shadow:0 12px 24px -24px rgba(40,70,150,.9)}
+.cw-mini .top{display:flex;align-items:center;gap:6px}
+.cw-mini .top i{font-style:normal;font-size:11.5px;font-weight:600;color:#95A3B8}
+.cw-mini .top b{font-size:14.5px;font-weight:600;color:#152C50;line-height:1.4}
+.cw-mini .top .cw-chev{margin-left:auto}
+.cw-mini .sub{display:flex;align-items:baseline;margin-top:5px;font-size:11.5px;font-weight:500;color:#5B7BAA}
+.cw-mini .sub span{display:flex;align-items:baseline;gap:4px;margin-right:14px}
+.cw-mini .sub i{font-style:normal;font-weight:600;color:#95A3B8}
 /* AI 结果：一人一张卡，行尾三枚图标 */
 .cw-aicard{position:relative;overflow:hidden;background:#fff;border-radius:16px;padding:12px 14px;margin-top:10px;
   box-shadow:0 12px 24px -24px rgba(40,70,150,.9)}
@@ -5628,9 +5640,6 @@ REND['cw-content']=function(){
   act.removeAttribute('onclick'); act.removeAttribute('aria-label');
   act.removeAttribute('title'); act.innerHTML='';
   var h='';
-  if(CW_STRAT==='ai'&&CW_GEN){
-    h+='<button class="cw-srow" onclick="cwBackToForm()"><span>主题</span><b>'+esc(CW_TOPIC)+'</b><span class="cw-chev">›</span></button>';
-  }
   h+='<div class="cw-strat">'
     +'<button class="'+(CW_STRAT==='fixed'?'on':'')+'" onclick="CW_STRAT=\'fixed\';REND[\'cw-content\']()">固定内容</button>'
     +'<button class="'+(CW_STRAT==='ai'?'on':'')+'" onclick="CW_STRAT=\'ai\';REND[\'cw-content\']()">AI生成</button></div>';
@@ -5660,11 +5669,18 @@ REND['cw-content']=function(){
     /* 从名单回来时可能多了几个人：已经点过生成，就给新来的人排进生成队列，别让他们挂一张空卡。 */
     var miss=cwSelIds().filter(function(id){ return CW_AI[id]==null&&!CW_FAIL[id]&&!CW_PEND[id]; });
     if(miss.length)cwAiBegin(miss);
+    h+='<div class="cw-results">';
     cwSelIds().forEach(function(id){ h+=cwAiCardHtml(id,!!CW_FLASH[id]); });
-    h+='<button class="cw-addrow" onclick="cwRegen()">全部重新生成</button>';
+    h+='<button class="cw-addrow" onclick="cwRegen()">全部重新生成</button></div>';
+    /* 生成后输入卡不搬去顶部：主题和三项参数留在原地收成一条，点它回表单改。 */
+    h+='<button class="cw-mini" onclick="cwBackToForm()">'
+      +'<span class="top"><i>主题</i><b>'+esc(CW_TOPIC)+'</b><span class="cw-chev">›</span></span>'
+      +'<span class="sub"><span><i>风格</i>'+CW_SET.style+'</span><span><i>角色</i>'+CW_SET.role+'</span><span><i>字数</i>'+CW_SET.words+'</span></span>'
+      +'</button>';
   }
   $('cwContentBody').innerHTML=h;
   $('cwContentBody').classList.toggle('cw-form', CW_STRAT==='ai'&&!CW_GEN);
+  $('cwContentBody').classList.toggle('cw-result', CW_STRAT==='ai'&&CW_GEN);
   CW_FLASH={};
   var ins=$('cwContentBody').querySelectorAll('.cw-aicard.in');
   for(var q=0;q<ins.length;q++)cwAiUnmark(ins[q]);
