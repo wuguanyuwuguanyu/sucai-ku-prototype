@@ -922,6 +922,154 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cust-acct-ck{flex:none;color:#2E6BFF;display:flex;width:22px;justify-content:flex-end}
 
+/* ---------------- 客户唤醒（App 工具页）· ADR-0095／docs/prd/客户唤醒-App工具页-PRD.md ----------------
+   这与后台派下来的「客户唤醒任务」是两条路：这一屏是员工自己点的、立即发的一次性动作，
+   没有定时、没有循环、不落后台任务，结果只落在本机的「唤醒记录」里。
+   视觉归到宿主四屏那一套：浅蓝雾顶、白卡、蓝字，主按钮用实色蓝（宿主主操作不用渐变）。
+   分档口径与「待唤醒客户」页同一套（今日 1–6 小时／1天 1–6 天／1周 7–13 天），
+   但这一屏是**选择器**：每行前面一枚勾选框，分组头带三态「全选」。 */
+#cw-list,#cw-content,#cw-confirm,#cw-records,#cw-record{background:linear-gradient(180deg,#F0F5FF 0%,#F7F9FE 100%)}
+.cw-glow{position:absolute;left:0;right:0;top:0;height:240px;pointer-events:none;
+  background:radial-gradient(56% 34% at 18% -10%,rgba(150,178,255,.34),transparent 72%),
+             radial-gradient(50% 30% at 100% 0%,rgba(182,160,255,.22),transparent 74%)}
+.cw-bar{position:relative}
+.cw-bar h3{position:absolute;left:48px;right:96px;top:0;bottom:0;display:flex;align-items:center;
+  justify-content:center;padding:0;pointer-events:none;font-size:18.7px;font-weight:500;color:#102953}
+.cw-acts{position:absolute;right:6px;top:50%;margin-top:-22px;display:flex;align-items:center;gap:2px}
+.cw-ib{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  color:#2E5FA8;position:relative;overflow:hidden}
+.cw-scroll{position:relative;z-index:1;padding:2px 16px 16px}
+/* 视图 chips：横向可滑，一枚一条「看哪一段」。**筛选只筛不改已勾选的人**，所以它不承担选择状态。 */
+.cw-chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:2px 16px 13px}
+.cw-chips::-webkit-scrollbar{display:none}
+.cw-chip{flex:none;display:flex;align-items:center;gap:5px;height:33px;padding:0 14px;border-radius:999px;
+  background:#fff;border:1px solid #DCE6FA;font-size:13.5px;font-weight:600;color:#3A5B8F;
+  position:relative;overflow:hidden;transition:background .18s var(--emph),color .18s}
+.cw-chip.on{background:#E8F0FF;border-color:#B9CDF6;color:#1B4AA8}
+.cw-chip .n{font-size:11.5px;font-weight:700;color:#7C93B8}
+.cw-chip.on .n{color:#2E6BFF}
+/* 分组头：左边「今日未回复 · 6 人」，右边三态全选。三态是：全勾 ✓／部分 –／全不选空框，
+   勾选框在「全选」二字左侧——用户看得到再点一次会怎样（Q17）。 */
+.cw-band{display:flex;align-items:center;justify-content:space-between;margin:14px 2px 8px}
+.cw-band:first-child{margin-top:4px}
+.cw-band>b{font-size:14.5px;font-weight:600;color:#173A6B;letter-spacing:.01em}
+.cw-allsel{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:#4A6B9E;
+  padding:4px 2px;border-radius:8px;position:relative;overflow:hidden}
+.cw-cb{flex:none;width:22px;height:22px;border-radius:7px;border:1.6px solid #C3D3EE;background:#fff;
+  display:flex;align-items:center;justify-content:center;color:#fff;transition:background .15s,border-color .15s}
+.cw-cb.sm{width:18px;height:18px;border-radius:6px}
+.cw-cb.on{background:linear-gradient(140deg,#1677FE,#6A5BFF);border-color:transparent}
+.cw-cb.part{border-color:#6A8FE0;background:#fff}
+.cw-cb.part::after{content:"";width:9px;height:2.4px;border-radius:2px;background:#6A8FE0}
+.cw-row{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:#fff;
+  border-radius:16px;padding:11px 12px;margin-bottom:10px;position:relative;overflow:hidden;
+  box-shadow:0 12px 24px -22px rgba(40,70,150,.95)}
+.cw-av{flex:none;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:16px;font-weight:600;letter-spacing:.02em;
+  background:linear-gradient(-52deg,#A56EFF 6.5%,#529AFF 96.9%)}
+.cw-main{flex:1;min-width:0}
+.cw-nm{display:flex;align-items:center;font-size:15.5px;font-weight:600;color:#152C50;line-height:1.2}
+.cw-tag{margin-left:6px;font-size:10.5px;font-weight:600;color:#9A5B2A;background:#FFF1E3;
+  border-radius:6px;padding:1px 5px;white-space:nowrap}
+.cw-meta{margin-top:4px;font-size:12px;font-weight:500;color:#95A3B8;line-height:1.2}
+.cw-right{flex:none;text-align:right;font-size:11px;font-weight:500;color:#8FA3BE;line-height:1.25}
+.cw-right b{display:block;font-size:14.5px;font-weight:600;color:#173A6B}
+/* 底部操作条：左边两行汇总，右边唯一主操作。与「待唤醒客户」那枚吸底条同一形制。 */
+.cw-foot{flex:none;display:flex;align-items:center;gap:12px;padding:10px 16px calc(14px + env(safe-area-inset-bottom));
+  background:#fff;position:relative;z-index:6;box-shadow:0 -14px 24px -20px rgba(40,70,150,.9)}
+.cw-sum{flex:1;min-width:0;font-size:12px;font-weight:500;color:#6E86A8;line-height:1.45}
+.cw-sum>b{font-size:17px;font-weight:700;color:#173A6B;margin:0 2px;letter-spacing:-.01em}
+.cw-sum.bad,.cw-sum.bad>b{color:#C2413A}
+.cw-btn{flex:none;display:flex;align-items:center;justify-content:center;height:46px;padding:0 22px;
+  border-radius:999px;background:#2E6BFF;color:#fff;font-size:15px;font-weight:600;letter-spacing:.01em;
+  position:relative;overflow:hidden;box-shadow:0 12px 20px -16px rgba(46,107,255,.95)}
+.cw-btn:disabled{background:#C9D8EF;box-shadow:none}
+.cw-btn.ghost{background:#E8EEF9;color:#2E5FA8;box-shadow:none}
+.cw-btn.block{width:100%}
+.cw-btn.sm{height:34px;padding:0 14px;font-size:13px}
+/* 白卡与段标题：内容页、确认页、记录详情共用 */
+.cw-card{background:#fff;border-radius:16px;padding:14px;margin-top:12px;
+  box-shadow:0 12px 24px -24px rgba(40,70,150,.9)}
+.cw-h{font-size:13.5px;font-weight:600;color:#2D528E;margin-bottom:6px}
+.cw-p{font-size:12.5px;font-weight:500;color:#7C8CA4;line-height:1.55}
+.cw-strat{display:flex;gap:8px;margin:2px 0 4px}
+.cw-strat button{flex:1;height:36px;border-radius:999px;background:#fff;border:1px solid #DCE6FA;
+  font-size:14px;font-weight:600;color:#3A5B8F;position:relative;overflow:hidden}
+.cw-strat button.on{background:#E8F0FF;border-color:#B9CDF6;color:#1B4AA8}
+.cw-seq{display:flex;align-items:flex-start;gap:10px;padding:10px 0;position:relative}
+.cw-seq+.cw-seq{border-top:1px solid #EEF2FA}
+.cw-no{flex:none;width:23px;height:23px;border-radius:8px;background:#E8F0FF;color:#2E6BFF;
+  font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.cw-sm{flex:1;min-width:0}
+.cw-st{font-size:11px;font-weight:600;color:#7C93B8;letter-spacing:.02em}
+.cw-sc{margin-top:3px;font-size:13.5px;font-weight:500;color:#17263F;line-height:1.5;
+  overflow-wrap:anywhere}
+.cw-sc.mono{color:#466DAD}
+.cw-op{flex:none;align-self:center;font-size:12.5px;font-weight:600;color:#2E6BFF;padding:8px 2px;
+  border-radius:8px;position:relative;overflow:hidden}
+.cw-kv{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12.5px;
+  font-weight:500;color:#617A9E;padding:6px 0}
+.cw-kv b{font-size:13px;font-weight:600;color:#17263F}
+.cw-kv .op{font-size:12px;font-weight:600;color:#2E6BFF;padding:4px 0 4px 10px;border-radius:8px;position:relative;overflow:hidden}
+.cw-line{height:1px;background:#EEF2FA;margin:6px 0}
+/* 单聊预览：这是微信里的样子，故用微信绿气泡（微信场景，不归 M3） */
+.cw-pv{background:#EDEDED;border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:7px;margin-top:8px}
+.cw-bub{align-self:flex-end;max-width:82%;padding:8px 10px;border-radius:8px;background:#95EC69;
+  font-size:13px;font-weight:500;color:#111;line-height:1.45;overflow-wrap:anywhere}
+.cw-bub.med{background:#fff}
+.cw-airow{display:flex;align-items:flex-start;gap:10px;padding:10px 0;position:relative}
+.cw-airow+.cw-airow{border-top:1px solid #EEF2FA}
+.cw-airow .cw-av{width:34px;height:34px;font-size:14px}
+.cw-aitx{flex:1;min-width:0;font-size:12.5px;font-weight:500;color:#3D5578;line-height:1.5;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.cw-airow.bad .cw-aitx{color:#C2413A}
+.cw-tagst{flex:none;font-size:11px;font-weight:600;border-radius:6px;padding:2px 6px;white-space:nowrap}
+.cw-tagst.wait{background:#FFF1E3;color:#B4690E}
+.cw-tagst.run{background:#E8F0FF;color:#2E6BFF}
+.cw-tagst.done{background:#E3F6EC;color:#1B8A54}
+.cw-tagst.part{background:#FFE9E6;color:#C2413A}
+.cw-fail{display:flex;align-items:center;gap:10px;padding:9px 0}
+.cw-fail+.cw-fail{border-top:1px solid #EEF2FA}
+.cw-fail .cw-av{width:32px;height:32px;font-size:13px}
+.cw-failm{flex:1;min-width:0;font-size:13px;font-weight:500;color:#17263F}
+.cw-why{font-size:11.5px;font-weight:500;color:#C2413A;margin-top:2px}
+.cw-tip{margin-top:12px;font-size:12px;font-weight:500;color:#7C8CA4;line-height:1.5;
+  background:#EFF5FF;border-radius:12px;padding:10px 12px}
+.cw-big{font-size:44px;font-weight:700;color:#173A6B;line-height:1;letter-spacing:-.02em;text-align:center}
+.cw-big small{font-size:15px;font-weight:600;margin-left:3px;color:#5B81BD}
+.cw-bigsub{text-align:center;font-size:12.5px;font-weight:500;color:#7C8CA4;margin-top:6px}
+/* 唤醒记录：一条一次唤醒，右侧状态 */
+.cw-rec{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#fff;border-radius:16px;
+  padding:12px 14px;margin-bottom:10px;position:relative;overflow:hidden;
+  box-shadow:0 12px 24px -24px rgba(40,70,150,.9)}
+.cw-when{flex:none;width:52px;font-size:11.5px;font-weight:600;color:#8FA3BE;line-height:1.35}
+.cw-recm{flex:1;min-width:0}
+.cw-recm b{display:block;font-size:15px;font-weight:600;color:#152C50}
+.cw-recm span{display:block;margin-top:3px;font-size:11.5px;font-weight:500;color:#95A3B8}
+/* 自定义 N 与设置的弹层内容（openSheet 的 .sheet-body 里：那层不带内边距，由这一族统一给） */
+.cw-sheet .sheet-body{padding:14px 18px 26px}
+.cw-sh{font-size:17px;font-weight:600;color:#17263F;margin-bottom:4px}
+.cw-sp{font-size:12.5px;font-weight:500;color:#7C8CA4;line-height:1.6}
+.cw-fld{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;
+  border-top:1px solid #E7ECF5;margin-top:8px}
+.cw-fld>span{font-size:14px;font-weight:600;color:#2D4A75}
+.cw-step{display:flex;align-items:center;gap:12px}
+.cw-step button{width:36px;height:36px;border-radius:50%;background:#E8F0FF;color:#2E6BFF;
+  font-size:19px;font-weight:600;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.cw-step b{min-width:58px;text-align:center;font-size:15px;font-weight:600;color:#17263F}
+.cw-units{display:flex;gap:8px}
+.cw-units button{height:34px;padding:0 16px;border-radius:999px;background:#fff;border:1px solid #DCE6FA;
+  font-size:13px;font-weight:600;color:#3A5B8F;position:relative;overflow:hidden}
+.cw-units button.on{background:#E8F0FF;border-color:#B9CDF6;color:#1B4AA8}
+.cw-hint{margin-top:10px;font-size:12px;font-weight:500;color:#7C8CA4;line-height:1.5}
+.cw-shbtns{display:flex;gap:10px;margin-top:16px}
+.cw-shbtns .cw-btn{flex:1}
+.cw-ta{width:100%;min-height:112px;border-radius:12px;border:1px solid #DCE6FA;background:#fff;
+  padding:10px 12px;font-size:14px;font-family:var(--f);color:#17263F;line-height:1.5;resize:none}
+.cw-attach{margin-top:8px;display:flex;align-items:center;gap:8px;background:#EFF5FF;border-radius:12px;
+  padding:10px 12px;font-size:13px;font-weight:600;color:#2E5FA8}
+.cw-attach .rm{margin-left:auto;font-size:12px;font-weight:600;color:#2E6BFF;padding:4px 2px}
+
 /* ---------------- 宿主 App AI托管页（底部 Tab「AI托管」，居中抬起）· 逻辑照参考原型 APP-AI-001 ----------------
    口径说明：
    · **信息结构**照参考原型 APP-AI-001（V3.2→V5.25 层层叠出来的最终态）：页头一行两颗圆
@@ -3445,6 +3593,13 @@ body.hit-d .ra-hit-exp{box-shadow:-1px 0 0 0 rgba(90,84,249,.45),1px 0 0 0 rgba(
             <button class="cust-wx" id="custWxAwake" onclick="custAcctToggle()" aria-label="切换微信账号" aria-expanded="false"></button>
           </div>
           <div class="scroll cust-scroll" id="custAwakeBody"></div>
+          <!-- 吸底「一键唤醒」· 客户唤醒两个入口之一（另一个在工具页「高效发送」组）。
+               点它落在名单的「全部」视图、三档一起带过去、默认全选；当前停在哪一档只影响页面上的列表，
+               不影响带过去的人数——想一次唤醒三档，不用在三个 Tab 里各点一次。 -->
+          <div class="cw-foot" id="custAwakeFoot">
+            <div class="cw-sum" id="custAwakeSum">三档共 <b>11</b> 人<br><span>三档一起带过去</span></div>
+            <button class="cw-btn" onclick="cwFromAwake()">一键唤醒</button>
+          </div>
         </section>
         <section class="screen" id="host-reach">
           <div class="cust-glow"></div>
@@ -3472,6 +3627,65 @@ body.hit-d .ra-hit-exp{box-shadow:-1px 0 0 0 rgba(90,84,249,.45),1px 0 0 0 rgba(
             <button class="cust-wx" id="custWxNewfriend" onclick="custAcctToggle()" aria-label="切换微信账号" aria-expanded="false"></button>
           </div>
           <div class="scroll cust-scroll" id="custNewfriendBody"></div>
+        </section>
+
+        <!-- 客户唤醒（App 工具页）· ADR-0095／docs/prd/客户唤醒-App工具页-PRD.md
+             两个入口：工具页「高效发送」组的「客户唤醒」，与「待唤醒客户」页吸底的「一键唤醒」。
+             五屏：名单 → 唤醒内容 → 确认发送；右上角 ⟲ 唤醒记录（点一条进记录详情）、⚙ 设置。
+             **没有发送中页与结果页**：脚本执行会切到微信、逐条发、占住屏幕，App 里画进度没意义；
+             点「开始唤醒」直接回记录，状态从「执行中」走到「完成／部分失败」。
+             正文一律由 REND['cw-*'] 按数据填（同 cust 四页的口径：版式一份，换数据）。 -->
+        <section class="screen" id="cw-list">
+          <div class="cw-glow"></div>
+          <div class="appbar-back cw-bar">
+            <button class="iconbtn" onclick="back()" id="cwListBack" title="返回"></button>
+            <h3>客户唤醒</h3>
+            <div class="cw-acts">
+              <button class="cw-ib" id="cwRecIc" onclick="go('cw-records')" aria-label="唤醒记录" title="唤醒记录"></button>
+              <button class="cw-ib" id="cwSetIc" onclick="cwSetSheet()" aria-label="设置" title="设置"></button>
+            </div>
+          </div>
+          <div class="scroll cw-scroll" id="cwListBody"></div>
+          <div class="cw-foot" id="cwListFoot"></div>
+        </section>
+
+        <section class="screen" id="cw-content">
+          <div class="cw-glow"></div>
+          <div class="appbar-back cw-bar">
+            <button class="iconbtn" onclick="back()" id="cwContentBack" title="返回"></button>
+            <h3>唤醒内容</h3>
+            <div class="cw-acts"><button class="cw-ib" id="cwContentAct" onclick="cwContentTop()" aria-label="添加内容" title="添加"></button></div>
+          </div>
+          <div class="scroll cw-scroll" id="cwContentBody"></div>
+          <div class="cw-foot" id="cwContentFoot"></div>
+        </section>
+
+        <section class="screen" id="cw-confirm">
+          <div class="cw-glow"></div>
+          <div class="appbar-back cw-bar">
+            <button class="iconbtn" onclick="back()" id="cwConfirmBack" title="返回"></button>
+            <h3>确认发送</h3>
+          </div>
+          <div class="scroll cw-scroll" id="cwConfirmBody"></div>
+          <div class="cw-foot" id="cwConfirmFoot"></div>
+        </section>
+
+        <section class="screen" id="cw-records">
+          <div class="cw-glow"></div>
+          <div class="appbar-back cw-bar">
+            <button class="iconbtn" onclick="back()" id="cwRecordsBack" title="返回"></button>
+            <h3>唤醒记录</h3>
+          </div>
+          <div class="scroll cw-scroll" id="cwRecordsBody"></div>
+        </section>
+
+        <section class="screen" id="cw-record">
+          <div class="cw-glow"></div>
+          <div class="appbar-back cw-bar">
+            <button class="iconbtn" onclick="back()" id="cwRecordBack" title="返回"></button>
+            <h3>唤醒详情</h3>
+          </div>
+          <div class="scroll cw-scroll" id="cwRecordBody"></div>
         </section>
 
         <!-- 宿主App AI托管页（底部 Tab「AI托管」那一屏）· 逻辑照参考原型 APP-AI-001
@@ -4439,7 +4653,7 @@ function syncNav(id,params){
 }
 
 /* ---------- Material ripple（统一按压反馈，替代缩放） ---------- */
-var RIP_SEL='.btn,.chip,.iconbtn,.cell,.wk-card,.p-card,.pc-btn,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.hv-msg,.hv-stat,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.hva-lockcard,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close,.hw-add,.cust-seg button,.cust-copy,.cust-acct-row';
+var RIP_SEL='.btn,.chip,.iconbtn,.cell,.wk-card,.p-card,.pc-btn,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.hv-msg,.hv-stat,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.hva-lockcard,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close,.hw-add,.cust-seg button,.cust-copy,.cust-acct-row,.cw-chip,.cw-allsel,.cw-row,.cw-btn,.cw-ib,.cw-op,.cw-strat button,.cw-step button,.cw-units button,.cw-rec,.cw-kv .op';
 function ripInit(){
   document.addEventListener('pointerdown',function(e){
     var t=e.target.closest ? e.target.closest(RIP_SEL) : null;
@@ -4466,7 +4680,7 @@ function ripInit(){
 
 /* ---------- 侧栏目录 ---------- */
 var NAV=[
-  {g:'概览',items:[{id:'host-home',n:'宿主 App 首页'},{id:'host-task',n:'宿主 App 任务页'},{id:'host-awake',n:'今日概况 · 待唤醒客户'},{id:'host-reach',n:'今日概况 · 待触达新客户'},{id:'host-chat',n:'今日概况 · 客户沟通'},{id:'host-newfriend',n:'今日概况 · 新增好友'},{id:'host-tools',n:'宿主 App 工具页'},{id:'host-me',n:'宿主 App 我的页'},{id:'host-fwset',n:'宿主 App 设置'},{id:'host-fwset-assist',n:'设置 · 辅助回复'},{id:'host-widgets',n:'设置 · 小组件'}]},
+  {g:'概览',items:[{id:'host-home',n:'宿主 App 首页'},{id:'host-task',n:'宿主 App 任务页'},{id:'host-awake',n:'今日概况 · 待唤醒客户'},{id:'host-reach',n:'今日概况 · 待触达新客户'},{id:'host-chat',n:'今日概况 · 客户沟通'},{id:'host-newfriend',n:'今日概况 · 新增好友'},{id:'host-tools',n:'宿主 App 工具页'},{n:'客户唤醒 · 待唤醒名单',fn:"go('cw-list')"},{n:'客户唤醒 · 唤醒内容',fn:"go('cw-content')"},{n:'客户唤醒 · 确认发送',fn:"go('cw-confirm')"},{n:'客户唤醒 · 唤醒记录',fn:"go('cw-records')"},{id:'host-me',n:'宿主 App 我的页'},{id:'host-fwset',n:'宿主 App 设置'},{id:'host-fwset-assist',n:'设置 · 辅助回复'},{id:'host-widgets',n:'设置 · 小组件'}]},
   /* AI托管各屏（主页＋二级）：主页面由底栏中间那枚抬起 Tab 进，二级页由主页页头／卡片／设置页进。
      侧栏里仍各列一条——侧栏是演示目录，能直达才方便对稿，不必照着真实路径点三下。
      末二条列的是**只有非旗舰版到得了**的那一屏（§2.2 的升级提示页）：它不挂在任何真实路径上
@@ -4778,17 +4992,17 @@ function taskJump(where){
 var CUST_SEG=0;
 var CUST_PAGES={
   'host-awake':{t:'待唤醒客户',label:'最后触达',tabs:['今日未回复','1天未回复','1周未回复'],lists:[
-    [{n:'李晓霞',m:'今天10:00　未回复·3小时'},
+    [{n:'许志远',m:'今天08:10　未回复·6小时'},
+     {n:'宋雨彤',m:'今天08:40　未回复·5小时'},
+     {n:'林晓雯',m:'今天09:20　未回复·4小时'},
      {n:'李晓霞',m:'今天10:00　未回复·3小时'},
      {n:'张大强',m:'今天10:00　未回复·3小时'},
-     {n:'张大强',m:'今天10:00　未回复·3小时'},
-     {n:'李晓霞',m:'今天10:00　未回复·3小时'},
-     {n:'李晓霞',m:'今天10:00　未回复·3小时'}],
-    [{n:'张大强',m:'昨天18:20　未回复·1天'},
-     {n:'李晓霞',m:'昨天11:05　未回复·1天'},
-     {n:'张大强',m:'昨天09:40　未回复·1天'}],
-    [{n:'李晓霞',m:'9月27日 15:30　未回复·7天'},
-     {n:'张大强',m:'9月27日 10:10　未回复·7天'}]]},
+     {n:'王芳',m:'今天09:05　未回复·2小时'}],
+    [{n:'刘洋',m:'前天15:30　未回复·5天'},
+     {n:'周敏',m:'昨天11:05　未回复·3天'},
+     {n:'陈立',m:'昨天18:20　未回复·2天'}],
+    [{n:'吴静',m:'9月27日 09:30　未回复·10天'},
+     {n:'郑凯',m:'9月27日 10:10　未回复·7天'}]]},
   'host-reach':{t:'待触达新客户',label:'最后触达',msg:'你好呀，朋友推荐我来找你，说你们家售后很靠谱。',items:[
     {n:'张大强',m:'今天10:00　未回复·3小时'},
     {n:'张大强',m:'今天10:00　未回复·3小时'},
@@ -4899,12 +5113,510 @@ function custRender(id){
   for(var j=0;j<list.length;j++)lh+=custCard(list[j],p);
   h+='<div class="cust-list">'+(lh||'<div class="hv-empty">暂无记录</div>')+'</div>';
   $(dom[0]).innerHTML=h;
+  /* 吸底那条写「三档共 N 人」——N 由三档数据算，不写死：改演示数据时它跟着走 */
+  if(id==='host-awake'&&$('custAwakeSum')){
+    var ti,tot=0;
+    for(ti=0;ti<p.lists.length;ti++)tot+=p.lists[ti].length;
+    $('custAwakeSum').innerHTML='三档共 <b>'+tot+'</b> 人<br><span>三档一起带过去</span>';
+  }
   CUST_ACCT_OPEN=false; custAcctSync(id);
 }
 REND['host-awake']=function(){custRender('host-awake')};
 REND['host-reach']=function(){custRender('host-reach')};
 REND['host-chat']=function(){custRender('host-chat')};
 REND['host-newfriend']=function(){custRender('host-newfriend')};
+
+/* ---------- 客户唤醒（App 工具页）· ADR-0095 ----------
+   员工自助的一次性唤醒：选一批一段时间没回的客户 → 写内容（固定一套／按人 AI 生成）→ 立即开始。
+   与后台派下来的「客户唤醒任务」是两条路：不建任务、不分配、不进任务列表与看板，结果只落本机记录。
+   分档与「待唤醒客户」页同一套（今日 1–6 小时／1天 1–6 天／1周 7–13 天）；超过 13 天不单列第四组，
+   用「自定义 N」按 [N, N+5] 去找。
+   演示数据用 c.w＝「N 天前已被唤醒过」：设置里「排除近期已唤醒」默认开，这一个人就不出现在三档里；
+   关掉它，第 1 天那组会多出一人，用来演示这个开关真的在改名单。 */
+var CW_VIEW='all';
+var CW_CUST=[
+  {i:'a1',n:'李晓霞',tag:'老客户',last:'今天 10:00',h:3},
+  {i:'a2',n:'张大强',tag:'高意向',last:'今天 10:00',h:3},
+  {i:'a3',n:'林晓雯',last:'今天 09:20',h:4},
+  {i:'a4',n:'王芳',last:'今天 09:05',h:2},
+  {i:'a5',n:'宋雨彤',last:'今天 08:40',h:5},
+  {i:'a6',n:'许志远',last:'今天 08:10',h:6},
+  {i:'b1',n:'陈立',last:'昨天 18:20',h:50},
+  {i:'b2',n:'周敏',tag:'高意向',last:'昨天 11:05',h:79},
+  {i:'b3',n:'刘洋',last:'前天 15:30',h:120},
+  {i:'b4',n:'赵一鸣',last:'昨天 16:20',h:52,w:2},
+  {i:'c1',n:'郑凯',last:'9月27日 10:10',h:180},
+  {i:'c2',n:'吴静',last:'9月27日 09:30',h:240},
+  /* 下面三条只在「自定义 N」里出现：14 天以上不单列分组 */
+  {i:'d1',n:'孙浩',last:'10月12日 09:20',h:31*24},
+  {i:'d2',n:'何丽',last:'10月10日 16:40',h:33*24},
+  {i:'d3',n:'马晓东',last:'9月2日 11:00',h:71*24}
+];
+var CW_SET={gap:10,cap:50,skip:true};
+var CW_TMP={gap:10,cap:50,skip:true};
+var CW_CUSTOM={n:30,u:'d'};
+var CW_SEL={};
+CW_CUST.forEach(function(c){ if(cwBand(c.h)>=0&&!c.w)CW_SEL[c.i]=true; });
+var CW_STRAT='fixed';
+var CW_FIXED=[
+  {t:'text',c:'好久不见，最近店里上了新款，给你留了一件。'},
+  {t:'image',c:'秋季新品主图.png'},
+  {t:'text',c:'要不要我拍两张细节图给你？'}
+];
+var CW_AI={}, CW_FAIL={}, CW_AI_ROUND=0, CW_WORDLIM=120;
+var CW_RECS=[
+  {id:'r2',when:'昨天\n10:15',n:8,strat:'fixed',fixed:2,st:'done',ok:8,fail:0,fails:[]},
+  {id:'r3',when:'11月7日\n14:30',n:23,strat:'fixed',fixed:4,st:'part',ok:21,fail:2,
+   fails:[{n:'罗琳',why:'对方已把你删除'},{n:'蒋文博',why:'消息发送失败'}]}
+];
+var CW_SH=null;
+
+function cwBand(h){ if(h>=1&&h<=6)return 0; if(h>=24&&h<168)return 1; if(h>=168&&h<336)return 2; return -1; }
+function cwDur(h){ return h<24?(h+' 小时'):(Math.floor(h/24)+' 天'); }
+function cwPool(){ return CW_CUST.filter(function(c){ return cwBand(c.h)>=0&&!(CW_SET.skip&&c.w); }); }
+function cwCust(id){ for(var i=0;i<CW_CUST.length;i++)if(CW_CUST[i].i===id)return CW_CUST[i]; return null; }
+function cwSelIds(){ var o=[]; CW_CUST.forEach(function(c){ if(CW_SEL[c.i])o.push(c.i); }); return o; }
+function cwSelCount(){ return cwSelIds().length; }
+function cwOver(){ return cwSelCount()>CW_SET.cap; }
+function cwRange(){ return CW_CUSTOM.n+'–'+(CW_CUSTOM.n+5)+' '+(CW_CUSTOM.u==='d'?'天':'小时'); }
+function cwByH(list){ return list.slice().sort(function(a,b){ return b.h-a.h }); } /* 组内按未回复时长从长到短 */
+function cwGroups(){
+  var i,pool=cwPool(),out;
+  if(CW_VIEW==='custom'){
+    var th=CW_CUSTOM.n*(CW_CUSTOM.u==='d'?24:1), span=5*(CW_CUSTOM.u==='d'?24:1);
+    return [{t:'未回复 '+cwRange(),l:cwByH(CW_CUST.filter(function(c){return c.h>=th&&c.h<=th+span&&!(CW_SET.skip&&c.w)}))}];
+  }
+  if(CW_VIEW==='all'){
+    out=[];
+    [0,1,2].forEach(function(b){
+      out.push({t:['今日未回复','1天未回复','1周未回复'][b],l:cwByH(pool.filter(function(c){return cwBand(c.h)===b}))});
+    });
+    return out;
+  }
+  var b=CW_VIEW==='today'?0:(CW_VIEW==='day'?1:2);
+  return [{t:['今日未回复','1天未回复','1周未回复'][b],l:cwByH(pool.filter(function(c){return cwBand(c.h)===b}))}];
+}
+/* 分组头那枚勾选框：全勾 ✓／部分 –／全不选空框。点一下＝全选，再点＝全不选（Q17）。 */
+function cwCbState(list){
+  var on=0;
+  for(var i=0;i<list.length;i++)if(CW_SEL[list[i].i])on++;
+  return !on?0:(on===list.length?2:1);
+}
+function cwCbHtml(st,sm){
+  var cls='cw-cb'+(sm?' sm':'')+(st===2?' on':(st===1?' part':''));
+  return '<span class="'+cls+'">'+(st===2?I('check',sm?11:13,3):'')+'</span>';
+}
+function cwToggleIds(s){
+  var ids=s.split(',').filter(Boolean),i,all=true;
+  for(i=0;i<ids.length;i++)if(!CW_SEL[ids[i]])all=false;
+  for(i=0;i<ids.length;i++)CW_SEL[ids[i]]=!all;
+  REND['cw-list']();
+}
+function cwToggle(id){ CW_SEL[id]=!CW_SEL[id]; REND['cw-list'](); }
+function cwView(v){
+  if(v==='custom'){ cwCustomSheet(); return; }
+  CW_VIEW=v; REND['cw-list']();
+}
+function cwFromAwake(){ CW_VIEW='all'; go('cw-list'); }
+
+REND['cw-list']=function(){
+  $('cwListBack').innerHTML=I('back',24,2);
+  $('cwRecIc').innerHTML=I('clock',20,2.1);
+  $('cwSetIc').innerHTML=I('gear',20,2.1);
+  var i,j,pool=cwPool(),cnt=[0,0,0];
+  for(i=0;i<pool.length;i++)cnt[cwBand(pool[i].h)]++;
+  var customList=CW_VIEW==='custom'?cwGroups()[0].l:[];
+  var h='<div class="cw-chips">';
+  h+='<button class="cw-chip'+(CW_VIEW==='all'?' on':'')+'" onclick="cwView(\'all\')">全部 <span class="n">'+(cnt[0]+cnt[1]+cnt[2])+'</span></button>';
+  h+='<button class="cw-chip'+(CW_VIEW==='today'?' on':'')+'" onclick="cwView(\'today\')">今日 <span class="n">'+cnt[0]+'</span></button>';
+  h+='<button class="cw-chip'+(CW_VIEW==='day'?' on':'')+'" onclick="cwView(\'day\')">1天 <span class="n">'+cnt[1]+'</span></button>';
+  h+='<button class="cw-chip'+(CW_VIEW==='week'?' on':'')+'" onclick="cwView(\'week\')">1周 <span class="n">'+cnt[2]+'</span></button>';
+  h+=CW_VIEW==='custom'
+    ?'<button class="cw-chip on" onclick="cwView(\'custom\')">自定义 '+cwRange()+' <span class="n">'+customList.length+'</span></button>'
+    :'<button class="cw-chip" onclick="cwView(\'custom\')">自定义 N</button>';
+  h+='</div>';
+  var gs=cwGroups();
+  for(i=0;i<gs.length;i++){
+    var g=gs[i], st=cwCbState(g.l), ids=g.l.map(function(c){return c.i}).join(',');
+    h+='<div class="cw-band"><b>'+g.t+' · '+g.l.length+' 人</b>'
+      +'<button class="cw-allsel" onclick="cwToggleIds(\''+ids+'\')" aria-pressed="'+(st===2?'true':'false')+'">'
+      +cwCbHtml(st,1)+'全选</button></div>';
+    if(!g.l.length)h+='<div class="cw-tip">这一段没有待唤醒的客户。</div>';
+    for(j=0;j<g.l.length;j++){
+      var c=g.l[j];
+      h+='<button class="cw-row" onclick="cwToggle(\''+c.i+'\')" aria-pressed="'+(CW_SEL[c.i]?'true':'false')+'">'
+        +cwCbHtml(CW_SEL[c.i]?2:0)
+        +'<span class="cw-av">'+c.n.charAt(0)+'</span>'
+        +'<span class="cw-main"><span class="cw-nm">'+c.n+(c.tag?'<span class="cw-tag">'+c.tag+'</span>':'')+'</span>'
+        +'<span class="cw-meta">最后触达 '+c.last+'</span></span>'
+        +'<span class="cw-right"><b>'+cwDur(c.h)+'</b>未回复</span></button>';
+    }
+  }
+  $('cwListBody').innerHTML=h;
+  var n=cwSelCount(), over=n>CW_SET.cap;
+  $('cwListFoot').innerHTML='<div class="cw-sum'+(over?' bad':'')+'">'
+    +(over?'已选 <b>'+n+'</b> 人，超过单次上限 '+CW_SET.cap+' 人'
+           :'已选 <b>'+n+'</b> 人<br><span>单次上限 '+CW_SET.cap+' 人</span>')
+    +'</div><button class="cw-btn"'+(n===0||over?' disabled':'')+' onclick="cwNext()">下一步：写唤醒内容</button>';
+};
+function cwNext(){
+  if(cwSelCount()===0){ toast('先选几个客户'); return; }
+  if(cwOver()){ toast('超过单次上限，先在设置里调高或去掉几个人'); return; }
+  go('cw-content');
+}
+
+/* 自定义 N：只改筛选条件，不动已勾选的人（切回来勾选还在）。 */
+function cwCustomBody(){
+  var lim=CW_CUSTOM.u==='d'?90:48;
+  return '<div class="cw-sh">自定义唤醒范围</div>'
+    +'<p class="cw-sp">超过 <b>N</b> 未回复的客户，取 <b>N ～ N+5</b> 这一段。</p>'
+    +'<div class="cw-fld"><span>未回复超过</span><div class="cw-step">'
+      +'<button onclick="cwCustomStep(-1)" aria-label="减一">−</button>'
+      +'<b>'+CW_CUSTOM.n+' '+(CW_CUSTOM.u==='d'?'天':'小时')+'</b>'
+      +'<button onclick="cwCustomStep(1)" aria-label="加一">＋</button></div></div>'
+    +'<div class="cw-fld"><span>单位</span><div class="cw-units">'
+      +'<button class="'+(CW_CUSTOM.u==='h'?'on':'')+'" onclick="cwCustomUnit(\'h\')">小时</button>'
+      +'<button class="'+(CW_CUSTOM.u==='d'?'on':'')+'" onclick="cwCustomUnit(\'d\')">天</button></div></div>'
+    +'<p class="cw-hint">按「'+CW_CUSTOM.n+' '+(CW_CUSTOM.u==='d'?'天':'小时')+'」算，这次会取未回复 '+cwRange()+' 的客户。'
+    +(CW_CUSTOM.u==='h'?'最多到 48 小时，再久请按天找。':'')+'</p>'
+    +'<div class="cw-shbtns"><button class="cw-btn ghost" onclick="closeSheet(CW_SH)">取消</button>'
+    +'<button class="cw-btn" onclick="cwCustomApply()">查看名单</button></div>';
+}
+function cwCustomSheet(){
+  CW_SH=openSheet(cwCustomBody(),'cw-sheet');
+}
+function cwCustomStep(d){
+  var lim=CW_CUSTOM.u==='d'?90:48;
+  CW_CUSTOM.n=Math.max(1,Math.min(lim,CW_CUSTOM.n+d));
+  if(CW_SH)CW_SH.querySelector('.sheet-body').innerHTML=cwCustomBody();
+}
+function cwCustomUnit(u){
+  CW_CUSTOM.u=u;
+  CW_CUSTOM.n=u==='d'?Math.min(90,CW_CUSTOM.n):Math.min(48,CW_CUSTOM.n);
+  if(CW_SH)CW_SH.querySelector('.sheet-body').innerHTML=cwCustomBody();
+}
+function cwCustomApply(){
+  CW_VIEW='custom'; closeSheet(CW_SH); CW_SH=null; REND['cw-list']();
+}
+
+/* 唤醒内容：两套策略——固定内容（一套多人）／AI生成（按人各一条）。 */
+function cwTypeN(t){ return t==='text'?'文本':(t==='image'?'图片':'视频'); }
+function cwStratN(s){ return s==='fixed'?'固定内容':'AI生成'; }
+function cwAiText(c,r){
+  var T=['上次你说想要轻薄一点的，这批正好有新款到店，我给你留了一件。',
+         '最近换季，店里到了几款适合你的外套，有空来看看？',
+         '好久没聊了，最近上了新款，想起你之前问过的那件，给你留了一件。',
+         '上次说的那件到了，先发你看看，合适我再给你留。',
+         '这批新到的颜色很衬你，要不要我拍两张细节图？',
+         '上周那批你看着怎么样？这次又到了几款，发你参考。',
+         '这两天降温，店里上了几件厚一点的，你穿正好。',
+         '你之前说想找通勤能穿的，这次到的那几款挺合适。'];
+  var k=0,i; for(i=1;i<c.i.length;i++)k+=c.i.charCodeAt(i);  /* 按客户错开，相邻两行不是同一句 */
+  return T[(k+r*3)%T.length];
+}
+function cwAiOk(){ return cwSelIds().filter(function(id){return CW_AI[id]!=null&&!CW_FAIL[id]}); }
+function cwEnsureAi(){
+  cwSelIds().forEach(function(id){
+    if(CW_AI[id]!=null||CW_FAIL[id])return;
+    if(id==='a4'&&CW_AI_ROUND===0){ CW_FAIL[id]='聊天记录太少'; return; }
+    CW_AI[id]=cwAiText(cwCust(id),CW_AI_ROUND);
+  });
+}
+function cwContentTop(){
+  if(CW_STRAT==='fixed')cwEditFixed(-1); else cwRegen();
+}
+function cwRegen(){
+  CW_AI_ROUND++; CW_AI={}; CW_FAIL={};
+  cwEnsureAi(); REND['cw-content'](); toast('已重新生成');
+}
+function cwNext2(){
+  if(CW_STRAT==='fixed'&&!CW_FIXED.length){ toast('先添加一条唤醒内容'); return; }
+  var failN=cwSelIds().filter(function(id){return !!CW_FAIL[id]}).length;
+  if(CW_STRAT==='ai'&&failN===cwSelCount()){ toast('没有生成成功的内容，换个策略或稍后重试'); return; }
+  go('cw-confirm');
+}
+function cwFixedSheet(i){
+  var it=i>=0?CW_FIXED[i]:null, t=it?it.t:'text', c=it?it.c:'';
+  return '<div class="cw-sh">'+(it?'编辑内容':'添加内容')+'</div>'
+    +'<div class="cw-strat" style="margin-top:10px">'
+      +['text','image','video'].map(function(k){
+        return '<button data-t="'+k+'" class="'+(k===t?'on':'')+'" onclick="cwSheetType(\''+k+'\')">'+cwTypeN(k)+'</button>';
+      }).join('')
+    +'</div>'
+    +'<div id="cwTaWrap" style="margin-top:12px">'
+      +'<textarea class="cw-ta" id="cwTa" placeholder="写完直接发；客户收到的是这一段原文">'+esc(c)+'</textarea>'
+    +'</div>'
+    +'<div id="cwAttachWrap" style="display:none">'
+      +'<div class="cw-attach"><span id="cwAttachN">'+(t==='text'?'':esc(c||'从相册选择'))+'</span>'
+      +'<button class="rm" onclick="cwPickFile()">选择</button></div>'
+      +'<p class="cw-hint">原型不接相册，这里只演示「一条内容＝一个附件」。</p></div>'
+    +'<div class="cw-shbtns">'
+      +(it?'<button class="cw-btn ghost" onclick="cwDelFixed('+i+')">删除</button>':'')
+      +'<button class="cw-btn" onclick="cwSaveFixed('+i+')">'+(it?'保存':'添加')+'</button></div>';
+}
+function cwEditFixed(i){
+  CW_SH=openSheet(cwFixedSheet(i),'cw-sheet');
+  cwSheetType(i>=0?CW_FIXED[i].t:'text');
+}
+function cwSheetType(t){
+  if(!CW_SH)return;
+  var bs=CW_SH.querySelectorAll('.cw-strat button');
+  for(var i=0;i<bs.length;i++)bs[i].classList.toggle('on',bs[i].getAttribute('data-t')===t);
+  CW_SH.setAttribute('data-t',t);
+  $('cwTaWrap').style.display=t==='text'?'':'none';
+  $('cwAttachWrap').style.display=t==='text'?'none':'';
+  if(t!=='text'&&!$('cwAttachN').textContent)$('cwAttachN').textContent='从相册选择';
+}
+function cwPickFile(){
+  var t=CW_SH.getAttribute('data-t');
+  $('cwAttachN').textContent=(t==='image'?'秋季新品主图.png':'门店实拍.mp4');
+}
+function cwSaveFixed(i){
+  var t=CW_SH.getAttribute('data-t')||'text', c;
+  if(t==='text'){ c=$('cwTa').value.trim(); if(!c){ toast('写点内容再保存'); return; } }
+  else{ c=$('cwAttachN').textContent; if(c==='从相册选择'){ toast('先选一个文件'); return; } }
+  if(i>=0)CW_FIXED[i]={t:t,c:c}; else CW_FIXED.push({t:t,c:c});
+  closeSheet(CW_SH); CW_SH=null; REND['cw-content']();
+}
+function cwDelFixed(i){
+  var dead=CW_FIXED[i];
+  CW_FIXED.splice(i,1);
+  closeSheet(CW_SH); CW_SH=null; REND['cw-content']();
+  /* 可撤销的删除不弹二次确认，用带「撤销」的 Snackbar（SKILL §4） */
+  toast('已删除第 '+(i+1)+' 条内容','撤销',function(){
+    CW_FIXED.splice(i,0,dead); if(cur==='cw-content')REND['cw-content']();
+  });
+}
+function cwEditAi(id){
+  var c=cwCust(id), fail=!!CW_FAIL[id];
+  CW_SH=openSheet('<div class="cw-sh">'+c.n+' · 专属话术</div>'
+    +'<p class="cw-sp">'+(fail?'这一条没生成成功，可以直接写一段。':'按聊天记录生成，改这一条不影响别人。')+'</p>'
+    +'<textarea class="cw-ta" id="cwTa" style="margin-top:10px" placeholder="写给这位客户的话">'+esc(CW_AI[id]||'')+'</textarea>'
+    +'<div class="cw-shbtns"><button class="cw-btn ghost" onclick="closeSheet(CW_SH)">取消</button>'
+    +'<button class="cw-btn" onclick="cwSaveAi(\''+id+'\')">保存</button></div>','cw-sheet');
+}
+function cwSaveAi(id){
+  var v=$('cwTa').value.trim();
+  if(!v){ toast('写点内容再保存'); return; }
+  CW_AI[id]=v; delete CW_FAIL[id];
+  closeSheet(CW_SH); CW_SH=null; REND['cw-content']();
+}
+function cwWordsSheet(){
+  CW_SH=openSheet('<div class="cw-sh">字数限制</div>'
+    +'<p class="cw-sp">生成的话术控制在多少字以内。太短说不清来意，太长客户懒得看。</p>'
+    +'<div class="cw-fld"><span>每条不超过</span><div class="cw-step">'
+      +'<button onclick="cwWordsStep(-20)" aria-label="减二十">−</button><b>'+CW_WORDLIM+' 字</b>'
+      +'<button onclick="cwWordsStep(20)" aria-label="加二十">＋</button></div></div>'
+    +'<div class="cw-shbtns"><button class="cw-btn ghost" onclick="closeSheet(CW_SH)">取消</button>'
+    +'<button class="cw-btn" onclick="closeSheet(CW_SH)">保存</button></div>','cw-sheet');
+}
+function cwWordsStep(d){
+  CW_WORDLIM=Math.max(60,Math.min(300,CW_WORDLIM+d));
+  CW_SH.querySelector('.sheet-body').innerHTML='<div class="cw-sh">字数限制</div>'
+    +'<p class="cw-sp">生成的话术控制在多少字以内。太短说不清来意，太长客户懒得看。</p>'
+    +'<div class="cw-fld"><span>每条不超过</span><div class="cw-step">'
+      +'<button onclick="cwWordsStep(-20)" aria-label="减二十">−</button><b>'+CW_WORDLIM+' 字</b>'
+      +'<button onclick="cwWordsStep(20)" aria-label="加二十">＋</button></div></div>'
+    +'<div class="cw-shbtns"><button class="cw-btn ghost" onclick="closeSheet(CW_SH)">取消</button>'
+    +'<button class="cw-btn" onclick="closeSheet(CW_SH)">保存</button></div>';
+}
+
+REND['cw-content']=function(){
+  $('cwContentBack').innerHTML=I('back',24,2);
+  var act=$('cwContentAct');
+  act.innerHTML=CW_STRAT==='fixed'?'<span style="font-size:13.5px;font-weight:600">添加</span>':I('refresh',20,2.1);
+  act.setAttribute('aria-label',CW_STRAT==='fixed'?'添加内容':'重新生成');
+  act.setAttribute('onclick','cwContentTop()');
+  var h='<div class="cw-strat">'
+    +'<button class="'+(CW_STRAT==='fixed'?'on':'')+'" onclick="CW_STRAT=\'fixed\';REND[\'cw-content\']()">固定内容</button>'
+    +'<button class="'+(CW_STRAT==='ai'?'on':'')+'" onclick="CW_STRAT=\'ai\';REND[\'cw-content\']()">AI生成</button></div>';
+  var n=cwSelCount();
+  if(CW_STRAT==='fixed'){
+    h+='<div class="cw-card"><div class="cw-h">所有客户收到同一套，按序号依次发出</div>';
+    if(!CW_FIXED.length)h+='<p class="cw-p">还没有内容。点右上角「添加」，第一条先写文本。</p>';
+    CW_FIXED.forEach(function(it,i){
+      h+='<div class="cw-seq"><span class="cw-no">'+(i+1)+'</span><div class="cw-sm">'
+        +'<div class="cw-st">'+cwTypeN(it.t)+'</div><div class="cw-sc'+(it.t!=='text'?' mono':'')+'">'+esc(it.c)+'</div></div>'
+        +'<button class="cw-op" onclick="cwEditFixed('+i+')">编辑</button></div>';
+    });
+    h+='</div>';
+    h+='<div class="cw-card"><div class="cw-h">客户实际收到的样子（单聊气泡）</div><div class="cw-pv">';
+    CW_FIXED.forEach(function(it){
+      h+=it.t==='text'?'<div class="cw-bub">'+esc(it.c)+'</div>'
+        :'<div class="cw-bub">［'+cwTypeN(it.t)+'］'+esc(it.c)+'</div>';
+    });
+    if(!CW_FIXED.length)h+='<p class="cw-p">还没有内容。</p>';
+    h+='</div></div>';
+    $('cwContentBody').innerHTML=h;
+    $('cwContentFoot').innerHTML='<div class="cw-sum">'+CW_FIXED.length+' 条 · '+n+' 人共 '+(CW_FIXED.length*n)
+      +' 条<br><span>固定内容</span></div>'
+      +'<button class="cw-btn"'+(CW_FIXED.length?'':' disabled')+' onclick="cwNext2()">下一步：确认发送</button>';
+  }else{
+    cwEnsureAi();
+    var ids=cwSelIds(), failN=ids.filter(function(id){return !!CW_FAIL[id]}).length, okN=ids.length-failN;
+    h+='<div class="cw-card"><div class="cw-h">生成依据</div>'
+      +'<div class="cw-kv"><span>获取历史聊天记录</span><b>30 条</b></div>'
+      +'<div class="cw-kv"><span>参考文案 / 内容主题</span><b>秋季新品回访</b></div>'
+      +'<div class="cw-kv"><span>回复风格 / 角色</span><b>亲切 · 客户经理</b></div>'
+      +'<div class="cw-kv"><span>字数限制</span><b>'+CW_WORDLIM+' 字 <button class="op" onclick="cwWordsSheet()">更多设置</button></b></div>'
+      +'</div>';
+    h+='<div class="cw-card"><div class="cw-h">已为 '+okN+' 人生成，可逐条修改</div>';
+    ids.forEach(function(id){
+      var c=cwCust(id), bad=!!CW_FAIL[id];
+      h+='<div class="cw-airow'+(bad?' bad':'')+'"><span class="cw-av">'+c.n.charAt(0)+'</span>'
+        +'<div class="cw-sm"><div class="cw-nm" style="font-size:13.5px">'+c.n+'</div>'
+        +'<div class="cw-aitx">'+(bad?'生成失败 · '+CW_FAIL[id]:esc(CW_AI[id]||''))+'</div></div>'
+        +'<button class="cw-op" onclick="cwEditAi(\''+id+'\')">编辑</button></div>';
+    });
+    if(!ids.length)h+='<p class="cw-p">还没选客户，回上一页选人。</p>';
+    h+='</div>';
+    if(failN)h+='<div class="cw-tip">'+failN+' 人没有生成成功，可以单独编辑，或切回固定内容。</div>';
+    $('cwContentBody').innerHTML=h;
+    $('cwContentFoot').innerHTML='<div class="cw-sum">'+okN+' 人各 1 条<br><span>AI生成 · 按人分开'
+      +(failN?' · '+failN+' 人未生成':'')+'</span></div>'
+      +'<button class="cw-btn"'+(okN?'':' disabled')+' onclick="cwNext2()">下一步：确认发送</button>';
+  }
+};
+
+REND['cw-confirm']=function(){
+  $('cwConfirmBack').innerHTML=I('back',24,2);
+  var n=CW_STRAT==='fixed'?cwSelCount():cwAiOk().length, over=n>CW_SET.cap;
+  var aiFail=CW_STRAT==='ai'?cwSelCount()-n:0;
+  var sum=CW_STRAT==='fixed'?('固定内容 · 每人 '+CW_FIXED.length+' 条'):'AI生成 · 每人 1 条专属话术';
+  var h='<div class="cw-card" style="padding:18px 14px">'
+    +'<div class="cw-big">'+n+'<small>人</small></div><div class="cw-bigsub">'+sum+'</div></div>';
+  h+='<div class="cw-card">'
+    +'<div class="cw-kv"><span>内容策略</span><b>'+cwStratN(CW_STRAT)+'</b></div>'
+    +'<div class="cw-kv"><span>发送间隔</span><b>'+CW_SET.gap+' 秒 <button class="op" onclick="cwSetSheet()">调整</button></b></div>'
+    +'<div class="cw-line"></div>'
+    +'<div class="cw-kv"><span>防重复</span><b>'+(CW_SET.skip?'排除 7 天内唤醒过的客户':'不排除已唤醒过的客户')+'</b></div>'
+    +'<div class="cw-kv"><span>发送账号</span><b>'+CUST_ACCTS[CUST_ACCT].n+'（当前微信）</b></div>'
+    +'</div>';
+  h+='<div class="cw-tip">'+(aiFail?aiFail+' 人没有生成成功，这次不唤醒。':'')
+    +'开始后脚本会切到微信逐条发送，期间 App 不在前台；发完的结果会写进「唤醒记录」。</div>';
+  if(over)h+='<div class="cw-tip" style="background:#FFE9E6;color:#C2413A">已选 '+n+' 人，超过单次上限 '+CW_SET.cap+' 人。先在设置里调高，或回去去掉几个人。</div>';
+  $('cwConfirmBody').innerHTML=h;
+  $('cwConfirmFoot').innerHTML='<div class="cw-sum">不留在本页看进度<br><span>去记录里看结果</span></div>'
+    +'<button class="cw-btn"'+(n===0||over?' disabled':'')+' onclick="cwStart()">开始唤醒</button>';
+};
+function cwClock(){
+  var d=new Date();
+  return (d.getHours()<10?'0':'')+d.getHours()+':'+(d.getMinutes()<10?'0':'')+d.getMinutes();
+}
+function cwStart(){
+  var ids=CW_STRAT==='fixed'?cwSelIds():cwAiOk(), n=ids.length;
+  if(n===0||cwOver()){ toast('名单不对，回去看看'); return; }
+  var r={id:'r'+Date.now(),when:'今天\n'+cwClock(),n:n,strat:CW_STRAT,fixed:CW_FIXED.length,
+         st:'run',ok:0,fail:0,fails:[],names:ids.slice()};
+  CW_RECS.unshift(r);
+  go('cw-records');
+  toast('已开始唤醒，完成后在记录里查看');
+  /* 演示用：脚本执行期间 App 不在前台，回到记录后状态自己跑完（真机上由脚本回报） */
+  setTimeout(function(){
+    var rr=cwRecById(r.id); if(!rr||rr.st!=='run')return;
+    var fn=Math.min(n,2);
+    rr.ok=n-fn; rr.fail=fn; rr.st=fn?'part':'done';
+    rr.fails=ids.slice(0,fn).map(function(id,i){
+      var c=cwCust(id);
+      return {n:c?c.n:'客户',why:i?'消息发送失败':'对方已把你删除'};
+    });
+    if(cur==='cw-records')REND['cw-records']();
+    else if(cur==='cw-record')REND['cw-record']({id:rr.id});
+  },8000);
+}
+function cwRecById(id){
+  /* 带 id 但找不到＝这条记录不在了（例如被还原掉了），返 null；别回落到第一条，
+     否则那个演示计时器会把另一条记录改成完成。不带 id 才取最新一条。 */
+  if(id){
+    for(var i=0;i<CW_RECS.length;i++)if(CW_RECS[i].id===id)return CW_RECS[i];
+    return null;
+  }
+  return CW_RECS[0]||null;
+}
+function cwRecTag(st){
+  return st==='run'?'<span class="cw-tagst run">执行中</span>'
+    :st==='done'?'<span class="cw-tagst done">完成</span>'
+    :'<span class="cw-tagst part">部分失败</span>';
+}
+REND['cw-records']=function(){
+  $('cwRecordsBack').innerHTML=I('back',24,2);
+  var h='';
+  if(!CW_RECS.length)h='<div class="cw-tip">还没有唤醒过。从名单选人开始，完成后结果会出现在这里。</div>';
+  CW_RECS.forEach(function(r){
+    var sub=cwStratN(r.strat)+(r.st==='run'?' · 执行中'
+      :(r.strat==='fixed'?' '+(r.fixed||1)+' 条':' 每人 1 条')+' · 成功 '+r.ok+(r.fail?' / 失败 '+r.fail:''));
+    h+='<button class="cw-rec" onclick="go(\'cw-record\',{id:\''+r.id+'\'})">'
+      +'<span class="cw-when">'+String(r.when).replace('\n','<br>')+'</span>'
+      +'<span class="cw-recm"><b>唤醒 '+r.n+' 人</b><span>'+sub+'</span></span>'
+      +cwRecTag(r.st)+'</button>';
+  });
+  $('cwRecordsBody').innerHTML=h;
+};
+REND['cw-record']=function(p){
+  $('cwRecordBack').innerHTML=I('back',24,2);
+  var r=cwRecById(p&&p.id);
+  if(!r){ $('cwRecordBody').innerHTML='<div class="cw-tip">没有这条记录。</div>'; return; }
+  var h='<div class="cw-card" style="padding:18px 14px"><div class="cw-big">'+r.n+'<small>人</small></div>'
+    +'<div class="cw-bigsub">'+cwStratN(r.strat)+' · '+(r.strat==='fixed'?('每人 '+(r.fixed||1)+' 条'):'每人 1 条专属话术')+'</div>'
+    +'<div style="text-align:center;margin-top:10px">'+cwRecTag(r.st)+'</div></div>';
+  h+='<div class="cw-card">'
+    +'<div class="cw-kv"><span>开始时间</span><b>'+String(r.when).replace('\n',' ')+'</b></div>'
+    +'<div class="cw-kv"><span>成功</span><b>'+r.ok+' 人</b></div>'
+    +'<div class="cw-kv"><span>失败</span><b style="color:'+(r.fail?'#C2413A':'#17263F')+'">'+r.fail+' 人</b></div>'
+    +'</div>';
+  if(r.fails&&r.fails.length){
+    h+='<div class="cw-card"><div class="cw-h">没发出去的人</div>';
+    r.fails.forEach(function(f){
+      h+='<div class="cw-fail"><span class="cw-av">'+f.n.charAt(0)+'</span><div class="cw-sm">'
+        +'<div class="cw-failm">'+f.n+'</div><div class="cw-why">'+f.why+'</div></div></div>';
+    });
+    h+='</div>';
+  }
+  h+='<div class="cw-tip">不提供重试：失败多半是对方删了好友、设了验证，或脚本被风控打断。要补发就重新选人再发一次。</div>';
+  $('cwRecordBody').innerHTML=h;
+};
+
+/* 设置：三个参数集中在一处，名单页与确认页只读回显；改动只影响下一次开始。 */
+function cwSetBody(){
+  return '<div class="cw-sh">发送设置</div>'
+    +'<div class="cw-fld"><span>发送间隔</span><div class="cw-step">'
+      +'<button onclick="cwSetStep(\'gap\',-5)" aria-label="减五秒">−</button><b>'+CW_TMP.gap+' 秒</b>'
+      +'<button onclick="cwSetStep(\'gap\',5)" aria-label="加五秒">＋</button></div></div>'
+    +'<p class="cw-hint">每条消息之间停多久，5–60 秒。调大更稳，但总时长变长。</p>'
+    +'<div class="cw-fld"><span>单次上限</span><div class="cw-step">'
+      +'<button onclick="cwSetStep(\'cap\',-10)" aria-label="减十人">−</button><b>'+CW_TMP.cap+' 人</b>'
+      +'<button onclick="cwSetStep(\'cap\',10)" aria-label="加十人">＋</button></div></div>'
+    +'<p class="cw-hint">一次最多唤醒多少人，上限 100 人。</p>'
+    +'<div class="cw-fld"><span>排除近期已唤醒</span>'
+      +'<button class="switch'+(CW_TMP.skip?' on':'')+'" role="switch" aria-checked="'+(CW_TMP.skip?'true':'false')+'" aria-label="排除近期已唤醒" onclick="cwSetSkip()"></button></div>'
+    +'<p class="cw-hint">开启后，7 天内已被唤醒过的客户不再出现在名单里。</p>'
+    +'<div class="cw-shbtns"><button class="cw-btn ghost" onclick="closeSheet(CW_SH)">取消</button>'
+    +'<button class="cw-btn" onclick="cwSetSave()">保存</button></div>';
+}
+function cwSetSheet(){
+  CW_TMP={gap:CW_SET.gap,cap:CW_SET.cap,skip:CW_SET.skip};
+  CW_SH=openSheet(cwSetBody(),'cw-sheet');
+}
+function cwSetStep(k,d){
+  if(k==='gap')CW_TMP.gap=Math.max(5,Math.min(60,CW_TMP.gap+d));
+  else CW_TMP.cap=Math.max(10,Math.min(100,CW_TMP.cap+d));
+  CW_SH.querySelector('.sheet-body').innerHTML=cwSetBody();
+}
+function cwSetSkip(){
+  CW_TMP.skip=!CW_TMP.skip;
+  CW_SH.querySelector('.sheet-body').innerHTML=cwSetBody();
+}
+function cwSetSave(){
+  var turnedOff=CW_SET.skip&&!CW_TMP.skip, turnedOn=!CW_SET.skip&&CW_TMP.skip;
+  CW_SET={gap:CW_TMP.gap,cap:CW_TMP.cap,skip:CW_TMP.skip};
+  closeSheet(CW_SH); CW_SH=null;
+  /* 关掉「排除」后新露出来的人默认勾上——名单默认全选这条规则不因为开关而破例；
+     重开时把他们从已选里摘掉，免得底部人数把看不见的人也数进去。 */
+  if(turnedOff)CW_CUST.forEach(function(c){ if(cwBand(c.h)>=0&&CW_SEL[c.i]===undefined)CW_SEL[c.i]=true; });
+  if(turnedOn)CW_CUST.forEach(function(c){ if(c.w)CW_SEL[c.i]=false; });
+  if(cur==='cw-list')REND['cw-list']();
+  else if(cur==='cw-confirm')REND['cw-confirm']();
+}
 
 /* ---------- 宿主 App 工具页（底部 Tab「工具」）· 2026-10-16 起照**线上旗舰版**那一版重排 ---------- */
 /* 这一屏原先照 Figma 节点 267:5486 复刻（六组 32 枚：客户管理／消息触达／社群经营／群聊运营／AI赋能／企微工具），
@@ -4963,6 +5675,10 @@ var HOST_TOOLS=[
     {n:'转发小程序',ic:'miniapp',pal:'creature',sm:'把小程序卡片转给客户',k:'o'},
     {n:'发消息',ic:'message',pal:'keyboard',sm:'给选中的客户发一条消息',k:'o'},
     {n:'转发收藏',ic:'send',pal:'phone',sm:'把微信收藏里的内容转给客户',k:'o'},
+    /* 客户唤醒＝员工自助的一次性唤醒（ADR-0095）。与后台派下来的「客户唤醒任务」不是一件事：
+       这里不建任务、不指定执行人员、不进任务列表与看板，结果只落本机的唤醒记录。
+       放这一组是因为它与转发、发消息同类——筛一批人、发一条消息。 */
+    {n:'客户唤醒',ic:'bell',pal:'bubble',sm:'把一段时间没回的客户一次唤醒',fn:"go('cw-list')",k:'o'},
     {n:'转发名片',ic:'idcard',pal:'creature',sm:'把名片转给指定客户',k:'o'},
     {n:'转发公众号',ic:'megaphone',pal:'creature',sm:'把公众号文章转给客户',k:'o'},
     {n:'文件分享',ic:'file',pal:'bubble',sm:'把文件发给指定客户',k:'o'},
