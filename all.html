@@ -22482,7 +22482,6 @@ function initQs(){
       +'<span class="ant-radio-label">'+label+'</span></label>';
   }
   var TS=[{n:'华东销售组',c:12},{n:'华南销售组',c:8},{n:'销售支持组',c:5},{n:'全员',c:25}];
-  var REP={once:'单次任务',week:'周循环',month:'月循环',custom:'自定义循环'};
 
   var form=document.createElement('div');form.className='rea-qf rea-qs';
   form.innerHTML='<div class="rea-qf-main"></div><aside class="rea-qf-side"></aside>';
@@ -22568,9 +22567,7 @@ function initQs(){
 
   /* ---------- ③ 什么时候发 ---------- */
   var b3=sec('3','什么时候发','');
-  row(b3,'任务类型',false,'<div class="ant-radio-group ant-radio-group-outline css-vgijab">'
-     +radio('rea-qs-type','once','单次任务',true)+radio('rea-qs-type','week','周循环',false)
-     +radio('rea-qs-type','month','月循环',false)+radio('rea-qs-type','custom','自定义循环',false)+'</div>');
+  /* 群发群组只有单次任务，③ 段只留两个时间控件。 */
   var s3=row(b3,'通知时间',true,
      '<input type="datetime-local" class="ant-input css-vgijab ant-input-outlined rea-qf-dt rea-qs-start" value="2026-10-13T16:05">');
   b3.appendChild(hint('到达通知时间会给执行人员推送提醒。'));
@@ -22676,10 +22673,9 @@ function initQs(){
     sumWho.title=sumWho.textContent;
     sumHow.textContent=file?'文件传输助手转发 · 每批最多 9 个群':'逐群发送 · 逐个群进会话';
     var sv=startI?startI.value:'',ev=endI?endI.value:'';
-    var rep=REP[ck('rea-qs-type')]||'单次任务';
     var gap=dayGap(sv,ev);
     var when=sv?dtLabel(sv):'未设置';
-    if(sv&&rep!=='单次任务')when+=' 起 · '+rep;else when+=' 发出';
+    if(sv)when+=' 发出';
     if(ev)when+='，'+gap+' 天内完成';
     sumWhen.textContent=when;
     sumExec.textContent=execSel?(execSel.n+' · '+execSel.c+' 人'):'未选择';
@@ -24296,6 +24292,325 @@ for(i=0;i<rows.length;i++){
   }
 
   /* ============================================================
+     微信营销任务 · 任务配置快照（2026-11-11）
+
+     六张详情页（发圈／群发好友／群发群组／批量加好友／关联好友／客户唤醒）的
+     进度卡右上角各加一枚「查看任务配置快照」，落到运行时合成的只读页。
+     页面骨架照「新小红书运营 · 任务配置快照」：面包屑 ＋ 返回按钮 ＋
+     基础信息 ＋ 该类型实际有的四段 ＋ 更多设置；字段值取创建时冻结的口径。
+     六张页共用一份数据表与一个渲染器，避免六个静态块各写一遍。
+     只动内嵌覆盖件：不动 _online-admin.js、不重跑构建。
+     ============================================================ */
+  var REA_WXS = {
+    '发圈 · 任务配置快照': {
+      list:'发圈', detail:'发圈 · 详情',
+      base:[
+        {label:'任务名称',value:'发圈任务20261012'},
+        {label:'任务类型',value:'发圈'},
+        {label:'任务状态',value:'进行中'},
+        {label:'有效期',value:'2026/10/12 13:51 ~ 2026/10/19 13:51'},
+        {label:'创建时间',value:'2026-10-12 13:51'}
+      ],
+      sections:[
+        {title:'① 发给谁看',rows:[
+          {label:'可见范围',value:'全部好友'},
+          {label:'提醒谁看',value:'重点客户、老客户'}
+        ]},
+        {title:'② 发什么',rows:[
+          {label:'任务内容',preview:true},
+          {label:'所在位置',value:'上海静安嘉里中心'}
+        ]},
+        {title:'③ 什么时候发',rows:[
+          {label:'循环方式',value:'单次任务'},
+          {label:'通知时间',value:'2026-10-12 13:51'},
+          {label:'截止时间',value:'2026-10-19 13:51'}
+        ]},
+        {title:'④ 谁来发',rows:[
+          {label:'执行人员',value:'张伯阳'}
+        ]}
+      ],
+      more:[
+        {label:'自动发送',value:'开启'},
+        {label:'全局弹窗',value:'关闭'}
+      ],
+      preview:{kind:'moments',name:'张伯阳',title:'撒打算',source:'云小助',location:'上海静安嘉里中心'}
+    },
+    '群发好友 · 任务配置快照': {
+      list:'群发好友', detail:'群发好友 · 详情',
+      base:[
+        {label:'任务名称',value:'群发好友任务20260902'},
+        {label:'任务类型',value:'群发好友'},
+        {label:'任务状态',value:'已过期'},
+        {label:'有效期',value:'2026/09/02 09:00 ~ 2026/09/09 09:00'},
+        {label:'创建时间',value:'2026-09-02 09:00'}
+      ],
+      sections:[
+        {title:'① 发给谁',rows:[
+          {label:'群发范围',value:'按微信标签'},
+          {label:'是否按照整个标签发送',value:'按照整个标签'},
+          {label:'匹配方式',value:'精确搜索'},
+          {label:'标签名称',value:'老客户、双十一'}
+        ]},
+        {title:'② 发什么',rows:[
+          {label:'任务内容',preview:true},
+          {label:'内容类型',value:'文本'},
+          {label:'描述文本',value:'各位老板好，本周新品已到店，欢迎进店体验，老客户到店可享专属优惠。'}
+        ]},
+        {title:'③ 什么时候发',rows:[
+          {label:'循环方式',value:'单次任务'},
+          {label:'通知时间',value:'2026-09-02 09:00'},
+          {label:'截止时间',value:'2026-09-09 09:00'}
+        ]},
+        {title:'④ 谁来发',rows:[
+          {label:'执行人员',value:'吴官宇'}
+        ]}
+      ],
+      more:[
+        {label:'发送类型',value:'群发助手'},
+        {label:'全局弹窗',value:'关闭'}
+      ],
+      preview:{kind:'chat',from:'吴官宇',text:'各位老板好，本周新品已到店，欢迎进店体验，老客户到店可享专属优惠。'}
+    },
+    '群发群组 · 任务配置快照': {
+      list:'群发群组', detail:'群发群组 · 详情',
+      base:[
+        {label:'任务名称',value:'群发群组任务20261013'},
+        {label:'任务类型',value:'群发群组'},
+        {label:'任务状态',value:'进行中'},
+        {label:'有效期',value:'2026/10/13 17:11 ~ 2026/10/20 17:11'},
+        {label:'创建时间',value:'2026-10-13 17:11'}
+      ],
+      sections:[
+        {title:'① 发给谁',rows:[
+          {label:'群发哪些群',value:'全部群'},
+          {label:'群聊名称关键词',value:'—（不涉及）',empty:true}
+        ]},
+        {title:'② 发什么',rows:[
+          {label:'任务内容',preview:true},
+          {label:'内容类型',value:'文本'},
+          {label:'内容文本',value:'各位老板好，本周新品已到店，欢迎进店体验，老客户到店可享专属优惠。'}
+        ]},
+        {title:'③ 什么时候发',rows:[
+          {label:'通知时间',value:'2026-10-13 17:11'},
+          {label:'截止时间',value:'2026-10-20 17:11'}
+        ]},
+        {title:'④ 谁来发',rows:[
+          {label:'执行人员',value:'雅楠002'}
+        ]}
+      ],
+      more:[
+        {label:'发送类型',value:'逐群发送'},
+        {label:'全局弹窗',value:'关闭'}
+      ],
+      preview:{kind:'group',group:'公司客户群',from:'雅楠002',text:'各位老板好，本周新品已到店，欢迎进店体验，老客户到店可享专属优惠。'}
+    },
+    '批量加好友 · 任务配置快照': {
+      list:'批量加好友', detail:'批量加好友 · 详情',
+      base:[
+        {label:'任务名称',value:'批量加好友20261013'},
+        {label:'任务类型',value:'批量添加好友'},
+        {label:'任务状态',value:'进行中'},
+        {label:'有效期',value:'2026/10/13 17:11 ~ 2026/10/20 17:11'},
+        {label:'创建时间',value:'2026-10-13 17:11'}
+      ],
+      sections:[
+        {title:'① 加谁',rows:[
+          {label:'添加好友方式',value:'手动输入'},
+          {label:'手机号',value:'13800138011、13900139002、13700137003 等 10 个'}
+        ]},
+        {title:'② 怎么加',rows:[
+          {label:'类型',value:'批量添加好友'},
+          {label:'验证消息',value:'您好，我是云小助的顾问'},
+          {label:'备注名',value:'周总'},
+          {label:'好友备忘',value:'10 月展会客户'},
+          {label:'是否遮挡',value:'否'},
+          {label:'设置标签',value:'重点客户、高意向'}
+        ]},
+        {title:'③ 什么时候加',rows:[
+          {label:'通知时间',value:'2026-10-13 17:11'},
+          {label:'截止时间',value:'2026-10-20 17:11'}
+        ]},
+        {title:'④ 谁来加',rows:[
+          {label:'执行人员',value:'雅楠002'}
+        ]}
+      ],
+      more:[
+        {label:'全局弹窗',value:'关闭'}
+      ]
+    },
+    '关联好友 · 任务配置快照': {
+      list:'关联好友', detail:'关联好友 · 详情',
+      base:[
+        {label:'任务名称',value:'关联好友20261013'},
+        {label:'任务类型',value:'关联好友'},
+        {label:'任务状态',value:'进行中'},
+        {label:'有效期',value:'2026/10/13 17:13 ~ 2026/10/20 17:13'},
+        {label:'创建时间',value:'2026-10-13 17:13'}
+      ],
+      sections:[
+        {title:'① 什么时候加',rows:[
+          {label:'通知时间',value:'2026-10-13 17:13'},
+          {label:'截止时间',value:'2026-10-20 17:13'}
+        ]},
+        {title:'② 谁来加',rows:[
+          {label:'执行人员',value:'雅楠002'}
+        ]}
+      ]
+    },
+    '客户唤醒 · 任务配置快照': {
+      list:'客户唤醒', detail:'客户唤醒 · 详情',
+      base:[
+        {label:'任务名称',value:'客户唤醒任务20261014'},
+        {label:'任务类型',value:'客户唤醒'},
+        {label:'任务状态',value:'进行中'},
+        {label:'有效期',value:'2026/10/14 10:19 ~ 2026/10/21 10:19'},
+        {label:'创建时间',value:'2026-10-14 10:19'}
+      ],
+      sections:[
+        {title:'① 唤醒谁',rows:[
+          {label:'唤醒人群',value:'超过 24 小时未回复的客户'},
+          {label:'微信标签',value:'老客户、高意向'}
+        ]},
+        {title:'② 发什么',rows:[
+          {label:'内容生成策略',value:'固定内容'},
+          {label:'唤醒内容',preview:true}
+        ]},
+        {title:'③ 什么时候发',rows:[
+          {label:'循环方式',value:'单次任务'},
+          {label:'通知时间',value:'2026-10-14 10:19'},
+          {label:'截止时间',value:'2026-10-21 10:19'}
+        ]},
+        {title:'④ 谁来发',rows:[
+          {label:'执行人员',value:'雅楠002'}
+        ]}
+      ],
+      more:[
+        {label:'全局弹窗',value:'关闭'}
+      ],
+      preview:{kind:'chat',from:'雅楠002',text:'您好，好久没联系了，最近店里到了新品，给您留了一份资料，方便的话回我一下～'}
+    }
+  };
+  function wxsEsc(s){
+    return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function wxsRows(rows){
+    var h='',i,r,v;
+    for(i=0;i<rows.length;i++){
+      r=rows[i];
+      if(r.preview)v='<button type="button" class="rea-wxs-link" data-wxs-view="1">查看</button>';
+      else if(r.empty)v='<span class="rea-wxs-empty">'+wxsEsc(r.value)+'</span>';
+      else v=wxsEsc(r.value);
+      h+='<div class="rea-wxs-row"><span>'+wxsEsc(r.label)+'</span><div>'+v+'</div></div>';
+    }
+    return h;
+  }
+  function wxsSection(title,rows){
+    return '<div class="rea-wxs-sec"><h4>'+wxsEsc(title)+'</h4>'+wxsRows(rows)+'</div>';
+  }
+  function reaWxSnapshotHtml(page){
+    var d=REA_WXS[page];
+    if(!d)return '';
+    var h='';
+    h+='<div class="h-full overflow-auto"><div class="h-full"><div class="_boxadd_28xtg_149">';
+    h+='<h4 style="padding-left:10px;font-weight:normal;"><nav class="ant-breadcrumb css-vgijab"><ol>';
+    h+='<li class="ant-breadcrumb-item"><span class="ant-breadcrumb-link">微信营销任务</span></li>';
+    h+='<li class="ant-breadcrumb-separator" aria-hidden="true">/</li>';
+    h+='<li class="ant-breadcrumb-item"><a class="ant-breadcrumb-link" href="#" data-rea="'+wxsEsc(d.list)+'">'+wxsEsc(d.list)+'</a></li>';
+    h+='<li class="ant-breadcrumb-separator" aria-hidden="true">/</li>';
+    h+='<li class="ant-breadcrumb-item"><span class="ant-breadcrumb-link"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" style="padding:0;height:auto;" data-rea="'+wxsEsc(d.detail)+'"><span>任务详情</span></button></span></li>';
+    h+='<li class="ant-breadcrumb-separator" aria-hidden="true">/</li>';
+    h+='<li class="ant-breadcrumb-item"><span class="ant-breadcrumb-link">任务配置快照</span></li>';
+    h+='</ol></nav></h4>';
+    h+='<div style="height:calc(-117px + 100vh);overflow-y:auto;box-sizing:border-box;background:var(--yk-content-bg,#fff);border:1px solid rgb(241,242,245);border-radius:5px;padding:16px;margin-top:8px;">';
+    h+='<div style="margin-bottom:16px;"><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-rea="'+wxsEsc(d.detail)+'"><span>返回任务详情</span></button><span class="rea-wxs-note">只读 · 任务创建时保存的配置</span></div>';
+    h+='<div class="ant-spin-nested-loading css-vgijab"><div class="ant-spin-container">';
+    h+=wxsSection('基础信息',d.base);
+    for(var i=0;i<d.sections.length;i++)h+=wxsSection(d.sections[i].title,d.sections[i].rows);
+    if(d.more&&d.more.length)h+=wxsSection('更多设置',d.more);
+    h+='</div></div></div></div></div></div>';
+    return h;
+  }
+  function reaWxPreviewContent(p){
+    var THUMB='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#98a2b3" stroke-width="1.5" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="M21 15l-4.6-4.6L7 20"/></svg>';
+    var PIN='<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>';
+    var h='<div class="ant-modal-content">';
+    h+='<button type="button" class="ant-modal-close" aria-label="关闭"><span class="ant-modal-close-x">×</span></button>';
+    if(p.kind==='moments'){
+      h+='<div class="ant-modal-header"><div class="ant-modal-title">朋友圈预览</div></div>';
+      h+='<div class="ant-modal-body"><div class="rea-fqc-moments"><div class="rea-fqc-mrow">';
+      h+='<div class="rea-fqc-mava" aria-hidden="true">'+wxsEsc((p.name||'张').slice(0,1))+'</div>';
+      h+='<div class="rea-fqc-mbody"><div class="rea-fqc-mname">'+wxsEsc(p.name||'张伯阳')+'</div>';
+      h+='<div class="rea-fqc-mlink"><div class="rea-fqc-mthumb">'+THUMB+'</div>';
+      h+='<div class="rea-fqc-mmeta"><div class="rea-fqc-mtitle">'+wxsEsc(p.title||'撒打算')+'</div>';
+      h+='<div class="rea-fqc-msrc">'+wxsEsc(p.source||'云小助')+'</div></div></div>';
+      if(p.location)h+='<div class="rea-fqc-mloc">'+PIN+'<span>'+wxsEsc(p.location)+'</span></div>';
+      h+='<div class="rea-fqc-mfoot"><span>1分钟前</span><span class="rea-fqc-mact">赞　评论</span></div>';
+      h+='</div></div></div></div>';
+    }else{
+      var title=p.kind==='group'?'群里收到的样子':'客户收到的样子';
+      var who=p.kind==='group'?(p.group||'公司客户群')+'（12）':(p.from||'张伯阳');
+      h+='<div class="ant-modal-header"><div class="ant-modal-title">'+title+'</div></div>';
+      h+='<div class="ant-modal-body"><div class="rea-wxs-chat">';
+      h+='<div class="rea-wxs-chat-hd">'+wxsEsc(who)+'</div>';
+      h+='<div class="rea-wxs-msg"><div class="rea-wxs-ava">'+(p.kind==='group'?'群':'销')+'</div>';
+      h+='<div class="rea-wxs-bubble">'+wxsEsc(p.text||'')+'</div></div>';
+      h+='</div></div>';
+    }
+    h+='<div class="ant-modal-footer"><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-wxs-close><span>关 闭</span></button></div>';
+    h+='</div>';
+    return h;
+  }
+  function reaWxSnapshotJs(page){
+    var d=REA_WXS[page]||{};
+    var body=d.preview?reaWxPreviewContent(d.preview):'';
+    return [
+      '(function(){',
+      'var H=' + reaJson(reaWxSnapshotHtml(page)) + ';',
+      'var B=' + reaJson(body) + ';',
+      'var KIND=' + reaJson(d.preview?d.preview.kind:'') + ';',
+      'var v=document.getElementById("subapp-viewport");',
+      'if(!v)return;',
+      'v.innerHTML=H;',
+      'if(!B)return;',
+      'function close(w){if(w&&w.parentNode)w.parentNode.removeChild(w);document.removeEventListener("keydown",onKey)}',
+      'function onKey(e){if(e.key==="Escape"||e.keyCode===27){var w=document.querySelector("[data-wxs-modal]");if(w)close(w)}}',
+      'function open(){',
+      '  var old=document.querySelector("[data-wxs-modal]");if(old)close(old);',
+      '  var w=document.createElement("div");w.className="ant-modal-root css-vgijab";w.setAttribute("data-wxs-modal","1");',
+      '  var cls=KIND==="moments"?"rea-fqc-modal":"rea-wxs-modal";',
+      '  var width=KIND==="moments"?"560px":"420px";',
+      '  w.innerHTML=\'<div class="ant-modal-mask"></div><div class="ant-modal-wrap ant-modal-centered"><div class="ant-modal css-vgijab \'+cls+\'" role="dialog" aria-modal="true" style="width:\'+width+\'">\'+B+\'</div></div>\';',
+      '  document.body.appendChild(w);',
+      '  w.querySelector(".ant-modal-close").addEventListener("click",function(){close(w)});',
+      '  var f=w.querySelector("[data-wxs-close]");if(f)f.addEventListener("click",function(){close(w)});',
+      '  var m=w.querySelector(".ant-modal-wrap");if(m)m.addEventListener("click",function(e){if(e.target===m)close(w)});',
+      '  document.addEventListener("keydown",onKey);',
+      '}',
+      'var bs=document.querySelectorAll("[data-wxs-view]"),i;',
+      'for(i=0;i<bs.length;i++)bs[i].addEventListener("click",function(e){e.preventDefault();e.stopPropagation();open()});',
+      '})();'
+    ].join('\n');
+  }
+  var REA_WX_SNAP_CSS = [
+    '.rea-wxs-note{margin-left:12px;color:#999}',
+    '.rea-wxs-sec{margin-bottom:24px}',
+    '.rea-wxs-sec h4{margin:0 0 12px;padding-left:8px;border-left:3px solid #1677ff;font-size:16px;line-height:24px;font-weight:600;color:#1f2329}',
+    '.rea-wxs-row{display:flex;padding:8px 0;border-bottom:1px dashed #f0f0f0;font-size:14px;line-height:22px;color:#1f2329}',
+    '.rea-wxs-row>span{width:160px;flex-shrink:0;color:#666}',
+    '.rea-wxs-row>div{flex:1;min-width:0;white-space:pre-wrap;word-break:break-word}',
+    '.rea-wxs-link{border:0;background:none;padding:0;font:inherit;color:#1677ff;cursor:pointer}',
+    '.rea-wxs-link:hover{text-decoration:underline}',
+    '.rea-wxs-empty{color:#999}',
+    '.rea-wxs-modal .ant-modal-body{padding-top:12px}',
+    '.rea-wxs-chat{padding:16px;border:1px solid #ededed;border-radius:8px;background:#f7f7f7}',
+    '.rea-wxs-chat-hd{margin-bottom:12px;font-size:13px;color:#8f959e}',
+    '.rea-wxs-msg{display:flex;gap:8px}',
+    '.rea-wxs-ava{display:flex;align-items:center;justify-content:center;width:36px;height:36px;flex:none;border-radius:4px;background:#2e448f;color:#fff;font-size:13px}',
+    '.rea-wxs-bubble{max-width:300px;padding:10px 12px;border:1px solid #ededed;border-radius:4px;background:#fff;font-size:14px;line-height:22px;color:#181818;white-space:pre-wrap;word-break:break-word}'
+  ].join('\n');
+
+  /* ============================================================
      微信营销任务 · 任务详情执行进度（2026-11-10）
 
      问题：六张详情页（发圈／群发好友／群发群组／批量加好友／关联好友／客户唤醒）
@@ -24386,6 +24701,8 @@ for(i=0;i<rows.length;i++){
     '.rea-wxd{box-sizing:border-box;position:relative;margin:0 0 20px;padding:20px 24px 18px;border-radius:8px;background:#F7F8FA}',
     '.rea-wxd-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap}',
     '.rea-wxd-id{display:flex;align-items:center;gap:12px;min-width:0}',
+    '.rea-wxd-snap{margin-left:auto;font-size:13px;line-height:20px;color:#1677FF;text-decoration:none;white-space:nowrap}',
+    '.rea-wxd-snap:hover{text-decoration:underline}',
     '.rea-wxd-name{margin:0;font-size:20px;line-height:28px;font-weight:600;color:#1F2329;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}',
     '.rea-wxd-state{display:inline-flex;align-items:center;gap:6px;flex:none;height:24px;padding:0 10px;border:1px solid #E5E8EF;border-radius:999px;background:#fff;font-size:13px;line-height:1;color:#646A73;white-space:nowrap}',
     '.rea-wxd-state i{width:7px;height:7px;border-radius:50%;background:#8F959E;flex:none}',
@@ -24519,6 +24836,13 @@ band.className='rea-wxd';
 band.setAttribute('data-rea-wxd','1');
 band.innerHTML=html;
 band.querySelector('.rea-wxd-name').textContent=title;
+/* 配置快照入口：六张详情页同一位置（进度卡右上角），目标页名由当前页名推导。 */
+var snap=document.createElement('a');
+snap.href='#';
+snap.className='rea-wxd-snap';
+snap.setAttribute('data-rea',PAGE.replace(' · 详情',' · 任务配置快照'));
+snap.textContent='查看任务配置快照';
+band.querySelector('.rea-wxd-top').appendChild(snap);
 var card=BODY.parentNode;
 var phc=card.closest?card.closest('.ant-page-header-content'):null;
 if(phc&&phc!==card&&card!==phc.firstElementChild){
@@ -27835,6 +28159,14 @@ checkCross();
     /* 关联好友／客户唤醒的详情原来没覆盖，这一笔补上（执行进度卡是唯一改动） */
     '关联好友 · 详情': { css: REA_WX_DETAIL_CSS, js: function(){ return reaWxDetailJs('关联好友 · 详情'); } },
     '客户唤醒 · 详情': { css: REA_WX_DETAIL_CSS, js: function(){ return reaWxDetailJs('客户唤醒 · 详情'); } },
+    /* 六张任务配置快照（2026-11-11）：运行时克隆各自详情页的壳，正文整段换成只读配置。
+       发圈的「任务内容」弹窗沿用 reaFqc 那套朋友圈排版，所以带上 REA_FQ_DETAIL_CSS。 */
+    '发圈 · 任务配置快照': { css: REA_FQ_DETAIL_CSS + REA_WX_SNAP_CSS, js: function(){ return reaWxSnapshotJs('发圈 · 任务配置快照'); } },
+    '群发好友 · 任务配置快照': { css: REA_WX_SNAP_CSS, js: function(){ return reaWxSnapshotJs('群发好友 · 任务配置快照'); } },
+    '群发群组 · 任务配置快照': { css: REA_WX_SNAP_CSS, js: function(){ return reaWxSnapshotJs('群发群组 · 任务配置快照'); } },
+    '批量加好友 · 任务配置快照': { css: REA_WX_SNAP_CSS, js: function(){ return reaWxSnapshotJs('批量加好友 · 任务配置快照'); } },
+    '关联好友 · 任务配置快照': { css: REA_WX_SNAP_CSS, js: function(){ return reaWxSnapshotJs('关联好友 · 任务配置快照'); } },
+    '客户唤醒 · 任务配置快照': { css: REA_WX_SNAP_CSS, js: function(){ return reaWxSnapshotJs('客户唤醒 · 任务配置快照'); } },
     /* 关联好友 · 新建（2026-11-10）：正文仍是快照那张「添加任务」弹窗，只补执行上限回显 */
     '关联好友 · 新建': { css: REA_FREQ_CSS, js: reaRelJs }
   };
@@ -27922,6 +28254,28 @@ checkCross();
       });
     } else {
       reaWarn('「任务配置快照」页合成失败：快照里找不到「' + REA_XHS_DETAIL + '」页');
+    }
+    /* 微信营销任务的六张配置快照：各自克隆对应详情页的壳，正文由覆盖脚本整段换掉。 */
+    var wxSnaps = [
+      ['发圈 · 详情', '发圈 · 任务配置快照'],
+      ['群发好友 · 详情', '群发好友 · 任务配置快照'],
+      ['群发群组 · 详情', '群发群组 · 任务配置快照'],
+      ['批量加好友 · 详情', '批量加好友 · 任务配置快照'],
+      ['关联好友 · 详情', '关联好友 · 任务配置快照'],
+      ['客户唤醒 · 详情', '客户唤醒 · 任务配置快照']
+    ];
+    for (i = 0; i < wxSnaps.length; i++){
+      var wsrc = find(wxSnaps[i][0]);
+      if (wsrc){
+        P.pages.push({
+          name: wxSnaps[i][1],
+          rest: wsrc.rest,
+          contentStart: wsrc.contentStart,
+          contentEnd: wsrc.contentEnd
+        });
+      } else {
+        reaWarn('「' + wxSnaps[i][1] + '」页合成失败：快照里找不到「' + wxSnaps[i][0] + '」页');
+      }
     }
     reaSynthDone = true;
   }
