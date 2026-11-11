@@ -22043,6 +22043,7 @@ function initQf(){
     return w?norm(w.textContent):'';
   }
   function scopeIsTags(){return checkedLabel(rScope).indexOf('按微信标签')>=0}
+  function scopeIsFriends(){return checkedLabel(rScope).indexOf('指定微信好友')>=0}
   function sendType(){
     var l=checkedLabel(rSend);
     if(l.indexOf('搜索')>=0)return 'search';
@@ -22057,6 +22058,22 @@ function initQf(){
      免得被快照的 REA_FX 按「同名单选组」插手。 */
   var b1=sec('1','发给谁','先定范围，再写内容');
   put(rScope,b1);
+  /* 群发范围补第三枚「指定微信好友」：克隆同组最后一枚，选中态仍归 REA_FX
+     按整组翻转（与「发送类型」补第三项同一套做法）。 */
+  (function(){
+    var grp=rScope.querySelector('.ant-radio-group');if(!grp)return;
+    if(grp.querySelector('[data-rea-scope="friends"]'))return;
+    var wraps=grp.querySelectorAll('.ant-radio-wrapper'),tpl=wraps[wraps.length-1];
+    if(!tpl)return;
+    var nb=tpl.cloneNode(true);
+    nb.setAttribute('data-rea-scope','friends');
+    nb.classList.remove('ant-radio-wrapper-checked');
+    var inp=nb.querySelector('input');
+    if(inp){inp.checked=false;inp.removeAttribute('checked');inp.value='5'}
+    var dot=nb.querySelector('.ant-radio');if(dot)dot.classList.remove('ant-radio-checked');
+    var txt=nb.querySelector('.ant-radio-label');if(txt)txt.textContent='指定微信好友';
+    grp.appendChild(nb);
+  })();
   var tagPanel=document.createElement('div');tagPanel.className='rea-qf-tagpanel';b1.appendChild(tagPanel);
   tagPanel.innerHTML=
      '<div class="rea-qf-trow"><span>是否按照整个标签发送</span>'
@@ -22109,7 +22126,23 @@ function initQf(){
     }
     return out;
   }
-  function drawPanel(){tagPanel.hidden=!scopeIsTags()}
+  /* 指定微信好友：昵称同样在各销售自己的微信里，后台列不出名单，只让运营按昵称
+     手填，多个用 , 分隔；执行时在每人好友里按昵称匹配，页面同样不预估人数。 */
+  var friendPanel=document.createElement('div');friendPanel.className='rea-qf-tagpanel';b1.appendChild(friendPanel);
+  friendPanel.innerHTML='<div class="rea-qf-trow"><label class="rea-qf-tagin">'
+    +'<input type="text" aria-label="好友昵称" placeholder="请输入好友昵称，多个昵称请用&quot;,&quot;隔开">'
+    +'</label></div>';
+  var friendInput=friendPanel.querySelector('input');
+  /* 好友昵称按 , 与全角，分隔，去空去重。 */
+  function friendNames(){
+    var seen={},out=[],list=friendInput.value.split(/[,，]/),q,v;
+    for(q=0;q<list.length;q++){
+      v=list[q].trim();
+      if(v&&!seen[v]){seen[v]=1;out.push(v)}
+    }
+    return out;
+  }
+  function drawPanel(){tagPanel.hidden=!scopeIsTags();friendPanel.hidden=!scopeIsFriends()}
   var tagHint=hint('');b1.appendChild(tagHint);
   var warn=hint('','rea-qf-warn');b1.appendChild(warn);
   if(rScope)rScope.addEventListener('click',function(){setTimeout(function(){drawPanel();render()},0)});
@@ -22321,11 +22354,13 @@ function initQf(){
     return n>0?n:0;
   }
   function render(){
-    var all=!scopeIsTags();
+    var friends=scopeIsFriends(),all=!scopeIsTags()&&!friends;
     var names=tagNames(),n=names.length;
+    var fnames=friendNames(),fn=fnames.length;
     var st=sendType();
     sumWho.textContent=all?'全部好友 · 人数执行时统计'
-      :(n?('标签：'+names.join(';')+' · '+MATCH_LABEL[matchMode]):'按微信标签 · 未填');
+      :(friends?(fn?('好友：'+fnames.join(',')):'指定微信好友 · 未填')
+        :(n?('标签：'+names.join(';')+' · '+MATCH_LABEL[matchMode]):'按微信标签 · 未填'));
     sumWho.title=sumWho.textContent;
     var how;
     if(st==='assistant')how='群发助手 · 每批最多 200 人';
@@ -22341,8 +22376,13 @@ function initQf(){
     sumWhen.textContent=when;
     sumExec.textContent=execSel?(execSel.n+' · '+execSel.c+' 人'):'未选择';
     var stName=st==='assistant'?'群发助手':st==='search'?'搜索发送':'文件传输助手转发';
-    actSum.textContent=(all?'全部好友':(n?n+' 个标签':'标签未填'))+' · '+stName;
-    if(!all){
+    var scopeWord=all?'全部好友':(friends?(fn?fn+' 个好友':'好友未填')
+      :(n?n+' 个标签':'标签未填'));
+    actSum.textContent=scopeWord+' · '+stName;
+    if(friends){
+      tagHint.textContent=fn?('已填 '+fn+' 个好友昵称，按昵称匹配；人数以各人手机为准。')
+        :('好友昵称在各销售自己的微信里，按昵称匹配；人数以各人手机为准。');
+    }else if(!all){
       tagHint.textContent=n?('已填 '+n+' 个标签，'+MATCH_TIP[matchMode]+'；人数以各人手机为准。')
         :('标签在各销售自己的微信里，'+MATCH_TIP[matchMode]+'；人数以各人手机为准。');
     }else{
@@ -22394,7 +22434,9 @@ function initQf(){
     if(!picked&&!editorText()&&ctypeSel()==='文本'){
       setErr(rContent,'请从素材库选一条素材，或临时写完内容');ok=false;
     }else setErr(rContent,'');
-    if(scopeIsTags()&&!tagNames().length){setErr(rScope,'按微信标签群发时，请至少填写一个标签名称');ok=false}else setErr(rScope,'');
+    if(scopeIsTags()&&!tagNames().length){setErr(rScope,'按微信标签群发时，请至少填写一个标签名称');ok=false}
+    else if(scopeIsFriends()&&!friendNames().length){setErr(rScope,'指定微信好友群发时，请至少填写一个好友昵称');ok=false}
+    else setErr(rScope,'');
     if(!startI||!startI.value){setErr(rStart,'请选择通知时间');ok=false}else setErr(rStart,'');
     if(!endI||!endI.value){setErr(rEnd,'请选择截止时间');ok=false}
     else if(startI&&startI.value&&endI.value<=startI.value){setErr(rEnd,'截止时间要晚于通知时间');ok=false}
