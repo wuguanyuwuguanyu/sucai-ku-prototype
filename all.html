@@ -177,8 +177,6 @@ mark{background:var(--primary-container);color:var(--on-primary-container);borde
 #stage::before,#stage::after{content:"";position:fixed;border-radius:50%;filter:blur(110px);opacity:.45;pointer-events:none}
 #stage::before{width:520px;height:520px;left:-120px;top:-160px;background:#3B33B8}
 #stage::after{width:620px;height:620px;right:-160px;bottom:-200px;background:#17337A}
-.stage-head{position:fixed;top:26px;left:50%;transform:translateX(-50%);text-align:center;z-index:5;pointer-events:none}
-.stage-head h1{font-size:15px;font-weight:600;letter-spacing:.08em;color:#C9CBF5}
 
 #sidebar{width:248px;height:min(880px,92vh);overflow-y:auto;border-radius:22px;padding:18px 12px;
   background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.09);backdrop-filter:blur(14px);z-index:20}
@@ -239,7 +237,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 @media(max-height:1020px){.phone-wrap{transform:scale(.9)}}
 @media(max-height:920px){.phone-wrap{transform:scale(.8)}}
 @media(max-height:820px){.phone-wrap{transform:scale(.7)}}
-@media(max-width:520px){.phone-wrap{transform:scale(.62)}.stage-head{display:none}}
+@media(max-width:520px){.phone-wrap{transform:scale(.62)}}
 
 /* ---------------- 屏幕基座与转场（M3 fade-through） ---------------- */
 .screen{position:absolute;inset:0;background:var(--surface);display:flex;flex-direction:column;visibility:hidden;overflow:hidden}
@@ -927,7 +925,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
    视觉归到宿主四屏那一套：浅蓝雾顶、白卡、蓝字，主按钮用实色蓝（宿主主操作不用渐变）。
    分档口径与「待唤醒客户」页同一套（今日 1–6 小时／1天 1–6 天／1周 7–13 天），
    但这一屏是**选择器**：每行前面一枚勾选框，分组头带三态「全选」。 */
-#cw-list,#cw-content,#cw-confirm,#cw-records,#cw-record{background:linear-gradient(180deg,#F0F5FF 0%,#F7F9FE 100%)}
+#cw-list,#cw-content,#cw-records,#cw-record{background:linear-gradient(180deg,#F0F5FF 0%,#F7F9FE 100%)}
 .cw-glow{position:absolute;left:0;right:0;top:0;height:240px;pointer-events:none;
   background:radial-gradient(56% 34% at 18% -10%,rgba(150,178,255,.34),transparent 72%),
              radial-gradient(50% 30% at 100% 0%,rgba(182,160,255,.22),transparent 74%)}
@@ -1068,6 +1066,59 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .cw-attach{margin-top:8px;display:flex;align-items:center;gap:8px;background:#EFF5FF;border-radius:12px;
   padding:10px 12px;font-size:13px;font-weight:600;color:#2E5FA8}
 .cw-attach .rm{margin-left:auto;font-size:12px;font-weight:600;color:#2E6BFF;padding:4px 2px}
+/* 2026-11-12 重排：名单与内容各占一屏，确认页并入内容页底栏。
+   内容页顶部「发给 N 人」整行可点回名单；固定内容与 AI 结果共用同一套行/卡。 */
+.cw-srow{display:flex;align-items:center;gap:8px;width:100%;text-align:left;background:#fff;
+  border-radius:16px;padding:13px 14px;margin-top:10px;position:relative;overflow:hidden;
+  box-shadow:0 12px 24px -24px rgba(40,70,150,.9)}
+.cw-srow+.cw-srow{margin-top:8px}
+.cw-srow>span:first-child{flex:none;font-size:13px;font-weight:500;color:#7C8CA4}
+.cw-srow>b{font-size:14px;font-weight:600;color:#152C50;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cw-srow .cw-sub{flex:1;min-width:0;text-align:right;font-size:11.5px;font-weight:500;color:#95A3B8;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cw-srow .cw-chev{margin-left:0}
+.cw-chev{flex:none;margin-left:auto;color:#A9B8CE;font-size:17px;font-weight:600;line-height:1}
+/* 固定内容：一组气泡，序号在左，行尾 ✎ × */
+.cw-crow{display:flex;align-items:flex-start;gap:10px;padding:9px 0}
+.cw-crow+.cw-crow{border-top:1px solid #EEF2FA}
+.cw-crow .cw-bub{flex:1;min-width:0;max-width:none;align-self:flex-start}
+/* 行尾图标动作：别复用头栏那枚 .cw-acts（那是 position:absolute 的） */
+.cw-cacts{flex:none;display:flex;align-items:center;gap:2px;padding-top:3px}
+.cw-cacts button{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  color:#5B7BAA;background:transparent;position:relative;overflow:hidden}
+.cw-cacts button.danger{color:#C2413A}
+.cw-srow .cw-chev{margin-left:6px}
+.cw-addrow{display:flex;align-items:center;justify-content:center;width:100%;height:44px;margin-top:6px;
+  border-radius:12px;border:1.4px dashed #C9D8EF;font-size:13.5px;font-weight:600;color:#2E6BFF}
+/* AI 表单：一个必填框 ＋ 三项设置收成一行 */
+.cw-topic{background:#fff;border-radius:16px;padding:14px;margin-top:10px;
+  box-shadow:0 12px 24px -24px rgba(40,70,150,.9)}
+.cw-topic .lab{font-size:12px;font-weight:600;color:#7C8CA4;margin-bottom:3px}
+.cw-topic input{width:100%;border:0;background:transparent;font-size:16px;font-weight:600;
+  font-family:var(--f);color:#152C50;padding:0;line-height:1.4;letter-spacing:.01em}
+.cw-topic input::placeholder{color:#B4C1D6;font-weight:500}
+.cw-topic input:focus{outline:none}
+.cw-cfg{display:flex;align-items:center;width:100%;padding:12px 14px;background:#fff;
+  border-radius:16px;margin-top:8px;font-size:12.5px;font-weight:500;color:#5B7BAA;
+  box-shadow:0 12px 24px -24px rgba(40,70,150,.9);position:relative;overflow:hidden}
+.cw-cfg span{display:flex;align-items:baseline;gap:4px;margin-right:14px}
+.cw-cfg i{font-style:normal;font-size:11.5px;font-weight:600;color:#95A3B8}
+/* AI 结果：一人一张卡，行尾三枚图标 */
+.cw-aicard{background:#fff;border-radius:16px;padding:12px 14px;margin-top:10px;
+  box-shadow:0 12px 24px -24px rgba(40,70,150,.9)}
+.cw-aichd{display:flex;align-items:center;gap:8px}
+.cw-aichd .cw-av{width:28px;height:28px;font-size:12px}
+.cw-aichd .nm{flex:1;min-width:0;font-size:13.5px;font-weight:600;color:#152C50}
+.cw-aicard .tx{margin-top:6px;font-size:13.5px;font-weight:500;color:#3D5578;line-height:1.55;overflow-wrap:anywhere}
+.cw-aicard.bad .tx{color:#C2413A}
+/* 设置弹层：话术生成 / 发送 两组 */
+.cw-grp{font-size:11.5px;font-weight:700;color:#95A3B8;letter-spacing:.04em;margin:16px 0 2px}
+.cw-grp:first-of-type{margin-top:8px}
+.cw-opts{display:flex;flex-wrap:wrap;gap:8px;padding:4px 0 8px}
+.cw-opts button{height:32px;padding:0 12px;border-radius:999px;background:#fff;border:1px solid #DCE6FA;
+  font-size:12.5px;font-weight:600;color:#3A5B8F;position:relative;overflow:hidden}
+.cw-opts button.on{background:#E8F0FF;border-color:#B9CDF6;color:#1B4AA8}
+.cw-ro{font-size:13px;font-weight:500;color:#95A3B8}
 
 /* ---------------- 宿主 App AI托管页（底部 Tab「AI托管」，居中抬起）· 逻辑照参考原型 APP-AI-001 ----------------
    口径说明：
@@ -3336,9 +3387,6 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 <body>
 
 <div id="stage">
-  <div class="stage-head">
-    <h1>素材库 · 高保真交互原型 · Material Design 3</h1>
-  </div>
 
   <!-- 侧栏＝原型外壳（展品），两段：上面「演示版本」（标准版／高级版／旗舰版三枚，见 setVer／buildVer），
        下面「屏幕目录」。版本开关特意放在**手机外**——它是演示件，不该被读成 App 里的一屏。 -->
@@ -3612,7 +3660,9 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 
         <!-- 客户唤醒（App 工具页）· ADR-0095／docs/prd/客户唤醒-App工具页-PRD.md
              两个入口：工具页「高效发送」组的「客户唤醒」，与「待唤醒客户」页吸底的「一键唤醒」。
-             五屏：名单 → 唤醒内容 → 确认发送；右上角 ⟲ 唤醒记录（点一条进记录详情）、⚙ 设置。
+             四屏：名单 → 唤醒内容 → 唤醒记录／记录详情；名单右上角 ⟲ 记录、⚙ 设置。
+             **2026-11-12 撤掉确认页**：人数、条数、间隔、防重复都能在内容页顶行与底栏说完，
+             多一屏只是把同样的话说第二遍。内容页顶行「发给 N 人」整行可点回名单（底栏换成「完成」）。
              **没有发送中页与结果页**：脚本执行会切到微信、逐条发、占住屏幕，App 里画进度没意义；
              点「开始唤醒」直接回记录，状态从「执行中」走到「完成／部分失败」。
              正文一律由 REND['cw-*'] 按数据填（同 cust 四页的口径：版式一份，换数据）。 -->
@@ -3635,20 +3685,10 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
           <div class="appbar-back cw-bar">
             <button class="iconbtn" onclick="back()" id="cwContentBack" title="返回"></button>
             <h3>唤醒内容</h3>
-            <div class="cw-acts"><button class="cw-ib" id="cwContentAct" onclick="cwContentTop()" aria-label="添加内容" title="添加"></button></div>
+            <div class="cw-acts"><button class="cw-ib" id="cwContentAct" aria-label="设置" title="设置"></button></div>
           </div>
           <div class="scroll cw-scroll" id="cwContentBody"></div>
           <div class="cw-foot" id="cwContentFoot"></div>
-        </section>
-
-        <section class="screen" id="cw-confirm">
-          <div class="cw-glow"></div>
-          <div class="appbar-back cw-bar">
-            <button class="iconbtn" onclick="back()" id="cwConfirmBack" title="返回"></button>
-            <h3>确认发送</h3>
-          </div>
-          <div class="scroll cw-scroll" id="cwConfirmBody"></div>
-          <div class="cw-foot" id="cwConfirmFoot"></div>
         </section>
 
         <section class="screen" id="cw-records">
@@ -4661,7 +4701,7 @@ function ripInit(){
 
 /* ---------- 侧栏目录 ---------- */
 var NAV=[
-  {g:'概览',items:[{id:'host-home',n:'宿主 App 首页'},{id:'host-task',n:'宿主 App 任务页'},{id:'host-awake',n:'今日概况 · 待唤醒客户'},{id:'host-reach',n:'今日概况 · 待触达新客户'},{id:'host-chat',n:'今日概况 · 客户沟通'},{id:'host-newfriend',n:'今日概况 · 新增好友'},{id:'host-tools',n:'宿主 App 工具页'},{n:'客户唤醒 · 待唤醒名单',fn:"go('cw-list')"},{n:'客户唤醒 · 唤醒内容',fn:"go('cw-content')"},{n:'客户唤醒 · 确认发送',fn:"go('cw-confirm')"},{n:'客户唤醒 · 唤醒记录',fn:"go('cw-records')"},{id:'host-me',n:'宿主 App 我的页'},{id:'host-fwset',n:'宿主 App 设置'},{id:'host-fwset-assist',n:'设置 · 辅助回复'},{id:'host-widgets',n:'设置 · 小组件'}]},
+  {g:'概览',items:[{id:'host-home',n:'宿主 App 首页'},{id:'host-task',n:'宿主 App 任务页'},{id:'host-awake',n:'今日概况 · 待唤醒客户'},{id:'host-reach',n:'今日概况 · 待触达新客户'},{id:'host-chat',n:'今日概况 · 客户沟通'},{id:'host-newfriend',n:'今日概况 · 新增好友'},{id:'host-tools',n:'宿主 App 工具页'},{n:'客户唤醒 · 待唤醒名单',fn:"cwEnter()"},{n:'客户唤醒 · 唤醒内容',fn:"go('cw-content')"},{n:'客户唤醒 · 唤醒记录',fn:"go('cw-records')"},{id:'host-me',n:'宿主 App 我的页'},{id:'host-fwset',n:'宿主 App 设置'},{id:'host-fwset-assist',n:'设置 · 辅助回复'},{id:'host-widgets',n:'设置 · 小组件'}]},
   /* AI托管各屏（主页＋二级）：主页面由底栏中间那枚抬起 Tab 进，二级页由主页页头／卡片／设置页进。
      侧栏里仍各列一条——侧栏是演示目录，能直达才方便对稿，不必照着真实路径点三下。
      末二条列的是**只有非旗舰版到得了**的那一屏（§2.2 的升级提示页）：它不挂在任何真实路径上
@@ -5127,8 +5167,10 @@ var CW_CUST=[
   {i:'d2',n:'何丽',last:'10月10日 16:40',h:33*24},
   {i:'d3',n:'马晓东',last:'9月2日 11:00',h:71*24}
 ];
-var CW_SET={gap:10,cap:50,skip:true};
-var CW_TMP={gap:10,cap:50,skip:true};
+var CW_SET={gap:10,cap:50,skip:true,style:'亲切',role:'客户经理',words:120};
+var CW_TMP={gap:10,cap:50,skip:true,style:'亲切',role:'客户经理',words:120};
+var CW_STYLES=['亲切','专业','紧迫','幽默','轻松'];
+var CW_ROLES=['客户经理','售前','营销人员'];
 var CW_CUSTOM={n:30,u:'d'};
 var CW_SEL={};
 CW_CUST.forEach(function(c){ if(cwBand(c.h)>=0&&!c.w)CW_SEL[c.i]=true; });
@@ -5138,7 +5180,12 @@ var CW_FIXED=[
   {t:'image',c:'秋季新品主图.png'},
   {t:'text',c:'要不要我拍两张细节图给你？'}
 ];
-var CW_AI={}, CW_FAIL={}, CW_AI_ROUND=0, CW_WORDLIM=120;
+var CW_AI={}, CW_FAIL={}, CW_AI_ROUND=0;
+/* 内容主题：必填，预填上次用过的值。CW_GEN＝AI 这次已经点过「生成话术」，
+   决定内容页画表单还是画结果；改主题就退回表单，结果不作数。 */
+var CW_TOPIC='秋季新品到店', CW_GEN=false;
+/* 名单的两种收尾：root＝根屏（下一步：写唤醒内容）；fix＝从内容页「修改」进来（完成）。 */
+var CW_LIST_MODE='root';
 var CW_RECS=[
   {id:'r2',when:'昨天\n10:15',n:8,strat:'fixed',fixed:2,st:'done',ok:8,fail:0,fails:[]},
   {id:'r3',when:'11月7日\n14:30',n:23,strat:'fixed',fixed:4,st:'part',ok:21,fail:2,
@@ -5192,7 +5239,8 @@ function cwView(v){
   if(v==='custom'){ cwCustomSheet(); return; }
   CW_VIEW=v; REND['cw-list']();
 }
-function cwFromAwake(){ CW_VIEW='all'; go('cw-list'); }
+function cwFromAwake(){ CW_VIEW='all'; cwEnter(); }
+function cwEnter(){ CW_LIST_MODE='root'; go('cw-list'); }
 
 REND['cw-list']=function(){
   $('cwListBack').innerHTML=I('back',24,2);
@@ -5229,16 +5277,26 @@ REND['cw-list']=function(){
   }
   $('cwListBody').innerHTML=h;
   var n=cwSelCount(), over=n>CW_SET.cap;
-  $('cwListFoot').innerHTML='<div class="cw-sum'+(over?' bad':'')+'">'
-    +(over?'已选 <b>'+n+'</b> 人，超过单次上限 '+CW_SET.cap+' 人'
-           :'已选 <b>'+n+'</b> 人<br><span>单次上限 '+CW_SET.cap+' 人</span>')
-    +'</div><button class="cw-btn"'+(n===0||over?' disabled':'')+' onclick="cwNext()">下一步：写唤醒内容</button>';
+  if(CW_LIST_MODE==='fix'){
+    /* 从内容页「修改」进来：底栏换成「完成」。超上限或一个人没选也能点——
+       回内容页后底栏才拦，免得人卡在名单页里出不去。 */
+    $('cwListFoot').innerHTML='<div class="cw-sum">已选 <b>'+n+'</b> 人</div>'
+      +'<button class="cw-btn" onclick="cwDoneList()">完成</button>';
+  }else{
+    /* 「单次上限」平时不显示，只在超了那一刻报数——没超的时候它是个没人会用的数。 */
+    $('cwListFoot').innerHTML='<div class="cw-sum'+(over?' bad':'')+'">'
+      +(over?'已选 <b>'+n+'</b> 人，上限 '+CW_SET.cap+' 人<br><span>在设置里调高，或去掉几个人</span>'
+             :'已选 <b>'+n+'</b> 人')
+      +'</div><button class="cw-btn"'+(n===0||over?' disabled':'')+' onclick="cwNext()">下一步：写唤醒内容</button>';
+  }
 };
 function cwNext(){
   if(cwSelCount()===0){ toast('先选几个客户'); return; }
   if(cwOver()){ toast('超过单次上限，先在设置里调高或去掉几个人'); return; }
   go('cw-content');
 }
+function cwEditList(){ CW_LIST_MODE='fix'; go('cw-list'); }
+function cwDoneList(){ CW_LIST_MODE='root'; back(); }
 
 /* 自定义 N：只改筛选条件，不动已勾选的人（切回来勾选还在）。 */
 function cwCustomBody(){
@@ -5297,19 +5355,32 @@ function cwEnsureAi(){
     CW_AI[id]=cwAiText(cwCust(id),CW_AI_ROUND);
   });
 }
-function cwContentTop(){
-  if(CW_STRAT==='fixed')cwEditFixed(-1); else cwRegen();
+/* 先填主题，再点生成。生成前不可能缺主题，也不会在用户没说「这次想说什么」时白花一次生成。 */
+function cwGen(){
+  if(!CW_TOPIC.trim()){ toast('先写这次想说什么'); return; }
+  CW_GEN=true; cwEnsureAi(); REND['cw-content']();
 }
 function cwRegen(){
   CW_AI_ROUND++; CW_AI={}; CW_FAIL={};
-  cwEnsureAi(); REND['cw-content'](); toast('已重新生成');
+  cwEnsureAi(); REND['cw-content'](); toast('已全部重新生成');
 }
-function cwNext2(){
-  if(CW_STRAT==='fixed'&&!CW_FIXED.length){ toast('先添加一条唤醒内容'); return; }
-  var failN=cwSelIds().filter(function(id){return !!CW_FAIL[id]}).length;
-  if(CW_STRAT==='ai'&&failN===cwSelCount()){ toast('没有生成成功的内容，换个策略或稍后重试'); return; }
-  go('cw-confirm');
+function cwRegenOne(id){
+  CW_AI_ROUND++; delete CW_FAIL[id];
+  CW_AI[id]=cwAiText(cwCust(id),CW_AI_ROUND);
+  REND['cw-content'](); toast('已重新生成 '+cwCust(id).n+' 的话术');
 }
+/* × ＝ 这次不唤醒他：卡片拿掉，名单里同步取消勾选。要找回来走「名单 → 勾上 → 补生成」。 */
+function cwDelAi(id){
+  var c=cwCust(id), t=CW_AI[id], f=CW_FAIL[id], wasSel=CW_SEL[id]!==false;
+  delete CW_AI[id]; delete CW_FAIL[id]; CW_SEL[id]=false;
+  REND['cw-content']();
+  toast('这次不唤醒 '+c.n,'撤销',function(){
+    if(t!=null)CW_AI[id]=t; if(f)CW_FAIL[id]=f; CW_SEL[id]=wasSel;
+    if(cur==='cw-content')REND['cw-content']();
+  });
+}
+function cwBackToForm(){ CW_GEN=false; REND['cw-content'](); }
+function cwTopicInput(v){ CW_TOPIC=v; cwContentFoot(); }
 function cwFixedSheet(i){
   var it=i>=0?CW_FIXED[i]:null, t=it?it.t:'text', c=it?it.c:'';
   return '<div class="cw-sh">'+(it?'编辑内容':'添加内容')+'</div>'
@@ -5365,7 +5436,7 @@ function cwDelFixed(i){
 function cwEditAi(id){
   var c=cwCust(id), fail=!!CW_FAIL[id];
   CW_SH=openSheet('<div class="cw-sh">'+c.n+' · 专属话术</div>'
-    +'<p class="cw-sp">'+(fail?'这一条没生成成功，可以直接写一段。':'按聊天记录生成，改这一条不影响别人。')+'</p>'
+    +(fail?'<p class="cw-sp">这一条没生成成功，可以直接写一段。</p>':'')
     +'<textarea class="cw-ta" id="cwTa" style="margin-top:10px" placeholder="写给这位客户的话">'+esc(CW_AI[id]||'')+'</textarea>'
     +'<div class="cw-shbtns"><button class="cw-btn ghost" onclick="closeSheet(CW_SH)">取消</button>'
     +'<button class="cw-btn" onclick="cwSaveAi(\''+id+'\')">保存</button></div>','cw-sheet');
@@ -5376,104 +5447,108 @@ function cwSaveAi(id){
   CW_AI[id]=v; delete CW_FAIL[id];
   closeSheet(CW_SH); CW_SH=null; REND['cw-content']();
 }
-function cwWordsSheet(){
-  CW_SH=openSheet('<div class="cw-sh">字数限制</div>'
-    +'<p class="cw-sp">生成的话术控制在多少字以内。太短说不清来意，太长客户懒得看。</p>'
-    +'<div class="cw-fld"><span>每条不超过</span><div class="cw-step">'
-      +'<button onclick="cwWordsStep(-20)" aria-label="减二十">−</button><b>'+CW_WORDLIM+' 字</b>'
-      +'<button onclick="cwWordsStep(20)" aria-label="加二十">＋</button></div></div>'
-    +'<div class="cw-shbtns"><button class="cw-btn ghost" onclick="closeSheet(CW_SH)">取消</button>'
-    +'<button class="cw-btn" onclick="closeSheet(CW_SH)">保存</button></div>','cw-sheet');
+/* 内容页：顶行「发给 N 人」回名单，中间是内容，底栏就是发出去。
+   固定内容与 AI 结果共用同一套「序号/头像 ＋ 正文 ＋ 图标动作」，AI 多一个表单态。 */
+function cwSentRow(){
+  var ids=cwSelIds(), cnt=[0,0,0];
+  ids.forEach(function(id){ var b=cwBand(cwCust(id).h); if(b>=0)cnt[b]++; });
+  var sub=(cnt[0]+cnt[1]+cnt[2]===ids.length)
+    ?'今日 '+cnt[0]+' · 1天 '+cnt[1]+' · 1周 '+cnt[2]:'';
+  return '<button class="cw-srow" onclick="cwEditList()"><span>发给</span><b>'+ids.length+' 人</b>'
+    +'<span class="cw-sub">'+sub+'</span><span class="cw-chev">›</span></button>';
 }
-function cwWordsStep(d){
-  CW_WORDLIM=Math.max(60,Math.min(300,CW_WORDLIM+d));
-  CW_SH.querySelector('.sheet-body').innerHTML='<div class="cw-sh">字数限制</div>'
-    +'<p class="cw-sp">生成的话术控制在多少字以内。太短说不清来意，太长客户懒得看。</p>'
-    +'<div class="cw-fld"><span>每条不超过</span><div class="cw-step">'
-      +'<button onclick="cwWordsStep(-20)" aria-label="减二十">−</button><b>'+CW_WORDLIM+' 字</b>'
-      +'<button onclick="cwWordsStep(20)" aria-label="加二十">＋</button></div></div>'
-    +'<div class="cw-shbtns"><button class="cw-btn ghost" onclick="closeSheet(CW_SH)">取消</button>'
-    +'<button class="cw-btn" onclick="closeSheet(CW_SH)">保存</button></div>';
+function cwContentFoot(){
+  var n=cwSelCount(), over=n>CW_SET.cap;
+  var adj='间隔 '+CW_SET.gap+' 秒 · '+(CW_SET.skip?'跳过 7 天内唤醒过的':'不跳过已唤醒的');
+  var sum,btn;
+  if(over){
+    sum='<div class="cw-sum bad">已选 <b>'+n+'</b> 人，上限 '+CW_SET.cap+' 人<br><span>在设置里调高，或去掉几个人</span></div>';
+    btn='<button class="cw-btn" disabled>开始唤醒</button>';
+  }else if(n===0){
+    sum='<div class="cw-sum"><b>0</b> 人</div>';
+    btn='<button class="cw-btn" disabled>开始唤醒</button>';
+  }else if(CW_STRAT==='fixed'){
+    if(!CW_FIXED.length){
+      sum='<div class="cw-sum"><b>'+n+'</b> 人 · 还没有内容</div>';
+      btn='<button class="cw-btn" disabled>开始唤醒</button>';
+    }else{
+      sum='<div class="cw-sum"><b>'+n+'</b> 人 · '+CW_FIXED.length+' 条共 '+(n*CW_FIXED.length)+' 条<br><span>'+adj+'</span></div>';
+      btn='<button class="cw-btn" onclick="cwStart()">开始唤醒</button>';
+    }
+  }else if(!CW_GEN){
+    var empty=!CW_TOPIC.trim();
+    sum='<div class="cw-sum">'+(empty?'还没写这次想说什么':'<b>'+n+'</b> 人 · 每人 1 条')+'</div>';
+    btn='<button class="cw-btn"'+(empty?' disabled':'')+' onclick="cwGen()">生成话术</button>';
+  }else{
+    var ok=cwAiOk().length;
+    if(!ok){
+      sum='<div class="cw-sum bad">没有生成成功的内容<br><span>换个主题再试，或切回固定内容</span></div>';
+      btn='<button class="cw-btn" disabled>开始唤醒</button>';
+    }else{
+      sum='<div class="cw-sum"><b>'+ok+'</b> 人 · 每人 1 条<br><span>'+adj+'</span></div>';
+      btn='<button class="cw-btn" onclick="cwStart()">开始唤醒</button>';
+    }
+  }
+  $('cwContentFoot').innerHTML=sum+btn;
 }
-
 REND['cw-content']=function(){
+  CW_LIST_MODE='root';
   $('cwContentBack').innerHTML=I('back',24,2);
   var act=$('cwContentAct');
-  act.innerHTML=CW_STRAT==='fixed'?'<span style="font-size:13.5px;font-weight:600">添加</span>':I('refresh',20,2.1);
-  act.setAttribute('aria-label',CW_STRAT==='fixed'?'添加内容':'重新生成');
-  act.setAttribute('onclick','cwContentTop()');
-  var h='<div class="cw-strat">'
+  /* 头栏只在 AI 这一支挂设置：三项生成参数在那一页起作用，固定内容没有可调的。 */
+  if(CW_STRAT==='ai'){
+    act.style.display='';
+    act.innerHTML=I('gear',20,2.1);
+    act.setAttribute('aria-label','设置'); act.setAttribute('title','设置');
+    act.setAttribute('onclick','cwSetSheet()');
+  }else{
+    act.style.display='none'; act.removeAttribute('onclick');
+  }
+  var h=cwSentRow();
+  if(CW_STRAT==='ai'&&CW_GEN){
+    h+='<button class="cw-srow" onclick="cwBackToForm()"><span>主题</span><b>'+esc(CW_TOPIC)+'</b><span class="cw-chev">›</span></button>';
+  }
+  h+='<div class="cw-strat">'
     +'<button class="'+(CW_STRAT==='fixed'?'on':'')+'" onclick="CW_STRAT=\'fixed\';REND[\'cw-content\']()">固定内容</button>'
     +'<button class="'+(CW_STRAT==='ai'?'on':'')+'" onclick="CW_STRAT=\'ai\';REND[\'cw-content\']()">AI生成</button></div>';
-  var n=cwSelCount();
   if(CW_STRAT==='fixed'){
-    h+='<div class="cw-card"><div class="cw-h">所有客户收到同一套，按序号依次发出</div>';
-    if(!CW_FIXED.length)h+='<p class="cw-p">还没有内容。点右上角「添加」，第一条先写文本。</p>';
+    h+='<div class="cw-card">';
     CW_FIXED.forEach(function(it,i){
-      h+='<div class="cw-seq"><span class="cw-no">'+(i+1)+'</span><div class="cw-sm">'
-        +'<div class="cw-st">'+cwTypeN(it.t)+'</div><div class="cw-sc'+(it.t!=='text'?' mono':'')+'">'+esc(it.c)+'</div></div>'
-        +'<button class="cw-op" onclick="cwEditFixed('+i+')">编辑</button></div>';
+      h+='<div class="cw-crow"><span class="cw-no">'+(i+1)+'</span>'
+        +'<div class="cw-bub">'+(it.t==='text'?esc(it.c):'［'+cwTypeN(it.t)+'］'+esc(it.c))+'</div>'
+        +'<span class="cw-cacts">'
+          +'<button onclick="cwEditFixed('+i+')" aria-label="编辑第 '+(i+1)+' 条">'+I('edit',15,2.1)+'</button>'
+          +'<button class="danger" onclick="cwDelFixed('+i+')" aria-label="删除第 '+(i+1)+' 条">'+I('trash',15,2.1)+'</button>'
+        +'</span></div>';
     });
-    h+='</div>';
-    h+='<div class="cw-card"><div class="cw-h">客户实际收到的样子（单聊气泡）</div><div class="cw-pv">';
-    CW_FIXED.forEach(function(it){
-      h+=it.t==='text'?'<div class="cw-bub">'+esc(it.c)+'</div>'
-        :'<div class="cw-bub">［'+cwTypeN(it.t)+'］'+esc(it.c)+'</div>';
-    });
-    if(!CW_FIXED.length)h+='<p class="cw-p">还没有内容。</p>';
-    h+='</div></div>';
-    $('cwContentBody').innerHTML=h;
-    $('cwContentFoot').innerHTML='<div class="cw-sum">'+CW_FIXED.length+' 条 · '+n+' 人共 '+(CW_FIXED.length*n)
-      +' 条<br><span>固定内容</span></div>'
-      +'<button class="cw-btn"'+(CW_FIXED.length?'':' disabled')+' onclick="cwNext2()">下一步：确认发送</button>';
+    h+='<button class="cw-addrow" onclick="cwEditFixed(-1)">＋ 添加一条</button></div>';
+    h+='<div class="cw-tip">开始后切到微信逐条发送，期间 App 不在前台，结果写进唤醒记录。</div>';
+  }else if(!CW_GEN){
+    h+='<div class="cw-topic"><div class="lab">这次想说什么</div>'
+      +'<input id="cwTopic" value="'+esc(CW_TOPIC)+'" placeholder="比如：秋季新品到店" oninput="cwTopicInput(this.value)"></div>'
+      +'<button class="cw-cfg" onclick="cwSetSheet()">'
+        +'<span><i>风格</i>'+CW_SET.style+'</span><span><i>角色</i>'+CW_SET.role+'</span>'
+        +'<span><i>字数</i>'+CW_SET.words+'</span><span class="cw-chev">›</span></button>';
   }else{
+    /* 从名单回来时可能多了几个人：已经点过生成，就给新来的人补上，别让他们挂一张空卡。 */
     cwEnsureAi();
-    var ids=cwSelIds(), failN=ids.filter(function(id){return !!CW_FAIL[id]}).length, okN=ids.length-failN;
-    h+='<div class="cw-card"><div class="cw-h">生成依据</div>'
-      +'<div class="cw-kv"><span>获取历史聊天记录</span><b>30 条</b></div>'
-      +'<div class="cw-kv"><span>参考文案 / 内容主题</span><b>秋季新品回访</b></div>'
-      +'<div class="cw-kv"><span>回复风格 / 角色</span><b>亲切 · 客户经理</b></div>'
-      +'<div class="cw-kv"><span>字数限制</span><b>'+CW_WORDLIM+' 字 <button class="op" onclick="cwWordsSheet()">更多设置</button></b></div>'
-      +'</div>';
-    h+='<div class="cw-card"><div class="cw-h">已为 '+okN+' 人生成，可逐条修改</div>';
-    ids.forEach(function(id){
+    cwSelIds().forEach(function(id){
       var c=cwCust(id), bad=!!CW_FAIL[id];
-      h+='<div class="cw-airow'+(bad?' bad':'')+'"><span class="cw-av">'+c.n.charAt(0)+'</span>'
-        +'<div class="cw-sm"><div class="cw-nm" style="font-size:13.5px">'+c.n+'</div>'
-        +'<div class="cw-aitx">'+(bad?'生成失败 · '+CW_FAIL[id]:esc(CW_AI[id]||''))+'</div></div>'
-        +'<button class="cw-op" onclick="cwEditAi(\''+id+'\')">编辑</button></div>';
+      h+='<div class="cw-aicard'+(bad?' bad':'')+'"><div class="cw-aichd">'
+        +'<span class="cw-av">'+c.n.charAt(0)+'</span><span class="nm">'+c.n+'</span>'
+        +'<span class="cw-cacts">'
+          +'<button onclick="cwEditAi(\''+id+'\')" aria-label="编辑 '+c.n+' 的话术">'+I('edit',15,2.1)+'</button>'
+          +'<button onclick="cwRegenOne(\''+id+'\')" aria-label="重新生成 '+c.n+' 的话术">'+I('refresh',15,2.1)+'</button>'
+          +'<button class="danger" onclick="cwDelAi(\''+id+'\')" aria-label="这次不唤醒 '+c.n+'">'+I('trash',15,2.1)+'</button>'
+        +'</span></div>'
+        +'<div class="tx">'+(bad?'生成失败 · '+CW_FAIL[id]:esc(CW_AI[id]||''))+'</div></div>';
     });
-    if(!ids.length)h+='<p class="cw-p">还没选客户，回上一页选人。</p>';
-    h+='</div>';
-    if(failN)h+='<div class="cw-tip">'+failN+' 人没有生成成功，可以单独编辑，或切回固定内容。</div>';
-    $('cwContentBody').innerHTML=h;
-    $('cwContentFoot').innerHTML='<div class="cw-sum">'+okN+' 人各 1 条<br><span>AI生成 · 按人分开'
-      +(failN?' · '+failN+' 人未生成':'')+'</span></div>'
-      +'<button class="cw-btn"'+(okN?'':' disabled')+' onclick="cwNext2()">下一步：确认发送</button>';
+    h+='<button class="cw-addrow" onclick="cwRegen()">全部重新生成</button>';
   }
+  $('cwContentBody').innerHTML=h;
+  cwContentFoot();
 };
 
-REND['cw-confirm']=function(){
-  $('cwConfirmBack').innerHTML=I('back',24,2);
-  var n=CW_STRAT==='fixed'?cwSelCount():cwAiOk().length, over=n>CW_SET.cap;
-  var aiFail=CW_STRAT==='ai'?cwSelCount()-n:0;
-  var sum=CW_STRAT==='fixed'?('固定内容 · 每人 '+CW_FIXED.length+' 条'):'AI生成 · 每人 1 条专属话术';
-  var h='<div class="cw-card" style="padding:18px 14px">'
-    +'<div class="cw-big">'+n+'<small>人</small></div><div class="cw-bigsub">'+sum+'</div></div>';
-  h+='<div class="cw-card">'
-    +'<div class="cw-kv"><span>内容策略</span><b>'+cwStratN(CW_STRAT)+'</b></div>'
-    +'<div class="cw-kv"><span>发送间隔</span><b>'+CW_SET.gap+' 秒 <button class="op" onclick="cwSetSheet()">调整</button></b></div>'
-    +'<div class="cw-line"></div>'
-    +'<div class="cw-kv"><span>防重复</span><b>'+(CW_SET.skip?'排除 7 天内唤醒过的客户':'不排除已唤醒过的客户')+'</b></div>'
-    +'<div class="cw-kv"><span>发送账号</span><b>'+CUST_ACCTS[CUST_ACCT].n+'（当前微信）</b></div>'
-    +'</div>';
-  h+='<div class="cw-tip">'+(aiFail?aiFail+' 人没有生成成功，这次不唤醒。':'')
-    +'开始后脚本会切到微信逐条发送，期间 App 不在前台；发完的结果会写进「唤醒记录」。</div>';
-  if(over)h+='<div class="cw-tip" style="background:#FFE9E6;color:#C2413A">已选 '+n+' 人，超过单次上限 '+CW_SET.cap+' 人。先在设置里调高，或回去去掉几个人。</div>';
-  $('cwConfirmBody').innerHTML=h;
-  $('cwConfirmFoot').innerHTML='<div class="cw-sum">不留在本页看进度<br><span>去记录里看结果</span></div>'
-    +'<button class="cw-btn"'+(n===0||over?' disabled':'')+' onclick="cwStart()">开始唤醒</button>';
-};
 function cwClock(){
   var d=new Date();
   return (d.getHours()<10?'0':'')+d.getHours()+':'+(d.getMinutes()<10?'0':'')+d.getMinutes();
@@ -5481,6 +5556,8 @@ function cwClock(){
 function cwStart(){
   var ids=CW_STRAT==='fixed'?cwSelIds():cwAiOk(), n=ids.length;
   if(n===0||cwOver()){ toast('名单不对，回去看看'); return; }
+  if(CW_STRAT==='fixed'&&!CW_FIXED.length){ toast('先添加一条唤醒内容'); return; }
+  if(CW_STRAT==='ai'&&!CW_GEN){ toast('先生成话术'); return; }
   var r={id:'r'+Date.now(),when:'今天\n'+cwClock(),n:n,strat:CW_STRAT,fixed:CW_FIXED.length,
          st:'run',ok:0,fail:0,fails:[],names:ids.slice()};
   CW_RECS.unshift(r);
@@ -5551,30 +5628,49 @@ REND['cw-record']=function(p){
   $('cwRecordBody').innerHTML=h;
 };
 
-/* 设置：三个参数集中在一处，名单页与确认页只读回显；改动只影响下一次开始。 */
+/* 设置：分两组——话术生成（风格／角色／字数）管「怎么写」，发送（账号只读／间隔／上限／排除）管「怎么发」。
+   都在右上角同一个弹层里，改动只影响下一次开始；内容页底栏那行回显的就是这里的值。 */
+function cwOpts(list,key){
+  return '<div class="cw-opts">'+list.map(function(v){
+    return '<button class="'+(CW_TMP[key]===v?'on':'')+'" onclick="cwSetPick(\''+key+'\',\''+v+'\')">'+v+'</button>';
+  }).join('')+'</div>';
+}
 function cwSetBody(){
-  return '<div class="cw-sh">发送设置</div>'
+  return '<div class="cw-sh">设置</div>'
+    +'<div class="cw-grp">话术生成</div>'
+    +'<div class="cw-fld" style="padding-bottom:0"><span>回复风格</span></div>'
+    +cwOpts(CW_STYLES,'style')
+    +'<div class="cw-fld" style="padding-bottom:0"><span>角色</span></div>'
+    +cwOpts(CW_ROLES,'role')
+    +'<div class="cw-fld"><span>字数限制</span><div class="cw-step">'
+      +'<button onclick="cwSetStep(\'words\',-20)" aria-label="减二十字">−</button><b>'+CW_TMP.words+' 字</b>'
+      +'<button onclick="cwSetStep(\'words\',20)" aria-label="加二十字">＋</button></div></div>'
+    +'<div class="cw-line"></div>'
+    +'<div class="cw-grp">发送</div>'
+    +'<div class="cw-fld"><span>发送账号</span><span class="cw-ro">当前微信</span></div>'
     +'<div class="cw-fld"><span>发送间隔</span><div class="cw-step">'
       +'<button onclick="cwSetStep(\'gap\',-5)" aria-label="减五秒">−</button><b>'+CW_TMP.gap+' 秒</b>'
       +'<button onclick="cwSetStep(\'gap\',5)" aria-label="加五秒">＋</button></div></div>'
-    +'<p class="cw-hint">每条消息之间停多久，5–60 秒。调大更稳，但总时长变长。</p>'
     +'<div class="cw-fld"><span>单次上限</span><div class="cw-step">'
       +'<button onclick="cwSetStep(\'cap\',-10)" aria-label="减十人">−</button><b>'+CW_TMP.cap+' 人</b>'
       +'<button onclick="cwSetStep(\'cap\',10)" aria-label="加十人">＋</button></div></div>'
-    +'<p class="cw-hint">一次最多唤醒多少人，上限 100 人。</p>'
     +'<div class="cw-fld"><span>排除近期已唤醒</span>'
       +'<button class="switch'+(CW_TMP.skip?' on':'')+'" role="switch" aria-checked="'+(CW_TMP.skip?'true':'false')+'" aria-label="排除近期已唤醒" onclick="cwSetSkip()"></button></div>'
-    +'<p class="cw-hint">开启后，7 天内已被唤醒过的客户不再出现在名单里。</p>'
     +'<div class="cw-shbtns"><button class="cw-btn ghost" onclick="closeSheet(CW_SH)">取消</button>'
     +'<button class="cw-btn" onclick="cwSetSave()">保存</button></div>';
 }
 function cwSetSheet(){
-  CW_TMP={gap:CW_SET.gap,cap:CW_SET.cap,skip:CW_SET.skip};
+  CW_TMP={gap:CW_SET.gap,cap:CW_SET.cap,skip:CW_SET.skip,style:CW_SET.style,role:CW_SET.role,words:CW_SET.words};
   CW_SH=openSheet(cwSetBody(),'cw-sheet');
+}
+function cwSetPick(k,v){
+  CW_TMP[k]=v;
+  CW_SH.querySelector('.sheet-body').innerHTML=cwSetBody();
 }
 function cwSetStep(k,d){
   if(k==='gap')CW_TMP.gap=Math.max(5,Math.min(60,CW_TMP.gap+d));
-  else CW_TMP.cap=Math.max(10,Math.min(100,CW_TMP.cap+d));
+  else if(k==='cap')CW_TMP.cap=Math.max(10,Math.min(100,CW_TMP.cap+d));
+  else CW_TMP.words=Math.max(60,Math.min(300,CW_TMP.words+d));
   CW_SH.querySelector('.sheet-body').innerHTML=cwSetBody();
 }
 function cwSetSkip(){
@@ -5583,14 +5679,14 @@ function cwSetSkip(){
 }
 function cwSetSave(){
   var turnedOff=CW_SET.skip&&!CW_TMP.skip, turnedOn=!CW_SET.skip&&CW_TMP.skip;
-  CW_SET={gap:CW_TMP.gap,cap:CW_TMP.cap,skip:CW_TMP.skip};
+  CW_SET={gap:CW_TMP.gap,cap:CW_TMP.cap,skip:CW_TMP.skip,style:CW_TMP.style,role:CW_TMP.role,words:CW_TMP.words};
   closeSheet(CW_SH); CW_SH=null;
   /* 关掉「排除」后新露出来的人默认勾上——名单默认全选这条规则不因为开关而破例；
      重开时把他们从已选里摘掉，免得底部人数把看不见的人也数进去。 */
   if(turnedOff)CW_CUST.forEach(function(c){ if(cwBand(c.h)>=0&&CW_SEL[c.i]===undefined)CW_SEL[c.i]=true; });
   if(turnedOn)CW_CUST.forEach(function(c){ if(c.w)CW_SEL[c.i]=false; });
   if(cur==='cw-list')REND['cw-list']();
-  else if(cur==='cw-confirm')REND['cw-confirm']();
+  else if(cur==='cw-content')REND['cw-content']();
 }
 
 /* ---------- 宿主 App 工具页（底部 Tab「工具」）· 2026-10-16 起照**线上旗舰版**那一版重排 ---------- */
@@ -5653,7 +5749,7 @@ var HOST_TOOLS=[
     /* 客户唤醒＝员工自助的一次性唤醒（ADR-0095）。与后台派下来的「客户唤醒任务」不是一件事：
        这里不建任务、不指定执行人员、不进任务列表与看板，结果只落本机的唤醒记录。
        放这一组是因为它与转发、发消息同类——筛一批人、发一条消息。 */
-    {n:'客户唤醒',ic:'bell',pal:'bubble',sm:'把一段时间没回的客户一次唤醒',fn:"go('cw-list')",k:'o'},
+    {n:'客户唤醒',ic:'bell',pal:'bubble',sm:'把一段时间没回的客户一次唤醒',fn:"cwEnter()",k:'o'},
     {n:'转发名片',ic:'idcard',pal:'creature',sm:'把名片转给指定客户',k:'o'},
     {n:'转发公众号',ic:'megaphone',pal:'creature',sm:'把公众号文章转给客户',k:'o'},
     {n:'文件分享',ic:'file',pal:'bubble',sm:'把文件发给指定客户',k:'o'},
