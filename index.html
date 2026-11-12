@@ -17490,15 +17490,6 @@ XX 系列
     <div class="yq-actions"><button type="button" class="yq-btn" id="yq-export">导出</button></div>
   </div>
 
-  <div class="yq-summary">
-    <button type="button" class="on" data-yq-sfilter="全部"><span>命中用户总数</span><b>128<small>人</small></b></button>
-    <button type="button" data-yq-sfilter="待触达"><span>待触达</span><b>74<small>人</small></b></button>
-    <button type="button" data-yq-sfilter="已触达"><span>已触达</span><b>31<small>人</small></b></button>
-    <button type="button" data-yq-sfilter="已采访"><span>已采访</span><b>9<small>人</small></b></button>
-    <button type="button" data-yq-sfilter="已忽略"><span>已忽略</span><b>14<small>人</small></b></button>
-  </div>
-  <div class="yq-toptypes"><span>评论类型 Top 3</span><b>使用效果 46</b><b>客服态度 28</b><b>产品质量 21</b><span class="yq-muted">仅统计用 AI 的任务</span></div>
-
   <div class="yq-filters">
     <label class="yq-fld"><span>关键词</span><input type="text" data-yq-f="kw" placeholder="用户昵称、小红书号、评论原文"></label>
     <label class="yq-fld"><span>状态</span>
@@ -17513,36 +17504,22 @@ XX 系列
     <label class="yq-fld"><span>负责人</span>
       <select data-yq-f="owner"><option>全部</option><option>张伟</option><option>王芳</option><option>徐磊</option><option>朱琳</option></select>
     </label>
-    <label class="yq-fld"><span>最近命中时间</span>
-      <select data-yq-f="time"><option>近 7 天</option><option>近 30 天</option><option>不限</option></select>
-    </label>
     <div class="yq-filter-actions">
       <button type="button" class="yq-btn soft" data-yq-query>查询</button>
       <button type="button" class="yq-btn" data-yq-reset>重置</button>
     </div>
   </div>
 
-  <div class="yq-chips-row"><span class="yq-chip" id="yq-taskchip">来源任务：XX 面霜口碑监测（11月）<button type="button" aria-label="移除筛选">×</button></span></div>
-
-  <div class="yq-bulk">
-    <span id="yq-selcount">已选 0 人</span>
-    <button type="button" class="yq-btn sm" data-yq-batch="status">批量改状态</button>
-    <button type="button" class="yq-btn sm" data-yq-batch="owner">批量改负责人</button>
-    <button type="button" class="yq-btn sm" id="yq-export-sel">导出</button>
-    <span class="grow"></span>
-    <span>默认按最近命中时间倒序</span>
-  </div>
   <div class="yq-tw">
     <table class="yq-table yq-lead-table">
       <colgroup>
-        <col style="width:5%"><col style="width:15%"><col style="width:19%"><col style="width:10%"><col style="width:15%"><col style="width:7%"><col style="width:12%"><col style="width:8%"><col style="width:5%"><col style="width:4%">
+        <col style="width:16%"><col style="width:20%"><col style="width:10%"><col style="width:16%"><col style="width:7%"><col style="width:13%"><col style="width:8%"><col style="width:5%"><col style="width:5%">
       </colgroup>
       <thead>
-        <tr><th class="yq-checkcell"><input type="checkbox" class="yq-check" data-yq-all aria-label="全选"></th><th>用户</th><th>最近命中评论</th><th>评论类型</th><th>来源任务</th><th class="num">命中次数</th><th>最近命中时间</th><th>状态</th><th>负责人</th><th>操作</th></tr>
+        <tr><th>用户</th><th>最近命中评论</th><th>评论类型</th><th>来源任务</th><th class="num">命中次数</th><th>最近命中时间</th><th>状态</th><th>负责人</th><th>操作</th></tr>
       </thead>
       <tbody>
         <tr data-status="已采访" data-owner="徐磊" data-type="售后服务" data-task="XX 系列售后反馈、XX 面霜口碑监测（11月）">
-          <td class="yq-checkcell"><input type="checkbox" class="yq-check" aria-label="选择 阿橘"></td>
           <td><div class="yq-identity"><span class="yq-avatar">橘</span><div><b>阿橘</b><span class="yq-sub2">小红书号 123456789</span></div></div></td>
           <td><span class="yq-clip" title="客服不理人，退个货要等一周。">客服不理人，退个货要等一周。</span></td>
           <td>售后服务</td>
@@ -17553,7 +17530,6 @@ XX 系列
           <td><button type="button" class="yq-link" data-yq-go="lead-detail">详情</button></td>
         </tr>
         <tr data-status="待触达" data-owner="张伟" data-type="产品质量" data-task="XX 面霜口碑监测（11月）">
-          <td class="yq-checkcell"><input type="checkbox" class="yq-check" aria-label="选择 一只小鹿"></td>
           <td><div class="yq-identity"><span class="yq-avatar">鹿</span><div><b>一只小鹿</b><span class="yq-sub2">小红书号 xiaolu_0912</span></div></div></td>
           <td><span class="yq-clip" title="用了三天就爆痘，客服还说是我的问题。">用了三天就爆痘，客服还说是我的问题。</span></td>
           <td>产品质量</td>
@@ -17564,7 +17540,6 @@ XX 系列
           <td><button type="button" class="yq-link" data-yq-go="lead-detail">详情</button></td>
         </tr>
         <tr data-status="已触达" data-owner="王芳" data-type="价格与套路" data-task="双十一价格吐槽监测">
-          <td class="yq-checkcell"><input type="checkbox" class="yq-check" aria-label="选择 momo"></td>
           <td><div class="yq-identity"><span class="yq-avatar">m</span><div><b>momo</b><span class="yq-sub2">小红书号 momo_778</span></div></div></td>
           <td><span class="yq-clip" title="太贵了，不如买 YY。">太贵了，不如买 YY。</span></td>
           <td>价格与套路</td>
@@ -17575,7 +17550,6 @@ XX 系列
           <td><button type="button" class="yq-link" data-yq-go="lead-detail">详情</button></td>
         </tr>
         <tr data-status="待触达" data-owner="张伟" data-type="使用效果" data-task="XX 面霜口碑监测（11月）">
-          <td class="yq-checkcell"><input type="checkbox" class="yq-check" aria-label="选择 Nina"></td>
           <td><div class="yq-identity"><span class="yq-avatar">N</span><div><b>Nina</b> <span class="yq-sub2">小红书号 nina_2333</span></div></div></td>
           <td><span class="yq-clip" title="可能是我的脸不适用吧，用完有点刺痛。">可能是我的脸不适用吧，用完有点刺痛。</span></td>
           <td>使用效果</td>
@@ -17586,7 +17560,6 @@ XX 系列
           <td><button type="button" class="yq-link" data-yq-go="lead-detail">详情</button></td>
         </tr>
         <tr data-status="已忽略" data-owner="王芳" data-type="使用效果" data-task="XX 面霜口碑监测（11月）">
-          <td class="yq-checkcell"><input type="checkbox" class="yq-check" aria-label="选择 饭团"></td>
           <td><div class="yq-identity"><span class="yq-avatar">饭</span><div><b>饭团</b><span class="yq-sub2">小红书号 fantuan_01</span></div></div></td>
           <td><span class="yq-clip" title="同款，我也是用完泛红，已经退了。">同款，我也是用完泛红，已经退了。</span></td>
           <td>使用效果</td>
@@ -17597,7 +17570,6 @@ XX 系列
           <td><button type="button" class="yq-link" data-yq-go="lead-detail">详情</button></td>
         </tr>
         <tr data-status="待触达" data-owner="朱琳" data-type="物流发货" data-task="双十一价格吐槽监测">
-          <td class="yq-checkcell"><input type="checkbox" class="yq-check" aria-label="选择 小满"></td>
           <td><div class="yq-identity"><span class="yq-avatar">满</span><div><b>小满</b><span class="yq-sub2">小红书号 xiaoman_66</span></div></div></td>
           <td><span class="yq-clip" title="物流太慢了，双十一买的现在还没发。">物流太慢了，双十一买的现在还没发。</span></td>
           <td>物流发货</td>
@@ -17754,8 +17726,6 @@ XX 系列
 .yq-table td.nowrap{overflow:hidden;text-overflow:ellipsis}
 .yq-table tbody tr:last-child td{border-bottom:0}
 .yq-table tbody tr:hover td{background:#FAFBFC}
-.yq-checkcell{width:40px;text-align:center}
-.yq-check{width:16px;height:16px;accent-color:#1677FF;cursor:pointer;vertical-align:-3px}
 .yq-clip{display:block;max-width:270px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* 徽标 */
@@ -17882,7 +17852,6 @@ XX 系列
 .yq-chip{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px;border-radius:6px;
   background:#E6F4FF;color:#1677FF;font-size:13px}
 .yq-chip button{padding:0;border:0;background:none;color:#1677FF;font-size:14px;line-height:1}
-.yq-chips-row{display:flex;align-items:center;gap:8px;margin-bottom:12px}
 .yq-import{margin-top:8px;padding:10px 12px;border-radius:8px;background:#F7F8FA;color:#646A73;font-size:12px}
 .yq-sheet-foot{display:flex;align-items:center;gap:10px;padding-left:230px}
 .yq-valid{margin-top:24px;padding:16px 20px;border-radius:8px;background:#F7F8FA}
@@ -17899,18 +17868,6 @@ XX 系列
 .yq-flash{animation:yqflash 1.1s ease}
 
 /* 命中用户汇总 */
-.yq-summary{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-bottom:16px}
-.yq-summary button{display:block;padding:14px 16px;border-radius:8px;background:#fff;text-align:left;transition:background .15s}
-.yq-summary button:hover{background:#F7F8FA}
-.yq-summary button.on{background:#E6F4FF}
-.yq-summary span{display:block;font-size:12px;color:#646A73}
-.yq-summary b{display:block;margin-top:4px;font-size:24px;font-weight:600;color:#1F2329;font-variant-numeric:tabular-nums}
-.yq-summary b small{margin-left:4px;font-size:12px;font-weight:400;color:#8F959E}
-.yq-toptypes{display:flex;align-items:center;flex-wrap:wrap;gap:8px 16px;margin-bottom:14px;font-size:12px;color:#646A73}
-.yq-toptypes b{color:#1F2329;font-weight:500}
-.yq-bulk{display:flex;align-items:center;flex-wrap:wrap;gap:10px;padding:10px 12px;border-radius:8px 8px 0 0;
-  background:#F7F8FA;font-size:12px;color:#646A73}
-.yq-bulk .grow{flex:1}
 
 /* 命中用户详情 */
 .yq-hero{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;padding:24px 0;border-bottom:1px solid #E5E8EF}
@@ -17931,10 +17888,6 @@ XX 系列
 .yq-hit-meta b{color:#1F2329;font-weight:500}
 .yq-hit-foot{display:flex;align-items:center;flex-wrap:wrap;gap:16px;margin-top:10px;padding-top:8px;
   border-top:1px solid #E5E8EF;font-size:12px;color:#8F959E}
-.yq-statusbox{display:grid;gap:8px;margin-top:12px}
-.yq-statusbox > label{display:flex;align-items:center;gap:8px;font-size:14px;color:#1F2329;cursor:pointer}
-.yq-statusbox input[type=radio]{width:16px;height:16px;accent-color:#1677FF;margin:0}
-.yq-statusbox select{width:100%;height:36px;margin-top:2px;padding:0 10px;border:1px solid #E5E8EF;border-radius:8px;background:#fff;font-size:14px}
 
 /* 浮层 */
 .yq-mask{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;background:rgba(31,35,41,.45)}
@@ -17957,7 +17910,6 @@ XX 系列
 .yq-kv p.pre{white-space:pre-line;line-height:1.7}
 
 @media(max-width:1100px){
-  .yq-summary{grid-template-columns:repeat(3,minmax(0,1fr))}
   .yq-kv,.yq-vgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .yq-info .yq-kv{grid-template-columns:repeat(2,minmax(0,1fr))}
   .yq-info{grid-template-columns:1fr}
@@ -18348,33 +18300,7 @@ XX 系列
 
   /* 命中用户 */
   function initLeads(){
-    var tbody = $('.yq-lead-table tbody');
-    var all = $('[data-yq-all]');
     function rows(){ return $$('.yq-lead-table tbody tr'); }
-    function checked(){ return rows().filter(function(tr){ return tr.querySelector('.yq-check').checked; }); }
-    function visible(){ return rows().filter(function(tr){ return !tr.hidden; }); }
-    function syncBulk(){
-      var n = checked().length;
-      $('#yq-selcount').textContent = '已选 ' + n + ' 人';
-      var vis = visible();
-      var sel = vis.filter(function(tr){ return tr.querySelector('.yq-check').checked; }).length;
-      all.checked = vis.length > 0 && sel === vis.length;
-      all.indeterminate = sel > 0 && sel < vis.length;
-    }
-    function leadCls(st){
-      return { '待触达': 'wait', '已触达': 'run', '已采访': 'done', '已忽略': 'end' }[st] || 'wait';
-    }
-    function setLeadStatus(tr, st){
-      tr.setAttribute('data-status', st);
-      var b = tr.querySelector('[data-yq-lstatus]');
-      b.className = 'yq-badge ' + leadCls(st);
-      b.innerHTML = '<i class="dot"></i>' + esc(st);
-    }
-    function setLeadOwner(tr, name){
-      tr.setAttribute('data-owner', name);
-      var c = tr.querySelector('[data-yq-lowner]');
-      if (c) c.textContent = name;
-    }
     function apply(){
       var kw = ($('[data-yq-f="kw"]').value || '').trim();
       var st = $('[data-yq-f="status"]').value;
@@ -18389,74 +18315,14 @@ XX 系列
           && (!owner || owner === '全部' || tr.getAttribute('data-owner') === owner);
         tr.hidden = !ok;
       });
-      syncBulk();
     }
-    tbody.addEventListener('change', function(e){
-      if (e.target.classList.contains('yq-check')) syncBulk();
-    });
-    all.addEventListener('change', function(){
-      visible().forEach(function(tr){ tr.querySelector('.yq-check').checked = all.checked; });
-      syncBulk();
-    });
     $('[data-yq-query]').addEventListener('click', apply);
     $('[data-yq-reset]').addEventListener('click', function(){
       $('[data-yq-f="kw"]').value = '';
       ['status', 'task', 'type', 'owner'].forEach(function(k){ $('[data-yq-f="' + k + '"]').value = '全部'; });
-      $$('[data-yq-sfilter]').forEach(function(b){
-        b.classList.toggle('on', b.getAttribute('data-yq-sfilter') === '全部');
-      });
       apply();
     });
-    $$('[data-yq-sfilter]').forEach(function(b){
-      b.addEventListener('click', function(){
-        var st = b.getAttribute('data-yq-sfilter');
-        $('[data-yq-f="status"]').value = st;
-        $$('[data-yq-sfilter]').forEach(function(x){ x.classList.toggle('on', x === b); });
-        apply();
-      });
-    });
-    var chip = $('#yq-taskchip');
-    if (chip){
-      chip.querySelector('button').addEventListener('click', function(){
-        chip.remove();
-        $('[data-yq-f="task"]').value = '全部';
-        apply();
-      });
-    }
-    $('[data-yq-batch="status"]').addEventListener('click', function(){
-      if (!checked().length){ toast('先选择命中用户'); return; }
-      var body = '<div class="yq-statusbox">'
-        + ['待触达', '已触达', '已采访', '已忽略'].map(function(s, i){
-            return '<label><input type="radio" name="yq-batch-status" value="' + s + '"'
-              + (i === 0 ? ' checked' : '') + '>' + s + '</label>';
-          }).join('')
-        + '</div>';
-      confirmBox('批量改状态', body, '确定', false, function(mask){
-        var val = mask.querySelector('input[name="yq-batch-status"]:checked').value;
-        var sel = checked();
-        sel.forEach(function(tr){ setLeadStatus(tr, val); });
-        toast('已更新 ' + sel.length + ' 人');
-        syncBulk();
-      });
-    });
-    $('[data-yq-batch="owner"]').addEventListener('click', function(){
-      if (!checked().length){ toast('先选择命中用户'); return; }
-      var body = '<div class="yq-statusbox"><span class="yq-muted">负责人</span><select id="yq-batch-owner">'
-        + ['张伟', '王芳', '徐磊', '朱琳'].map(function(n){ return '<option>' + n + '</option>'; }).join('')
-        + '</select></div>';
-      confirmBox('批量改负责人', body, '确定', false, function(mask){
-        var val = mask.querySelector('#yq-batch-owner').value;
-        var sel = checked();
-        sel.forEach(function(tr){ setLeadOwner(tr, val); });
-        toast('已更新 ' + sel.length + ' 人');
-        syncBulk();
-      });
-    });
     $('#yq-export').addEventListener('click', function(){ toast('已导出命中用户 Excel（演示）'); });
-    $('#yq-export-sel').addEventListener('click', function(){
-      toast(checked().length ? '已导出所选命中用户 Excel（演示）' : '已导出筛选后的全部命中用户 Excel（演示）');
-    });
-    syncBulk();
   }
 
   /* 命中用户详情：本页不设导出，只读 */
