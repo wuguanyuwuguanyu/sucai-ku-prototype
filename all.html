@@ -17713,7 +17713,7 @@ XX 面霜 踩雷</p></div>
     <div class="yq-actions"><button type="button" class="yq-btn" id="yq-export">导出</button></div>
   </div>
 
-  <div class="yq-hero" id="yq-hero" data-status="已采访" data-owner="徐磊">
+  <div class="yq-hero">
     <div class="yq-hero-id">
       <span class="yq-avatar">橘</span>
       <div>
@@ -17722,15 +17722,12 @@ XX 面霜 踩雷</p></div>
         <div class="yq-hero-meta">
           <span>首次命中 <b>2026-11-07 18:20</b></span>
           <span>最近命中 <b>2026-11-09 14:06</b></span>
-          <span>状态 <b id="yq-hero-status">已采访</b></span>
-          <span>负责人 <b id="yq-hero-owner">徐磊</b></span>
+          <span>状态 <b>已采访</b></span>
+          <span>负责人 <b>徐磊</b></span>
         </div>
       </div>
     </div>
     <div class="yq-hero-acts">
-      <button type="button" class="yq-btn sm" id="yq-focus-status">改状态</button>
-      <button type="button" class="yq-btn sm" id="yq-focus-owner">改负责人</button>
-      <button type="button" class="yq-btn sm" id="yq-focus-note">添加跟进记录</button>
       <button type="button" class="yq-btn sm" id="yq-copy">复制主页链接</button>
       <button type="button" class="yq-link" id="yq-open">打开小红书主页 ↗</button>
     </div>
@@ -17765,33 +17762,6 @@ XX 面霜 踩雷</p></div>
       </div>
     </section>
 
-    <aside class="yq-rail">
-      <section class="yq-sec">
-        <div class="yq-sec-head"><h2>跟进</h2></div>
-        <div class="yq-statusbox" id="yq-statusbox">
-          <label><input type="radio" name="yq-lead-status" value="待触达">待触达</label>
-          <label><input type="radio" name="yq-lead-status" value="已触达">已触达</label>
-          <label><input type="radio" name="yq-lead-status" value="已采访" checked>已采访</label>
-          <label><input type="radio" name="yq-lead-status" value="已忽略">已忽略</label>
-          <span class="yq-muted" style="margin-top:4px">负责人</span>
-          <select id="yq-owner"><option>徐磊</option><option>张伟</option><option>王芳</option><option>朱琳</option></select>
-        </div>
-        <div class="yq-noteform" style="margin-top:14px">
-          <textarea id="yq-note" placeholder="备注，最多 500 字" maxlength="500"></textarea>
-          <div class="yq-formrow"><button type="button" class="yq-btn primary" id="yq-save-follow">保存</button></div>
-        </div>
-      </section>
-
-      <section class="yq-sec">
-        <div class="yq-sec-head"><h2>跟进记录</h2></div>
-        <ol class="yq-timeline" id="yq-timeline">
-          <li><b>备注</b><p>用户同意把反馈转给客服团队。</p><small>徐磊 · 2026-11-09 14:20</small></li>
-          <li><b>状态：已触达 → 已采访</b><p>约了周三电话采访，重点问售后流程。</p><small>徐磊 · 2026-11-09 14:06</small></li>
-          <li><b>负责人：张伟 → 徐磊</b><p>售后类命中用户统一交给客服组跟进。</p><small>张伟 · 2026-11-08 21:10</small></li>
-          <li><b>状态：待触达 → 已触达</b><p>已在小红书私信，等回复。</p><small>张伟 · 2026-11-07 18:30</small></li>
-        </ol>
-      </section>
-    </aside>
   </div>
 </div>
 </script>
@@ -17994,7 +17964,7 @@ XX 面霜 踩雷</p></div>
 .yq-hero-meta{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:10px;font-size:12px;color:#646A73}
 .yq-hero-meta b{color:#1F2329;font-weight:500}
 .yq-hero-acts{display:flex;align-items:center;flex-wrap:wrap;justify-content:flex-end;gap:8px;max-width:520px}
-.yq-split{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(320px,.85fr);gap:32px;align-items:start;padding-top:8px}
+.yq-split{display:grid;grid-template-columns:minmax(0,1fr);gap:32px;align-items:start;padding-top:8px}
 .yq-split > .yq-sec{padding-top:24px}
 .yq-split .yq-sec:first-child{border-top:0}
 .yq-hits{display:grid;gap:20px}
@@ -18011,21 +17981,10 @@ XX 面霜 踩雷</p></div>
 .yq-ai .tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:5px}
 .yq-hit-foot{display:flex;align-items:center;flex-wrap:wrap;gap:16px;margin-top:10px;padding-top:8px;
   border-top:1px solid #E5E8EF;font-size:12px;color:#8F959E}
-.yq-rail{display:grid;gap:24px}
 .yq-statusbox{display:grid;gap:8px;margin-top:12px}
 .yq-statusbox > label{display:flex;align-items:center;gap:8px;font-size:14px;color:#1F2329;cursor:pointer}
 .yq-statusbox input[type=radio]{width:16px;height:16px;accent-color:#1677FF;margin:0}
 .yq-statusbox select{width:100%;height:36px;margin-top:2px;padding:0 10px;border:1px solid #E5E8EF;border-radius:8px;background:#fff;font-size:14px}
-.yq-noteform textarea{width:100%;min-height:76px;padding:8px 10px;border:1px solid #E5E8EF;border-radius:8px;font-size:14px;resize:vertical}
-.yq-noteform textarea:focus{border-color:#1677FF;outline:none;box-shadow:0 0 0 2px rgba(22,119,255,.12)}
-.yq-formrow{display:flex;justify-content:flex-end;margin-top:8px}
-.yq-timeline{list-style:none;margin:12px 0 0;padding:0}
-.yq-timeline li{position:relative;padding:0 0 18px 20px;border-left:1px solid #E5E8EF}
-.yq-timeline li:last-child{padding-bottom:0;border-left-color:transparent}
-.yq-timeline li:before{content:"";position:absolute;left:-4px;top:6px;width:7px;height:7px;border-radius:50%;background:#1677FF}
-.yq-timeline b{display:block;font-size:14px;font-weight:500;color:#1F2329}
-.yq-timeline p{margin-top:2px;font-size:12px;color:#646A73}
-.yq-timeline small{display:block;margin-top:2px;font-size:12px;color:#8F959E}
 
 /* 浮层 */
 .yq-mask{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;background:rgba(31,35,41,.45)}
@@ -18526,52 +18485,6 @@ XX 面霜 踩雷</p></div>
 
   /* 命中用户详情 */
   function initLeadDetail(){
-    var hero = $('#yq-hero');
-    var oldStatus = hero.getAttribute('data-status');
-    function prependFollow(title, note, who){
-      var li = document.createElement('li');
-      li.innerHTML = '<b>' + esc(title) + '</b>'
-        + (note ? '<p>' + esc(note) + '</p>' : '')
-        + '<small>' + esc(who) + ' · ' + now() + '</small>';
-      var ol = $('#yq-timeline');
-      ol.insertBefore(li, ol.firstChild);
-    }
-    $('#yq-save-follow').addEventListener('click', function(){
-      var r = root.querySelector('input[name="yq-lead-status"]:checked');
-      var st = r ? r.value : oldStatus;
-      var owner = $('#yq-owner').value;
-      var note = ($('#yq-note').value || '').trim();
-      if (st === oldStatus && note === '' && owner === hero.getAttribute('data-owner')){
-        toast('没有要保存的变更');
-        return;
-      }
-      if (st !== oldStatus){
-        prependFollow('状态：' + oldStatus + ' → ' + st, '', owner);
-        oldStatus = st;
-        hero.setAttribute('data-status', st);
-        $('#yq-hero-status').textContent = st;
-      }
-      if (owner !== hero.getAttribute('data-owner')){
-        hero.setAttribute('data-owner', owner);
-        $('#yq-hero-owner').textContent = owner;
-      }
-      if (note){
-        prependFollow('备注', note, owner);
-        $('#yq-note').value = '';
-      }
-      toast('已保存');
-    });
-    $('#yq-focus-status').addEventListener('click', function(){
-      $('#yq-statusbox').scrollIntoView({block: 'center'});
-    });
-    $('#yq-focus-owner').addEventListener('click', function(){
-      $('#yq-owner').focus();
-      $('#yq-owner').scrollIntoView({block: 'center'});
-    });
-    $('#yq-focus-note').addEventListener('click', function(){
-      $('#yq-note').focus();
-      $('#yq-note').scrollIntoView({block: 'center'});
-    });
     $('#yq-copy').addEventListener('click', function(){
       var link = 'https://www.xiaohongshu.com/user/profile/123456789';
       try { if (navigator.clipboard) navigator.clipboard.writeText(link); } catch (e) {}
