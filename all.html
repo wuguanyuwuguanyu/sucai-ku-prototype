@@ -961,8 +961,6 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
   background:linear-gradient(-52deg,#A56EFF 6.5%,#529AFF 96.9%)}
 .cw-main{flex:1;min-width:0}
 .cw-nm{display:flex;align-items:center;font-size:17.6px;font-weight:600;color:#152C50;line-height:1.2}
-.cw-tag{margin-left:6px;font-size:10.5px;font-weight:600;color:#9A5B2A;background:#FFF1E3;
-  border-radius:6px;padding:1px 5px;white-space:nowrap}
 .cw-meta{margin-top:5px;font-size:12.1px;font-weight:500;color:#95A3B8;line-height:1.2}
 .cw-right{flex:none;text-align:right;font-size:11px;font-weight:500;color:#8FA3BE;line-height:1.25}
 .cw-right b{display:block;font-size:14.5px;font-weight:600;color:#173A6B}
@@ -5205,14 +5203,14 @@ REND['host-newfriend']=function(){custRender('host-newfriend')};
    关掉它，第 1 天那组会多出一人，用来演示这个开关真的在改名单。 */
 var CW_VIEW='all';
 var CW_CUST=[
-  {i:'a1',n:'李晓霞',tag:'老客户',last:'今天 10:00',h:3},
-  {i:'a2',n:'张大强',tag:'高意向',last:'今天 10:00',h:3},
+  {i:'a1',n:'李晓霞',last:'今天 10:00',h:3},
+  {i:'a2',n:'张大强',last:'今天 10:00',h:3},
   {i:'a3',n:'林晓雯',last:'今天 09:20',h:4},
   {i:'a4',n:'王芳',last:'今天 09:05',h:2},
   {i:'a5',n:'宋雨彤',last:'今天 08:40',h:5},
   {i:'a6',n:'许志远',last:'今天 08:10',h:6},
   {i:'b1',n:'陈立',last:'昨天 18:20',h:50},
-  {i:'b2',n:'周敏',tag:'高意向',last:'昨天 11:05',h:79},
+  {i:'b2',n:'周敏',last:'昨天 11:05',h:79},
   {i:'b3',n:'刘洋',last:'前天 15:30',h:120},
   {i:'b4',n:'赵一鸣',last:'昨天 16:20',h:52,w:2},
   {i:'c1',n:'郑凯',last:'9月27日 10:10',h:180},
@@ -5352,7 +5350,7 @@ REND['cw-list']=function(){
       h+='<button class="cw-row" onclick="cwToggle(\''+c.i+'\')" aria-pressed="'+(CW_SEL[c.i]?'true':'false')+'">'
         +cwCbHtml(CW_SEL[c.i]?2:0)
         +'<span class="cw-av">'+c.n.charAt(0)+'</span>'
-        +'<span class="cw-main"><span class="cw-nm">'+c.n+(c.tag?'<span class="cw-tag">'+c.tag+'</span>':'')+'</span>'
+        +'<span class="cw-main"><span class="cw-nm">'+c.n+'</span>'
         +'<span class="cw-meta">最后触达 '+c.last+'</span></span>'
         +'<span class="cw-right"><b>'+cwDur(c.h)+'</b>未回复</span></button>';
     }
