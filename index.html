@@ -17087,132 +17087,141 @@ render();
 <script type="text/plain" id="srcYqNew">
 <div class="yq" data-yq-page="new">
   <button type="button" class="yq-crumb" data-yq-go="tasks">‹ 小红书舆情监测 / 新建任务</button>
-  <div class="yq-head">
-    <div><h1>新建监测任务</h1></div>
-  </div>
 
-  <div class="yq-form">
-    <section class="yq-sec">
-      <div class="yq-fs-head"><span class="yq-fs-no">1</span><h2>任务安排</h2></div>
-      <div class="yq-field" id="yq-name-wrap">
-        <div class="yq-flabel"><span class="req">*</span>任务名称</div>
-        <div class="yq-ctrl"><input type="text" id="yq-name" value="舆情监测任务 2026-11-11" maxlength="19" placeholder="最多 19 个字"></div>
-      </div>
-      <div class="yq-field" id="yq-people-wrap">
-        <div class="yq-flabel"><span class="req">*</span>执行人员</div>
-        <div class="yq-ctrl">
-          <div class="yq-chips" id="yq-chips">
-            <span class="yq-chips-ph" id="yq-people-ph">请选择执行人员</span>
-            <button type="button" class="yq-caret" id="yq-people" aria-label="选择执行人员">▾</button>
+  <div class="yq-sheet">
+    <h1>新建任务</h1>
+
+    <section class="yq-sect">
+      <div class="yq-sect-head"><h2>任务安排</h2><p>谁跑、什么时候跑、提醒弹到哪</p></div>
+      <div class="yq-sect-body">
+        <div class="yq-field" id="yq-name-wrap">
+          <div class="yq-flabel">任务名称<span class="req">*</span></div>
+          <div class="yq-ctrl"><input type="text" id="yq-name" value="舆情监测任务 2026-11-11" maxlength="19" placeholder="最多 19 个字"></div>
+        </div>
+        <div class="yq-field" id="yq-people-wrap">
+          <div class="yq-flabel">执行人员<span class="req">*</span></div>
+          <div class="yq-ctrl">
+            <div class="yq-chips" id="yq-chips">
+              <span class="yq-chips-ph" id="yq-people-ph">请选择执行人员</span>
+              <button type="button" class="yq-caret" id="yq-people" aria-label="选择执行人员">▾</button>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="yq-field" id="yq-notify-wrap">
-        <div class="yq-flabel"><span class="req">*</span>通知时间</div>
-        <div class="yq-ctrl">
-          <div class="yq-inline">
-            <input type="text" id="yq-notify-date" value="2026-11-29" placeholder="日期" style="width:140px">
-            <input type="text" id="yq-notify-time" value="09:00:00" placeholder="时间" style="width:110px">
-            <span class="yq-muted">（到达时间将会推送提醒）</span>
+        <div class="yq-field" id="yq-notify-wrap">
+          <div class="yq-flabel">通知时间<span class="req">*</span></div>
+          <div class="yq-ctrl">
+            <div class="yq-inline">
+              <input type="text" id="yq-notify-date" value="2026-11-29" placeholder="日期" style="width:140px">
+              <input type="text" id="yq-notify-time" value="09:00:00" placeholder="时间" style="width:110px">
+              <span class="yq-muted">（到达时间将会推送提醒）</span>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="yq-field" id="yq-deadline-wrap">
-        <div class="yq-flabel"><span class="req">*</span>截止时间</div>
-        <div class="yq-ctrl">
-          <div class="yq-inline">
-            <input type="text" id="yq-deadline-date" value="2026-11-30" placeholder="日期" style="width:140px">
-            <input type="text" id="yq-deadline-time" value="23:59:00" placeholder="时间" style="width:110px">
+        <div class="yq-field" id="yq-deadline-wrap">
+          <div class="yq-flabel">截止时间<span class="req">*</span></div>
+          <div class="yq-ctrl">
+            <div class="yq-inline">
+              <input type="text" id="yq-deadline-date" value="2026-11-30" placeholder="日期" style="width:140px">
+              <input type="text" id="yq-deadline-time" value="23:59:00" placeholder="时间" style="width:110px">
+            </div>
           </div>
         </div>
-      </div>
-      <div class="yq-field">
-        <div class="yq-flabel">全局弹窗</div>
-        <div class="yq-ctrl">
-          <label class="yq-switch"><input type="checkbox" id="yq-popup"><span></span></label>
-          <div class="yq-hint">开启后，将在手机的所有页面中弹出任务提醒；关闭，则只在小红书中弹出任务提醒。</div>
+        <div class="yq-field">
+          <div class="yq-flabel">全局弹窗</div>
+          <div class="yq-ctrl">
+            <label class="yq-switch"><input type="checkbox" id="yq-popup"><span></span></label>
+            <div class="yq-hint">开启后，将在手机的所有页面中弹出任务提醒；关闭，则只在小红书中弹出任务提醒。</div>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="yq-sec">
-      <div class="yq-fs-head"><span class="yq-fs-no">2</span><h2>监测对象</h2></div>
-      <div class="yq-field" id="yq-brand-wrap">
-        <div class="yq-flabel"><span class="req">*</span>品牌 / 产品词</div>
-        <div class="yq-ctrl">
-          <textarea id="yq-brand" placeholder="每行一个，每个词最多 30 个字，最多 100 行。填品牌全称、简称、产品名、系列名和常见错别字；不填「面霜」这类行业通用词。"></textarea>
-        </div>
-      </div>
-    </section>
-
-    <section class="yq-sec">
-      <div class="yq-fs-head"><span class="yq-fs-no">3</span><h2>找笔记</h2></div>
-      <div class="yq-field">
-        <div class="yq-flabel">关键词类型</div>
-        <div class="yq-ctrl"><div class="yq-radios"><label><input type="radio" name="yq-kwtype" value="term" checked>词条</label><label><input type="radio" name="yq-kwtype" value="topic">话题</label></div></div>
-      </div>
-      <div class="yq-field">
-        <div class="yq-flabel">录入方式</div>
-        <div class="yq-ctrl">
-          <div class="yq-radios"><label><input type="radio" name="yq-entry" value="manual" checked>手动输入</label><label><input type="radio" name="yq-entry" value="import">导入</label></div>
-          <div class="yq-import" id="yq-import" hidden>选择 Excel / CSV 文件，第一列放关键词，一行一个；导入后仍可修改。</div>
-        </div>
-      </div>
-      <div class="yq-field" id="yq-keywords-wrap">
-        <div class="yq-flabel"><span class="req">*</span>搜索关键词</div>
-        <div class="yq-ctrl">
-          <textarea id="yq-keywords" placeholder="每行一个，每个词最多 30 个字，最多 200 行。可以比品牌词更宽，例如加上「测评」「踩雷」「吐槽」。"></textarea>
-        </div>
-      </div>
-      <div class="yq-field">
-        <div class="yq-flabel">笔记发布时间</div>
-        <div class="yq-ctrl"><select id="yq-notetime"><option>7 日内</option><option>15 日内</option><option selected>30 日内</option><option>90 日内</option><option>不限</option></select></div>
-      </div>
-      <div class="yq-field">
-        <div class="yq-flabel">评论发布时间</div>
-        <div class="yq-ctrl"><select id="yq-commenttime"><option>7 日内</option><option>15 日内</option><option selected>30 日内</option><option>90 日内</option><option>不限</option></select></div>
-      </div>
-      <div class="yq-field">
-        <div class="yq-flabel">过滤赞助笔记</div>
-        <div class="yq-ctrl"><label class="yq-switch"><input type="checkbox" id="yq-sponsored" checked><span></span></label></div>
-      </div>
-    </section>
-
-    <section class="yq-sec">
-      <div class="yq-fs-head"><span class="yq-fs-no">4</span><h2>判定规则</h2></div>
-      <div class="yq-field">
-        <div class="yq-flabel">判定方式</div>
-        <div class="yq-ctrl"><div class="yq-radios">
-          <label><input type="radio" name="yq-judge" value="kw">关键词</label>
-          <label><input type="radio" name="yq-judge" value="ai" checked>AI分析</label>
-        </div></div>
-      </div>
-      <div class="yq-field" id="yq-negative-wrap">
-        <div class="yq-flabel"><span class="req" id="yq-neg-req">*</span>检测词</div>
-        <div class="yq-ctrl">
-          <textarea id="yq-negative" placeholder="每行一个，每个词最多 10 个字，最多 200 行。填目标评论里真会出现的说法，不填品牌词和产品词。"></textarea>
-        </div>
-      </div>
-      <div class="yq-field" id="yq-instruction-wrap">
-        <div class="yq-flabel"><span class="req" id="yq-ins-req">*</span>判定说明</div>
-        <div class="yq-ctrl">
-          <textarea id="yq-instruction" style="min-height:96px" placeholder="最多 500 个字，写清什么算目标评论">用户在说本品牌或本产品的质量、使用效果、售后、客服态度、价格、物流发货、虚假宣传或使用安全，包括口语化、反讽、错别字和简称。只是提到品牌但语气中性或正面，不算；说平台、说其他品牌，不算；客观对比但没有贬低本品牌，不算。</textarea>
-        </div>
-      </div>
-    </section>
-
-    <section class="yq-sec">
-      <div class="yq-fs-head"><span class="yq-fs-no">5</span><h2>执行设置</h2></div>
-      <div class="yq-field" id="yq-limit-wrap">
-        <div class="yq-flabel">单次执行上限</div>
-        <div class="yq-ctrl">
-          <div class="yq-radios">
-            <label><input type="radio" name="yq-limit" value="500" checked>500</label>
-            <label><input type="radio" name="yq-limit" value="1000">1,000</label>
-            <label><input type="radio" name="yq-limit" value="3000">3,000</label>
-            <label><input type="radio" name="yq-limit" value="custom">自定义 <input type="number" min="1" placeholder="条数" data-yq-custom style="width:86px;height:30px;border:1px solid #E5E8EF;border-radius:6px;padding:0 8px"></label>
+    <section class="yq-sect">
+      <div class="yq-sect-head"><h2>监测对象</h2><p>要盯住哪些品牌和产品词</p></div>
+      <div class="yq-sect-body">
+        <div class="yq-field" id="yq-brand-wrap">
+          <div class="yq-flabel">品牌 / 产品词<span class="req">*</span></div>
+          <div class="yq-ctrl">
+            <textarea id="yq-brand" placeholder="每行一个，每个词最多 30 个字，最多 100 行。填品牌全称、简称、产品名、系列名和常见错别字；不填「面霜」这类行业通用词。"></textarea>
           </div>
-          <div class="yq-hint">每次任务最多匹配客户评论次数</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="yq-sect">
+      <div class="yq-sect-head"><h2>找笔记</h2><p>搜什么，在哪些笔记和评论里找</p></div>
+      <div class="yq-sect-body">
+        <div class="yq-field">
+          <div class="yq-flabel">关键词类型</div>
+          <div class="yq-ctrl"><div class="yq-radios"><label><input type="radio" name="yq-kwtype" value="term" checked>词条</label><label><input type="radio" name="yq-kwtype" value="topic">话题</label></div></div>
+        </div>
+        <div class="yq-field">
+          <div class="yq-flabel">录入方式</div>
+          <div class="yq-ctrl">
+            <div class="yq-radios"><label><input type="radio" name="yq-entry" value="manual" checked>手动输入</label><label><input type="radio" name="yq-entry" value="import">导入</label></div>
+            <div class="yq-import" id="yq-import" hidden>选择 Excel / CSV 文件，第一列放关键词，一行一个；导入后仍可修改。</div>
+          </div>
+        </div>
+        <div class="yq-field" id="yq-keywords-wrap">
+          <div class="yq-flabel">搜索关键词<span class="req">*</span></div>
+          <div class="yq-ctrl">
+            <textarea id="yq-keywords" placeholder="每行一个，每个词最多 30 个字，最多 200 行。可以比品牌词更宽，例如加上「测评」「踩雷」「吐槽」。"></textarea>
+          </div>
+        </div>
+        <div class="yq-field">
+          <div class="yq-flabel">笔记发布时间</div>
+          <div class="yq-ctrl"><select id="yq-notetime"><option>7 日内</option><option>15 日内</option><option selected>30 日内</option><option>90 日内</option><option>不限</option></select></div>
+        </div>
+        <div class="yq-field">
+          <div class="yq-flabel">评论发布时间</div>
+          <div class="yq-ctrl"><select id="yq-commenttime"><option>7 日内</option><option>15 日内</option><option selected>30 日内</option><option>90 日内</option><option>不限</option></select></div>
+        </div>
+        <div class="yq-field">
+          <div class="yq-flabel">过滤赞助笔记</div>
+          <div class="yq-ctrl"><label class="yq-switch"><input type="checkbox" id="yq-sponsored" checked><span></span></label></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="yq-sect">
+      <div class="yq-sect-head"><h2>判定规则</h2><p>什么样的评论算命中</p></div>
+      <div class="yq-sect-body">
+        <div class="yq-field">
+          <div class="yq-flabel">判定方式</div>
+          <div class="yq-ctrl"><div class="yq-radios">
+            <label><input type="radio" name="yq-judge" value="kw">关键词</label>
+            <label><input type="radio" name="yq-judge" value="ai" checked>AI分析</label>
+          </div></div>
+        </div>
+        <div class="yq-field" id="yq-negative-wrap">
+          <div class="yq-flabel">检测词<span class="req" id="yq-neg-req">*</span></div>
+          <div class="yq-ctrl">
+            <textarea id="yq-negative" placeholder="每行一个，每个词最多 10 个字，最多 200 行。填目标评论里真会出现的说法，不填品牌词和产品词。"></textarea>
+          </div>
+        </div>
+        <div class="yq-field" id="yq-instruction-wrap">
+          <div class="yq-flabel">判定说明<span class="req" id="yq-ins-req">*</span></div>
+          <div class="yq-ctrl">
+            <textarea id="yq-instruction" style="min-height:96px" placeholder="最多 500 个字，写清什么算目标评论">用户在说本品牌或本产品的质量、使用效果、售后、客服态度、价格、物流发货、虚假宣传或使用安全，包括口语化、反讽、错别字和简称。只是提到品牌但语气中性或正面，不算；说平台、说其他品牌，不算；客观对比但没有贬低本品牌，不算。</textarea>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="yq-sect">
+      <div class="yq-sect-head"><h2>执行设置</h2><p>每次任务最多匹配多少条评论</p></div>
+      <div class="yq-sect-body">
+        <div class="yq-field" id="yq-limit-wrap">
+          <div class="yq-flabel">单次执行上限</div>
+          <div class="yq-ctrl">
+            <div class="yq-radios">
+              <label><input type="radio" name="yq-limit" value="500" checked>500</label>
+              <label><input type="radio" name="yq-limit" value="1000">1,000</label>
+              <label><input type="radio" name="yq-limit" value="3000">3,000</label>
+              <label><input type="radio" name="yq-limit" value="custom">自定义 <input type="number" min="1" placeholder="条数" data-yq-custom style="width:86px;height:30px;border:1px solid #E5E8EF;border-radius:6px;padding:0 8px"></label>
+            </div>
+            <div class="yq-hint">每次任务最多匹配客户评论次数</div>
+          </div>
         </div>
       </div>
     </section>
@@ -17222,11 +17231,9 @@ render();
       <div class="yq-vgrid" data-yq-vgrid></div>
     </div>
 
-    <div class="yq-formfoot">
-      <div class="yq-actions">
-        <button type="button" class="yq-btn" id="yq-cancel">取消</button>
-        <button type="button" class="yq-btn primary" id="yq-save">保存</button>
-      </div>
+    <div class="yq-sheet-foot">
+      <button type="button" class="yq-btn primary" id="yq-save">保存</button>
+      <button type="button" class="yq-btn" id="yq-cancel">取消</button>
     </div>
   </div>
 
@@ -17829,15 +17836,19 @@ XX 面霜 踩雷</p></div>
 .yq-fstep.scope{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;padding:0}
 .yq-fstep.scope > div{display:flex;align-items:center;justify-content:center;gap:10px;min-height:54px}
 
-/* 表单 */
-.yq-form{max-width:1000px}
-.yq-fs-head{display:flex;align-items:center;gap:10px;padding-bottom:12px;border-bottom:1px solid #E5E8EF}
-.yq-fs-no{display:grid;place-items:center;width:22px;height:22px;flex-shrink:0;border-radius:50%;
-  background:#E6F4FF;color:#1677FF;font-size:12px;font-weight:600}
-.yq-field{display:grid;grid-template-columns:150px minmax(0,1fr);gap:16px;padding:14px 0;border-bottom:1px solid #E5E8EF}
-.yq-field:last-child{border-bottom:0;padding-bottom:0}
-.yq-flabel{padding-top:7px;font-size:14px;color:#646A73}
-.yq-flabel .req{margin-right:3px;color:#FF4D4F}
+/* 新建页：照「新小红书运营 · 新建」，浅灰画布上铺一张白纸，纸里一段一张卡片 */
+.yq[data-yq-page="new"]{background:#F2F5FA}
+.yq-sheet{max-width:1080px;padding:20px 24px 24px;border-radius:8px;background:#fff}
+.yq-sheet > h1{margin:0 0 16px;font-size:16px;font-weight:600}
+.yq-sect{margin:0 0 16px;border:1px solid #F0F0F2;border-radius:8px;background:#fff;overflow:hidden}
+.yq-sect:last-of-type{margin-bottom:8px}
+.yq-sect-head{padding:14px 20px 12px;border-bottom:1px solid #F0F0F2}
+.yq-sect-head h2{font-size:16px;font-weight:500}
+.yq-sect-head p{margin-top:2px;font-size:13px;color:#8C8C8C}
+.yq-sect-body{padding:2px 20px 18px}
+.yq-field{display:grid;grid-template-columns:210px minmax(0,1fr);gap:20px;padding:14px 0 0;border:0}
+.yq-flabel{padding-top:8px;font-size:14px;color:#1F2329;text-align:right;white-space:nowrap}
+.yq-flabel .req{margin-left:2px;color:#FF4D4F}
 .yq-ctrl{min-width:0}
 .yq-ctrl > input[type=text],.yq-ctrl > input[type=number],.yq-ctrl > select,.yq-ctrl > textarea{
   width:100%;padding:7px 10px;border:1px solid #E5E8EF;border-radius:8px;background:#fff;font-size:14px;color:#1F2329}
@@ -17868,8 +17879,7 @@ XX 面霜 踩雷</p></div>
 .yq-chip button{padding:0;border:0;background:none;color:#1677FF;font-size:14px;line-height:1}
 .yq-chips-row{display:flex;align-items:center;gap:8px;margin-bottom:12px}
 .yq-import{margin-top:8px;padding:10px 12px;border-radius:8px;background:#F7F8FA;color:#646A73;font-size:12px}
-.yq-formfoot{display:flex;align-items:center;justify-content:flex-end;gap:16px;margin-top:8px;
-  padding:16px 0;border-top:1px solid #E5E8EF;background:#fff}
+.yq-sheet-foot{display:flex;align-items:center;gap:10px;padding-left:230px}
 .yq-valid{margin-top:24px;padding:16px 20px;border-radius:8px;background:#F7F8FA}
 .yq-valid > h3{margin-bottom:12px}
 .yq-vgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
@@ -17951,6 +17961,8 @@ XX 面霜 踩雷</p></div>
   .yq-split{grid-template-columns:1fr}
   .yq-duo{grid-template-columns:1fr}
   .yq-duo > .yq-sec + .yq-sec{padding-top:24px;border-top:1px solid #E5E8EF}
+  .yq-field{grid-template-columns:150px minmax(0,1fr)}
+  .yq-sheet-foot{padding-left:170px}
 }
 </script>
 
