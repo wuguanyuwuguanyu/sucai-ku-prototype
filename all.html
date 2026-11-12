@@ -1080,6 +1080,11 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .cw-crow{display:flex;align-items:flex-start;gap:10px;padding:9px 0}
 .cw-crow+.cw-crow{border-top:1px solid #EEF2FA}
 .cw-crow .cw-bub{flex:1;min-width:0;max-width:none;align-self:flex-start}
+/* 图片那条不包绿气泡：微信里图片消息就是图本身，列表照这个口径直接显示缩略图（文件名只留 alt） */
+.cw-crow .cw-bub.media{flex:0 0 auto;width:144px;padding:0;background:transparent;line-height:0;
+  border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(20,40,80,.12)}
+.cw-crow .cw-bub.media img{display:block;width:100%;height:144px;object-fit:cover}
+.cw-crow .cw-cacts{margin-left:auto}
 /* 行尾图标动作：别复用头栏那枚 .cw-acts（那是 position:absolute 的） */
 .cw-cacts{flex:none;display:flex;align-items:center;gap:2px;padding-top:3px}
 .cw-cacts button{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;
@@ -5231,6 +5236,29 @@ var CW_FIXED=[
   {t:'image',c:'秋季新品主图.png'},
   {t:'text',c:'要不要我拍两张细节图给你？'}
 ];
+/* 固定内容里的图片：列表要显示客户收到的那张图，不能只写文件名。原型不带素材图、也不走网络，
+   所以用内联 SVG 画出这张「秋季新品主图」（挂在衣架上的驼色大衣）。 */
+var CW_IMG_SRC='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(
+  "<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'>"
+  +"<defs>"
+  +"<linearGradient id='bg' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#F8F2E9'/><stop offset='1' stop-color='#E9DAC5'/></linearGradient>"
+  +"<linearGradient id='coat' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#CBAA79'/><stop offset='1' stop-color='#A9814D'/></linearGradient>"
+  +"</defs>"
+  +"<rect width='300' height='300' fill='url(#bg)'/>"
+  +"<circle cx='238' cy='64' r='58' fill='#FFFFFF' opacity='.38'/>"
+  +"<ellipse cx='150' cy='268' rx='84' ry='11' fill='#7A5A32' opacity='.10'/>"
+  +"<path d='M150 32c0-7 10-8 10-1 0 5-7 5-10 9' fill='none' stroke='#9B8568' stroke-width='3' stroke-linecap='round'/>"
+  +"<path d='M150 40v16M150 56l-53 29M150 56l53 29' fill='none' stroke='#B29B7B' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/>"
+  +"<path d='M150 74c-12 0-22 4-32 10l-26 13c-6 3-9 8-10 14l-9 124c-1 8 4 13 12 13h130c8 0 13-5 12-13l-9-124c-1-6-4-11-10-14l-26-13c-10-6-20-10-32-10z' fill='url(#coat)'/>"
+  +"<path d='M104 94c-4 8-6 16-7 24l-8 112' fill='none' stroke='#93703F' stroke-width='2' opacity='.5'/>"
+  +"<path d='M196 94c4 8 6 16 7 24l8 112' fill='none' stroke='#93703F' stroke-width='2' opacity='.5'/>"
+  +"<path d='M126 82c8 12 16 18 24 18s16-6 24-18l10 7c-10 15-21 22-34 22s-24-7-34-22z' fill='#8F6C3F'/>"
+  +"<path d='M150 104l-22-20-9 70 31-28z' fill='#C5A06D'/>"
+  +"<path d='M150 104l22-20 9 70-31-28z' fill='#B08A55'/>"
+  +"<path d='M150 128v120' stroke='#93703F' stroke-width='2'/>"
+  +"<circle cx='150' cy='156' r='3.6' fill='#7C5A31'/><circle cx='150' cy='190' r='3.6' fill='#7C5A31'/><circle cx='150' cy='224' r='3.6' fill='#7C5A31'/>"
+  +"<path d='M96 196l26 10M204 196l-26 10' stroke='#8B6839' stroke-width='2.4' stroke-linecap='round' opacity='.65'/>"
+  +"</svg>");
 var CW_AI={}, CW_FAIL={}, CW_AI_ROUND=0;
 /* AI 话术是**一人一条并发生成**的（Prompt 规格：并发 3–5）。原型用定时器把这件事演出来：
    每张卡各自从骨架走到正文。令牌按人记——单人重生成／整批重来／×掉他，旧定时器回来时
@@ -5647,7 +5675,10 @@ REND['cw-content']=function(){
     h+='<div class="cw-card">';
     CW_FIXED.forEach(function(it,i){
       h+='<div class="cw-crow"><span class="cw-no">'+(i+1)+'</span>'
-        +'<div class="cw-bub">'+(it.t==='text'?esc(it.c):'［'+cwTypeN(it.t)+'］'+esc(it.c))+'</div>'
+        +'<div class="cw-bub'+(it.t==='image'?' media':'')+'">'
+          +(it.t==='text'?esc(it.c):it.t==='image'?'<img src="'+CW_IMG_SRC+'" alt="'+esc(it.c)+'">'
+            :'［'+cwTypeN(it.t)+'］'+esc(it.c))
+        +'</div>'
         +'<span class="cw-cacts">'
           +'<button onclick="cwEditFixed('+i+')" aria-label="编辑第 '+(i+1)+' 条">'+I('edit',15,2.1)+'</button>'
           +'<button class="danger" onclick="cwDelFixed('+i+')" aria-label="删除第 '+(i+1)+' 条">'+I('trash',15,2.1)+'</button>'
