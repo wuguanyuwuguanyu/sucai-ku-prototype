@@ -17115,7 +17115,7 @@ render();
     <label class="yq-fld"><span>任务名称</span><input type="text" data-yq-f="name" placeholder="搜索任务名称"></label>
     <label class="yq-fld"><span>状态</span>
       <select data-yq-f="status">
-        <option>全部</option><option>未开始</option><option>监测中</option><option>已暂停</option><option>已完成</option><option>已结束</option>
+        <option>全部</option><option>未开始</option><option>进行中</option><option>已过期</option><option>执行完毕</option><option>执行停止</option>
       </select>
     </label>
     <label class="yq-fld"><span>执行人员</span>
@@ -17139,35 +17139,35 @@ render();
         <tr><th>任务名称</th><th>监测对象</th><th>搜索关键词</th><th>开始与截止时间</th><th>执行人员</th><th>状态</th><th class="num">命中用户数</th><th>最近执行时间</th><th>操作</th></tr>
       </thead>
       <tbody>
-        <tr data-st="监测中">
+        <tr data-st="进行中">
           <td><button type="button" class="yq-link strong yq-task-name" data-yq-act="detail">XX 面霜口碑监测（11月）</button></td>
           <td><span class="yq-clip" title="XX、XX 面霜、XX 系列">XX、XX 面霜、XX 系列</span></td>
           <td><span class="yq-clip" title="XX 面霜、XX 面霜 测评、XX 面霜 踩雷">XX 面霜、XX 面霜 测评、XX 面霜 踩雷</span></td>
           <td class="nowrap">2026-11-09 10:20<span class="yq-sub2">至 2026-11-30 23:59</span></td>
           <td>张伟、王芳、徐磊</td>
-          <td><span class="yq-badge run" data-yq-badge><i class="dot"></i>监测中</span></td>
+          <td><span class="yq-badge run" data-yq-badge><i class="dot"></i>进行中</span></td>
           <td class="num">37</td>
           <td class="nowrap">2026-11-09 17:42</td>
           <td class="nowrap" data-yq-acts><button type="button" class="yq-link" data-yq-act="detail">详情</button><button type="button" class="yq-link" data-yq-act="pause">暂停</button><button type="button" class="yq-link danger" data-yq-act="term">终止</button></td>
         </tr>
-        <tr data-st="已暂停">
+        <tr data-st="进行中" data-paused="1">
           <td><button type="button" class="yq-link strong yq-task-name" data-yq-act="detail">双十一价格吐槽监测</button></td>
           <td><span class="yq-clip" title="XX、小X瓶">XX、小X瓶</span></td>
           <td><span class="yq-clip" title="XX 价格、XX 涨价、小X瓶 智商税">XX 价格、XX 涨价、小X瓶 智商税</span></td>
           <td class="nowrap">2026-11-05 09:00<span class="yq-sub2">至 2026-11-20 23:59</span></td>
           <td>王芳、朱琳</td>
-          <td><span class="yq-badge pause" data-yq-badge><i class="dot"></i>已暂停</span></td>
+          <td><span class="yq-badge run" data-yq-badge><i class="dot"></i>进行中</span><span class="yq-sub2" data-yq-paused>已暂停</span></td>
           <td class="num">12</td>
           <td class="nowrap">2026-11-08 21:15</td>
           <td class="nowrap" data-yq-acts><button type="button" class="yq-link" data-yq-act="detail">详情</button><button type="button" class="yq-link" data-yq-act="resume">继续</button><button type="button" class="yq-link danger" data-yq-act="term">终止</button></td>
         </tr>
-        <tr data-st="已完成">
+        <tr data-st="执行完毕">
           <td><button type="button" class="yq-link strong yq-task-name" data-yq-act="detail">XX 系列售后反馈</button></td>
           <td><span class="yq-clip" title="XX 系列">XX 系列</span></td>
           <td><span class="yq-clip" title="XX 售后、XX 退货、XX 客服">XX 售后、XX 退货、XX 客服</span></td>
           <td class="nowrap">2026-10-28 14:10<span class="yq-sub2">至 2026-11-08 23:59</span></td>
           <td>徐磊、韩雪</td>
-          <td><span class="yq-badge done" data-yq-badge><i class="dot"></i>已完成</span></td>
+          <td><span class="yq-badge done" data-yq-badge><i class="dot"></i>执行完毕</span></td>
           <td class="num">8</td>
           <td class="nowrap">2026-11-08 22:40</td>
           <td class="nowrap" data-yq-acts><button type="button" class="yq-link" data-yq-act="detail">详情</button></td>
@@ -17183,21 +17183,32 @@ render();
           <td class="nowrap">—</td>
           <td class="nowrap" data-yq-acts><button type="button" class="yq-link" data-yq-act="detail">详情</button></td>
         </tr>
-        <tr data-st="已结束">
+        <tr data-st="已过期">
           <td><button type="button" class="yq-link strong yq-task-name" data-yq-act="detail">618 后的使用反馈</button></td>
           <td><span class="yq-clip" title="XX">XX</span></td>
           <td><span class="yq-clip" title="XX 面霜 效果、XX 面霜 过敏">XX 面霜 效果、XX 面霜 过敏</span></td>
           <td class="nowrap">2026-06-20 10:00<span class="yq-sub2">至 2026-07-20 23:59</span></td>
           <td>王芳、徐磊</td>
-          <td><span class="yq-badge end" data-yq-badge><i class="dot"></i>已结束</span></td>
+          <td><span class="yq-badge warn" data-yq-badge><i class="dot"></i>已过期</span></td>
           <td class="num">21</td>
           <td class="nowrap">2026-07-20 23:58</td>
+          <td class="nowrap" data-yq-acts><button type="button" class="yq-link" data-yq-act="detail">详情</button></td>
+        </tr>
+        <tr data-st="执行停止">
+          <td><button type="button" class="yq-link strong yq-task-name" data-yq-act="detail">开学季套装差评监测</button></td>
+          <td><span class="yq-clip" title="XX、XX 套装">XX、XX 套装</span></td>
+          <td><span class="yq-clip" title="XX 套装 差评、XX 套装 踩雷">XX 套装 差评、XX 套装 踩雷</span></td>
+          <td class="nowrap">2026-09-01 10:00<span class="yq-sub2">至 2026-10-31 23:59</span></td>
+          <td>王芳、朱琳</td>
+          <td><span class="yq-badge end" data-yq-badge><i class="dot"></i>执行停止</span></td>
+          <td class="num">5</td>
+          <td class="nowrap">2026-09-12 18:05</td>
           <td class="nowrap" data-yq-acts><button type="button" class="yq-link" data-yq-act="detail">详情</button></td>
         </tr>
       </tbody>
     </table>
   </div>
-  <div class="yq-pager"><span>共 5 场任务 · 按创建时间倒序</span><span>每页 20 条<button type="button" class="yq-pg">上一页</button><button type="button" class="yq-pg">下一页</button></span></div>
+  <div class="yq-pager"><span>共 6 场任务 · 按创建时间倒序</span><span>每页 20 条<button type="button" class="yq-pg">上一页</button><button type="button" class="yq-pg">下一页</button></span></div>
 </div>
 </script>
 
@@ -17392,7 +17403,7 @@ XX 面霜 踩雷</textarea>
   <button type="button" class="yq-crumb" data-yq-go="tasks">‹ 小红书舆情监测 / 任务详情</button>
   <div class="yq-head">
     <div>
-      <h1>XX 面霜口碑监测（11月）<span class="yq-badge run" id="yq-status"><i class="dot"></i>监测中</span></h1>
+      <h1>XX 面霜口碑监测（11月）<span class="yq-badge run" id="yq-status"><i class="dot"></i>进行中</span><span class="yq-tag" id="yq-paused" hidden>已暂停</span></h1>
       <p class="yq-sub">2026-11-09 10:20 开始 · 2026-11-30 23:59 截止 · 创建人 张伟</p>
     </div>
     <div class="yq-actions">
@@ -17807,6 +17818,8 @@ XX 面霜 踩雷</textarea>
 .yq-badge.run{background:#E6F4FF;color:#1677FF}
 .yq-badge.run .dot{background:#1677FF}
 .yq-badge.pause .dot{background:#FAAD14}
+.yq-badge.warn{background:#FFF7E6;color:#D46B08}
+.yq-badge.warn .dot{background:#FAAD14}
 .yq-badge.done .dot{background:#52C41A}
 .yq-badge.end{color:#8F959E}
 .yq-tag{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:6px;background:#F7F8FA;
@@ -18024,7 +18037,7 @@ XX 面霜 踩雷</textarea>
   }
 
   function badgeCls(st){
-    return { '监测中': 'run', '已暂停': 'pause', '已完成': 'done', '未开始': 'wait', '已结束': 'end' }[st] || 'wait';
+    return { '进行中': 'run', '未开始': 'wait', '已过期': 'warn', '执行完毕': 'done', '执行停止': 'end' }[st] || 'wait';
   }
   function setBadge(el, st){
     el.className = 'yq-badge ' + badgeCls(st);
@@ -18042,19 +18055,29 @@ XX 面霜 踩雷</textarea>
   /* 任务列表 */
   function initTasks(){
     var tbody = $('.yq-task-table tbody');
-    function acts(st){
+    function acts(st, paused){
       var h = '<button type="button" class="yq-link" data-yq-act="detail">详情</button>';
-      if (st === '监测中') h += '<button type="button" class="yq-link" data-yq-act="pause">暂停</button>';
-      if (st === '已暂停') h += '<button type="button" class="yq-link" data-yq-act="resume">继续</button>';
-      if (st === '监测中' || st === '已暂停') h += '<button type="button" class="yq-link danger" data-yq-act="term">终止</button>';
+      if (st === '进行中') h += '<button type="button" class="yq-link" data-yq-act="' + (paused ? 'resume' : 'pause') + '">' + (paused ? '继续' : '暂停') + '</button>';
+      if (st === '进行中') h += '<button type="button" class="yq-link danger" data-yq-act="term">终止</button>';
       return h;
     }
-    function setStatus(tr, st){
+    function setStatus(tr, st, paused){
       tr.setAttribute('data-st', st);
+      if (paused) tr.setAttribute('data-paused', '1');
+      else tr.removeAttribute('data-paused');
       var b = tr.querySelector('[data-yq-badge]');
       if (b) setBadge(b, st);
+      var p = tr.querySelector('[data-yq-paused]');
+      if (paused && !p && b){
+        p = document.createElement('span');
+        p.className = 'yq-sub2';
+        p.setAttribute('data-yq-paused', '');
+        p.textContent = '已暂停';
+        b.parentNode.insertBefore(p, b.nextSibling);
+      }
+      if (p) p.hidden = !paused;
       var cell = tr.querySelector('[data-yq-acts]');
-      if (cell) cell.innerHTML = acts(st);
+      if (cell) cell.innerHTML = acts(st, paused);
     }
     tbody.addEventListener('click', function(e){
       var b = e.target.closest('[data-yq-act]');
@@ -18062,11 +18085,11 @@ XX 面霜 踩雷</textarea>
       var tr = b.closest('tr');
       var act = b.getAttribute('data-yq-act');
       if (act === 'detail'){ go('detail'); return; }
-      if (act === 'pause'){ setStatus(tr, '已暂停'); toast('任务已暂停'); return; }
-      if (act === 'resume'){ setStatus(tr, '监测中'); toast('任务已继续'); return; }
+      if (act === 'pause'){ setStatus(tr, '进行中', true); toast('任务已暂停'); return; }
+      if (act === 'resume'){ setStatus(tr, '进行中', false); toast('任务已继续'); return; }
       if (act === 'term'){
-        confirmBox('终止任务', '<p>终止后不再扫描新笔记，已产生的命中用户保留。</p>', '终止', true, function(){
-          setStatus(tr, '已结束');
+        confirmBox('终止任务', '<p>终止后不再扫描新笔记，已产生的命中用户保留。终止后不能重新开始。</p>', '终止', true, function(){
+          setStatus(tr, '执行停止');
           toast('任务已终止');
         });
       }
@@ -18251,20 +18274,24 @@ XX 面霜 踩雷</textarea>
 
   /* 任务详情 */
   function initDetail(){
-    var status = '监测中';
+    var status = '进行中';
+    var paused = false;
     var pause = $('#yq-pause');
     var term = $('#yq-term');
+    var pausedTag = $('#yq-paused');
     pause.addEventListener('click', function(){
-      if (status === '监测中'){ status = '已暂停'; pause.textContent = '继续'; }
-      else if (status === '已暂停'){ status = '监测中'; pause.textContent = '暂停'; }
-      else return;
-      setBadge($('#yq-status'), status);
-      toast(status === '已暂停' ? '任务已暂停' : '任务已继续');
+      if (status !== '进行中') return;
+      paused = !paused;
+      pause.textContent = paused ? '继续' : '暂停';
+      pausedTag.hidden = !paused;
+      toast(paused ? '任务已暂停' : '任务已继续');
     });
     term.addEventListener('click', function(){
-      confirmBox('终止任务', '<p>终止后不再扫描新笔记，已产生的命中用户保留。</p>', '终止', true, function(){
-        status = '已结束';
+      confirmBox('终止任务', '<p>终止后不再扫描新笔记，已产生的命中用户保留。终止后不能重新开始。</p>', '终止', true, function(){
+        status = '执行停止';
+        paused = false;
         setBadge($('#yq-status'), status);
+        pausedTag.hidden = true;
         pause.hidden = true;
         term.hidden = true;
         toast('任务已终止');
