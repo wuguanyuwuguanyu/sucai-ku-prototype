@@ -17195,9 +17195,9 @@ render();
           <td class="nowrap" data-yq-acts><button type="button" class="yq-link" data-yq-act="detail">详情</button></td>
         </tr>
         <tr data-st="执行停止">
-          <td><button type="button" class="yq-link strong yq-task-name" data-yq-act="detail">开学季套装差评监测</button></td>
+          <td><button type="button" class="yq-link strong yq-task-name" data-yq-act="detail">开学季套装开箱监测</button></td>
           <td><span class="yq-clip" title="XX、XX 套装">XX、XX 套装</span></td>
-          <td><span class="yq-clip" title="XX 套装 差评、XX 套装 踩雷">XX 套装 差评、XX 套装 踩雷</span></td>
+          <td><span class="yq-clip" title="XX 套装 开箱、XX 套装 测评">XX 套装 开箱、XX 套装 测评</span></td>
           <td class="nowrap">2026-09-01 10:00<span class="yq-sub2">至 2026-10-31 23:59</span></td>
           <td>王芳、朱琳</td>
           <td><span class="yq-badge end" data-yq-badge><i class="dot"></i>执行停止</span></td>
@@ -17316,7 +17316,7 @@ XX 面霜 踩雷</textarea>
         </div></div>
       </div>
       <div class="yq-field" id="yq-negative-wrap">
-        <div class="yq-flabel"><span class="req">*</span>负面词</div>
+        <div class="yq-flabel"><span class="req">*</span>检测词</div>
         <div class="yq-ctrl">
           <textarea id="yq-negative">过敏
 爆痘
@@ -17337,7 +17337,7 @@ XX 面霜 踩雷</textarea>
       <div class="yq-field" id="yq-instruction-wrap">
         <div class="yq-flabel"><span class="req">*</span>判定说明</div>
         <div class="yq-ctrl">
-          <textarea id="yq-instruction" style="min-height:96px">用户在抱怨本品牌或本产品的质量、使用效果、售后、客服态度、价格、物流发货、虚假宣传或使用安全，包括口语化、反讽、错别字和简称。只是提到品牌但语气中性或正面，不算；抱怨平台、抱怨其他品牌，不算；客观对比但没有贬低本品牌，不算。</textarea>
+          <textarea id="yq-instruction" style="min-height:96px">用户在说本品牌或本产品的质量、使用效果、售后、客服态度、价格、物流发货、虚假宣传或使用安全，包括口语化、反讽、错别字和简称。只是提到品牌但语气中性或正面，不算；说平台、说其他品牌，不算；客观对比但没有贬低本品牌，不算。</textarea>
           <div class="yq-hint">最多 500 个字</div>
         </div>
       </div>
@@ -17427,7 +17427,7 @@ XX 面霜 踩雷</textarea>
       <div><span>通知设置</span><p>每天 09:00 汇总 · 全局弹窗关</p></div>
       <div><span>创建时间</span><p>2026-11-09 10:18</p></div>
       <div><span>判定方式</span><p>关键词+AI</p></div>
-      <div><span>负面词</span><p>过敏、爆痘、烂脸、退货、客服不理、智商税</p></div>
+      <div><span>检测词</span><p>过敏、爆痘、烂脸、退货、客服不理、智商税</p></div>
       <div><span>排除词</span><p>不过敏、不是智商税</p></div>
     </div>
   </section>
@@ -17441,10 +17441,10 @@ XX 面霜 踩雷</textarea>
       <div class="yq-metric"><span>命中用户数</span><b>37<small>人</small></b></div>
       <div class="yq-metric"><span>判定失败数</span><b>3<small>条</small></b></div>
     </div>
-    <div class="yq-subhead"><h3>负面分布</h3>
-      <div class="yq-seg" role="tablist" aria-label="负面分布">
-        <button type="button" class="on" role="tab" aria-selected="true" data-yq-dist="type">负面类型</button>
-        <button type="button" role="tab" aria-selected="false" data-yq-dist="word">负面词</button>
+    <div class="yq-subhead"><h3>命中分布</h3>
+      <div class="yq-seg" role="tablist" aria-label="命中分布">
+        <button type="button" class="on" role="tab" aria-selected="true" data-yq-dist="type">评论类型</button>
+        <button type="button" role="tab" aria-selected="false" data-yq-dist="word">检测词</button>
       </div>
     </div>
     <div data-yq-distpane="type">
@@ -17492,7 +17492,7 @@ XX 面霜 踩雷</textarea>
     </div>
     <div class="yq-tw">
       <table class="yq-table">
-        <thead><tr><th>用户</th><th>最近命中评论</th><th class="num">命中次数</th><th>负面类型</th><th>置信度</th><th>状态</th><th>负责人</th><th>最近命中时间</th></tr></thead>
+        <thead><tr><th>用户</th><th>最近命中评论</th><th class="num">命中次数</th><th>评论类型</th><th>置信度</th><th>状态</th><th>负责人</th><th>最近命中时间</th></tr></thead>
         <tbody>
           <tr>
             <td><button type="button" class="yq-link strong" data-yq-lead>一只小鹿</button><span class="yq-sub2">小红书号 xiaolu_0912</span></td>
@@ -17551,7 +17551,7 @@ XX 面霜 踩雷</textarea>
     <button type="button" data-yq-sfilter="已采访"><span>已采访</span><b>9<small>人</small></b></button>
     <button type="button" data-yq-sfilter="已忽略"><span>已忽略</span><b>14<small>人</small></b></button>
   </div>
-  <div class="yq-toptypes"><span>负面类型 Top 3</span><b>使用效果 46</b><b>客服态度 28</b><b>产品质量 21</b><span class="yq-muted">仅统计用 AI 的任务</span></div>
+  <div class="yq-toptypes"><span>评论类型 Top 3</span><b>使用效果 46</b><b>客服态度 28</b><b>产品质量 21</b><span class="yq-muted">仅统计用 AI 的任务</span></div>
 
   <div class="yq-filters">
     <label class="yq-fld"><span>关键词</span><input type="text" data-yq-f="kw" placeholder="用户昵称、小红书号、评论原文"></label>
@@ -17561,7 +17561,7 @@ XX 面霜 踩雷</textarea>
     <label class="yq-fld"><span>来源任务</span>
       <select data-yq-f="task"><option>全部</option><option>XX 面霜口碑监测（11月）</option><option>双十一价格吐槽监测</option><option>XX 系列售后反馈</option></select>
     </label>
-    <label class="yq-fld"><span>负面类型</span>
+    <label class="yq-fld"><span>评论类型</span>
       <select data-yq-f="type"><option>全部</option><option>产品质量</option><option>使用效果</option><option>售后服务</option><option>客服态度</option><option>价格与套路</option><option>物流发货</option><option>虚假宣传</option><option>使用安全</option><option>其他</option></select>
     </label>
     <label class="yq-fld"><span>负责人</span>
@@ -17592,7 +17592,7 @@ XX 面霜 踩雷</textarea>
         <col style="width:5%"><col style="width:15%"><col style="width:19%"><col style="width:10%"><col style="width:15%"><col style="width:7%"><col style="width:12%"><col style="width:8%"><col style="width:5%"><col style="width:4%">
       </colgroup>
       <thead>
-        <tr><th class="yq-checkcell"><input type="checkbox" class="yq-check" data-yq-all aria-label="全选"></th><th>用户</th><th>最近命中评论</th><th>负面类型</th><th>来源任务</th><th class="num">命中次数</th><th>最近命中时间</th><th>状态</th><th>负责人</th><th>操作</th></tr>
+        <tr><th class="yq-checkcell"><input type="checkbox" class="yq-check" data-yq-all aria-label="全选"></th><th>用户</th><th>最近命中评论</th><th>评论类型</th><th>来源任务</th><th class="num">命中次数</th><th>最近命中时间</th><th>状态</th><th>负责人</th><th>操作</th></tr>
       </thead>
       <tbody>
         <tr data-status="已采访" data-owner="徐磊" data-type="售后服务" data-task="XX 系列售后反馈、XX 面霜口碑监测（11月）">
@@ -17707,7 +17707,7 @@ XX 面霜 踩雷</textarea>
           <div class="yq-hit-head"><span class="yq-tag">笔记正文</span><b>用了 XX 系列三个月，皮肤越来越差</b><button type="button" class="yq-link" data-yq-ext>笔记链接 ↗</button><span class="time">2026-11-09 14:06</span></div>
           <blockquote class="yq-quote">正文摘要：……用了 XX 系列三个月，脸颊反复泛红，停用后才慢慢恢复。</blockquote>
           <div class="yq-hit-meta"><span>来源任务 <b>XX 面霜口碑监测（11月）</b></span><span>判定方式 <b>AI分析</b></span><span>命中词 <b>—</b></span><span>品牌词来源 <b>笔记正文</b></span></div>
-          <div class="yq-ai"><div class="tags"><span class="yq-tag blue">AI 使用效果</span><span class="yq-tag dash">置信度 低</span></div>笔记正文描述使用本品牌产品后出现持续泛红，属于使用效果类负面。置信度偏低，因没有明确医学归因。</div>
+          <div class="yq-ai"><div class="tags"><span class="yq-tag blue">AI 使用效果</span><span class="yq-tag dash">置信度 低</span></div>笔记正文描述使用本品牌产品后出现持续泛红，属于使用效果类。置信度偏低，因没有明确医学归因。</div>
           <div class="yq-hit-foot"><button type="button" class="yq-link" data-yq-ext>笔记链接 ↗</button><span>采集时间 2026-11-09 14:08</span></div>
         </article>
         <article class="yq-hit">
@@ -17715,14 +17715,14 @@ XX 面霜 踩雷</textarea>
           <p class="yq-parent">回复 @一只小鹿：我也是，客服让我自己承担运费。</p>
           <blockquote class="yq-quote">我也是，客服让我自己承担运费。</blockquote>
           <div class="yq-hit-meta"><span>来源任务 <b>XX 面霜口碑监测（11月）</b></span><span>判定方式 <b>关键词+AI</b></span><span>命中词 <b>客服不理</b></span><span>品牌词来源 <b>评论</b></span></div>
-          <div class="yq-ai"><div class="tags"><span class="yq-tag blue">AI 客服态度</span><span class="yq-tag">置信度 中</span></div>用户附和他人并补充客服要求自行承担运费，属于对本品牌客服态度的抱怨。</div>
+          <div class="yq-ai"><div class="tags"><span class="yq-tag blue">AI 客服态度</span><span class="yq-tag">置信度 中</span></div>用户附和他人并补充客服要求自行承担运费，属于本品牌客服态度类。</div>
           <div class="yq-hit-foot"><button type="button" class="yq-link" data-yq-ext>回复链接 ↗</button><span>采集时间 2026-11-08 21:05</span></div>
         </article>
         <article class="yq-hit">
           <div class="yq-hit-head"><span class="yq-tag">评论</span><b>XX 面霜用了半年，说点真实感受</b><button type="button" class="yq-link" data-yq-ext>笔记链接 ↗</button><span class="time">2026-11-07 18:20</span></div>
           <blockquote class="yq-quote">客服不理人，退个货要等一周。</blockquote>
           <div class="yq-hit-meta"><span>来源任务 <b>XX 系列售后反馈</b></span><span>判定方式 <b>关键词+AI</b></span><span>命中词 <b>退货、客服不理</b></span><span>品牌词来源 <b>笔记正文</b></span></div>
-          <div class="yq-ai"><div class="tags"><span class="yq-tag blue">AI 售后服务</span><span class="yq-tag">置信度 中</span></div>用户称退货需等待一周且客服未回应，属于对本品牌售后服务的抱怨。</div>
+          <div class="yq-ai"><div class="tags"><span class="yq-tag blue">AI 售后服务</span><span class="yq-tag">置信度 中</span></div>用户称退货需等待一周且客服未回应，属于本品牌售后服务类。</div>
           <div class="yq-hit-foot"><button type="button" class="yq-link" data-yq-ext>评论链接 ↗</button><span>采集时间 2026-11-07 18:22</span></div>
         </article>
       </div>
@@ -18258,16 +18258,16 @@ XX 面霜 踩雷</textarea>
 
       var mode = root.querySelector('input[name="yq-judge"]:checked').value;
       var negs = lines('#yq-negative');
-      if (mode !== 'ai' && !negs.length) miss.push(['yq-negative-wrap', '负面词必填']);
+      if (mode !== 'ai' && !negs.length) miss.push(['yq-negative-wrap', '检测词必填']);
       negs.forEach(function(w, i){
-        if (w.length > 10) miss.push(['yq-negative-wrap', '负面词第 ' + (i + 1) + ' 行超过 10 个字']);
-        if (w.length === 1) suggest.push(['yq-negative-wrap', '负面词里有单个字的词，容易大面积误伤']);
+        if (w.length > 10) miss.push(['yq-negative-wrap', '检测词第 ' + (i + 1) + ' 行超过 10 个字']);
+        if (w.length === 1) suggest.push(['yq-negative-wrap', '检测词里有单个字的词，容易大面积误伤']);
       });
       if (mode !== 'kw' && !val('#yq-instruction')) miss.push(['yq-instruction-wrap', '判定说明必填']);
 
       var exc = lines('#yq-exclude');
       negs.forEach(function(w){
-        if (exc.indexOf(w) >= 0) conflict.push(['yq-exclude-wrap', '「' + w + '」同时出现在负面词和排除词，这个负面词不会生效']);
+        if (exc.indexOf(w) >= 0) conflict.push(['yq-exclude-wrap', '「' + w + '」同时出现在检测词和排除词，这个检测词不会生效']);
       });
 
       var lim = customLimit();
