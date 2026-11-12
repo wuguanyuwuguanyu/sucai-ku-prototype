@@ -17327,13 +17327,6 @@ XX 面霜 踩雷</textarea>
           <div class="yq-hint">每行一个，每个词最多 10 个字，最多 200 行</div>
         </div>
       </div>
-      <div class="yq-field" id="yq-exclude-wrap">
-        <div class="yq-flabel">排除词</div>
-        <div class="yq-ctrl">
-          <textarea id="yq-exclude" style="min-height:62px">不过敏
-不是智商税</textarea>
-        </div>
-      </div>
       <div class="yq-field" id="yq-instruction-wrap">
         <div class="yq-flabel"><span class="req">*</span>判定说明</div>
         <div class="yq-ctrl">
@@ -17428,7 +17421,6 @@ XX 面霜 踩雷</textarea>
       <div><span>创建时间</span><p>2026-11-09 10:18</p></div>
       <div><span>判定方式</span><p>关键词+AI</p></div>
       <div><span>检测词</span><p>过敏、爆痘、烂脸、退货、客服不理、智商税</p></div>
-      <div><span>排除词</span><p>不过敏、不是智商税</p></div>
     </div>
   </section>
 
@@ -17912,7 +17904,7 @@ XX 面霜 踩雷</textarea>
   padding:16px 0;border-top:1px solid #E5E8EF;background:#fff}
 .yq-valid{margin-top:24px;padding:16px 20px;border-radius:8px;background:#F7F8FA}
 .yq-valid > h3{margin-bottom:12px}
-.yq-vgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.yq-vgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
 .yq-vgroup{padding:12px 14px;border-radius:8px;background:#fff}
 .yq-vgroup.block{border-left:3px solid #FF4D4F}
 .yq-vgroup h4{margin:0 0 6px;font-size:12px;font-weight:600;color:#646A73}
@@ -18218,7 +18210,7 @@ XX 面霜 踩雷</textarea>
       var n = parseInt(custom.value, 10);
       return isNaN(n) ? 0 : n;
     }
-    function showValidation(miss, conflict, suggest){
+    function showValidation(miss, suggest){
       var box = $('#yq-validation');
       var grid = box.querySelector('[data-yq-vgrid]');
       function group(title, arr, cls){
@@ -18230,14 +18222,13 @@ XX 面霜 踩雷</textarea>
           + '</ul></div>';
       }
       grid.innerHTML = group('缺失必填 · 拦截', miss, 'block')
-        + group('配置矛盾 · 拦截', conflict, 'block')
         + group('建议项 · 不拦截', suggest, '');
       box.hidden = false;
       box.scrollIntoView({block: 'nearest'});
     }
 
     $('#yq-save').addEventListener('click', function(){
-      var miss = [], conflict = [], suggest = [];
+      var miss = [], suggest = [];
       if (!val('#yq-name')) miss.push(['yq-name-wrap', '任务名称必填']);
       if ($$('.yq-chip').length === 0) miss.push(['yq-people-wrap', '至少选择一名执行人员']);
       var deadline = parseDate(val('#yq-deadline'));
@@ -18265,11 +18256,6 @@ XX 面霜 踩雷</textarea>
       });
       if (mode !== 'kw' && !val('#yq-instruction')) miss.push(['yq-instruction-wrap', '判定说明必填']);
 
-      var exc = lines('#yq-exclude');
-      negs.forEach(function(w){
-        if (exc.indexOf(w) >= 0) conflict.push(['yq-exclude-wrap', '「' + w + '」同时出现在检测词和排除词，这个检测词不会生效']);
-      });
-
       var lim = customLimit();
       if (lim >= 3000) suggest.push(['yq-limit-wrap', '单次执行上限 3,000 以上，账号限流风险高']);
       if (lim <= 0) miss.push(['yq-limit-wrap', '自定义上限要填一个大于 0 的条数']);
@@ -18277,8 +18263,8 @@ XX 面霜 踩雷</textarea>
       if (!(freq >= 1 && freq <= 60)) miss.push(['yq-freq-wrap', '执行频率要在 1–60 分钟之间']);
       else if (freq < 3) suggest.push(['yq-freq-wrap', '执行频率低于 3 分钟，容易被平台限流']);
 
-      showValidation(miss, conflict, suggest);
-      if (miss.length || conflict.length) return;
+      showValidation(miss, suggest);
+      if (miss.length) return;
       toast(suggest.length ? '任务已保存（有 ' + suggest.length + ' 条建议项）' : '任务已保存，已进入「未开始」');
       setTimeout(function(){ go('tasks'); }, 900);
     });
