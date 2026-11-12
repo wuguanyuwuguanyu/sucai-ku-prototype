@@ -17137,18 +17137,6 @@ render();
     </section>
 
     <section class="yq-sect">
-      <div class="yq-sect-head"><h2>监测对象</h2><p>要盯住哪些品牌和产品词</p></div>
-      <div class="yq-sect-body">
-        <div class="yq-field" id="yq-brand-wrap">
-          <div class="yq-flabel">品牌 / 产品词<span class="req">*</span></div>
-          <div class="yq-ctrl">
-            <textarea id="yq-brand" placeholder="每行一个，每个词最多 30 个字，最多 100 行。填品牌全称、简称、产品名、系列名和常见错别字；不填「面霜」这类行业通用词。"></textarea>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="yq-sect">
       <div class="yq-sect-head"><h2>找笔记</h2><p>搜什么，在哪些笔记和评论里找</p></div>
       <div class="yq-sect-body">
         <div class="yq-field">
@@ -17165,7 +17153,7 @@ render();
         <div class="yq-field" id="yq-keywords-wrap">
           <div class="yq-flabel">搜索关键词<span class="req">*</span></div>
           <div class="yq-ctrl">
-            <textarea id="yq-keywords" placeholder="每行一个，每个词最多 30 个字，最多 200 行。可以比品牌词更宽，例如加上「测评」「踩雷」「吐槽」。"></textarea>
+            <textarea id="yq-keywords" placeholder="每行一个，每个词最多 30 个字，最多 200 行。可以加上「测评」「踩雷」「吐槽」这类词，把相关笔记捞出来。"></textarea>
           </div>
         </div>
         <div class="yq-field">
@@ -17199,10 +17187,22 @@ render();
             <textarea id="yq-negative" placeholder="每行一个，每个词最多 10 个字，最多 200 行。填目标评论里真会出现的说法，不填品牌词和产品词。"></textarea>
           </div>
         </div>
+        <div class="yq-field" id="yq-exclude-wrap">
+          <div class="yq-flabel">排除词</div>
+          <div class="yq-ctrl">
+            <textarea id="yq-exclude" placeholder="每行一个，每个词最多 10 个字，最多 200 行。评论命中任意一个就跳过，不再判定。"></textarea>
+          </div>
+        </div>
         <div class="yq-field" id="yq-instruction-wrap">
           <div class="yq-flabel">判定说明<span class="req" id="yq-ins-req">*</span></div>
           <div class="yq-ctrl">
             <textarea id="yq-instruction" style="min-height:96px" placeholder="最多 500 个字，写清什么算目标评论">用户在说本品牌或本产品的质量、使用效果、售后、客服态度、价格、物流发货、虚假宣传或使用安全，包括口语化、反讽、错别字和简称。只是提到品牌但语气中性或正面，不算；说平台、说其他品牌，不算；客观对比但没有贬低本品牌，不算。</textarea>
+          </div>
+        </div>
+        <div class="yq-field" id="yq-brand-wrap">
+          <div class="yq-flabel">品牌 / 产品词</div>
+          <div class="yq-ctrl">
+            <textarea id="yq-brand" placeholder="选填。每行一个，每个词最多 30 个字，最多 100 行。填品牌全称、简称、产品名、系列名和常见错别字，帮助 AI 区分本品牌和竞品。"></textarea>
           </div>
         </div>
       </div>
@@ -17267,7 +17267,7 @@ render();
         <div><span>任务名称</span><p>XX 面霜口碑监测（11月）</p></div>
         <div><span>任务状态</span><p><span class="yq-badge run"><i class="dot"></i>进行中</span></p></div>
         <div><span>任务有效期</span><p>2026-11-09 10:20~2026-11-30 23:59</p></div>
-        <div><span>监测对象</span><p>XX、XX 面霜、XX 系列、小X瓶</p></div>
+        <div><span>品牌 / 产品词</span><p>XX、XX 面霜、XX 系列、小X瓶</p></div>
         <div><span>判定方式</span><p>AI分析</p></div>
         <div><span>执行人员</span><p>张伟、王芳、徐磊</p></div>
         <div><span>通知时间</span><p>2026-11-29 09:00</p></div>
@@ -17363,14 +17363,14 @@ render();
     <div class="yq-tw">
       <table class="yq-table">
         <colgroup>
-          <col style="width:12%"><col style="width:15%"><col style="width:7%"><col style="width:11%"><col style="width:7%"><col style="width:10%"><col style="width:10%"><col style="width:20%"><col style="width:8%">
+          <col style="width:12%"><col style="width:14%"><col style="width:6%"><col style="width:6%"><col style="width:10%"><col style="width:6%"><col style="width:10%"><col style="width:9%"><col style="width:19%"><col style="width:8%">
         </colgroup>
-        <thead><tr><th>用户</th><th>小红书号</th><th>性别</th><th class="num">粉丝量</th><th>IP</th><th class="num">命中次数</th><th>负责人</th><th>最近命中时间</th><th>操作</th></tr></thead>
+        <thead><tr><th>用户</th><th>小红书号</th><th>性别</th><th>年龄</th><th class="num">粉丝量</th><th>IP</th><th class="num">命中次数</th><th>负责人</th><th>最近命中时间</th><th>操作</th></tr></thead>
         <tbody>
           <tr>
             <td><button type="button" class="yq-link strong" data-yq-lead>一只小鹿</button></td>
             <td>xiaolu_0912</td>
-            <td>女</td><td class="num">1.2 万</td><td>上海</td>
+            <td>女</td><td>26</td><td class="num">1.2 万</td><td>上海</td>
             <td class="num">2</td>
             <td>张伟</td><td class="nowrap">2026-11-09 16:58</td>
             <td><button type="button" class="yq-link" data-yq-go="lead-detail">详情</button></td>
@@ -17378,7 +17378,7 @@ render();
           <tr>
             <td><button type="button" class="yq-link strong" data-yq-lead>阿橘</button></td>
             <td>123456789</td>
-            <td>女</td><td class="num">8,641</td><td>广东</td>
+            <td>女</td><td>31</td><td class="num">8,641</td><td>广东</td>
             <td class="num">1</td>
             <td>徐磊</td><td class="nowrap">2026-11-09 14:06</td>
             <td><button type="button" class="yq-link" data-yq-go="lead-detail">详情</button></td>
@@ -17386,7 +17386,7 @@ render();
           <tr>
             <td><button type="button" class="yq-link strong" data-yq-lead>Nina</button></td>
             <td>nina_2333</td>
-            <td>女</td><td class="num">2.3 万</td><td>浙江</td>
+            <td>女</td><td>24</td><td class="num">2.3 万</td><td>浙江</td>
             <td class="num">1</td>
             <td>张伟</td><td class="nowrap">2026-11-09 11:32</td>
             <td><button type="button" class="yq-link" data-yq-go="lead-detail">详情</button></td>
@@ -17394,7 +17394,7 @@ render();
           <tr>
             <td><button type="button" class="yq-link strong" data-yq-lead>小北</button></td>
             <td>xiaobei_17</td>
-            <td>男</td><td class="num">3,205</td><td>北京</td>
+            <td>男</td><td>29</td><td class="num">3,205</td><td>北京</td>
             <td class="num">1</td>
             <td>王芳</td><td class="nowrap">2026-11-09 10:15</td>
             <td><button type="button" class="yq-link" data-yq-go="lead-detail">详情</button></td>
@@ -17402,7 +17402,7 @@ render();
           <tr>
             <td><button type="button" class="yq-link strong" data-yq-lead>可乐</button></td>
             <td>kele_207</td>
-            <td>男</td><td class="num">5.7 万</td><td>四川</td>
+            <td>男</td><td>33</td><td class="num">5.7 万</td><td>四川</td>
             <td class="num">1</td>
             <td>徐磊</td><td class="nowrap">2026-11-08 23:41</td>
             <td><button type="button" class="yq-link" data-yq-go="lead-detail">详情</button></td>
@@ -17437,16 +17437,6 @@ render();
   </section>
 
   <section class="yq-sec">
-    <div class="yq-sec-head"><h2>监测对象</h2></div>
-    <div class="yq-kv">
-      <div class="full"><span>品牌 / 产品词</span><p class="pre">XX
-XX 面霜
-XX 系列
-小X瓶</p></div>
-    </div>
-  </section>
-
-  <section class="yq-sec">
     <div class="yq-sec-head"><h2>找笔记</h2></div>
     <div class="yq-kv">
       <div><span>关键词类型</span><p>词条</p></div>
@@ -17470,7 +17460,14 @@ XX 面霜 踩雷</p></div>
 退货
 客服不理
 智商税</p></div>
+      <div class="full"><span>排除词</span><p class="pre">没有
+不贵
+已回购</p></div>
       <div class="full"><span>判定说明</span><p class="pre">用户在说本品牌或本产品的质量、使用效果、售后、客服态度、价格、物流发货、虚假宣传或使用安全，包括口语化、反讽、错别字和简称。只是提到品牌但语气中性或正面，不算；说平台、说其他品牌，不算；客观对比但没有贬低本品牌，不算。</p></div>
+      <div class="full"><span>品牌 / 产品词</span><p class="pre">XX
+XX 面霜
+XX 系列
+小X瓶</p></div>
     </div>
   </section>
 
@@ -18134,9 +18131,10 @@ XX 面霜 踩雷</p></div>
     var ins = $('#yq-instruction-wrap');
     function applyJudge(mode){
       neg.hidden = false;
-      ins.hidden = mode === 'kw';
+      ins.hidden = mode !== 'ai';
+      $('#yq-brand-wrap').hidden = mode !== 'ai';
       $('#yq-neg-req').hidden = mode !== 'kw';
-      $('#yq-ins-req').hidden = mode === 'kw';
+      $('#yq-ins-req').hidden = mode !== 'ai';
     }
     $$('input[name="yq-judge"]').forEach(function(r){
       r.addEventListener('change', function(){ applyJudge(r.value); });
@@ -18274,7 +18272,6 @@ XX 面霜 踩雷</p></div>
       else if (notify && notify > deadline) miss.push(['yq-notify-wrap', '通知时间要早于截止时间']);
 
       var brands = lines('#yq-brand');
-      if (!brands.length) miss.push(['yq-brand-wrap', '品牌/产品词必填']);
       if (brands.length > 100) miss.push(['yq-brand-wrap', '品牌/产品词最多 100 行']);
       brands.forEach(function(w, i){
         if (w.length > 30) miss.push(['yq-brand-wrap', '品牌/产品词第 ' + (i + 1) + ' 行超过 30 个字']);
@@ -18292,6 +18289,12 @@ XX 面霜 踩雷</p></div>
       negs.forEach(function(w, i){
         if (w.length > 10) miss.push(['yq-negative-wrap', '检测词第 ' + (i + 1) + ' 行超过 10 个字']);
         if (w.length === 1) suggest.push(['yq-negative-wrap', '检测词里有单个字的词，容易大面积误伤']);
+      });
+      var excludes = lines('#yq-exclude');
+      if (excludes.length > 200) miss.push(['yq-exclude-wrap', '排除词最多 200 行']);
+      excludes.forEach(function(w, i){
+        if (w.length > 10) miss.push(['yq-exclude-wrap', '排除词第 ' + (i + 1) + ' 行超过 10 个字']);
+        if (w.length === 1) suggest.push(['yq-exclude-wrap', '排除词里有单个字的词，容易跳过正常评论']);
       });
       if (mode === 'ai' && !val('#yq-instruction')) miss.push(['yq-instruction-wrap', '判定说明必填']);
 
@@ -18656,7 +18659,7 @@ XX 面霜 踩雷</p></div>
   var REA_YQ_LEADS = '小红书舆情监测 · 命中用户';
   var REA_YQ_LEAD_DETAIL = '小红书舆情监测 · 命中用户详情';
   /* 任务配置快照：现网同样没有这条路由，克隆详情页外壳合成，正文来自载体块 srcYqSnapshot。
-     只读，回答「这场任务当时怎么配的」，正文与新建页五段一一对应。 */
+     只读，回答「这场任务当时怎么配的」，正文与新建页四段一一对应。 */
   var REA_YQ_SNAPSHOT = '小红书舆情监测 · 任务配置快照';
   /* 「详细数据」子页：现网路由 board/wxz/task 不在 37 页快照里，
      由 reaSynthPages() 在运行时克隆看板页外壳合成，正文来自下面那个载体块。 */
