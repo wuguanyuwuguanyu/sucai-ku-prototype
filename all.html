@@ -11780,6 +11780,10 @@ setTimeout(sbScan,120);
           </button>
         </div>
       </header>
+      <section class="ov-value-section" aria-label="四项能力使用情况">
+        <div class="ov-section-heading"><h2>云小助帮上了哪些忙</h2></div>
+        <div id="ov-value-scenes" class="ov-value-grid"></div>
+      </section>
       <section class="ov-people" aria-labelledby="ov-people-title">
         <div class="ov-section-heading"><h2 id="ov-people-title">团队使用情况</h2><button class="ov-link" data-value-people="all">查看员工明细 →</button></div>
         <div class="ov-panel">
@@ -11800,10 +11804,6 @@ setTimeout(sbScan,120);
             </section>
           </div>
         </div>
-      </section>
-      <section class="ov-value-section" aria-label="四项能力使用情况">
-        <div class="ov-section-heading"><h2>云小助帮上了哪些忙</h2></div>
-        <div id="ov-value-scenes" class="ov-value-grid"></div>
       </section>
       <div class="ov-section-heading ov-resource-heading">
         <h2>
@@ -12247,8 +12247,7 @@ setTimeout(sbScan,120);
   color: #8f959e;
 }
 .rea-ov-page .ov-people {
-  margin-top: 24px;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
 }
 .rea-ov-page .ov-people > .ov-section-heading {
   margin-bottom: 16px;
@@ -12952,7 +12951,7 @@ setTimeout(sbScan,120);
 .rea-ov-page .ov-resources {
   align-items: stretch;
 }
-/* Usage overview: team usage, four capabilities, company resources. */
+/* Usage overview: four capabilities, team usage, company resources. */
 .rea-ov-page .ov-team-note { margin:16px 0 24px; color:#646A73; font-size:12px; }
 .rea-ov-page .ov-team-chart-note { margin-bottom:8px; font-size:12px; }
 .rea-ov-page #ov-people-stats .ov-stat small { color:#646A73; font-size:12px; font-weight:400; }
@@ -12965,7 +12964,7 @@ setTimeout(sbScan,120);
 .rea-ov-page .ov-work-item:focus-visible { outline:2px solid #1677FF; outline-offset:4px; }
 .rea-ov-page .ov-team-status { margin-bottom:16px; display:flex; align-items:center; gap:8px; }
 .rea-ov-page .ov-scene-filters { width:max-content; margin-bottom:24px; }
-.rea-ov-page .ov-value-section { margin-bottom:24px; }
+.rea-ov-page .ov-value-section { margin:24px 0; }
 .rea-ov-page .ov-value-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
 .rea-ov-page .ov-value-scene { padding:24px; background:#FFFFFF; border:1px solid #E9EEF6; border-radius:12px; }
 .rea-ov-page .ov-value-scene h2 { display:flex; gap:8px; align-items:center; }
