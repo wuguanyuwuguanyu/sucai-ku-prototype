@@ -17358,7 +17358,7 @@ render();
   <section class="yq-sec">
     <div class="yq-sec-head">
       <h2>命中用户</h2>
-      <span class="yq-muted"><button type="button" class="yq-link" data-yq-export-lead>导出本任务命中用户</button><button type="button" class="yq-link" data-yq-export-hit>导出命中明细</button><button type="button" class="yq-link" data-yq-go="leads">查看全部命中用户 ›</button></span>
+      <span class="yq-muted"><button type="button" class="yq-btn" data-yq-export><svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 1.8v7.2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M3.5 5.9 7 9.4l3.5-3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 12.2h10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>导出数据</button><button type="button" class="yq-link" data-yq-go="leads">查看全部命中用户 ›</button></span>
     </div>
     <div class="yq-tw">
       <table class="yq-table">
@@ -18306,11 +18306,8 @@ XX 系列
         });
       });
     });
-    $$('[data-yq-export-lead]').forEach(function(b){
-      b.addEventListener('click', function(){ toast('已导出本任务命中用户 Excel（演示）'); });
-    });
-    $$('[data-yq-export-hit]').forEach(function(b){
-      b.addEventListener('click', function(){ toast('已导出命中明细 Excel（演示）'); });
+    $$('[data-yq-export]').forEach(function(b){
+      b.addEventListener('click', function(){ toast('已导出命中用户与命中明细 Excel（演示）'); });
     });
     $$('[data-yq-lead]').forEach(function(b){
       b.addEventListener('click', function(){ go('lead-detail'); });
