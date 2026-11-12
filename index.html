@@ -17200,9 +17200,9 @@ render();
           </div>
         </div>
         <div class="yq-field" id="yq-brand-wrap">
-          <div class="yq-flabel">品牌 / 产品词</div>
+          <div class="yq-flabel">品牌 / 产品词<span class="req">*</span></div>
           <div class="yq-ctrl">
-            <textarea id="yq-brand" placeholder="选填。每行一个，每个词最多 30 个字，最多 100 行。填品牌全称、简称、产品名、系列名和常见错别字，帮助 AI 区分本品牌和竞品。"></textarea>
+            <textarea id="yq-brand" placeholder="每行一个，每个词最多 30 个字，最多 100 行。填品牌全称、简称、产品名、系列名和常见错别字，帮助 AI 区分本品牌和竞品。"></textarea>
           </div>
         </div>
       </div>
@@ -18254,6 +18254,7 @@ XX 系列
       });
 
       var mode = root.querySelector('input[name="yq-judge"]:checked').value;
+      if (mode === 'ai' && !brands.length) miss.push(['yq-brand-wrap', '品牌/产品词必填']);
       var negs = lines('#yq-negative');
       if (mode === 'kw' && !negs.length) miss.push(['yq-negative-wrap', '检测词必填']);
       negs.forEach(function(w, i){
