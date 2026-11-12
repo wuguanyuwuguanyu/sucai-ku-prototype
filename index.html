@@ -17394,19 +17394,13 @@ render();
   </div>
 
   <section class="yq-sec">
-    <div class="yq-sec-head"><h2>基础信息</h2><span class="yq-frozen">判定规则与找笔记条件已冻结</span></div>
+    <div class="yq-sec-head"><h2>任务信息</h2><span class="yq-sec-tools"><span class="yq-frozen">判定规则与找笔记条件已冻结</span><button type="button" class="yq-link" data-yq-go="snapshot">查看任务配置快照 ›</button></span></div>
     <div class="yq-kv">
       <div><span>监测对象</span><p>XX、XX 面霜、XX 系列、小X瓶</p></div>
-      <div><span>搜索关键词</span><p>XX 面霜 / XX 面霜 测评 / XX 面霜 踩雷</p></div>
-      <div><span>关键词类型 · 录入方式</span><p>词条 · 手动输入</p></div>
-      <div><span>笔记发布时间</span><p>30 日内</p></div>
-      <div><span>评论发布时间</span><p>30 日内</p></div>
-      <div><span>过滤赞助笔记</span><p>打开</p></div>
-      <div><span>执行人员</span><p>张伟、王芳、徐磊</p></div>
-      <div><span>通知设置</span><p>2026-11-29 09:00 提醒 · 全局弹窗关</p></div>
-      <div><span>创建时间</span><p>2026-11-09 10:18</p></div>
       <div><span>判定方式</span><p>AI分析</p></div>
-      <div><span>检测词</span><p>过敏、爆痘、烂脸、退货、客服不理、智商税</p></div>
+      <div><span>执行人员</span><p>张伟、王芳、徐磊</p></div>
+      <div><span>通知时间</span><p>2026-11-29 09:00</p></div>
+      <div><span>创建时间</span><p>2026-11-09 10:18</p></div>
     </div>
   </section>
 
@@ -17503,6 +17497,74 @@ render();
           </tr>
         </tbody>
       </table>
+    </div>
+  </section>
+</div>
+</script>
+
+<script type="text/plain" id="srcYqSnapshot">
+<div class="yq" data-yq-page="snapshot">
+  <button type="button" class="yq-crumb" data-yq-go="detail">‹ 小红书舆情监测 / 任务配置快照</button>
+  <div class="yq-head">
+    <div>
+      <h1>任务配置快照</h1>
+      <p class="yq-sub">XX 面霜口碑监测（11月） · 创建于 2026-11-09 10:18 · 只读，任务开始后不再变化</p>
+    </div>
+  </div>
+
+  <section class="yq-sec">
+    <div class="yq-sec-head"><h2>任务安排</h2></div>
+    <div class="yq-kv">
+      <div><span>任务名称</span><p>XX 面霜口碑监测（11月）</p></div>
+      <div><span>执行人员</span><p>张伟、王芳、徐磊</p></div>
+      <div><span>通知时间</span><p>2026-11-29 09:00</p></div>
+      <div><span>截止时间</span><p>2026-11-30 23:59</p></div>
+      <div><span>全局弹窗</span><p>关闭</p></div>
+    </div>
+  </section>
+
+  <section class="yq-sec">
+    <div class="yq-sec-head"><h2>监测对象</h2></div>
+    <div class="yq-kv">
+      <div class="full"><span>品牌 / 产品词</span><p class="pre">XX
+XX 面霜
+XX 系列
+小X瓶</p></div>
+    </div>
+  </section>
+
+  <section class="yq-sec">
+    <div class="yq-sec-head"><h2>找笔记</h2></div>
+    <div class="yq-kv">
+      <div><span>关键词类型</span><p>词条</p></div>
+      <div><span>录入方式</span><p>手动输入</p></div>
+      <div><span>笔记发布时间</span><p>30 日内</p></div>
+      <div><span>评论发布时间</span><p>30 日内</p></div>
+      <div><span>过滤赞助笔记</span><p>打开</p></div>
+      <div class="full"><span>搜索关键词</span><p class="pre">XX 面霜
+XX 面霜 测评
+XX 面霜 踩雷</p></div>
+    </div>
+  </section>
+
+  <section class="yq-sec">
+    <div class="yq-sec-head"><h2>判定规则</h2></div>
+    <div class="yq-kv">
+      <div><span>判定方式</span><p>AI分析</p></div>
+      <div class="full"><span>检测词</span><p class="pre">过敏
+爆痘
+烂脸
+退货
+客服不理
+智商税</p></div>
+      <div class="full"><span>判定说明</span><p class="pre">用户在说本品牌或本产品的质量、使用效果、售后、客服态度、价格、物流发货、虚假宣传或使用安全，包括口语化、反讽、错别字和简称。只是提到品牌但语气中性或正面，不算；说平台、说其他品牌，不算；客观对比但没有贬低本品牌，不算。</p></div>
+    </div>
+  </section>
+
+  <section class="yq-sec">
+    <div class="yq-sec-head"><h2>执行设置</h2></div>
+    <div class="yq-kv">
+      <div><span>单次执行上限</span><p>500 条</p></div>
     </div>
   </section>
 </div>
@@ -17978,6 +18040,11 @@ render();
   border-radius:8px;background:#1F2329;color:#fff;font-size:14px;box-shadow:0 6px 16px rgba(0,0,0,.08);
   transition:opacity .18s;white-space:nowrap}
 
+/* 任务信息右侧的操作区；快照页的长字段（词表、判定说明）占满整行并按行断行 */
+.yq-sec-tools{display:flex;align-items:baseline;gap:16px}
+.yq-kv .full{grid-column:1/-1}
+.yq-kv p.pre{white-space:pre-line;line-height:1.7}
+
 @media(max-width:1100px){
   .yq-summary,.yq-metrics{grid-template-columns:repeat(3,minmax(0,1fr))}
   .yq-kv,.yq-vgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -17993,7 +18060,8 @@ render();
     'new': '小红书舆情监测 · 新建',
     detail: '小红书舆情监测 · 任务详情',
     leads: '小红书舆情监测 · 命中用户',
-    'lead-detail': '小红书舆情监测 · 命中用户详情'
+    'lead-detail': '小红书舆情监测 · 命中用户详情',
+    snapshot: '小红书舆情监测 · 任务配置快照'
   };
   var v = document.getElementById('subapp-viewport');
   if (!v) return;
@@ -18705,13 +18773,16 @@ render();
      只读，回答「这次执行为什么这么发」（PRD §4.10）。 */
   var REA_XHS_SNAPSHOT = '新小红书运营 · 任务配置快照';
   /* 小红书舆情监测（2026-11-11）：小红书营销下的独立模块，现网还没有这几条路由。
-     五页全部由 reaSynthPages() 克隆「新小红书运营 · 详情」的壳合成，
+     六页（含任务配置快照）全部由 reaSynthPages() 克隆「新小红书运营 · 详情」的壳合成，
      正文来自 srcYq* 载体块、由 srcYqScript 整段替换 #subapp-viewport。 */
   var REA_YQ_PAGE = '小红书舆情监测';
   var REA_YQ_NEW = '小红书舆情监测 · 新建';
   var REA_YQ_DETAIL = '小红书舆情监测 · 任务详情';
   var REA_YQ_LEADS = '小红书舆情监测 · 命中用户';
   var REA_YQ_LEAD_DETAIL = '小红书舆情监测 · 命中用户详情';
+  /* 任务配置快照：现网同样没有这条路由，克隆详情页外壳合成，正文来自载体块 srcYqSnapshot。
+     只读，回答「这场任务当时怎么配的」，正文与新建页五段一一对应。 */
+  var REA_YQ_SNAPSHOT = '小红书舆情监测 · 任务配置快照';
   /* 「详细数据」子页：现网路由 board/wxz/task 不在 37 页快照里，
      由 reaSynthPages() 在运行时克隆看板页外壳合成，正文来自下面那个载体块。 */
   var REA_DETAIL_TASK = '微小助看板 · 执行人明细';
@@ -31595,7 +31666,7 @@ syncTip();drawRows();
       +'window.__REA_OVERVIEW_HOST_CAPTURE=false;';
   }
 
-  /* 小红书舆情监测：五页共用一份样式与一份页内脚本。
+  /* 小红书舆情监测：六页共用一份样式与一份页内脚本。
      正文块按页名取，脚本从 srcYqScript 读（docOf 还原闭标签写法），
      只把页名与正文交给它，换页逻辑全在那段脚本里。 */
   var REA_YQ_CSS = docOf('srcYqStyle');
@@ -31605,7 +31676,8 @@ syncTip();drawRows();
       'new': 'srcYqNew',
       detail: 'srcYqDetail',
       leads: 'srcYqLeads',
-      'lead-detail': 'srcYqLeadDetail'
+      'lead-detail': 'srcYqLeadDetail',
+      snapshot: 'srcYqSnapshot'
     };
     return 'window.__YQ_PAGE=' + reaJson(page) + ';'
       + 'window.__YQ_HTML=' + reaJson(reaCoverHtml(ids[page])) + ';'
@@ -31645,6 +31717,7 @@ syncTip();drawRows();
     [REA_YQ_DETAIL]: { css: REA_YQ_CSS, js: function(){ return reaYqJs('detail'); } },
     [REA_YQ_LEADS]: { css: REA_YQ_CSS, js: function(){ return reaYqJs('leads'); } },
     [REA_YQ_LEAD_DETAIL]: { css: REA_YQ_CSS, js: function(){ return reaYqJs('lead-detail'); } },
+    [REA_YQ_SNAPSHOT]: { css: REA_YQ_CSS, js: function(){ return reaYqJs('snapshot'); } },
     /* 六张微信营销任务详情页（2026-11-10）：共用一张执行进度卡与 10 条演示表行。
        前面那段 js 是各页原有的任务信息回显，进度卡排在它后面（先补行、再收行）。 */
     '群发好友 · 详情': { css: REA_QF_CSS + REA_WX_DETAIL_CSS, js: function(){ return reaQfDetailJs() + reaWxDetailJs('群发好友 · 详情'); } },
@@ -31761,10 +31834,10 @@ syncTip();drawRows();
     } else {
       reaWarn('「任务配置快照」页合成失败：快照里找不到「' + REA_XHS_DETAIL + '」页');
     }
-    /* 小红书舆情监测五页：与任务配置快照同一条合成法，壳仍用详情页那一份，
+    /* 小红书舆情监测六页：与任务配置快照同一条合成法，壳仍用详情页那一份，
        侧栏自然就是「小红书营销」，正文由 srcYqScript 整段换掉。 */
     if (xhs){
-      [REA_YQ_PAGE, REA_YQ_NEW, REA_YQ_DETAIL, REA_YQ_LEADS, REA_YQ_LEAD_DETAIL].forEach(function(n){
+      [REA_YQ_PAGE, REA_YQ_NEW, REA_YQ_DETAIL, REA_YQ_LEADS, REA_YQ_LEAD_DETAIL, REA_YQ_SNAPSHOT].forEach(function(n){
         P.pages.push({
           name: n,
           rest: xhs.rest,
