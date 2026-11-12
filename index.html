@@ -17365,7 +17365,7 @@ render();
         <colgroup>
           <col style="width:12%"><col style="width:14%"><col style="width:6%"><col style="width:6%"><col style="width:10%"><col style="width:6%"><col style="width:10%"><col style="width:9%"><col style="width:19%"><col style="width:8%">
         </colgroup>
-        <thead><tr><th>用户</th><th>小红书号</th><th>性别</th><th>年龄</th><th class="num">粉丝量</th><th>IP</th><th class="num">命中次数</th><th>负责人</th><th>最近命中时间</th><th>操作</th></tr></thead>
+        <thead><tr><th>用户</th><th>小红书号</th><th>性别</th><th>年龄</th><th class="num">粉丝量</th><th>IP</th><th class="num">命中次数</th><th>执行员工</th><th>最近命中时间</th><th>操作</th></tr></thead>
         <tbody>
           <tr>
             <td><button type="button" class="yq-link strong" data-yq-lead>一只小鹿</button></td>
@@ -17485,7 +17485,10 @@ XX 系列
   <button type="button" class="yq-crumb" data-yq-go="tasks">‹ 小红书舆情监测 / 命中用户</button>
 
   <div class="yq-filters">
-    <label class="yq-fld"><span>关键词</span><input type="text" data-yq-f="kw" placeholder="用户昵称、小红书号"></label>
+    <div class="yq-search">
+      <input type="text" data-yq-f="kw" placeholder="用户昵称、小红书号" aria-label="搜索命中用户">
+      <button type="button" class="yq-search-btn" aria-label="搜索"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="4.6" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 10.5 14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+    </div>
     <button type="button" class="yq-btn" data-yq-reset>重置</button>
     <span class="grow"></span>
     <button type="button" class="yq-btn" id="yq-export">导出</button>
@@ -17497,7 +17500,7 @@ XX 系列
         <col style="width:12%"><col style="width:14%"><col style="width:6%"><col style="width:6%"><col style="width:10%"><col style="width:6%"><col style="width:10%"><col style="width:9%"><col style="width:19%"><col style="width:8%">
       </colgroup>
       <thead>
-        <tr><th>用户</th><th>小红书号</th><th>性别</th><th>年龄</th><th class="num">粉丝量</th><th>IP</th><th class="num">命中次数</th><th>负责人</th><th>最近命中时间</th><th>操作</th></tr>
+        <tr><th>用户</th><th>小红书号</th><th>性别</th><th>年龄</th><th class="num">粉丝量</th><th>IP</th><th class="num">命中次数</th><th>执行员工</th><th>最近命中时间</th><th>操作</th></tr>
       </thead>
       <tbody>
         <tr>
@@ -17567,7 +17570,13 @@ XX 系列
       <span class="yq-avatar">橘</span>
       <div>
         <h1>阿橘</h1>
-        <p class="yq-sub">小红书号 123456789</p>
+        <div class="yq-hero-facts">
+          <span>小红书号 <b>123456789</b></span>
+          <span>性别 <b>女</b></span>
+          <span>年龄 <b>31</b></span>
+          <span>粉丝量 <b>8,641</b></span>
+          <span>IP <b>广东</b></span>
+        </div>
       </div>
     </div>
   </div>
@@ -17579,19 +17588,19 @@ XX 系列
         <article class="yq-hit">
           <div class="yq-hit-head"><b>用了 XX 系列三个月，皮肤越来越差</b><span class="time">2026-11-09 14:06</span></div>
           <blockquote class="yq-quote">XX 面霜用了两周也开始泛红，客服还说是我的问题。</blockquote>
-          <div class="yq-hit-meta"><span>来源任务 <b>XX 面霜口碑监测（11月）</b></span><span>判定方式 <b>AI分析</b></span><span>命中词 <b>客服不理</b></span><span>AI 判定 <b>使用效果</b> · 用户称使用两周后泛红，并质疑客服回应</span></div>
+          <div class="yq-hit-meta"><span>判定方式 <b>AI分析</b></span><span>命中词 <b>客服不理</b></span><span>AI 判定 <b>使用效果</b> · 用户称使用两周后泛红，并质疑客服回应</span></div>
           <div class="yq-hit-foot"><span>采集时间 2026-11-09 14:08</span></div>
         </article>
         <article class="yq-hit">
           <div class="yq-hit-head"><b>双十一 XX 面霜到底值不值</b><span class="time">2026-11-08 21:03</span></div>
           <blockquote class="yq-quote">XX 面霜的客服让我自己承担运费，退货还要等一周。</blockquote>
-          <div class="yq-hit-meta"><span>来源任务 <b>XX 面霜口碑监测（11月）</b></span><span>判定方式 <b>AI分析</b></span><span>命中词 <b>客服不理</b></span><span>AI 判定 <b>客服态度</b> · 用户称客服要求自行承担运费、退货需等待一周</span></div>
+          <div class="yq-hit-meta"><span>判定方式 <b>AI分析</b></span><span>命中词 <b>客服不理</b></span><span>AI 判定 <b>客服态度</b> · 用户称客服要求自行承担运费、退货需等待一周</span></div>
           <div class="yq-hit-foot"><span>采集时间 2026-11-08 21:05</span></div>
         </article>
         <article class="yq-hit">
           <div class="yq-hit-head"><b>XX 面霜用了半年，说点真实感受</b><span class="time">2026-11-07 18:20</span></div>
           <blockquote class="yq-quote">XX 面霜客服不理人，退个货要等一周。</blockquote>
-          <div class="yq-hit-meta"><span>来源任务 <b>XX 系列售后反馈</b></span><span>判定方式 <b>关键词</b></span><span>命中词 <b>退货、客服不理</b></span></div>
+          <div class="yq-hit-meta"><span>判定方式 <b>关键词</b></span><span>命中词 <b>退货、客服不理</b></span></div>
           <div class="yq-hit-foot"><span>采集时间 2026-11-07 18:22</span></div>
         </article>
       </div>
@@ -17670,6 +17679,15 @@ XX 系列
 /* 筛选：标签与控件同行，与「新小红书运营」的筛选排法一致 */
 .yq-filters{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;margin:4px 0 16px}
 .yq-filters .grow{flex:1}
+/* 搜索框：输入框右侧挂一个描边的放大镜按钮 */
+.yq-search{display:flex;align-items:stretch;width:260px}
+.yq-search input{flex:1;min-width:0;height:34px;padding:0 12px;border:1px solid #D9D9D9;border-right:0;
+  border-radius:8px 0 0 8px;background:#fff;font-size:14px;color:#1F2329}
+.yq-search input::placeholder{color:#B8BEC9}
+.yq-search input:focus{border-color:#1677FF;outline:none}
+.yq-search-btn{display:grid;place-items:center;width:42px;flex-shrink:0;border:1px solid #1677FF;
+  border-radius:0 8px 8px 0;background:#fff;color:#1677FF}
+.yq-search-btn:hover{background:#F0F7FF}
 .yq-fld{display:flex;flex-direction:row;align-items:center;gap:8px;font-size:14px;color:#646A73;white-space:nowrap}
 .yq-fld input,.yq-fld select{height:34px;min-width:150px;padding:0 10px;border:1px solid #E5E8EF;border-radius:8px;
   background:#fff;font-size:14px;color:#1F2329}
@@ -17844,6 +17862,8 @@ XX 系列
 .yq-hero-id{display:flex;align-items:flex-start;gap:14px}
 .yq-hero .yq-avatar{width:48px;height:48px;font-size:16px}
 .yq-hero h1{font-size:20px}
+.yq-hero-facts{display:flex;flex-wrap:wrap;gap:6px 20px;margin-top:8px;font-size:13px;color:#8F959E}
+.yq-hero-facts b{font-weight:400;color:#1F2329}
 .yq-split{display:grid;grid-template-columns:minmax(0,1fr);gap:32px;align-items:start;padding-top:8px}
 .yq-split > .yq-sec{padding-top:24px}
 .yq-split .yq-sec:first-child{border-top:0}
@@ -18277,6 +18297,7 @@ XX 系列
       rows().forEach(function(tr){ tr.hidden = !!q && tr.textContent.indexOf(q) < 0; });
     }
     kw.addEventListener('input', apply);
+    $('.yq-search-btn').addEventListener('click', apply);
     $('[data-yq-reset]').addEventListener('click', function(){
       kw.value = '';
       apply();
