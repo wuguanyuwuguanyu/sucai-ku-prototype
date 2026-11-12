@@ -17483,100 +17483,69 @@ XX 系列
 <script type="text/plain" id="srcYqLeads">
 <div class="yq" data-yq-page="leads">
   <button type="button" class="yq-crumb" data-yq-go="tasks">‹ 小红书舆情监测 / 命中用户</button>
-  <div class="yq-head">
-    <div>
-      <h1>命中用户</h1>
-    </div>
-    <div class="yq-actions"><button type="button" class="yq-btn" id="yq-export">导出</button></div>
-  </div>
 
   <div class="yq-filters">
-    <label class="yq-fld"><span>关键词</span><input type="text" data-yq-f="kw" placeholder="用户昵称、小红书号、评论原文"></label>
-    <label class="yq-fld"><span>状态</span>
-      <select data-yq-f="status"><option>全部</option><option>待触达</option><option>已触达</option><option>已采访</option><option>已忽略</option></select>
-    </label>
-    <label class="yq-fld"><span>来源任务</span>
-      <select data-yq-f="task"><option>全部</option><option>XX 面霜口碑监测（11月）</option><option>双十一价格吐槽监测</option><option>XX 系列售后反馈</option></select>
-    </label>
-    <label class="yq-fld"><span>评论类型</span>
-      <select data-yq-f="type"><option>全部</option><option>产品质量</option><option>使用效果</option><option>售后服务</option><option>客服态度</option><option>价格与套路</option><option>物流发货</option><option>虚假宣传</option><option>使用安全</option><option>其他</option></select>
-    </label>
-    <label class="yq-fld"><span>负责人</span>
-      <select data-yq-f="owner"><option>全部</option><option>张伟</option><option>王芳</option><option>徐磊</option><option>朱琳</option></select>
-    </label>
-    <div class="yq-filter-actions">
-      <button type="button" class="yq-btn soft" data-yq-query>查询</button>
-      <button type="button" class="yq-btn" data-yq-reset>重置</button>
-    </div>
+    <label class="yq-fld"><span>关键词</span><input type="text" data-yq-f="kw" placeholder="用户昵称、小红书号"></label>
+    <button type="button" class="yq-btn" data-yq-reset>重置</button>
+    <span class="grow"></span>
+    <button type="button" class="yq-btn" id="yq-export">导出</button>
   </div>
 
   <div class="yq-tw">
     <table class="yq-table yq-lead-table">
       <colgroup>
-        <col style="width:16%"><col style="width:20%"><col style="width:10%"><col style="width:16%"><col style="width:7%"><col style="width:13%"><col style="width:8%"><col style="width:5%"><col style="width:5%">
+        <col style="width:12%"><col style="width:14%"><col style="width:6%"><col style="width:6%"><col style="width:10%"><col style="width:6%"><col style="width:10%"><col style="width:9%"><col style="width:19%"><col style="width:8%">
       </colgroup>
       <thead>
-        <tr><th>用户</th><th>最近命中评论</th><th>评论类型</th><th>来源任务</th><th class="num">命中次数</th><th>最近命中时间</th><th>状态</th><th>负责人</th><th>操作</th></tr>
+        <tr><th>用户</th><th>小红书号</th><th>性别</th><th>年龄</th><th class="num">粉丝量</th><th>IP</th><th class="num">命中次数</th><th>负责人</th><th>最近命中时间</th><th>操作</th></tr>
       </thead>
       <tbody>
-        <tr data-status="已采访" data-owner="徐磊" data-type="售后服务" data-task="XX 系列售后反馈、XX 面霜口碑监测（11月）">
-          <td><div class="yq-identity"><span class="yq-avatar">橘</span><div><b>阿橘</b><span class="yq-sub2">小红书号 123456789</span></div></div></td>
-          <td><span class="yq-clip" title="客服不理人，退个货要等一周。">客服不理人，退个货要等一周。</span></td>
-          <td>售后服务</td>
-          <td>2 场<span class="yq-sub2">XX 系列售后反馈、XX 面霜口碑监测（11月）</span></td>
-          <td class="num">3</td><td class="nowrap">2026-11-09 14:06</td>
-          <td><span class="yq-badge done" data-yq-lstatus><i class="dot"></i>已采访</span></td>
-          <td data-yq-lowner>徐磊</td>
+        <tr>
+          <td><button type="button" class="yq-link strong" data-yq-lead>阿橘</button></td>
+          <td>123456789</td>
+          <td>女</td><td>31</td><td class="num">8,641</td><td>广东</td>
+          <td class="num">3</td>
+          <td>徐磊</td><td class="nowrap">2026-11-09 14:06</td>
           <td><button type="button" class="yq-link" data-yq-go="lead-detail">详情</button></td>
         </tr>
-        <tr data-status="待触达" data-owner="张伟" data-type="产品质量" data-task="XX 面霜口碑监测（11月）">
-          <td><div class="yq-identity"><span class="yq-avatar">鹿</span><div><b>一只小鹿</b><span class="yq-sub2">小红书号 xiaolu_0912</span></div></div></td>
-          <td><span class="yq-clip" title="用了三天就爆痘，客服还说是我的问题。">用了三天就爆痘，客服还说是我的问题。</span></td>
-          <td>产品质量</td>
-          <td>1 场<span class="yq-sub2">XX 面霜口碑监测（11月）</span></td>
-          <td class="num">2</td><td class="nowrap">2026-11-09 16:58</td>
-          <td><span class="yq-badge wait" data-yq-lstatus><i class="dot"></i>待触达</span></td>
-          <td data-yq-lowner>张伟</td>
+        <tr>
+          <td><button type="button" class="yq-link strong" data-yq-lead>一只小鹿</button></td>
+          <td>xiaolu_0912</td>
+          <td>女</td><td>26</td><td class="num">1.2 万</td><td>上海</td>
+          <td class="num">2</td>
+          <td>张伟</td><td class="nowrap">2026-11-09 16:58</td>
           <td><button type="button" class="yq-link" data-yq-go="lead-detail">详情</button></td>
         </tr>
-        <tr data-status="已触达" data-owner="王芳" data-type="价格与套路" data-task="双十一价格吐槽监测">
-          <td><div class="yq-identity"><span class="yq-avatar">m</span><div><b>momo</b><span class="yq-sub2">小红书号 momo_778</span></div></div></td>
-          <td><span class="yq-clip" title="太贵了，不如买 YY。">太贵了，不如买 YY。</span></td>
-          <td>价格与套路</td>
-          <td>1 场<span class="yq-sub2">双十一价格吐槽监测</span></td>
-          <td class="num">1</td><td class="nowrap">2026-11-09 15:20</td>
-          <td><span class="yq-badge run" data-yq-lstatus><i class="dot"></i>已触达</span></td>
-          <td data-yq-lowner>王芳</td>
+        <tr>
+          <td><button type="button" class="yq-link strong" data-yq-lead>momo</button></td>
+          <td>momo_778</td>
+          <td>女</td><td>27</td><td class="num">4,320</td><td>江苏</td>
+          <td class="num">1</td>
+          <td>王芳</td><td class="nowrap">2026-11-09 15:20</td>
           <td><button type="button" class="yq-link" data-yq-go="lead-detail">详情</button></td>
         </tr>
-        <tr data-status="待触达" data-owner="张伟" data-type="使用效果" data-task="XX 面霜口碑监测（11月）">
-          <td><div class="yq-identity"><span class="yq-avatar">N</span><div><b>Nina</b> <span class="yq-sub2">小红书号 nina_2333</span></div></div></td>
-          <td><span class="yq-clip" title="可能是我的脸不适用吧，用完有点刺痛。">可能是我的脸不适用吧，用完有点刺痛。</span></td>
-          <td>使用效果</td>
-          <td>1 场<span class="yq-sub2">XX 面霜口碑监测（11月）</span></td>
-          <td class="num">1</td><td class="nowrap">2026-11-09 11:32</td>
-          <td><span class="yq-badge wait" data-yq-lstatus><i class="dot"></i>待触达</span></td>
-          <td data-yq-lowner>张伟</td>
+        <tr>
+          <td><button type="button" class="yq-link strong" data-yq-lead>Nina</button></td>
+          <td>nina_2333</td>
+          <td>女</td><td>24</td><td class="num">2.3 万</td><td>浙江</td>
+          <td class="num">1</td>
+          <td>张伟</td><td class="nowrap">2026-11-09 11:32</td>
           <td><button type="button" class="yq-link" data-yq-go="lead-detail">详情</button></td>
         </tr>
-        <tr data-status="已忽略" data-owner="王芳" data-type="使用效果" data-task="XX 面霜口碑监测（11月）">
-          <td><div class="yq-identity"><span class="yq-avatar">饭</span><div><b>饭团</b><span class="yq-sub2">小红书号 fantuan_01</span></div></div></td>
-          <td><span class="yq-clip" title="同款，我也是用完泛红，已经退了。">同款，我也是用完泛红，已经退了。</span></td>
-          <td>使用效果</td>
-          <td>1 场<span class="yq-sub2">XX 面霜口碑监测（11月）</span></td>
-          <td class="num">2</td><td class="nowrap">2026-11-08 22:10</td>
-          <td><span class="yq-badge end" data-yq-lstatus><i class="dot"></i>已忽略</span></td>
-          <td data-yq-lowner>王芳</td>
+        <tr>
+          <td><button type="button" class="yq-link strong" data-yq-lead>饭团</button></td>
+          <td>fantuan_01</td>
+          <td>女</td><td>30</td><td class="num">6,120</td><td>江苏</td>
+          <td class="num">2</td>
+          <td>王芳</td><td class="nowrap">2026-11-08 22:10</td>
           <td><button type="button" class="yq-link" data-yq-go="lead-detail">详情</button></td>
         </tr>
-        <tr data-status="待触达" data-owner="朱琳" data-type="物流发货" data-task="双十一价格吐槽监测">
-          <td><div class="yq-identity"><span class="yq-avatar">满</span><div><b>小满</b><span class="yq-sub2">小红书号 xiaoman_66</span></div></div></td>
-          <td><span class="yq-clip" title="物流太慢了，双十一买的现在还没发。">物流太慢了，双十一买的现在还没发。</span></td>
-          <td>物流发货</td>
-          <td>1 场<span class="yq-sub2">双十一价格吐槽监测</span></td>
-          <td class="num">1</td><td class="nowrap">2026-11-08 19:45</td>
-          <td><span class="yq-badge wait" data-yq-lstatus><i class="dot"></i>待触达</span></td>
-          <td data-yq-lowner>朱琳</td>
+        <tr>
+          <td><button type="button" class="yq-link strong" data-yq-lead>小满</button></td>
+          <td>xiaoman_66</td>
+          <td>男</td><td>35</td><td class="num">2,480</td><td>福建</td>
+          <td class="num">1</td>
+          <td>朱琳</td><td class="nowrap">2026-11-08 19:45</td>
           <td><button type="button" class="yq-link" data-yq-go="lead-detail">详情</button></td>
         </tr>
       </tbody>
@@ -17700,6 +17669,7 @@ XX 系列
 
 /* 筛选：标签与控件同行，与「新小红书运营」的筛选排法一致 */
 .yq-filters{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;margin:4px 0 16px}
+.yq-filters .grow{flex:1}
 .yq-fld{display:flex;flex-direction:row;align-items:center;gap:8px;font-size:14px;color:#646A73;white-space:nowrap}
 .yq-fld input,.yq-fld select{height:34px;min-width:150px;padding:0 10px;border:1px solid #E5E8EF;border-radius:8px;
   background:#fff;font-size:14px;color:#1F2329}
@@ -18300,26 +18270,15 @@ XX 系列
 
   /* 命中用户 */
   function initLeads(){
+    var kw = $('[data-yq-f="kw"]');
     function rows(){ return $$('.yq-lead-table tbody tr'); }
     function apply(){
-      var kw = ($('[data-yq-f="kw"]').value || '').trim();
-      var st = $('[data-yq-f="status"]').value;
-      var task = $('[data-yq-f="task"]').value;
-      var type = $('[data-yq-f="type"]').value;
-      var owner = $('[data-yq-f="owner"]').value;
-      rows().forEach(function(tr){
-        var ok = (!kw || tr.textContent.indexOf(kw) >= 0)
-          && (!st || st === '全部' || tr.getAttribute('data-status') === st)
-          && (!task || task === '全部' || (tr.getAttribute('data-task') || '').indexOf(task) >= 0)
-          && (!type || type === '全部' || tr.getAttribute('data-type') === type)
-          && (!owner || owner === '全部' || tr.getAttribute('data-owner') === owner);
-        tr.hidden = !ok;
-      });
+      var q = (kw.value || '').trim();
+      rows().forEach(function(tr){ tr.hidden = !!q && tr.textContent.indexOf(q) < 0; });
     }
-    $('[data-yq-query]').addEventListener('click', apply);
+    kw.addEventListener('input', apply);
     $('[data-yq-reset]').addEventListener('click', function(){
-      $('[data-yq-f="kw"]').value = '';
-      ['status', 'task', 'type', 'owner'].forEach(function(k){ $('[data-yq-f="' + k + '"]').value = '全部'; });
+      kw.value = '';
       apply();
     });
     $('#yq-export').addEventListener('click', function(){ toast('已导出命中用户 Excel（演示）'); });
