@@ -17235,21 +17235,31 @@ render();
           </div>
         </div>
       </div>
-      <div class="yq-field">
-        <div class="yq-flabel">通知时间</div>
+      <div class="yq-field" id="yq-notify-wrap">
+        <div class="yq-flabel"><span class="req">*</span>通知时间</div>
         <div class="yq-ctrl">
-          <div class="yq-inline"><input type="text" id="yq-notify" value="09:00" style="width:96px"></div>
+          <div class="yq-inline">
+            <input type="text" id="yq-notify-date" value="2026-11-29" placeholder="日期" style="width:140px">
+            <input type="text" id="yq-notify-time" value="09:00:00" placeholder="时间" style="width:110px">
+            <span class="yq-muted">（到达时间将会推送提醒）</span>
+          </div>
         </div>
       </div>
       <div class="yq-field" id="yq-deadline-wrap">
         <div class="yq-flabel"><span class="req">*</span>截止时间</div>
         <div class="yq-ctrl">
-          <div class="yq-inline"><input type="text" id="yq-deadline" value="2026-11-30 23:59" placeholder="选择截止时间，要晚于当前时间" style="width:190px"></div>
+          <div class="yq-inline">
+            <input type="text" id="yq-deadline-date" value="2026-11-30" placeholder="日期" style="width:140px">
+            <input type="text" id="yq-deadline-time" value="23:59:00" placeholder="时间" style="width:110px">
+          </div>
         </div>
       </div>
       <div class="yq-field">
         <div class="yq-flabel">全局弹窗</div>
-        <div class="yq-ctrl"><div class="yq-radios"><label><input type="radio" name="yq-popup" value="on">打开</label><label><input type="radio" name="yq-popup" value="off" checked>关闭</label></div></div>
+        <div class="yq-ctrl">
+          <label class="yq-switch"><input type="checkbox" id="yq-popup"><span></span></label>
+          <div class="yq-hint">开启后，将在手机的所有页面中弹出任务提醒；关闭，则只在小红书中弹出任务提醒。</div>
+        </div>
       </div>
     </section>
 
@@ -17292,7 +17302,7 @@ render();
       </div>
       <div class="yq-field">
         <div class="yq-flabel">过滤赞助笔记</div>
-        <div class="yq-ctrl"><label class="yq-checkline"><input type="checkbox" id="yq-sponsored" checked>跳过带赞助、广告标记的笔记</label></div>
+        <div class="yq-ctrl"><label class="yq-switch"><input type="checkbox" id="yq-sponsored" checked><span></span></label></div>
       </div>
     </section>
 
@@ -17302,18 +17312,17 @@ render();
         <div class="yq-flabel">判定方式</div>
         <div class="yq-ctrl"><div class="yq-radios">
           <label><input type="radio" name="yq-judge" value="kw">关键词</label>
-          <label><input type="radio" name="yq-judge" value="ai">AI分析</label>
-          <label><input type="radio" name="yq-judge" value="kwai" checked>关键词+AI</label>
+          <label><input type="radio" name="yq-judge" value="ai" checked>AI分析</label>
         </div></div>
       </div>
       <div class="yq-field" id="yq-negative-wrap">
-        <div class="yq-flabel"><span class="req">*</span>检测词</div>
+        <div class="yq-flabel"><span class="req" id="yq-neg-req">*</span>检测词</div>
         <div class="yq-ctrl">
           <textarea id="yq-negative" placeholder="每行一个，每个词最多 10 个字，最多 200 行。填目标评论里真会出现的说法，不填品牌词和产品词。"></textarea>
         </div>
       </div>
       <div class="yq-field" id="yq-instruction-wrap">
-        <div class="yq-flabel"><span class="req">*</span>判定说明</div>
+        <div class="yq-flabel"><span class="req" id="yq-ins-req">*</span>判定说明</div>
         <div class="yq-ctrl">
           <textarea id="yq-instruction" style="min-height:96px" placeholder="最多 500 个字，写清什么算目标评论">用户在说本品牌或本产品的质量、使用效果、售后、客服态度、价格、物流发货、虚假宣传或使用安全，包括口语化、反讽、错别字和简称。只是提到品牌但语气中性或正面，不算；说平台、说其他品牌，不算；客观对比但没有贬低本品牌，不算。</textarea>
         </div>
@@ -17331,14 +17340,7 @@ render();
             <label><input type="radio" name="yq-limit" value="3000">3,000</label>
             <label><input type="radio" name="yq-limit" value="custom">自定义 <input type="number" min="1" placeholder="条数" data-yq-custom style="width:86px;height:30px;border:1px solid #E5E8EF;border-radius:6px;padding:0 8px"></label>
           </div>
-          <div class="yq-hint">按评论条数计，含楼中楼</div>
-        </div>
-      </div>
-      <div class="yq-field" id="yq-freq-wrap">
-        <div class="yq-flabel">执行频率</div>
-        <div class="yq-ctrl">
-          <div class="yq-inline"><input type="number" id="yq-freq" value="10" min="1" max="60" style="width:90px"><span class="yq-muted">分钟</span></div>
-          <div class="yq-hint">1–60 分钟</div>
+          <div class="yq-hint">每次任务最多匹配客户评论次数</div>
         </div>
       </div>
     </section>
@@ -17401,9 +17403,9 @@ render();
       <div><span>评论发布时间</span><p>30 日内</p></div>
       <div><span>过滤赞助笔记</span><p>打开</p></div>
       <div><span>执行人员</span><p>张伟、王芳、徐磊</p></div>
-      <div><span>通知设置</span><p>每天 09:00 汇总 · 全局弹窗关</p></div>
+      <div><span>通知设置</span><p>2026-11-29 09:00 提醒 · 全局弹窗关</p></div>
       <div><span>创建时间</span><p>2026-11-09 10:18</p></div>
-      <div><span>判定方式</span><p>关键词+AI</p></div>
+      <div><span>判定方式</span><p>AI分析</p></div>
       <div><span>检测词</span><p>过敏、爆痘、烂脸、退货、客服不理、智商税</p></div>
     </div>
   </section>
@@ -17432,7 +17434,7 @@ render();
         <div class="yq-dist-row"><span>售后服务</span><span class="yq-track"><i style="width:14%"></i></span><b>2</b></div>
         <div class="yq-dist-row"><span>其他</span><span class="yq-track"><i style="width:7%"></i></span><b>1</b></div>
       </div>
-      <p class="yq-dist-note">仅 AI 分析和关键词+AI 有分类</p>
+      <p class="yq-dist-note">仅 AI分析 有分类</p>
     </div>
     <div data-yq-distpane="word" hidden>
       <div class="yq-dist">
@@ -17690,14 +17692,14 @@ render();
           <div class="yq-hit-head"><span class="yq-tag">楼中楼回复</span><b>双十一 XX 面霜到底值不值</b><button type="button" class="yq-link" data-yq-ext>笔记链接 ↗</button><span class="time">2026-11-08 21:03</span></div>
           <p class="yq-parent">回复 @一只小鹿：我也是，客服让我自己承担运费。</p>
           <blockquote class="yq-quote">我也是，客服让我自己承担运费。</blockquote>
-          <div class="yq-hit-meta"><span>来源任务 <b>XX 面霜口碑监测（11月）</b></span><span>判定方式 <b>关键词+AI</b></span><span>命中词 <b>客服不理</b></span><span>品牌词来源 <b>评论</b></span></div>
+          <div class="yq-hit-meta"><span>来源任务 <b>XX 面霜口碑监测（11月）</b></span><span>判定方式 <b>AI分析</b></span><span>命中词 <b>客服不理</b></span><span>品牌词来源 <b>评论</b></span></div>
           <div class="yq-ai"><div class="tags"><span class="yq-tag blue">AI 客服态度</span><span class="yq-tag">置信度 中</span></div>用户附和他人并补充客服要求自行承担运费，属于本品牌客服态度类。</div>
           <div class="yq-hit-foot"><button type="button" class="yq-link" data-yq-ext>回复链接 ↗</button><span>采集时间 2026-11-08 21:05</span></div>
         </article>
         <article class="yq-hit">
           <div class="yq-hit-head"><span class="yq-tag">评论</span><b>XX 面霜用了半年，说点真实感受</b><button type="button" class="yq-link" data-yq-ext>笔记链接 ↗</button><span class="time">2026-11-07 18:20</span></div>
           <blockquote class="yq-quote">客服不理人，退个货要等一周。</blockquote>
-          <div class="yq-hit-meta"><span>来源任务 <b>XX 系列售后反馈</b></span><span>判定方式 <b>关键词+AI</b></span><span>命中词 <b>退货、客服不理</b></span><span>品牌词来源 <b>笔记正文</b></span></div>
+          <div class="yq-hit-meta"><span>来源任务 <b>XX 系列售后反馈</b></span><span>判定方式 <b>AI分析</b></span><span>命中词 <b>退货、客服不理</b></span><span>品牌词来源 <b>笔记正文</b></span></div>
           <div class="yq-ai"><div class="tags"><span class="yq-tag blue">AI 售后服务</span><span class="yq-tag">置信度 中</span></div>用户称退货需等待一周且客服未回应，属于本品牌售后服务类。</div>
           <div class="yq-hit-foot"><button type="button" class="yq-link" data-yq-ext>评论链接 ↗</button><span>采集时间 2026-11-07 18:22</span></div>
         </article>
@@ -17878,6 +17880,13 @@ render();
 .yq-radios input[type=radio]{width:16px;height:16px;accent-color:#1677FF;margin:0}
 .yq-checkline{display:inline-flex;align-items:center;gap:7px;font-size:14px;color:#1F2329;cursor:pointer}
 .yq-checkline input{width:16px;height:16px;accent-color:#1677FF;margin:0}
+.yq-switch{position:relative;display:inline-block;width:44px;height:22px;margin-top:7px;vertical-align:middle}
+.yq-switch input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}
+.yq-switch span{display:block;width:100%;height:100%;border-radius:11px;background:rgba(31,35,41,.25);transition:background .2s}
+.yq-switch span::after{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .2s}
+.yq-switch input:checked + span{background:#1677FF}
+.yq-switch input:checked + span::after{left:24px}
+.yq-switch input:focus-visible + span{outline:2px solid #1677FF;outline-offset:2px}
 .yq-chips{display:flex;align-items:center;flex-wrap:wrap;gap:8px;min-height:36px;padding:3px 10px;
   border:1px solid #E5E8EF;border-radius:8px;background:#fff;cursor:pointer}
 .yq-chips-ph{color:#B8BEC9;font-size:14px}
@@ -18126,14 +18135,16 @@ render();
     var neg = $('#yq-negative-wrap');
     var ins = $('#yq-instruction-wrap');
     function applyJudge(mode){
-      neg.hidden = mode === 'ai';
+      neg.hidden = false;
       ins.hidden = mode === 'kw';
+      $('#yq-neg-req').hidden = mode !== 'kw';
+      $('#yq-ins-req').hidden = mode === 'kw';
     }
     $$('input[name="yq-judge"]').forEach(function(r){
       r.addEventListener('change', function(){ applyJudge(r.value); });
     });
     var checkedJudge = root.querySelector('input[name="yq-judge"]:checked');
-    applyJudge(checkedJudge ? checkedJudge.value : 'kwai');
+    applyJudge(checkedJudge ? checkedJudge.value : 'ai');
 
     $$('input[name="yq-entry"]').forEach(function(r){
       r.addEventListener('change', function(){ $('#yq-import').hidden = r.value !== 'import'; });
@@ -18202,6 +18213,9 @@ render();
       var d = new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5]);
       return isNaN(d.getTime()) ? null : d;
     }
+    function parseDt(dateSel, timeSel){
+      return parseDate((val(dateSel) || '').trim() + ' ' + (val(timeSel) || '').trim().slice(0, 5));
+    }
     function customLimit(){
       var r = root.querySelector('input[name="yq-limit"]:checked');
       if (!r) return 0;
@@ -18230,8 +18244,11 @@ render();
       var miss = [], suggest = [];
       if (!val('#yq-name')) miss.push(['yq-name-wrap', '任务名称必填']);
       if ($$('.yq-chip').length === 0) miss.push(['yq-people-wrap', '至少选择一名执行人员']);
-      var deadline = parseDate(val('#yq-deadline'));
+      var notify = parseDt('#yq-notify-date', '#yq-notify-time');
+      if (!notify || notify.getTime() <= Date.now()) miss.push(['yq-notify-wrap', '通知时间必填，且要晚于当前时间']);
+      var deadline = parseDt('#yq-deadline-date', '#yq-deadline-time');
       if (!deadline || deadline.getTime() <= Date.now()) miss.push(['yq-deadline-wrap', '截止时间必填，且要晚于当前时间']);
+      else if (notify && notify > deadline) miss.push(['yq-notify-wrap', '通知时间要早于截止时间']);
 
       var brands = lines('#yq-brand');
       if (!brands.length) miss.push(['yq-brand-wrap', '品牌/产品词必填']);
@@ -18248,19 +18265,16 @@ render();
 
       var mode = root.querySelector('input[name="yq-judge"]:checked').value;
       var negs = lines('#yq-negative');
-      if (mode !== 'ai' && !negs.length) miss.push(['yq-negative-wrap', '检测词必填']);
+      if (mode === 'kw' && !negs.length) miss.push(['yq-negative-wrap', '检测词必填']);
       negs.forEach(function(w, i){
         if (w.length > 10) miss.push(['yq-negative-wrap', '检测词第 ' + (i + 1) + ' 行超过 10 个字']);
         if (w.length === 1) suggest.push(['yq-negative-wrap', '检测词里有单个字的词，容易大面积误伤']);
       });
-      if (mode !== 'kw' && !val('#yq-instruction')) miss.push(['yq-instruction-wrap', '判定说明必填']);
+      if (mode === 'ai' && !val('#yq-instruction')) miss.push(['yq-instruction-wrap', '判定说明必填']);
 
       var lim = customLimit();
       if (lim >= 3000) suggest.push(['yq-limit-wrap', '单次执行上限 3,000 以上，账号限流风险高']);
       if (lim <= 0) miss.push(['yq-limit-wrap', '自定义上限要填一个大于 0 的条数']);
-      var freq = parseInt(val('#yq-freq'), 10);
-      if (!(freq >= 1 && freq <= 60)) miss.push(['yq-freq-wrap', '执行频率要在 1–60 分钟之间']);
-      else if (freq < 3) suggest.push(['yq-freq-wrap', '执行频率低于 3 分钟，容易被平台限流']);
 
       showValidation(miss, suggest);
       if (miss.length) return;
