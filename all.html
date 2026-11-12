@@ -17224,16 +17224,14 @@ render();
       <div class="yq-fs-head"><span class="yq-fs-no">1</span><h2>任务安排</h2></div>
       <div class="yq-field" id="yq-name-wrap">
         <div class="yq-flabel"><span class="req">*</span>任务名称</div>
-        <div class="yq-ctrl"><input type="text" id="yq-name" value="舆情监测任务 2026-11-11" maxlength="19"><div class="yq-hint">最多 19 个字</div></div>
+        <div class="yq-ctrl"><input type="text" id="yq-name" value="舆情监测任务 2026-11-11" maxlength="19" placeholder="最多 19 个字"></div>
       </div>
       <div class="yq-field" id="yq-people-wrap">
         <div class="yq-flabel"><span class="req">*</span>执行人员</div>
         <div class="yq-ctrl">
           <div class="yq-chips" id="yq-chips">
-            <span class="yq-chip" data-name="张伟">张伟<button type="button" class="yq-chip-x" aria-label="移除 张伟">×</button></span>
-            <span class="yq-chip" data-name="王芳">王芳<button type="button" class="yq-chip-x" aria-label="移除 王芳">×</button></span>
-            <span class="yq-chip" data-name="徐磊">徐磊<button type="button" class="yq-chip-x" aria-label="移除 徐磊">×</button></span>
-            <button type="button" class="yq-btn sm" id="yq-people">选择人员</button>
+            <span class="yq-chips-ph" id="yq-people-ph">请选择执行人员</span>
+            <button type="button" class="yq-caret" id="yq-people" aria-label="选择执行人员">▾</button>
           </div>
         </div>
       </div>
@@ -17246,7 +17244,7 @@ render();
       <div class="yq-field" id="yq-deadline-wrap">
         <div class="yq-flabel"><span class="req">*</span>截止时间</div>
         <div class="yq-ctrl">
-          <div class="yq-inline"><input type="text" id="yq-deadline" value="2026-11-30 23:59" style="width:190px"></div>
+          <div class="yq-inline"><input type="text" id="yq-deadline" value="2026-11-30 23:59" placeholder="选择截止时间，要晚于当前时间" style="width:190px"></div>
         </div>
       </div>
       <div class="yq-field">
@@ -17260,11 +17258,7 @@ render();
       <div class="yq-field" id="yq-brand-wrap">
         <div class="yq-flabel"><span class="req">*</span>品牌 / 产品词</div>
         <div class="yq-ctrl">
-          <textarea id="yq-brand">XX
-XX 面霜
-XX 系列
-小X瓶</textarea>
-          <div class="yq-hint">每行一个，每个词最多 30 个字，最多 100 行</div>
+          <textarea id="yq-brand" placeholder="每行一个，每个词最多 30 个字，最多 100 行。填品牌全称、简称、产品名、系列名和常见错别字；不填「面霜」这类行业通用词。"></textarea>
         </div>
       </div>
     </section>
@@ -17285,10 +17279,7 @@ XX 系列
       <div class="yq-field" id="yq-keywords-wrap">
         <div class="yq-flabel"><span class="req">*</span>搜索关键词</div>
         <div class="yq-ctrl">
-          <textarea id="yq-keywords">XX 面霜
-XX 面霜 测评
-XX 面霜 踩雷</textarea>
-          <div class="yq-hint">每行一个，每个词最多 30 个字，最多 200 行</div>
+          <textarea id="yq-keywords" placeholder="每行一个，每个词最多 30 个字，最多 200 行。可以比品牌词更宽，例如加上「测评」「踩雷」「吐槽」。"></textarea>
         </div>
       </div>
       <div class="yq-field">
@@ -17318,20 +17309,13 @@ XX 面霜 踩雷</textarea>
       <div class="yq-field" id="yq-negative-wrap">
         <div class="yq-flabel"><span class="req">*</span>检测词</div>
         <div class="yq-ctrl">
-          <textarea id="yq-negative">过敏
-爆痘
-烂脸
-退货
-客服不理
-智商税</textarea>
-          <div class="yq-hint">每行一个，每个词最多 10 个字，最多 200 行</div>
+          <textarea id="yq-negative" placeholder="每行一个，每个词最多 10 个字，最多 200 行。填目标评论里真会出现的说法，不填品牌词和产品词。"></textarea>
         </div>
       </div>
       <div class="yq-field" id="yq-instruction-wrap">
         <div class="yq-flabel"><span class="req">*</span>判定说明</div>
         <div class="yq-ctrl">
-          <textarea id="yq-instruction" style="min-height:96px">用户在说本品牌或本产品的质量、使用效果、售后、客服态度、价格、物流发货、虚假宣传或使用安全，包括口语化、反讽、错别字和简称。只是提到品牌但语气中性或正面，不算；说平台、说其他品牌，不算；客观对比但没有贬低本品牌，不算。</textarea>
-          <div class="yq-hint">最多 500 个字</div>
+          <textarea id="yq-instruction" style="min-height:96px" placeholder="最多 500 个字，写清什么算目标评论">用户在说本品牌或本产品的质量、使用效果、售后、客服态度、价格、物流发货、虚假宣传或使用安全，包括口语化、反讽、错别字和简称。只是提到品牌但语气中性或正面，不算；说平台、说其他品牌，不算；客观对比但没有贬低本品牌，不算。</textarea>
         </div>
       </div>
     </section>
@@ -17894,7 +17878,10 @@ XX 面霜 踩雷</textarea>
 .yq-radios input[type=radio]{width:16px;height:16px;accent-color:#1677FF;margin:0}
 .yq-checkline{display:inline-flex;align-items:center;gap:7px;font-size:14px;color:#1F2329;cursor:pointer}
 .yq-checkline input{width:16px;height:16px;accent-color:#1677FF;margin:0}
-.yq-chips{display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding-top:2px}
+.yq-chips{display:flex;align-items:center;flex-wrap:wrap;gap:8px;min-height:36px;padding:3px 10px;
+  border:1px solid #E5E8EF;border-radius:8px;background:#fff;cursor:pointer}
+.yq-chips-ph{color:#B8BEC9;font-size:14px}
+.yq-caret{margin-left:auto;padding:0 2px;border:0;background:none;color:#B8BEC9;font-size:14px;line-height:1;cursor:pointer}
 .yq-chip{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px;border-radius:6px;
   background:#E6F4FF;color:#1677FF;font-size:13px}
 .yq-chip button{padding:0;border:0;background:none;color:#1677FF;font-size:14px;line-height:1}
@@ -18158,9 +18145,20 @@ XX 面霜 踩雷</textarea>
       if (r) r.checked = true;
     });
 
+    function syncPeoplePh(){
+      var ph = $('#yq-people-ph');
+      if (ph) ph.hidden = $$('.yq-chip').length > 0;
+    }
+    syncPeoplePh();
+
     root.addEventListener('click', function(e){
       var x = e.target.closest('.yq-chip-x');
-      if (x){ var c = x.closest('.yq-chip'); if (c) c.remove(); dirty = true; }
+      if (x){ var c = x.closest('.yq-chip'); if (c) c.remove(); syncPeoplePh(); dirty = true; }
+    });
+
+    $('#yq-chips').addEventListener('click', function(e){
+      if (e.target.closest('.yq-chip-x') || e.target.id === 'yq-people') return;
+      $('#yq-people').click();
     });
 
     $('#yq-people').addEventListener('click', function(){
@@ -18184,6 +18182,7 @@ XX 面霜 踩雷</textarea>
           + esc(c.value) + '">×</button>';
         $('#yq-chips').insertBefore(span, $('#yq-people'));
       });
+      syncPeoplePh();
       $('#yq-people-modal').hidden = true;
       dirty = true;
     });
