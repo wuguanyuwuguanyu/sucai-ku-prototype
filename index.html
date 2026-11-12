@@ -17248,21 +17248,13 @@ render();
 <script type="text/plain" id="srcYqDetail">
 <div class="yq" data-yq-page="detail">
   <button type="button" class="yq-crumb" data-yq-go="tasks">‹ 小红书舆情监测 / 任务详情</button>
-  <div class="yq-head">
-    <div>
-      <h1>XX 面霜口碑监测（11月）<span class="yq-badge run" id="yq-status"><i class="dot"></i>进行中</span><span class="yq-tag" id="yq-paused" hidden>已暂停</span></h1>
-      <p class="yq-sub">2026-11-09 10:20 开始 · 2026-11-30 23:59 截止 · 创建人 张伟</p>
-    </div>
-    <div class="yq-actions">
-      <button type="button" class="yq-btn" id="yq-pause">暂停</button>
-      <button type="button" class="yq-btn danger" id="yq-term">终止</button>
-      <button type="button" class="yq-btn" id="yq-export">导出</button>
-      <button type="button" class="yq-btn primary" data-yq-go="leads">本任务命中用户</button>
-    </div>
-  </div>
 
   <section class="yq-sec">
     <div class="yq-sec-head"><h2>任务信息</h2><span class="yq-sec-tools"><span class="yq-frozen">判定规则与找笔记条件已冻结</span><button type="button" class="yq-link" data-yq-go="snapshot">查看任务配置快照 ›</button></span></div>
+    <div class="yq-ident">
+      <div class="yq-ident-name">XX 面霜口碑监测（11月）<span class="yq-badge run"><i class="dot"></i>进行中</span></div>
+      <p class="yq-sub">2026-11-09 10:20 开始 · 2026-11-30 23:59 截止 · 创建人 张伟 · 最近刷新 17:42 <button type="button" class="yq-link" id="yq-refresh">刷新</button></p>
+    </div>
     <div class="yq-kv">
       <div><span>监测对象</span><p>XX、XX 面霜、XX 系列、小X瓶</p></div>
       <div><span>判定方式</span><p>AI分析</p></div>
@@ -17327,7 +17319,7 @@ render();
   <section class="yq-sec">
     <div class="yq-sec-head">
       <h2>本任务命中用户</h2>
-      <span class="yq-muted"><button type="button" class="yq-link" data-yq-export-lead>导出本任务命中用户</button><button type="button" class="yq-link" data-yq-export-hit>导出命中明细</button></span>
+      <span class="yq-muted"><button type="button" class="yq-link" data-yq-export-lead>导出本任务命中用户</button><button type="button" class="yq-link" data-yq-export-hit>导出命中明细</button><button type="button" class="yq-link" data-yq-go="leads">查看全部命中用户 ›</button></span>
     </div>
     <div class="yq-tw">
       <table class="yq-table">
@@ -17727,7 +17719,9 @@ XX 面霜 踩雷</p></div>
 
 /* 区块 */
 .yq-sec{padding:24px 0;border-top:1px solid #E5E8EF}
-.yq-head + .yq-sec{border-top:0;padding-top:0}
+.yq-head + .yq-sec,.yq-crumb + .yq-sec{border-top:0;padding-top:0}
+.yq-ident{margin-bottom:18px}
+.yq-ident-name{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:600;line-height:1.4;color:#1F2329}
 .yq-sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:16px}
 .yq-subhead{display:flex;align-items:baseline;gap:10px;margin:24px 0 10px}
 .yq-kv{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px 24px}
@@ -18177,29 +18171,7 @@ XX 面霜 踩雷</p></div>
 
   /* 任务详情 */
   function initDetail(){
-    var status = '进行中';
-    var paused = false;
-    var pause = $('#yq-pause');
-    var term = $('#yq-term');
-    var pausedTag = $('#yq-paused');
-    pause.addEventListener('click', function(){
-      if (status !== '进行中') return;
-      paused = !paused;
-      pause.textContent = paused ? '继续' : '暂停';
-      pausedTag.hidden = !paused;
-      toast(paused ? '任务已暂停' : '任务已继续');
-    });
-    term.addEventListener('click', function(){
-      confirmBox('终止任务', '<p>终止后不再扫描新笔记，已产生的命中用户保留。终止后不能重新开始。</p>', '终止', true, function(){
-        status = '执行停止';
-        paused = false;
-        setBadge($('#yq-status'), status);
-        pausedTag.hidden = true;
-        pause.hidden = true;
-        term.hidden = true;
-        toast('任务已终止');
-      });
-    });
+    $('#yq-refresh').addEventListener('click', function(){ toast('已刷新'); });
     $$('[data-yq-dist]').forEach(function(tab){
       tab.addEventListener('click', function(){
         var k = tab.getAttribute('data-yq-dist');
@@ -18213,7 +18185,6 @@ XX 面霜 踩雷</p></div>
         });
       });
     });
-    $('#yq-export').addEventListener('click', function(){ toast('已导出 Excel（演示）'); });
     $$('[data-yq-export-lead]').forEach(function(b){
       b.addEventListener('click', function(){ toast('已导出本任务命中用户 Excel（演示）'); });
     });
