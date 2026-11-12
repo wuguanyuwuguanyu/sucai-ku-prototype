@@ -17484,17 +17484,20 @@ XX 系列
 <div class="yq" data-yq-page="leads">
   <button type="button" class="yq-crumb" data-yq-go="tasks">‹ 小红书舆情监测 / 命中用户</button>
 
-  <div class="yq-filters">
-    <div class="yq-search">
-      <input type="text" data-yq-f="kw" placeholder="用户昵称、小红书号" aria-label="搜索命中用户">
-      <button type="button" class="yq-search-btn" aria-label="搜索"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="4.6" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 10.5 14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+  <div class="yq-topcard">
+    <div class="yq-filters">
+      <div class="yq-search">
+        <input type="text" data-yq-f="kw" placeholder="用户昵称、小红书号" aria-label="搜索命中用户">
+        <button type="button" class="yq-search-btn" aria-label="搜索"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="4.6" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 10.5 14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      </div>
+      <button type="button" class="yq-btn" data-yq-reset>重置</button>
+      <span class="grow"></span>
+      <button type="button" class="yq-btn" id="yq-export">导出</button>
     </div>
-    <button type="button" class="yq-btn" data-yq-reset>重置</button>
-    <span class="grow"></span>
-    <button type="button" class="yq-btn" id="yq-export">导出</button>
   </div>
 
-  <div class="yq-tw">
+  <div class="yq-panel">
+    <div class="yq-tw">
     <table class="yq-table yq-lead-table">
       <colgroup>
         <col style="width:12%"><col style="width:14%"><col style="width:6%"><col style="width:6%"><col style="width:10%"><col style="width:6%"><col style="width:10%"><col style="width:9%"><col style="width:19%"><col style="width:8%">
@@ -17553,8 +17556,9 @@ XX 系列
         </tr>
       </tbody>
     </table>
+    </div>
+    <div class="yq-pager"><span>共 128 人</span><span>每页 20 条<button type="button" class="yq-pg">上一页</button><button type="button" class="yq-pg">下一页</button></span></div>
   </div>
-  <div class="yq-pager"><span>共 128 人</span><span>每页 20 条<button type="button" class="yq-pg">上一页</button><button type="button" class="yq-pg">下一页</button></span></div>
 </div>
 </script>
 
@@ -17632,9 +17636,18 @@ XX 系列
 .yq[data-yq-page="detail"] .yq-crumb + .yq-sec{padding-top:20px}
 .yq[data-yq-page="detail"] .yq-duo{margin:0 0 16px;padding:0;border:0;gap:16px;align-items:stretch}
 .yq[data-yq-page="detail"] .yq-duo > .yq-sec{margin:0;padding:20px;border:0}
-.yq[data-yq-page="tasks"] .yq-topcard{background:#fff;border-radius:8px;padding:16px 20px;margin:0 0 16px}
+.yq-topcard{background:#fff;border-radius:8px;padding:16px 20px;margin:0 0 16px}
 .yq[data-yq-page="tasks"] .yq-head{margin:0 0 16px;align-items:center}
 .yq[data-yq-page="tasks"] .yq-filters{margin:0}
+/* 任务配置快照、命中用户、命中用户详情与上面同一套底座 */
+.yq[data-yq-page="snapshot"],.yq[data-yq-page="leads"],.yq[data-yq-page="lead-detail"]{background:#F2F5FA}
+.yq[data-yq-page="snapshot"] .yq-head{background:#fff;border-radius:8px;padding:16px 20px;margin:0 0 16px}
+.yq[data-yq-page="snapshot"] .yq-sec{margin:0 0 16px;padding:20px;border:0;border-radius:8px;background:#fff}
+.yq[data-yq-page="snapshot"] .yq-sec:last-child{margin-bottom:0}
+.yq[data-yq-page="leads"] .yq-filters{margin:0}
+.yq[data-yq-page="lead-detail"] .yq-hero{margin:0 0 16px;padding:20px;border:0;border-radius:8px;background:#fff}
+.yq[data-yq-page="lead-detail"] .yq-split{padding-top:0}
+.yq[data-yq-page="lead-detail"] .yq-split > section{padding:20px;border-radius:8px;background:#fff}
 .yq-panel{background:#fff;border-radius:8px;overflow:hidden;padding:16px 20px}
 .yq-panel .yq-tw{border:0}
 .yq-panel .yq-pager{padding:12px 0 0}
