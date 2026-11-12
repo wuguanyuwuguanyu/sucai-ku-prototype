@@ -936,8 +936,13 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .cw-ib{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;
   color:#2E5FA8;position:relative;overflow:hidden}
 .cw-scroll{position:relative;z-index:1;padding:2px 16px 16px}
-/* 分档控件直接复用「待唤醒客户」那枚 `.cust-seg`（同一槽、同一选中片），不再另画一排 chips：
-   上一步点「一键唤醒」过来，控件不该换一副长相。**筛选只筛不改已勾选的人**，选中态说的是「在看哪一段」。 */
+/* 视图 chips：横向可滑，一枚一条「看哪一段」。**筛选只筛不改已勾选的人**，所以它不承担选择状态。 */
+.cw-chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:2px 16px 13px}
+.cw-chips::-webkit-scrollbar{display:none}
+.cw-chip{flex:none;display:flex;align-items:center;gap:5px;height:33px;padding:0 14px;border-radius:999px;
+  background:#fff;border:1px solid #DCE6FA;font-size:13.5px;font-weight:600;color:#3A5B8F;
+  position:relative;overflow:hidden;transition:background .18s var(--emph),color .18s}
+.cw-chip.on{background:#E8F0FF;border-color:#B9CDF6;color:#1B4AA8}
 /* 分组头：左边「今日未回复 · 6 人」，右边三态全选。三态是：全勾 ✓／部分 –／全不选空框，
    勾选框在「全选」二字左侧——用户看得到再点一次会怎样（Q17）。 */
 .cw-band{display:flex;align-items:center;justify-content:space-between;margin:14px 2px 8px}
@@ -951,27 +956,22 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .cw-cb.on{background:linear-gradient(140deg,#1677FE,#6A5BFF);border-color:transparent}
 .cw-cb.part{border-color:#6A8FE0;background:#fff}
 .cw-cb.part::after{content:"";width:9px;height:2.4px;border-radius:2px;background:#6A8FE0}
-/* 行卡与「待唤醒客户」的 `.cust-card` 同一套尺寸：圆角 16.5、内衬 13/14、卡距 12、头像 44、
-   姓名 17.6、副行 12.1。这一页多一枚勾选框和右侧时长，其余照那张卡。 */
 .cw-row{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:#fff;
-  border-radius:16.5px;padding:13px 14px;margin-bottom:12px;position:relative;overflow:hidden;
+  border-radius:16px;padding:11px 12px;margin-bottom:10px;position:relative;overflow:hidden;
   box-shadow:0 12px 24px -22px rgba(40,70,150,.95)}
-.cw-av{flex:none;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-  color:#fff;font-size:17px;font-weight:600;letter-spacing:.02em;
+.cw-av{flex:none;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:16px;font-weight:600;letter-spacing:.02em;
   background:linear-gradient(-52deg,#A56EFF 6.5%,#529AFF 96.9%)}
 .cw-main{flex:1;min-width:0}
-.cw-nm{display:flex;align-items:center;font-size:17.6px;font-weight:600;color:#152C50;line-height:1.2}
+.cw-nm{display:flex;align-items:center;font-size:15.5px;font-weight:600;color:#152C50;line-height:1.2}
 .cw-tag{margin-left:6px;font-size:10.5px;font-weight:600;color:#9A5B2A;background:#FFF1E3;
   border-radius:6px;padding:1px 5px;white-space:nowrap}
-.cw-meta{margin-top:5px;font-size:12.1px;font-weight:500;color:#95A3B8;line-height:1.2}
+.cw-meta{margin-top:4px;font-size:12px;font-weight:500;color:#95A3B8;line-height:1.2}
 .cw-right{flex:none;text-align:right;font-size:11px;font-weight:500;color:#8FA3BE;line-height:1.25}
 .cw-right b{display:block;font-size:14.5px;font-weight:600;color:#173A6B}
 /* 底部操作条：左边两行汇总，右边唯一主操作。与「待唤醒客户」那枚吸底条同一形制。 */
 .cw-foot{flex:none;display:flex;align-items:center;gap:12px;padding:10px 16px calc(14px + env(safe-area-inset-bottom));
   background:#fff;position:relative;z-index:6;box-shadow:0 -14px 24px -20px rgba(40,70,150,.9)}
-/* 名单那屏和「待唤醒客户」一样只有一枚通栏主操作：人数收成上面一行，按钮换成 .block 通栏。 */
-.cw-foot.stack{display:block;padding-top:12px}
-.cw-foot.stack .cw-sum{margin-bottom:9px;line-height:1.4}
 .cw-sum{flex:1;min-width:0;font-size:12px;font-weight:500;color:#6E86A8;line-height:1.45}
 .cw-sum>b{font-size:17px;font-weight:700;color:#173A6B;margin:0 2px;letter-spacing:-.01em}
 .cw-sum.bad,.cw-sum.bad>b{color:#C2413A}
@@ -3731,8 +3731,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
             </div>
           </div>
           <div class="scroll cw-scroll" id="cwListBody"></div>
-          <!-- 底栏与「待唤醒客户」同一形制：人数一行、主操作通栏（PRD §3.2） -->
-          <div class="cw-foot stack" id="cwListFoot"></div>
+          <div class="cw-foot" id="cwListFoot"></div>
         </section>
 
         <section class="screen" id="cw-content">
@@ -4729,7 +4728,7 @@ function syncNav(id,params){
 }
 
 /* ---------- Material ripple（统一按压反馈，替代缩放） ---------- */
-var RIP_SEL='.btn,.chip,.iconbtn,.cell,.wk-card,.p-card,.pc-btn,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.hv-msg,.hv-stat,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.hva-lockcard,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close,.hw-add,.cust-seg button,.cust-copy,.cust-acct-row,.cw-allsel,.cw-row,.cw-btn,.cw-ib,.cw-op,.cw-strat button,.cw-step button,.cw-units button,.cw-rec,.cw-kv .op';
+var RIP_SEL='.btn,.chip,.iconbtn,.cell,.wk-card,.p-card,.pc-btn,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.hv-msg,.hv-stat,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.hva-lockcard,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close,.hw-add,.cust-seg button,.cust-copy,.cust-acct-row,.cw-chip,.cw-allsel,.cw-row,.cw-btn,.cw-ib,.cw-op,.cw-strat button,.cw-step button,.cw-units button,.cw-rec,.cw-kv .op';
 function ripInit(){
   document.addEventListener('pointerdown',function(e){
     var t=e.target.closest ? e.target.closest(RIP_SEL) : null;
@@ -5330,15 +5329,12 @@ REND['cw-list']=function(){
   $('cwRecIc').innerHTML=I('clock',20,2.1);
   $('cwSetIc').innerHTML=I('gear',20,2.1);
   var i,j;
-  /* 分段器与「待唤醒客户」同一枚 `.cust-seg`：浅蓝槽、选中白片、字吃蓝紫渐变。
-     五段比那页多两段（全部／自定义），仍是一条不横滑的分段器——与上一步的控件是同一个东西。 */
-  var views=[['all','全部'],['today','今日'],['day','1天'],['week','1周'],['custom','自定义']];
-  var h='<div class="cust-seg cw-seg">';
-  for(i=0;i<views.length;i++){
-    var on=CW_VIEW===views[i][0];
-    h+='<button class="'+(on?'on':'')+'" aria-pressed="'+(on?'true':'false')+'" onclick="cwView(\''+views[i][0]+'\')">'
-      +'<span>'+views[i][1]+'</span></button>';
-  }
+  var h='<div class="cw-chips">';
+  h+='<button class="cw-chip'+(CW_VIEW==='all'?' on':'')+'" onclick="cwView(\'all\')">全部</button>';
+  h+='<button class="cw-chip'+(CW_VIEW==='today'?' on':'')+'" onclick="cwView(\'today\')">今日</button>';
+  h+='<button class="cw-chip'+(CW_VIEW==='day'?' on':'')+'" onclick="cwView(\'day\')">1天</button>';
+  h+='<button class="cw-chip'+(CW_VIEW==='week'?' on':'')+'" onclick="cwView(\'week\')">1周</button>';
+  h+='<button class="cw-chip'+(CW_VIEW==='custom'?' on':'')+'" onclick="cwView(\'custom\')">自定义</button>';
   h+='</div>';
   var gs=cwGroups();
   for(i=0;i<gs.length;i++){
@@ -5362,15 +5358,14 @@ REND['cw-list']=function(){
   if(CW_LIST_MODE==='fix'){
     /* 从内容页「修改」进来：底栏换成「完成」。超上限或一个人没选也能点——
        回内容页后底栏才拦，免得人卡在名单页里出不去。 */
-    /* 底栏与「待唤醒客户」那一枚同一形制：人数单独一行，主操作通栏。 */
     $('cwListFoot').innerHTML='<div class="cw-sum">已选 <b>'+n+'</b> 人</div>'
-      +'<button class="cw-btn block" onclick="cwDoneList()">完成</button>';
+      +'<button class="cw-btn" onclick="cwDoneList()">完成</button>';
   }else{
     /* 「单次上限」平时不显示，只在超了那一刻报数——没超的时候它是个没人会用的数。 */
     $('cwListFoot').innerHTML='<div class="cw-sum'+(over?' bad':'')+'">'
       +(over?'已选 <b>'+n+'</b> 人，上限 '+CW_SET.cap+' 人<br><span>在设置里调高，或去掉几个人</span>'
              :'已选 <b>'+n+'</b> 人')
-      +'</div><button class="cw-btn block"'+(n===0||over?' disabled':'')+' onclick="cwNext()">下一步：写唤醒内容</button>';
+      +'</div><button class="cw-btn"'+(n===0||over?' disabled':'')+' onclick="cwNext()">下一步：写唤醒内容</button>';
   }
 };
 function cwNext(){
