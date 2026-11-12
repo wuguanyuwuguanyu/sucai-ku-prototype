@@ -17255,15 +17255,15 @@ render();
 
   <section class="yq-sec">
     <div class="yq-sec-head"><h2>任务信息</h2><span class="yq-sec-tools"><span class="yq-frozen">判定规则与找笔记条件已冻结</span><button type="button" class="yq-link" data-yq-go="snapshot">查看任务配置快照 ›</button></span></div>
-    <div class="yq-ident">
-      <div class="yq-ident-name">XX 面霜口碑监测（11月）<span class="yq-badge run"><i class="dot"></i>进行中</span></div>
-      <p class="yq-sub">2026-11-09 10:20 开始 · 2026-11-30 23:59 截止 · 创建人 张伟 · 最近刷新 17:42 <button type="button" class="yq-link" id="yq-refresh">刷新</button></p>
-    </div>
     <div class="yq-kv">
+      <div><span>任务名称</span><p>XX 面霜口碑监测（11月）</p></div>
+      <div><span>任务状态</span><p><span class="yq-badge run"><i class="dot"></i>进行中</span></p></div>
+      <div><span>任务有效期</span><p>2026-11-09 10:20~2026-11-30 23:59</p></div>
       <div><span>监测对象</span><p>XX、XX 面霜、XX 系列、小X瓶</p></div>
       <div><span>判定方式</span><p>AI分析</p></div>
       <div><span>执行人员</span><p>张伟、王芳、徐磊</p></div>
       <div><span>通知时间</span><p>2026-11-29 09:00</p></div>
+      <div><span>创建人</span><p>张伟</p></div>
       <div><span>创建时间</span><p>2026-11-09 10:18</p></div>
     </div>
   </section>
@@ -17756,11 +17756,9 @@ XX 面霜 踩雷</p></div>
 /* 区块 */
 .yq-sec{padding:24px 0;border-top:1px solid #E5E8EF}
 .yq-head + .yq-sec,.yq-crumb + .yq-sec{border-top:0;padding-top:0}
-.yq-ident{margin-bottom:18px}
-.yq-ident-name{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:600;line-height:1.4;color:#1F2329}
 .yq-sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:16px}
 .yq-kv{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px 24px}
-.yq-kv span{display:block;margin-bottom:3px;font-size:12px;color:#8F959E}
+.yq-kv > div > span{display:block;margin-bottom:3px;font-size:12px;color:#8F959E}
 .yq-kv p{font-size:14px;color:#1F2329}
 .yq-seg{display:inline-flex;gap:2px;margin-left:auto;padding:2px;border-radius:8px;background:#F5F6F8}
 .yq-sec-head .yq-seg{align-self:center}
@@ -18253,7 +18251,6 @@ XX 面霜 踩雷</p></div>
 
   /* 任务详情 */
   function initDetail(){
-    $('#yq-refresh').addEventListener('click', function(){ toast('已刷新'); });
     $$('[data-yq-dist]').forEach(function(tab){
       tab.addEventListener('click', function(){
         var k = tab.getAttribute('data-yq-dist');
