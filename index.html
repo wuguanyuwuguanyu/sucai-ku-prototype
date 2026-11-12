@@ -11761,7 +11761,6 @@ setTimeout(sbScan,120);
       <header class="ov-heading">
         <div>
           <h1>使用总览</h1>
-          <p id="ov-range" class="ov-muted"></p>
         </div>
         <div class="ov-toolbar">
           <div class="ov-periods" role="group" aria-label="统计时间范围">
@@ -11781,13 +11780,11 @@ setTimeout(sbScan,120);
           </button>
         </div>
       </header>
-      <p class="ov-demo-note">演示数据 · 用于评审指标与交互</p>
       <section class="ov-panel ov-value-coverage" id="ov-value-coverage" aria-label="团队使用覆盖"></section>
       <section class="ov-value-section" aria-label="四项能力使用情况">
-        <div class="ov-section-heading"><h2>云小助帮上了哪些忙</h2><span class="ov-muted" id="ov-value-period"></span></div>
+        <div class="ov-section-heading"><h2>云小助帮上了哪些忙</h2></div>
         <div id="ov-value-scenes" class="ov-value-grid"></div>
       </section>
-      <section class="ov-panel ov-value-followup" id="ov-value-followup"></section>
       <details class="ov-workload" id="ov-workload"><summary>查看全部工作量 <span>新增好友、发圈、消息与执行记录</span></summary><div id="ov-results" class="ov-panel"></div><span id="ov-results-help" hidden></span></details>
       <section class="ov-people" aria-labelledby="ov-people-title">
         <div class="ov-section-heading">
@@ -12989,7 +12986,6 @@ setTimeout(sbScan,120);
   align-items: stretch;
 }
 /* Value overview: one company snapshot, four capability panels, then actionable records. */
-.rea-ov-page .ov-demo-note { color:#646A73; font-size:12px; margin:-16px 0 16px; }
 .rea-ov-page .ov-value-coverage { display:grid; grid-template-columns:minmax(260px,1fr) minmax(300px,1.2fr); gap:32px; align-items:center; margin-bottom:32px; }
 .rea-ov-page .ov-coverage-copy h2 { margin:8px 0; font-size:20px; font-weight:500; }
 .rea-ov-page .ov-coverage-copy strong { color:#1677FF; font-size:32px; font-weight:600; font-variant-numeric:tabular-nums; }
@@ -13021,13 +13017,6 @@ setTimeout(sbScan,120);
 .rea-ov-page .ov-scene-secondary { border-left:1px solid #E5E8EF; padding-left:24px; }
 .rea-ov-page .ov-scene-secondary strong { display:block; font-size:20px; font-weight:600; margin:8px 0; }
 .rea-ov-page .ov-scene-foot { border-top:1px solid #E5E8EF; padding-top:16px; margin-top:24px; font-size:12px; color:#646A73; }
-.rea-ov-page .ov-value-followup { margin-bottom:24px; }
-.rea-ov-page .ov-followup-list { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:24px; }
-.rea-ov-page .ov-followup-list button { position:relative; border:0; border-right:1px solid #E5E8EF; padding:0 24px 0 0; text-align:left; background:none; }
-.rea-ov-page .ov-followup-list button:last-child { border-right:0; }
-.rea-ov-page .ov-followup-list button:hover b { color:#1677FF; }
-.rea-ov-page .ov-followup-list small { display:block; color:#646A73; margin-top:8px; font-size:12px; }
-.rea-ov-page .ov-followup-list i { position:absolute; right:8px; top:12px; font-style:normal; color:#1677FF; }
 .rea-ov-page .ov-workload { margin-bottom:32px; }
 .rea-ov-page .ov-workload summary { cursor:pointer; font-weight:500; padding:8px 0; }
 .rea-ov-page .ov-workload summary span { color:#646A73; font-size:12px; font-weight:400; margin-left:16px; }
@@ -13045,8 +13034,6 @@ setTimeout(sbScan,120);
 }
 @media(max-width:640px) {
  .rea-ov-page .ov-people-dots { grid-template-columns:repeat(10,minmax(20px,1fr)); }
- .rea-ov-page .ov-followup-list { grid-template-columns:1fr; }
- .rea-ov-page .ov-followup-list button { border-right:0; border-bottom:1px solid #E5E8EF; padding-bottom:16px; }
  .rea-ov-page .ov-scene-numbers { grid-template-columns:1fr; }
  .rea-ov-page .ov-scene-secondary { border-left:0; padding-left:0; }
  .rea-ov-page .ov-value-coverage { grid-template-columns:minmax(0,1fr); }
@@ -13824,10 +13811,6 @@ setTimeout(sbScan,120);
         foot:'填入、复制、发送计采纳；同次会话不重复。'},
     ];
     $('#ov-value-scenes').innerHTML = cards.map((c) => `<section class="ov-value-scene" data-scene-card="${c.id}"><div class="ov-section-heading"><h2><span class="ov-scene-icon">${ovIcon(METRIC_ICONS[c.icon],20)}</span>${c.title}${helpSpan(sceneNotes[c.id])}</h2><button class="ov-link" data-scene="${c.id}">查看详情 →</button></div><div class="ov-scene-numbers"><div><span>${c.label}</span><b>${typeof c.value === 'number' ? number(c.value) : c.value}<small>${c.unit}</small></b><p>${c.supporting}</p></div><div class="ov-scene-secondary"><span>${c.label2}</span><strong>${c.value2}</strong><p>${c.note}</p></div></div><p class="ov-scene-foot">${c.foot}</p></section>`).join('');
-    const none = people.filter((p) => p.kind === 'none').length;
-    const outstanding = task.total-task.done, failed = auto.total-auto.done;
-    $('#ov-value-followup').innerHTML = `<div class="ov-section-heading"><h2>值得跟进</h2><span class="ov-muted">先查看记录，再判断原因</span></div><div class="ov-followup-list"><button data-value-people="none"><span><b>${none} 人</b> 暂无四项能力使用记录</span><small>核实适用场景与配置</small><i>→</i></button><button data-scene="tasks" data-outcome="pending"><span><b>${number(outstanding)} 人次</b> 任务尚未完成</span><small>查看本期下发的任务</small><i>→</i></button><button data-scene="auto" data-outcome="failed"><span><b>${failed} 轮</b> 自动回复未成功</span><small>查看失败记录与原因</small><i>→</i></button></div>`;
-    $('#ov-value-period').textContent = `${dateLabel(periods[period].days-1)} — ${dateLabel()} · ${route.org === 'all' ? '全公司' : route.org}`;
   }
   function renderSceneDetail() {
     const scene = route.scene, stats = sceneStats(scene);
@@ -14526,8 +14509,6 @@ setTimeout(sbScan,120);
   function render() {
     $("#ov-home").hidden = route.view !== "home";
     $("#ov-detail").hidden = route.view === "home";
-    $("#ov-range").textContent =
-      `${dateLabel(periods[period].days - 1)} — ${dateLabel()} · ${route.org === "all" ? "全公司" : route.org}`;
     $("#ov-updated").textContent = new Date().toLocaleString("zh-CN", {
       hour12: false,
     });
