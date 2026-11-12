@@ -17103,7 +17103,7 @@ render();
       <h1>小红书舆情监测</h1>
       <div class="yq-tabs">
         <button type="button" class="on" data-yq-go="tasks">监测任务</button>
-        <button type="button" data-yq-go="leads">舆情线索</button>
+        <button type="button" data-yq-go="leads">命中用户</button>
       </div>
     </div>
     <div class="yq-actions">
@@ -17133,10 +17133,10 @@ render();
   <div class="yq-tw">
     <table class="yq-table yq-task-table">
       <colgroup>
-        <col style="width:17%"><col style="width:10%"><col style="width:14%"><col style="width:13%"><col style="width:12%"><col style="width:7%"><col style="width:5%"><col style="width:12%"><col style="width:10%">
+        <col style="width:17%"><col style="width:10%"><col style="width:13%"><col style="width:13%"><col style="width:12%"><col style="width:7%"><col style="width:8%"><col style="width:10%"><col style="width:10%">
       </colgroup>
       <thead>
-        <tr><th>任务名称</th><th>监测对象</th><th>搜索关键词</th><th>开始与截止时间</th><th>执行人员</th><th>状态</th><th class="num">线索数</th><th>最近执行时间</th><th>操作</th></tr>
+        <tr><th>任务名称</th><th>监测对象</th><th>搜索关键词</th><th>开始与截止时间</th><th>执行人员</th><th>状态</th><th class="num">命中用户数</th><th>最近执行时间</th><th>操作</th></tr>
       </thead>
       <tbody>
         <tr data-st="监测中">
@@ -17399,7 +17399,7 @@ XX 面霜 踩雷</textarea>
       <button type="button" class="yq-btn" id="yq-pause">暂停</button>
       <button type="button" class="yq-btn danger" id="yq-term">终止</button>
       <button type="button" class="yq-btn" id="yq-export">导出</button>
-      <button type="button" class="yq-btn primary" data-yq-go="leads">本任务线索</button>
+      <button type="button" class="yq-btn primary" data-yq-go="leads">本任务命中用户</button>
     </div>
   </div>
 
@@ -17422,12 +17422,12 @@ XX 面霜 踩雷</textarea>
   </section>
 
   <section class="yq-sec">
-    <div class="yq-sec-head"><h2>监测概览</h2><span class="yq-muted">评论含楼中楼 · 线索按人去重</span></div>
+    <div class="yq-sec-head"><h2>监测概览</h2><span class="yq-muted">评论含楼中楼 · 命中用户按人去重</span></div>
     <div class="yq-metrics">
       <div class="yq-metric"><span>扫描笔记数</span><b>186<small>篇</small></b></div>
       <div class="yq-metric"><span>扫描评论数</span><b>4,320<small>条</small></b></div>
       <div class="yq-metric"><span>命中评论数</span><b>52<small>条</small></b></div>
-      <div class="yq-metric"><span>线索数</span><b>37<small>人</small></b></div>
+      <div class="yq-metric"><span>命中用户数</span><b>37<small>人</small></b></div>
       <div class="yq-metric"><span>判定失败数</span><b>3<small>条</small></b></div>
     </div>
     <div class="yq-subhead"><h3>负面类型分布</h3><span class="yq-muted">仅 AI 分析、关键词+AI 有分类</span></div>
@@ -17445,7 +17445,7 @@ XX 面霜 踩雷</textarea>
     <div class="yq-sec-head"><h2>执行人员进度</h2><span class="yq-muted">某个执行人员掉线时，只暂停他那一份</span></div>
     <div class="yq-tw">
       <table class="yq-table">
-        <thead><tr><th>执行人员</th><th class="num">分到笔记</th><th class="num">已扫笔记</th><th class="num">扫到评论</th><th class="num">抓到线索</th><th>状态</th></tr></thead>
+        <thead><tr><th>执行人员</th><th class="num">分到笔记</th><th class="num">已扫笔记</th><th class="num">扫到评论</th><th class="num">抓到命中用户</th><th>状态</th></tr></thead>
         <tbody>
           <tr><td>张伟</td><td class="num">62</td><td class="num">62</td><td class="num">1,480</td><td class="num">14</td><td><span class="yq-badge done"><i class="dot"></i>正常</span></td></tr>
           <tr><td>王芳</td><td class="num">62</td><td class="num">55</td><td class="num">1,260</td><td class="num">13</td><td><span class="yq-badge done"><i class="dot"></i>正常</span></td></tr>
@@ -17457,12 +17457,12 @@ XX 面霜 踩雷</textarea>
 
   <section class="yq-sec">
     <div class="yq-sec-head">
-      <h2>本任务线索</h2>
-      <span class="yq-muted"><button type="button" class="yq-link" data-yq-export-lead>导出本任务线索</button><button type="button" class="yq-link" data-yq-export-hit>导出命中明细</button></span>
+      <h2>本任务命中用户</h2>
+      <span class="yq-muted"><button type="button" class="yq-link" data-yq-export-lead>导出本任务命中用户</button><button type="button" class="yq-link" data-yq-export-hit>导出命中明细</button></span>
     </div>
     <div class="yq-tw">
       <table class="yq-table">
-        <thead><tr><th>客户</th><th>最近命中评论</th><th class="num">命中次数</th><th>负面类型</th><th>置信度</th><th>状态</th><th>负责人</th><th>最近命中时间</th></tr></thead>
+        <thead><tr><th>用户</th><th>最近命中评论</th><th class="num">命中次数</th><th>负面类型</th><th>置信度</th><th>状态</th><th>负责人</th><th>最近命中时间</th></tr></thead>
         <tbody>
           <tr>
             <td><button type="button" class="yq-link strong" data-yq-lead>一只小鹿</button><span class="yq-sub2">小红书号 xiaolu_0912</span></td>
@@ -17508,14 +17508,14 @@ XX 面霜 踩雷</textarea>
       <h1>小红书舆情监测</h1>
       <div class="yq-tabs">
         <button type="button" data-yq-go="tasks">监测任务</button>
-        <button type="button" class="on" data-yq-go="leads">舆情线索</button>
+        <button type="button" class="on" data-yq-go="leads">命中用户</button>
       </div>
     </div>
     <div class="yq-actions"><button type="button" class="yq-btn" id="yq-export">导出</button></div>
   </div>
 
   <div class="yq-summary">
-    <button type="button" class="on" data-yq-sfilter="全部"><span>线索总数</span><b>128<small>人</small></b></button>
+    <button type="button" class="on" data-yq-sfilter="全部"><span>命中用户总数</span><b>128<small>人</small></b></button>
     <button type="button" data-yq-sfilter="待触达"><span>待触达</span><b>74<small>人</small></b></button>
     <button type="button" data-yq-sfilter="已触达"><span>已触达</span><b>31<small>人</small></b></button>
     <button type="button" data-yq-sfilter="已采访"><span>已采访</span><b>9<small>人</small></b></button>
@@ -17524,7 +17524,7 @@ XX 面霜 踩雷</textarea>
   <div class="yq-toptypes"><span>负面类型 Top 3</span><b>使用效果 46</b><b>客服态度 28</b><b>产品质量 21</b><span class="yq-muted">仅统计用 AI 的任务</span></div>
 
   <div class="yq-filters">
-    <label class="yq-fld"><span>关键词</span><input type="text" data-yq-f="kw" placeholder="客户昵称、小红书号、评论原文"></label>
+    <label class="yq-fld"><span>关键词</span><input type="text" data-yq-f="kw" placeholder="用户昵称、小红书号、评论原文"></label>
     <label class="yq-fld"><span>状态</span>
       <select data-yq-f="status"><option>全部</option><option>待触达</option><option>已触达</option><option>已采访</option><option>已忽略</option></select>
     </label>
@@ -17562,7 +17562,7 @@ XX 面霜 踩雷</textarea>
         <col style="width:5%"><col style="width:15%"><col style="width:19%"><col style="width:10%"><col style="width:15%"><col style="width:7%"><col style="width:12%"><col style="width:8%"><col style="width:5%"><col style="width:4%">
       </colgroup>
       <thead>
-        <tr><th class="yq-checkcell"><input type="checkbox" class="yq-check" data-yq-all aria-label="全选"></th><th>客户</th><th>最近命中评论</th><th>负面类型</th><th>来源任务</th><th class="num">命中次数</th><th>最近命中时间</th><th>状态</th><th>负责人</th><th>操作</th></tr>
+        <tr><th class="yq-checkcell"><input type="checkbox" class="yq-check" data-yq-all aria-label="全选"></th><th>用户</th><th>最近命中评论</th><th>负面类型</th><th>来源任务</th><th class="num">命中次数</th><th>最近命中时间</th><th>状态</th><th>负责人</th><th>操作</th></tr>
       </thead>
       <tbody>
         <tr data-status="已采访" data-owner="徐磊" data-type="售后服务" data-task="XX 系列售后反馈、XX 面霜口碑监测（11月）">
@@ -17634,15 +17634,15 @@ XX 面霜 踩雷</textarea>
       </tbody>
     </table>
   </div>
-  <div class="yq-pager"><span>共 128 条线索</span><span>每页 20 条<button type="button" class="yq-pg">上一页</button><button type="button" class="yq-pg">下一页</button></span></div>
+  <div class="yq-pager"><span>共 128 人</span><span>每页 20 条<button type="button" class="yq-pg">上一页</button><button type="button" class="yq-pg">下一页</button></span></div>
 </div>
 </script>
 
 <script type="text/plain" id="srcYqLeadDetail">
 <div class="yq" data-yq-page="lead-detail">
-  <button type="button" class="yq-crumb" data-yq-go="leads">‹ 小红书舆情监测 / 舆情线索 / 线索详情</button>
+  <button type="button" class="yq-crumb" data-yq-go="leads">‹ 小红书舆情监测 / 命中用户 / 命中用户详情</button>
   <div class="yq-head">
-    <div><h1>线索详情</h1></div>
+    <div><h1>命中用户详情</h1></div>
     <div class="yq-actions"><button type="button" class="yq-btn" id="yq-export">导出</button></div>
   </div>
 
@@ -17720,7 +17720,7 @@ XX 面霜 踩雷</textarea>
         <ol class="yq-timeline" id="yq-timeline">
           <li><b>备注</b><p>用户同意把反馈转给客服团队。</p><small>徐磊 · 2026-11-09 14:20</small></li>
           <li><b>状态：已触达 → 已采访</b><p>约了周三电话采访，重点问售后流程。</p><small>徐磊 · 2026-11-09 14:06</small></li>
-          <li><b>负责人：张伟 → 徐磊</b><p>售后类线索统一交给客服组跟进。</p><small>张伟 · 2026-11-08 21:10</small></li>
+          <li><b>负责人：张伟 → 徐磊</b><p>售后类命中用户统一交给客服组跟进。</p><small>张伟 · 2026-11-08 21:10</small></li>
           <li><b>状态：待触达 → 已触达</b><p>已在小红书私信，等回复。</p><small>张伟 · 2026-11-07 18:30</small></li>
         </ol>
       </section>
@@ -17887,7 +17887,7 @@ XX 面霜 踩雷</textarea>
 @keyframes yqflash{0%,100%{background:transparent}30%,70%{background:#E6F4FF}}
 .yq-flash{animation:yqflash 1.1s ease}
 
-/* 线索汇总 */
+/* 命中用户汇总 */
 .yq-summary{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-bottom:16px}
 .yq-summary button{display:block;padding:14px 16px;border-radius:8px;background:#fff;text-align:left;transition:background .15s}
 .yq-summary button:hover{background:#F7F8FA}
@@ -17901,7 +17901,7 @@ XX 面霜 踩雷</textarea>
   background:#F7F8FA;font-size:12px;color:#646A73}
 .yq-bulk .grow{flex:1}
 
-/* 线索详情 */
+/* 命中用户详情 */
 .yq-hero{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;padding:24px 0;border-bottom:1px solid #E5E8EF}
 .yq-hero-id{display:flex;align-items:flex-start;gap:14px}
 .yq-hero .yq-avatar{width:48px;height:48px;font-size:16px}
@@ -17969,8 +17969,8 @@ XX 面霜 踩雷</textarea>
     tasks: '小红书舆情监测',
     'new': '小红书舆情监测 · 新建',
     detail: '小红书舆情监测 · 任务详情',
-    leads: '小红书舆情监测 · 线索',
-    'lead-detail': '小红书舆情监测 · 线索详情'
+    leads: '小红书舆情监测 · 命中用户',
+    'lead-detail': '小红书舆情监测 · 命中用户详情'
   };
   var v = document.getElementById('subapp-viewport');
   if (!v) return;
@@ -18065,7 +18065,7 @@ XX 面霜 踩雷</textarea>
       if (act === 'pause'){ setStatus(tr, '已暂停'); toast('任务已暂停'); return; }
       if (act === 'resume'){ setStatus(tr, '监测中'); toast('任务已继续'); return; }
       if (act === 'term'){
-        confirmBox('终止任务', '<p>终止后不再扫描新笔记，已产生的线索保留。</p>', '终止', true, function(){
+        confirmBox('终止任务', '<p>终止后不再扫描新笔记，已产生的命中用户保留。</p>', '终止', true, function(){
           setStatus(tr, '已结束');
           toast('任务已终止');
         });
@@ -18262,7 +18262,7 @@ XX 面霜 踩雷</textarea>
       toast(status === '已暂停' ? '任务已暂停' : '任务已继续');
     });
     term.addEventListener('click', function(){
-      confirmBox('终止任务', '<p>终止后不再扫描新笔记，已产生的线索保留。</p>', '终止', true, function(){
+      confirmBox('终止任务', '<p>终止后不再扫描新笔记，已产生的命中用户保留。</p>', '终止', true, function(){
         status = '已结束';
         setBadge($('#yq-status'), status);
         pause.hidden = true;
@@ -18272,7 +18272,7 @@ XX 面霜 踩雷</textarea>
     });
     $('#yq-export').addEventListener('click', function(){ toast('已导出 Excel（演示）'); });
     $$('[data-yq-export-lead]').forEach(function(b){
-      b.addEventListener('click', function(){ toast('已导出本任务线索 Excel（演示）'); });
+      b.addEventListener('click', function(){ toast('已导出本任务命中用户 Excel（演示）'); });
     });
     $$('[data-yq-export-hit]').forEach(function(b){
       b.addEventListener('click', function(){ toast('已导出命中明细 Excel（演示）'); });
@@ -18282,7 +18282,7 @@ XX 面霜 踩雷</textarea>
     });
   }
 
-  /* 舆情线索 */
+  /* 命中用户 */
   function initLeads(){
     var tbody = $('.yq-lead-table tbody');
     var all = $('[data-yq-all]');
@@ -18360,7 +18360,7 @@ XX 面霜 踩雷</textarea>
       });
     }
     $('[data-yq-batch="status"]').addEventListener('click', function(){
-      if (!checked().length){ toast('先选择线索'); return; }
+      if (!checked().length){ toast('先选择命中用户'); return; }
       var body = '<div class="yq-statusbox">'
         + ['待触达', '已触达', '已采访', '已忽略'].map(function(s, i){
             return '<label><input type="radio" name="yq-batch-status" value="' + s + '"'
@@ -18371,12 +18371,12 @@ XX 面霜 踩雷</textarea>
         var val = mask.querySelector('input[name="yq-batch-status"]:checked').value;
         var sel = checked();
         sel.forEach(function(tr){ setLeadStatus(tr, val); });
-        toast('已更新 ' + sel.length + ' 条线索');
+        toast('已更新 ' + sel.length + ' 人');
         syncBulk();
       });
     });
     $('[data-yq-batch="owner"]').addEventListener('click', function(){
-      if (!checked().length){ toast('先选择线索'); return; }
+      if (!checked().length){ toast('先选择命中用户'); return; }
       var body = '<div class="yq-statusbox"><span class="yq-muted">负责人</span><select id="yq-batch-owner">'
         + ['张伟', '王芳', '徐磊', '朱琳'].map(function(n){ return '<option>' + n + '</option>'; }).join('')
         + '</select></div>';
@@ -18384,18 +18384,18 @@ XX 面霜 踩雷</textarea>
         var val = mask.querySelector('#yq-batch-owner').value;
         var sel = checked();
         sel.forEach(function(tr){ setLeadOwner(tr, val); });
-        toast('已更新 ' + sel.length + ' 条线索');
+        toast('已更新 ' + sel.length + ' 人');
         syncBulk();
       });
     });
-    $('#yq-export').addEventListener('click', function(){ toast('已导出线索 Excel（演示）'); });
+    $('#yq-export').addEventListener('click', function(){ toast('已导出命中用户 Excel（演示）'); });
     $('#yq-export-sel').addEventListener('click', function(){
-      toast(checked().length ? '已导出所选线索 Excel（演示）' : '已导出筛选后的全部线索 Excel（演示）');
+      toast(checked().length ? '已导出所选命中用户 Excel（演示）' : '已导出筛选后的全部命中用户 Excel（演示）');
     });
     syncBulk();
   }
 
-  /* 线索详情 */
+  /* 命中用户详情 */
   function initLeadDetail(){
     var hero = $('#yq-hero');
     var oldStatus = hero.getAttribute('data-status');
@@ -18449,7 +18449,7 @@ XX 面霜 踩雷</textarea>
       toast('主页链接已复制');
     });
     $('#yq-open').addEventListener('click', function(){ toast('演示环境不跳转外部链接'); });
-    $('#yq-export').addEventListener('click', function(){ toast('已导出线索详情（演示）'); });
+    $('#yq-export').addEventListener('click', function(){ toast('已导出命中用户详情（演示）'); });
     $$('[data-yq-ext]').forEach(function(b){
       b.addEventListener('click', function(){ toast('演示环境不跳转外部链接'); });
     });
@@ -18649,8 +18649,8 @@ XX 面霜 踩雷</textarea>
   var REA_YQ_PAGE = '小红书舆情监测';
   var REA_YQ_NEW = '小红书舆情监测 · 新建';
   var REA_YQ_DETAIL = '小红书舆情监测 · 任务详情';
-  var REA_YQ_LEADS = '小红书舆情监测 · 线索';
-  var REA_YQ_LEAD_DETAIL = '小红书舆情监测 · 线索详情';
+  var REA_YQ_LEADS = '小红书舆情监测 · 命中用户';
+  var REA_YQ_LEAD_DETAIL = '小红书舆情监测 · 命中用户详情';
   /* 「详细数据」子页：现网路由 board/wxz/task 不在 37 页快照里，
      由 reaSynthPages() 在运行时克隆看板页外壳合成，正文来自下面那个载体块。 */
   var REA_DETAIL_TASK = '微小助看板 · 执行人明细';
