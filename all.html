@@ -17586,20 +17586,32 @@ XX 系列
       <div class="yq-sec-head"><h2>命中记录</h2><span class="yq-muted">3 条 · 按时间倒序</span></div>
       <div class="yq-hits">
         <article class="yq-hit">
-          <div class="yq-hit-head"><b>用了 XX 系列三个月，皮肤越来越差</b><span class="time">2026-11-09 14:06</span></div>
-          <blockquote class="yq-quote">XX 面霜用了两周也开始泛红，客服还说是我的问题。</blockquote>
+          <div class="yq-hit-head"><span class="yq-hit-tag">笔记标题</span><b>用了 XX 系列三个月，皮肤越来越差</b></div>
+          <figure class="yq-hit-comment">
+            <figcaption><span class="yq-hit-tag">评论内容</span></figcaption>
+            <blockquote class="yq-quote">XX 面霜用了两周也开始泛红，客服还说是我的问题。</blockquote>
+            <span class="yq-hit-time">2026-11-09 14:06</span>
+          </figure>
           <div class="yq-hit-meta"><span>判定方式 <b>AI分析</b></span><span>命中词 <b>客服不理</b></span><span>AI 判定 <b>使用效果</b> · 用户称使用两周后泛红，并质疑客服回应</span></div>
           <div class="yq-hit-foot"><span>采集时间 2026-11-09 14:08</span></div>
         </article>
         <article class="yq-hit">
-          <div class="yq-hit-head"><b>双十一 XX 面霜到底值不值</b><span class="time">2026-11-08 21:03</span></div>
-          <blockquote class="yq-quote">XX 面霜的客服让我自己承担运费，退货还要等一周。</blockquote>
+          <div class="yq-hit-head"><span class="yq-hit-tag">笔记标题</span><b>双十一 XX 面霜到底值不值</b></div>
+          <figure class="yq-hit-comment">
+            <figcaption><span class="yq-hit-tag">评论内容</span></figcaption>
+            <blockquote class="yq-quote">XX 面霜的客服让我自己承担运费，退货还要等一周。</blockquote>
+            <span class="yq-hit-time">2026-11-08 21:03</span>
+          </figure>
           <div class="yq-hit-meta"><span>判定方式 <b>AI分析</b></span><span>命中词 <b>客服不理</b></span><span>AI 判定 <b>客服态度</b> · 用户称客服要求自行承担运费、退货需等待一周</span></div>
           <div class="yq-hit-foot"><span>采集时间 2026-11-08 21:05</span></div>
         </article>
         <article class="yq-hit">
-          <div class="yq-hit-head"><b>XX 面霜用了半年，说点真实感受</b><span class="time">2026-11-07 18:20</span></div>
-          <blockquote class="yq-quote">XX 面霜客服不理人，退个货要等一周。</blockquote>
+          <div class="yq-hit-head"><span class="yq-hit-tag">笔记标题</span><b>XX 面霜用了半年，说点真实感受</b></div>
+          <figure class="yq-hit-comment">
+            <figcaption><span class="yq-hit-tag">评论内容</span></figcaption>
+            <blockquote class="yq-quote">XX 面霜客服不理人，退个货要等一周。</blockquote>
+            <span class="yq-hit-time">2026-11-07 18:20</span>
+          </figure>
           <div class="yq-hit-meta"><span>判定方式 <b>关键词</b></span><span>命中词 <b>退货、客服不理</b></span></div>
           <div class="yq-hit-foot"><span>采集时间 2026-11-07 18:22</span></div>
         </article>
@@ -17872,7 +17884,13 @@ XX 系列
 .yq-hit:last-child{padding-bottom:0;border-bottom:0}
 .yq-hit-head{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:10px}
 .yq-hit-head b{font-size:14px;font-weight:600;color:#1F2329}
-.yq-hit-head .time{margin-left:auto;font-size:12px;color:#8F959E;white-space:nowrap}
+/* 命中记录里三样东西各自带名：笔记标题、评论内容、评论时间 */
+.yq-hit-tag{display:inline-block;padding:0 6px;border:1px solid #E0E4EB;border-radius:4px;
+  background:#F7F8FA;font-size:11px;line-height:18px;color:#8F959E;white-space:nowrap}
+.yq-hit-comment{margin:0}
+.yq-hit-comment figcaption{margin-bottom:8px}
+.yq-hit-comment .yq-quote{padding:10px 14px;background:#F7F8FA;border-radius:6px}
+.yq-hit-time{display:block;margin-top:8px;text-align:right;font-size:12px;color:#8F959E}
 .yq-quote{margin:0;padding:10px 14px;border-radius:0 8px 8px 0;background:#F7F8FA;font-size:14px;line-height:1.7;color:#1F2329}
 .yq-hit-meta{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:10px;font-size:12px;color:#646A73}
 .yq-hit-meta b{color:#1F2329;font-weight:500}
