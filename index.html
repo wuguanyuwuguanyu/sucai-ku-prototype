@@ -17264,43 +17264,51 @@ render();
     </div>
   </section>
 
-  <section class="yq-sec">
-    <div class="yq-sec-head"><h2>监测概览</h2><span class="yq-muted">只扫评论 · 命中用户按人去重</span></div>
-    <div class="yq-metrics">
-      <div class="yq-metric"><span>扫描笔记数</span><b>186<small>篇</small></b></div>
-      <div class="yq-metric"><span>扫描评论数</span><b>4,320<small>条</small></b></div>
-      <div class="yq-metric"><span>命中评论数</span><b>52<small>条</small></b></div>
-      <div class="yq-metric"><span>命中用户数</span><b>37<small>人</small></b></div>
-    </div>
-    <div class="yq-subhead"><h3>命中分布</h3>
-      <div class="yq-seg" role="tablist" aria-label="命中分布">
-        <button type="button" class="on" role="tab" aria-selected="true" data-yq-dist="type">评论类型</button>
-        <button type="button" role="tab" aria-selected="false" data-yq-dist="word">检测词</button>
+  <div class="yq-duo">
+    <section class="yq-sec">
+      <div class="yq-sec-head"><h2>监测概览</h2><span class="yq-muted">只扫评论 · 命中用户按人去重</span></div>
+      <div class="yq-funnel" role="img" aria-label="扫描 186 篇笔记、4,320 条评论，命中评论 52 条，命中用户 37 人">
+        <div class="yq-fstep scope">
+          <div><span>扫描笔记</span><b>186<small>篇</small></b></div>
+          <div><span>扫描评论</span><b>4,320<small>条</small></b></div>
+        </div>
+        <div class="yq-fstep s2"><span>命中评论</span><b>52<small>条</small></b><em>命中率 1.2%</em></div>
+        <div class="yq-fstep s3"><span>命中用户</span><b>37<small>人</small></b><em>人均 1.4 条命中</em></div>
       </div>
-    </div>
-    <div data-yq-distpane="type">
-      <div class="yq-dist">
-        <div class="yq-dist-row"><span>使用效果</span><span class="yq-track"><i style="width:100%"></i></span><b>14</b></div>
-        <div class="yq-dist-row"><span>客服态度</span><span class="yq-track"><i style="width:64%"></i></span><b>9</b></div>
-        <div class="yq-dist-row"><span>产品质量</span><span class="yq-track"><i style="width:50%"></i></span><b>7</b></div>
-        <div class="yq-dist-row"><span>价格与套路</span><span class="yq-track"><i style="width:29%"></i></span><b>4</b></div>
-        <div class="yq-dist-row"><span>售后服务</span><span class="yq-track"><i style="width:14%"></i></span><b>2</b></div>
-        <div class="yq-dist-row"><span>其他</span><span class="yq-track"><i style="width:7%"></i></span><b>1</b></div>
+    </section>
+
+    <section class="yq-sec">
+      <div class="yq-sec-head">
+        <h2>命中分布</h2>
+        <div class="yq-seg" role="tablist" aria-label="命中分布">
+          <button type="button" class="on" role="tab" aria-selected="true" data-yq-dist="type">评论类型</button>
+          <button type="button" role="tab" aria-selected="false" data-yq-dist="word">检测词</button>
+        </div>
       </div>
-      <p class="yq-dist-note">仅 AI分析 有分类</p>
-    </div>
-    <div data-yq-distpane="word" hidden>
-      <div class="yq-dist">
-        <div class="yq-dist-row"><span>过敏</span><span class="yq-track"><i style="width:100%"></i></span><b>12</b></div>
-        <div class="yq-dist-row"><span>客服不理</span><span class="yq-track"><i style="width:67%"></i></span><b>8</b></div>
-        <div class="yq-dist-row"><span>退货</span><span class="yq-track"><i style="width:58%"></i></span><b>7</b></div>
-        <div class="yq-dist-row"><span>爆痘</span><span class="yq-track"><i style="width:42%"></i></span><b>5</b></div>
-        <div class="yq-dist-row"><span>烂脸</span><span class="yq-track"><i style="width:25%"></i></span><b>3</b></div>
-        <div class="yq-dist-row"><span>智商税</span><span class="yq-track"><i style="width:17%"></i></span><b>2</b></div>
+      <div data-yq-distpane="type">
+        <div class="yq-dist">
+          <div class="yq-dist-row"><span>使用效果</span><span class="yq-track"><i style="width:100%"></i></span><b>14</b></div>
+          <div class="yq-dist-row"><span>客服态度</span><span class="yq-track"><i style="width:64%"></i></span><b>9</b></div>
+          <div class="yq-dist-row"><span>产品质量</span><span class="yq-track"><i style="width:50%"></i></span><b>7</b></div>
+          <div class="yq-dist-row"><span>价格与套路</span><span class="yq-track"><i style="width:29%"></i></span><b>4</b></div>
+          <div class="yq-dist-row"><span>售后服务</span><span class="yq-track"><i style="width:14%"></i></span><b>2</b></div>
+          <div class="yq-dist-row"><span>其他</span><span class="yq-track"><i style="width:7%"></i></span><b>1</b></div>
+        </div>
+        <p class="yq-dist-note">仅 AI分析 有分类</p>
       </div>
-      <p class="yq-dist-note">按命中用户的首个命中词统计</p>
-    </div>
-  </section>
+      <div data-yq-distpane="word" hidden>
+        <div class="yq-dist">
+          <div class="yq-dist-row"><span>过敏</span><span class="yq-track"><i style="width:100%"></i></span><b>12</b></div>
+          <div class="yq-dist-row"><span>客服不理</span><span class="yq-track"><i style="width:67%"></i></span><b>8</b></div>
+          <div class="yq-dist-row"><span>退货</span><span class="yq-track"><i style="width:58%"></i></span><b>7</b></div>
+          <div class="yq-dist-row"><span>爆痘</span><span class="yq-track"><i style="width:42%"></i></span><b>5</b></div>
+          <div class="yq-dist-row"><span>烂脸</span><span class="yq-track"><i style="width:25%"></i></span><b>3</b></div>
+          <div class="yq-dist-row"><span>智商税</span><span class="yq-track"><i style="width:17%"></i></span><b>2</b></div>
+        </div>
+        <p class="yq-dist-note">按命中用户的首个命中词统计</p>
+      </div>
+    </section>
+  </div>
 
   <section class="yq-sec">
     <div class="yq-sec-head"><h2>执行人员进度</h2><span class="yq-muted">某个执行人员掉线时，只暂停他那一份</span></div>
@@ -17363,6 +17371,7 @@ render();
         </tbody>
       </table>
     </div>
+    <div class="yq-pager"><span>共 37 人 · 每页 20 人</span><span><button type="button" class="yq-pg">上一页</button><button type="button" class="yq-pg">下一页</button></span></div>
   </section>
 </div>
 </script>
@@ -17721,15 +17730,11 @@ XX 面霜 踩雷</p></div>
 .yq-ident{margin-bottom:18px}
 .yq-ident-name{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:600;line-height:1.4;color:#1F2329}
 .yq-sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:16px}
-.yq-subhead{display:flex;align-items:baseline;gap:10px;margin:24px 0 10px}
 .yq-kv{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px 24px}
 .yq-kv span{display:block;margin-bottom:3px;font-size:12px;color:#8F959E}
 .yq-kv p{font-size:14px;color:#1F2329}
-.yq-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px}
-.yq-metric span{display:block;font-size:12px;color:#646A73}
-.yq-metric b{display:block;margin-top:6px;font-size:26px;font-weight:600;line-height:1.25;color:#1F2329;font-variant-numeric:tabular-nums}
-.yq-metric b small{margin-left:4px;font-size:12px;font-weight:400;color:#8F959E}
 .yq-seg{display:inline-flex;gap:2px;margin-left:auto;padding:2px;border-radius:8px;background:#F5F6F8}
+.yq-sec-head .yq-seg{align-self:center}
 .yq-seg button{height:26px;padding:0 10px;border:0;border-radius:6px;background:none;font-size:12px;color:#646A73;cursor:pointer}
 .yq-seg button.on{background:#fff;color:#1F2329;font-weight:600;box-shadow:0 1px 2px rgba(31,35,41,.08)}
 .yq-dist-note{margin:12px 0 0;font-size:12px;color:#8F959E}
@@ -17738,6 +17743,22 @@ XX 面霜 踩雷</p></div>
 .yq-dist-row b{text-align:right;color:#1F2329;font-variant-numeric:tabular-nums}
 .yq-track{display:block;height:8px;border-radius:4px;background:#F7F8FA;overflow:hidden}
 .yq-track i{display:block;height:100%;border-radius:4px;background:#1677FF}
+
+/* 监测概览（漏斗）与命中分布并排 */
+.yq-duo{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:32px;align-items:start;
+  padding-top:24px;border-top:1px solid #E5E8EF}
+.yq-duo > .yq-sec{padding:0;border-top:0}
+.yq-funnel{display:grid;justify-items:center;gap:8px;padding-top:4px}
+.yq-fstep{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;min-height:54px;padding:0 32px;
+  background:#E6F4FF;clip-path:polygon(0 0,100% 0,92% 100%,8% 100%)}
+.yq-fstep span{font-size:12px;color:#646A73}
+.yq-fstep b{font-size:22px;font-weight:600;color:#1F2329;font-variant-numeric:tabular-nums}
+.yq-fstep b small{margin-left:3px;font-size:12px;font-weight:400;color:#8F959E}
+.yq-fstep em{font-style:normal;font-size:12px;color:#646A73}
+.yq-fstep.s2{width:78%;background:#D8EBFF}
+.yq-fstep.s3{width:58%;background:#C7E0FD}
+.yq-fstep.scope{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;padding:0}
+.yq-fstep.scope > div{display:flex;align-items:center;justify-content:center;gap:10px;min-height:54px}
 
 /* 表单 */
 .yq-form{max-width:1000px}
@@ -17850,9 +17871,11 @@ XX 面霜 踩雷</p></div>
 .yq-kv p.pre{white-space:pre-line;line-height:1.7}
 
 @media(max-width:1100px){
-  .yq-summary,.yq-metrics{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .yq-summary{grid-template-columns:repeat(3,minmax(0,1fr))}
   .yq-kv,.yq-vgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .yq-split{grid-template-columns:1fr}
+  .yq-duo{grid-template-columns:1fr}
+  .yq-duo > .yq-sec + .yq-sec{padding-top:24px;border-top:1px solid #E5E8EF}
 }
 </script>
 
