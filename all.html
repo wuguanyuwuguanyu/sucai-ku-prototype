@@ -22274,10 +22274,6 @@ tb.addEventListener("click",function(e){
     + '.rea-baf-gap{display:flex;align-items:center;gap:8px;font-size:14px;color:rgba(0,0,0,.88)}'
     + '.rea-baf-gap .rea-baf-num,.rea-baf-ctl .ant-input.rea-baf-num{width:110px;max-width:110px;text-align:center}'
     + '.rea-baf-hint{margin:6px 0 0;max-width:680px;font-size:12px;line-height:20px;color:#8F959E}'
-    + '.rea-baf-tip{box-sizing:border-box;max-width:680px;margin-top:8px;padding:8px 12px;border-radius:8px;background:#F7F8FA;font-size:12px;line-height:20px;color:#646A73}'
-    /* 快照把「温馨提示：」放在内容盒的 flex 里，窄视口下会被后面的长文挤成「温馨提/示：」两行；
-       只给这行加，别动快照的正文 */
-    + '.rea-baf-tip-label{flex:none;white-space:nowrap}'
     + '.rea-baf-err{display:none;margin:4px 0 0;max-width:680px;font-size:12px;line-height:20px;color:#ff4d4f}'
     + '.rea-baf-err.on{display:block}'
     /* ---- 2026-11-10 复刻「好友任务创建页」线框稿 ----
@@ -22286,7 +22282,8 @@ tb.addEventListener("click",function(e){
        分隔线 #F0F0F0，控件边 #D9D9D9，浅底 #E6F4FF，页底 #FAFAFA。 */
     /* 页面底色与另外三张新建页、与新小红书保持一致：白底，卡片靠细边立起来 */
     + '[class*="_con_"]{background:#FFFFFF}'
-    + '.rea-baf-form{max-width:1200px;margin:0 auto}'
+    /* 与另外几张新建页同宽：内容区整幅铺开，别再限宽居中留出两侧空带 */
+    + '.rea-baf-form{max-width:none;margin:0}'
     + '.rea-baf-page{padding:6px 0 0;font-size:14px;line-height:1.6;color:#333333}'
     + '.rea-baf-hd{margin:0 0 16px}'
     + '.rea-baf-hd h1{margin:0;font-size:16px;line-height:26px;font-weight:500;color:#333333}'
@@ -22309,7 +22306,8 @@ tb.addEventListener("click",function(e){
     + '.rea-baf-secbd{display:block;padding:14px 20px 0}'
     + '.rea-baf-row{display:flex;align-items:flex-start;margin:0 0 18px}'
     + '.rea-baf-secbd>.rea-baf-row:last-child{margin-bottom:14px}'
-    + '.rea-baf-lab{flex:0 0 92px;box-sizing:border-box;width:92px;padding:0 16px 0 0;text-align:right;font-size:14px;line-height:32px;color:#646A73;white-space:nowrap}'
+    /* 116px 才放得下「添加好友方式」＋必填星号；92px 时文字会顶进右侧控件 */
+    + '.rea-baf-lab{flex:0 0 116px;box-sizing:border-box;width:116px;padding:0 16px 0 0;text-align:right;font-size:14px;line-height:32px;color:#646A73;white-space:nowrap}'
     + '.rea-baf-lab.req:before{content:"*";margin-right:4px;color:#FF4D4F}'
     + '.rea-baf-ctl{flex:1 1 auto;min-width:0}'
     /* 控件统一 32px 高，跟群发两页和快照的 AntD 控件停同一条线 */
@@ -22321,7 +22319,7 @@ tb.addEventListener("click",function(e){
     /* 昵称／地区的三选一：一行排开，和 38px 的控件同高 */
     + '.rea-baf-mode{display:flex;align-items:center;flex-wrap:wrap;gap:18px;min-height:32px}'
     /* 添加方式：三块等宽卡片，选中换浅底蓝边，圆点藏掉 */
-    + '.rea-baf-tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}'
+    + '.rea-baf-tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;max-width:640px}'
     + '.rea-baf-tiles .ant-radio-wrapper{position:relative;display:flex;align-items:center;justify-content:center;gap:6px;box-sizing:border-box;min-height:32px;margin:0;padding:0 8px;border:1px solid #D9D9D9;border-radius:6px;background:#fff;font-size:13px;line-height:1.6;color:#333333;white-space:nowrap;cursor:pointer}'
     + '.rea-baf-tiles .ant-radio-wrapper:hover{border-color:#8C8C8C}'
     + '.rea-baf-tiles .ant-radio-wrapper-checked{border-color:#1677FF;background:#E6F4FF;color:#1677FF}'
@@ -22334,8 +22332,6 @@ tb.addEventListener("click",function(e){
     + '.rea-baf-ctl [class*="_upload_box_"]>p{margin:4px 0 0;padding:0;font-size:12px;line-height:18px;color:#8F959E}'
     /* 单选圆点换成页面主色 */
     + '.rea-baf-ctl .ant-radio-checked .ant-radio-inner{border-color:#1677FF;background:#1677FF}'
-    + '.rea-baf-tip{box-sizing:border-box;margin-top:8px;padding:10px 12px;border-radius:6px;background:#FAFAFA;font-size:11px;line-height:1.6;color:#8C8C8C}'
-    + '.rea-baf-tip-label{flex:none;white-space:nowrap}'
     + '.rea-baf-err{display:none;margin:6px 0 0;font-size:12px;line-height:18px;color:#FF4D4F}'
     + '.rea-baf-err.on{display:block}'
     /* 群组／地区选择器的触发框跟着 38px 走 */
@@ -25040,11 +25036,8 @@ if(!METHOD_ROW)return;
 var ROW_NAME=rowOf('任务名称'),ROW_OPT=rowOf('备注名'),
     PHONE_ROW=rowOf('手机号'),TYPE_ROW=rowOf('类型'),
     TIP_ROW=METHOD_ROW.nextElementSibling;
-if(TIP_ROW&&TIP_ROW.textContent.indexOf('温馨提示')>=0){
-  TIP_ROW.classList.add('rea-baf-tip');
-  var tipTxt=TIP_ROW.querySelector('[class*="_upload_box_"] > div > div');
-  if(tipTxt)tipTxt.classList.add('rea-baf-tip-label');
-}
+/* 温馨提示那一行整行删掉，认不准就不动，免得误删别的行 */
+if(TIP_ROW&&TIP_ROW.textContent.indexOf('温馨提示')<0)TIP_ROW=null;
 
 function cloneRow(label,required){
   /* 用「备注名」那行当壳：它的内容盒是 div（_upload_box_），能清空再装控件。
@@ -25485,19 +25478,8 @@ if(mRow){
   });
   var methodHint=document.createElement('p');methodHint.className='rea-baf-hint';
   mRow.ctl.appendChild(methodHint);
-  if(TIP_ROW){
-    var tipLab=TIP_ROW.querySelector('span[class*="_must_"]');
-    var tipBox=tipLab?tipLab.nextElementSibling:null;
-    if(tipBox){
-      /* 快照这句写的是「单次 20 个、一天 200 个」，与上面回显的执行上限对不上；
-         只留多账号分摊这件事，具体数字以执行上限那条为准。 */
-      var tipLine=tipBox.querySelector('div > div + div');
-      if(tipLine)tipLine.textContent='多个账号会分摊这批客户，例如 10 个客户由 2 个账号各添加 5 个。';
-      tipBox.classList.add('rea-baf-tip');
-      mRow.ctl.appendChild(tipBox);
-    }
-    if(TIP_ROW.parentNode)TIP_ROW.parentNode.removeChild(TIP_ROW);
-  }
+  /* 快照那句「温馨提示」（单次 20 个、一天 200 个，多账号分摊）与页首执行上限重复，整行去掉 */
+  if(TIP_ROW&&TIP_ROW.parentNode)TIP_ROW.parentNode.removeChild(TIP_ROW);
 }
 var METHOD_HINTS={
   manual:'一行一个手机号；执行人员逐个搜索，找到后发好友申请。',
@@ -25658,13 +25640,14 @@ if(execRow){
 }
 
 /* ---- 分配方式：这批号怎么分给执行人员，二选一 ----
+   落在「添加对象」里、跟在名单后面：它分的是这份名单，不属于任务安排。
    只在手动输入／文件导入时出现；群内好友由各群所属员工执行，不出这一行。
    两种方式每人拿到的条数一样多，差别只在号码是连续的一段还是一人一个轮着分。 */
 var ALLOC_HINTS={
   '平均分配':'名单按顺序切成连续几段，每人一段；除不尽时轮流多分一人。',
   '轮询分配':'名单按顺序一人一个轮流分，分完一轮再从头接着分。'
 };
-var allocRow=bafNewRow(b1,'分配方式',false),allocModes=null,allocHint=null;
+var allocRow=bafNewRow(b2,'分配方式',false),allocModes=null,allocHint=null;
 allocModes=modeRadios('rea-baf-alloc',['平均分配','轮询分配'],0);
 if(allocModes)allocRow.ctl.appendChild(allocModes);
 allocHint=document.createElement('p');allocHint.className='rea-baf-hint';
