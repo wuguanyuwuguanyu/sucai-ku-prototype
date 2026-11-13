@@ -22029,7 +22029,9 @@ tb.addEventListener("click",function(e){
     + '.rea-wxt-freq:before{content:"*";color:#ff4d4f;margin-right:4px;font-family:SimSun,sans-serif}'
     + '.rea-wxt-fctl{flex:1;min-width:0}'
     + '.rea-wxt-inp{width:100%;max-width:640px}'
-    + '.rea-wxt-ta{width:100%;max-width:640px;margin-top:10px;resize:vertical}'
+    /* display:block：快照的 .ant-input 是 inline-block，跟在单选框后面时，行宽够就挤到同一行
+       （行宽 ≥ 单选框 ＋ 640 时必现，窗口拉宽或侧栏收起就会撞上）。让它独占一行，单选框永远在上。 */
+    + '.rea-wxt-ta{display:block;width:100%;max-width:640px;margin-top:10px;resize:vertical}'
     + '.rea-wxt-ferr{min-height:0;font-size:12px;line-height:20px;color:#ff4d4f}'
     + '.rea-wxt-bad{border-color:#ff4d4f!important}'
     + '.rea-wxt-hint{margin-left:8px;font-size:12px;color:#999999}'
