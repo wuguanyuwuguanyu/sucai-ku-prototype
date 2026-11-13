@@ -21440,10 +21440,9 @@ function taskScope(rs,metric,range){
 
   /* 「发圈 · 详情」的覆盖脚本（2026-11-10）：创建页重排后，把详情页缺的配置补成只读行。
      快照的「任务信息」原先只有任务名称、大类、状态、有效期、素材分类、执行人员、已发送、素材；
-     脚本在「执行人员」后补五行——谁可以看（一级状态与二级标签／朋友写在同一个值里，
-     名称最多列前 5 个）、任务内容（行内固定写「查看」）、所在位置、循环方式、自动发送。
-     全局弹窗不回显。
-     任务内容不在这行里铺开，点「查看」抬弹窗，
+     脚本在「执行人员」后补四行——谁可以看（一级状态与二级标签／朋友写在同一个值里，
+     名称最多列前 5 个）、所在位置、循环方式、自动发送。全局弹窗不回显。
+     任务内容那一行由 reaWxDetailContentJs 统一补：点「查看」抬弹窗，
      弹窗里就是这条朋友圈最终发出去的样子：昵称、正文或文章卡、所在位置，照朋友圈的排版。
      正文仍是快照，脚本只插 <p><span>标签：</span><span>值</span></p>，不抄整页；
      按「执行人员：」定位，不认行序——重抓快照后行序变了也不会插错。
@@ -21475,68 +21474,14 @@ for(i=0;i<ps.length;i++){
   if(t.indexOf('执行人员：')===0){anchor=ps[i];break}
 }
 if(!anchor)return;
-var THUMB='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#98a2b3" stroke-width="1.5" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="M21 15l-4.6-4.6L7 20"/></svg>';
-var PIN='<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>';
 function row(label,value,attr){
   var p=document.createElement('p');p.setAttribute(attr,'1');
   var a=document.createElement('span');a.textContent=label;
   var b=document.createElement('span');b.textContent=value;
   p.appendChild(a);p.appendChild(b);return p;
 }
-function contentRow(){
-  var p=document.createElement('p');p.setAttribute('data-rea-fq-content-row','1');
-  var a=document.createElement('span');a.textContent='任务内容：';
-  var b=document.createElement('span');
-  var lnk=document.createElement('button');
-  lnk.type='button';lnk.className='rea-fqc-link';lnk.textContent='查看';
-  lnk.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();openContent()});
-  b.appendChild(lnk);p.appendChild(a);p.appendChild(b);return p;
-}
-function openContent(){
-  var old=document.querySelector('[data-rea-fq-content]');
-  if(old&&old.parentNode)old.parentNode.removeChild(old);
-  var w=document.createElement('div');
-  w.className='ant-modal-root css-vgijab';
-  w.setAttribute('data-rea-fq-content','1');
-  w.innerHTML=[
-    '<div class="ant-modal-mask"></div>',
-    '<div class="ant-modal-wrap ant-modal-centered">',
-    '<div class="ant-modal css-vgijab rea-fqc-modal" role="dialog" aria-modal="true" aria-label="朋友圈预览" style="width:560px">',
-    '<div class="ant-modal-content">',
-    '<button type="button" class="ant-modal-close" aria-label="关闭"><span class="ant-modal-close-x">×</span></button>',
-    '<div class="ant-modal-header"><div class="ant-modal-title">朋友圈预览</div></div>',
-    '<div class="ant-modal-body">',
-    '<div class="rea-fqc-moments">',
-    '<div class="rea-fqc-mrow">',
-    '<div class="rea-fqc-mava" aria-hidden="true">张</div>',
-    '<div class="rea-fqc-mbody">',
-    '<div class="rea-fqc-mname">张伯阳</div>',
-    '<div class="rea-fqc-mlink"><div class="rea-fqc-mthumb">'+THUMB+'</div>',
-    '<div class="rea-fqc-mmeta"><div class="rea-fqc-mtitle">撒打算</div>',
-    '<div class="rea-fqc-msrc">云小助</div></div></div>',
-    '<div class="rea-fqc-mloc">'+PIN+'<span>上海静安嘉里中心</span></div>',
-    '<div class="rea-fqc-mfoot"><span>1分钟前</span><span class="rea-fqc-mact">赞　评论</span></div>',
-    '</div></div></div>',
-    '</div>',
-    '<div class="ant-modal-footer">',
-    '<button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-rea-fq-close><span>关 闭</span></button>',
-    '</div></div></div></div></div>'
-  ].join('');
-  document.body.appendChild(w);
-  function close(){
-    if(w.parentNode)w.parentNode.removeChild(w);
-    document.removeEventListener('keydown',onKey);
-  }
-  function onKey(e){if(e.key==='Escape'||e.keyCode===27)close()}
-  w.querySelector('.ant-modal-close').addEventListener('click',close);
-  w.querySelector('[data-rea-fq-close]').addEventListener('click',close);
-  var mask=w.querySelector('.ant-modal-wrap');
-  if(mask)mask.addEventListener('click',function(e){if(e.target===mask)close()});
-  document.addEventListener('keydown',onKey);
-}
 var rows=[
   row('谁可以看：','部分可见 · 标签：重点客户、高意向','data-rea-fq-scope'),
-  contentRow(),
   row('所在位置：','上海静安嘉里中心','data-rea-fq-loc'),
   row('循环方式：','单次任务','data-rea-fq-cycle'),
   row('自动发送：','开启','data-rea-fq-auto')
@@ -21553,8 +21498,6 @@ for(i=0;i<rows.length;i++){
      避开新建页那组 rea-fq-*（四段结构、下拉、时间控件），两页的样式互不相干。
      弹窗按朋友圈的排版画单条动态：头像＋昵称、正文或文章卡、所在位置、时间与赞／评论。 */
   var REA_FQ_DETAIL_CSS=[
-    '.rea-fqc-link{border:0;background:none;padding:0;font:inherit;color:#1677ff;cursor:pointer}',
-    '.rea-fqc-link:hover{text-decoration:underline}',
     '.rea-fqc-modal .ant-modal-body{padding-top:4px}',
     '.rea-fqc-moments{border-top:1px solid #ededed;border-bottom:1px solid #ededed;background:#fff}',
     '.rea-fqc-mrow{display:flex;gap:10px;padding:16px 4px 14px}',
@@ -25861,8 +25804,9 @@ for(i=0;i<rows.length;i++){
   }
 
   /* 群发群组 · 详情：补只读回显（2026-11-10）。
-     创建页重排后，「任务内容」与「发送类型」在详情页没有落点；在「群发内容数量」后补两行。
-     内容整行铺满并允许换行——快照的 p 是 33% 宽、单行省略，装不下正文。
+     创建页重排后，「任务内容」与「发送类型」在详情页没有落点；在「群发内容数量」后补行。
+     「任务内容」那一行由 reaWxDetailContentJs 统一补成一枚「查看」（2026-11-13）；
+     这里只补「发送类型」。
      群发群组只有单次任务，不补循环方式；群发哪些群、两个时间、执行人员照快照。
      快照只有一条演示任务，值按演示口径写；拿到真实任务数据后换成读字段即可。 */
   function reaQsDetailJs(){
@@ -25874,25 +25818,11 @@ for(i=0;i<ps.length;i++){
   if(norm(ps[i].textContent).indexOf('群发内容数量：')===0){anchor=ps[i];break}
 }
 if(!anchor||!anchor.parentNode)return;
-var rows=[
-  ['任务内容','各位老板好，本周新品已到店，欢迎进店体验，老客户到店可享专属优惠。',true],
-  ['发送类型','逐群发送',false]
-];
-var ref=anchor;
-for(i=0;i<rows.length;i++){
-  var p=document.createElement('p');
-  if(rows[i][2]){
-    p.style.flex='0 0 100%';
-    p.style.whiteSpace='normal';
-    p.style.alignItems='flex-start';
-    p.style.overflow='visible';
-  }
-  var a=document.createElement('span');a.textContent=rows[i][0]+'：';
-  var b=document.createElement('span');b.textContent=rows[i][1];
-  p.appendChild(a);p.appendChild(b);
-  ref.parentNode.insertBefore(p,ref.nextSibling);
-  ref=p;
-}
+var p=document.createElement('p');
+var a=document.createElement('span');a.textContent='发送类型：';
+var b=document.createElement('span');b.textContent='逐群发送';
+p.appendChild(a);p.appendChild(b);
+anchor.parentNode.insertBefore(p,anchor.nextSibling);
 })();`;
   }
 
@@ -26778,6 +26708,63 @@ var empty=wrap.querySelector('.ant-table-empty');
 if(empty)empty.classList.remove('ant-table-empty');
 var tot=document.querySelector('.ant-pagination-total-text');
 if(tot)tot.textContent='共 '+n+' 条记录';
+})();`;
+  }
+
+  /* ============================================================
+     微信营销任务 · 详情「查看发送内容」（2026-11-13）
+
+     四张内容型任务的列表页都能看发送内容了，详情页的任务信息里却只有配置：
+     群发好友与客户唤醒连一行内容都没有，群发群组把正文铺在行里，发圈那枚「查看」
+     是单独写的一段。统一成一枚「查看」，点开与列表页、任务配置快照同一套弹窗
+     （reaWxPreviewContent），内容副本取 REA_WXS 里各页的 preview，不另写一份。
+     行插在内容相关那一行的后面：发圈「谁可以看」、群发好友「素材分类」、
+     群发群组「群发内容数量」、客户唤醒「内容生成策略」。
+     脚本要排在 reaWxDetailJs 之前——那边会把标签的冒号去掉、改成上下两行，
+     插在它之后再补行就接不上版式。 */
+  var REA_WXD_CONTENT = {
+    '发圈 · 详情':     {label:'任务内容', anchor:'谁可以看',     snap:'发圈 · 任务配置快照'},
+    '群发好友 · 详情': {label:'任务内容', anchor:'素材分类',     snap:'群发好友 · 任务配置快照'},
+    '群发群组 · 详情': {label:'任务内容', anchor:'群发内容数量', snap:'群发群组 · 任务配置快照'},
+    '客户唤醒 · 详情': {label:'唤醒内容', anchor:'内容生成策略', snap:'客户唤醒 · 任务配置快照'}
+  };
+  function reaWxDetailContentJs(page){
+    var c = REA_WXD_CONTENT[page];
+    if(!c) return '';
+    var prev = (REA_WXS[c.snap] || {}).preview;
+    if(!prev) return '';
+    return String.raw`(function(){
+'use strict';
+var LABEL=${reaJson(c.label)}, ANCHOR=${reaJson(c.anchor)};
+var BODYHTML=${reaJson(reaWxPreviewContent(prev))}, KIND=${reaJson(prev.kind || 'chat')};
+var BODY=document.querySelector('[class*="_task_information_body_"]');
+if(!BODY||BODY.querySelector('[data-rea-wxd-content]'))return;
+function norm(s){return String(s==null?'':s).replace(/\s+/g,'')}
+var ps=BODY.querySelectorAll('p'),anchor=null,i;
+for(i=0;i<ps.length;i++){if(norm(ps[i].textContent).indexOf(ANCHOR+'：')===0){anchor=ps[i];break}}
+if(!anchor)return;
+var p=document.createElement('p'),a=document.createElement('span'),v=document.createElement('span'),b=document.createElement('button');
+p.setAttribute('data-rea-wxd-content','1');
+a.textContent=LABEL+'：';
+b.type='button';b.className='rea-wxs-link';b.textContent='查看';
+b.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();open()});
+v.appendChild(b);p.appendChild(a);p.appendChild(v);
+anchor.parentNode.insertBefore(p,anchor.nextSibling);
+function close(w){if(w&&w.parentNode)w.parentNode.removeChild(w);document.removeEventListener('keydown',onKey)}
+function onKey(e){if(e.key==='Escape'||e.keyCode===27){var w=document.querySelector('[data-rea-wxd-content-modal]');if(w)close(w)}}
+function open(){
+  var old=document.querySelector('[data-rea-wxd-content-modal]');if(old)close(old);
+  var cls=KIND==='moments'?'rea-fqc-modal':'rea-wxs-modal';
+  var width=KIND==='moments'?'560px':'420px';
+  var w=document.createElement('div');
+  w.className='ant-modal-root css-vgijab';w.setAttribute('data-rea-wxd-content-modal','1');
+  w.innerHTML='<div class="ant-modal-mask"></div><div class="ant-modal-wrap ant-modal-centered"><div class="ant-modal css-vgijab '+cls+'" role="dialog" aria-modal="true" style="width:'+width+'">'+BODYHTML+'</div></div>';
+  document.body.appendChild(w);
+  w.querySelector('.ant-modal-close').addEventListener('click',function(){close(w)});
+  var f=w.querySelector('[data-wxs-close]');if(f)f.addEventListener('click',function(){close(w)});
+  var m=w.querySelector('.ant-modal-wrap');if(m)m.addEventListener('click',function(e){if(e.target===m)close(w)});
+  document.addEventListener('keydown',onKey);
+}
 })();`;
   }
 
@@ -30556,8 +30543,8 @@ syncTip();drawRows();
     '客户唤醒': { css: REA_WX_SNAP_CSS, js: function(){ return reaWxListJs('客户唤醒'); } },
     /* 六张微信营销任务详情页（2026-11-10）：共用一张执行进度卡与 10 条演示表行。
        前面那段 js 是各页原有的任务信息回显，进度卡排在它后面（先补行、再收行）。 */
-    '群发好友 · 详情': { css: REA_QF_CSS + REA_WX_DETAIL_CSS, js: function(){ return reaQfDetailJs() + reaWxDetailJs('群发好友 · 详情'); } },
-    '发圈 · 详情': { css: REA_FQ_DETAIL_CSS + REA_WX_DETAIL_CSS, js: function(){ return reaFqDetailJs() + reaWxDetailJs('发圈 · 详情'); } },
+    '群发好友 · 详情': { css: REA_QF_CSS + REA_WX_DETAIL_CSS + REA_WX_SNAP_CSS, js: function(){ return reaQfDetailJs() + reaWxDetailContentJs('群发好友 · 详情') + reaWxDetailJs('群发好友 · 详情'); } },
+    '发圈 · 详情': { css: REA_FQ_DETAIL_CSS + REA_WX_DETAIL_CSS + REA_WX_SNAP_CSS, js: function(){ return reaFqDetailJs() + reaWxDetailContentJs('发圈 · 详情') + reaWxDetailJs('发圈 · 详情'); } },
     /* 微信营销任务 · 任务内容「从素材库选择」（2026-10-23）：三页共用一份弹窗与选材逻辑 */
     '发圈 · 新建': { css: REA_WXT_CSS, js: function(){ return reaWxtJs('发圈 · 新建'); } },
     '群发好友 · 新建': { css: REA_WXT_CSS + REA_FREQ_CSS, js: function(){ return reaWxtJs('群发好友 · 新建') + reaFreqDrawerJs('msg'); } },
@@ -30567,10 +30554,11 @@ syncTip();drawRows();
     /* 批量加好友（2026-10-27）：新建页补「添加群内好友」与四行配置；详情页补只读回显 */
     '批量加好友 · 新建': { css: REA_BD_CSS + REA_FREQ_CSS, js: function(){ return reaBdJs() + reaFreqDrawerJs('add'); } },
     '批量加好友 · 详情': { css: REA_WX_DETAIL_CSS, js: function(){ return reaBdDetailJs() + reaWxDetailJs('批量加好友 · 详情'); } },
-    '群发群组 · 详情': { css: REA_WX_DETAIL_CSS, js: function(){ return reaQsDetailJs() + reaWxDetailJs('群发群组 · 详情'); } },
-    /* 关联好友／客户唤醒的详情原来没覆盖，这一笔补上（执行进度卡是唯一改动） */
+    '群发群组 · 详情': { css: REA_WX_DETAIL_CSS + REA_WX_SNAP_CSS, js: function(){ return reaQsDetailJs() + reaWxDetailContentJs('群发群组 · 详情') + reaWxDetailJs('群发群组 · 详情'); } },
+    /* 关联好友／客户唤醒的详情原来没覆盖，这一笔补上（执行进度卡是唯一改动；
+       客户唤醒另有「查看发送内容」，见 reaWxDetailContentJs） */
     '关联好友 · 详情': { css: REA_WX_DETAIL_CSS, js: function(){ return reaWxDetailJs('关联好友 · 详情'); } },
-    '客户唤醒 · 详情': { css: REA_WX_DETAIL_CSS, js: function(){ return reaWxDetailJs('客户唤醒 · 详情'); } },
+    '客户唤醒 · 详情': { css: REA_WX_DETAIL_CSS + REA_WX_SNAP_CSS, js: function(){ return reaWxDetailContentJs('客户唤醒 · 详情') + reaWxDetailJs('客户唤醒 · 详情'); } },
     /* 六张任务配置快照（2026-11-11）：运行时克隆各自详情页的壳，正文整段换成只读配置。
        发圈的「任务内容」弹窗沿用 reaFqc 那套朋友圈排版，所以带上 REA_FQ_DETAIL_CSS。 */
     '发圈 · 任务配置快照': { css: REA_FQ_DETAIL_CSS + REA_WX_SNAP_CSS, js: function(){ return reaWxSnapshotJs('发圈 · 任务配置快照'); } },
