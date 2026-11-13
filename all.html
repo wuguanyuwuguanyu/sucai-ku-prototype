@@ -17322,6 +17322,30 @@ render();
           <div class="yq-flabel">过滤赞助笔记</div>
           <div class="yq-ctrl"><label class="yq-switch"><input type="checkbox" id="yq-sponsored" checked><span></span></label></div>
         </div>
+        <div class="yq-field" id="yq-like-wrap">
+          <div class="yq-flabel">笔记点赞数</div>
+          <div class="yq-ctrl"><div class="yq-inline yq-range">
+            <input type="number" id="yq-like-min" min="0" step="1" placeholder="最低" aria-label="笔记点赞数最低值">
+            <span class="yq-muted">—</span>
+            <input type="number" id="yq-like-max" min="0" step="1" placeholder="最高" aria-label="笔记点赞数最高值">
+          </div></div>
+        </div>
+        <div class="yq-field" id="yq-cmt-wrap">
+          <div class="yq-flabel">笔记评论数</div>
+          <div class="yq-ctrl"><div class="yq-inline yq-range">
+            <input type="number" id="yq-cmt-min" min="0" step="1" placeholder="最低" aria-label="笔记评论数最低值">
+            <span class="yq-muted">—</span>
+            <input type="number" id="yq-cmt-max" min="0" step="1" placeholder="最高" aria-label="笔记评论数最高值">
+          </div></div>
+        </div>
+        <div class="yq-field" id="yq-fans-wrap">
+          <div class="yq-flabel">作者粉丝数</div>
+          <div class="yq-ctrl"><div class="yq-inline yq-range">
+            <input type="number" id="yq-fans-min" min="0" step="1" placeholder="最低" aria-label="作者粉丝数最低值">
+            <span class="yq-muted">—</span>
+            <input type="number" id="yq-fans-max" min="0" step="1" placeholder="最高" aria-label="作者粉丝数最高值">
+          </div></div>
+        </div>
       </div>
     </section>
 
@@ -17460,6 +17484,7 @@ render();
         <div class="yq-fstep s2"><span>命中评论</span><b>52<small>条</small></b></div>
         <div class="yq-fstep s3"><span>命中用户</span><b>37<small>人</small></b></div>
       </div>
+      <p class="yq-dist-note" data-yq-skip>搜到 320 篇 · 门槛跳过 134 篇（点赞 96 · 粉丝 28 · 评论 10）· 指标未取到放行 12 篇</p>
     </section>
 
     <section class="yq-sec">
@@ -17598,6 +17623,9 @@ render();
       <div><span>笔记发布时间</span><p>30 日内</p></div>
       <div><span>评论发布时间</span><p>30 日内</p></div>
       <div><span>过滤赞助笔记</span><p>打开</p></div>
+      <div><span>笔记点赞数</span><p>100–不限</p></div>
+      <div><span>笔记评论数</span><p>5–不限</p></div>
+      <div><span>作者粉丝数</span><p>1,000–50,000</p></div>
       <div class="full"><span>搜索关键词</span><p class="pre">XX 面霜
 XX 面霜 测评
 XX 面霜 踩雷</p></div>
@@ -17996,6 +18024,8 @@ XX 系列
 .yq-hint{margin-top:6px;font-size:12px;line-height:1.6;color:#8F959E}
 .yq-inline{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .yq-inline input{height:36px;padding:0 10px;border:1px solid #E5E8EF;border-radius:8px;font-size:14px}
+.yq-range input{width:132px}
+.yq-range .yq-muted{font-size:14px;color:#B8BEC9}
 .yq-radios{display:flex;flex-wrap:wrap;gap:8px 20px;padding-top:8px}
 .yq-radios > label{display:inline-flex;align-items:center;gap:6px;font-size:14px;color:#1F2329;cursor:pointer}
 .yq-radios input[type=radio]{width:16px;height:16px;accent-color:#1677FF;margin:0}
@@ -18425,6 +18455,23 @@ XX 系列
       var lim = customLimit();
       if (lim >= 3000) suggest.push(['yq-limit-wrap', '单次执行上限 3,000 以上，账号限流风险高']);
       if (lim <= 0) miss.push(['yq-limit-wrap', '自定义上限要填一个大于 0 的条数']);
+
+      /* 笔记门槛：区间两端都可留空＝不限；只收非负整数，最低不能高于最高 */
+      [['yq-like-wrap', '#yq-like-min', '#yq-like-max', '笔记点赞数'],
+       ['yq-cmt-wrap', '#yq-cmt-min', '#yq-cmt-max', '笔记评论数'],
+       ['yq-fans-wrap', '#yq-fans-min', '#yq-fans-max', '作者粉丝数']].forEach(function(r){
+        var lo = (val(r[1]) || '').trim();
+        var hi = (val(r[2]) || '').trim();
+        if ((lo && !/^\d+$/.test(lo)) || (hi && !/^\d+$/.test(hi))) {
+          miss.push([r[0], r[3] + '要填非负整数']);
+        } else if (lo && hi && parseInt(lo, 10) > parseInt(hi, 10)) {
+          miss.push([r[0], r[3] + '最低值不能高于最高值']);
+        }
+      });
+      var likeMin = parseInt(val('#yq-like-min'), 10);
+      var fansMin = parseInt(val('#yq-fans-min'), 10);
+      if (likeMin >= 5000) suggest.push(['yq-like-wrap', '点赞门槛较高，可能挡掉小账号的真实反馈']);
+      if (fansMin >= 50000) suggest.push(['yq-fans-wrap', '粉丝门槛较高，可能挡掉小账号的真实反馈']);
 
       showValidation(miss, suggest);
       if (miss.length) return;
