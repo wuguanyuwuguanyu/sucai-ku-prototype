@@ -11010,10 +11010,8 @@ function openAiPanel(){
   var barr=$('aiBar'),ap=$('aiPanel');
   if(ap&&barr&&barr.style.display!=='none'){
     var bl=parseFloat(barr.style.left),bt=parseFloat(barr.style.top);
-    if(isFinite(bl))ap.style.left=Math.max(4,Math.min(bl,412-384.5-4))+'px';
-    if(isFinite(bt))ap.style.top=Math.max(34,Math.min(bt,916-409.8-4))+'px';
-    if(ap.style.left)barr.style.left=ap.style.left;
-    if(ap.style.top)barr.style.top=ap.style.top;
+    if(isFinite(bl)){ap.style.left=Math.max(4,Math.min(bl,412-384.5-4))+'px';barr.style.left=ap.style.left}
+    if(isFinite(bt)){ap.style.top=Math.max(34,Math.min(bt,916-409.8-4))+'px';barr.style.top=ap.style.top}
   }
   aiBarHide();
   for(var i=0;i<pendingHits.length;i++)pendingHits[i].done=true; /* 打开浮层＝命中已阅、角标清零（与素材面板 openPanel 同一口径） */
