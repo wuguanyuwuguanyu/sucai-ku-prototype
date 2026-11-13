@@ -2672,13 +2672,16 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
   background:linear-gradient(90deg,#EEEFFF,#F0F1FF);
   box-shadow:inset 0 0 0 2px rgba(255,255,255,.6),var(--e3);
   display:flex;align-items:center;gap:6px;padding:0 14px 0 14.8px;
-  z-index:73;border:none;cursor:pointer;font:inherit;text-align:left;
+  z-index:73;border:none;cursor:grab;font:inherit;text-align:left;
+  touch-action:none;user-select:none;
   color:#587ad9;-webkit-tap-highlight-color:transparent}
 .ai-bar-live{flex:1;min-width:0;display:flex;align-items:center;gap:3.8px;
   font-size:14.3px;line-height:1;color:#587ad9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ai-bar-live i{width:4.4px;height:4.4px;border-radius:50%;background:#00D991;flex:none}
 .ai-bar svg{flex:none}
 .ai-bar:active{background:linear-gradient(90deg,#E4E7FF,#E9EBFF)}
+/* 拖着走的时候保持按下的底色（别在拖到一半松开「按下」观感），指针换成抓紧 */
+.ai-bar.dragging{cursor:grabbing;background:linear-gradient(90deg,#E4E7FF,#E9EBFF)}
 .ai-bar:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
 /* 横条「等面板压完再出现」（ADR-0088 的交接口径）：时长与延迟由 aiBarShow() 按 PMOT 写成内联，
    这里只定名字与填充方式——类摘掉即回到常态。 */
@@ -4058,7 +4061,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
                只属于聊天辅助，与全局素材球无关（全局球恒在，素材面板开时也不收起）。
                位置由 aiCollapseToBar() 写成 left/top：与面板同宽，落在面板原先顶边那一格；
                只在辅助开过、当前没展开、且屏上没有别的浮层时出现。 -->
-          <button type="button" class="ai-bar" id="aiBar" style="display:none" onclick="openAiPanel()" aria-label="展开聊天辅助"></button>
+          <button type="button" class="ai-bar" id="aiBar" style="display:none" aria-label="展开聊天辅助"></button>
           <!-- 原「命中推荐弹卡」#recPop 已于 2026-10-15 整块删除（ADR-0061）：未开启聊天辅助时的命中
                改由下面的 #hpTip ＋ #hpPanel 承担（横幅先说一声、点开才看清单），微信屏里不再有第二套「命中展示」。 -->
           <!-- 顶部命中横幅（#hpTip · 2026-10-15 新增，ADR-0061）：未开启聊天辅助时命中素材关键词，
@@ -9780,7 +9783,54 @@ function aiBarInit(){
   /* 绿点＝「辅助还在跑」，与浮层头部那枚「已就位」同色同义；不是未读数（未读另有语义，别混用） */
   b.innerHTML='<span class="ai-bar-live"><i></i>已就位，正在辅助中...</span>'
     +'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 15 12 9 18 15"/></svg>';
+  aiBarDrag(b);
   aiBarShow();
+}
+/* 横条可拖（ADR-0096 的后续，产品 2026-11-13「收起后依然要支持能拖动」）：折叠态自己带位置，
+   拖到哪就停在哪；点它展开时面板落回这一格（openAiPanel 里同步），再从底部药丸收起又回写到面板顶边。
+   手势与 panelDrag 同一套：4px 阈值才捕获指针、拖过的这一次在松手后 150ms 内吞掉补发的 click
+   （横条的 click 自己接管展开，所以去掉 DOM 上的 inline onclick，改在这里按 _swallowUntil 判）。
+   与 panelDrag 的差别只有两处：横条不做「推出屏外收起」，位置一律夹在屏内；
+   拖的时候整条跟手，不用管别的浮层。 */
+function aiBarDrag(b){
+  if(!b||b._dg)return;b._dg=true;
+  var down=false,moved=false,sx=0,sy=0,ox=0,oy=0,k=1;
+  b._swallowUntil=0; /* 初值要在：undefined 与时刻比大小恒为 false，那会变成「每一次 click 都吞」 */
+  b.addEventListener('pointerdown',function(e){
+    if(e.button&&e.button!==0)return;
+    down=true;moved=false;b._swallowUntil=0;sx=e.clientX;sy=e.clientY;
+    b.classList.remove('anim-in'); /* 入场那 180ms 的 translateY 还没跑完就抓住：先落定，别跟手势打架 */
+    ox=b.offsetLeft;oy=b.offsetTop; /* 412×916 布局像素，不受外层 .phone 的 scale 影响 */
+    var inner=b.closest('.phone-inner');
+    k=inner?inner.getBoundingClientRect().width/412:1;
+    /* 按下即捕获（与 panelDrag 的头部相反，那里得等过阈值才捕获，否则头部按钮收不到 click）。
+       横条整条就是那枚按钮、click 也是我们自己挂的：捕获把 click 改派到它自己身上，正好。
+       不这么做的话，甩得快一点第一次 pointermove 就已经在横条外，事件落在聊天列表上，
+       这一拖永远开始不了（无头实测踩到：横条 44 高，一步跨出去就失效）。 */
+    try{b.setPointerCapture(e.pointerId)}catch(x){}
+  });
+  b.addEventListener('pointermove',function(e){
+    if(!down)return;
+    if(!moved){
+      if(Math.abs(e.clientX-sx)<4&&Math.abs(e.clientY-sy)<4)return;
+      moved=true;b.classList.add('dragging');
+    }
+    var nx=ox+(e.clientX-sx)/k,ny=oy+(e.clientY-sy)/k;
+    /* 夹取用 offsetWidth／offsetHeight（与 aiCollapseToBar 同源）：横条 384.5×44，
+       横向几乎没得挪（合法区间 4–23），纵向能从状态栏下拖到手势条上 */
+    b.style.left=Math.max(4,Math.min(nx,412-b.offsetWidth-4))+'px';
+    b.style.top=Math.max(34,Math.min(ny,916-b.offsetHeight-4))+'px';
+  });
+  function barDragEnd(){
+    if(moved)b._swallowUntil=Date.now()+150; /* 只给「真拖过」开窗口：轻点不带惯性，补发的 click 照常展开 */
+    down=false;moved=false;b.classList.remove('dragging');
+  }
+  b.addEventListener('pointerup',barDragEnd);
+  b.addEventListener('pointercancel',barDragEnd);
+  b.addEventListener('click',function(e){
+    if(Date.now()<=b._swallowUntil){b._swallowUntil=0;e.preventDefault();e.stopPropagation();return}
+    openAiPanel();
+  });
 }
 function aiBarShow(delay){
   var b=$('aiBar');if(!b)return;
@@ -9794,7 +9844,7 @@ function aiBarShow(delay){
   b.style.animationDelay=(delay||0)+'ms';
   b.classList.remove('anim-in');void b.offsetWidth;b.classList.add('anim-in');
 }
-function aiBarHide(){var b=$('aiBar');if(!b)return;b.style.display='none';b.classList.remove('anim-in')}
+function aiBarHide(){var b=$('aiBar');if(!b)return;b.style.display='none';b.classList.remove('anim-in','dragging')}
 function aiBarReset(){
   aiBarOn=false;
   var b=$('aiBar');if(!b)return;
@@ -10954,6 +11004,17 @@ function openAiPanel(){
   if(!resume)closeHpPanel();          /* 同上：命中浮层也让位——开着辅助时不留在屏上（与 matchKw 的分流同一条口径） */
   hpTipHide();                        /* 辅助一开，命中就走时间线：横幅（若有）不该再挂着 */
   aiOpen=true;aiBarOn=true;           /* 开过一次就记住：收起时才有那条横条，没开过不凭空出现 */
+  /* 从折叠横条展开＝落回横条当前那一格（横条可拖，ADR-0096 后续）。面板比横条高得多，
+     横条拖到屏的下一半时面板放不下：按面板自己的高（409.8）再夹一次屏内，并把夹过的位置写回横条，
+     保持「横条恒在面板顶边那一格」这条不变量（下次收起仍落在这里）。 */
+  var barr=$('aiBar'),ap=$('aiPanel');
+  if(ap&&barr&&barr.style.display!=='none'){
+    var bl=parseFloat(barr.style.left),bt=parseFloat(barr.style.top);
+    if(isFinite(bl))ap.style.left=Math.max(4,Math.min(bl,412-384.5-4))+'px';
+    if(isFinite(bt))ap.style.top=Math.max(34,Math.min(bt,916-409.8-4))+'px';
+    if(ap.style.left)barr.style.left=ap.style.left;
+    if(ap.style.top)barr.style.top=ap.style.top;
+  }
   aiBarHide();
   for(var i=0;i<pendingHits.length;i++)pendingHits[i].done=true; /* 打开浮层＝命中已阅、角标清零（与素材面板 openPanel 同一口径） */
   ballBadge();dkRefresh();
