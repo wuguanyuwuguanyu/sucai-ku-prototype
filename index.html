@@ -22230,14 +22230,7 @@ tb.addEventListener("click",function(e){
     + '.rea-baf-page{padding:6px 0 0;font-size:14px;line-height:1.6;color:#333333}'
     + '.rea-baf-hd{margin:0 0 16px}'
     + '.rea-baf-hd h1{margin:0;font-size:16px;line-height:26px;font-weight:500;color:#333333}'
-    /* 执行上限：共用那条在别页是灰底无框，这里照线框稿落成白底细边的一条 */
-    + '.rea-baf-page .rea-freq{margin:0 0 20px;padding:10px 13px;border:1px solid #F0F0F0;border-radius:7px;background:#fff;font-size:11px;line-height:1.6;color:#8C8C8C;gap:2px 8px;align-items:center}'
-    + '.rea-baf-page .rea-freq-k{font-weight:500;color:#333333}'
-    + '.rea-baf-page .rea-freq-v em{font-style:normal;color:#333333}'
-    + '.rea-baf-page .rea-freq-a{color:#1677FF;font-size:11px}'
-    + '.rea-baf-page .rea-freq-a:hover{color:#4096FF}'
-    + '.rea-baf-page .rea-freq>svg{width:14px;height:14px;flex:none;color:#1677FF}'
-    + '.rea-baf-layout{display:grid;grid-template-columns:minmax(0,1fr) 210px;gap:24px;align-items:start}'
+    + '.rea-baf-layout{display:grid;grid-template-columns:minmax(0,800px) 210px;gap:24px;align-items:start;justify-content:start}'
     /* 2026-11-13 与新小红书运营 · 新建统一：分节从「一叠白纸里切段」改成一张张白底卡片，
        卡片头＝标题＋一行灰副标题；序号圆点退休。 */
     + '.rea-baf-sheet{min-width:0;background:transparent}'
@@ -23479,8 +23472,6 @@ function initQf(){
   var side=document.createElement('aside');side.className='rea-qf-side';
   wrap.appendChild(main);wrap.appendChild(side);
   holder.appendChild(wrap);
-  /* 执行上限：只回显操作频率设置里那组数，就地打开抽屉改 */
-  main.insertAdjacentHTML('afterbegin',${reaJson(reaFreqNote('msg'))});
   if(title)title.textContent='新建群发好友任务';
 
   function sec(no,txt,sub){
@@ -24020,8 +24011,6 @@ function initQs(){
   form.innerHTML='<div class="rea-qf-main"></div><aside class="rea-qf-side"></aside>';
   sheet.appendChild(form);
   var main=q('.rea-qf-main',form),side=q('.rea-qf-side',form);
-  /* 执行上限：只回显操作频率设置里那组数，就地打开抽屉改 */
-  main.insertAdjacentHTML('afterbegin',${reaJson(reaFreqNote('msg'))});
 
   function sec(no,t,sub){
     var secEl=document.createElement('section');secEl.className='rea-qf-sec';
@@ -24488,8 +24477,6 @@ else if(PAGE==='群发群组 · 新建')initQs();
     'var ADDB=null,abs=BD.querySelectorAll("button.ant-btn");',
     'for(fi=0;fi<abs.length;fi++)if((abs[fi].textContent||"").replace(/\\s+/g,"")==="添加回复内容")ADDB=abs[fi];',
     'if(!ADDB||!TB)return;',
-    '/* 执行上限：只回显操作频率设置里那组数，就地打开抽屉改 */',
-    'BD.insertAdjacentHTML("afterbegin",' + reaJson(reaFreqNote('greet')) + ');',
     '/* 「从素材库选择」＝「添加回复内容」右侧的次按钮。与手建并存、不互斥：',
     '   取完照样能逐行编辑／删除，素材只是把 n 条消息一次铺成 n 行。 */',
     'var SRCB=document.createElement("button");',
@@ -25306,7 +25293,7 @@ function toast(t){
 function back(){parent.postMessage({reaPage:'批量加好友'},'*')}
 
 /* ---------- 2026-11-10 复刻「好友任务创建页」线框稿 ----------
-   版式照线框稿：页头（标题＋说明＋新建标记）→ 执行上限的一条 → 白纸面表单 ＋ 右栏任务概览
+   版式照线框稿：页头（标题＋说明＋新建标记）→ 白纸面表单 ＋ 右栏任务概览
    → 贴着下沿的操作条。四段是 ① 谁来加 → ② 加谁 → ③ 怎么加 → ④ 什么时候加，
    任务名称与全局弹窗收进「更多设置」，点开才铺。
    行仍是快照原节点——单选、开关、输入框的接线不动，这里只搬位置、补几个可点控件。 */
@@ -25323,18 +25310,6 @@ var page=document.createElement('div');page.className='rea-baf-page';wrap.append
 var hd=document.createElement('div');hd.className='rea-baf-hd';
 var hd1=document.createElement('h1');hd1.textContent='新建批量加好友任务';
 hd.appendChild(hd1);page.appendChild(hd);
-
-/* 执行上限：只回显操作频率设置里那组数，就地打开抽屉改 */
-var limitBox=document.createElement('div');
-limitBox.innerHTML=${reaJson(reaFreqNote('add'))};
-var limitNote=limitBox.querySelector('.rea-freq');
-if(limitNote){
-  limitNote.insertAdjacentHTML('afterbegin',
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
-    +'<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>'
-    +'<path d="m9 12 2 2 4-4"/></svg>');
-  page.appendChild(limitNote);
-}
 
 /* 白纸面 ＋ 右栏任务概览 */
 var layout=document.createElement('div');layout.className='rea-baf-layout';page.appendChild(layout);
@@ -25421,7 +25396,7 @@ if(mRow){
   });
   var methodHint=document.createElement('p');methodHint.className='rea-baf-hint';
   mRow.ctl.appendChild(methodHint);
-  /* 快照那句「温馨提示」（单次 20 个、一天 200 个，多账号分摊）与页首执行上限重复，整行去掉 */
+  /* 快照那句「温馨提示」（单次 20 个、一天 200 个，多账号分摊）跟页内其它内容重复，整行去掉 */
   if(TIP_ROW&&TIP_ROW.parentNode)TIP_ROW.parentNode.removeChild(TIP_ROW);
 }
 var METHOD_HINTS={
@@ -26325,8 +26300,8 @@ BT.addEventListener('click',function(e){
       unit:'items', noun:'好友', head:'微信号/手机号',
       hide:['添加总量','未执行数','已执行数','用户不存在','用户已添加','已发送验证请求'],
       extra:'执行人员 1 人',
-      plan:['done','done','done','done','open','open','open','open','open','fail'],
-      labels:{done:'已执行',open:'未执行',fail:'用户不存在'}
+      plan:['pass','pass','pass','warn','done','fail','open','open','open','open'],
+      labels:{done:'用户已添加',open:'未执行',warn:'已发送验证请求',fail:'用户不存在'}
     },
     '关联好友 · 详情': {
       state:'live', stateText:'进行中',
@@ -29289,49 +29264,6 @@ bar.style.display='none';
 .rea-opf-toast.err::before{background:#FF4D4F}
 `;
 
-  /* ============================================================
-     执行上限的回显（2026-11-10）
-     操作频率设置里那四组上限（主动加好友、自动打招呼、群发消息、关联好友）
-     在对应的新建页顶上回显一行，右边给一个「调整上限 →」跳回设置页。
-     数值不在任务页里另存一份：设置页保存时写进这份共享状态，任务页渲染时读它，
-     所以改完上限再回来看到的就是新数；没有存档时用快照里的那组数。
-     回显只读，不改任务配置，也不挡保存。
-     ============================================================ */
-  var REA_FREQ_CSS = `
-.rea-freq{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px;margin:0 0 20px;padding:9px 14px;border-radius:8px;background:#F7F8FA;font-size:12px;line-height:20px;color:#646A73}
-.rea-freq-k{font-weight:500;color:#1F2329}
-.rea-freq-v{min-width:0}
-.rea-freq-v em{font-style:normal;color:#1F2329}
-.rea-freq-a{margin-left:auto;padding:0;border:0;background:none;font:inherit;color:#1677FF;cursor:pointer;white-space:nowrap}
-.rea-freq-a:hover{color:#0958D9;text-decoration:underline}
-.rea-freq-a:focus-visible{outline:2px solid #1677FF;outline-offset:2px;border-radius:4px}
-.rea-freq-mask{position:fixed;inset:0;z-index:1100;background:rgba(31,35,41,.35);opacity:0;visibility:hidden;transition:opacity .2s,visibility .2s}
-.rea-freq-mask.on{opacity:1;visibility:visible}
-.rea-freq-drawer{position:fixed;top:0;right:0;bottom:0;z-index:1101;display:flex;flex-direction:column;width:440px;max-width:92vw;background:#fff;box-shadow:-8px 0 24px rgba(31,35,41,.10);transform:translateX(100%);transition:transform .22s}
-.rea-freq-drawer.on{transform:none}
-.rea-freq-hd{flex:none;display:flex;align-items:flex-start;gap:12px;padding:20px 24px 14px;border-bottom:1px solid #F0F2F5}
-.rea-freq-hd h3{margin:0;font-size:16px;line-height:24px;font-weight:600;color:#1F2329}
-.rea-freq-sub{margin:4px 0 0;font-size:12px;line-height:18px;color:#8F959E}
-.rea-freq-x{flex:none;margin-left:auto;width:24px;height:24px;padding:0;border:0;border-radius:4px;background:none;color:#8F959E;font-size:18px;line-height:24px;cursor:pointer}
-.rea-freq-x:hover{background:#F2F3F5;color:#1F2329}
-.rea-freq-bd{flex:1;overflow:auto;padding:4px 24px 20px}
-.rea-freq-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px solid #F5F6F8}
-.rea-freq-row:last-of-type{border-bottom:0}
-.rea-freq-lab{font-size:13px;line-height:20px;color:#1F2329}
-.rea-freq-ctl{flex:none;display:flex;align-items:center;gap:6px}
-.rea-freq-num{width:92px;height:32px;padding:0 10px;border:1px solid #D9D9D9;border-radius:6px;background:#fff;color:#1F2329;font-size:13px;line-height:30px;text-align:right;outline:none}
-.rea-freq-num:focus{border-color:#1677FF;box-shadow:0 0 0 2px rgba(22,119,255,.12)}
-.rea-freq-dash{color:#C9CDD4;font-size:12px}
-.rea-freq-unit{min-width:36px;font-size:12px;color:#8F959E}
-.rea-freq-err{display:none;margin:10px 0 0;font-size:12px;line-height:18px;color:#FF4D4F;text-align:right}
-.rea-freq-err.on{display:block}
-.rea-freq-ft{flex:none;display:flex;justify-content:flex-end;gap:8px;padding:14px 24px;border-top:1px solid #F0F2F5}
-.rea-freq-btn{height:32px;padding:0 16px;border:1px solid #D9D9D9;border-radius:6px;background:#fff;color:#1F2329;font-size:13px;cursor:pointer}
-.rea-freq-btn:hover{border-color:#1677FF;color:#1677FF}
-.rea-freq-btn.pri{border-color:#1677FF;background:#1677FF;color:#fff}
-.rea-freq-btn.pri:hover{background:#4096FF;border-color:#4096FF;color:#fff}
-`;
-
   /* 默认值与快照那一页逐项对齐；设置页保存后才覆盖。 */
   var REA_OPF_DEF = {
     aiPoints: { v: 200, unlimited: false },
@@ -29377,287 +29309,6 @@ bar.style.display='none';
     REA_OPF_STATE = s;
     try { localStorage.setItem('rea-opf-v1', JSON.stringify(s)); } catch(e){}
   };
-
-  /* 一条回显：执行上限 ＋ 数值 ＋「调整上限」。任务页只挑跟自己那组有关的几项，不整页搬。 */
-  function reaFreqNote(kind){
-    var s = reaOpfState(), v;
-    function rng(a, b){ return '<em>' + (a === b ? a : a + '~' + b) + '</em>'; }
-    if (kind === 'add'){
-      v = '每个微信每日 <em>' + s.addDaily + '</em> 人 · 每批 <em>' + s.addBatch
-        + '</em> 人 · 批次间隔 ' + rng(s.addGap[0], s.addGap[1]) + ' 分钟';
-    } else if (kind === 'greet'){
-      v = '单个微信每日最多 <em>' + s.greetDaily + '</em> 人';
-    } else if (kind === 'msg'){
-      v = '每日 <em>' + s.msgDaily + '</em> 条 · 每小时 <em>' + s.msgHourly
-        + '</em> 条 · 每条间隔 ' + rng(s.msgGap[0], s.msgGap[1]) + ' 秒';
-    } else if (kind === 'rel'){
-      v = '每小时最多关联 <em>' + s.relHourly + '</em> 人 · 账号间隔 '
-        + rng(s.relGap[0], s.relGap[1]) + ' 秒';
-    } else {
-      return '';
-    }
-    return '<div class="rea-freq"><span class="rea-freq-k">执行上限</span>'
-      + '<span class="rea-freq-v">' + v + '</span>'
-      + '<button type="button" class="rea-freq-a" data-rea-freq-open>调整上限 ›</button></div>';
-  }
-  window.__reaFreqNote = reaFreqNote;
-  /* 覆盖页里插这条：target 写目标容器的 JS 表达式（wrap / main / BD …） */
-  function reaFreqMountJs(kind, target){
-    return 'var __freqT=' + target + ';\n'
-      + 'if(__freqT)__freqT.insertAdjacentHTML("afterbegin",' + reaJson(reaFreqNote(kind)) + ');';
-  }
-
-  /* 就地改上限的那几组：只列这一页用得上的行，上下限照设置页。
-     链接改抽屉而不是跳页——任务页填到一半跳走，回来就得从头再建。 */
-  var REA_FREQ_GROUPS = {
-    add: { name: '主动加好友', rows: [
-      { key: 'addDaily', label: '每个微信每日添加', unit: '人', min: 0, max: 200 },
-      { key: 'addBatch', label: '每个微信每批添加', unit: '人', min: 0, max: 100 },
-      { key: 'addGap', label: '批次间隔', unit: '分钟', pair: true, min: [1, 1], max: [18, 18] }
-    ] },
-    greet: { name: '自动打招呼', rows: [
-      { key: 'greetDaily', label: '单个微信每日', unit: '人', min: 1, max: 180 }
-    ] },
-    msg: { name: '群发消息', rows: [
-      { key: 'msgDaily', label: '每日群发', unit: '条', min: 1, max: 5000 },
-      { key: 'msgHourly', label: '每小时群发', unit: '条', min: 1, max: 5000 },
-      { key: 'msgGap', label: '多条消息间隔', unit: '秒', pair: true, min: [3, 4], max: [3600, 3600] },
-      { key: 'objGap', label: '多个对象间隔', unit: '秒', pair: true, min: [3, 4], max: [3600, 3600] }
-    ] },
-    rel: { name: '关联好友', rows: [
-      { key: 'relHourly', label: '每小时关联', unit: '人', min: 1, max: 50 },
-      { key: 'relGap', label: '账号间隔', unit: '秒', pair: true, min: [3, 4], max: [3600, 60] }
-    ] }
-  };
-
-  /* 抽屉。注入到覆盖页里执行，所以不闭包任何外层变量——只认参数与 parent 上的共享读写。 */
-  function reaFreqOpen(kind, group){
-    function el(tag, cls, txt){
-      var n = document.createElement(tag);
-      if (cls) n.className = cls;
-      if (txt != null) n.textContent = txt;
-      return n;
-    }
-    function int(v, d){ v = parseInt(v, 10); return isNaN(v) ? d : v; }
-    function clamp(v, mn, mx){ return Math.max(mn, Math.min(mx, int(v, mn))); }
-    function getState(){
-      try { return (parent.__reaOpfGet && parent.__reaOpfGet()) || {}; }
-      catch(e){ return {}; }
-    }
-    function putState(s){
-      try { if (parent.__reaOpfSave) parent.__reaOpfSave(s); } catch(e){}
-    }
-
-    var mask = el('div', 'rea-freq-mask');
-    var drawer = el('aside', 'rea-freq-drawer');
-    drawer.setAttribute('role', 'dialog');
-    drawer.setAttribute('aria-modal', 'true');
-    drawer.setAttribute('aria-labelledby', 'rea-freq-title');
-    drawer.tabIndex = -1;
-
-    var hd = el('div', 'rea-freq-hd');
-    var hdt = el('div');
-    var title = el('h3', null, '执行上限');
-    title.id = 'rea-freq-title';
-    hdt.appendChild(title);
-    hdt.appendChild(el('p', 'rea-freq-sub', group.name + ' · 保存后对所有同类任务生效'));
-    var closeX = el('button', 'rea-freq-x', '×');
-    closeX.type = 'button';
-    closeX.setAttribute('aria-label', '关闭');
-    hd.appendChild(hdt); hd.appendChild(closeX);
-
-    var bd = el('div', 'rea-freq-bd');
-    var err = el('p', 'rea-freq-err', '每小时上限不能高于每日群发总数');
-    var rows = [];
-    group.rows.forEach(function(r){
-      var row = el('div', 'rea-freq-row');
-      row.appendChild(el('span', 'rea-freq-lab', r.label));
-      var ctl = el('span', 'rea-freq-ctl');
-      var ins = [];
-      for (var i = 0; i < (r.pair ? 2 : 1); i++){
-        if (i) ctl.appendChild(el('span', 'rea-freq-dash', '~'));
-        var inp = document.createElement('input');
-        inp.type = 'text';
-        inp.setAttribute('inputmode', 'numeric');
-        inp.className = 'rea-freq-num';
-        inp.setAttribute('aria-label', r.label + (r.pair ? (i ? '上限' : '下限') : ''));
-        inp.__fr = { idx: i, pair: !!r.pair, ins: ins,
-          min: r.pair ? r.min[i] : r.min, max: r.pair ? r.max[i] : r.max };
-        ins.push(inp);
-        ctl.appendChild(inp);
-      }
-      ctl.appendChild(el('span', 'rea-freq-unit', r.unit));
-      row.appendChild(ctl);
-      bd.appendChild(row);
-      rows.push({ key: r.key, pair: !!r.pair, ins: ins });
-    });
-    bd.appendChild(err);
-
-    var ft = el('div', 'rea-freq-ft');
-    var cancel = el('button', 'rea-freq-btn', '取消');
-    cancel.type = 'button';
-    var save = el('button', 'rea-freq-btn pri', '保存');
-    save.type = 'button';
-    ft.appendChild(cancel); ft.appendChild(save);
-    drawer.appendChild(hd); drawer.appendChild(bd); drawer.appendChild(ft);
-
-    var open = false, lastFocus = null, noteEl = null;
-
-    function other(inp){
-      var o = inp.__fr;
-      return o.pair ? o.ins[o.idx ? 0 : 1] : null;
-    }
-    function order(inp){
-      var o = inp.__fr, ot = other(inp);
-      if (!ot) return;
-      var oo = ot.__fr, v = int(inp.value, o.min);
-      if (o.idx === 0 && v > int(ot.value, oo.min)) ot.value = clamp(v, oo.min, oo.max);
-      else if (o.idx === 1 && v < int(ot.value, oo.min)) ot.value = clamp(v, oo.min, oo.max);
-    }
-    function check(){
-      var ok = true;
-      if (kind === 'msg'){
-        var d = -1, h = -1;
-        rows.forEach(function(r){
-          if (r.key === 'msgDaily') d = int(r.ins[0].value, r.ins[0].__fr.min);
-          if (r.key === 'msgHourly') h = int(r.ins[0].value, r.ins[0].__fr.min);
-        });
-        ok = d < 0 || h < 0 || h <= d;
-      }
-      err.classList.toggle('on', !ok);
-      return ok;
-    }
-    function norm(inp){
-      var o = inp.__fr;
-      inp.value = clamp(inp.value, o.min, o.max);
-      order(inp);
-      inp.value = clamp(inp.value, o.min, o.max);
-      check();
-    }
-    function fill(){
-      var s = getState();
-      rows.forEach(function(r){
-        if (r.pair){
-          var v = s[r.key];
-          if (!v || v.length !== 2) v = [r.ins[0].__fr.min, r.ins[1].__fr.min];
-          for (var i = 0; i < 2; i++) r.ins[i].value = clamp(v[i], r.ins[i].__fr.min, r.ins[i].__fr.max);
-        } else {
-          r.ins[0].value = clamp(s[r.key], r.ins[0].__fr.min, r.ins[0].__fr.max);
-        }
-      });
-      check();
-    }
-    function collect(){
-      var s = getState();
-      rows.forEach(function(r){
-        if (r.pair) s[r.key] = [int(r.ins[0].value, r.ins[0].__fr.min), int(r.ins[1].value, r.ins[1].__fr.min)];
-        else s[r.key] = int(r.ins[0].value, r.ins[0].__fr.min);
-      });
-      return s;
-    }
-    /* 只换数值那一段，按钮、图标、间距都留在原地 */
-    function paintNote(){
-      var html = '';
-      try { html = parent.__reaFreqNote ? parent.__reaFreqNote(kind) : ''; } catch(e){}
-      if (!html) return;
-      var cur = noteEl && noteEl.querySelector('.rea-freq-v');
-      if (!cur) cur = document.querySelector('.rea-freq-v');
-      if (!cur) return;
-      var box = document.createElement('div');
-      box.innerHTML = html;
-      var nv = box.querySelector('.rea-freq-v');
-      if (nv) cur.innerHTML = nv.innerHTML;
-    }
-    function close(){
-      if (!open) return;
-      open = false;
-      mask.classList.remove('on');
-      drawer.classList.remove('on');
-      document.removeEventListener('keydown', onKey, true);
-      setTimeout(function(){
-        if (mask.parentNode) mask.parentNode.removeChild(mask);
-        if (drawer.parentNode) drawer.parentNode.removeChild(drawer);
-        if (lastFocus && lastFocus.focus) lastFocus.focus();
-      }, 220);
-    }
-    function commit(){
-      rows.forEach(function(r){ r.ins.forEach(norm); });
-      if (!check()){
-        var h = null;
-        rows.forEach(function(r){ if (r.key === 'msgHourly') h = r.ins[0]; });
-        if (h) h.focus();
-        return;
-      }
-      putState(collect());
-      paintNote();
-      close();
-    }
-    function onKey(e){
-      if (e.key === 'Escape'){ e.preventDefault(); close(); return; }
-      if (e.key === 'Enter' && e.target && e.target.classList && e.target.classList.contains('rea-freq-num')){
-        e.preventDefault(); commit(); return;
-      }
-      if (e.key === 'Tab'){
-        var f = drawer.querySelectorAll('button,input');
-        if (!f.length) return;
-        var first = f[0], last = f[f.length - 1];
-        if (e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
-        else if (!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
-      }
-    }
-    function openDrawer(trigger){
-      if (open) return;
-      open = true;
-      lastFocus = document.activeElement;
-      noteEl = trigger && trigger.closest ? trigger.closest('.rea-freq') : null;
-      fill();
-      document.body.appendChild(mask);
-      document.body.appendChild(drawer);
-      void drawer.offsetWidth;
-      mask.classList.add('on');
-      drawer.classList.add('on');
-      document.addEventListener('keydown', onKey, true);
-      setTimeout(function(){ (rows.length ? rows[0].ins[0] : drawer).focus(); }, 30);
-    }
-
-    rows.forEach(function(r){
-      r.ins.forEach(function(inp){
-        inp.addEventListener('input', function(){
-          var v = String(this.value).replace(/[^\d]/g, '');
-          if (v !== this.value) this.value = v;
-          check();
-        });
-        inp.addEventListener('blur', function(){ norm(this); });
-        inp.addEventListener('keydown', function(e){
-          if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
-          e.preventDefault();
-          var o = this.__fr;
-          this.value = clamp(int(this.value, o.min) + (e.key === 'ArrowUp' ? 1 : -1), o.min, o.max);
-          order(this);
-          check();
-        });
-      });
-    });
-    closeX.addEventListener('click', function(e){ e.preventDefault(); close(); });
-    cancel.addEventListener('click', function(e){ e.preventDefault(); close(); });
-    mask.addEventListener('click', close);
-    save.addEventListener('click', function(e){ e.preventDefault(); commit(); });
-
-    /* 委托到 document：回显可能晚于本脚本插入（群发页在 init 里才铺），也可能随弹窗重建 */
-    document.addEventListener('click', function(e){
-      var t = e.target;
-      while (t && t !== document && !(t.classList && t.classList.contains('rea-freq-a'))) t = t.parentNode;
-      if (!t || t === document) return;
-      e.preventDefault();
-      openDrawer(t);
-    });
-  }
-
-  function reaFreqDrawerJs(kind){
-    var g = REA_FREQ_GROUPS[kind];
-    if (!g) return '';
-    return '(' + reaFreqOpen.toString() + ')(' + reaJson(kind) + ',' + reaJson(g) + ');';
-  }
 
   function reaOpfJs(){
     return String.raw`
@@ -29905,15 +29556,6 @@ Object.keys(F).forEach(function(k){F[k].ins.forEach(function(i){sync(i)})});
 checkCross();
 })();
 `;
-  }
-
-  /* 关联好友 · 新建（2026-11-10）：快照那张「添加任务」弹窗不动，只把执行上限回显
-     插到弹窗正文最前。弹窗体在快照里有好几份模板，认「任务名称」那一份。 */
-  function reaRelJs(){
-    var target = '(function(){var bs=document.querySelectorAll(".ant-modal-body"),i;'
-      + 'for(i=0;i<bs.length;i++)if((bs[i].textContent||"").indexOf("任务名称")>=0)return bs[i];'
-      + 'return null})()';
-    return '(function(){' + reaFreqMountJs('rel', target) + '})();' + reaFreqDrawerJs('rel');
   }
 
   /* 客户唤醒 · 新建（2026-11-11）：快照只画了静态表单——「添加回复内容」弹窗、
@@ -30547,12 +30189,12 @@ syncTip();drawRows();
     '发圈 · 详情': { css: REA_FQ_DETAIL_CSS + REA_WX_DETAIL_CSS + REA_WX_SNAP_CSS, js: function(){ return reaFqDetailJs() + reaWxDetailContentJs('发圈 · 详情') + reaWxDetailJs('发圈 · 详情'); } },
     /* 微信营销任务 · 任务内容「从素材库选择」（2026-10-23）：三页共用一份弹窗与选材逻辑 */
     '发圈 · 新建': { css: REA_WXT_CSS, js: function(){ return reaWxtJs('发圈 · 新建'); } },
-    '群发好友 · 新建': { css: REA_WXT_CSS + REA_FREQ_CSS, js: function(){ return reaWxtJs('群发好友 · 新建') + reaFreqDrawerJs('msg'); } },
-    '群发群组 · 新建': { css: REA_WXT_CSS + REA_FREQ_CSS, js: function(){ return reaWxtJs('群发群组 · 新建') + reaFreqDrawerJs('msg'); } },
+    '群发好友 · 新建': { css: REA_WXT_CSS, js: function(){ return reaWxtJs('群发好友 · 新建'); } },
+    '群发群组 · 新建': { css: REA_WXT_CSS, js: function(){ return reaWxtJs('群发群组 · 新建'); } },
     /* 自动打招呼 · 新建：欢迎语模版的「添加回复内容」流（2026-10-23） */
-    '自动打招呼 · 新建': { css: REA_PICK_CSS + REA_ZD_CSS + REA_FREQ_CSS, js: function(){ return reaZdJs() + reaFreqDrawerJs('greet'); } },
+    '自动打招呼 · 新建': { css: REA_PICK_CSS + REA_ZD_CSS, js: function(){ return reaZdJs(); } },
     /* 批量加好友（2026-10-27）：新建页补「添加群内好友」与四行配置；详情页补只读回显 */
-    '批量加好友 · 新建': { css: REA_BD_CSS + REA_FREQ_CSS, js: function(){ return reaBdJs() + reaFreqDrawerJs('add'); } },
+    '批量加好友 · 新建': { css: REA_BD_CSS, js: function(){ return reaBdJs(); } },
     '批量加好友 · 详情': { css: REA_WX_DETAIL_CSS, js: function(){ return reaBdDetailJs() + reaWxDetailJs('批量加好友 · 详情'); } },
     '群发群组 · 详情': { css: REA_WX_DETAIL_CSS + REA_WX_SNAP_CSS, js: function(){ return reaQsDetailJs() + reaWxDetailContentJs('群发群组 · 详情') + reaWxDetailJs('群发群组 · 详情'); } },
     /* 关联好友／客户唤醒的详情原来没覆盖，这一笔补上（执行进度卡是唯一改动；
@@ -30567,8 +30209,6 @@ syncTip();drawRows();
     '批量加好友 · 任务配置快照': { css: REA_WX_SNAP_CSS, js: function(){ return reaWxSnapshotJs('批量加好友 · 任务配置快照'); } },
     '关联好友 · 任务配置快照': { css: REA_WX_SNAP_CSS, js: function(){ return reaWxSnapshotJs('关联好友 · 任务配置快照'); } },
     '客户唤醒 · 任务配置快照': { css: REA_WX_SNAP_CSS, js: function(){ return reaWxSnapshotJs('客户唤醒 · 任务配置快照'); } },
-    /* 关联好友 · 新建（2026-11-10）：正文仍是快照那张「添加任务」弹窗，只补执行上限回显 */
-    '关联好友 · 新建': { css: REA_FREQ_CSS, js: reaRelJs },
     /* 客户唤醒 · 新建（2026-11-11）：单位下拉、执行人员、添加回复内容弹窗（固定内容／AI 两套）
        ＋ 唤醒内容行的增删改；正文与设计语言都还是快照，只补交互 */
     '客户唤醒 · 新建': { css: REA_HX_CSS, js: reaHxJs }
