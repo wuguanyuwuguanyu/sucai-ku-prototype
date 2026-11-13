@@ -26382,7 +26382,52 @@ BT.addEventListener('click',function(e){
     '.rea-wxd-tb.warn i{background:#FAAD14}',
     '.rea-wxd-tb.fail i{background:#FF4D4F}',
     '.rea-wxd-tb.pass i{background:#52C41A}',
-    '.rea-wxd-tb.open{color:#646A73}'
+    '.rea-wxd-tb.open{color:#646A73}',
+    /* 客户唤醒 · 详情：右栏换成唤醒结果（2026-11-13）。
+       已唤醒＝客户回复；唤醒率＝已唤醒÷已发送，触达率＝已发送÷应触达。
+       蓝＝已回复、灰＝未回复、琥珀＝发送失败，色值取 ADR-0082 的 token。 */
+    '.rea-wxd-hx .rea-wxd-info{grid-template-columns:minmax(0,1fr) 400px}',
+    '.rea-hx-hd{display:flex;align-items:center;gap:8px;margin-bottom:14px}',
+    '.rea-hx-t{display:inline-flex;align-items:center;gap:5px;font-size:14px;font-weight:600;line-height:20px;color:#1F2329}',
+    '.rea-hx-more{margin-left:auto;border:0;background:none;padding:0;font:inherit;font-size:13px;line-height:20px;color:#1677FF;cursor:pointer;white-space:nowrap}',
+    '.rea-hx-more:hover{text-decoration:underline}',
+    '.rea-hx-main{display:flex;align-items:flex-end;justify-content:space-between;gap:16px}',
+    '.rea-hx-big{display:flex;align-items:baseline;gap:6px;min-width:0}',
+    '.rea-hx-big>span{font-size:12px;line-height:18px;color:#8F959E;align-self:flex-start;margin-top:4px}',
+    '.rea-hx-big b{font-size:32px;line-height:1.15;font-weight:600;color:#1F2329;font-variant-numeric:tabular-nums}',
+    '.rea-hx-big em{font-style:normal;font-size:13px;line-height:20px;color:#646A73}',
+    '.rea-hx-rates{display:grid;gap:8px;text-align:right}',
+    '.rea-hx-rates span{display:block;font-size:12px;line-height:18px;color:#8F959E}',
+    '.rea-hx-rates b{display:block;font-size:16px;line-height:22px;font-weight:600;color:#1F2329;font-variant-numeric:tabular-nums}',
+    '.rea-hx-bar{display:flex;height:8px;margin-top:18px;border-radius:4px;overflow:hidden;background:#F0F2F5}',
+    '.rea-hx-bar i{display:block;height:100%}',
+    '.rea-hx-bar .rep,.rea-hx-lg .rep{background:#1677FF}',
+    '.rea-hx-bar .open,.rea-hx-lg .open{background:#C9CED6}',
+    '.rea-hx-bar .fail,.rea-hx-lg .fail{background:#FAAD14}',
+    '.rea-hx-lg{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:12px}',
+    '.rea-hx-lg button{display:inline-flex;align-items:center;gap:6px;border:0;background:none;padding:0;font:inherit;font-size:12px;line-height:18px;color:#646A73;cursor:pointer;white-space:nowrap}',
+    '.rea-hx-lg button:hover{color:#1677FF}',
+    '.rea-hx-lg i{width:6px;height:6px;flex:none;border-radius:50%}',
+    '.rea-hx-lg b{font-weight:500;color:#1F2329;font-variant-numeric:tabular-nums}',
+    '.rea-hx-lg button:hover b{color:#1677FF}',
+    '.rea-hx-ft{margin-top:14px;font-size:12px;line-height:18px;color:#8F959E}',
+    '.rea-hx-modal .ant-modal-content{position:relative}',
+    '.rea-hx-modal .ant-modal-body{padding-top:4px}',
+    '.rea-hx-tool{display:flex;align-items:center;gap:8px;margin-bottom:14px}',
+    '.rea-hx-tool-sp{flex:1;min-width:8px}',
+    '.rea-hx-scroll{max-height:52vh;overflow:auto;border:1px solid #F0F0F2;border-radius:6px}',
+    '.rea-hx-scroll .ant-table-thead>tr>th{white-space:nowrap;position:sticky;top:0;z-index:2;background:#F7F8FA}',
+    '.rea-hx-table .ant-table-tbody>tr>td{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}',
+    '.rea-hx-table .ant-table-tbody>tr.ant-table-row:hover>td{background:#FAFBFC}',
+    '.rea-hx-count{margin-top:10px;text-align:right;font-size:12px;line-height:18px;color:#8F959E}',
+    '.rea-hx-emp b{display:block;font-weight:400;font-size:14px;line-height:20px;color:#1F2329}',
+    '.rea-hx-emp span{display:block;font-size:12px;line-height:18px;color:#8F959E}',
+    '.rea-hx-dd{position:absolute;z-index:1060;background:#fff;border-radius:8px;padding:4px;box-shadow:0 6px 16px rgba(0,0,0,.08)}',
+    '.rea-hx-dd .ant-select-item{padding:5px 12px;border-radius:4px;cursor:pointer}',
+    '.rea-hx-dd .ant-select-item-option-active{background:rgba(0,0,0,.04)}',
+    '.rea-hx-dd .ant-select-item-option-selected{background:#E6F4FF;color:#1677FF}',
+    '@media(max-width:1200px){.rea-wxd-hx .rea-wxd-info{grid-template-columns:minmax(0,1fr) 340px}}',
+    '@media(max-width:1000px){.rea-wxd-hx .rea-wxd-info{grid-template-columns:minmax(0,1fr)}}'
   ].join('\n');
 
   /* 任务信息重排 + 演示表行。字段在左、进度环在右（关联好友的任务信息没有标题，
@@ -26744,6 +26789,301 @@ function open(){
   var f=w.querySelector('[data-wxs-close]');if(f)f.addEventListener('click',function(){close(w)});
   var m=w.querySelector('.ant-modal-wrap');if(m)m.addEventListener('click',function(e){if(e.target===m)close(w)});
   document.addEventListener('keydown',onKey);
+}
+})();`;
+  }
+
+  /* 客户唤醒 · 详情：右栏从「执行进度」换成「唤醒结果」（2026-11-13）。
+     员工执行只是通道，创建人要看的是这批沉睡客户回来多少：
+     已唤醒 x 位、唤醒率（已回复÷已发送）、触达率（已发送÷应触达），
+     下面一条三段占比条，点任一段开客户明细并预筛。
+     员工表最后一列从「应触达人数」改成「已唤醒/应触达」，点开该员工的客户明细。
+     口径：客户回复即计为已唤醒；回复按任务累计，任务结束后新到的回复仍记在本任务。
+     演示数字：4/10 人已执行、应触达 720、已发送 660、已回复 128、发送失败 60。
+     只动内嵌覆盖件：不动 _online-admin.js、不重跑构建。 */
+  function reaWakeJs(){
+    return String.raw`(function(){
+'use strict';
+var CARD=document.querySelector('[data-rea-wxd]');
+if(!CARD)return;
+if(CARD.classList.contains('rea-wxd-hx'))return;
+/* 这一条右栏的环没有类名（reaWxDetailJs 只在批量加好友那支给它加），按位置取 */
+var INFO=CARD.querySelector('.rea-wxd-info');
+if(!INFO||INFO.children.length<2)return;
+var RING=INFO.children[INFO.children.length-1];
+var N={reach:720,sent:660,replied:128,failed:60,done:4,people:10};
+N.open=N.sent-N.replied;
+var TOTAL=180;
+var PEOPLE=[
+ {n:'雅楠002',p:'13260303290',d:'测试二级三部',rep:38,fail:15},
+ {n:'李佳',p:'13800138001',d:'销售一部',rep:32,fail:15},
+ {n:'王敏',p:'13800138002',d:'销售一部',rep:34,fail:15},
+ {n:'陈昊',p:'13800138003',d:'销售二部',rep:24,fail:15}
+];
+function pct(a,b){return (a/b*100).toFixed(1)+'%'}
+function wd(a,b){return (a/b*100).toFixed(2)+'%'}
+CARD.classList.add('rea-wxd-hx');
+RING.className='rea-wxd-ring rea-hx-res';
+RING.innerHTML=''
++'<div class="rea-hx-hd"><span class="rea-hx-t">唤醒结果<span class="rea-wxd-help" title="客户在收到唤醒消息后回复，即计为已唤醒；唤醒率＝已唤醒÷已发送。回复按任务累计，任务结束后新到的回复仍记在本任务。">?</span></span>'
++'<button type="button" class="rea-hx-more" data-hx-open="all">查看唤醒明细 ›</button></div>'
++'<div class="rea-hx-main">'
++'<div class="rea-hx-big"><span>已唤醒</span><b>'+N.replied+'</b><em>位</em></div>'
++'<div class="rea-hx-rates"><div><span>触达率</span><b>'+pct(N.sent,N.reach)+'</b></div><div><span>唤醒率</span><b>'+pct(N.replied,N.sent)+'</b></div></div>'
++'</div>'
++'<div class="rea-hx-bar" role="img" aria-label="应触达 '+N.reach+' 位：已回复 '+N.replied+' 位、未回复 '+N.open+' 位、发送失败 '+N.failed+' 位">'
++'<i class="rep" style="width:'+wd(N.replied,N.reach)+'"></i>'
++'<i class="open" style="width:'+wd(N.open,N.reach)+'"></i>'
++'<i class="fail" style="width:'+wd(N.failed,N.reach)+'"></i>'
++'</div>'
++'<div class="rea-hx-lg">'
++'<button type="button" data-hx-open="replied"><i class="rep"></i>已回复<b>'+N.replied+'</b></button>'
++'<button type="button" data-hx-open="open"><i class="open"></i>未回复<b>'+N.open+'</b></button>'
++'<button type="button" data-hx-open="failed"><i class="fail"></i>发送失败<b>'+N.failed+'</b></button>'
++'</div>'
++'<div class="rea-hx-ft">已执行 '+N.done+'/'+N.people+' 人 · 应触达 '+N.reach+' 位</div>';
+/* 员工表最后一列：应触达人数 → 已唤醒/应触达；点开该员工的客户明细 */
+function clean(x){return String(x==null?'':x).replace(/\s+/g,'')}
+var ths=document.querySelectorAll('.ant-table-thead th'),i,k;
+for(i=0;i<ths.length;i++){if(clean(ths[i].textContent)==='应触达人数')ths[i].textContent='已唤醒/应触达'}
+var trs=document.querySelectorAll('.ant-table-tbody tr.ant-table-row');
+for(i=0;i<trs.length;i++){
+  var tds=trs[i].children;if(!tds.length)continue;
+  var nm=clean(tds[0].textContent),ppl=null;
+  for(k=0;k<PEOPLE.length;k++){if(nm.indexOf(PEOPLE[k].n)>=0){ppl=PEOPLE[k];break}}
+  if(!ppl)continue;
+  var td=tds[tds.length-1],btn=td.querySelector('button');
+  if(!btn)continue;
+  var sp=btn.querySelector('span');
+  if(sp)sp.textContent=ppl.rep+'/'+TOTAL;else btn.textContent=ppl.rep+'/'+TOTAL;
+  btn.setAttribute('data-hx-emp',ppl.n);
+  btn.addEventListener('click',function(){openHx({emp:this.getAttribute('data-hx-emp')})});
+}
+var hits=CARD.querySelectorAll('[data-hx-open]');
+for(i=0;i<hits.length;i++)hits[i].addEventListener('click',function(e){e.preventDefault();openHx({preset:this.getAttribute('data-hx-open')})});
+/* ===== 客户明细弹窗：任务级列表，可按发送状态、是否回复、员工、客户筛 ===== */
+var NICKS=['林小满','顾北','周舟','沈知夏','陆远','许乐','苏晴','陈默','方糖','向南','白露','唐果','江野','夏至','秦朗','叶青','温言','程曦','柳岸','安然'];
+var REMARKS=['周总','李经理','王总','陈总','赵经理','孙总','吴总','郑经理','林总','刘总'];
+var REPLYTXT=['收到了，谢谢','好的，最近正好有需要','这个活动还有吗？','已了解，稍后联系','麻烦发下详情','收到，我看看','可以，帮我留一份','好的，谢谢'];
+var CONTENT='您好，好久没联系了，最近我们上了新品，给您留了一份资料，方便的话我发您看看～';
+function p2(n){return (n<10?'0':'')+n}
+function fdt(d){return d.getFullYear()+'/'+p2(d.getMonth()+1)+'/'+p2(d.getDate())+' '+p2(d.getHours())+':'+p2(d.getMinutes())}
+var ALL=[];
+for(var pi=0;pi<PEOPLE.length;pi++){
+  var pe=PEOPLE[pi];
+  for(var j=0;j<TOTAL;j++){
+    var failed=j>=TOTAL-pe.fail;
+    var replied=!failed&&j<pe.rep;
+    var st=new Date(2026,10,10,10,19,0).getTime()+(pi*TOTAL+j)*7*60000;
+    var sd=new Date(st),rd=new Date(st+(5+j%17)*60000);
+    var ld=new Date(2026,8,1+((pi*TOTAL+j)%28),10,0,0);
+    ALL.push({
+      emp:pe.n,phone:pe.p,dept:pe.d,
+      nick:NICKS[(pi*7+j)%NICKS.length],
+      wxid:'wxid_'+pe.p.slice(-4)+p2(Math.floor(j/100))+p2(j%100),
+      remark:REMARKS[(pi*3+j)%REMARKS.length],
+      send:failed?'-':fdt(sd),
+      content:failed?'-':CONTENT,
+      replied:replied,
+      reply:replied?fdt(rd):'-',
+      replyText:replied?REPLYTXT[(pi+j)%REPLYTXT.length]:'-',
+      status:failed?'发送失败':'已发送',
+      last:fdt(ld)
+    });
+  }
+}
+var ML=null,DD=null,DDKEY='',ST='all',RP='all',KWE='',KWC='';
+function q(s,r){return (r||document).querySelector(s)}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+var ARROW='<span class="anticon anticon-down" aria-hidden="true"><svg viewBox="64 64 896 896" focusable="false" width="1em" height="1em" fill="currentColor"><path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"></path></svg></span>';
+var EMPTY='<svg width="64" height="41" viewBox="0 0 64 41" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0 1)" fill="none" fill-rule="evenodd"><ellipse fill="#F5F5F5" cx="32" cy="33" rx="32" ry="7"></ellipse><g fill-rule="nonzero" stroke="#D9D9D9"><path d="M55 12.76L44.854 1.258C44.367.474 43.656 0 42.907 0H21.093c-.749 0-1.46.474-1.947 1.257L9 12.761V22h46v-9.24z"></path><path d="M41.613 15.931c0-1.605.994-2.93 2.227-2.93H18.624c-1.233 0-2.227 1.325-2.227 2.93V41c0 1.605.994 2.93 2.227 2.93h22.989c1.233 0 2.227-1.325 2.227-2.93V15.93z" fill="#FAFAFA"></path></g></g></svg>';
+var DL='<svg viewBox="64 64 896 896" focusable="false" width="1em" height="1em" fill="currentColor"><path d="M505.7 661a8 8 0 0012.6 0l112-141.7c4.1-5.2.4-12.9-6.3-12.9h-74.1V168c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8v338.3H400c-6.7 0-10.4 7.7-6.3 12.9l112 141.8zM878 626h-60c-4.4 0-8 3.6-8 8v154H214V634c-4.4 0-8-3.6-8-8h-60c-4.4 0-8 3.6-8 8v198c0 17.7 14.3 32 32 32h684c17.7 0 32-14.3 32-32V634c0-4.4-3.6-8-8-8z"></path></svg>';
+function matches(r){
+  if(ST!=='all'&&r.status!==ST)return false;
+  if(RP==='yes'&&!r.replied)return false;
+  if(RP==='no'&&r.replied)return false;
+  if(KWE&&r.emp.toLowerCase().indexOf(KWE.toLowerCase())<0&&r.phone.indexOf(KWE)<0)return false;
+  if(KWC&&(r.nick+r.remark+r.wxid).toLowerCase().indexOf(KWC.toLowerCase())<0)return false;
+  return true;
+}
+function selHtml(key,ph,wid){
+  return '<span class="ant-select css-vgijab ant-select-outlined ant-select-single ant-select-show-arrow" data-hx-sel="'+key+'" style="width:'+wid+'px">'
+  +'<span class="ant-select-selector"><span class="ant-select-selection-wrap">'
+  +'<span class="ant-select-selection-search"><input type="search" autocomplete="off" class="ant-select-selection-search-input" role="combobox" readonly style="opacity:0"></span>'
+  +'<span class="ant-select-selection-placeholder">'+ph+'</span>'
+  +'</span></span>'
+  +'<span class="ant-select-arrow">'+ARROW+'</span></span>';
+}
+function tableShell(){
+  return '<div class="ant-table-wrapper rea-hx-table css-vgijab">'
+  +'<div class="ant-spin-nested-loading css-vgijab"><div class="ant-spin-container">'
+  +'<div class="ant-table css-vgijab"><div class="ant-table-container"><div class="ant-table-content">'
+  +'<table style="table-layout:fixed;width:100%">'
+  +'<colgroup><col style="width:12%"><col style="width:12%"><col style="width:13.2%"><col style="width:12%"><col style="width:6.8%"><col style="width:13.2%"><col style="width:10.4%"><col style="width:7.6%"><col style="width:12.8%"></colgroup>'
+  +'<thead class="ant-table-thead"><tr>'
+  +'<th class="ant-table-cell">执行员工信息</th>'
+  +'<th class="ant-table-cell">客户信息<span class="rea-wxd-help" title="客户昵称与备注；同一客户被多个员工微信触达时分别计数">?</span></th>'
+  +'<th class="ant-table-cell">发送时间</th>'
+  +'<th class="ant-table-cell">发送内容</th>'
+  +'<th class="ant-table-cell">是否回复<span class="rea-wxd-help" title="客户回复了本次唤醒消息">?</span></th>'
+  +'<th class="ant-table-cell">回复时间</th>'
+  +'<th class="ant-table-cell">回复内容</th>'
+  +'<th class="ant-table-cell">发送状态</th>'
+  +'<th class="ant-table-cell">上次沟通时间</th>'
+  +'</tr></thead><tbody class="ant-table-tbody" data-hx-tbody></tbody></table>'
+  +'</div></div></div></div></div></div>';
+}
+function render(){
+  var body=q('[data-hx-tbody]',ML),h='',rs=[],n=0;
+  if(!body)return;
+  for(n=0;n<ALL.length;n++)if(matches(ALL[n]))rs.push(ALL[n]);
+  if(!rs.length){
+    h='<tr class="ant-table-placeholder"><td class="ant-table-cell" colspan="9"><div class="ant-empty ant-empty-normal css-vgijab"><div class="ant-empty-image">'+EMPTY+'</div><div class="ant-empty-description">暂无数据</div></div></td></tr>';
+  }else{
+    for(n=0;n<rs.length;n++){
+      var r=rs[n];
+      h+='<tr class="ant-table-row ant-table-row-level-0" data-row-key="'+n+'">'
+      +'<td class="ant-table-cell" title="'+esc(r.emp)+' '+esc(r.phone)+'"><div class="rea-hx-emp"><b>'+esc(r.emp)+'</b><span>'+esc(r.phone)+'</span></div></td>'
+      +'<td class="ant-table-cell" title="'+esc(r.wxid)+'">'+esc(r.nick)+'（'+esc(r.remark)+'）</td>'
+      +'<td class="ant-table-cell">'+r.send+'</td>'
+      +'<td class="ant-table-cell" title="'+esc(r.content)+'">'+esc(r.content)+'</td>'
+      +'<td class="ant-table-cell">'+(r.replied?'是':'否')+'</td>'
+      +'<td class="ant-table-cell">'+r.reply+'</td>'
+      +'<td class="ant-table-cell" title="'+esc(r.replyText)+'">'+esc(r.replyText)+'</td>'
+      +'<td class="ant-table-cell">'+r.status+'</td>'
+      +'<td class="ant-table-cell">'+r.last+'</td>'
+      +'</tr>';
+    }
+  }
+  body.innerHTML=h;
+  var c=q('[data-hx-count]',ML);if(c)c.textContent='共 '+rs.length+' 条记录';
+}
+function setSelLabel(key,v,lbl){
+  var sel=q('[data-hx-sel="'+key+'"]',ML);if(!sel)return;
+  var ph=q('.ant-select-selection-placeholder',sel)||q('.ant-select-selection-item',sel);
+  if(!ph)return;
+  ph.textContent=lbl;
+  ph.className='ant-select-selection-item';
+}
+function resetSel(key){
+  var sel=q('[data-hx-sel="'+key+'"]',ML);if(!sel)return;
+  var ph=q('.ant-select-selection-item',sel)||q('.ant-select-selection-placeholder',sel);
+  if(!ph)return;
+  ph.className='ant-select-selection-placeholder';
+  ph.textContent=key==='status'?'请选择发送状态':'是否回复';
+}
+function closeDD(){if(DD&&DD.parentNode)DD.parentNode.removeChild(DD);DD=null;DDKEY=''}
+function openDD(sel){
+  closeDD();
+  var box=q('.ant-modal-content',ML);if(!box)return;
+  var key=sel.getAttribute('data-hx-sel'),r=sel.getBoundingClientRect(),cr=box.getBoundingClientRect();
+  var opts=key==='status'?[['all','全部'],['已发送','已发送'],['发送失败','发送失败']]:[['all','全部'],['yes','已回复'],['no','未回复']];
+  var cur=key==='status'?ST:RP,h='',i;
+  for(i=0;i<opts.length;i++){
+    h+='<div class="ant-select-item ant-select-item-option'+(opts[i][0]===cur?' ant-select-item-option-selected':'')+'" data-hx-opt="'+opts[i][0]+'"><div class="ant-select-item-option-content">'+opts[i][1]+'</div></div>';
+  }
+  DD=document.createElement('div');
+  DD.className='ant-select-dropdown css-vgijab rea-hx-dd';
+  DD.style.cssText='left:'+(r.left-cr.left)+'px;top:'+(r.bottom-cr.top+4)+'px;width:'+r.width+'px';
+  DD.innerHTML='<div class="rc-virtual-list"><div class="rc-virtual-list-holder"><div class="rc-virtual-list-holder-inner">'+h+'</div></div></div>';
+  box.appendChild(DD);
+  DDKEY=key;
+  var its=DD.querySelectorAll('[data-hx-opt]'),j;
+  for(j=0;j<its.length;j++){
+    its[j].addEventListener('click',function(){
+      var v=this.getAttribute('data-hx-opt'),lbl=this.textContent;
+      if(DDKEY==='status')ST=v;else RP=v;
+      setSelLabel(DDKEY,v,lbl);
+      closeDD();
+      render();
+    });
+  }
+}
+function msg(t){
+  var w=document.createElement('div');w.className='ant-message css-mncuj7';
+  w.innerHTML='<div class="ant-message-notice-wrapper"><div class="ant-message-notice"><div class="ant-message-notice-content"><div class="ant-message-custom-content ant-message-info"><span></span></div></div></div></div>';
+  w.querySelector('span').textContent=t;
+  document.body.appendChild(w);
+  setTimeout(function(){if(w.parentNode)w.parentNode.removeChild(w)},2400);
+}
+function onKey(e){if(e.key==='Escape'||e.keyCode===27)closeModal()}
+function onDocClick(e){
+  if(!DD)return;
+  var sel=e.target.closest?e.target.closest('[data-hx-sel]'):null;
+  if(DD.contains(e.target)||sel)return;
+  closeDD();
+}
+function closeModal(){
+  closeDD();
+  if(ML&&ML.parentNode)ML.parentNode.removeChild(ML);
+  ML=null;
+  document.removeEventListener('keydown',onKey);
+  document.removeEventListener('click',onDocClick);
+}
+function openHx(opt){
+  opt=opt||{};
+  closeModal();
+  ST='all';RP='all';KWE='';KWC='';
+  var pre=opt.preset||'all';
+  if(pre==='replied')RP='yes';
+  else if(pre==='open'){ST='已发送';RP='no'}
+  else if(pre==='failed')ST='发送失败';
+  if(opt.emp)KWE=String(opt.emp).replace(/\s+/g,'');
+  var w=document.createElement('div');
+  w.className='ant-modal-root css-vgijab';w.setAttribute('data-rea-hx-modal','1');
+  w.innerHTML='<div class="ant-modal-mask"></div><div class="ant-modal-wrap ant-modal-centered">'
+  +'<div class="ant-modal css-vgijab rea-hx-modal" role="dialog" aria-modal="true" aria-label="客户唤醒详情" style="width:1300px">'
+  +'<div class="ant-modal-content">'
+  +'<button type="button" class="ant-modal-close" aria-label="关闭"><span class="ant-modal-close-x">×</span></button>'
+  +'<div class="ant-modal-header"><div class="ant-modal-title">客户唤醒详情</div></div>'
+  +'<div class="ant-modal-body">'
+  +'<div class="rea-hx-tool">'
+  +selHtml('status','请选择发送状态',150)
+  +selHtml('reply','是否回复',120)
+  +'<input type="text" class="ant-input css-vgijab ant-input-outlined" data-hx-kwe placeholder="请输入员工微信" style="width:150px">'
+  +'<input type="text" class="ant-input css-vgijab ant-input-outlined" data-hx-kwc placeholder="请输入客户信息" style="width:150px">'
+  +'<button type="button" class="ant-btn css-vgijab ant-btn-primary ant-btn-color-primary ant-btn-variant-solid" data-hx-query><span>查询</span></button>'
+  +'<button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-hx-reset><span>重置</span></button>'
+  +'<span class="rea-hx-tool-sp"></span>'
+  +'<button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-hx-export><span class="anticon anticon-download">'+DL+'</span><span>导出</span></button>'
+  +'<span class="rea-wxd-help" title="导出当前筛选结果">?</span>'
+  +'</div>'
+  +'<div class="rea-hx-scroll">'+tableShell()+'</div>'
+  +'<div class="rea-hx-count" data-hx-count>共 0 条记录</div>'
+  +'</div>'
+  +'<div class="ant-modal-footer"><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-hx-close><span>关 闭</span></button></div>'
+  +'</div></div></div>';
+  document.body.appendChild(w);
+  ML=w;
+  var kw=q('[data-hx-kwe]',w),kc=q('[data-hx-kwc]',w);
+  if(KWE)kw.value=KWE;
+  if(RP==='yes')setSelLabel('reply','yes','已回复');
+  else if(RP==='no')setSelLabel('reply','no','未回复');
+  if(ST!=='all')setSelLabel('status',ST,ST);
+  render();
+  q('[data-hx-close]',w).addEventListener('click',closeModal);
+  q('.ant-modal-close',w).addEventListener('click',closeModal);
+  q('.ant-modal-wrap',w).addEventListener('click',function(e){if(e.target===this)closeModal()});
+  q('[data-hx-query]',w).addEventListener('click',function(){
+    KWE=(kw.value||'').replace(/\s+/g,'');KWC=(kc.value||'').replace(/\s+/g,'');render();
+  });
+  q('[data-hx-reset]',w).addEventListener('click',function(){
+    ST='all';RP='all';KWE='';KWC='';kw.value='';kc.value='';
+    resetSel('status');resetSel('reply');render();
+  });
+  q('[data-hx-export]',w).addEventListener('click',function(){
+    var c=q('[data-hx-count]',w).textContent;
+    msg('已导出 '+c.replace(/[^0-9]/g,'')+' 条记录（演示）');
+  });
+  var sels=w.querySelectorAll('[data-hx-sel]'),si;
+  for(si=0;si<sels.length;si++)sels[si].addEventListener('click',function(e){
+    e.stopPropagation();
+    if(DD&&DDKEY===this.getAttribute('data-hx-sel'))closeDD();else openDD(this);
+  });
+  kw.addEventListener('keydown',function(e){if(e.key==='Enter'){KWE=(kw.value||'').replace(/\s+/g,'');render();}});
+  kc.addEventListener('keydown',function(e){if(e.key==='Enter'){KWC=(kc.value||'').replace(/\s+/g,'');render();}});
+  document.addEventListener('keydown',onKey);
+  document.addEventListener('click',onDocClick);
 }
 })();`;
   }
@@ -30205,7 +30545,7 @@ syncTip();drawRows();
     /* 关联好友／客户唤醒的详情原来没覆盖，这一笔补上（执行进度卡是唯一改动；
        客户唤醒另有「查看发送内容」，见 reaWxDetailContentJs） */
     '关联好友 · 详情': { css: REA_WX_DETAIL_CSS, js: function(){ return reaWxDetailJs('关联好友 · 详情'); } },
-    '客户唤醒 · 详情': { css: REA_WX_DETAIL_CSS + REA_WX_SNAP_CSS, js: function(){ return reaWxDetailContentJs('客户唤醒 · 详情') + reaWxDetailJs('客户唤醒 · 详情'); } },
+    '客户唤醒 · 详情': { css: REA_WX_DETAIL_CSS + REA_WX_SNAP_CSS, js: function(){ return reaWxDetailContentJs('客户唤醒 · 详情') + reaWxDetailJs('客户唤醒 · 详情') + reaWakeJs(); } },
     /* 六张任务配置快照（2026-11-11）：运行时克隆各自详情页的壳，正文整段换成只读配置。
        发圈的「任务内容」弹窗沿用 reaFqc 那套朋友圈排版，所以带上 REA_FQ_DETAIL_CSS。 */
     '发圈 · 任务配置快照': { css: REA_FQ_DETAIL_CSS + REA_WX_SNAP_CSS, js: function(){ return reaWxSnapshotJs('发圈 · 任务配置快照'); } },
