@@ -22102,6 +22102,13 @@ tb.addEventListener("click",function(e){
     + '.rea-qf-rd input:checked+.rea-qf-rddot:after{content:"";position:absolute;left:3px;top:3px;width:8px;height:8px;border-radius:50%;background:#1677FF}'
     + '.rea-qf-rd input:focus-visible+.rea-qf-rddot{box-shadow:0 0 0 2px #E6F4FF}'
     + '.rea-qf-help{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;flex:none;border:1px solid #C9CDD4;border-radius:50%;color:#8F959E;font-size:10px;line-height:1;cursor:help}'
+    /* 选项不可选时的感叹号：原因收在悬停／键盘聚焦的浮层里，不占页面一行 */
+    + '.rea-qf-why{position:relative;display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;flex:none;margin-left:5px;border:1px solid #C9CDD4;border-radius:50%;color:#8F959E;font:600 10px/1 Arial,sans-serif;cursor:help;vertical-align:-1px}'
+    + '.rea-qf-why[hidden]{display:none!important}'
+    + '.rea-qf-why:hover,.rea-qf-why:focus-visible{border-color:#FAAD14;color:#FAAD14}'
+    + '.rea-qf-why:focus-visible{outline:2px solid rgba(250,173,20,.35);outline-offset:2px}'
+    + '.rea-qf-why:after{content:attr(data-tip);position:absolute;left:50%;bottom:calc(100% + 8px);z-index:60;width:max-content;max-width:264px;padding:8px 10px;border-radius:6px;background:#1F2329;color:#fff;font-size:12px;line-height:1.6;font-weight:400;letter-spacing:0;text-align:left;white-space:normal;box-shadow:0 6px 18px rgba(15,29,51,.18);opacity:0;visibility:hidden;transform:translate(-50%,2px);transition:opacity .12s ease-out,transform .12s ease-out;pointer-events:none}'
+    + '.rea-qf-why:hover:after,.rea-qf-why:focus-visible:after{opacity:1;visibility:visible;transform:translate(-50%,0)}'
     + '.rea-qf-mini{position:relative;display:inline-block}'
     + '.rea-qf-select.rea-qf-minisel{width:168px;color:#1F2329}'
     + '.rea-qf-mini .rea-qf-selmenu{width:168px}'
@@ -22587,6 +22594,8 @@ tb.addEventListener("click",function(e){
       : '先选部门工作域，再选分组。只列出能作为群发内容的素材，个人素材不在可选范围内。';
     return `(function(){
 var PAGE=${reaJson(page)};
+/* 文件传输助手转发不可选时的原因（两页共用，挂在选项后的感叹号上） */
+var FILE_WHY='内容只有文字时不能用文件传输助手转发（微信不支持这种发送方式）；加入图片、视频或文件后可选。';
 function norm(s){return String(s==null?'':s).replace(/\\s+/g,'')}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function q(s,r){return (r||document).querySelector(s)}
@@ -23582,6 +23591,35 @@ function initQf(){
     return 'assistant';
   }
 
+  /* 内容只有文字时，文件传输助手转发不可选：微信不支持用这种方式发纯文字内容
+     （群发任务-发送类型与提速-PRD §2.1）。临时创建看内容类型，素材看有没有图片／视频／文件。
+     禁用只挂 AntD 自己的类，REA_FX 认 ant-radio-wrapper-disabled，点了不翻。 */
+  var sendTypeGrp=null,sendTypeFile=null;
+  function contentTextOnly(){
+    if(picked)return !(picked.images||picked.video||picked.files);
+    return ctypeSel().indexOf('文本')>=0;
+  }
+  function setFileTypeOff(){
+    if(!sendTypeFile)return false;
+    var off=contentTextOnly();
+    sendTypeFile.classList.toggle('ant-radio-wrapper-disabled',off);
+    sendTypeFile.setAttribute('aria-disabled',off?'true':'false');
+    sendTypeFile.title=off?'内容只有文字时不能用文件传输助手转发':'';
+    var inp=sendTypeFile.querySelector('input');if(inp)inp.disabled=off;
+    var dot=sendTypeFile.querySelector('.ant-radio');if(dot)dot.classList.toggle('ant-radio-disabled',off);
+    return off;
+  }
+  /* 内容退回纯文字时，已选中的文件传输助手转发自动落回群发助手 */
+  function backToAssistant(){
+    var ws=qa('.ant-radio-wrapper',sendTypeGrp),i;
+    for(i=0;i<ws.length;i++){
+      var on=norm(ws[i].textContent).indexOf('群发助手')>=0;
+      ws[i].classList.toggle('ant-radio-wrapper-checked',on);
+      var x=ws[i].querySelector('input');if(x)x.checked=on;
+      var d=ws[i].querySelector('.ant-radio');if(d)d.classList.toggle('ant-radio-checked',on);
+    }
+  }
+
   /* ---------- 三段：任务安排 → 发给谁 → 发什么（2026-11-13 与新小红书运营 · 新建对齐） ----------
      第一张卡是「任务安排」：任务名称、执行人员、任务类型、两个时间、全局弹窗；
      发送类型跟着内容走，落在「发什么」末尾。三段在这里一次建好，后面的代码只往对应的段里放行。 */
@@ -23673,7 +23711,17 @@ function initQf(){
   if(rCtype){
     rCtype.classList.add('rea-qf-subrow');
     var csp=rCtype.querySelector('.ant-space');
-    if(csp)csp.classList.add('rea-qf-ctype');
+    if(csp){
+      csp.classList.add('rea-qf-ctype');
+      /* 文本／图片／视频三枚按钮在快照里是 React 接的，静态页没人翻主态；
+         这里补上（纯文字判断与右栏预览都读它）。 */
+      csp.addEventListener('click',function(e){
+        var b=e.target.closest?e.target.closest('.ant-btn'):null;
+        if(!b)return;
+        qa('.ant-btn',csp).forEach(function(x){setPrimary(x,x===b)});
+        setTimeout(render,0);
+      });
+    }
   }
   put(rText,b3,true);
   var textHint=null;
@@ -23785,12 +23833,15 @@ function initQf(){
   /* ---------- 发什么收尾：发送类型跟着内容走 ---------- */
   put(rSend,b3,true);
   var stTip=hint('');b3.appendChild(stTip);
+  var stWhy=null;
   /* 现网「发送类型」只有群发助手／搜索发送，这里补第三枚「文件传输助手转发」。
      克隆同组未选中的那枚，选中态仍归 REA_FX 按整组 .ant-radio-wrapper 翻转，
      不另写点击逻辑（见 群发任务-发送类型与提速-PRD §2.1、§7）。 */
   (function(){
     var grp=rSend.querySelector('.ant-radio-group');if(!grp)return;
-    if(grp.querySelector('[data-rea-sendtype="file_transfer"]'))return;
+    sendTypeGrp=grp;
+    var ex=grp.querySelector('[data-rea-sendtype="file_transfer"]');
+    if(ex){sendTypeFile=ex;return}
     var wraps=grp.querySelectorAll('.ant-radio-wrapper'),tpl=wraps[wraps.length-1];
     if(!tpl)return;
     var nb=tpl.cloneNode(true);
@@ -23801,6 +23852,7 @@ function initQf(){
     var dot=nb.querySelector('.ant-radio');if(dot)dot.classList.remove('ant-radio-checked');
     var txt=nb.querySelector('.ant-radio-label');if(txt)txt.textContent='文件传输助手转发';
     grp.appendChild(nb);
+    sendTypeFile=nb;
     var ws=qa('.ant-radio-wrapper',grp),q;
     for(q=0;q<ws.length;q++){
       if(norm(ws[q].textContent)==='群发助手'){
@@ -23810,6 +23862,17 @@ function initQf(){
     }
     grp.addEventListener('click',function(){setTimeout(render,0)});
   })();
+  if(sendTypeFile){
+    stWhy=document.createElement('span');
+    stWhy.className='rea-qf-why';
+    stWhy.setAttribute('role','img');
+    stWhy.setAttribute('tabindex','0');
+    stWhy.setAttribute('data-tip',FILE_WHY);
+    stWhy.setAttribute('aria-label',FILE_WHY);
+    stWhy.textContent='!';
+    stWhy.hidden=true;
+    sendTypeFile.appendChild(stWhy);
+  }
 
   /* ---------- 底部操作条 ---------- */
   var act=document.createElement('div');act.className='rea-qf-act';
@@ -23872,6 +23935,8 @@ function initQf(){
     var friends=scopeIsFriends(),all=!scopeIsTags()&&!friends;
     var names=tagSelection(),n=names.length;
     var fnames=friendNames(),fn=fnames.length;
+    var textOnly=setFileTypeOff();
+    if(textOnly&&sendType()==='file')backToAssistant();
     var st=sendType();
     sumWho.textContent=all?'全部好友 · 人数执行时统计'
       :(friends?(fn?('好友：'+fnames.join(',')):'指定微信好友 · 未填')
@@ -23899,11 +23964,12 @@ function initQf(){
       tagHint.textContent=fn?('已填 '+fn+' 个好友昵称，按昵称匹配；人数以各人手机为准。')
         :('好友昵称在各销售自己的微信里，按昵称匹配；人数以各人手机为准。');
     }else if(!all){
-      tagHint.textContent=n?('已选 '+n+' 个标签，'+MATCH_TIP[tagPick.mode()]+'；人数以各人手机为准。')
-        :('点输入框可从执行人员手机同步的标签里多选，也可以直接输入；'+MATCH_TIP[tagPick.mode()]+'；人数以各人手机为准。');
+      /* 没选标签时不给说明；选了才提示匹配口径与人数口径。 */
+      tagHint.textContent=n?('已选 '+n+' 个标签，'+MATCH_TIP[tagPick.mode()]+'；人数以各人手机为准。'):'';
     }else{
       tagHint.textContent='每位执行人员发给自己微信里的全部好友；人数以各人手机为准，后台不预先统计。';
     }
+    tagHint.hidden=!tagHint.textContent;
     if(!all&&!friends&&n>=2&&wholeOn()){
       warn.style.display='';warn.textContent='已选 '+n+' 个标签；按整个标签发送时，同时在多个标签里的好友可能收到多次。';
     }else if(all&&st==='file'){
@@ -23914,6 +23980,7 @@ function initQf(){
       :(st==='search'
         ?'逐人进会话发送，最慢；好处是能逐个看到发送结果。'
         :'先把内容发到文件传输助手，再按批转发；每批最多 9 个好友。适合小批量、指定标签，或群发助手发不了的内容。');
+    if(stWhy)stWhy.hidden=!textOnly;
     var text=picked?picked.text:editorText();
     var media='';
     if(picked){
@@ -24149,11 +24216,52 @@ function initQs(){
   manual(true);
 
   /* ---------- 发什么续：发送类型跟着内容走 ---------- */
-  row(b3,'发送类型',false,
+  var stCtl=row(b3,'发送类型',false,
      '<div class="ant-radio-group ant-radio-group-outline css-vgijab">'
      +radio('rea-qs-sendtype','per_group','逐群发送',true)+radio('rea-qs-sendtype','file_transfer','文件传输助手转发',false)
      +'</div>');
   var stHint=hint('');b3.appendChild(stHint);
+  var stWhy=null;
+  var stFileIn=stCtl.querySelector('input[value="file_transfer"]'),
+      stFileWrap=stFileIn?stFileIn.closest('.ant-radio-wrapper'):null;
+  if(stFileWrap){
+    stWhy=document.createElement('span');
+    stWhy.className='rea-qf-why';
+    stWhy.setAttribute('role','img');
+    stWhy.setAttribute('tabindex','0');
+    stWhy.setAttribute('data-tip',FILE_WHY);
+    stWhy.setAttribute('aria-label',FILE_WHY);
+    stWhy.textContent='!';
+    stWhy.hidden=true;
+    stFileWrap.appendChild(stWhy);
+  }
+  /* 内容只有文字时，文件传输助手转发不可选：微信不支持用这种方式发纯文字内容
+     （群发任务-发送类型与提速-PRD §2.2）。临时创建看内容类型，素材看有没有媒体。 */
+  function contentTextOnly(){
+    if(picked)return !(picked.images||picked.video||picked.files);
+    return ck('rea-qs-ctype')==='text';
+  }
+  function setFileTypeOff(){
+    if(!stFileWrap)return false;
+    var off=contentTextOnly();
+    stFileWrap.classList.toggle('ant-radio-wrapper-disabled',off);
+    stFileWrap.setAttribute('aria-disabled',off?'true':'false');
+    stFileWrap.title=off?'内容只有文字时不能用文件传输助手转发':'';
+    stFileIn.disabled=off;
+    var dot=stFileWrap.querySelector('.ant-radio');if(dot)dot.classList.toggle('ant-radio-disabled',off);
+    return off;
+  }
+  function backToPerGroup(){
+    var ins=qa('input[name="rea-qs-sendtype"]',form),i,x,on,w;
+    for(i=0;i<ins.length;i++){
+      x=ins[i];on=x.value==='per_group';w=x.closest('.ant-radio-wrapper');
+      x.checked=on;
+      if(w){
+        w.classList.toggle('ant-radio-wrapper-checked',on);
+        var d=w.querySelector('.ant-radio');if(d)d.classList.toggle('ant-radio-checked',on);
+      }
+    }
+  }
 
   /* ---------- 底部操作条 ---------- */
   var act=document.createElement('div');act.className='rea-qf-act';
@@ -24188,6 +24296,8 @@ function initQs(){
   }
 
   function render(){
+    var textOnly=setFileTypeOff();
+    if(textOnly&&ck('rea-qs-sendtype')==='file_transfer')backToPerGroup();
     var all=ck('rea-qs-scope')!=='names',ks=kws(),file=ck('rea-qs-sendtype')==='file_transfer';
     kwI.style.display=all?'none':'';
     sumWho.textContent=all?'全部群 · 群数执行时统计'
@@ -24214,6 +24324,7 @@ function initQs(){
     }else{warn.style.display='none';warn.textContent='';}
     stHint.style.display=file?'':'none';
     stHint.textContent=file?'先把内容发到文件传输助手，再按批转发；每批最多 9 个群。建议把「群发哪些群」写成能覆盖一批的群名关键词。':'';
+    if(stWhy)stWhy.hidden=!textOnly;
     var text=picked?picked.text:(ta.value||'');
     var ct=ck('rea-qs-ctype'),media='';
     if(picked){
@@ -24239,8 +24350,9 @@ function initQs(){
      的选中态落定（幂等，和 REA_FX 撞上也不会翻错）。 */
   form.addEventListener('click',function(e){
     var w=e.target.closest?e.target.closest('.ant-radio-wrapper'):null;
-    if(w){
-      var inp=w.querySelector('input[type="radio"]'),g=inp?inp.name:'',ws=qa('.ant-radio-wrapper',form),i,x,on;
+    if(w&&!w.classList.contains('ant-radio-wrapper-disabled')){
+      var inp=w.querySelector('input[type="radio"]'),g=inp?inp.name:'';if(inp&&inp.disabled)return;
+      var ws=qa('.ant-radio-wrapper',form),i,x,on;
       if(g)for(i=0;i<ws.length;i++){
         x=ws[i].querySelector('input[type="radio"]');
         if(!x||x.name!==g)continue;
