@@ -26339,6 +26339,8 @@ BT.addEventListener('click',function(e){
      一条任务做到哪一步得来回看两块。现重排成一块「任务信息」：
      任务核心字段（名称／状态／有效期 ＋ 原有配置行）在左，执行进度环形图在右，
      中间一道竖线；「查看任务配置快照」从进度卡右上角挪到「任务信息」标题右边。
+     批量加好友在右栏竖排两个环：上「任务进度」按目标数，下「好友状态」只统计已执行的
+     那部分（两个分母不同，图例分别标明），因为前者是后者的分母来源，不是并列两维。
 
      进度口径不变：人员型按人次，数量型按目标数；逾期含在未执行内，不单独占一段。
      日期按演示口径写死（快照那条任务的有效期是 2026-09/10，真钟早过了），
@@ -26392,7 +26394,7 @@ BT.addEventListener('click',function(e){
       created:'2026-11-10 17:11',
       unit:'items', noun:'好友', head:'微信号/手机号',
       hide:['添加总量','未执行数','已执行数','用户不存在','用户已添加','已发送验证请求'],
-      extra:'执行人员 1 人 · 已完成 0 人',
+      extra:'执行人员 1 人',
       plan:['done','done','done','done','open','open','open','open','open','fail'],
       labels:{done:'已执行',open:'未执行',fail:'用户不存在'}
     },
@@ -26460,6 +26462,12 @@ BT.addEventListener('click',function(e){
     '.rea-wxd-ring-lg i.fail{background:#FF4D4F}',
     '.rea-wxd-ring-lg b{margin-left:auto;font-size:12px;font-weight:400;color:#646A73}',
     '.rea-wxd-ring-ft{margin-top:12px;font-size:12px;line-height:18px;color:#8F959E}',
+    '.rea-wxd-rings .rea-wxd-ring-hd{margin-bottom:10px}',
+    '.rea-wxd-rings .rea-wxd-ring-bd{gap:16px}',
+    '.rea-wxd-rings .rea-wxd-donut,.rea-wxd-rings .rea-wxd-donut svg{width:96px;height:96px}',
+    '.rea-wxd-rings .rea-wxd-donut-c b{font-size:18px}',
+    '.rea-wxd-rings .rea-wxd-ring-lg{gap:8px}',
+    '.rea-wxd-blk+.rea-wxd-blk{margin-top:16px;padding-top:16px;border-top:1px solid #F0F0F2}',
     '@media(max-width:1000px){.rea-wxd-info{grid-template-columns:minmax(0,1fr)}.rea-wxd-kv{grid-template-columns:repeat(2,minmax(0,1fr))!important}.rea-wxd-ring{margin-top:20px;padding:20px 0 0;border-top:1px solid #E5E8EF;border-left:0}}',
     '.rea-wxd-tb{display:inline-flex;align-items:center;gap:6px;font-size:14px;line-height:22px;color:#1F2329}',
     '.rea-wxd-tb i{width:6px;height:6px;border-radius:50%;background:#8F959E;flex:none}',
@@ -26524,50 +26532,102 @@ var done=c.done,pending=n-done;
 function lb(v){return CFG.labels[v]||v}
 var U=CFG.unit==='items'?(' 个'+CFG.noun):' 人';
 var CU=CFG.unit==='items'?' 个':' 人';
-var summary;
-if(!pending){
-  summary=n+U+(CFG.unit==='items'?'全部完成':'全部执行完成');
-}else{
-  var seg=[];
-  if(done)seg.push(done+CU+lb('done'));
-  ['open','warn','fail'].forEach(function(v){if(c[v])seg.push(c[v]+CU+lb(v))});
-  summary=n+U+'中 '+seg.join('，');
-  if(CFG.state==='ended'&&pending)summary+='（其中 '+pending+CU+'已逾期）';
-}
 /* 环形图：一笔画完的圆按状态分段，从 12 点起顺时针；周长 2πr（r=50）。
    段色与任务表的状态点同一套：蓝＝已执行、灰＝未执行、琥珀＝中断、红＝异常。 */
-var CIRC=2*Math.PI*50,segs='',acc=0;
-['done','open','warn','fail'].forEach(function(v){
-  if(!c[v])return;
-  var len=c[v]/n*CIRC;
-  segs+='<circle class="'+v+'" cx="60" cy="60" r="50" stroke-dasharray="'+len.toFixed(2)+' '+(CIRC-len).toFixed(2)+'" transform="rotate('+(acc/n*360).toFixed(2)+' 60 60)"></circle>';
-  acc+=c[v];
-});
-var leg='';
-['done','open','warn','fail'].forEach(function(v){
-  if(c[v])leg+='<div><i class="'+v+'"></i>'+lb(v)+'<b>'+c[v]+CU+'</b></div>';
-});
-var help=CFG.unit==='items'
-  ?'按目标数统计：一位'+CFG.noun+'计 1 项；逾期含在未执行内。'
-  :'按人次统计：一位执行人员计 1 次；逾期含在未执行内。';
-var foot=[];
-if(CFG.extra)foot.push(CFG.extra);
-if(CFG.state==='ended'&&pending)foot.push('其中 '+pending+CU+'已逾期');
+var CIRC=2*Math.PI*50;
+function donutSvg(counts,total,order){
+  if(!total)return '';
+  var segs='',acc=0;
+  order.forEach(function(v){
+    if(!counts[v])return;
+    var len=counts[v]/total*CIRC;
+    segs+='<circle class="'+v+'" cx="60" cy="60" r="50" stroke-dasharray="'+len.toFixed(2)+' '+(CIRC-len).toFixed(2)+'" transform="rotate('+(acc/total*360).toFixed(2)+' 60 60)"></circle>';
+    acc+=counts[v];
+  });
+  return segs;
+}
+function legendHtml(counts,order,names,unit){
+  var h='';
+  order.forEach(function(v){
+    if(counts[v])h+='<div><i class="'+v+'"></i>'+names[v]+'<b>'+counts[v]+unit+'</b></div>';
+  });
+  return h;
+}
+function ringBlock(o){
+  return '<div class="rea-wxd-blk">'
+    +'<div class="rea-wxd-ring-hd"><span class="rea-wxd-ring-t">'+o.title+'<span class="rea-wxd-help" title="'+o.help+'">?</span></span><span>'+o.total+'</span></div>'
+    +'<div class="rea-wxd-ring-bd">'
+    +'<div class="rea-wxd-donut" role="img" aria-label="'+o.aria+'">'
+    +'<svg viewBox="0 0 120 120"><circle class="track" cx="60" cy="60" r="50"></circle>'+o.segs+'</svg>'
+    +'<div class="rea-wxd-donut-c"><b>'+o.center+'</b><span>'+o.centerLb+'</span></div>'
+    +'</div>'
+    +'<div class="rea-wxd-ring-lg">'+o.leg+'</div>'
+    +'</div>'
+    +(o.foot?'<div class="rea-wxd-ring-ft">'+o.foot+'</div>':'')
+    +'</div>';
+}
 var ring=document.createElement('div');
-ring.className='rea-wxd-ring';
-ring.innerHTML=''
-+'<div class="rea-wxd-ring-hd">'
-+'<span class="rea-wxd-ring-t">'+(CFG.unit==='items'?'任务进度':'执行进度')+'<span class="rea-wxd-help" title="'+help+'">?</span></span>'
-+'<span>共 '+n+U+'</span>'
-+'</div>'
-+'<div class="rea-wxd-ring-bd">'
-+'<div class="rea-wxd-donut" role="img" aria-label="'+summary+'">'
-+'<svg viewBox="0 0 120 120"><circle class="track" cx="60" cy="60" r="50"></circle>'+segs+'</svg>'
-+'<div class="rea-wxd-donut-c"><b>'+done+'/'+n+'</b><span>'+lb('done')+'</span></div>'
-+'</div>'
-+'<div class="rea-wxd-ring-lg">'+leg+'</div>'
-+'</div>'
-+(foot.length?'<div class="rea-wxd-ring-ft">'+foot.join(' · ')+'</div>':'');
+if(PAGE==='批量加好友 · 详情'){
+  /* 两个维度不是并列关系：任务进度按目标数，好友状态只统计已执行的那部分。
+     两个环各带各的分母，第二个环的图例与表格「执行结果」同口径；
+     用户不存在是处理过的真失败，计入已执行。 */
+  var exN=c.done+c.warn+c.fail;
+  var ex={done:exN,open:c.open};
+  var res={done:c.done,warn:c.warn,fail:c.fail};
+  var resOrder=['done','warn','fail'];
+  var resNames={done:'用户已添加',warn:'已发送验证请求',fail:'用户不存在'};
+  var resBits=[];
+  resOrder.forEach(function(v){if(res[v])resBits.push(res[v]+CU+resNames[v])});
+  ring.className='rea-wxd-ring rea-wxd-rings';
+  ring.innerHTML=ringBlock({
+    title:'任务进度',
+    help:'按目标数统计：资料页处理完（含已是好友、用户不存在）计 1 个已执行，还没处理到的计未执行；逾期含在未执行内。',
+    total:'共 '+n+U,
+    aria:'任务进度：'+n+U+'中 '+exN+CU+'已执行，'+c.open+CU+'未执行',
+    segs:donutSvg(ex,n,['done','open']),
+    center:exN+'/'+n,centerLb:'已执行',
+    leg:legendHtml(ex,['done','open'],{done:'已执行',open:'未执行'},CU),
+    foot:CFG.extra
+  })+ringBlock({
+    title:'好友状态',
+    help:'只统计已执行的目标，口径与表格「执行结果」一致。',
+    total:'已执行 '+exN+CU,
+    aria:'好友状态：已执行 '+exN+CU+'中 '+(resBits.length?resBits.join('，'):'暂无结果'),
+    segs:donutSvg(res,exN,resOrder),
+    center:res.done+'/'+exN,centerLb:'已添加',
+    leg:legendHtml(res,resOrder,resNames,CU)
+  });
+}else{
+  var summary;
+  if(!pending){
+    summary=n+U+(CFG.unit==='items'?'全部完成':'全部执行完成');
+  }else{
+    var seg=[];
+    if(done)seg.push(done+CU+lb('done'));
+    ['open','warn','fail'].forEach(function(v){if(c[v])seg.push(c[v]+CU+lb(v))});
+    summary=n+U+'中 '+seg.join('，');
+    if(CFG.state==='ended'&&pending)summary+='（其中 '+pending+CU+'已逾期）';
+  }
+  var help=CFG.unit==='items'
+    ?'按目标数统计：一位'+CFG.noun+'计 1 项；逾期含在未执行内。'
+    :'按人次统计：一位执行人员计 1 次；逾期含在未执行内。';
+  var foot=[];
+  if(CFG.extra)foot.push(CFG.extra);
+  if(CFG.state==='ended'&&pending)foot.push('其中 '+pending+CU+'已逾期');
+  ring.innerHTML=''
+  +'<div class="rea-wxd-ring-hd">'
+  +'<span class="rea-wxd-ring-t">'+(CFG.unit==='items'?'任务进度':'执行进度')+'<span class="rea-wxd-help" title="'+help+'">?</span></span>'
+  +'<span>共 '+n+U+'</span>'
+  +'</div>'
+  +'<div class="rea-wxd-ring-bd">'
+  +'<div class="rea-wxd-donut" role="img" aria-label="'+summary+'">'
+  +'<svg viewBox="0 0 120 120"><circle class="track" cx="60" cy="60" r="50"></circle>'+donutSvg(c,n,['done','open','warn','fail'])+'</svg>'
+  +'<div class="rea-wxd-donut-c"><b>'+done+'/'+n+'</b><span>'+lb('done')+'</span></div>'
+  +'</div>'
+  +'<div class="rea-wxd-ring-lg">'+legendHtml(c,['done','open','warn','fail'],{done:lb('done'),open:lb('open'),warn:lb('warn'),fail:lb('fail')},CU)+'</div>'
+  +'</div>'
+  +(foot.length?'<div class="rea-wxd-ring-ft">'+foot.join(' · ')+'</div>':'');
+}
 /* 任务状态带一枚小徽标，与任务表的状态点同色（进行中蓝、已结束灰）。
    rowOf 认「标签：」前缀，所以这一笔必须赶在去冒号之前。 */
 var stRow=rowOf('任务状态');
@@ -26686,7 +26746,7 @@ function fill(tr,idx,v){
     setCell(td[1],'您好，我是云小助的顾问');
     setCell(td[2],v==='done'?REMARKS[idx%REMARKS.length]:'-');
     setCell(td[3],v==='done'?'10 月展会客户':'-');
-    setCell(td[4],v==='done'?'是':'否');
+    setCell(td[4],v==='open'?'否':'是');
     if(v==='open')setCell(td[5],'-');
     else setStatusLabel(td[5],v,v==='done'?'用户已添加':lb(v));
   }else if(PAGE==='关联好友 · 详情'){
