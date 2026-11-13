@@ -22109,9 +22109,18 @@ tb.addEventListener("click",function(e){
     + '.rea-qf-tagin:focus-within{border-color:#1677FF;box-shadow:0 0 0 2px #E6F4FF}'
     + '.rea-qf-tagin input{flex:1;min-width:0;border:0;outline:0;background:transparent;font-size:14px;color:#1F2329}'
     + '.rea-qf-tagin input::placeholder{color:#C9CDD4}'
-    + '.rea-qf-trow.rea-qf-typed[hidden]{display:none!important}'
     + '.rea-qf-listwrap{position:relative;max-width:560px}'
     + '.rea-qf-listwrap[hidden]{display:none!important}'
+    /* 标签选择器：左边「精确搜索／模糊搜索」，右边可多选、可打字的输入框 */
+    + '.rea-qf-tagctl{display:flex;align-items:flex-start;gap:12px;max-width:560px}'
+    + '.rea-qf-tagctl .rea-qf-mini{flex:none}'
+    + '.rea-qf-tagctl .rea-qf-select.rea-qf-minisel{width:132px}'
+    + '.rea-qf-tagctl .rea-qf-mini .rea-qf-selmenu{width:132px}'
+    + '.rea-qf-tagctl .rea-qf-listwrap{flex:1 1 auto;min-width:0}'
+    + '.rea-qf-taginp{flex:1 1 auto;min-width:80px;height:24px;padding:0;border:0;outline:0;background:transparent;font-size:14px;line-height:24px;color:#1F2329}'
+    + '.rea-qf-taginp::placeholder{color:#C9CDD4}'
+    + '.rea-qf-tagbox:focus-within{border-color:#1677FF;box-shadow:0 0 0 2px #E6F4FF}'
+    + '.rea-qf-tagbox.bad{border-color:#ff4d4f}'
     + '.rea-qf-tagbox{position:relative;display:flex;flex-wrap:wrap;align-items:center;gap:6px;box-sizing:border-box;min-height:32px;padding:4px 26px 4px 11px;border:1px solid #E5E8EF;border-radius:8px;background:#fff;cursor:pointer}'
     + '.rea-qf-tagbox:hover{border-color:#1677FF}'
     + '.rea-qf-tagbox.on{border-color:#1677FF;box-shadow:0 0 0 2px #E6F4FF}'
@@ -22123,10 +22132,6 @@ tb.addEventListener("click",function(e){
     + '.rea-qf-tagcaret{position:absolute;right:10px;top:50%;margin-top:-6px;font-size:10px;line-height:12px;color:#8F959E;pointer-events:none}'
     + '.rea-qf-tagdd{position:absolute;z-index:30;left:0;top:calc(100% + 4px);box-sizing:border-box;width:100%;border:1px solid #E5E8EF;border-radius:8px;background:#fff;box-shadow:0 6px 16px rgba(0,0,0,.08)}'
     + '.rea-qf-tagdd[hidden]{display:none!important}'
-    + '.rea-qf-tagsearch{padding:8px}'
-    + '.rea-qf-tagsearch input{box-sizing:border-box;width:100%;height:30px;padding:0 9px;border:1px solid #E5E8EF;border-radius:6px;outline:0;font-size:13px;color:#1F2329}'
-    + '.rea-qf-tagsearch input::placeholder{color:#C9CDD4}'
-    + '.rea-qf-tagsearch input:focus{border-color:#1677FF}'
     + '.rea-qf-taglist{max-height:220px;overflow:auto;padding:0 6px}'
     + '.rea-qf-tagopt{display:flex;align-items:center;gap:8px;padding:7px 6px;border-radius:6px;font-size:14px;color:#1F2329;cursor:pointer}'
     + '.rea-qf-tagopt:hover{background:#F7F8FA}'
@@ -22649,6 +22654,186 @@ function toast(t){
   setTimeout(function(){if(w.parentNode)w.parentNode.removeChild(w)},2400);
 }
 
+/* ---------- 微信标签选择器（2026-11-13） ----------
+   点输入框展开执行人员手机端同步过来的标签，可多选；也能直接打字，回车或分号落成标签。
+   「精确搜索／模糊搜索」只决定打字进来的标签在执行时怎么匹配；下拉里勾选的标签本身就是
+   手机上的标签名，按精确名称下发。标签跟着执行人员走，任何位置都不显示人数。 */
+function reaTagPicker(o){
+  o=o||{};
+  var sel=[],typed=[],query='',mode='exact',busy=false,busyTimer=null;
+  var MODE={exact:'精确搜索',fuzzy:'模糊搜索'};
+  var host=document.createElement('div');host.className='rea-qf-tagctl';
+  host.innerHTML=
+     '<div class="rea-qf-mini">'
+    +'<button type="button" class="rea-qf-select rea-qf-minisel" aria-label="选择方式" aria-haspopup="listbox" aria-expanded="false">'
+    +'<span class="rea-qf-seltext">精确搜索</span><span class="rea-qf-selcaret">▾</span></button>'
+    +'<div class="rea-qf-selmenu" role="listbox">'
+    +'<button type="button" class="rea-qf-opt" role="option" data-mode="exact" aria-selected="true">精确搜索</button>'
+    +'<button type="button" class="rea-qf-opt" role="option" data-mode="fuzzy" aria-selected="false">模糊搜索</button>'
+    +'</div></div>'
+    +'<div class="rea-qf-listwrap">'
+    +'<div class="rea-qf-tagbox" role="combobox" aria-haspopup="listbox" aria-expanded="false">'
+    +'<input class="rea-qf-taginp" type="text" autocomplete="off" aria-label="微信标签" placeholder="请选择或输入微信标签">'
+    +'<span class="rea-qf-tagcaret">▾</span></div>'
+    +'<div class="rea-qf-tagdd" hidden>'
+    +'<div class="rea-qf-taglist" role="listbox" aria-label="微信标签" aria-multiselectable="true"></div>'
+    +'<div class="rea-qf-tagft"><span>已选 0 个标签</span><button type="button" class="rea-qf-tagclear">清空</button></div>'
+    +'</div></div>';
+  var box=host.querySelector('.rea-qf-tagbox'),inp=host.querySelector('.rea-qf-taginp'),
+      dd=host.querySelector('.rea-qf-tagdd'),list=host.querySelector('.rea-qf-taglist'),
+      ft=host.querySelector('.rea-qf-tagft span'),clearBtn=host.querySelector('.rea-qf-tagclear'),
+      modeBtn=host.querySelector('.rea-qf-select'),modeMenu=host.querySelector('.rea-qf-selmenu'),
+      modeText=host.querySelector('.rea-qf-seltext');
+
+  function names(){
+    var out=[],i,n;
+    for(i=0;i<sel.length;i++)if(out.indexOf(sel[i])<0)out.push(sel[i]);
+    for(i=0;i<typed.length;i++){n=typed[i];if(out.indexOf(n)<0)out.push(n)}
+    return out;
+  }
+  function fire(){if(o.onChange)o.onChange()}
+  function chips(){
+    qa('.rea-qf-tagchip',box).forEach(function(c){c.parentNode.removeChild(c)});
+    var all=names(),i,c,n;
+    for(i=0;i<all.length;i++){
+      n=all[i];c=document.createElement('span');c.className='rea-qf-tagchip';
+      c.innerHTML='<span>'+esc(n)+'</span><button type="button" class="rea-qf-tagx" data-tag="'+esc(n)
+        +'" aria-label="移除'+esc(n)+'">×</button>';
+      box.insertBefore(c,inp);
+    }
+    inp.placeholder=all.length?'':'请选择或输入微信标签';
+    ft.textContent='已选 '+all.length+' 个标签';
+    box.setAttribute('aria-expanded',dd.hidden?'false':'true');
+  }
+  function drawList(){
+    var tags=typeof o.getTags==='function'?o.getTags():[];
+    if(tags===null){list.innerHTML='<div class="rea-qf-tagempty">先选择执行人员，再选标签。</div>';return}
+    if(busy){list.innerHTML='<div class="rea-qf-tagempty">标签还在从手机同步，稍后再试。</div>';return}
+    if(!tags.length){list.innerHTML='<div class="rea-qf-tagempty">该执行人员的微信里还没有标签；可以直接输入标签名。</div>';return}
+    var q=query.toLowerCase(),items=[],i;
+    for(i=0;i<tags.length;i++)if(!q||tags[i].toLowerCase().indexOf(q)>=0)items.push(tags[i]);
+    if(!items.length){list.innerHTML='<div class="rea-qf-tagempty">没有匹配的标签；按回车直接用它。</div>';return}
+    var all=names(),h='',n,on;
+    for(i=0;i<items.length;i++){
+      n=items[i];on=all.indexOf(n)>=0;
+      h+='<label class="rea-qf-tagopt'+(on?' on':'')+'">'
+        +'<input type="checkbox" data-tag="'+esc(n)+'"'+(on?' checked':'')+'>'
+        +'<span class="rea-qf-tagname">'+esc(n)+'</span></label>';
+    }
+    list.innerHTML=h;
+  }
+  function draw(){chips();if(!dd.hidden)drawList()}
+  function openDD(){
+    if(!dd.hidden)return;
+    dd.hidden=false;box.classList.add('on');drawList();chips();
+    try{inp.focus()}catch(e){}
+  }
+  function closeDD(){dd.hidden=true;box.classList.remove('on');chips()}
+  function removeName(n){
+    var i=sel.indexOf(n);if(i>=0)sel.splice(i,1);
+    i=typed.indexOf(n);if(i>=0)typed.splice(i,1);
+  }
+  function addTyped(v){
+    var n=String(v||'').replace(/^\s+|\s+$/g,'');
+    if(!n||names().indexOf(n)>=0)return;
+    typed.push(n);
+  }
+  function commitText(){
+    var parts=inp.value.split(/[;；]/),i;
+    for(i=0;i<parts.length;i++)addTyped(parts[i]);
+    inp.value='';query='';
+  }
+  box.addEventListener('click',function(e){
+    var x=e.target.closest?e.target.closest('.rea-qf-tagx'):null;
+    if(x){e.preventDefault();e.stopPropagation();removeName(x.getAttribute('data-tag'));draw();fire();inp.focus();return}
+    if(e.target===inp){openDD();return}
+    e.preventDefault();inp.focus();openDD();
+  });
+  inp.addEventListener('focus',openDD);
+  inp.addEventListener('blur',function(e){
+    var to=e.relatedTarget;
+    if(to&&host.contains(to))return;
+    if(inp.value){commitText();draw();fire()}
+  });
+  inp.addEventListener('input',function(){
+    var v=inp.value;
+    if(/[;；]/.test(v)){
+      var parts=v.split(/[;；]/),last=parts.pop(),i;
+      for(i=0;i<parts.length;i++)addTyped(parts[i]);
+      inp.value=last;
+    }
+    query=inp.value;
+    openDD();drawList();chips();fire();
+  });
+  inp.addEventListener('keydown',function(e){
+    var k=e.key||'';
+    if(k==='Enter'||e.keyCode===13){e.preventDefault();commitText();draw();fire();return}
+    if(k==='Escape'||e.keyCode===27){closeDD();return}
+    if((k==='Backspace'||e.keyCode===8)&&!inp.value){
+      var all=names();
+      if(all.length){e.preventDefault();removeName(all[all.length-1]);draw();fire()}
+    }
+  });
+  list.addEventListener('change',function(e){
+    var c=e.target;
+    if(!c||c.type!=='checkbox')return;
+    var n=c.getAttribute('data-tag'),i;
+    if(c.checked){
+      i=typed.indexOf(n);if(i>=0)typed.splice(i,1);
+      if(sel.indexOf(n)<0)sel.push(n);
+    }else removeName(n);
+    draw();fire();
+  });
+  clearBtn.addEventListener('click',function(e){
+    e.preventDefault();sel=[];typed=[];inp.value='';query='';draw();fire();
+  });
+  modeBtn.addEventListener('click',function(e){
+    e.preventDefault();e.stopPropagation();
+    var on=modeMenu.classList.toggle('on');
+    modeBtn.setAttribute('aria-expanded',on?'true':'false');
+  });
+  modeMenu.addEventListener('click',function(e){
+    var b=e.target.closest?e.target.closest('.rea-qf-opt'):null;if(!b)return;
+    e.preventDefault();setMode(b.getAttribute('data-mode'));
+    modeMenu.classList.remove('on');modeBtn.setAttribute('aria-expanded','false');
+  });
+  document.addEventListener('click',function(e){
+    if(!host.contains(e.target)){
+      if(modeMenu.classList.contains('on')){modeMenu.classList.remove('on');modeBtn.setAttribute('aria-expanded','false')}
+      if(!dd.hidden){
+        if(inp.value){var had=names().length;commitText();chips();if(names().length!==had)fire()}
+        closeDD();
+      }
+    }
+  });
+  function setMode(m){
+    if(!MODE[m])return;
+    mode=m;modeText.textContent=MODE[m];
+    qa('.rea-qf-opt',modeMenu).forEach(function(b){
+      b.setAttribute('aria-selected',b.getAttribute('data-mode')===m?'true':'false');
+    });
+    fire();
+  }
+  chips();
+  return {
+    el:host,
+    names:names,
+    mode:function(){return mode},
+    setMode:setMode,
+    input:function(){return inp},
+    markBad:function(on){box.classList.toggle('bad',!!on)},
+    flush:function(){if(inp.value){commitText();draw();fire()}},
+    focus:openDD,
+    clear:function(){sel=[];typed=[];inp.value='';query='';draw()},
+    reload:function(){
+      sel=[];       /* 标签跟着人走：手机列表里选的清掉；手填的名称可能在新执行人员身上也有，保留 */
+      busy=true;if(busyTimer)clearTimeout(busyTimer);
+      busyTimer=setTimeout(function(){busy=false;if(!dd.hidden)drawList()},450);
+      draw();fire();
+    }
+  };
+}
+
 /* 覆盖页不再走 reaNavJs 的「取消 → 回模块页」那条通用接线（它只接未覆盖的子页），
    这里补回来：三页的 取 消 都回各自的模块页。 */
 (function(){
@@ -22830,6 +23015,14 @@ function initFq(){
     if(scopeLbl)scopeLbl.textContent='谁可以看';
     if(gScope)gScope.classList.add('rea-fq-visrow');
     var visBox=null,visSub=null,visIn=null,visErr=null,visLast='all',visByLast='tag';
+    var fqTagPick=null;
+    /* 演示标签跟着执行人员走；正式版取手机同步上来的好友标签并集，同名标签已合并。 */
+    var FQ_ORG_TAGS=[
+      ['重点客户','老客户','高意向','待跟进'],
+      ['重点客户','新客户','已成交'],
+      [],
+      ['重点客户','老客户','高意向','待跟进','新客户','已成交']
+    ];
     if(gScope){
       var scopeGrp=gScope.querySelector('.ant-radio-group');
       if(scopeGrp){
@@ -22850,6 +23043,17 @@ function initFq(){
         visIn=document.createElement('label');visIn.className='rea-qf-tagin';
         visIn.innerHTML='<input type="text" autocomplete="off">';
         visErr=document.createElement('p');visErr.className='rea-qf-err';
+        /* 按微信标签：点输入框展开执行人员手机里的标签，可多选，也能直接打字；
+           精确搜索／模糊搜索只决定打字进来的标签在执行时怎么匹配。 */
+        fqTagPick=reaTagPicker({
+          getTags:function(){
+            if(!execSel)return null;
+            var names=['华东销售组','华南销售组','销售支持组','全员'],i=names.indexOf(execSel.n);
+            return i>=0?FQ_ORG_TAGS[i]:[];
+          },
+          onChange:function(){fqRender()}
+        });
+        visSub.appendChild(fqTagPick.el);
         visSub.appendChild(visIn);visSub.appendChild(visErr);
         visBox.appendChild(visSub);
         var visInput=visIn.querySelector('input');
@@ -22881,7 +23085,9 @@ function initFq(){
       }
       return out;
     }
-    function fqVisNames(){return fqNamesOf(visIn)}
+    function fqVisNames(){
+      return (fqTagPick&&fqVisBy()==='tag')?fqTagPick.names():fqNamesOf(visIn);
+    }
     function fqVisSummary(){
       var m=fqVisMode();
       if(m==='all')return '全部好友';
@@ -22894,16 +23100,18 @@ function initFq(){
       if(m!==visLast||by!==visByLast){
         visLast=m;visByLast=by;
         if(ci)ci.value='';
+        if(fqTagPick){fqTagPick.clear();fqTagPick.markBad(false)}
         if(visErr){visErr.textContent='';visErr.style.display='none'}
         if(ci)ci.classList.remove('bad');
       }
       var need=(m==='partial'||m==='exclude');
       if(visSub)visSub.style.display=need?'flex':'none';
-      visIn.style.display=need?'flex':'none';
       if(!need)return;
+      if(fqTagPick)fqTagPick.el.style.display=by==='tag'?'':'none';
+      visIn.style.display=by==='friend'?'flex':'none';
       if(ci){
-        ci.placeholder=by==='tag'?'输入标签名称，多个用 ; 分隔':'输入好友备注名，多个用 ; 分隔';
-        ci.setAttribute('aria-label',(m==='exclude'?'不给谁看 · ':'')+(by==='tag'?'标签名称':'好友备注名'));
+        ci.placeholder='输入好友备注名，多个用 ; 分隔';
+        ci.setAttribute('aria-label',(m==='exclude'?'不给谁看 · ':'')+'好友备注名');
       }
     }
     /* 两行没有标题的快照行：一行空壳，一行是截止时间下面的提示，搬完统一清掉 */
@@ -22949,7 +23157,10 @@ function initFq(){
           var sp=selBtn.querySelector('.rea-qf-seltext');
           if(sp)sp.textContent=execSel.n+'（'+execSel.c+' 人）';
           selMenu.classList.remove('on');selBtn.setAttribute('aria-expanded','false');
-          fqSetErr(gExec,'');fqRender();
+          fqSetErr(gExec,'');
+          if(fqTagPick){var hadTags=fqTagPick.names().length;fqTagPick.reload();
+            if(hadTags)toast('执行人员已更换，已选标签已清空；手填的标签保留。')}
+          fqRender();
         });
         document.addEventListener('click',function(e){
           if(selMenu.classList.contains('on')&&!execCtl.contains(e.target))selMenu.classList.remove('on');
@@ -23234,7 +23445,9 @@ function initFq(){
         else fqFormErr(mediaR.row,'');
       }
       /* 可见范围：部分可见／不给谁看要名单；只校验格式，不查存在性 */
-      var vm=fqVisMode(),vby=fqVisBy(),vn=fqVisNames(),vmsg='',vi;
+      var vm=fqVisMode(),vby=fqVisBy();
+      if(vby==='tag'&&fqTagPick)fqTagPick.flush();
+      var vn=fqVisNames(),vmsg='',vi;
       if((vm==='partial'||vm==='exclude')&&!vn.length){
         vmsg=(vm==='exclude'?'请填写不给谁看的':'请填写')+(vby==='tag'?'标签名称':'好友备注名');
       }else if(vn.length>100){
@@ -23244,9 +23457,10 @@ function initFq(){
       }
       if(visErr){
         visErr.textContent=vmsg;visErr.style.display=vmsg?'block':'none';
-        var vinp=visIn?visIn.querySelector('input'):null;
+        var vinp=(vby==='tag'&&fqTagPick)?fqTagPick.input():(visIn?visIn.querySelector('input'):null);
+        if(fqTagPick)fqTagPick.markBad(!!vmsg&&vby==='tag');
         if(vinp){
-          vinp.classList.toggle('bad',!!vmsg);
+          vinp.classList.toggle('bad',!!vmsg&&vby!=='tag');
           if(vmsg){try{vinp.focus()}catch(ign){}}
         }
       }
@@ -23398,45 +23612,10 @@ function initQf(){
     grp.appendChild(nb);
   })();
   var tagPanel=document.createElement('div');tagPanel.className='rea-qf-tagpanel';b2.appendChild(tagPanel);
-  tagPanel.innerHTML=
-     '<div class="rea-qf-trow"><div class="rea-qf-mini">'
-    +'<button type="button" class="rea-qf-select rea-qf-minisel" aria-label="选择方式" aria-haspopup="listbox" aria-expanded="false">'
-    +'<span class="rea-qf-seltext">精确搜索</span><span class="rea-qf-selcaret">▾</span></button>'
-    +'<div class="rea-qf-selmenu" role="listbox">'
-    +'<button type="button" class="rea-qf-opt" role="option" data-mode="exact" aria-selected="true">精确搜索</button>'
-    +'<button type="button" class="rea-qf-opt" role="option" data-mode="fuzzy" aria-selected="false">模糊匹配</button>'
-    +'<button type="button" class="rea-qf-opt" role="option" data-mode="list" aria-selected="false">从标签列表选择</button>'
-    +'</div></div></div>'
-    +'<div class="rea-qf-trow"><span>是否按照整个标签发送</span>'
+  tagPanel.innerHTML='<div class="rea-qf-trow"><span>是否按照整个标签发送</span>'
     +'<label class="rea-qf-rd"><input type="radio" name="rea-qf-whole" value="whole" checked><span class="rea-qf-rddot"></span>按照整个标签</label>'
     +'<span class="rea-qf-help" role="img" aria-label="说明">?</span>'
-    +'<label class="rea-qf-rd"><input type="radio" name="rea-qf-whole" value="part"><span class="rea-qf-rddot"></span>不按照整个标签</label></div>'
-    +'<div class="rea-qf-trow rea-qf-typed"><label class="rea-qf-tagin"><input type="text" aria-label="标签名称"></label></div>'
-    +'<div class="rea-qf-listwrap" hidden>'
-    +'<div class="rea-qf-tagbox" role="combobox" tabindex="0" aria-haspopup="listbox" aria-expanded="false"></div>'
-    +'<div class="rea-qf-tagdd" hidden>'
-    +'<div class="rea-qf-tagsearch"><input type="text" placeholder="搜索标签" aria-label="搜索标签"></div>'
-    +'<div class="rea-qf-taglist"></div>'
-    +'<div class="rea-qf-tagft"><span>已选 0 个标签</span><button type="button" class="rea-qf-tagclear">清空</button></div>'
-    +'</div></div>';
-  var tagSel=tagPanel.querySelector('.rea-qf-select'),tagMenu=tagPanel.querySelector('.rea-qf-selmenu'),
-      tagSelText=tagPanel.querySelector('.rea-qf-seltext'),
-      typedRow=tagPanel.querySelector('.rea-qf-typed'),
-      tagInput=typedRow.querySelector('input'),
-      listWrap=tagPanel.querySelector('.rea-qf-listwrap'),
-      tagBox=tagPanel.querySelector('.rea-qf-tagbox'),
-      tagDD=tagPanel.querySelector('.rea-qf-tagdd'),
-      tagSearch=tagPanel.querySelector('.rea-qf-tagsearch input'),
-      tagList=tagPanel.querySelector('.rea-qf-taglist'),
-      tagFt=tagPanel.querySelector('.rea-qf-tagft span'),
-      tagClear=tagPanel.querySelector('.rea-qf-tagclear');
-  tagInput.placeholder="请输入标签名称，多个标签请用';'隔开";
-  /* 精确搜索＝标签名与填写内容完全一致才算命中；模糊匹配＝标签名包含填写内容即命中；
-     从标签列表选择＝把执行人员手机同步上来的标签列出来多选，不显示人数。 */
-  var matchMode='exact';
-  var listSel=[],listQuery='',listReady=false,listTimer=null;
-  var MATCH_LABEL={exact:'精确搜索',fuzzy:'模糊匹配',list:'从标签列表选择'},
-      MATCH_TIP={exact:'标签名要完全一致才算命中',fuzzy:'标签名包含这几个字就算命中'};
+    +'<label class="rea-qf-rd"><input type="radio" name="rea-qf-whole" value="part"><span class="rea-qf-rddot"></span>不按照整个标签</label></div>';
   /* 演示标签跟着执行人员走；正式版取手机同步上来的好友标签并集，同名标签已合并。 */
   var ORG_TAGS=[
     ['重点客户','老客户','高意向','待跟进'],
@@ -23444,136 +23623,28 @@ function initQf(){
     [],
     ['重点客户','老客户','高意向','待跟进','新客户','已成交']
   ];
-  function orgTags(){
-    if(!execSel)return null;
-    var i=ORGS.indexOf(execSel);
-    return i>=0?ORG_TAGS[i]:[];
-  }
+  var MATCH_LABEL={exact:'精确搜索',fuzzy:'模糊搜索'},
+      MATCH_TIP={exact:'标签名要完全一致才算命中',fuzzy:'标签名包含这几个字就算命中'};
+  /* 点输入框展开执行人员手机里的标签，可多选，也能直接打字；模式只决定打字进来的
+     标签在执行时怎么匹配，不影响勾选。 */
+  var tagPick=reaTagPicker({
+    getTags:function(){
+      if(!execSel)return null;
+      var i=ORGS.indexOf(execSel);
+      return i>=0?ORG_TAGS[i]:[];
+    },
+    onChange:function(){render()}
+  });
+  tagPanel.appendChild(tagPick.el);
   function wholeOn(){
     var r=tagPanel.querySelector('input[name="rea-qf-whole"]:checked');
     return !r||r.value==='whole';
   }
-  function tagSelection(){return matchMode==='list'?listSel.slice():tagNames()}
-  function drawTagBox(){
-    var h='',i;
-    for(i=0;i<listSel.length;i++){
-      h+='<span class="rea-qf-tagchip"><span>'+esc(listSel[i])+'</span>'
-        +'<button type="button" class="rea-qf-tagx" data-tag="'+esc(listSel[i])+'" aria-label="移除'+esc(listSel[i])+'">×</button></span>';
-    }
-    tagBox.innerHTML=(h||'<span class="rea-qf-tagph">请选择微信标签（可多选）</span>')
-      +'<span class="rea-qf-tagcaret">▾</span>';
-    tagBox.classList.toggle('on',!tagDD.hidden);
-    tagBox.setAttribute('aria-expanded',tagDD.hidden?'false':'true');
-    tagFt.textContent='已选 '+listSel.length+' 个标签';
-  }
-  function drawTagList(){
-    var all=orgTags(),i;
-    if(all===null){
-      tagList.innerHTML='<div class="rea-qf-tagempty">先选择执行人员，再选标签。</div>';return;
-    }
-    if(!listReady){
-      tagList.innerHTML='<div class="rea-qf-tagempty">标签还在从手机同步，稍后再试。</div>';return;
-    }
-    if(!all.length){
-      tagList.innerHTML='<div class="rea-qf-tagempty">该执行人员的微信里还没有标签。</div>';return;
-    }
-    var qs=listQuery.replace(/^\s+|\s+$/g,'').toLowerCase(),items=[];
-    for(i=0;i<all.length;i++)if(!qs||all[i].toLowerCase().indexOf(qs)>=0)items.push(all[i]);
-    if(!items.length){
-      tagList.innerHTML='<div class="rea-qf-tagempty">没有匹配的标签。</div>';return;
-    }
-    var h='';
-    for(i=0;i<items.length;i++){
-      var n=items[i],on=listSel.indexOf(n)>=0;
-      h+='<label class="rea-qf-tagopt'+(on?' on':'')+'">'
-        +'<input type="checkbox"'+(on?' checked':'')+' data-tag="'+esc(n)+'">'
-        +'<span class="rea-qf-tagname">'+esc(n)+'</span></label>';
-    }
-    tagList.innerHTML=h;
-  }
-  function openTagDD(){
-    if(!tagDD.hidden)return;
-    tagDD.hidden=false;
-    drawTagBox();drawTagList();
-    setTimeout(function(){try{tagSearch.focus()}catch(e){}},0);
-  }
-  function closeTagDD(){tagDD.hidden=true;drawTagBox()}
+  function tagSelection(){return tagPick.names()}
   function onExecChange(){
-    var had=listSel.length;
-    if(had)listSel=[];
-    if(listTimer)clearTimeout(listTimer);
-    listReady=false;
-    listTimer=setTimeout(function(){listReady=true;drawTagList();render()},450);
-    drawTagBox();drawTagList();
-    if(had)toast('执行人员已更换，已选标签已清空，请重新选择。');
-  }
-  function setTagMode(m){
-    matchMode=m;
-    tagSelText.textContent=MATCH_LABEL[m];
-    qa('.rea-qf-opt',tagMenu).forEach(function(b){
-      b.setAttribute('aria-selected',b.getAttribute('data-mode')===m?'true':'false');
-    });
-    typedRow.hidden=(m==='list');
-    listWrap.hidden=(m!=='list');
-    if(m!=='list')closeTagDD();
-    else{drawTagBox();drawTagList()}
-    render();
-  }
-  tagSel.addEventListener('click',function(e){
-    e.preventDefault();
-    var on=!tagMenu.classList.contains('on');
-    tagMenu.classList.toggle('on',on);
-    tagSel.setAttribute('aria-expanded',on?'true':'false');
-  });
-  tagMenu.addEventListener('click',function(e){
-    var o=e.target.closest('.rea-qf-opt');
-    if(!o)return;
-    e.preventDefault();
-    setTagMode(o.getAttribute('data-mode')||'exact');
-    tagMenu.classList.remove('on');tagSel.setAttribute('aria-expanded','false');
-  });
-  document.addEventListener('click',function(e){
-    if(!tagPanel.contains(e.target)){
-      tagMenu.classList.remove('on');tagSel.setAttribute('aria-expanded','false');closeTagDD();
-    }
-  });
-  tagBox.addEventListener('click',function(e){
-    var x=e.target.closest?e.target.closest('.rea-qf-tagx'):null;
-    if(x){
-      e.preventDefault();e.stopPropagation();
-      var n=x.getAttribute('data-tag'),i=listSel.indexOf(n);
-      if(i>=0){listSel.splice(i,1);drawTagBox();drawTagList();render()}
-      return;
-    }
-    e.preventDefault();
-    if(tagDD.hidden)openTagDD();else closeTagDD();
-  });
-  tagBox.addEventListener('keydown',function(e){
-    if(e.key==='Enter'||e.key===' '||e.keyCode===13||e.keyCode===32){
-      e.preventDefault();if(tagDD.hidden)openTagDD();else closeTagDD();
-    }
-    if(e.key==='Escape'||e.keyCode===27)closeTagDD();
-  });
-  tagSearch.addEventListener('input',function(){listQuery=tagSearch.value;drawTagList()});
-  tagList.addEventListener('change',function(e){
-    var c=e.target;
-    if(!c||c.type!=='checkbox')return;
-    var n=c.getAttribute('data-tag'),i=listSel.indexOf(n);
-    if(c.checked&&i<0)listSel.push(n);
-    if(!c.checked&&i>=0)listSel.splice(i,1);
-    drawTagBox();drawTagList();render();
-  });
-  tagClear.addEventListener('click',function(e){
-    e.preventDefault();listSel=[];drawTagBox();drawTagList();render();
-  });
-  /* 标签按名称匹配：; 与全角；都当分隔符，去空去重。 */
-  function tagNames(){
-    var seen={},out=[],list=tagInput.value.split(/[;；]/),q,v;
-    for(q=0;q<list.length;q++){
-      v=list[q].trim();
-      if(v&&!seen[v]){seen[v]=1;out.push(v)}
-    }
-    return out;
+    var had=tagPick.names().length;
+    tagPick.reload();
+    if(had)toast('执行人员已更换，已选标签已清空；手填的标签保留。');
   }
   /* 指定微信好友：昵称同样在各销售自己的微信里，后台列不出名单，只让运营按昵称
      手填，多个用 , 分隔；执行时在每人好友里按昵称匹配，页面同样不预估人数。 */
@@ -23804,9 +23875,7 @@ function initQf(){
     var st=sendType();
     sumWho.textContent=all?'全部好友 · 人数执行时统计'
       :(friends?(fn?('好友：'+fnames.join(',')):'指定微信好友 · 未填')
-        :(n?(matchMode==='list'
-            ?('标签：'+names.join('、')+' · 从列表选 '+n+' 个')
-            :('标签：'+names.join(';')+' · '+MATCH_LABEL[matchMode]))
+        :(n?('标签：'+names.join(';')+' · '+MATCH_LABEL[tagPick.mode()])
           :'按微信标签 · 未填'));
     sumWho.title=sumWho.textContent;
     var how;
@@ -23830,12 +23899,8 @@ function initQf(){
       tagHint.textContent=fn?('已填 '+fn+' 个好友昵称，按昵称匹配；人数以各人手机为准。')
         :('好友昵称在各销售自己的微信里，按昵称匹配；人数以各人手机为准。');
     }else if(!all){
-      if(matchMode==='list'){
-        tagHint.textContent='标签由各销售的手机同步而来；人数以各人手机为准。';
-      }else{
-        tagHint.textContent=n?('已填 '+n+' 个标签，'+MATCH_TIP[matchMode]+'；人数以各人手机为准。')
-          :('标签在各销售自己的微信里，'+MATCH_TIP[matchMode]+'；人数以各人手机为准。');
-      }
+      tagHint.textContent=n?('已选 '+n+' 个标签，'+MATCH_TIP[tagPick.mode()]+'；人数以各人手机为准。')
+        :('点输入框可从执行人员手机同步的标签里多选，也可以直接输入；'+MATCH_TIP[tagPick.mode()]+'；人数以各人手机为准。');
     }else{
       tagHint.textContent='每位执行人员发给自己微信里的全部好友；人数以各人手机为准，后台不预先统计。';
     }
@@ -23884,6 +23949,7 @@ function initQf(){
     e.preventDefault();
     var ok=true;
     if(!execSel){setErr(rExec,'请选择执行人员');ok=false}else setErr(rExec,'');
+    if(scopeIsTags())tagPick.flush();
     if(scopeIsTags()&&!tagSelection().length){setErr(rScope,'按微信标签群发时，请至少填写或选择一个标签');ok=false}
     else if(scopeIsFriends()&&!friendNames().length){setErr(rScope,'指定微信好友群发时，请至少填写一个好友昵称');ok=false}
     else setErr(rScope,'');
