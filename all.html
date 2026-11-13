@@ -22833,13 +22833,15 @@ function taskScope(rs,metric,range){
 
   /* 「发圈 · 详情」的覆盖脚本（2026-11-10）：创建页重排后，把详情页缺的配置补成只读行。
      快照的「任务信息」原先只有任务名称、大类、状态、有效期、素材分类、执行人员、已发送、素材；
-     脚本在「执行人员」后补五行——谁可以看（名称最多列前 5 个）、任务内容（行内固定写「查看」）、
-     所在位置、循环方式、自动发送。全局弹窗不回显。任务内容不在这行里铺开，点「查看」抬弹窗，
+     脚本在「执行人员」后补六行——谁可以看、不给谁看（两级分开写，名称最多列前 5 个）、
+     任务内容（行内固定写「查看」）、所在位置、循环方式、自动发送。全局弹窗不回显。
+     任务内容不在这行里铺开，点「查看」抬弹窗，
      弹窗里就是这条朋友圈最终发出去的样子：昵称、正文或文章卡、所在位置，照朋友圈的排版。
      正文仍是快照，脚本只插 <p><span>标签：</span><span>值</span></p>，不抄整页；
      按「执行人员：」定位，不认行序——重抓快照后行序变了也不会插错。
-     值按快照那条演示任务的口径写（不给谁看：重点客户、高意向／文章「撒打算」／
-     上海静安嘉里中心／单次任务／自动发送开启），拿到真实任务数据后换成读字段。
+     值按快照那条演示任务的口径写（谁可以看：全部好友／不给谁看：按微信标签选择、
+     重点客户、高意向／文章「撒打算」／上海静安嘉里中心／单次任务／自动发送开启），
+     拿到真实任务数据后换成读字段。
      页签「员工完成情况 / 任务意向动态」只留前者：「任务意向动态」那枚页签连同它的表一起摘掉，
      按页签文字定位（页签名与 tab id 都是快照生成物，不写死）。 */
   function reaFqDetailJs(){
@@ -22925,7 +22927,8 @@ function openContent(){
   document.addEventListener('keydown',onKey);
 }
 var rows=[
-  row('谁可以看：','不给谁看：重点客户、高意向','data-rea-fq-scope'),
+  row('谁可以看：','全部好友','data-rea-fq-scope'),
+  row('不给谁看：','按微信标签选择：重点客户、高意向','data-rea-fq-exclude'),
   contentRow(),
   row('所在位置：','上海静安嘉里中心','data-rea-fq-loc'),
   row('循环方式：','单次任务','data-rea-fq-cycle'),
@@ -23438,11 +23441,14 @@ tb.addEventListener("click",function(e){
     /* 右栏效果预览里的地点行：位置不属于正文，挂在媒体区之后 */
     + '.rea-wxt-pvloc{display:flex;align-items:center;gap:4px;margin-top:8px;font-size:12px;line-height:18px;color:#2e448f}'
     + '.rea-wxt-pvloc svg{flex:none;width:12px;height:12px}'
-    /* 发圈 · 新建：谁可以看。四种状态共用一枚单行输入；「不给谁看」下面再挂两枚粒度单选。 */
+    /* 发圈 · 新建：可见范围。两层——一级「谁可以看」定范围，二级「不给谁看」在这个范围里
+       再排除一批人；二级用左侧竖线加灰标签缩进，读得出从属关系。两级各带一枚单行输入。 */
     + '.rea-fq-vis{display:flex;flex-direction:column;gap:10px;flex:1 1 auto;min-width:0;max-width:560px}'
+    + '.rea-fq-visrow{align-items:flex-start!important}'
     + '.rea-fq-vis .ant-radio-group{white-space:nowrap}'
-    + '.rea-fq-visradios{display:none;align-items:center;gap:20px;min-height:24px;padding-left:10px;border-left:2px solid #E5E8EF}'
-    + '.rea-fq-vislab{font-size:13px;color:#8F959E}'
+    + '.rea-fq-visub{display:flex;flex-direction:column;gap:8px;padding:2px 0 0 12px;border-left:2px solid #E5E8EF}'
+    + '.rea-fq-visubhd{font-size:13px;line-height:20px;color:#8F959E}'
+    + '.rea-fq-visubrd{display:flex;align-items:center;gap:20px;flex-wrap:wrap;min-height:24px}'
     + '.rea-fq-vis .rea-qf-tagin{display:none}'
     + '.rea-fq-vis .rea-qf-tagin input{width:100%}'
     + '.rea-fq-vis .rea-qf-err{margin-top:0}'
@@ -24207,62 +24213,64 @@ function initFq(){
         gAuto=fqGroup('自动发送'),gType=fqGroup('任务类型'),gStart=fqGroup('通知时间'),
         gEnd=fqGroup('截止时间'),gPopup=fqGroup('全局弹窗');
 
-    /* ---- 谁可以看：四种互斥状态 ----
-       标签沿用快照那一行，只把文字换成页面口径；快照的三枚单选补第四枚「不给谁看」。
-       三种非默认状态共用一枚单行输入（切换状态即清空），「不给谁看」再挂两枚粒度单选。
+    /* ---- 可见范围：两层 ----
+       一级「谁可以看」沿用快照那三枚单选（全部好友／按微信标签选择／指定微信好友），
+       二级「不给谁看」默认不限，在上一级圈定的范围里再排除一批人；两级各有一枚单行输入。
        标签在各销售自己的微信里，后台查不到名单：只做格式校验，不校验存在性、不预估人数。 */
     var scopeLbl=gScope?findLabel('选择可见好友'):null;
     if(scopeLbl)scopeLbl.textContent='谁可以看';
-    var visBox=null,visEx=null,visIn=null,visErr=null,visLast='all';
+    if(gScope)gScope.classList.add('rea-fq-visrow');
+    var visBox=null,visIn=null,visErr=null,visLast='all',
+        exBox=null,exIn=null,exErr=null,exLast='none';
     if(gScope){
       var scopeGrp=gScope.querySelector('.ant-radio-group');
       if(scopeGrp){
-        /* 第四枚克隆同组最后一枚，选中态仍归 REA_FX 按整组翻转。 */
-        var visWs=scopeGrp.querySelectorAll('.ant-radio-wrapper'),
-            visTpl=visWs[visWs.length-1];
-        if(visTpl&&!scopeGrp.querySelector('[data-rea-vis="exclude"]')){
-          var visNb=visTpl.cloneNode(true);
-          visNb.setAttribute('data-rea-vis','exclude');
-          visNb.classList.remove('ant-radio-wrapper-checked');
-          var visNi=visNb.querySelector('input');
-          if(visNi){visNi.checked=false;visNi.removeAttribute('checked');visNi.value='6'}
-          var visNd=visNb.querySelector('.ant-radio');if(visNd)visNd.classList.remove('ant-radio-checked');
-          var visNt=visNb.querySelector('.ant-radio-label');if(visNt)visNt.textContent='不给谁看';
-          scopeGrp.appendChild(visNb);
-        }
         visBox=document.createElement('div');visBox.className='rea-fq-vis';
         scopeGrp.parentNode.insertBefore(visBox,scopeGrp);
         visBox.appendChild(scopeGrp);
-        visEx=document.createElement('div');visEx.className='rea-fq-visradios';
-        visEx.innerHTML='<span class="rea-fq-vislab">排除方式</span>'
-          +'<label class="rea-qf-rd"><input type="radio" name="rea-fq-exby" value="tag" checked><span class="rea-qf-rddot"></span>按微信标签选择</label>'
-          +'<label class="rea-qf-rd"><input type="radio" name="rea-fq-exby" value="friend"><span class="rea-qf-rddot"></span>指定微信好友</label>';
         visIn=document.createElement('label');visIn.className='rea-qf-tagin';
         visIn.innerHTML='<input type="text" autocomplete="off">';
         visErr=document.createElement('p');visErr.className='rea-qf-err';
-        visBox.appendChild(visEx);visBox.appendChild(visIn);visBox.appendChild(visErr);
+        visBox.appendChild(visIn);visBox.appendChild(visErr);
         var visInput=visIn.querySelector('input');
         visInput.addEventListener('input',function(){
           visErr.textContent='';visErr.style.display='none';visInput.classList.remove('bad');
+        });
+
+        /* 二级：不给谁看。默认「不限」；选了按标签或按好友才露出输入框。 */
+        exBox=document.createElement('div');exBox.className='rea-fq-visub';
+        exBox.innerHTML='<span class="rea-fq-visubhd">不给谁看</span>'
+          +'<div class="rea-fq-visubrd">'
+          +'<label class="rea-qf-rd"><input type="radio" name="rea-fq-exby" value="none" checked><span class="rea-qf-rddot"></span>不限</label>'
+          +'<label class="rea-qf-rd"><input type="radio" name="rea-fq-exby" value="tag"><span class="rea-qf-rddot"></span>按微信标签选择</label>'
+          +'<label class="rea-qf-rd"><input type="radio" name="rea-fq-exby" value="friend"><span class="rea-qf-rddot"></span>指定微信好友</label>'
+          +'</div>';
+        exIn=document.createElement('label');exIn.className='rea-qf-tagin';
+        exIn.innerHTML='<input type="text" autocomplete="off">';
+        exErr=document.createElement('p');exErr.className='rea-qf-err';
+        exBox.appendChild(exIn);exBox.appendChild(exErr);
+        visBox.appendChild(exBox);
+        var exInput=exIn.querySelector('input');
+        exInput.addEventListener('input',function(){
+          exErr.textContent='';exErr.style.display='none';exInput.classList.remove('bad');
         });
       }
     }
     function fqVisMode(){
       var t=fqChecked(gScope);
-      if(t.indexOf('不给谁看')>=0)return 'exclude';
       if(t.indexOf('按微信标签')>=0)return 'tag';
       if(t.indexOf('指定微信好友')>=0)return 'friend';
       return 'all';
     }
-    function fqExBy(){
-      if(!visEx)return 'tag';
-      var r=visEx.querySelector('input:checked');
-      return r?r.value:'tag';
+    function fqExMode(){
+      if(!exBox)return 'none';
+      var r=exBox.querySelector('input:checked');
+      return r?r.value:'none';
     }
     /* 名单只做文本净化：; ／ ； 分隔、去空白、去重；不查标签或好友是否真的存在。 */
-    function fqVisNames(){
-      if(!visIn)return [];
-      var raw=String((visIn.querySelector('input')||{}).value||'');
+    function fqNamesOf(el){
+      if(!el)return [];
+      var raw=String((el.querySelector('input')||{}).value||'');
       var parts=raw.split(/[;；]/),out=[],seen={},i,n;
       for(i=0;i<parts.length;i++){
         n=parts[i].replace(/^\s+|\s+$/g,'');
@@ -24271,32 +24279,48 @@ function initFq(){
       }
       return out;
     }
+    function fqVisNames(){return fqNamesOf(visIn)}
+    function fqExNames(){return fqNamesOf(exIn)}
     function fqVisSummary(){
-      var m=fqVisMode(),n=fqVisNames().length;
-      if(m==='tag')return '按微信标签 · '+n+' 个标签';
-      if(m==='friend')return '指定好友 · '+n+' 人';
-      if(m==='exclude')return '不给谁看 · '+n+(fqExBy()==='tag'?' 个标签':' 人');
-      return '全部好友';
+      var m=fqVisMode(),n=fqVisNames().length,s;
+      s=m==='tag'?('按微信标签 · '+n+' 个标签')
+        :(m==='friend'?('指定好友 · '+n+' 人'):'全部好友');
+      var em=fqExMode();
+      if(em!=='none')s+='（排除 '+fqExNames().length+(em==='tag'?' 个标签':' 人')+'）';
+      return s;
     }
     function fqVisSync(){
       if(!visBox||!visIn)return;
-      var m=fqVisMode(),ex=fqExBy(),key=m+(m==='exclude'?':'+ex:'');
-      if(key!==visLast){
-        visLast=key;
+      var m=fqVisMode();
+      if(m!==visLast){
+        visLast=m;
         var ci=visIn.querySelector('input');
         if(ci)ci.value='';
         if(visErr){visErr.textContent='';visErr.style.display='none'}
         if(ci)ci.classList.remove('bad');
       }
-      visEx.style.display=m==='exclude'?'flex':'none';
       visIn.style.display=m==='all'?'none':'flex';
       var inp=visIn.querySelector('input');
       if(inp){
-        var isTag=(m==='tag'||(m==='exclude'&&ex==='tag'));
+        var isTag=m==='tag';
         inp.placeholder=isTag?'输入标签名称，多个用 ; 分隔':'输入好友备注名，多个用 ; 分隔';
-        inp.setAttribute('aria-label',m==='exclude'
-          ?('不给谁看 · '+(isTag?'标签名称':'好友备注名'))
-          :(isTag?'标签名称':'好友备注名'));
+        inp.setAttribute('aria-label',isTag?'标签名称':'好友备注名');
+      }
+      if(!exBox||!exIn)return;
+      var em=fqExMode();
+      if(em!==exLast){
+        exLast=em;
+        var ei=exIn.querySelector('input');
+        if(ei)ei.value='';
+        if(exErr){exErr.textContent='';exErr.style.display='none'}
+        if(ei)ei.classList.remove('bad');
+      }
+      exIn.style.display=em==='none'?'none':'flex';
+      var einp=exIn.querySelector('input');
+      if(einp){
+        var exTag=em==='tag';
+        einp.placeholder=exTag?'输入标签名称，多个用 ; 分隔':'输入好友备注名，多个用 ; 分隔';
+        einp.setAttribute('aria-label','不给谁看 · '+(exTag?'标签名称':'好友备注名'));
       }
     }
     /* 两行没有标题的快照行：一行空壳，一行是截止时间下面的提示，搬完统一清掉 */
@@ -24631,14 +24655,22 @@ function initFq(){
         else if(fqCat==='视频'&&!fqVid){fqFormErr(mediaR.row,'请上传视频');ok=false}
         else fqFormErr(mediaR.row,'');
       }
-      /* 谁可以看：选了非默认状态就要有名单；只校验格式，不查标签／好友是否存在 */
+      /* 可见范围：一级谁可以看必填名单，二级不给谁看选了就必填；都只校验格式，不查存在性 */
       var vm=fqVisMode(),vn=fqVisNames(),vmsg='',vi;
       if(vm!=='all'&&!vn.length){
-        vmsg=vm==='exclude'?'请填写不给谁看的人':(vm==='tag'?'请填写标签名称':'请填写好友备注名');
+        vmsg=vm==='tag'?'请填写标签名称':'请填写好友备注名';
       }else if(vn.length>100){
         vmsg='最多填写 100 个名称';
       }else{
         for(vi=0;vi<vn.length;vi++)if(vn[vi].length>30){vmsg='单个名称最多 30 字';break}
+      }
+      var em=fqExMode(),en=fqExNames(),emsg='';
+      if(em!=='none'&&!en.length){
+        emsg=em==='tag'?'请填写不给谁看的标签名称':'请填写不给谁看的好友备注名';
+      }else if(en.length>100){
+        emsg='最多填写 100 个名称';
+      }else{
+        for(vi=0;vi<en.length;vi++)if(en[vi].length>30){emsg='单个名称最多 30 字';break}
       }
       if(visErr){
         visErr.textContent=vmsg;visErr.style.display=vmsg?'block':'none';
@@ -24648,7 +24680,15 @@ function initFq(){
           if(vmsg){try{vinp.focus()}catch(ign){}}
         }
       }
-      if(vmsg)ok=false;
+      if(exErr){
+        exErr.textContent=emsg;exErr.style.display=emsg?'block':'none';
+        var einp=exIn?exIn.querySelector('input'):null;
+        if(einp){
+          einp.classList.toggle('bad',!!emsg);
+          if(emsg&&!vmsg){try{einp.focus()}catch(ign){}}
+        }
+      }
+      if(vmsg||emsg)ok=false;
       if(!execSel){fqSetErr(gExec,'请选择执行人员');ok=false}else fqSetErr(gExec,'');
       if(!startI||!startI.value){fqSetErr(gStart,'请选择通知时间');ok=false}else fqSetErr(gStart,'');
       if(!endI||!endI.value){fqSetErr(gEnd,'请选择截止时间');ok=false}
@@ -27189,7 +27229,8 @@ for(i=0;i<rows.length;i++){
       ],
       sections:[
         {title:'① 发给谁看',rows:[
-          {label:'谁可以看',value:'不给谁看：重点客户、高意向'}
+          {label:'谁可以看',value:'全部好友'},
+          {label:'不给谁看',value:'按微信标签选择：重点客户、高意向'}
         ]},
         {title:'② 发什么',rows:[
           {label:'任务内容',preview:true},
