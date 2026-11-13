@@ -10708,10 +10708,7 @@ function closeHpPanel(instant){
   panelHide(p,instant);                 /* 与另两块同一条退场（ADR-0088） */
   /* 与 closeAiPanel 同一条口径：不动悬浮球。球是素材库的折叠态、存活条件是「微信前台」，
      本浮层收起不等于离开微信——球留在右侧边缘，正好当"去素材库翻一条"的入口。
-     **下钻来的那次（hpChild）关掉只褪这一层**：下面的辅助浮层从头到尾没被关过，时间线原样留着。
-     辅助的折叠横条若被这份清单挡着（aiBarShow 的条件里有 hpOpen／panelOpen），这里退场后同步一次；
-     延迟取 PMOT.out，和面板淡出同一拍，别在清单还在褪的时候就把条拉出来。 */
-  aiBarShow(PMOT.out);
+     **下钻来的那次（hpChild）关掉只褪这一层**：下面的辅助浮层从头到尾没被关过，时间线原样留着。 */
 }
 function hpRender(){
   var t=$('hpTitle');if(t)t.innerHTML=raHitsHead(hpHits.length); /* 标题＝分区头整块（素材库徽章 ＋ 命中素材 · N 条） */
