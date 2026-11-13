@@ -4155,9 +4155,10 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
                    独立清单没有父层可回，这一枚整块不出现（display:none）。 -->
               <button class="hp-back" onclick="hpBack()" title="返回聊天辅助" aria-label="返回聊天辅助"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg></button>
               <span id="hpTitle"></span>
-              <!-- 角块只有一枚 ✕＝关闭这一页（ADR-0096）：收起为横条改走底部那条药丸，
-                   下钻页与独立清单同一个角块，不再由 .stack 二选一。 -->
-              <button class="ai-close" onclick="closeHpPanel()" title="关闭"><svg width="11" height="11" viewBox="0 0 20.0017 20" fill="#AAC1E5" aria-hidden="true"><path d="M10.0008 7.94717L2.48033 0.424977C1.9137 -0.141659 0.994998 -0.141659 0.428363 0.424977C-0.138273 0.991612 -0.138273 1.91031 0.428363 2.47695L7.94717 9.99914L0.424977 17.5196C-0.141659 18.0863 -0.141659 19.005 0.424977 19.5716C0.991612 20.1382 1.91031 20.1382 2.47694 19.5716L10.0008 12.0528L17.5213 19.575C17.8879 19.9415 18.4221 20.0847 18.9228 19.9505C19.4236 19.8164 19.8147 19.4253 19.9488 18.9245C20.083 18.4238 19.9398 17.8896 19.5733 17.523L12.0545 9.99914L19.5767 2.47864C19.9432 2.11209 20.0864 1.57783 19.9522 1.07712C19.8181 0.576403 19.4269 0.185299 18.9262 0.0511333C18.4255 -0.0830329 17.8913 0.0601208 17.5247 0.42667L10.0008 7.94548V7.94717Z"/></svg></button>
+              <!-- 角块只有一枚 ✕＝关闭（ADR-0096）：收起为横条改走底部那条药丸，角块不再兼收起。
+                   关闭什么按这一页的身份分（hpClose）：下钻页属于聊天辅助，✕ 关的是**整块辅助**
+                   （与返回各司其职，不再是同一件事）；独立清单没有父层，✕ 关的就是这份清单。 -->
+              <button class="ai-close" onclick="hpClose()" title="关闭"><svg width="11" height="11" viewBox="0 0 20.0017 20" fill="#AAC1E5" aria-hidden="true"><path d="M10.0008 7.94717L2.48033 0.424977C1.9137 -0.141659 0.994998 -0.141659 0.428363 0.424977C-0.138273 0.991612 -0.138273 1.91031 0.428363 2.47695L7.94717 9.99914L0.424977 17.5196C-0.141659 18.0863 -0.141659 19.005 0.424977 19.5716C0.991612 20.1382 1.91031 20.1382 2.47694 19.5716L10.0008 12.0528L17.5213 19.575C17.8879 19.9415 18.4221 20.0847 18.9228 19.9505C19.4236 19.8164 19.8147 19.4253 19.9488 18.9245C20.083 18.4238 19.9398 17.8896 19.5733 17.523L12.0545 9.99914L19.5767 2.47864C19.9432 2.11209 20.0864 1.57783 19.9522 1.07712C19.8181 0.576403 19.4269 0.185299 18.9262 0.0511333C18.4255 -0.0830329 17.8913 0.0601208 17.5247 0.42667L10.0008 7.94548V7.94717Z"/></svg></button>
             </div>
             <!-- 搜索条（ADR-0089）：恒在。它收窄的是**这一批命中**（标题／正文／关键词／附件名），不是全库——
                  要翻库去素材库面板，那里才有视图与筛选。输入框写成静态节点、不随重绘替换，否则每敲一个字
@@ -9861,6 +9862,7 @@ function openPanel(){
   var swap=aiOpen||hpOpen;            /* 捕获在关闭之前：有另一块在场＝这次是"换掉"，走并叠 */
   var wasOpen=panelOpen;             /* 已开着再被 openPanel（比如从球菜单再点一次）＝不重置这一批 */
   panelOpen=true;                     /* 先落开态再收辅助：closeAiPanel 里的 aiBarShow 看到它就不会闪一下横条 */
+  aiBarShow();                        /* 素材库面板占了这块地方：辅助的折叠横条先让开（关面板时再回来） */
   if(aiOpen)closeAiPanel();
   closeHpPanel();                     /* 后开者胜（ADR-0028 决策 3）：命中浮层让位 */
   pHitNew=0;                          /* 面板开＝顶部那份命中推荐当场可见，面板内「新命中」角标归零 */
@@ -10625,6 +10627,7 @@ function hpOpenList(msgs,child){
   p.classList.toggle('stack',hpChild);
   /* 底部横条＝收起聊天辅助，只在下钻页可点（ADR-0096）：独立清单没有横条可收，药丸保持装饰态 */
   var d=p.querySelector('.ai-drag');if(d)d.disabled=!hpChild;
+  aiBarShow(); /* 清单和折叠横条抢同一块地方：清单开着＝横条先让开 */
   hpPose(p);
   panelShow(p,false);
   hpRender();
@@ -10664,6 +10667,9 @@ function hpMirror(p){
 /* 二级页的「‹」＝只褪清单这一层（ADR-0093）：时间线原样还在，这一批到此结束——
    再点「查看全部」是重新起一批、搜索词也复位（与 ✕ 同一条收尾，不跨页残留）。 */
 function hpBack(){if(hpChild)closeHpPanel()}
+/* 命中清单角块那枚 ✕（ADR-0096）：下钻页是辅助浮层自己的一页，✕ 关整块辅助（‹ 只负责退回时间线，
+   两者不再重复）；独立清单没有父层，✕ 关这一份清单。 */
+function hpClose(){ if(hpChild)aiCloseAll(); else closeHpPanel(); }
 /* 清单内搜索：只筛**这一批**（标题／正文／关键词／附件名，与库内搜索同一个谓词）。
    它不换视图、不碰会话，清空即回全量——所以不需要"搜索态"那一套，输入即筛。 */
 function hpSearch2(v){hpQ=(v||'').trim();hpExpId=null;hpSearchClrSync();hpRender()}
@@ -10708,7 +10714,10 @@ function closeHpPanel(instant){
   panelHide(p,instant);                 /* 与另两块同一条退场（ADR-0088） */
   /* 与 closeAiPanel 同一条口径：不动悬浮球。球是素材库的折叠态、存活条件是「微信前台」，
      本浮层收起不等于离开微信——球留在右侧边缘，正好当"去素材库翻一条"的入口。
-     **下钻来的那次（hpChild）关掉只褪这一层**：下面的辅助浮层从头到尾没被关过，时间线原样留着。 */
+     **下钻来的那次（hpChild）关掉只褪这一层**：下面的辅助浮层从头到尾没被关过，时间线原样留着。
+     辅助的折叠横条若被这份清单挡着（aiBarShow 的条件里有 hpOpen／panelOpen），这里退场后同步一次；
+     延迟取 PMOT.out，和面板淡出同一拍，别在清单还在褪的时候就把条拉出来。 */
+  aiBarShow(PMOT.out);
 }
 function hpRender(){
   var t=$('hpTitle');if(t)t.innerHTML=raHitsHead(hpHits.length); /* 标题＝分区头整块（素材库徽章 ＋ 命中素材 · N 条） */
@@ -11035,10 +11044,10 @@ function closeAiPanel(instant,toBar){
    aiBarOn 先落 false 再收面板：后面 aiBarShow 就不会把横条拉出来，面板退场的 180ms 里也不会闪一下。 */
 function aiCloseAll(){
   aiOpen=false;
+  aiBarOn=false; /* 先落：后面 closeHpPanel 里的 aiBarShow 看到它就不会把横条拉出来 */
   if(hpChild)closeHpPanel(false); /* 下钻的清单是它的下一层（ADR-0089）：这一层收，那一层不能留在屏上裸着 */
   raStreamStop(); /* 浮层都不在了，流式链必须掐断——否则 timer 会继续在隐藏的卡片上敲字 */
   raBatchReset();  /* 关闭＝没人看着这一问了：停掉 3 秒计时，重开时按会话重建 */
-  aiBarOn=false; /* 这一关不再留落点；下次从入口打开后按收起，横条才回来 */
   panelHide($('aiPanel'),false); /* 与收起同一条退场（180ms 淡出），只是不再接横条 */
   aiBarShow();     /* 幂等同步一次：横条若正亮着（理论上不会，浮层开着时它是隐藏的）也一并收掉 */
   toast('已关闭聊天辅助 · 点九宫格「聊天辅助」可重新打开');
@@ -11558,7 +11567,7 @@ buildNav();
 buildVer();   /* 侧栏顶部那枚演示版本开关（标准版／高级版／旗舰版三枚）：与目录同属演示件、同时建 */
 ripInit();
 ballInit();
-aiBallInit();
+aiBarInit();
 dkRefresh();
 function tick(){
   var d=new Date();
