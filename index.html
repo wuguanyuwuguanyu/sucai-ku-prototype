@@ -21899,9 +21899,9 @@ tb.addEventListener("click",function(e){
     '.rea-qfr-top{display:grid;grid-template-columns:minmax(0,480px) minmax(0,1fr);gap:64px;align-items:start;padding:16px 0 24px;border-bottom:1px solid #E5E8EF}',
     '.rea-qfr-fn{min-width:0}',
     '.rea-qfr-fn-rows{display:grid;gap:10px;padding-top:6px}',
-    '.rea-qfr-fn-row{display:grid;grid-template-columns:56px minmax(0,1fr) 44px 56px;align-items:center;gap:12px}',
+    '.rea-qfr-fn-row{display:grid;grid-template-columns:56px minmax(0,1fr) 44px 76px;align-items:center;gap:12px}',
     '.rea-qfr-fn-row>span{font-size:12px;line-height:18px;color:#646A73;white-space:nowrap}',
-    '.rea-qfr-fn-track{height:18px;border-radius:4px;background:#F0F2F5;overflow:hidden}',
+    '.rea-qfr-fn-track{height:18px;background:none}',
     '.rea-qfr-fn-bar{display:block;height:100%;min-width:4px;border-radius:4px;background:#1677FF}',
     '.rea-qfr-fn-row>b{font-size:12px;line-height:18px;font-weight:600;color:#1F2329;text-align:right;font-variant-numeric:tabular-nums}',
     '.rea-qfr-fn-row>em{font-size:12px;line-height:18px;font-style:normal;color:#8F959E;text-align:right;font-variant-numeric:tabular-nums}',
@@ -22036,7 +22036,7 @@ var table='<div class="rea-qfr-list"><div class="rea-qfr-hd">回复明细<span c
    条高 18px、总宽收在 480px 内，数字全在条外，避免大块实心蓝。 */
 var sentRate=reach?total/reach*100:0,repRate=total?nRep/total*100:0,repReach=reach?nRep/reach*100:0;
 function fnRow(label,val,w,rate){
-  return '<div class="rea-qfr-fn-row"><span>'+label+'</span><div class="rea-qfr-fn-track"><i class="rea-qfr-fn-bar" style="width:'+w.toFixed(1)+'%"></i></div><b>'+val+'</b><em>'+(rate||'')+'</em></div>';
+  return '<div class="rea-qfr-fn-row"><span>'+label+'</span><div class="rea-qfr-fn-track"><i class="rea-qfr-fn-bar" style="width:'+w.toFixed(1)+'%"></i></div><b>'+val+'</b><em>'+(rate?'转化 '+rate:'')+'</em></div>';
 }
 var funnel='<section class="rea-qfr-fn"><div class="rea-qfr-hd">转化<span class="rea-qfr-help" title="按好友条目统计：应触达＝任务圈定的好友；已发送＝员工实际发出；已回复＝好友回了本任务消息。百分比相对上一级。">?</span></div>'
  +'<div class="rea-qfr-fn-rows">'
@@ -26589,6 +26589,7 @@ BT.addEventListener('click',function(e){
     '.rea-wxd-donut svg{display:block;width:120px;height:120px;transform:rotate(-90deg)}',
     '.rea-wxd-donut circle{fill:none;stroke-width:12}',
     '.rea-wxd-donut circle.track{stroke:#F0F2F5}',
+    '.rea-wxd-donut svg.is-tick circle.track{display:none}',
     '.rea-wxd-donut circle.done{stroke:#1677FF}',
     '.rea-wxd-donut circle.open{stroke:#C9CED6}',
     '.rea-wxd-donut circle.warn{stroke:#FAAD14}',
@@ -26633,7 +26634,7 @@ BT.addEventListener('click',function(e){
     '.rea-wxd-fn-row:nth-child(3) .rea-wxd-fn-bar{background:#8FB2F4}',
     '.rea-wxd-fn-row:nth-child(4) .rea-wxd-fn-bar{background:#A9C6F7}',
     '.rea-wxd-fn-num{flex:none;width:38px;font-size:12px;line-height:18px;color:#1F2329;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}',
-    '.rea-wxd-fn-rate{flex:none;width:32px;font-size:12px;line-height:18px;color:#646A73;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}',
+    '.rea-wxd-fn-rate{flex:none;width:68px;font-size:12px;line-height:18px;color:#646A73;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}',
     '.rea-wxd-fn-ft{margin-top:12px;font-size:12px;line-height:18px;color:#8F959E}',
     '@media(max-width:1000px){.rea-wxd-info{grid-template-columns:minmax(0,1fr)}.rea-wxd-kv{grid-template-columns:repeat(2,minmax(0,1fr))!important}.rea-wxd-ring{margin-top:20px;padding:20px 0 0;border-top:1px solid #E5E8EF;border-left:0}}',
     '.rea-wxd-tb{display:inline-flex;align-items:center;gap:6px;font-size:14px;line-height:22px;color:#1F2329}',
@@ -26655,14 +26656,16 @@ BT.addEventListener('click',function(e){
     '.rea-hx-side{margin-left:auto;font-size:12px;line-height:18px;color:#8F959E;white-space:nowrap}',
     '.rea-hx-fn{max-width:720px}',
     '.rea-hx-fn-bd{display:grid;gap:5px}',
-    '.rea-hx-fn-row{display:flex;align-items:center;gap:12px;width:100%;border:0;background:none;padding:0;font:inherit;text-align:left;cursor:pointer}',
-    '.rea-hx-fn-bar{display:flex;align-items:center;justify-content:space-between;flex:none;height:30px;padding:0 18px;color:#fff;font-size:13px;line-height:20px;clip-path:polygon(0 0,100% 0,96.5% 100%,3.5% 100%);min-width:0;transition:filter .15s}',
-    '.rea-hx-fn-bar>b{font-weight:600;font-variant-numeric:tabular-nums}',
+    '.rea-hx-fn-row{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;padding:0;font:inherit;text-align:left;cursor:pointer}',
+    '.rea-hx-fn-lb{flex:none;width:56px;text-align:right;font-size:13px;line-height:20px;color:#646A73;white-space:nowrap}',
+    '.rea-hx-fn-track{display:flex;align-items:center;flex:1;min-width:0;height:30px}',
+    '.rea-hx-fn-bar{display:block;height:30px;min-width:4px;clip-path:polygon(0 0,100% 0,96.5% 100%,3.5% 100%);transition:filter .15s}',
     '.rea-hx-fn-row:hover .rea-hx-fn-bar{filter:brightness(1.06)}',
     '.rea-hx-fn-row:nth-child(1) .rea-hx-fn-bar{background:#1677FF}',
     '.rea-hx-fn-row:nth-child(2) .rea-hx-fn-bar{background:#5B8BF0}',
-    '.rea-hx-fn-row:nth-child(3) .rea-hx-fn-bar{background:#A9C6F7;color:#1F2329;padding:0 12px}',
-    '.rea-hx-fn-rate{font-size:12px;line-height:18px;color:#646A73;white-space:nowrap}',
+    '.rea-hx-fn-row:nth-child(3) .rea-hx-fn-bar{background:#8FB2F4}',
+    '.rea-hx-fn-num{flex:none;width:52px;text-align:right;font-size:13px;line-height:20px;font-weight:600;color:#1F2329;font-variant-numeric:tabular-nums;white-space:nowrap}',
+    '.rea-hx-fn-rate{flex:none;width:88px;font-size:12px;line-height:18px;color:#646A73;white-space:nowrap}',
     '.rea-hx-fn-ft{margin-top:10px;font-size:12px;line-height:18px;color:#8F959E}',
     '.rea-hx-exbd{display:flex;align-items:center;gap:20px}',
     '.rea-hx-donut{width:84px;height:84px}',
@@ -26743,11 +26746,25 @@ function lb(v){return CFG.labels[v]||v}
 var U=CFG.unit==='items'?(' 个'+CFG.noun):' 人';
 var CU=CFG.unit==='items'?' 个':' 人';
 /* 环形图：一笔画完的圆按状态分段，从 12 点起顺时针；周长 2πr（r=50）。
-   段色与任务表的状态点同一套：蓝＝已执行、灰＝未执行、琥珀＝中断、红＝异常。 */
-var CIRC=2*Math.PI*50;
+   段色与任务表的状态点同一套：蓝＝已执行、灰＝未执行、琥珀＝中断、红＝异常。
+   单位少（≤24）时改画**刻度环**：一个单位一格，10 个人就是 10 格——5/10 不再是半段弧，
+   而是数得出来的 5 格，中断和未执行也各自成格。超过 24 个单位退回连续弧：
+   刻度细到读不出单位时，连续的密度比分不清的碎格更诚实。 */
+var CIRC=2*Math.PI*50,TICK_MAX=24;
+function tickCls(total){return total<=TICK_MAX?' is-tick':''}
 function donutSvg(counts,total,order){
   if(!total)return '';
-  var segs='',acc=0;
+  var segs='',acc=0,i;
+  if(total<=TICK_MAX){
+    var slot=CIRC/total,gap=slot*0.38,tick=slot-gap;
+    order.forEach(function(v){
+      for(i=0;i<counts[v];i++){
+        segs+='<circle class="'+v+'" cx="60" cy="60" r="50" stroke-dasharray="'+tick.toFixed(2)+' '+(CIRC-tick).toFixed(2)+'" transform="rotate('+((acc*slot+gap/2)/CIRC*360).toFixed(2)+' 60 60)"></circle>';
+        acc++;
+      }
+    });
+    return segs;
+  }
   order.forEach(function(v){
     if(!counts[v])return;
     var len=counts[v]/total*CIRC;
@@ -26780,7 +26797,7 @@ if(PAGE==='批量加好友 · 详情'){
   ];
   var fh='',prev=n;
   tiers.forEach(function(t,i){
-    var rate=i===0?'':(prev?Math.round(t.n/prev*100)+'%':'-');
+    var rate=i===0?'':(prev?'转化 '+Math.round(t.n/prev*100)+'%':'-');
     fh+='<div class="rea-wxd-fn-row">'
       +'<span class="rea-wxd-fn-lb">'+t.lb+'</span>'
       +'<span class="rea-wxd-fn-track"><i class="rea-wxd-fn-bar" style="width:'+(n?Math.max(t.n/n*100,3):0).toFixed(1)+'%"></i></span>'
@@ -26802,7 +26819,7 @@ if(PAGE==='批量加好友 · 详情'){
     +'<div class="rea-wxd-tabbd" data-wxd-panel="exec">'
     +'<div class="rea-wxd-ring-bd">'
     +'<div class="rea-wxd-donut" role="img" aria-label="任务执行：'+n+U+'中 '+exN+CU+'已执行，'+c.open+CU+'未执行">'
-    +'<svg viewBox="0 0 120 120"><circle class="track" cx="60" cy="60" r="50"></circle>'+donutSvg(ex,n,['done','open'])+'</svg>'
+    +'<svg'+tickCls(n)+' viewBox="0 0 120 120"><circle class="track" cx="60" cy="60" r="50"></circle>'+donutSvg(ex,n,['done','open'])+'</svg>'
     +'<div class="rea-wxd-donut-c"><b>'+exN+'/'+n+'</b><span>已执行</span></div>'
     +'</div>'
     +'<div class="rea-wxd-ring-lg">'+legendHtml(ex,['done','open'],{done:'已执行',open:'未执行'},CU)+'</div>'
@@ -26850,7 +26867,7 @@ if(PAGE==='批量加好友 · 详情'){
   +'</div>'
   +'<div class="rea-wxd-ring-bd">'
   +'<div class="rea-wxd-donut" role="img" aria-label="'+summary+'">'
-  +'<svg viewBox="0 0 120 120"><circle class="track" cx="60" cy="60" r="50"></circle>'+donutSvg(c,n,['done','open','warn','fail'])+'</svg>'
+  +'<svg'+tickCls(n)+' viewBox="0 0 120 120"><circle class="track" cx="60" cy="60" r="50"></circle>'+donutSvg(c,n,['done','open','warn','fail'])+'</svg>'
   +'<div class="rea-wxd-donut-c"><b>'+done+'/'+n+'</b><span>'+lb('done')+'</span></div>'
   +'</div>'
   +'<div class="rea-wxd-ring-lg">'+legendHtml(c,['done','open','warn','fail'],{done:lb('done'),open:lb('open'),warn:lb('warn'),fail:lb('fail')},CU)+'</div>'
@@ -27110,8 +27127,17 @@ var tiers=[
 ],fh='',ti;
 for(ti=0;ti<tiers.length;ti++){
   fh+='<button type="button" class="rea-hx-fn-row" data-hx-open="'+tiers[ti].k+'">'
-   +'<span class="rea-hx-fn-bar" style="width:'+tiers[ti].w+'%"><span>'+tiers[ti].label+'</span><b>'+tiers[ti].v+'</b></span>'
+   +'<span class="rea-hx-fn-lb">'+tiers[ti].label+'</span>'
+   +'<span class="rea-hx-fn-track"><i class="rea-hx-fn-bar" style="width:'+tiers[ti].w+'%"></i></span>'
+   +'<b class="rea-hx-fn-num">'+tiers[ti].v+' 位</b>'
    +'<span class="rea-hx-fn-rate">'+tiers[ti].rate+'</span></button>';
+}
+/* 刻度环与 reaWxDetailJs 里那个同一套算法（两段脚本是两个独立 IIFE，取不到那边的函数，
+   就在这里就地画）：一人一格，10 人 10 格，4 格蓝＝已执行，6 格灰＝未执行。 */
+var CIRC2=2*Math.PI*50,slot=CIRC2/N.people,gap=slot*0.38,tick=slot-gap,ticks='',tacc=0,tstep;
+for(tstep=0;tstep<N.people;tstep++){
+  ticks+='<circle class="'+(tstep<N.done?'done':'open')+'" cx="60" cy="60" r="50" stroke-dasharray="'+tick.toFixed(2)+' '+(CIRC2-tick).toFixed(2)+'" transform="rotate('+((tacc*slot+gap/2)/CIRC2*360).toFixed(2)+' 60 60)"></circle>';
+  tacc++;
 }
 var charts=document.createElement('div');
 charts.className='rea-hx-charts';
@@ -27125,7 +27151,7 @@ charts.innerHTML=''
 +'<div class="rea-hx-hd"><span class="rea-hx-t">执行进度<span class="rea-wxd-help" title="按人次统计：一位执行人员计 1 次；10 人中 4 人已执行，未执行的人员还没开始触达。">?</span></span><span class="rea-hx-side">共 '+N.people+' 人</span></div>'
 +'<div class="rea-hx-exbd">'
 +'<div class="rea-wxd-donut rea-hx-donut" role="img" aria-label="执行进度：'+N.people+' 人中 '+N.done+' 人已执行，'+(N.people-N.done)+' 人未执行">'
-+'<svg viewBox="0 0 120 120"><circle class="track" cx="60" cy="60" r="50"></circle><circle class="seg done" cx="60" cy="60" r="50" stroke-dasharray="125.66 188.5"></circle></svg>'
++'<svg class="is-tick" viewBox="0 0 120 120"><circle class="track" cx="60" cy="60" r="50"></circle>'+ticks+'</svg>'
 +'<div class="rea-wxd-donut-c"><b>'+N.done+'/'+N.people+'</b><span>已执行</span></div></div>'
 +'<div class="rea-wxd-ring-lg"><div><i class="done"></i>已执行<b>'+N.done+' 人</b></div><div><i class="open"></i>未执行<b>'+(N.people-N.done)+' 人</b></div></div>'
 +'</div></div>';
