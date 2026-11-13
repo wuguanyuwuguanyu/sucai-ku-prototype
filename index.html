@@ -21893,7 +21893,15 @@ tb.addEventListener("click",function(e){
      ============================================================ */
   var REA_QFR_CSS = [
     '.rea-qfr{padding:4px 0 0}',
-    '.rea-qfr-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;padding:18px 0 20px;border-bottom:1px solid #E5E8EF}',
+    /* 顶部左边三级转化漏斗、右边四格指标（2×2）；漏斗沿用客户唤醒详情那套 .rea-hx-fn，
+       这里只收宽度与行光标，不另造一套样式 */
+    '.rea-qfr-top{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:48px;align-items:start;padding:18px 0 24px;border-bottom:1px solid #E5E8EF}',
+    '.rea-qfr-fn{min-width:0}',
+    '.rea-qfr-fn .rea-hx-fn{max-width:none}',
+    '.rea-qfr-fn .rea-hx-fn-row{cursor:default}',
+    '.rea-qfr-fn .rea-hx-fn-bar{font-size:12px;padding:0 18px;clip-path:polygon(0 0,100% 0,98% 100%,2% 100%)}',
+    '.rea-qfr-fn .rea-hx-fn-row:nth-child(3) .rea-hx-fn-bar{padding:0 10px}',
+    '.rea-qfr-kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 24px;padding:0;border-bottom:0}',
     '.rea-qfr-kpi{min-width:0}',
     '.rea-qfr-kpi>span{display:block;font-size:12px;line-height:18px;color:#8F959E}',
     '.rea-qfr-kpi>b{display:block;margin-top:6px;font-size:28px;line-height:1.15;font-weight:600;color:#1F2329;font-variant-numeric:tabular-nums}',
@@ -21925,7 +21933,7 @@ tb.addEventListener("click",function(e){
     '.rea-qfr-foot{margin-top:12px;font-size:12px;line-height:18px;color:#8F959E}',
     '.rea-qfr-empty{display:flex;flex:1;align-items:center;justify-content:center;padding:48px 0;font-size:13px;color:#8F959E}',
     '.rea-qfr-table .rea-qfr-empty{display:block;text-align:center}',
-    '@media(max-width:1100px){.rea-qfr-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.rea-qfr-grid{grid-template-columns:minmax(0,1fr);gap:32px}}'
+    '@media(max-width:1100px){.rea-qfr-top{grid-template-columns:minmax(0,1fr);gap:28px}.rea-qfr-grid{grid-template-columns:minmax(0,1fr);gap:32px}}'
   ].join('\n');
 
   function reaQfReplyJs(){
@@ -21949,6 +21957,9 @@ function hm(min){
 function fmt(ts){var d=new Date(ts);return d.getFullYear()+'/'+pad(d.getMonth()+1)+'/'+pad(d.getDate())+' '+pad(d.getHours())+':'+pad(d.getMinutes())}
 var replied=DATA.filter(function(r){return r.replied});
 var total=DATA.length,nRep=replied.length;
+/* 应触达＝任务圈定的好友数；718 条是五名执行人员实际发出去的，差的 42 位是
+   好友已删除／风控拦下／员工没上线。演示数固定 760，真实任务从字段取。 */
+var reach=760;
 var within=replied.filter(function(r){return r.delay<=1440}).length;
 var late=replied.filter(function(r){return r.delay>4320}).length;
 var ds=replied.map(function(r){return r.delay}).sort(function(a,b){return a-b});
@@ -21957,7 +21968,7 @@ var med=0;
 if(ds.length){var m=Math.floor(ds.length/2);med=ds.length%2?ds[m]:(ds[m-1]+ds[m])/2}
 var hMed=hm(med),hAvg=hm(avg);
 var kpi='<div class="rea-qfr-kpis">'
- +'<div class="rea-qfr-kpi"><span>已回复好友</span><b>'+nRep+'</b><em>已发送 '+total+' 条 · 回复率 '+pct(total?nRep/total*100:0)+'</em></div>'
+ +'<div class="rea-qfr-kpi"><span>已回复好友</span><b>'+nRep+'</b><em>回复率 '+pct(total?nRep/total*100:0)+'</em></div>'
  +'<div class="rea-qfr-kpi"><span>24 小时内回复</span><b>'+within+'</b><em>占已回复 '+pct(nRep?within/nRep*100:0)+'</em></div>'
  +'<div class="rea-qfr-kpi"><span>首次回复耗时</span><b>'+hMed[0]+'<small>'+hMed[1]+'</small></b><em>平均 '+hAvg[0]+' '+hAvg[1]+'</em></div>'
  +'<div class="rea-qfr-kpi"><span>3 天后才回复</span><b>'+late+'</b><em>占已回复 '+pct(nRep?late/nRep*100:0)+'</em></div>'
@@ -22016,7 +22027,15 @@ var table='<div class="rea-qfr-list"><div class="rea-qfr-hd">回复明细<span c
  +'<div class="rea-qfr-scroll"><table class="rea-qfr-table"><colgroup><col style="width:24%"><col style="width:16%"><col style="width:20%"><col style="width:40%"></colgroup>'
  +'<thead><tr><th>好友</th><th>执行人员</th><th>回复时间</th><th>回复内容</th></tr></thead><tbody>'+rows+'</tbody></table></div>'
  +'<div class="rea-qfr-foot">共 '+nRep+' 条回复</div></div>';
-var body='<div class="rea-qfr">'+kpi
+/* 三级漏斗：应触达 → 已发送 → 已回复，条宽按应触达等比收窄，右侧百分比相对上一级 */
+var sentRate=reach?total/reach*100:0,repRate=total?nRep/total*100:0;
+var funnel='<section class="rea-qfr-fn"><div class="rea-qfr-hd">转化漏斗<span class="rea-qfr-help" title="按好友条目统计：应触达＝任务圈定的好友；已发送＝员工实际发出；已回复＝好友回了本任务消息。右侧百分比相对上一级。">?</span></div>'
+ +'<div class="rea-hx-fn"><div class="rea-hx-fn-bd">'
+ +'<div class="rea-hx-fn-row"><span class="rea-hx-fn-bar" style="width:100%"><span>应触达</span><b>'+reach+'</b></span><span class="rea-hx-fn-rate"></span></div>'
+ +'<div class="rea-hx-fn-row"><span class="rea-hx-fn-bar" style="width:'+sentRate.toFixed(1)+'%"><span>已发送</span><b>'+total+'</b></span><span class="rea-hx-fn-rate">'+pct(sentRate)+'</span></div>'
+ +'<div class="rea-hx-fn-row"><span class="rea-hx-fn-bar" style="width:'+(reach?nRep/reach*100:0).toFixed(1)+'%"><span>已回复</span><b>'+nRep+'</b></span><span class="rea-hx-fn-rate">'+pct(repRate)+'</span></div>'
+ +'</div><div class="rea-hx-fn-ft">未发送 '+(reach-total)+' 位 · 未回复 '+(total-nRep)+' 位</div></div></section>';
+var body='<div class="rea-qfr"><div class="rea-qfr-top">'+funnel+kpi+'</div>'
  +'<div class="rea-qfr-grid">'
  +'<section class="rea-qfr-sec"><div class="rea-qfr-hd">回复趋势<span class="rea-qfr-help" title="按首次回复的自然日归格；同一好友只计一次。">?</span></div><div class="rea-qfr-cols">'+cols+'</div></section>'
  +'<section class="rea-qfr-sec"><div class="rea-qfr-hd">首次回复耗时<span class="rea-qfr-help" title="从好友收到群发消息到第一次回复的间隔；按已回复好友计。">?</span></div><div class="rea-qfr-dur">'+dur+'</div></section>'
