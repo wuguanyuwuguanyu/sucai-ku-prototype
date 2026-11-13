@@ -11754,13 +11754,13 @@ setTimeout(sbScan,120);
 </script>
 <!-- 使用总览：看板入口首页。正文、样式、交互从高保真稿嵌入；页面导航由视图③外壳提供。 -->
 <script type="text/plain" id="srcOverview"><div class="rea-ov-page"><main class="ov-main"><div id="ov-home">
-<header class="ov-heading"><div><h1>使用总览</h1><div id="ov-home-scope" class="ov-muted ov-scope"></div></div><div class="ov-toolbar"><div class="ov-periods" role="group" aria-label="统计时间范围"><button type="button" data-period="day">今日</button><button type="button" data-period="week">近一周</button><button type="button" data-period="month">近一月</button><button type="button" data-period="quarter">近三月</button></div><button type="button" class="ov-help ov-help-button ov-help-right" data-action="definitions" aria-label="数据说明" data-tip="数据说明">?</button></div></header>
-<section class="ov-team-summary ov-panel" aria-label="团队使用摘要"><div id="ov-people-stats"></div><div id="ov-team-distribution"></div></section>
-<section class="ov-value-section" aria-label="四项能力使用情况"><div class="ov-section-heading"><h2>能力使用情况</h2></div><div id="ov-value-scenes" class="ov-value-grid"></div></section>
+<header class="ov-heading"><div><h1>使用总览</h1><div id="ov-home-scope" class="ov-muted ov-scope"></div></div><div class="ov-toolbar"><button type="button" class="ov-control ov-primary" data-value-action="report">汇报视图</button><div class="ov-periods" role="group" aria-label="统计时间范围"><button type="button" data-period="day">今日</button><button type="button" data-period="week">近一周</button><button type="button" data-period="month">近一月</button><button type="button" data-period="quarter">近三月</button></div><button type="button" class="ov-help ov-help-button ov-help-right" data-action="definitions" aria-label="数据说明" data-tip="数据说明">?</button></div></header>
+<section id="ov-value-summary" class="ov-panel"></section><section class="ov-value-section" aria-label="销售工作成果"><div class="ov-section-heading"><h2>销售工作成果</h2></div><div id="ov-value-scenes" class="ov-value-grid"></div></section>
+<section class="ov-panel ov-more"><button type="button" class="ov-link" data-value-action="more" aria-expanded="false">更多场景 <span>⌄</span></button><div id="ov-more-scenes" hidden></div></section><div class="ov-section-heading ov-capabilities-heading"><h2>四项能力使用</h2><div class="ov-capability-links"><button class="ov-link" data-scene="material">素材与话术 →</button><button class="ov-link" data-scene="tasks">任务执行 →</button><button class="ov-link" data-scene="auto">自动回复 →</button><button class="ov-link" data-scene="assist">辅助回复 →</button></div></div><section class="ov-team-summary ov-panel" aria-label="团队使用摘要"><div id="ov-people-stats"></div><div id="ov-team-distribution"></div></section>
 <section class="ov-people ov-panel" aria-labelledby="ov-people-title"><div class="ov-section-heading"><h2 id="ov-people-title">使用人数趋势</h2><div class="ov-tabs" role="group" aria-label="使用趋势范围"><button data-team-mode="all">全部使用</button><button data-team-mode="proactive">主动使用</button><button data-team-mode="automated">自动执行</button></div></div><div class="ov-team-chart-note"><span id="ov-activity-note" class="ov-muted"></span></div><div id="ov-activity-chart"></div></section>
 <div class="ov-team-rankings"><section class="ov-panel ov-departments" aria-labelledby="ov-usage-title"><div class="ov-section-heading"><h2 id="ov-usage-title">部门与员工</h2><div class="ov-tabs" role="group" aria-label="使用情况维度"><button type="button" data-people-tab="department">部门</button><button type="button" data-people-tab="employee">员工</button></div></div><div id="ov-people-ranking"></div></section><section class="ov-panel ov-features" aria-labelledby="ov-features-title"><div class="ov-section-heading"><h2 id="ov-features-title">热门功能 Top 5<span class="ov-help" tabindex="0" role="img" aria-label="App 工具按主动使用次数从高到低展示前五项" data-tip="App 工具按主动使用次数从高到低展示前五项">?</span></h2><button type="button" class="ov-link" data-action="features">查看全部功能 →</button></div><div class="ov-feature-head"><span>排名</span><span>功能</span><span class="ov-feature-count">使用次数</span><span></span></div><div id="ov-feature-ranking"></div></section></div>
 <div class="ov-section-heading ov-resource-heading"><h2>企业资源 <span class="ov-tag">全公司</span><span class="ov-help" tabindex="0" role="img" aria-label="席位与余额为当前存量，点数消耗跟随所选时间。" data-tip="席位与余额为当前存量，点数消耗跟随所选时间。">?</span></h2></div><div class="ov-resources"><section class="ov-panel" aria-labelledby="ov-seats-title"><div class="ov-section-heading"><h2 id="ov-seats-title">版本席位</h2><button type="button" class="ov-link" data-action="seats">查看分配 →</button></div><div class="ov-seat-summary"><b>30 <small>/ 32 席已分配</small></b><span class="ov-tag">2 席待分配</span></div><div id="ov-seats" class="ov-tiers"></div></section><section class="ov-panel" aria-labelledby="ov-points-title"><div class="ov-section-heading"><h2 id="ov-points-title">AI 点数</h2><button type="button" class="ov-link" data-action="points">查看消耗明细 →</button></div><div class="ov-point-meter"><div class="ov-point-meter-head"><span>本期消耗 <b id="ov-points-total">0</b><small>点</small><em id="ov-points-used-share"></em></span><span>当前剩余 <b>42,000</b><small>点</small><em id="ov-points-rest-share"></em></span></div><div class="ov-point-meter-bar" role="img" aria-label="本期消耗与当前剩余占比"><i id="ov-points-used-bar" class="used"></i><i class="rest"></i></div></div><div class="ov-section-heading"><h3 id="ov-point-ranking-title">员工消耗 Top 5</h3><div class="ov-tabs" role="group" aria-label="点数消耗维度"><button type="button" data-points-tab="employee">员工</button><button type="button" data-points-tab="feature">功能</button></div></div><div id="ov-points-ranking"></div></section></div>
-</div><section id="ov-detail" hidden aria-label="总览详情"></section><dialog id="ov-dialog" aria-labelledby="ov-dialog-title"><div class="ov-section-heading"><h2 id="ov-dialog-title">数据说明</h2><button type="button" class="ov-link" data-action="close-dialog">关闭 ×</button></div><div id="ov-dialog-body"></div></dialog></main></div></script>
+</div><section id="ov-report" hidden aria-label="成果汇报"></section><section id="ov-detail" hidden aria-label="总览详情"></section><dialog id="ov-dialog" aria-labelledby="ov-dialog-title"><div class="ov-section-heading"><h2 id="ov-dialog-title">数据说明</h2><button type="button" class="ov-link" data-action="close-dialog">关闭 ×</button></div><div id="ov-dialog-body"></div></dialog></main></div></script>
 <script type="text/plain" id="srcOverviewStyle">.rea-ov-page {
   min-height: 100%;
   background: #f6f8fb;
@@ -12951,6 +12951,47 @@ setTimeout(sbScan,120);
  .rea-ov-page .ov-distribution-labels {grid-template-columns:repeat(2,minmax(0,1fr));}
  .rea-ov-page .ov-resource-metrics {gap:16px;}
 }
+
+/* Customer value presentation. Protected rankings and resource modules keep their existing rules. */
+.rea-ov-page .ov-primary{background:#1677FF;color:#fff;border-color:#1677FF}
+.rea-ov-page #ov-value-summary{margin:24px 0 0;padding:24px 32px}
+.rea-ov-page .ov-value-intro{display:flex;justify-content:space-between;align-items:center;gap:32px}
+.rea-ov-page .ov-value-eyebrow{font-size:12px;color:#646A73;font-weight:400}
+.rea-ov-page .ov-time-value{display:flex;align-items:baseline;gap:12px;font-size:40px;font-weight:600;line-height:1.5;font-variant-numeric:tabular-nums}
+.rea-ov-page .ov-time-value small{font-size:14px;font-weight:400;color:#646A73}
+.rea-ov-page .ov-execution-summary{display:flex;gap:48px}
+.rea-ov-page .ov-execution-summary button{display:grid;gap:8px;text-align:left;border:0;background:none;cursor:pointer;color:#646A73;font-size:14px}
+.rea-ov-page .ov-execution-summary strong{font-size:24px;color:#1F2329;font-variant-numeric:tabular-nums}
+.rea-ov-page .ov-execution-summary small{font-size:12px;margin-left:8px;font-weight:400}
+.rea-ov-page .ov-value-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.rea-ov-page .ov-value-scene{padding:24px;min-height:180px}
+.rea-ov-page .ov-result-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.rea-ov-page .ov-result-label{font-size:14px;color:#1F2329;display:flex;gap:8px;align-items:center}
+.rea-ov-page .ov-result-number{display:flex;align-items:baseline;gap:8px;border:0;background:none;padding:4px 0 12px;cursor:pointer;font-size:36px;font-weight:600;color:#1F2329;font-variant-numeric:tabular-nums;text-align:left}
+.rea-ov-page .ov-result-number:hover{color:#1677FF}
+.rea-ov-page .ov-result-number small{font-size:14px;color:#646A73;font-weight:400}
+.rea-ov-page .ov-result-number i{font-size:14px;color:#1677FF;font-style:normal;opacity:0}
+.rea-ov-page .ov-result-number:hover i,.rea-ov-page .ov-result-number:focus-visible i{opacity:1}
+.rea-ov-page .ov-result-footer{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:12px;color:#646A73}
+.rea-ov-page .ov-result-footer b{font-weight:500;color:#1F2329;margin-left:4px}
+.rea-ov-page .ov-result-footer .ov-link{font-size:12px}
+.rea-ov-page .ov-more{padding:16px 24px;margin-bottom:24px}
+.rea-ov-page .ov-more-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:24px}
+.rea-ov-page .ov-more-grid>div{display:grid;gap:16px;font-size:14px;color:#646A73}
+.rea-ov-page .ov-capabilities-heading{margin-top:24px}
+.rea-ov-page .ov-capability-links{display:flex;flex-wrap:wrap;gap:16px}
+.rea-ov-page .ov-capability-links .ov-link{font-size:12px}
+.rea-ov-page .ov-estimate-table{width:100%;border-collapse:collapse;margin:24px 0;font-size:14px}
+.rea-ov-page .ov-estimate-table th,.rea-ov-page .ov-estimate-table td{padding:12px 8px;text-align:left;border-bottom:1px solid #E9EEF6}
+.rea-ov-page .ov-estimate-table input{width:80px;padding:8px;border:1px solid #E5E8EF;border-radius:8px;font:inherit}
+.rea-ov-page .ov-estimate-actions{display:flex;justify-content:flex-end;gap:16px;margin:24px 0}
+.rea-ov-page .ov-estimate-total{font-size:16px;text-align:right}
+.rea-ov-page .ov-report-grid{margin:24px 0}
+.rea-ov-page .ov-report-assumptions{font-size:12px;color:#646A73;margin-top:32px}
+.rea-ov-page #ov-report .ov-value-intro{padding:8px}
+.rea-ov-page [hidden]{display:none!important}
+@media(max-width:1150px){.rea-ov-page .ov-value-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.rea-ov-page .ov-execution-summary{gap:24px}}
+@media(max-width:750px){.rea-ov-page .ov-value-grid{grid-template-columns:1fr}.rea-ov-page .ov-value-intro{align-items:flex-start;flex-direction:column;gap:24px}.rea-ov-page .ov-more-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.rea-ov-page .ov-time-value{font-size:32px}.rea-ov-page .ov-capabilities-heading{align-items:flex-start;flex-direction:column}}
 </script>
 <script type="text/plain" id="srcOverviewScript">(function () {
   "use strict";
@@ -13134,6 +13175,8 @@ setTimeout(sbScan,120);
       note: "取得实际发布或互动完成回执的次数",
     },
   };
+  metrics.firstTouch.unit="人次";
+  metrics.communication={name:"沟通辅助",unit:"次",note:"AI建议采纳与聊天匹配后素材取用，按有效操作累计；其中匹配素材取用也包含在企业内容取用中，两者不相加。演示匹配关联使用独立示意规则，生产需展示关联ID。"};
   const heroMetrics = [
     "added",
     "publish",
@@ -13464,9 +13507,15 @@ setTimeout(sbScan,120);
       (employee) => route.org === "all" || employee.dept === route.org,
     );
   }
+  function successfulReceipts(records) {
+    const seen=new Set();
+    return records.filter(r=>{const key=r.rootId||r.id;if(seen.has(key)||r.status&&!['success','completed'].includes(r.status))return false;seen.add(key);return true;});
+  }
   function selectMetric(records, metric) {
-    if (metric === "automaticAdded") return records.filter(r => r.metric === "added" && (r.sources.includes("tasks") || r.sources.includes("hosting")));
-    if (metric === "autoMessages") return records.filter(r => r.metric === "message" && r.sources.includes("hosting") && r.feature === "自动回复消息");
+    if(metric === "communication") return successfulReceipts(records.filter(r=>r.metric==='aiReply'||(r.metric==='material'&&r.sequence%3===0)));
+    if(metric === "friendSend" || metric === "interact") return successfulReceipts(records.filter(r=>r.metric===metric));
+    if (metric === "automaticAdded") return successfulReceipts(records.filter(r => r.metric === "added" && (r.sources.includes("tasks") || r.sources.includes("hosting"))));
+    if (metric === "autoMessages") return successfulReceipts(records.filter(r => r.metric === "message" && r.sources.includes("hosting") && r.feature === "自动回复消息"));
     if (metric === "message") return records.filter(messageMetric);
     if (["materialUsers", "materialCount", "materialSend"].includes(metric))
       return records.filter(
@@ -13743,18 +13792,89 @@ setTimeout(sbScan,120);
   function sceneTabs(scene, selected, entries) {
     return `<div class="ov-tabs ov-scene-filters" role="group" aria-label="分析内容">${entries.map(([key,label])=>`<button data-scene="${scene}" data-scene-tab="${key}" aria-pressed="${selected===key}">${label}</button>`).join('')}</div>`;
   }
+
+  const valueDefaults=[10,10,20,5];
+  let valueSeconds=valueDefaults.slice();
+  try { const stored=JSON.parse(localStorage.getItem('yunxiaozhu-overview-demo-estimate-v1')); if(Array.isArray(stored)&&stored.length===4&&stored.every(n=>Number.isInteger(n)&&n>=0&&n<=600))valueSeconds=stored; }catch(e){}
+  let reportMode=false,reportCumulative=false,reportScroll=0;
+  const valueSpecs=[
+    {id:'automaticAdded',name:'新增好友',unit:'人次',scene:'建立客户联系',icon:'added',note:metrics.automaticAdded.note},
+    {id:'friendSend',name:'主动联系客户',unit:'人次',scene:'主动触达与跟进',icon:'message',note:'当前覆盖群发好友成功目标人次。同一批次同一目标去重，多段消息不放大数量；不代表阅读或去重客户。'},
+    {id:'autoMessages',name:'AI自动回复',unit:'条',scene:'客户接待',icon:'autoReply',note:metrics.autoMessages.note+' 消息按成功发生时间归期；轮次详情仍按触发时间统计。'},
+    {id:'communication',name:'沟通辅助',unit:'次',scene:'销售沟通辅助',icon:'aiReply',note:metrics.communication.note},
+    {id:'material',name:'企业内容取用',unit:'次',scene:'企业内容复用',icon:'material',note:'企业素材复制、保存、一键发送、一键发圈；不包含任务自动发送。部分取用也计入沟通辅助，不与之相加。'},
+    {id:'interact',name:'客户互动',unit:'次',scene:'日常关系维护',icon:'interact',note:'当前已统计朋友圈点赞与评论完成回执；微信运动点赞未接入。AI和托管仅为执行方式，同一动作不重复计。'}
+  ];
+  const estimateMetrics=['friendSend','firstTouch','autoMessages','interact'];
+  const estimateNames=['群发好友成功目标','自动打招呼','AI自动回复消息','朋友圈成功互动'];
+  function valueRecords(cumulative=false) {
+    return allRecords.filter(r=>r.day>=0&&r.day<(cumulative?90:periods[period].days)&&(route.org==='all'||employees[r.employee].dept===route.org));
+  }
+  function estimateValue(records,seconds=valueSeconds) {
+    const seen=new Set();
+    const buckets=estimateMetrics.map(()=>0);
+    // Priority resolves any shared root receipts before weighted batch quantities are added.
+    [1,0,2,3].forEach(i=>selectMetric(records,estimateMetrics[i]).forEach(r=>{const id=r.rootId||r.id;if(!seen.has(id)){seen.add(id);buckets[i]+=r.qty;}}));
+    return {buckets,seconds:buckets.reduce((v,n,i)=>v+n*seconds[i],0)};
+  }
+  function hourLabel(seconds) {return seconds>0&&seconds<360?'＜0.1':(seconds/3600).toFixed(1);}
+  function valueNumber(value){return value>=10000?(value/10000).toFixed(2)+'万':number(value);}
+  function valueSummary(records) {
+    const estimated=estimateValue(records), completed=records.filter(r=>r.metric==='taskCompleted');
+    return `<div class="ov-value-intro"><div><span class="ov-value-eyebrow">预计节省操作时间 ${helpSpan('按逐条手动操作假设估算，不扣除配置、审核和纠错时间；不是净工时减少量。仅含群发好友、打招呼、AI回复和已接入的朋友圈互动。')}</span><div class="ov-time-value">${hourLabel(estimated.seconds)}<small>小时</small><span class="ov-tag">部分场景</span></div><button class="ov-link" data-value-action="estimate">估算规则 ↗</button></div><div class="ov-execution-summary"><button data-metric="taskCompleted"><span>完成任务执行</span><strong>${number(sum(completed))}<small>人次</small></strong></button><button data-scene="tasks" data-scene-tab="people"><span>参与完成</span><strong>${new Set(completed.map(r=>r.employee)).size}<small>人</small></strong></button></div></div>`;
+  }
+  function valueCards(records) {
+    const supplemental={
+      automaticAdded:[['涉及员工',new Set(selectMetric(records,'automaticAdded').map(r=>r.employee)).size+' 人','users:automaticAdded']],
+      friendSend:[['涉及员工',new Set(selectMetric(records,'friendSend').map(r=>r.employee)).size+' 人','users:friendSend'],['朋友圈发布',number(metricValue(records,'publish'))+' 条','publish']],
+      autoMessages:[['回复员工',new Set(selectMetric(records,'autoMessages').map(r=>r.employee)).size+' 人','users:autoMessages']],
+      communication:[['AI建议采纳',number(metricValue(records,'aiReply'))+' 次','aiReply'],['匹配素材取用',number(sum(selectMetric(records,'communication').filter(r=>r.metric==='material')))+' 次']],
+      material:[['取用员工',metricValue(records,'materialUsers')+' 人','materialUsers'],['被取用素材',metricValue(records,'materialCount')+' 条','materialCount']],
+      interact:[['朋友圈互动',number(metricValue(records,'interact'))+' 次'],['运动点赞','未接入']]
+    };
+    return valueSpecs.map(c=>{const n=metricValue(records,c.id);return `<section class="ov-value-scene" data-result-card="${c.id}"><div class="ov-result-heading"><span class="ov-value-eyebrow">${c.scene}</span><span class="ov-scene-icon">${ovIcon(METRIC_ICONS[c.icon]||METRIC_ICONS.message,20)}</span></div><div class="ov-result-label">${c.name}${helpSpan(c.note)}</div><button class="ov-result-number" data-metric="${c.id}" data-value="${n}" title="${number(n)} ${c.unit}">${valueNumber(n)}<small>${c.unit}</small><i aria-hidden="true">↗</i></button><div class="ov-result-footer">${supplemental[c.id].map(([label,n,metric])=>metric?`<button class="ov-link" ${metric.startsWith('users:')?'data-value-users="'+metric.slice(6)+'"':metric==='materialUsers'?'data-scene="material" data-scene-tab="people"':metric==='materialCount'?'data-scene="material" data-scene-tab="materials"':'data-metric="'+metric+'"'}>${label} <b>${n}</b></button>`:`<span>${label} <b>${n}</b></span>`).join('')}</div></section>`}).join('');
+  }
   function renderValue() {
-    const records=scopedRecords(),task=sceneStats('tasks'),auto=sceneStats('auto'),assist=sceneStats('assist'),completed=completedInScope();
-    const failed=sceneEvidence('auto').filter(r=>['failed','partial'].includes(r.status)).length;
-    const main=(attrs,label,value,unit,sub='')=>`<button class="ov-cap-main" ${attrs}><span>${label}</span><b>${number(value)}<small>${unit}</small></b>${sub?`<small>${sub}</small>`:''}</button>`;
-    const minor=(attrs,label,value)=>`<button ${attrs}><span>${label}</span><strong>${value} <i aria-hidden="true">›</i></strong></button>`;
-    const cards=[
-      {id:'material',icon:'material',main:main('data-scene="material" data-scene-tab="people"','取用员工',metricValue(records,'materialUsers'),'人'),subs:[minor('data-scene="material" data-scene-tab="records"','素材取用',number(metricValue(records,'material'))+' 次'),minor('data-scene="material" data-scene-tab="materials"','被取用素材',number(metricValue(records,'materialCount'))+' 条')]},
-      {id:'tasks',icon:'taskExec',main:main('data-scene="tasks"','本期完成执行',completed.length,'人次'),subs:[minor('data-scene="tasks" data-scene-tab="people"','参与完成',new Set(completed.map(r=>r.employee)).size+' 人'),minor('data-scene="tasks" data-scene-tab="dispatch"','本期下发完成进度',ratio(task.done,task.total))]},
-      {id:'auto',icon:'autoReply',main:main('data-scene="auto" data-outcome="success"','成功回复',auto.done,'轮'),subs:[minor('data-scene="auto"','成功率',ratio(auto.done,auto.total)),minor('data-scene="auto" data-outcome="failed"','失败 / 部分发送',failed+' 轮')]},
-      {id:'assist',icon:'aiReply',main:main('data-scene="assist"','会话采纳率',ratio(assist.done,assist.total),'',`${assist.done} / ${assist.total} 次已展示会话`),subs:[minor('data-scene="assist" data-scene-tab="people"','采纳员工',assist.users+' 人'),minor('data-scene="assist"','已展示会话',assist.total+' 次')]}
-    ];
-    $('#ov-value-scenes').innerHTML=cards.map(c=>`<section class="ov-value-scene" data-scene-card="${c.id}"><div class="ov-section-heading"><h2><span class="ov-scene-icon">${ovIcon(METRIC_ICONS[c.icon],20)}</span>${sceneNames[c.id]}${helpSpan(sceneNotes[c.id])}</h2><button class="ov-link" data-scene="${c.id}" aria-label="查看${sceneNames[c.id]}详情">查看详情 →</button></div><div class="ov-cap-content">${c.main}<div class="ov-cap-secondary">${c.subs.join('')}</div></div></section>`).join('');
+    const records=valueRecords();
+    $('#ov-value-summary').innerHTML=valueSummary(records);
+    $('#ov-value-scenes').innerHTML=valueCards(records);
+    $('#ov-more-scenes').innerHTML=`<div class="ov-more-grid">${['publish','firstTouch'].map(m=>metricButton(m,records)).join('')}<div><span>群发送</span><b>未接入</b></div><div><span>邀请入群 / 确认入群</span><b>未接入</b></div></div>`;
+  }
+  function estimateRows(records,seconds=valueSeconds,editable=false) {
+    const e=estimateValue(records,seconds);
+    return `<table class="ov-estimate-table"><thead><tr><th>自动化动作</th><th>成功数量</th><th>假设秒/次</th><th>预计小时</th></tr></thead><tbody>${estimateNames.map((n,i)=>`<tr><td>${n}</td><td>${number(e.buckets[i])}</td><td>${editable?`<input type="number" min="0" max="600" step="1" required data-estimate-input="${i}" aria-label="${n}单次假设秒数" value="${seconds[i]}">`:seconds[i]}</td><td data-estimate-part="${i}">${hourLabel(e.buckets[i]*seconds[i])}</td></tr>`).join('')}</tbody></table>`;
+  }
+  function openEstimate() {
+    $('#ov-dialog-title').textContent='估算规则';
+    $('#ov-dialog-body').innerHTML=`<p>按逐条手动操作估算。以下秒数为可调整的演示假设，未扣除配置、审核与纠错时间。</p>${estimateRows(valueRecords(reportMode&&reportCumulative),valueSeconds,true)}<p class="ov-muted">部分场景：微信运动点赞未接入。任务与托管完成不重复计入；素材、建议采纳与加好友不入模。</p><div class="ov-estimate-total">合计 <strong id="ov-estimate-preview">${hourLabel(estimateValue(valueRecords(reportMode&&reportCumulative)).seconds)}</strong> 小时</div><div class="ov-estimate-actions"><button class="ov-link" data-value-action="defaults">恢复默认</button><button class="ov-control" data-value-action="cancel-estimate">取消</button><button class="ov-control ov-primary" data-value-action="apply-estimate">应用</button></div><p class="ov-muted">规则 v1 · 设置仅保存在当前浏览器的演示企业</p>`;
+    $('#ov-dialog').showModal();
+  }
+  function estimateDraft() {return [...root.querySelectorAll('[data-estimate-input]')].map(n=>n.value.trim()===''?NaN:Number(n.value));}
+  function updateEstimatePreview() {
+    const draft=estimateDraft(),valid=draft.length===4&&draft.every(n=>Number.isInteger(n)&&n>=0&&n<=600);
+    root.querySelector('[data-value-action="apply-estimate"]').disabled=!valid;
+    $('#ov-estimate-preview').textContent=valid?hourLabel(estimateValue(valueRecords(reportMode&&reportCumulative),draft).seconds):'—';
+    if(valid){const e=estimateValue(valueRecords(reportMode&&reportCumulative),draft);root.querySelectorAll('[data-estimate-part]').forEach((el,i)=>el.textContent=hourLabel(e.buckets[i]*draft[i]));}
+  }
+  function renderReport() {
+    const records=valueRecords(reportCumulative),scope=route.org==='all'?'全公司':route.org;
+    $('#ov-report').innerHTML=`<header class="ov-heading"><div><span class="ov-value-eyebrow">云小助 · 销售工作成果</span><h1>${html(scope)} · 成果汇报 <span class="ov-tag">演示数据</span></h1><p class="ov-muted">${dateLabel((reportCumulative?90:periods[period].days)-1)} — ${dateLabel()}${reportCumulative?' · 自'+dateLabel(89)+'累计':''}</p></div><div class="ov-toolbar ov-report-actions"><button class="ov-link" data-value-action="exit-report">返回总览</button><button class="ov-control ov-primary" data-value-action="print">打印 / 另存为PDF</button></div></header><div class="ov-tabs ov-report-actions"><button data-report-range="period" aria-pressed="${!reportCumulative}">所选期间 · ${periods[period].name}</button><button data-report-range="cumulative" aria-pressed="${reportCumulative}">累计</button></div><section class="ov-panel">${valueSummary(records)}</section><div class="ov-value-grid ov-report-grid">${valueCards(records)}</div><section class="ov-report-assumptions"><h2>估算说明 · 规则 v1</h2><p>按逐条手动操作估算，未扣除配置、审核和纠错时间。仅包含下表已统计动作，运动点赞未接入。各项成果存在交集，不相加。</p>${estimateRows(records)}<p class="ov-muted">演示数据 · 统计范围：${html(scope)} · ${dateLabel((reportCumulative?90:periods[period].days)-1)} — ${dateLabel()}</p></section>`;
+    // Reports are a snapshot, so cumulative details cannot accidentally open period-only lists.
+    $('#ov-report').querySelectorAll('[data-metric],[data-scene],[data-value-users]').forEach(el=>{el.removeAttribute('data-metric');el.removeAttribute('data-value-users');el.removeAttribute('data-scene');el.removeAttribute('data-scene-tab');el.tabIndex=-1;});
+  }
+  function valueAction(action) {
+    if(action==='report'){reportScroll=scroller().scrollTop;reportMode=true;reportCumulative=false;$('#ov-home').hidden=true;$('#ov-report').hidden=false;renderReport();const tree=document.querySelector('.yk-lefttree');if(tree)tree.hidden=true;scroller().scrollTop=0;}
+    if(action==='exit-report'){reportMode=false;$('#ov-report').hidden=true;const tree=document.querySelector('.yk-lefttree');if(tree)tree.hidden=false;render();scroller().scrollTop=reportScroll;}
+    if(action==='more'){const area=$('#ov-more-scenes');area.hidden=!area.hidden;root.querySelector('[data-value-action="more"]').setAttribute('aria-expanded',!area.hidden);}
+    if(action==='estimate')openEstimate();
+    if(action==='cancel-estimate')$('#ov-dialog').close();
+    if(action==='defaults'){root.querySelectorAll('[data-estimate-input]').forEach((el,i)=>el.value=valueDefaults[i]);updateEstimatePreview();}
+    if(action==='apply-estimate'){const draft=estimateDraft();if(draft.length!==4||!draft.every(n=>Number.isInteger(n)&&n>=0&&n<=600))return;valueSeconds=draft;try{localStorage.setItem('yunxiaozhu-overview-demo-estimate-v1',JSON.stringify(draft));}catch(e){}$('#ov-dialog').close();renderValue();if(reportMode)renderReport();}
+    if(action==='print'){
+      const w=window.open('','_blank');if(!w)return;
+      const printCSS='@page{size:A4 landscape;margin:12mm}*{box-sizing:border-box}html,body{height:auto!important;min-height:0!important;overflow:visible!important;margin:0;background:#fff;color:#1F2329;font:12px/1.6 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif}button{border:0;background:none;padding:0;font:inherit;color:inherit;text-align:left}h1{font-size:20px;margin:4px 0}h2{font-size:16px}p{margin:8px 0}.ov-muted,.ov-value-eyebrow{color:#646A73}.ov-heading{display:flex;justify-content:space-between;margin-bottom:16px}.ov-report-actions,.ov-help,[data-value-action="estimate"],.ov-result-number i{display:none!important}.ov-tag{font-size:12px;color:#646A73;font-weight:400;margin-left:8px}.ov-value-intro{display:flex;align-items:center;justify-content:space-between;padding:16px 0}.ov-time-value{font-size:36px;font-weight:600;display:flex;gap:8px;align-items:baseline}.ov-time-value small{font-size:12px;font-weight:400}.ov-execution-summary{display:flex;gap:32px}.ov-execution-summary button{display:grid;gap:8px;color:#646A73}.ov-execution-summary strong{font-size:24px;color:#1F2329}.ov-execution-summary small{font-size:12px;margin-left:8px}.ov-value-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0}.ov-value-scene{min-width:0;padding:16px;border:1px solid #E9EEF6;border-radius:12px;break-inside:avoid}.ov-result-heading{display:flex;justify-content:space-between;color:#1677FF;margin-bottom:8px}.ov-result-number{font-size:30px;font-weight:600;display:flex;align-items:baseline;gap:8px;margin:4px 0 12px}.ov-result-number small{font-size:12px;font-weight:400;color:#646A73}.ov-result-footer{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:#646A73}.ov-result-footer b{font-weight:500;color:#1F2329}.ov-report-assumptions{break-before:page;color:#646A73}.ov-estimate-table{width:100%;border-collapse:collapse;margin:24px 0}.ov-estimate-table td,.ov-estimate-table th{padding:12px 8px;text-align:left;border-bottom:1px solid #E9EEF6}';
+      w.document.write('<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>云小助成果汇报</title><style>'+printCSS+'</style></head><body><div class="rea-ov-page">'+$('#ov-report').innerHTML+'</div></body></html>');w.document.close();w.focus();setTimeout(()=>w.print(),250);
+    }
   }
   function renderSceneDetail() {
     const scene=route.scene, records=scopedRecords(), stats=sceneStats(scene);
@@ -14080,7 +14200,12 @@ setTimeout(sbScan,120);
     let title = "使用详情",
       body = "";
     const scope = route.org === "all" ? "全公司" : route.org;
-    if (route.view === "scene") {
+    if (route.view === "resultUsers") {
+      title=metrics[route.metric].name+' · 参与员工';
+      const selected=selectMetric(records,route.metric);
+      const people=[...new Set(selected.map(r=>r.employee))].filter(id=>`${employees[id].name}${employees[id].dept}`.includes(filters.query));
+      body=form()+table(['员工','部门','成果数量','最近记录'],people.map(id=>{const own=selected.filter(r=>r.employee===id);return [employeeLink(id),html(employees[id].dept),number(sum(own))+' '+metrics[route.metric].unit,dateLabel(Math.min(...own.map(r=>r.day)))];}),true,`共 ${people.length} 名员工`);
+    } else if (route.view === "scene") {
       title = sceneNames[route.scene];
       body = renderSceneDetail();
     } else if (route.view === "valuePeople") {
@@ -14427,13 +14552,17 @@ setTimeout(sbScan,120);
     renderTree();
   }
   function definitions() {
-    $("#ov-dialog-body").innerHTML = '<p>本页为演示数据。任务完成日期、未展示会话和回复等待/部分发送状态为新增演示记录，正式接口需提供独立完成回执与状态。四项能力分别核对使用与执行情况，不合成价值分数，也不将执行量换算成收入或节省工时。</p><p>团队覆盖按素材取用、AI建议采纳、任务成功结果及AI自动回复记录去重员工。主动使用与自动执行可能重叠，分布以四种互斥状态展示。</p><p>聊天匹配会话、辅助会话与自动回复轮次是本次新增的采集设计，原型用独立演示记录展示分母、失败与未采纳。正式接入前需核实采集完整性；未接入显示“未接入”，不能显示为零。</p><p>素材取用和结果回执按发生时间筛选；本期完成执行按完成时间统计，包含此前下发的任务；本期下发完成进度按下发时间选取队列并读取当前状态，含未到期任务。成功发送消息统计条数，不代表去重客户或阅读人数。采纳不证明最终发送、回复质量或成交。</p><p>自动通过好友并打招呼属于规则触发的自动动作，工作量单列，不作为下发任务完成率的分母。</p><p>团队人数、趋势与员工名单统一按四项能力统计，主动使用与自动执行可重叠，总人数按员工去重。近三月按分段日均人数展示，点击查看该段使用过的去重员工。企业资源始终为全公司，消耗按所选期间、余额和席位为当前存量。</p>';
+    $("#ov-dialog-title").textContent="数据说明";
+    $("#ov-dialog-body").innerHTML = '<p>本页为演示数据。任务完成日期、未展示会话和回复等待/部分发送状态为新增演示记录，正式接口需提供独立完成回执与状态。四项能力分别核对使用与执行情况，不合成价值分数，不将执行量换算成收入。预计节省操作时间采用可调整的假设，非实测净节省工时。互动仅统计已有朋友圈记录，运动点赞与群运营尚未接入。</p><p>团队覆盖按素材取用、AI建议采纳、任务成功结果及AI自动回复记录去重员工。主动使用与自动执行可能重叠，分布以四种互斥状态展示。</p><p>聊天匹配会话、辅助会话与自动回复轮次是本次新增的采集设计，原型用独立演示记录展示分母、失败与未采纳。正式接入前需核实采集完整性；未接入显示“未接入”，不能显示为零。</p><p>素材取用和结果回执按发生时间筛选；本期完成执行按完成时间统计，包含此前下发的任务；本期下发完成进度按下发时间选取队列并读取当前状态，含未到期任务。成功发送消息统计条数，不代表去重客户或阅读人数。采纳不证明最终发送、回复质量或成交。</p><p>自动通过好友并打招呼属于规则触发的自动动作，工作量单列，不作为下发任务完成率的分母。</p><p>团队人数、趋势与员工名单统一按四项能力统计，主动使用与自动执行可重叠，总人数按员工去重。近三月按分段日均人数展示，点击查看该段使用过的去重员工。企业资源始终为全公司，消耗按所选期间、余额和席位为当前存量。</p>';
     $("#ov-dialog").showModal();
   }
   document.addEventListener("click", (event) => {
     const button = event.target.closest("button");
     if (!button || button.disabled) return;
     const data = button.dataset;
+    if(data.valueAction){valueAction(data.valueAction);return;}
+    if(data.valueUsers){navigate({view:'resultUsers',metric:data.valueUsers});return;}
+    if(data.reportRange){reportCumulative=data.reportRange==='cumulative';renderReport();return;}
     if(data.materialRecords) navigate({view:'scene',scene:'material',tab:'records',material:data.materialRecords});
     else if (data.scene) navigate({view:'scene',scene:data.scene,...(data.sceneTab?{tab:data.sceneTab}:{}),...(data.outcome ? {outcome:data.outcome} : {}),...(data.sceneEmployee ? {filters:{query:data.sceneEmployee,source:'all',feature:'all',status:'all'}} : {})});
     else if (data.teamMode) { teamMode = data.teamMode; renderPeople(); syncPressed(); }
@@ -14541,6 +14670,7 @@ setTimeout(sbScan,120);
       syncPressed();
     }
   });
+  document.addEventListener("input",event=>{if(event.target.matches("[data-estimate-input]"))updateEstimatePreview();});
   document.addEventListener("change", event => {
     if (event.target.id !== 'ov-team-status') return;
     route.kind = event.target.value; filters.status = 'all'; recordPage = 1; renderDetail();
