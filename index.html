@@ -17769,7 +17769,7 @@ XX 系列
       <div class="yq-sec-head"><h2>命中记录</h2><span class="yq-muted">3 条 · 按时间倒序</span></div>
       <div class="yq-hits">
         <article class="yq-hit">
-          <div class="yq-hit-head"><span class="yq-hit-tag">笔记标题</span><b>用了 XX 系列三个月，皮肤越来越差</b></div>
+          <div class="yq-hit-head"><span class="yq-hit-tag">笔记标题</span><button type="button" class="yq-note-link" data-yq-note="0" aria-label="预览笔记：用了 XX 系列三个月，皮肤越来越差">用了 XX 系列三个月，皮肤越来越差<svg class="yq-note-eye" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
           <figure class="yq-hit-comment">
             <figcaption><span class="yq-hit-tag">评论内容</span></figcaption>
             <blockquote class="yq-quote">XX 面霜用了两周也开始泛红，客服还说是我的问题。</blockquote>
@@ -17779,7 +17779,7 @@ XX 系列
           <div class="yq-hit-foot"><span>采集时间 2026-11-09 14:08</span></div>
         </article>
         <article class="yq-hit">
-          <div class="yq-hit-head"><span class="yq-hit-tag">笔记标题</span><b>双十一 XX 面霜到底值不值</b></div>
+          <div class="yq-hit-head"><span class="yq-hit-tag">笔记标题</span><button type="button" class="yq-note-link" data-yq-note="1" aria-label="预览笔记：双十一 XX 面霜到底值不值">双十一 XX 面霜到底值不值<svg class="yq-note-eye" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
           <figure class="yq-hit-comment">
             <figcaption><span class="yq-hit-tag">评论内容</span></figcaption>
             <blockquote class="yq-quote">XX 面霜的客服让我自己承担运费，退货还要等一周。</blockquote>
@@ -17789,7 +17789,7 @@ XX 系列
           <div class="yq-hit-foot"><span>采集时间 2026-11-08 21:05</span></div>
         </article>
         <article class="yq-hit">
-          <div class="yq-hit-head"><span class="yq-hit-tag">笔记标题</span><b>XX 面霜用了半年，说点真实感受</b></div>
+          <div class="yq-hit-head"><span class="yq-hit-tag">笔记标题</span><button type="button" class="yq-note-link" data-yq-note="2" aria-label="预览笔记：XX 面霜用了半年，说点真实感受">XX 面霜用了半年，说点真实感受<svg class="yq-note-eye" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
           <figure class="yq-hit-comment">
             <figcaption><span class="yq-hit-tag">评论内容</span></figcaption>
             <blockquote class="yq-quote">XX 面霜客服不理人，退个货要等一周。</blockquote>
@@ -18077,6 +18077,12 @@ XX 系列
 .yq-hit:last-child{padding-bottom:0;border-bottom:0}
 .yq-hit-head{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:10px}
 .yq-hit-head b{font-size:14px;font-weight:600;color:#1F2329}
+.yq-note-link{display:inline-flex;align-items:center;gap:6px;margin:0;padding:0;border:0;background:none;
+  appearance:none;min-height:0;height:auto;font-family:inherit;font-size:14px;font-weight:600;line-height:1.6;
+  color:#1F2329;text-align:left;cursor:pointer}
+.yq-note-link:hover{color:#1677FF;text-decoration:underline;text-underline-offset:3px}
+.yq-note-eye{flex:none;color:#8F959E}
+.yq-note-link:hover .yq-note-eye{color:#1677FF}
 /* 命中记录里三样东西各自带名：笔记标题、评论内容、评论时间 */
 .yq-hit-tag{display:inline-block;padding:0 6px;border:1px solid #E0E4EB;border-radius:4px;
   background:#F7F8FA;font-size:11px;line-height:18px;color:#8F959E;white-space:nowrap}
@@ -18094,6 +18100,41 @@ XX 系列
 .yq-mask{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;background:rgba(31,35,41,.45)}
 .yq-modal{width:560px;max-width:calc(100vw - 48px);padding:24px;border-radius:8px;background:#fff;box-shadow:0 6px 16px rgba(0,0,0,.08)}
 .yq-modal h3{margin-bottom:14px;font-size:16px}
+/* 笔记预览：左图右文，图可切换，正文按行保留 */
+.yq-note-modal{width:960px;max-width:calc(100vw - 48px);max-height:calc(100vh - 64px);overflow:auto;
+  border-radius:10px;background:#fff;box-shadow:0 12px 40px rgba(0,0,0,.16)}
+.yq-note-modal:focus{outline:none}
+.yq-note-hd{position:sticky;top:0;z-index:1;display:flex;align-items:center;justify-content:space-between;
+  padding:16px 24px;border-bottom:1px solid #F0F0F0;background:#fff}
+.yq-note-hd h3{margin:0;font-size:16px;font-weight:600;color:#1F2329}
+.yq-note-x{width:32px;height:32px;padding:0;border:0;border-radius:6px;background:none;color:#8F959E;
+  font-size:22px;line-height:1;cursor:pointer}
+.yq-note-x:hover{background:#F2F5FA;color:#1F2329}
+.yq-note-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr)}
+.yq-note-media{display:flex;flex-direction:column;gap:12px;padding:24px;background:#F7F8FA;border-right:1px solid #F0F0F0}
+.yq-note-main{aspect-ratio:3/4;overflow:hidden;border-radius:8px;background:#EDEFF3}
+.yq-note-main img{display:block;width:100%;height:100%;object-fit:cover}
+.yq-note-thumbs{display:flex;flex-wrap:wrap;gap:8px}
+.yq-note-thumb{width:56px;height:56px;padding:0;border:2px solid transparent;border-radius:6px;overflow:hidden;
+  background:#fff;cursor:pointer}
+.yq-note-thumb.on{border-color:#1677FF}
+.yq-note-thumb img{display:block;width:100%;height:100%;object-fit:cover}
+.yq-note-body{display:flex;flex-direction:column;min-width:0;padding:24px 28px}
+.yq-note-author{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.yq-note-author .yq-avatar{width:36px;height:36px;font-size:14px}
+.yq-note-author b{font-size:14px;font-weight:600;color:#1F2329}
+.yq-note-author span{margin-left:8px;font-size:12px;color:#8F959E}
+.yq-note-title{margin:0 0 14px;font-size:20px;line-height:1.45;font-weight:600;color:#1F2329}
+.yq-note-text{margin:0;font-size:14px;line-height:1.8;color:#333333;white-space:pre-line}
+.yq-note-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;font-size:13px;color:#1677FF}
+.yq-note-meta{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:auto;padding-top:20px;border-top:1px solid #F0F0F0;
+  font-size:12px;color:#8F959E}
+.yq-note-meta b{font-weight:500;color:#646A73}
+@media(max-width:860px){
+  .yq-note-grid{grid-template-columns:minmax(0,1fr)}
+  .yq-note-media{border-right:0;border-bottom:1px solid #F0F0F0}
+  .yq-note-main{max-height:52vh}
+}
 .yq-mbody p{font-size:14px;line-height:1.7;color:#646A73}
 .yq-mfoot{display:flex;justify-content:flex-end;gap:12px;margin-top:24px}
 .yq-people{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 16px}
@@ -18531,8 +18572,132 @@ XX 系列
     $('#yq-export').addEventListener('click', function(){ toast('已导出命中用户 Excel（演示）'); });
   }
 
-  /* 命中用户详情：本页不设导出，只读 */
-  function initLeadDetail(){}
+  /* 命中用户详情：本页不设导出，只读；笔记标题可点开预览 */
+  function noteImg(bg1, bg2, ink, kind){
+    var shape = '';
+    if (kind === 'jar') {
+      shape = "<rect x='252' y='330' width='216' height='210' rx='42' fill='" + ink + "'/>"
+        + "<rect x='238' y='286' width='244' height='64' rx='24' fill='" + ink + "' opacity='.9'/>"
+        + "<rect x='284' y='374' width='152' height='104' rx='12' fill='#FFFFFF' opacity='.55'/>"
+        + "<rect x='310' y='402' width='100' height='6' rx='3' fill='" + ink + "' opacity='.55'/>"
+        + "<rect x='310' y='420' width='72' height='6' rx='3' fill='" + ink + "' opacity='.35'/>";
+    } else if (kind === 'tube') {
+      shape = "<path d='M292 292h136l18 338c2 32-20 54-52 54h-68c-32 0-54-22-52-54z' fill='" + ink + "'/>"
+        + "<rect x='306' y='250' width='108' height='54' rx='14' fill='" + ink + "' opacity='.9'/>"
+        + "<rect x='330' y='228' width='60' height='32' rx='8' fill='#F7F3EC'/>"
+        + "<rect x='318' y='380' width='84' height='120' rx='10' fill='#FFFFFF' opacity='.5'/>"
+        + "<rect x='338' y='406' width='44' height='6' rx='3' fill='" + ink + "' opacity='.55'/>"
+        + "<rect x='338' y='424' width='32' height='6' rx='3' fill='" + ink + "' opacity='.35'/>";
+    } else {
+      shape = "<rect x='286' y='300' width='148' height='340' rx='34' fill='" + ink + "'/>"
+        + "<rect x='322' y='252' width='76' height='66' rx='14' fill='" + ink + "' opacity='.92'/>"
+        + "<rect x='334' y='222' width='52' height='42' rx='10' fill='#F7F3EC'/>"
+        + "<rect x='318' y='380' width='84' height='120' rx='8' fill='#FFFFFF' opacity='.55'/>"
+        + "<rect x='336' y='404' width='48' height='6' rx='3' fill='" + ink + "' opacity='.55'/>"
+        + "<rect x='336' y='422' width='48' height='6' rx='3' fill='" + ink + "' opacity='.35'/>";
+    }
+    var svg = "<svg xmlns='http://www.w3.org/2000/svg' width='720' height='960' viewBox='0 0 720 960'>"
+      + "<defs><linearGradient id='g' x1='0' y1='0' x2='0' y2='1'>"
+      + "<stop offset='0' stop-color='" + bg1 + "'/><stop offset='1' stop-color='" + bg2 + "'/></linearGradient></defs>"
+      + "<rect width='720' height='960' fill='url(#g)'/>"
+      + "<circle cx='576' cy='156' r='132' fill='#FFFFFF' opacity='.28'/>"
+      + "<circle cx='118' cy='812' r='96' fill='#FFFFFF' opacity='.18'/>"
+      + "<ellipse cx='360' cy='704' rx='168' ry='26' fill='#6B5233' opacity='.12'/>"
+      + shape
+      + "<path d='M108 250c28-34 54-34 82 0' fill='none' stroke='#FFFFFF' stroke-width='5' stroke-linecap='round' opacity='.35'/>"
+      + "<path d='M620 700c-26 22-26 48 0 74' fill='none' stroke='#FFFFFF' stroke-width='5' stroke-linecap='round' opacity='.3'/>"
+      + "</svg>";
+    return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+  }
+  var YQ_NOTE_IMGS = [
+    [noteImg('#F7F0E6','#E3D0B8','#C9A26E','bottle'), noteImg('#EFE6DA','#D8C0A0','#A9814D','jar'), noteImg('#F4EDE4','#DECBB2','#B9875A','tube')],
+    [noteImg('#F8EDEF','#E9CDD4','#D98A9C','bottle'), noteImg('#F7E8EC','#E5C2CC','#C97890','jar'), noteImg('#FAF0F2','#EDD3DA','#D08FA0','tube')],
+    [noteImg('#EEF2EC','#D6E0D2','#8FA98B','jar'), noteImg('#F1F3EE','#DCE4D8','#9FB39B','tube'), noteImg('#EDF1EC','#D2DCCF','#839C7F','bottle')]
+  ];
+  var YQ_NOTES = [
+    {
+      title: '用了 XX 系列三个月，皮肤越来越差',
+      author: '一颗柚子', fans: '2.3 万', avatar: '柚',
+      time: '2026-11-06 20:12', likes: '1,204', cmts: '86', collects: '233',
+      text: '从 8 月开始用 XX 系列，前两周还好，第三周开始泛红、刺痛。\n客服说是我自己的问题，让停用观察。停了两周才缓过来。\n空瓶和当时的照片都留着，给同样在用的姐妹提个醒。',
+      tags: ['XX系列', '护肤踩雷', '敏感肌'],
+      imgs: YQ_NOTE_IMGS[0]
+    },
+    {
+      title: '双十一 XX 面霜到底值不值',
+      author: '小满', fans: '1.2 万', avatar: '满',
+      time: '2026-11-07 09:40', likes: '3,482', cmts: '214', collects: '601',
+      text: '双十一预售入手 XX 面霜，算下来比平时便宜 80 左右。\n用了一周，肤感偏厚，干皮应该会喜欢，油皮慎入。\n客服让我自己承担退货运费，这点不太舒服。',
+      tags: ['双十一', 'XX面霜', '干皮护肤'],
+      imgs: YQ_NOTE_IMGS[1]
+    },
+    {
+      title: 'XX 面霜用了半年，说点真实感受',
+      author: '南山南', fans: '5,208', avatar: '南',
+      time: '2026-11-05 12:30', likes: '892', cmts: '57', collects: '140',
+      text: '用了半年，从第一瓶到现在第三瓶。\n优点是保湿够、不搓泥；缺点是对泛红没什么用，换季还是会刺痛。\n客服这块也一言难尽，退货要等一周。给想入的姐妹一个参考。',
+      tags: ['XX面霜', '空瓶记', '真实测评'],
+      imgs: YQ_NOTE_IMGS[2]
+    }
+  ];
+  function openNotePreview(i){
+    var n = YQ_NOTES[i];
+    if (!n) return;
+    var prevFocus = document.activeElement;
+    var mask = document.createElement('div');
+    mask.className = 'yq-mask';
+    var thumbs = n.imgs.map(function(src, k){
+      return '<button type="button" class="yq-note-thumb' + (k === 0 ? ' on' : '') + '" data-yq-thumb="' + k
+        + '" aria-label="第 ' + (k + 1) + ' 张配图"><img src="' + src + '" alt=""></button>';
+    }).join('');
+    var tags = n.tags.map(function(t){ return '<span>#' + esc(t) + '</span>'; }).join('');
+    mask.innerHTML = '<div class="yq-note-modal" role="dialog" aria-modal="true" aria-label="笔记预览" tabindex="-1">'
+      + '<div class="yq-note-hd"><h3>笔记预览</h3>'
+      + '<button type="button" class="yq-note-x" data-yq-note-close aria-label="关闭">×</button></div>'
+      + '<div class="yq-note-grid">'
+      + '<div class="yq-note-media">'
+      + '<div class="yq-note-main"><img src="' + n.imgs[0] + '" alt="笔记配图"></div>'
+      + '<div class="yq-note-thumbs">' + thumbs + '</div>'
+      + '</div>'
+      + '<div class="yq-note-body">'
+      + '<div class="yq-note-author"><span class="yq-avatar">' + esc(n.avatar) + '</span>'
+      + '<div><b>' + esc(n.author) + '</b><span>粉丝 ' + esc(n.fans) + '</span></div></div>'
+      + '<h4 class="yq-note-title">' + esc(n.title) + '</h4>'
+      + '<p class="yq-note-text">' + esc(n.text) + '</p>'
+      + '<div class="yq-note-tags">' + tags + '</div>'
+      + '<div class="yq-note-meta"><span>发布于 <b>' + esc(n.time) + '</b></span>'
+      + '<span>赞 <b>' + esc(n.likes) + '</b></span>'
+      + '<span>评论 <b>' + esc(n.cmts) + '</b></span>'
+      + '<span>收藏 <b>' + esc(n.collects) + '</b></span></div>'
+      + '</div></div></div>';
+    root.appendChild(mask);
+    var main = mask.querySelector('.yq-note-main img');
+    Array.prototype.slice.call(mask.querySelectorAll('[data-yq-thumb]')).forEach(function(b){
+      b.addEventListener('click', function(){
+        main.src = n.imgs[parseInt(b.getAttribute('data-yq-thumb'), 10)];
+        Array.prototype.slice.call(mask.querySelectorAll('[data-yq-thumb]')).forEach(function(x){
+          x.classList.toggle('on', x === b);
+        });
+      });
+    });
+    function close(){
+      document.removeEventListener('keydown', onKey);
+      mask.remove();
+      if (prevFocus && prevFocus.focus) prevFocus.focus();
+    }
+    function onKey(e){ if (e.key === 'Escape') close(); }
+    document.addEventListener('keydown', onKey);
+    mask.addEventListener('click', function(e){ if (e.target === mask) close(); });
+    mask.querySelector('[data-yq-note-close]').addEventListener('click', close);
+    mask.querySelector('.yq-note-modal').focus();
+  }
+  function initLeadDetail(){
+    $$('[data-yq-note]').forEach(function(b){
+      b.addEventListener('click', function(){
+        openNotePreview(parseInt(b.getAttribute('data-yq-note'), 10));
+      });
+    });
+  }
 
   if (PAGE === 'tasks') initTasks();
   else if (PAGE === 'new') initNew();
