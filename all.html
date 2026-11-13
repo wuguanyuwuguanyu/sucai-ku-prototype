@@ -26355,6 +26355,7 @@ BT.addEventListener('click',function(e){
     '.rea-wxd-donut circle.open{stroke:#C9CED6}',
     '.rea-wxd-donut circle.warn{stroke:#FAAD14}',
     '.rea-wxd-donut circle.fail{stroke:#FF4D4F}',
+    '.rea-wxd-donut circle.pass{stroke:#52C41A}',
     '.rea-wxd-donut-c{position:absolute;inset:0;display:grid;place-content:center;text-align:center}',
     '.rea-wxd-donut-c b{font-size:20px;line-height:1.3;font-weight:600;color:#1F2329;font-variant-numeric:tabular-nums}',
     '.rea-wxd-donut-c span{font-size:12px;color:#8F959E}',
@@ -26365,6 +26366,7 @@ BT.addEventListener('click',function(e){
     '.rea-wxd-ring-lg i.open{background:#C9CED6}',
     '.rea-wxd-ring-lg i.warn{background:#FAAD14}',
     '.rea-wxd-ring-lg i.fail{background:#FF4D4F}',
+    '.rea-wxd-ring-lg i.pass{background:#52C41A}',
     '.rea-wxd-ring-lg b{margin-left:auto;font-size:12px;font-weight:400;color:#646A73}',
     '.rea-wxd-ring-ft{margin-top:12px;font-size:12px;line-height:18px;color:#8F959E}',
     '.rea-wxd-rings .rea-wxd-ring-hd{margin-bottom:10px}',
@@ -26379,6 +26381,7 @@ BT.addEventListener('click',function(e){
     '.rea-wxd-tb.done i{background:#1677FF}',
     '.rea-wxd-tb.warn i{background:#FAAD14}',
     '.rea-wxd-tb.fail i{background:#FF4D4F}',
+    '.rea-wxd-tb.pass i{background:#52C41A}',
     '.rea-wxd-tb.open{color:#646A73}'
   ].join('\n');
 
@@ -26431,7 +26434,7 @@ if(CFG.created)setVal('创建时间',CFG.created);
 var validityRow=rowOf('有效期');
 if(validityRow&&validityRow.firstElementChild)validityRow.firstElementChild.textContent='任务有效期';
 
-var plan=CFG.plan,n=plan.length,c={done:0,open:0,warn:0,fail:0};
+var plan=CFG.plan,n=plan.length,c={done:0,open:0,warn:0,fail:0,pass:0};
 for(i=0;i<n;i++)c[plan[i]]++;
 var done=c.done,pending=n-done;
 function lb(v){return CFG.labels[v]||v}
@@ -26475,12 +26478,13 @@ var ring=document.createElement('div');
 if(PAGE==='批量加好友 · 详情'){
   /* 两个维度不是并列关系：任务进度按目标数，好友状态只统计已执行的那部分。
      两个环各带各的分母，第二个环的图例与表格「执行结果」同口径；
-     用户不存在是处理过的真失败，计入已执行。 */
-  var exN=c.done+c.warn+c.fail;
+     验证通过才是这条任务真正加上的好友，放环心和图例第一段；用户已添加是幂等跳过，
+     用户不存在是处理过的真失败，都计入已执行。 */
+  var exN=c.done+c.warn+c.fail+c.pass;
   var ex={done:exN,open:c.open};
-  var res={done:c.done,warn:c.warn,fail:c.fail};
-  var resOrder=['done','warn','fail'];
-  var resNames={done:'用户已添加',warn:'已发送验证请求',fail:'用户不存在'};
+  var res={pass:c.pass,warn:c.warn,done:c.done,fail:c.fail};
+  var resOrder=['pass','warn','done','fail'];
+  var resNames={pass:'验证通过',warn:'已发送验证请求',done:'用户已添加',fail:'用户不存在'};
   var resBits=[];
   resOrder.forEach(function(v){if(res[v])resBits.push(res[v]+CU+resNames[v])});
   ring.className='rea-wxd-ring rea-wxd-rings';
@@ -26499,7 +26503,7 @@ if(PAGE==='批量加好友 · 详情'){
     total:'已执行 '+exN+CU,
     aria:'好友状态：已执行 '+exN+CU+'中 '+(resBits.length?resBits.join('，'):'暂无结果'),
     segs:donutSvg(res,exN,resOrder),
-    center:res.done+'/'+exN,centerLb:'已添加',
+    center:res.pass+'/'+exN,centerLb:'验证通过',
     leg:legendHtml(res,resOrder,resNames,CU)
   });
 }else{
@@ -26647,13 +26651,14 @@ function fill(tr,idx,v){
     setCell(td[4],v==='done'?TIMES[idx%TIMES.length]:'-');
     setBtn(td[5],v==='done'?'180':'-',true);
   }else if(PAGE==='批量加好友 · 详情'){
+    var RES={pass:'验证通过',warn:'已发送验证请求',done:'用户已添加',fail:'用户不存在'};
     setCell(td[0],TARGETS[idx%TARGETS.length]);
     setCell(td[1],'您好，我是云小助的顾问');
-    setCell(td[2],v==='done'?REMARKS[idx%REMARKS.length]:'-');
-    setCell(td[3],v==='done'?'10 月展会客户':'-');
+    setCell(td[2],(v==='open'||v==='fail')?'-':REMARKS[idx%REMARKS.length]);
+    setCell(td[3],(v==='open'||v==='fail')?'-':'10 月展会客户');
     setCell(td[4],v==='open'?'否':'是');
     if(v==='open')setCell(td[5],'-');
-    else setStatusLabel(td[5],v,v==='done'?'用户已添加':lb(v));
+    else setStatusLabel(td[5],v,RES[v]||lb(v));
   }else if(PAGE==='关联好友 · 详情'){
     setCell(td[0],String(idx+1));setCell(td[1],p.p);
     setCell(td[2],WXIDS[idx%WXIDS.length]);
