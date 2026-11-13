@@ -24202,8 +24202,7 @@ function initQs(){
      +'</div>');
   var ta=q('.rea-qs-ta',s2),temp=q('.rea-wxt-temp',s2),host=q('.rea-wxt-host',s2),
       srcBtn=q('.rea-wxt-srcbtn',s2),tempBtn=q('.rea-wxt-tempbtn',s2),picked=null;
-  var textHint=hint('群里看到的就是这段文字；图片或视频会单独成一条消息。');b3.appendChild(textHint);
-  function manual(v){temp.style.display=v?'':'none';textHint.style.display=v?'':'none'}
+  function manual(v){temp.style.display=v?'':'none'}
   function apply(m){
     picked=m;
     if(m){setPrimary(srcBtn,true);setPrimary(tempBtn,false);manual(false)}
@@ -24317,8 +24316,9 @@ function initQs(){
       scopeHint.textContent=ks.length?('已填 '+ks.length+' 个关键词；群名包含任一个就命中，一个群只发一次。')
         :'群在各销售自己的微信里，按群名关键词匹配，群数以后台执行时为准。';
     }else{
-      scopeHint.textContent='每位执行人员发给自己微信里的全部群；群数以各人手机为准，后台不预先统计。';
+      scopeHint.textContent='';
     }
+    scopeHint.hidden=!scopeHint.textContent;
     if(all&&file){
       warn.style.display='';warn.textContent='全部群用文件传输助手转发要一批批勾，建议把「群发哪些群」写成能覆盖一批的群名关键词。';
     }else{warn.style.display='none';warn.textContent='';}
