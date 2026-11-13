@@ -24240,7 +24240,7 @@ function initFq(){
         /* 二级：不给谁看。默认「不限」；选了按标签或按好友才露出输入框。 */
         exBox=document.createElement('div');exBox.className='rea-fq-visub';
         exBox.innerHTML='<span class="rea-fq-visubhd">不给谁看</span>'
-          +'<div class="rea-fq-visubrd">'
+          +'<div class="rea-fq-visubrd" role="radiogroup" aria-label="不给谁看">'
           +'<label class="rea-qf-rd"><input type="radio" name="rea-fq-exby" value="none" checked><span class="rea-qf-rddot"></span>不限</label>'
           +'<label class="rea-qf-rd"><input type="radio" name="rea-fq-exby" value="tag"><span class="rea-qf-rddot"></span>按微信标签选择</label>'
           +'<label class="rea-qf-rd"><input type="radio" name="rea-fq-exby" value="friend"><span class="rea-qf-rddot"></span>指定微信好友</label>'
