@@ -11758,7 +11758,7 @@ setTimeout(sbScan,120);
 <section class="ov-team-summary ov-panel" aria-label="团队使用摘要"><div id="ov-people-stats"></div><div id="ov-team-distribution"></div></section>
 <section class="ov-value-section" aria-label="四项能力使用情况"><div class="ov-section-heading"><h2>能力使用情况</h2></div><div id="ov-value-scenes" class="ov-value-grid"></div></section>
 <section class="ov-people ov-panel" aria-labelledby="ov-people-title"><div class="ov-section-heading"><h2 id="ov-people-title">使用人数趋势</h2><div class="ov-tabs" role="group" aria-label="使用趋势范围"><button data-team-mode="all">全部使用</button><button data-team-mode="proactive">主动使用</button><button data-team-mode="automated">自动执行</button></div></div><div class="ov-team-chart-note"><span id="ov-activity-note" class="ov-muted"></span></div><div id="ov-activity-chart"></div></section>
-<section class="ov-panel ov-departments" aria-labelledby="ov-usage-title"><div class="ov-section-heading"><h2 id="ov-usage-title">部门使用情况</h2><div class="ov-inline-actions"><button class="ov-link" data-action="features">App 工具使用 →</button><button class="ov-link" data-value-people="all">查看员工明细 →</button></div></div><div id="ov-people-ranking"></div></section>
+<div class="ov-team-rankings"><section class="ov-panel ov-departments" aria-labelledby="ov-usage-title"><div class="ov-section-heading"><h2 id="ov-usage-title">部门与员工</h2><div class="ov-tabs" role="group" aria-label="使用情况维度"><button type="button" data-people-tab="department">部门</button><button type="button" data-people-tab="employee">员工</button></div></div><div id="ov-people-ranking"></div></section><section class="ov-panel ov-features" aria-labelledby="ov-features-title"><div class="ov-section-heading"><h2 id="ov-features-title">热门功能 Top 5<span class="ov-help" tabindex="0" role="img" aria-label="App 工具按主动使用次数从高到低展示前五项" data-tip="App 工具按主动使用次数从高到低展示前五项">?</span></h2><button type="button" class="ov-link" data-action="features">查看全部功能 →</button></div><div class="ov-feature-head"><span>排名</span><span>功能</span><span class="ov-feature-count">使用次数</span><span></span></div><div id="ov-feature-ranking"></div></section></div>
 <section class="ov-panel ov-resource-summary" aria-label="企业资源"><div class="ov-section-heading"><h2>企业资源 <span class="ov-tag">全公司</span><span class="ov-help" tabindex="0" role="img" aria-label="席位与余额是当前存量，点数消耗跟随所选时间" data-tip="席位与余额是当前存量，点数消耗跟随所选时间">?</span></h2></div><div class="ov-resource-metrics"><button data-action="seats"><span>当前席位分配</span><b>30 <small>/ 32 席</small></b></button><button data-action="seats"><span>待分配席位</span><b>2 <small>席</small></b></button><button data-action="points"><span>本期点数消耗</span><b id="ov-points-total">0</b></button><button data-action="points"><span>当前剩余点数</span><b>42,000</b></button></div></section>
 </div><section id="ov-detail" hidden aria-label="总览详情"></section><dialog id="ov-dialog" aria-labelledby="ov-dialog-title"><div class="ov-section-heading"><h2 id="ov-dialog-title">数据说明</h2><button type="button" class="ov-link" data-action="close-dialog">关闭 ×</button></div><div id="ov-dialog-body"></div></dialog></main></div></script>
 <script type="text/plain" id="srcOverviewStyle">.rea-ov-page {
@@ -12910,6 +12910,8 @@ setTimeout(sbScan,120);
 .rea-ov-page .ov-cap-main:hover b,.rea-ov-page .ov-cap-secondary button:hover strong,.rea-ov-page .ov-distribution-labels button:hover strong,.rea-ov-page .ov-coverage:hover b {color:#1677FF;}
 .rea-ov-page .ov-cap-main:active,.rea-ov-page .ov-cap-secondary button:active,.rea-ov-page .ov-distribution-labels button:active {opacity:.7;}
 .rea-ov-page .ov-people,.rea-ov-page .ov-departments,.rea-ov-page .ov-resource-summary {margin-bottom:24px;}
+.rea-ov-page .ov-team-rankings {display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:24px;margin-bottom:24px;}
+.rea-ov-page .ov-team-rankings > .ov-panel {margin-bottom:0;}
 .rea-ov-page .ov-inline-actions {display:flex;gap:24px;align-items:center;}
 .rea-ov-page .ov-ref-line {border-color:#8F959E;}
 .rea-ov-page .ov-ref-line span {color:#646A73;}
@@ -12935,6 +12937,7 @@ setTimeout(sbScan,120);
 }
 @media(max-width:1050px) {
  .rea-ov-page .ov-value-grid {grid-template-columns:1fr;}
+ .rea-ov-page .ov-team-rankings {grid-template-columns:1fr;}
  .rea-ov-page .ov-team-summary {grid-template-columns:1fr;}
  .rea-ov-page .ov-cap-secondary button {flex-direction:row;}
  .rea-ov-page .ov-resource-metrics {grid-template-columns:repeat(2,minmax(0,1fr));}
@@ -13166,7 +13169,6 @@ setTimeout(sbScan,120);
   let peopleSort = {
     tab: savedPeopleSort.tab === "employee" ? "employee" : "department",
     key: savedPeopleSort.key || "",
-    direction:savedPeopleSort.direction || "asc",
   };
   let homeOrg = saved.homeOrg || saved.org || "all";
   if (!employees.some((employee) => employee.dept === homeOrg)) homeOrg = "all";
@@ -13914,16 +13916,50 @@ setTimeout(sbScan,120);
         })
         .join("")}</div></div>`;
     renderTeamRanking();
-
+    renderFeatures();
   }
   function renderTeamRanking() {
-    const people=valuePeople(),key=peopleSort.key||'rate',asc=peopleSort.direction!=='desc';
-    const departments=[...new Set(scopedEmployees().map(e=>e.dept))].map(name=>{
-      const own=people.filter(p=>p.employee.dept===name),used=own.filter(p=>p.kind!=='none').length;
-      return {name,assigned:own.length,used,none:own.length-used,rate:own.length?used/own.length:0};
-    }).sort((a,b)=>(asc?1:-1)*(a[key]-b[key])||b.none-a.none||a.name.localeCompare(b.name,'zh-CN'));
-    const head=(label,k)=>`<th aria-sort="${key===k?(asc?'ascending':'descending'):'none'}"><button class="ov-sort" data-sort="${k}">${label} ${key===k?(asc?'↑':'↓'):'↕'}</button></th>`;
-    $('#ov-people-ranking').innerHTML=`<div class="ov-table-wrap"><table><thead><tr><th>部门</th>${head('使用 / 已授权','used')}${head('覆盖率','rate')}${head('暂无记录','none')}<th>操作</th></tr></thead><tbody>${departments.map(d=>`<tr><td>${html(d.name)}</td><td>${d.used} / ${d.assigned} 人</td><td>${ratio(d.used,d.assigned)}</td><td><button class="ov-link" data-department="${html(d.name)}" data-dept-kind="none">${d.none} 人</button></td><td><button class="ov-link" data-department="${html(d.name)}">查看员工 →</button></td></tr>`).join('')}</tbody></table></div>`;
+    const people = valuePeople();
+    const defaultKey = peopleTab === "department" ? "rate" : "days";
+    const allowed = peopleTab === "department"
+      ? ["used", "rate", "average"]
+      : ["days", "last"];
+    const activeKey = peopleSort.tab === peopleTab && allowed.includes(peopleSort.key) ? peopleSort.key : defaultKey;
+    const compare = (rows, key) => rows.sort((a, b) => Number(b[key] ?? 0) - Number(a[key] ?? 0));
+    const header = (label, sortKey) => ({ label, sortKey, activeKey });
+    if (peopleTab === "department") {
+      const departments = [...new Set(scopedEmployees().map((employee) => employee.dept))].map((name) => {
+        const own = people.filter((p) => p.employee.dept === name), used = own.filter((p) => p.kind !== "none");
+        return { name, assigned: own.length, used: used.length, rate: own.length ? used.length / own.length : 0,
+          average: used.length ? used.reduce((total, p) => total + p.days, 0) / used.length : 0 };
+      });
+      compare(departments, activeKey);
+      $("#ov-people-ranking").innerHTML = table(
+        ["排名", header("部门", ""), header("使用 / 已分配", "used"), header("覆盖率", "rate"), header("人均使用天数", "average"), "操作"],
+        departments.slice(0, 5).map((item, index) => [
+          rankBadge(index + 1), html(item.name), `${item.used} / ${item.assigned} 人`,
+          `${(item.rate * 100).toFixed(1)}%`, `${item.average.toFixed(1)} 天`,
+          `<button type="button" class="ov-link" data-department="${html(item.name)}">查看员工 →</button>`,
+        ]),
+      );
+    } else {
+      const rows = people.map((p) => ({ ...p, last: p.last === null ? -1 : -p.last }));
+      compare(rows, activeKey);
+      $("#ov-people-ranking").innerHTML = table(
+        ["排名", header("员工", ""), header("部门", ""), header("使用天数", "days"), header("最近使用", "last")],
+        rows.slice(0, 5).map((p, index) => [
+          rankBadge(index + 1), employeeLink(p.employee.id), html(p.employee.dept), `${p.days} 天`,
+          p.last === -1 ? "暂无" : dateLabel(-p.last),
+        ]),
+      );
+    }
+  }
+  function renderFeatures() {
+    const features = featureStats();
+    $("#ov-feature-ranking").innerHTML = features
+      .slice(0, 5)
+      .map((item, index) => `<button type="button" class="ov-feature-row" data-usage-feature="${html(item.feature)}">${rankBadge(index + 1)}<span class="ov-feature-name"><strong>${html(item.feature)}</strong><span class="ov-track"><i style="width:${(item.count / features[0].count) * 100}%"></i></span></span><span class="ov-feature-count">${number(item.count)} 次</span><span aria-hidden="true">›</span></button>`)
+      .join("") || '<div class="ov-empty">所选期间暂无工具使用记录</div>';
   }
   function pointRecords() {
     return pointLedger.filter(withinWindow);
@@ -14376,7 +14412,7 @@ setTimeout(sbScan,120);
       const target = key === 'material' ? '企业微信看板' : '微小助看板';
       parent.postMessage({reaPage:target,reaOverview:stateFor({view:'home',org:homeOrg})},'*');
     } else if (data.sort) {
-      peopleSort = { tab:"department", key:data.sort, direction:(peopleSort.key||"rate")===data.sort ? (peopleSort.direction==="desc"?"asc":"desc") : data.sort==="none"?"desc":"asc" };
+      peopleSort = { tab: peopleTab, key: data.sort };
       renderPeople();
     } else if (data.period) {
       period = data.period;
