@@ -11759,7 +11759,7 @@ setTimeout(sbScan,120);
 <section class="ov-value-section" aria-label="四项能力使用情况"><div class="ov-section-heading"><h2>能力使用情况</h2></div><div id="ov-value-scenes" class="ov-value-grid"></div></section>
 <section class="ov-people ov-panel" aria-labelledby="ov-people-title"><div class="ov-section-heading"><h2 id="ov-people-title">使用人数趋势</h2><div class="ov-tabs" role="group" aria-label="使用趋势范围"><button data-team-mode="all">全部使用</button><button data-team-mode="proactive">主动使用</button><button data-team-mode="automated">自动执行</button></div></div><div class="ov-team-chart-note"><span id="ov-activity-note" class="ov-muted"></span></div><div id="ov-activity-chart"></div></section>
 <div class="ov-team-rankings"><section class="ov-panel ov-departments" aria-labelledby="ov-usage-title"><div class="ov-section-heading"><h2 id="ov-usage-title">部门与员工</h2><div class="ov-tabs" role="group" aria-label="使用情况维度"><button type="button" data-people-tab="department">部门</button><button type="button" data-people-tab="employee">员工</button></div></div><div id="ov-people-ranking"></div></section><section class="ov-panel ov-features" aria-labelledby="ov-features-title"><div class="ov-section-heading"><h2 id="ov-features-title">热门功能 Top 5<span class="ov-help" tabindex="0" role="img" aria-label="App 工具按主动使用次数从高到低展示前五项" data-tip="App 工具按主动使用次数从高到低展示前五项">?</span></h2><button type="button" class="ov-link" data-action="features">查看全部功能 →</button></div><div class="ov-feature-head"><span>排名</span><span>功能</span><span class="ov-feature-count">使用次数</span><span></span></div><div id="ov-feature-ranking"></div></section></div>
-<section class="ov-panel ov-resource-summary" aria-label="企业资源"><div class="ov-section-heading"><h2>企业资源 <span class="ov-tag">全公司</span><span class="ov-help" tabindex="0" role="img" aria-label="席位与余额是当前存量，点数消耗跟随所选时间" data-tip="席位与余额是当前存量，点数消耗跟随所选时间">?</span></h2></div><div class="ov-resource-metrics"><button data-action="seats"><span>当前席位分配</span><b>30 <small>/ 32 席</small></b></button><button data-action="seats"><span>待分配席位</span><b>2 <small>席</small></b></button><button data-action="points"><span>本期点数消耗</span><b id="ov-points-total">0</b></button><button data-action="points"><span>当前剩余点数</span><b>42,000</b></button></div></section>
+<div class="ov-section-heading ov-resource-heading"><h2>企业资源 <span class="ov-tag">全公司</span><span class="ov-help" tabindex="0" role="img" aria-label="席位与余额为当前存量，点数消耗跟随所选时间。" data-tip="席位与余额为当前存量，点数消耗跟随所选时间。">?</span></h2></div><div class="ov-resources"><section class="ov-panel" aria-labelledby="ov-seats-title"><div class="ov-section-heading"><h2 id="ov-seats-title">版本席位</h2><button type="button" class="ov-link" data-action="seats">查看分配 →</button></div><div class="ov-seat-summary"><b>30 <small>/ 32 席已分配</small></b><span class="ov-tag">2 席待分配</span></div><div id="ov-seats" class="ov-tiers"></div></section><section class="ov-panel" aria-labelledby="ov-points-title"><div class="ov-section-heading"><h2 id="ov-points-title">AI 点数</h2><button type="button" class="ov-link" data-action="points">查看消耗明细 →</button></div><div class="ov-point-meter"><div class="ov-point-meter-head"><span>本期消耗 <b id="ov-points-total">0</b><small>点</small><em id="ov-points-used-share"></em></span><span>当前剩余 <b>42,000</b><small>点</small><em id="ov-points-rest-share"></em></span></div><div class="ov-point-meter-bar" role="img" aria-label="本期消耗与当前剩余占比"><i id="ov-points-used-bar" class="used"></i><i class="rest"></i></div></div><div class="ov-section-heading"><h3 id="ov-point-ranking-title">员工消耗 Top 5</h3><div class="ov-tabs" role="group" aria-label="点数消耗维度"><button type="button" data-points-tab="employee">员工</button><button type="button" data-points-tab="feature">功能</button></div></div><div id="ov-points-ranking"></div></section></div>
 </div><section id="ov-detail" hidden aria-label="总览详情"></section><dialog id="ov-dialog" aria-labelledby="ov-dialog-title"><div class="ov-section-heading"><h2 id="ov-dialog-title">数据说明</h2><button type="button" class="ov-link" data-action="close-dialog">关闭 ×</button></div><div id="ov-dialog-body"></div></dialog></main></div></script>
 <script type="text/plain" id="srcOverviewStyle">.rea-ov-page {
   min-height: 100%;
@@ -12910,7 +12910,7 @@ setTimeout(sbScan,120);
 .rea-ov-page .ov-cap-main:hover b,.rea-ov-page .ov-cap-secondary button:hover strong,.rea-ov-page .ov-distribution-labels button:hover strong,.rea-ov-page .ov-coverage:hover b {color:#1677FF;}
 .rea-ov-page .ov-cap-main:active,.rea-ov-page .ov-cap-secondary button:active,.rea-ov-page .ov-distribution-labels button:active {opacity:.7;}
 .rea-ov-page .ov-people,.rea-ov-page .ov-departments,.rea-ov-page .ov-resource-summary {margin-bottom:24px;}
-.rea-ov-page .ov-team-rankings {display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:24px;margin-bottom:24px;}
+.rea-ov-page .ov-team-rankings {display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:24px;margin-bottom:0;}
 .rea-ov-page .ov-team-rankings > .ov-panel {margin-bottom:0;}
 .rea-ov-page .ov-inline-actions {display:flex;gap:24px;align-items:center;}
 .rea-ov-page .ov-ref-line {border-color:#8F959E;}
@@ -13985,7 +13985,32 @@ setTimeout(sbScan,120);
     '<path d="M3.5 8l4 3.5L12 5l4.5 6.5 4-3.5-1.8 10.5H5.3z"/>',
   ];
   function renderResources() {
-    $('#ov-points-total').textContent=number(sum(pointRecords()));
+    $("#ov-seats").innerHTML = tiers
+      .map(
+        (tier, id) =>
+          `<button type="button" class="ov-tier" data-tier="${id}" title="${tier.name}：已分配 ${tier.assigned} 席，共 ${tier.bought} 席"><span class="ov-tier-top"><span class="ov-tier-icon">${ovIcon(TIER_ICONS[id], 14)}</span><span class="ov-tier-name">${tier.name}</span></span><b>${tier.assigned}<small>/ ${tier.bought} 席</small></b><span class="ov-tier-track"><i style="width:${(tier.assigned / tier.bought) * 100}%"></i></span><span class="ov-tier-note">${tier.bought - tier.assigned ? `待分配 ${tier.bought - tier.assigned} 席` : "已满"}</span></button>`,
+      )
+      .join("");
+    const total = sum(pointRecords());
+    const rest = 42000;
+    const usedShare = total + rest ? total / (total + rest) : 0;
+    $("#ov-points-total").textContent = number(total);
+    $("#ov-points-used-share").textContent = `${(usedShare * 100).toFixed(0)}%`;
+    $("#ov-points-rest-share").textContent = `${((1 - usedShare) * 100).toFixed(0)}%`;
+    $("#ov-points-used-bar").style.width = `${usedShare * 100}%`;
+    $("#ov-point-ranking-title").textContent =
+      pointsTab === "employee" ? "员工消耗 Top 5" : "功能消耗分布";
+    const groups = pointGroups(pointsTab);
+    const display =
+      pointsTab === "employee"
+        ? groups.filter((item) => item.key !== null).slice(0, 5)
+        : groups;
+    $("#ov-points-ranking").innerHTML = display
+      .map(
+        (item) =>
+          `<button type="button" class="ov-point-row" data-point-${pointsTab}="${item.key}"><span class="ov-point-name">${pointsTab === "employee" ? html(employees[item.key].name) : pointFeatures[item.key]}${pointsTab === "employee" ? `<small>${html(employees[item.key].dept)}</small>` : ""}</span><span class="ov-track"><i style="width:${(item.qty / Math.max(1, total)) * 100}%"></i></span><strong>${number(item.qty)} 点<small>${((item.qty / Math.max(1, total)) * 100).toFixed(1)}%</small></strong></button>`,
+      )
+      .join("");
   }
   function form({ source = false, status = false, points = false } = {}) {
     return `<form class="ov-form" id="ov-filter"><input name="query" aria-label="搜索员工或事项" placeholder="搜索员工、部门或事项" value="${html(filters.query)}">${
