@@ -2664,27 +2664,26 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .ball.glide{transition:left .2s var(--emph),top .2s var(--emph),right .2s var(--emph),bottom .2s var(--emph)}
 .ball.hit{animation:pulse 1s var(--emph) 2}
 @keyframes pulse{0%{box-shadow:var(--e3),0 0 0 4px rgba(255,255,255,.7)}50%{box-shadow:0 4px 12px 2px rgba(186,26,26,.45),0 0 0 9px rgba(186,26,26,.18)}100%{box-shadow:var(--e3),0 0 0 4px rgba(255,255,255,.7)}}
-/* AI 模块球（ADR-0078／0090）＝聊天辅助浮层收起后的**自己的**折叠态，与全局素材球是两颗独立的球：
-   全局球恒在、只有单击＋拖动；这一颗在辅助浮层被收起/顶掉后出现、点它＝重开辅助浮层。
-   48px＝M3 的最小可点尺寸（原 42 小于 48，点起来发飘），仍比 54 的全局球小一档、避免两颗球等权；
-   另有 4px 的透明外环把实际可点面做到 56，球本身不再长胖。tertiary-container 与菜单里那枚
-   「聊天辅助」同一套色，右上角那枚绿点跟浮层头部的「已就位」同色——一眼认得出是同一模块的折叠态。
-   默认落在 **Dock 下方**（top 147＝Dock 底 135 ＋ 12）的右侧空白：不压 Dock 的「聊天辅助」按钮、
-   不压输入框，也不压左对齐的客户气泡；**自由拖拽、不贴边**（产品口径「独立拖到任意位置」），
-   位置只由 left/top 记住，不做 edge 半隐藏。 */
-.mball{position:absolute;right:14px;top:147px;width:48px;height:48px;border-radius:50%;
-  background:var(--tertiary-container);color:var(--on-tertiary-container);z-index:73;
-  display:flex;align-items:center;justify-content:center;cursor:grab;touch-action:none;user-select:none;
-  box-shadow:var(--e3),0 0 0 1px rgba(255,255,255,.7)}
-.mball::before{content:'';position:absolute;inset:-4px;border-radius:50%} /* 透明外环：视觉 48、可点 56 */
-.mball:focus-visible{outline:2px solid var(--primary);outline-offset:3px}
-.mball.drag{cursor:grabbing}
-.mball-live{position:absolute;right:7px;top:7px;width:8px;height:8px;border-radius:50%;
-  background:#00D991;box-shadow:0 0 0 2px var(--tertiary-container);pointer-events:none}
-/* 模块球「等旧面板淡完再出现」（ADR-0088）：时长与延迟由 aiBallShow() 按 PMOT 写成内联
-   （240ms 延迟 + 200ms 淡入放大），这里只定名字与填充方式——类摘掉即回到常态，不会把球留在半透明。 */
-@keyframes mballIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:none}}
-.mball.anim-in{animation-name:mballIn;animation-fill-mode:both;animation-timing-function:var(--emph)}
+/* 聊天辅助的折叠态是**一条横条**，不是球（ADR-0096）：点浮层底部那条药丸，面板压扁成横条；
+   点横条展开。它只属于聊天辅助，全局素材球照旧独立、恒在。
+   条与面板同宽，落在面板原先底边那一格——折叠时以底边为轴压下去，读得出「这块面板变成了这条」。
+   高度 44＝可点下限，宽度沿用面板 384.5；底色与面板同一套渐变，绿点跟头部「已就位」同色同义。 */
+.ai-bar{position:absolute;left:14px;top:412.8px;width:384.5px;height:44px;border-radius:16.5px;
+  background:linear-gradient(90deg,#EEEFFF,#F0F1FF);
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.6),var(--e3);
+  display:flex;align-items:center;gap:6px;padding:0 14px 0 14.8px;
+  z-index:73;border:none;cursor:pointer;font:inherit;text-align:left;
+  color:#587ad9;-webkit-tap-highlight-color:transparent}
+.ai-bar-live{flex:1;min-width:0;display:flex;align-items:center;gap:3.8px;
+  font-size:14.3px;line-height:1;color:#587ad9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ai-bar-live i{width:4.4px;height:4.4px;border-radius:50%;background:#00D991;flex:none}
+.ai-bar svg{flex:none}
+.ai-bar:active{background:linear-gradient(90deg,#E4E7FF,#E9EBFF)}
+.ai-bar:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+/* 横条「等面板压完再出现」（ADR-0088 的交接口径）：时长与延迟由 aiBarShow() 按 PMOT 写成内联，
+   这里只定名字与填充方式——类摘掉即回到常态。 */
+@keyframes barIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.ai-bar.anim-in{animation-name:barIn;animation-fill-mode:both;animation-timing-function:var(--emph)}
 .ball-badge{position:absolute;top:-4px;right:-4px;min-width:19px;height:19px;border-radius:10px;background:var(--error);color:#fff;
   font-size:10.5px;font-weight:500;display:none;align-items:center;justify-content:center;padding:0 5px;box-shadow:0 0 0 2.5px #fff}
 .ball-badge.show{display:flex}
@@ -2904,19 +2903,18 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 @keyframes panelSwapIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
 .panel.anim-out{animation:panelSwapOut .18s var(--emph) forwards;pointer-events:none}
 .panel.anim-in{animation:panelSwapIn .36s var(--emph) .06s both}
-/* 收起成球（ADR-0090）：面板不是淡掉，是**缩到模块球的位置**——落点由 JS 写成 --bx/--by/--sx/--sy。
-   时长与 PMOT.toBall 一致（240ms）；球在 240ms 后按 PMOT.aiBallDelay 接上，两者正好交班。
-   前 55% 保持不透明：先让面板一路缩成圆，再淡出——中途就透明的话，读不出「这块面板变成了这颗球」。
-   终点要是一个 48px 的圆：缩放后的宽高就是球的 48，圆角取 50% 才收得圆；
-   transform-origin 默认中心，translate 移动的是缩放后的中心，所以终点圆心＝球的圆心。 */
-@keyframes panelToBall{from{opacity:1;transform:none;border-radius:16.5px}
+/* 收起成横条（ADR-0096）：面板以**底边**为轴压扁成那条横条——条就落在它原先底边那一格。
+   时长与 PMOT.toBar 一致（220ms）；横条在面板落定的同一拍按 PMOT.barDelay 淡入，两者正好交班。
+   前 55% 保持不透明：先让面板一路压成一条，再淡出——中途就透明的话，读不出「这块面板变成了这条」。
+   transform-origin 写在下面那条规则里（50% 100%），压扁时底边不动，横条的顶边正好接在压下来的那条上。 */
+@keyframes panelToBar{from{opacity:1;transform:none;border-radius:16.5px}
   55%{opacity:1}
-  to{opacity:0;transform:translate(var(--bx,0),var(--by,0)) scale(var(--sx,.12),var(--sy,.12));border-radius:50%}}
-/* #hpPanel 也在列（ADR-0093）：从二级页收起时屏上那张卡就是清单，缩成球的是它，不是被它盖住的辅助浮层 */
-#aiPanel.to-ball,#hpPanel.to-ball{animation:panelToBall .24s var(--emph) forwards;pointer-events:none}
+  to{opacity:0;transform:scale(1,.09);border-radius:16.5px}}
+/* #hpPanel 也在列（ADR-0093）：从二级页收起时屏上那张卡就是清单，压成横条的是它，不是被它盖住的辅助浮层 */
+#aiPanel.to-bar,#hpPanel.to-bar{transform-origin:50% 100%;animation:panelToBar .22s var(--emph) forwards;pointer-events:none}
 /* 系统开了「减弱动效」时全部瞬切；JS 侧 pmotOff() 也会直接走同步分支，这里是第二道保险。
    .panel／.bmenu 也要列进去：它们首次打开走的是基类的入场动画，不归 panelShow 管。 */
-@media (prefers-reduced-motion:reduce){.panel,.bmenu,.panel.anim-out,.panel.anim-in,.panel.to-ball,.bmenu.anim-out,.mball.anim-in,.ball.glide{animation:none;transition:none}}
+@media (prefers-reduced-motion:reduce){.panel,.bmenu,.panel.anim-out,.panel.anim-in,.panel.to-bar,.ai-bar.anim-in,.bmenu.anim-out,.ball.glide{animation:none;transition:none}}
 .panel-head{flex:none;display:flex;align-items:center;gap:8px;padding:10px 14px 8px;background:var(--sc-low);border-bottom:1px solid var(--outline-variant);cursor:grab;touch-action:none;user-select:none}
 /* 面板搜索条：常态不占行（收进头部一枚 icon），点开才摊在头部下方——面板列表因此常态多一行 */
 .panel-search{flex:none;display:flex;align-items:center;gap:8px;background:var(--sc-high);border-radius:999px;height:44px;padding:0 16px;color:var(--on-surface-variant);font-size:13px;animation:fade .15s}
@@ -3024,28 +3022,13 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
    高度＝头部高（ADR-0046 由 19.8 随头部一起改到 40）：块子只跟头部齐高才吃得住面板那个 16.5 圆角
    ——只把高度留在 19.8、往下挪 10 的话，块子自己的右上圆角会伸到面板圆角之外被 .panel 裁掉。
    内容由 flex 居中，落点恰在头部中线上，与左边那行副标题同一水平线。
-   **同副壳的两个浮层在这里分叉**：命中浮层的 ✕ 是真关掉（照设计稿原路径、#AAC1E5 实心）；
-   聊天辅助浮层写「收起 ⌄」，因为它收进自己的小球、并没有被关掉（ADR-0090）。 */
+   两个浮层的角块都是 ✕＝关闭（ADR-0096）：聊天辅助收起为横条走的是底部那条药丸，不再占角块；
+   角块回到设计稿原路径、#AAC1E5 实心，与命中清单同一枚。关闭＝整个收走、不留横条，入口退回九宫格。 */
 .ai-close{position:absolute;right:0;top:0;width:31.9px;height:40px;border-radius:0 16.5px 0 16.5px;
   background:rgba(255,255,255,.5);border:none;cursor:pointer;padding:0;overflow:hidden;
   display:flex;align-items:center;justify-content:center}
 .ai-close svg{display:block}
 .ai-close:active{background:rgba(255,255,255,.82)}
-/* 聊天辅助浮层的角块＝「收起」，不是「关闭」（ADR-0090）：它收进自己的模块球，浮层没被关掉。
-   ✕ 的通用词义是"关掉"，这里写「收起 ⌄」把去向说清——字是主操作名，不是装饰文案。
-   58px 宽＝两字 11px ＋ 3px 间隙 ＋ 12px 箭头 ＋ 两侧留白；高度仍与头部齐平（40），
-   角块自身的圆角才不会伸到面板圆角外被裁。命中浮层的角块仍是 ✕（那条链路是真关掉、没有球）。 */
-#aiPanel .ai-close{width:58px;gap:3px;font-size:11px;font-weight:500;color:#587AD9;transition:background .12s}
-/* 「关闭」并排在角块左侧（ADR-0091）：收起＝留球（就地放一边）、关闭＝不留球（入口退回九宫格），
-   两枚并排才分得清去向。它是次要动作，故不占角块、只做文字钮：11px / on-surface-variant，
-   视觉压在「收起」之下，按压反馈与角块同一套。
-   右距 64＝角块 58＋6 的缝，两枚按压面不贴在一起；高 40 跟头部齐平（理由同角块——
-   只跟头部齐高才不会伸出面板圆角），宽 48 是 M3 触控下限、两字之外的余量留给手指。 */
-.ai-close-all{position:absolute;right:64px;top:0;width:48px;height:40px;padding:0;border:none;
-  background:none;border-radius:8px;font-size:11px;font-weight:500;color:var(--on-surface-variant);
-  cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .12s}
-.ai-close-all:active{background:rgba(255,255,255,.82)}
-.ai-close-all:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
 /* 内容白卡：设计稿是白 90% + 0 2px 15px 的浅蓝投影。必须是 flex 列且 min-height:0，
    否则里面 #aiBody 的 flex:1 撑不出高度、列表不滚；position:relative + overflow:hidden 是
    滚动指示层（SB_RULES 的 .panel-list 那条）的宿主条件——sbMount 取的是 el.parentElement，
@@ -3056,9 +3039,17 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 /* 列表内衬改 13.7（= 设计稿回答模块距内容卡左边那 25px 的换算值）。只改内衬——
    flex:1 / overflow-y:auto / 隐藏滚动条 一条都不能动。 */
 #aiPanel .panel-list,#hpPanel .panel-list{padding:13.7px}
-/* 底部拖拽药丸：纯装饰，不吃指针事件（压在内容卡下沿之上） */
-.ai-drag{position:absolute;left:50%;bottom:5.5px;transform:translateX(-50%);width:30.8px;height:2.8px;
-  border-radius:20px;background:#cbd4e7;pointer-events:none}
+/* 底部横条＝收起聊天辅助的入口（ADR-0096）：点它，面板压扁成 #aiBar。
+   药丸本身仍是 30.8×2.8 的细条（压在内容卡下沿之上），但可点面放大到 96×26——
+   只给 2.8px 高的命中区，手指根本按不上。可点面是透明的，视觉一个字没改。
+   命中清单的**独立态**不挂这个动作（它没有横条可收）：按钮由 hpOpenList 置 disabled，
+   只在下钻成辅助浮层自己的一页时才可点。 */
+.ai-drag{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:96px;height:26px;
+  padding:0;border:none;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent;z-index:1}
+.ai-drag::before{content:'';position:absolute;left:50%;bottom:5.5px;transform:translateX(-50%);
+  width:30.8px;height:2.8px;border-radius:20px;background:#cbd4e7}
+.ai-drag:disabled{cursor:default;pointer-events:none}
+.ai-drag:active:not(:disabled)::before{background:#aab8d1}
 /* 命中清单里的搜索（ADR-0089）：连发合并之后一批可能有几十条，没有收窄就只能一路滑。
    **恒在**，不随条数出现／消失（同 #panel 那排 chips 的口径——钮忽有忽无比多一行更难受）。
    排在头部与内容卡之间，高度由 .ai-content 的 flex:1 让出（33＋9），下面那笔高度账一个字没动。 */
@@ -3079,18 +3070,15 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
    不是"又开了一块"：站位抄父层、进场不播 popCard（"新开一块"的观感多半就是这两件事凑出来的）。
    头部三件按页分工——
      · 左上角一枚「‹」返回（标题顺移到 38），只褪这一层，时间线与滚动位置原样留着；
-     · 右上角换成父层同一枚「收起 ⌄」（收起为球，展开还落这一页）；
-     · 下钻页**不留「关闭」**：要关先返回，免得看素材时误关掉整块聊天辅助。
-   独立清单（横幅／素材库面板进来的那条）不吃这些规则：它没有父层，角块仍是 ✕。 */
+     · 右上角是同一枚 ✕＝关闭这一页（ADR-0096：收起改走底部横条，角块不再兼收起）；
+     · 收起为横条仍可用：点底部那条药丸，展开还落这一页。
+   独立清单（横幅／素材库面板进来的那条）不吃这些规则：它没有父层，角块同样是 ✕。 */
 .hp-back{position:absolute;left:4px;top:0;width:30px;height:40px;padding:0;border:none;border-radius:8px;
   display:none;align-items:center;justify-content:center;background:none;color:#587AD9;cursor:pointer}
 #hpPanel.stack .hp-back{display:flex}
 .hp-back:active{background:rgba(255,255,255,.82)}
 .hp-back:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
 #hpPanel.stack #hpTitle>.ra-hit-sec{left:38px}
-#hpPanel .hp-fold{display:none;width:58px;gap:3px;font-size:11px;font-weight:500;color:#587AD9}
-#hpPanel.stack .hp-fold{display:flex}
-#hpPanel.stack .ai-close:not(.hp-fold){display:none}
 
 /* ===== 素材库面板的卡（ADR-0075 ④）：标题（渐变色字）＋一行摘要＋行尾两枚取用钮、右上角一枚来源角标 =====
    稿 670×134、行距 146 → 368×73.6、行距 80.2（卡间距 6.6）；白卡 90% 底、圆角 26 → 14.3、
@@ -4066,11 +4054,11 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
             <button class="wx-send" onclick="wxSend()">发送</button>
           </div>
           <div class="ball" id="ball" style="right:12px;bottom:120px"></div>
-          <!-- AI 模块球（ADR-0078／0090）：聊天辅助浮层收起/被顶掉后的**自己的**折叠态。
-               与全局素材球是两颗独立的球——全局球恒在（素材面板开时也不收起），这一颗只在
-               辅助浮层开过之后、且当前没展开时出现；点它＝重开辅助浮层（与菜单里的「聊天辅助」同一落点）。
-               位置自由拖拽、不贴边，默认落在 Dock 下方的右侧空白（避开 Dock、输入框与客户气泡）。 -->
-          <div class="mball" id="aiBall" style="display:none"></div>
+          <!-- 聊天辅助的折叠态＝一条横条（ADR-0096）：点浮层底部那条药丸，面板压扁成它；点它展开。
+               只属于聊天辅助，与全局素材球无关（全局球恒在，素材面板开时也不收起）。
+               位置由 aiCollapseToBar() 写成 left/top：与面板同宽，落在面板原先底边那一格；
+               只在辅助开过、当前没展开、且屏上没有别的浮层时出现。 -->
+          <button type="button" class="ai-bar" id="aiBar" style="display:none" onclick="openAiPanel()" aria-label="展开聊天辅助"></button>
           <!-- 原「命中推荐弹卡」#recPop 已于 2026-10-15 整块删除（ADR-0061）：未开启聊天辅助时的命中
                改由下面的 #hpTip ＋ #hpPanel 承担（横幅先说一声、点开才看清单），微信屏里不再有第二套「命中展示」。 -->
           <!-- 顶部命中横幅（#hpTip · 2026-10-15 新增，ADR-0061）：未开启聊天辅助时命中素材关键词，
@@ -4123,8 +4111,8 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
                内容区仍是 #aiBody.panel-list，**id 与类名一个字都不能改**：
                  · tools/smoke.js 断言 `[id="aiBody"]` 全仓唯一、且类名含 panel-list；
                  · 滚动指示层只按 .panel-list 这个类选择器挂载（SB_RULES），宿主由新加的 .ai-content 承担。
-               结构：.panel-head（副标题／关闭／收起，三件全绝对定位）
-                     → .ai-content（内容白卡，内嵌滚动区）→ .ai-drag（底部药丸，纯装饰）。
+               结构：.panel-head（副标题／关闭，两件绝对定位）
+                     → .ai-content（内容白卡，内嵌滚动区）→ .ai-drag（底部横条＝收起为横条）。
                2026-10-14 按用户要求头部瘦身（ADR-0044）：头像、主标题「实时辅助」、「重置为本会话」三件
                删除，只剩副标题——它顶到头部左上角，头部高度随之从 65.4 收到 19.8（＝副标题自身行高，
                零留白），省下的 45.6px 归内容白卡。头部同时是拖拽把手，故这 19.8px 就是拖拽条的高度。
@@ -4133,11 +4121,10 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
           <div class="panel ai-panel" id="aiPanel" style="display:none;left:14px;top:47px">
             <div class="panel-head" id="aiHead">
               <span class="ai-sub"><i></i>已就位，正在辅助中...</span>
-              <button class="ai-close-all" onclick="aiCloseAll()" title="关闭聊天辅助" aria-label="关闭聊天辅助">关闭</button>
-              <button class="ai-close" onclick="closeAiPanel(false,true)" title="收起为悬浮球" aria-label="收起为悬浮球"><span>收起</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button>
+              <button class="ai-close" onclick="aiCloseAll()" title="关闭聊天辅助" aria-label="关闭聊天辅助"><svg width="11" height="11" viewBox="0 0 20.0017 20" fill="#AAC1E5" aria-hidden="true"><path d="M10.0008 7.94717L2.48033 0.424977C1.9137 -0.141659 0.994998 -0.141659 0.428363 0.424977C-0.138273 0.991612 -0.138273 1.91031 0.428363 2.47695L7.94717 9.99914L0.424977 17.5196C-0.141659 18.0863 -0.141659 19.005 0.424977 19.5716C0.991612 20.1382 1.91031 20.1382 2.47694 19.5716L10.0008 12.0528L17.5213 19.575C17.8879 19.9415 18.4221 20.0847 18.9228 19.9505C19.4236 19.8164 19.8147 19.4253 19.9488 18.9245C20.083 18.4238 19.9398 17.8896 19.5733 17.523L12.0545 9.99914L19.5767 2.47864C19.9432 2.11209 20.0864 1.57783 19.9522 1.07712C19.8181 0.576403 19.4269 0.185299 18.9262 0.0511333C18.4255 -0.0830329 17.8913 0.0601208 17.5247 0.42667L10.0008 7.94548V7.94717Z"/></svg></button>
             </div>
             <div class="ai-content"><div id="aiBody" class="panel-list"></div></div>
-            <div class="ai-drag"></div>
+            <button type="button" class="ai-drag" onclick="aiCollapse()" title="收起聊天辅助" aria-label="收起聊天辅助"></button>
           </div>
 
           <!-- 命中素材浮层（#hpPanel · 2026-10-15 新增，ADR-0061）：**未开启聊天辅助**时，客户消息命中
@@ -4168,10 +4155,9 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
                    独立清单没有父层可回，这一枚整块不出现（display:none）。 -->
               <button class="hp-back" onclick="hpBack()" title="返回聊天辅助" aria-label="返回聊天辅助"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg></button>
               <span id="hpTitle"></span>
-              <!-- 下钻页的角块＝「收起 ⌄」，与父层同一枚、同一个去向（收进模块球，展开落回这一页）；
-                   独立清单的角块仍是 ✕（下面那枚），二者由 .stack 二选一显示。 -->
-              <button class="ai-close hp-fold" onclick="closeAiPanel(false,true)" title="收起为悬浮球" aria-label="收起为悬浮球"><span>收起</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button>
-              <button class="ai-close" onclick="closeHpPanel()" title="收起"><svg width="11" height="11" viewBox="0 0 20.0017 20" fill="#AAC1E5" aria-hidden="true"><path d="M10.0008 7.94717L2.48033 0.424977C1.9137 -0.141659 0.994998 -0.141659 0.428363 0.424977C-0.138273 0.991612 -0.138273 1.91031 0.428363 2.47695L7.94717 9.99914L0.424977 17.5196C-0.141659 18.0863 -0.141659 19.005 0.424977 19.5716C0.991612 20.1382 1.91031 20.1382 2.47694 19.5716L10.0008 12.0528L17.5213 19.575C17.8879 19.9415 18.4221 20.0847 18.9228 19.9505C19.4236 19.8164 19.8147 19.4253 19.9488 18.9245C20.083 18.4238 19.9398 17.8896 19.5733 17.523L12.0545 9.99914L19.5767 2.47864C19.9432 2.11209 20.0864 1.57783 19.9522 1.07712C19.8181 0.576403 19.4269 0.185299 18.9262 0.0511333C18.4255 -0.0830329 17.8913 0.0601208 17.5247 0.42667L10.0008 7.94548V7.94717Z"/></svg></button>
+              <!-- 角块只有一枚 ✕＝关闭这一页（ADR-0096）：收起为横条改走底部那条药丸，
+                   下钻页与独立清单同一个角块，不再由 .stack 二选一。 -->
+              <button class="ai-close" onclick="closeHpPanel()" title="关闭"><svg width="11" height="11" viewBox="0 0 20.0017 20" fill="#AAC1E5" aria-hidden="true"><path d="M10.0008 7.94717L2.48033 0.424977C1.9137 -0.141659 0.994998 -0.141659 0.428363 0.424977C-0.138273 0.991612 -0.138273 1.91031 0.428363 2.47695L7.94717 9.99914L0.424977 17.5196C-0.141659 18.0863 -0.141659 19.005 0.424977 19.5716C0.991612 20.1382 1.91031 20.1382 2.47694 19.5716L10.0008 12.0528L17.5213 19.575C17.8879 19.9415 18.4221 20.0847 18.9228 19.9505C19.4236 19.8164 19.8147 19.4253 19.9488 18.9245C20.083 18.4238 19.9398 17.8896 19.5733 17.523L12.0545 9.99914L19.5767 2.47864C19.9432 2.11209 20.0864 1.57783 19.9522 1.07712C19.8181 0.576403 19.4269 0.185299 18.9262 0.0511333C18.4255 -0.0830329 17.8913 0.0601208 17.5247 0.42667L10.0008 7.94548V7.94717Z"/></svg></button>
             </div>
             <!-- 搜索条（ADR-0089）：恒在。它收窄的是**这一批命中**（标题／正文／关键词／附件名），不是全库——
                  要翻库去素材库面板，那里才有视图与筛选。输入框写成静态节点、不随重绘替换，否则每敲一个字
@@ -4182,7 +4168,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
               <button class="pclr" id="hpSearchClr" style="display:none" onclick="hpSearchClear()" title="清空搜索">✕</button>
             </div>
             <div class="ai-content"><div id="hpBody" class="panel-list"></div></div>
-            <div class="ai-drag"></div>
+            <button type="button" class="ai-drag" onclick="aiCollapse()" title="收起聊天辅助" aria-label="收起聊天辅助" disabled></button>
           </div>
         </section>
 
@@ -4855,7 +4841,7 @@ function resetDemo(){
   S.hostExp={};
   pendingHits.length=0; pQ=''; pHitNew=0;
   HVA_ADMIN_LOCKED=false;   /* 演示开关也回默认（「允许修改」），免得重置后两屏还停在只读态 */
-  closePanel(true); closeAiPanel(true); closeHpPanel(true); aiBallReset(); hpHits=[]; hpMsg=''; S.aiTipsSeen=false; closeBallMenu(true); /* 重置＝瞬切，不播交接动效（ADR-0088） */
+  closePanel(true); closeAiPanel(true); closeHpPanel(true); aiBarReset(); hpHits=[]; hpMsg=''; S.aiTipsSeen=false; closeBallMenu(true); /* 重置＝瞬切，不播交接动效（ADR-0088） */
   raBatchReset(); RA_MSGLOG=[];   /* 会话与分轮一起归零（ADR-0087）：留旧消息序列会让重开后的轮序号对不上屏幕上的聊天气泡 */
   raRounds=[]; raExpId=null; raStreamStop(); S.raPaused=false; wxRebuildChat(); updateBall(); ballBadge(); dkRefresh();
   render(cur,{}); toast('演示数据已重置');
@@ -9557,7 +9543,7 @@ REND['wechat']=function(){
   if(!wxBuilt){wxBuilt=true;wxRebuildChat()}
   var b=$('ball');
   if(b)b.style.display=S.floatOn?'flex':'none';
-  aiBallShow(); /* 模块球跟着微信屏一起进出：它只在这个场景里有意义 */
+  aiBarShow(); /* 折叠横条跟着微信屏一起进出：它只在这个场景里有意义 */
 };
 function bub(side,text,extra){
   return '<div class="bub-row '+side+'">'+(side==='me'?'':'<span class="ava">客</span>')
@@ -9730,7 +9716,7 @@ function ballSnap(b){
   b.style.left=(cur+27<216?-24:432-30)+'px';
 }
 function placeBall(x,y){var b=$('ball');b.style.left=Math.max(8,Math.min(x-24))+'px';b.style.top=Math.max(80,Math.min(y-24,780))+'px';b.style.right='auto';b.style.bottom='auto'}
-function updateBall(){var b=$('ball');if(b)b.style.display=S.floatOn?'flex':'none';aiBallShow()}
+function updateBall(){var b=$('ball');if(b)b.style.display=S.floatOn?'flex':'none';aiBarShow()}
 function ballTap(){
   var b=$('ball');
   if(b&&b.classList.contains('edge')){ /* 半隐藏态：**一次单击＝复位并同时开菜单**（ADR-0078）。
@@ -9780,83 +9766,42 @@ function closeBallMenu(instant){ /* 幂等：元素缺失、本来没开都不�
 }
 function pickLib(){closeBallMenu();openPanel()}
 function pickRa(){closeBallMenu();openAiPanel()}
-/* ---------- AI 模块球（ADR-0078／0090）----------
-   聊天辅助浮层收起后不再「整个关死」，而是收成**它自己的**一颗小球；全局素材球不受影响、恒在。
-   两颗球是**并列的两个模块折叠态**，不是「主球＋卫星」：都能独立拖、都能直接点开各自那块浮层。
-   出现条件只有两条：①这个模块开过（aiBallOn——没开过不凭空长出一颗球）；②当前没展开（aiOpen=false）。
-   浮层里那枚「关闭」（ADR-0091）会把 aiBallOn 落回 false——那一下不留球，下次从入口打开再收起才回来。
-   不贴边、不半隐藏：产品口径「独立拖到任意位置」，位置由内联 left/top 记住，收起再开还在原处。
-   （ADR-0092 补一条：把浮层横向推出屏外收起时，球会落在**那一侧边缘**（4px）与你松手同高——
-   是动作的落点，不是常态；仍整颗可见，不做半隐藏。）
-   ADR-0090 起：48px（＋4px 透明外环）、闪电＋右上绿点、可聚焦；收起时面板缩向它的圆心，
-   不是淡出后另起一颗球——用户得看见「这块面板变成了这颗球」。 */
-var aiBallOn=false;
-function aiBallInit(){
-  var b=$('aiBall');if(!b)return;
+/* ---------- 聊天辅助的折叠态＝一条横条（ADR-0096）----------
+   点浮层底部那条药丸，面板以底边为轴压扁成 #aiBar；点横条重新展开。收起不再做成球：
+   全局素材球只代表素材库这一个模块，聊天辅助再挂一颗球会让「哪颗球是哪个模块」变成要记的事。
+   出现条件三条：①这个模块开过（aiBarOn——没开过不凭空长出一条）；②当前没展开（aiOpen=false）；
+   ③屏上没有别的浮层（素材库面板／命中清单都和它抢同一块地方，横条比球大，压在别人身上更难看）。
+   浮层右上角那枚 ✕＝关闭（ADR-0096）会把 aiBarOn 落回 false——那一下不留横条，
+   下次从入口打开再收起才回来。位置每次收起时现算：与面板同宽，落在面板原先底边那一格。 */
+var aiBarOn=false,AI_BAR_H=44; /* AI_BAR_H 要与 CSS 的 .ai-bar height 一致 */
+function aiBarInit(){
+  var b=$('aiBar');if(!b)return;
   /* 绿点＝「辅助还在跑」，与浮层头部那枚「已就位」同色同义；不是未读数（未读另有语义，别混用） */
-  b.innerHTML=I('sparkle',21,2.1)+'<span class="mball-live" aria-hidden="true"></span>';
-  b.setAttribute('role','button');
-  b.setAttribute('tabindex','0');
-  b.setAttribute('aria-label','打开辅助回复');
-  b.addEventListener('keydown',function(e){
-    if(e.key==='Enter'||e.key===' '){e.preventDefault();openAiPanel()}
-  });
-  aiBallDrag(b);
-  aiBallShow();
+  b.innerHTML='<span class="ai-bar-live"><i></i>已就位，正在辅助中...</span>'
+    +'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 15 12 9 18 15"/></svg>';
+  aiBarShow();
 }
-function aiBallShow(){
-  var b=$('aiBall');if(!b)return;
-  if(!(aiBallOn&&!aiOpen&&S.floatOn)){aiBallHide();return}
+function aiBarShow(delay){
+  var b=$('aiBar');if(!b)return;
+  if(!(aiBarOn&&!aiOpen&&!panelOpen&&!hpOpen&&S.floatOn)){aiBarHide();return}
   if(b.style.display==='flex')return;   /* 已亮着＝不重播入场（updateBall／dkRefresh 会反复调到这里） */
   b.style.display='flex';
-  if(pmotOff()||PMOT.aiBall<=0){b.classList.remove('anim-in');return}
-  /* 等旧面板落定再出现（ADR-0088）：240ms 延迟 + 200ms 淡入放大。它和面板占同一块区域，
-     同时淡出淡入会互相稀释——错开半拍才读得出「面板收起来了，入口在这儿」。 */
-  b.style.animationDuration=PMOT.aiBall+'ms';
-  b.style.animationDelay=PMOT.aiBallDelay+'ms';
+  if(pmotOff()||PMOT.bar<=0){b.classList.remove('anim-in');return}
+  /* 等面板落定再出现（ADR-0088）：默认 180ms 淡入上移 6px；收起为横条那一路把延迟传成 toBar，
+     面板压完的同一下它才开始淡入，正好交班。 */
+  b.style.animationDuration=PMOT.bar+'ms';
+  b.style.animationDelay=(delay||0)+'ms';
   b.classList.remove('anim-in');void b.offsetWidth;b.classList.add('anim-in');
 }
-function aiBallHide(){var b=$('aiBall');if(!b)return;b.style.display='none';b.classList.remove('anim-in')}
-function aiBallReset(){
-  aiBallOn=false;
-  var b=$('aiBall');if(!b)return;
-  b.style.display='none';b.style.left='';b.style.top='';b.style.right='';b.style.bottom='';b.classList.remove('drag');
+function aiBarHide(){var b=$('aiBar');if(!b)return;b.style.display='none';b.classList.remove('anim-in')}
+function aiBarReset(){
+  aiBarOn=false;
+  var b=$('aiBar');if(!b)return;
+  b.style.display='none';b.style.left='';b.style.top='';b.classList.remove('anim-in');
 }
-function aiBallDrag(b){
-  var sx,sy,ox,oy,inner,moved,down=false;
-  b.addEventListener('pointerdown',function(e){
-    down=true;moved=false;sx=e.clientX;sy=e.clientY;
-    var r=b.getBoundingClientRect();ox=r.left;oy=r.top;
-    inner=b.closest('.phone-inner').getBoundingClientRect();
-    b.setPointerCapture(e.pointerId);
-    b.parentNode.appendChild(b); /* 两颗球同为 z 73：被按住的那颗排到后面＝压在另一颗上 */
-    b.classList.add('drag');
-  });
-  b.addEventListener('pointermove',function(e){
-    if(!down)return;
-    if(Math.abs(e.clientX-sx)>5||Math.abs(e.clientY-sy)>5)moved=true;
-    if(!moved)return;
-    var k=(inner.width||412)/412;
-    b.style.left=Math.max(0,Math.min((ox+(e.clientX-sx)-inner.left)/k,412-48))+'px';
-    b.style.top=Math.max(44,Math.min((oy+(e.clientY-sy)-inner.top)/k,916-48-16))+'px';
-    b.style.right='auto';
-  });
-  b.addEventListener('pointerup',function(){
-    down=false;b.classList.remove('drag');
-    if(moved){moved=false;return} /* 自由拖拽：松手就停在那儿，不贴边 */
-    openAiPanel();                /* 单击＝主操作：收起的那块浮层重新展开 */
-  });
-  b.addEventListener('pointercancel',function(){down=false;moved=false;b.classList.remove('drag')});
-}
-/* 模块球的圆心（412×916 布局像素）＝收起动画的落点。**不能量 rect**：球 display:none 时 rect 全 0，
-   而且外层 .phone 带 scale，rect 是视觉像素。默认位置跟 CSS 的 right:14/top:147 是同一对数，改那边要同改这里。 */
-function aiBallCenter(){
-  var b=$('aiBall'),w=48,h=48,l,t;
-  l=parseFloat(b&&b.style.left);t=parseFloat(b&&b.style.top);
-  if(!isFinite(l))l=412-14-w;
-  if(!isFinite(t))t=147;
-  return {x:l+w/2,y:t+h/2};
-}
+/* 点底部药丸＝收起。只有辅助浮层（或它下钻的那一页）认这个动作：
+   独立命中清单没有「横条」这个折叠态，它的药丸由 hpOpenList 置 disabled。 */
+function aiCollapse(){ if(aiOpen)closeAiPanel(false,true); }
 /* 命中角标：未处理命中数（打开面板即视为已处理，清零隐藏） */
 function ballBadge(){
   var bd=$('ballBadge');if(!bd)return;
@@ -9877,13 +9822,13 @@ var panelOpen=false,pHitMsgs=[],aiOpen=false,pHitNew=0; /* aiOpen=辅助回复�
    **单独关闭**＝同一条退场。退场到点才 display:none——所以"display 已经是 none 了吗"不能当"关没关"用，
    开关状态一律看 panelOpen／aiOpen／hpOpen 三个布尔。
    毫秒数必须与 CSS 里 .anim-out/.anim-in 的时长一致（CSS 那边有同样的提醒）。 */
-var PMOT={out:180,in:360,delay:60,toBall:240,ball:200,aiBall:200,aiBallDelay:240,menu:100};
+var PMOT={out:180,in:360,delay:60,toBar:220,bar:180,ball:200,menu:100};
 function pmotOff(){ try{return !!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)}catch(e){return false} }
 function panelShow(el,swap){
   if(!el)return;
   var already=el.style.display!=='none'&&!el.classList.contains('anim-out'); /* 已亮着＝重开同一块，不重播动效 */
   if(el._pt){clearTimeout(el._pt);el._pt=null}
-  el.classList.remove('anim-out','to-ball');
+  el.classList.remove('anim-out','to-bar');
   if(already){el.style.display='flex';return}
   if(swap&&!pmotOff()&&PMOT.in>0)el.classList.add('anim-in');
   else el.classList.remove('anim-in');           /* 首次打开：清掉旧类，让基类 popCard 接手 */
@@ -9892,7 +9837,7 @@ function panelShow(el,swap){
 function panelHide(el,instant){
   if(!el)return;
   if(el._pt){clearTimeout(el._pt);el._pt=null}
-  el.classList.remove('anim-in','to-ball');
+  el.classList.remove('anim-in','to-bar');
   if(el.style.display==='none')return;           /* 本来就没开：不排定时器，也不留退场类 */
   if(instant||pmotOff()||PMOT.out<=0){el.classList.remove('anim-out');el.style.display='none';return}
   el.classList.add('anim-out');
@@ -9902,7 +9847,7 @@ function panelHide(el,instant){
 function panelFinish(el){
   if(!el)return;
   if(el._pt){clearTimeout(el._pt);el._pt=null}
-  el.classList.remove('anim-out','anim-in','to-ball');
+  el.classList.remove('anim-out','anim-in','to-bar');
   el.style.display='none';
 }
 function ballGlide(b){
@@ -9914,10 +9859,11 @@ function ballGlide(b){
 function openPanel(){
   closeBallMenu();                    /* 面板开＝菜单收（菜单是球的展开，不是面板的） */
   var swap=aiOpen||hpOpen;            /* 捕获在关闭之前：有另一块在场＝这次是"换掉"，走并叠 */
+  var wasOpen=panelOpen;             /* 已开着再被 openPanel（比如从球菜单再点一次）＝不重置这一批 */
+  panelOpen=true;                     /* 先落开态再收辅助：closeAiPanel 里的 aiBarShow 看到它就不会闪一下横条 */
   if(aiOpen)closeAiPanel();
   closeHpPanel();                     /* 后开者胜（ADR-0028 决策 3）：命中浮层让位 */
-  var wasOpen=panelOpen;             /* 已开着再被 openPanel（比如从球菜单再点一次）＝不重置这一批 */
-  panelOpen=true;pHitNew=0;          /* 面板开＝顶部那份命中推荐当场可见，面板内「新命中」角标归零 */
+  pHitNew=0;                          /* 面板开＝顶部那份命中推荐当场可见，面板内「新命中」角标归零 */
   /* 从关到开：把**所有还没呈现过**的命中一次收进这一批（ADR-0080／0081）——面板关着时连发的好几条
      各命中不同素材，打开时应当都在，而不是只剩最后一条。已呈现过的重开不再冒出。 */
   if(!wasOpen){
@@ -9942,7 +9888,7 @@ function closePanel(instant){
   pHitMsgs=[];pHitNew=0;              /* 关面板即收（ADR-0080）：命中推荐不跨开合残留，也结束这一批 */
   panelHide($('panel'),instant);      /* 180ms 淡出后才落 display（ADR-0088）；resetDemo 传 true 走瞬切 */
   ballUnliftForPanel();               /* 面板关了：球回原位（用户拖过就不回，见 ballLift） */
-  aiBallShow();                       /* 顶掉辅助浮层时它已收了球；这里再同步一次，幂等 */
+  aiBarShow();                        /* 顶掉辅助浮层时它已收成横条；这里再同步一次，幂等 */
   var b=$('ball');if(b)b.style.display=S.floatOn?'flex':'none';
 }
 function placePanel(){}
@@ -10677,6 +10623,8 @@ function hpOpenList(msgs,child){
   hpHits=hpMerged();
   var p=$('hpPanel');if(!p)return;
   p.classList.toggle('stack',hpChild);
+  /* 底部横条＝收起聊天辅助，只在下钻页可点（ADR-0096）：独立清单没有横条可收，药丸保持装饰态 */
+  var d=p.querySelector('.ai-drag');if(d)d.disabled=!hpChild;
   hpPose(p);
   panelShow(p,false);
   hpRender();
@@ -10760,7 +10708,10 @@ function closeHpPanel(instant){
   panelHide(p,instant);                 /* 与另两块同一条退场（ADR-0088） */
   /* 与 closeAiPanel 同一条口径：不动悬浮球。球是素材库的折叠态、存活条件是「微信前台」，
      本浮层收起不等于离开微信——球留在右侧边缘，正好当"去素材库翻一条"的入口。
-     **下钻来的那次（hpChild）关掉只褪这一层**：下面的辅助浮层从头到尾没被关过，时间线原样留着。 */
+     **下钻来的那次（hpChild）关掉只褪这一层**：下面的辅助浮层从头到尾没被关过，时间线原样留着。
+     辅助的折叠横条若被这份清单挡着（aiBarShow 的条件里有 hpOpen／panelOpen），这里退场后同步一次；
+     延迟取 PMOT.out，和面板淡出同一拍，别在清单还在褪的时候就把条拉出来。 */
+  aiBarShow(PMOT.out);
 }
 function hpRender(){
   var t=$('hpTitle');if(t)t.innerHTML=raHitsHead(hpHits.length); /* 标题＝分区头整块（素材库徽章 ＋ 命中素材 · N 条） */
@@ -10990,14 +10941,14 @@ function raFull(s){return s.lead+' '+s.pts.map(function(t,i){return (i+1)+'. '+t
 function aiToggle(){ if(aiOpen)closeAiPanel(false,true); else openAiPanel(); }
 function openAiPanel(){
   closeBallMenu();                    /* 同上：浮层开＝菜单收 */
-  /* 收起为球时若停在二级页，这一页不销毁（ADR-0093）：再展开还落清单，滚动位置照旧 */
+  /* 收起为横条时若停在二级页，这一页不销毁（ADR-0093）：再展开还落清单，滚动位置照旧 */
   var resume=hpStash&&hpMsgs.length&&hpChild;
   var swap=panelOpen||hpOpen;         /* 捕获在关闭之前：有另一块在场＝这次是"换掉"，走并叠（ADR-0088） */
   if(panelOpen)closePanel();          /* 后开者胜：素材库面板让位（两个方向都成立的关键） */
   if(!resume)closeHpPanel();          /* 同上：命中浮层也让位——开着辅助时不留在屏上（与 matchKw 的分流同一条口径） */
   hpTipHide();                        /* 辅助一开，命中就走时间线：横幅（若有）不该再挂着 */
-  aiOpen=true;aiBallOn=true;          /* 开过一次就记住：收起时才有那颗模块球，没开过不凭空出现 */
-  aiBallHide();
+  aiOpen=true;aiBarOn=true;           /* 开过一次就记住：收起时才有那条横条，没开过不凭空出现 */
+  aiBarHide();
   for(var i=0;i<pendingHits.length;i++)pendingHits[i].done=true; /* 打开浮层＝命中已阅、角标清零（与素材面板 openPanel 同一口径） */
   ballBadge();dkRefresh();
   raExpId=null; /* 重开＝落回能扫的那一屏（同 openPanel 的 S.pExpId=null），不停在上次摊开的那条上 */
@@ -11018,99 +10969,81 @@ function openAiPanel(){
   if(resume)hpResumeChild();           /* 收起前停在二级页：展开仍落清单（ADR-0093），时间线在下面照常重建 */
   if(!S.aiTipsSeen)aiTipsShow();       /* 首次说明弹窗 */
 }
-/* 收起为球后再展开，落回二级页（ADR-0093，产品 2026-11-10 口径）：
-   DOM 原样留着（不重画），滚动位置还原；站位重新对一次父层——收起期间它可能被拖过、被 aiReopenRestore 复位过。 */
+/* 收起为横条后再展开，落回二级页（ADR-0093，产品 2026-11-10 口径）：
+   DOM 原样留着（不重画），滚动位置还原；站位重新对一次父层——收起期间它可能被拖过。 */
 function hpResumeChild(){
   var p=$('hpPanel');if(!p||!hpStash)return;
   hpStash=false;hpOpen=true;hpChild=true;
   p.classList.add('stack');
   hpPose(p);
   panelShow(p,false);
+  var d=p.querySelector('.ai-drag');if(d)d.disabled=false; /* 下钻页的底部横条＝收起（ADR-0096） */
   var b=$('hpBody');if(b)b.scrollTop=hpScroll;
   var ph=$('hpHead');if(ph&&!ph._dragged){panelDrag(ph);ph._dragged=true}
 }
-/* 收起成球（ADR-0090）：把面板的中心一路缩到模块球的圆心，球就是这块面板的折叠态，不是新冒出来的东西。
-   落点与尺寸都按 412×916 布局像素算，不受外层 .phone 的 scale 影响；时长＝PMOT.toBall（240ms），
-   球的进场延迟＝PMOT.aiBallDelay（240ms）——面板落 display:none 的同一下，球开始淡入，正好交班。
+/* 收起成横条（ADR-0096）：面板以底边为轴压扁成 #aiBar，横条落在面板原先底边那一格。
+   位置按 412×916 布局像素现算，不受外层 .phone 的 scale 影响；时长＝PMOT.toBar（220ms），
+   横条的进场延迟也是 PMOT.toBar——面板落 display:none 的同一下条开始淡入，正好交班。
    减弱动效或时长为 0 时不走这条，由 closeAiPanel 落回 panelHide 的同步分支。 */
-function aiCollapseToBall(p){
+function aiCollapseToBar(p){
   if(!p)return;
   if(p._pt){clearTimeout(p._pt);p._pt=null}
   p.classList.remove('anim-in','anim-out');
-  var bc=aiBallCenter(),pcx=p.offsetLeft+p.offsetWidth/2,pcy=p.offsetTop+p.offsetHeight/2;
-  p.style.setProperty('--bx',(bc.x-pcx).toFixed(1)+'px');
-  p.style.setProperty('--by',(bc.y-pcy).toFixed(1)+'px');
-  p.style.setProperty('--sx',(48/Math.max(1,p.offsetWidth)).toFixed(4));
-  p.style.setProperty('--sy',(48/Math.max(1,p.offsetHeight)).toFixed(4));
-  p.classList.add('to-ball');
-  p._pt=setTimeout(function(){
-    p._pt=null;p.style.display='none';p.classList.remove('to-ball');
-    aiReopenRestore(p); /* 被推出屏外的那次收起：落地后再复位，别在动画里把浮层拽回墙里 */
-  },PMOT.toBall||PMOT.out);
-}
-/* 推出去收起的落点（ADR-0092）：球贴在你推出去的那一侧（4px，**整颗可见**，不做半隐藏）、与松手同高。
-   side：-1 左、1 右；cy＝松手时浮层中心的 y（调用方按 412×916 布局像素算好）。
-   先把球摆好再走 closeAiPanel(toBall)：面板缩向的就是这颗球，用的是「收起 ⌄」同一条落法。
-   legalL＝浮层最后一个合法 left，收起落地后由 aiReopenRestore 复位。 */
-function aiDropToEdge(side,cy,legalL){
-  var p=$('aiPanel'),b=$('aiBall');if(!p)return;
-  if(b){
-    b.style.left=(side<0?4:412-48-4)+'px';
-    b.style.top=Math.max(44,Math.min(cy-24,916-48-16))+'px';
-    b.style.right='auto';b.style.bottom='auto';b.classList.remove('edge');
+  var bar=$('aiBar');
+  if(bar){
+    bar.style.left=Math.max(4,Math.min(p.offsetLeft,412-p.offsetWidth-4))+'px';
+    bar.style.top=Math.max(44,Math.min(p.offsetTop+p.offsetHeight-AI_BAR_H,916-AI_BAR_H-16))+'px';
   }
-  p._reopenLeft=legalL;
+  p.classList.add('to-bar');
+  p._pt=setTimeout(function(){
+    p._pt=null;p.style.display='none';p.classList.remove('to-bar');
+  },PMOT.toBar||PMOT.out);
+}
+/* 推出屏外收起（ADR-0092）：先把浮层拉回最后一个合法左位再收起——横条与面板同宽，
+   落在屏外就点不到了。它和底部药丸收成同一条横条，只是这一次是你把它推走的。 */
+function aiDropToEdge(side,cy,legalL){
+  var p=$('aiPanel'),hp=$('hpPanel');
+  if(p)p.style.left=legalL+'px';
+  if(hp&&hpChild)hp.style.left=legalL+'px';
   closeAiPanel(false,true);
 }
-function aiReopenRestore(p){
-  p=p||$('aiPanel');if(!p||p._reopenLeft==null)return;
-  p.style.left=p._reopenLeft+'px';p._reopenLeft=null;
-}
-function closeAiPanel(instant,toBall){
+function closeAiPanel(instant,toBar){
   aiOpen=false;
   /* 二级页遇到「收起」（ADR-0093，产品 2026-11-10）：这一页**不销毁**，展开还落回清单。
-     其余三条都不留档——被别的浮层顶掉（不带 toBall）、关闭（aiCloseAll）、重置：那几条都走 closeHpPanel。 */
-  var keepChild=hpChild&&toBall&&!instant;
+     其余几条都不留档——被别的浮层顶掉、关闭（aiCloseAll）、重置：那几条都走 closeHpPanel。 */
+  var keepChild=hpChild&&toBar&&!instant;
   if(hpChild&&!keepChild)closeHpPanel(instant); /* 下钻的清单是它的下一层（ADR-0089）：这一层收，那一层不能留在屏上裸着 */
   raStreamStop(); /* 浮层都不在了，流式链必须掐断——否则 timer 会继续在隐藏的卡片上敲字 */
   raBatchReset();  /* 收起＝没人看着这一问了：停掉 3 秒计时，重开时按会话重建（收口的流不会在隐藏卡片上跑） */
   var p=$('aiPanel');
-  /* 用户按「收起」或 Dock 开关（toBall=true）：面板缩到模块球；
-     被别的浮层顶掉（openPanel → closeAiPanel，不带 toBall）仍走原来的淡出——屏上另有一块面板正在进场，
-     再飞一颗球会抢动作线。两条路都收成同一颗球，只是动作不同。 */
+  /* 用户点底部横条或 Dock 开关（toBar=true）：面板压成横条；
+     被别的浮层顶掉（openPanel → closeAiPanel，不带 toBar）仍走原来的淡出——屏上另有一块面板正在进场。
+     两条路都收成同一条横条，只是动作不同；别的浮层开着时横条先不显示（见 aiBarShow 的条件）。 */
   if(keepChild){
-    /* 屏上那张卡是二级页：缩成球的是**它**。辅助浮层直接落隐藏、不跟动画（两张同尺寸的卡一起缩就是重影）；
+    /* 屏上那张卡是二级页：压成横条的是**它**。辅助浮层直接落隐藏、不跟动画（两张同尺寸的卡一起压就是重影）；
        档案里只留清单这一页本身（msgs／搜索／滚动位置），时间线照常由下次 openAiPanel 重建。 */
     hpStash=true;hpOpen=false;
     var hb=$('hpBody');hpScroll=hb?hb.scrollTop:0;
     panelHide(p,true);
-    aiReopenRestore(p);                 /* 推出屏外那次收起：先把父层位置复位（legalL 在拖拽里已夹过，跳不了） */
     var hp=$('hpPanel');
     if(hp)hp.style.animation='';        /* 下钻页用 inline none 压着 popCard，别把收起动画也压掉 */
-    if(toBall&&!pmotOff()&&PMOT.out>0&&S.floatOn&&aiBallOn)aiCollapseToBall(hp);
+    if(toBar&&!instant&&!pmotOff()&&PMOT.toBar>0&&S.floatOn&&aiBarOn)aiCollapseToBar(hp);
     else panelFinish(hp);
-  }else if(toBall&&!instant&&!pmotOff()&&PMOT.out>0&&S.floatOn&&aiBallOn)aiCollapseToBall(p);
-  else{ /* 180ms 淡出后才落 display（ADR-0088） */
-    panelHide(p,instant);
-    /* 被推出屏外的那次收起若走了这条（别的浮层顶掉／减弱动效）：退场落地后同样得复位 */
-    if(instant||pmotOff()||PMOT.out<=0)aiReopenRestore(p);
-    else setTimeout(function(){aiReopenRestore(p)},PMOT.out);
-  }
-  /* 收起＝**收成它自己的小球**（ADR-0078／0090，产品口径），不是整个关死；全局素材球照旧不动。
-     被别的浮层顶掉时也是同一个去向。 */
-  aiBallShow();
+  }else if(toBar&&!instant&&!pmotOff()&&PMOT.toBar>0&&S.floatOn&&aiBarOn)aiCollapseToBar(p);
+  else panelHide(p,instant);
+  /* 收起＝收成它自己的横条，不是整个关死；全局素材球照旧不动。 */
+  aiBarShow((toBar&&!instant)?PMOT.toBar:0);
 }
-/* 关闭（ADR-0091）＝浮层和它自己的球一起收走，入口退回九宫格「聊天辅助」与悬浮球两选一菜单。
-   与「收起」分工：收起留球（就地放一边），关闭不留球；功能本身没关，随时能从入口再开。
-   aiBallOn 先落 false 再收面板：后面 aiBallShow 就不会把球拉出来，面板淡出的 180ms 里也不会闪一下球。 */
+/* 关闭（ADR-0096）＝浮层和它的横条一起收走，入口退回九宫格「聊天辅助」与悬浮球两选一菜单。
+   aiBarOn 先落 false 再收面板：后面 aiBarShow 就不会把横条拉出来，面板退场的 180ms 里也不会闪一下。 */
 function aiCloseAll(){
   aiOpen=false;
   if(hpChild)closeHpPanel(false); /* 下钻的清单是它的下一层（ADR-0089）：这一层收，那一层不能留在屏上裸着 */
   raStreamStop(); /* 浮层都不在了，流式链必须掐断——否则 timer 会继续在隐藏的卡片上敲字 */
   raBatchReset();  /* 关闭＝没人看着这一问了：停掉 3 秒计时，重开时按会话重建 */
-  aiBallOn=false; /* 这一关不再留落点；下次从入口打开后按收起，球才回来 */
-  panelHide($('aiPanel'),false); /* 与收起同一条退场（180ms 淡出），只是不再接球 */
-  aiBallShow();    /* 幂等同步一次：球若正亮着（理论上不会，浮层开着时球是隐藏的）也一并收掉 */
+  aiBarOn=false; /* 这一关不再留落点；下次从入口打开后按收起，横条才回来 */
+  panelHide($('aiPanel'),false); /* 与收起同一条退场（180ms 淡出），只是不再接横条 */
+  aiBarShow();     /* 幂等同步一次：横条若正亮着（理论上不会，浮层开着时它是隐藏的）也一并收掉 */
   toast('已关闭聊天辅助 · 点九宫格「聊天辅助」可重新打开');
 }
 function raSwap(i){
@@ -11755,129 +11688,14 @@ setTimeout(sbScan,120);
 </html>
 </script>
 <!-- 使用总览：看板入口首页。正文、样式、交互从高保真稿嵌入；页面导航由视图③外壳提供。 -->
-<script type="text/plain" id="srcOverview"><div class="rea-ov-page">
-  <main class="ov-main">
-    <div id="ov-home">
-      <header class="ov-heading">
-        <div>
-          <h1>使用总览</h1>
-        </div>
-        <div class="ov-toolbar">
-          <div class="ov-periods" role="group" aria-label="统计时间范围">
-            <button type="button" data-period="day">今日</button
-            ><button type="button" data-period="week">近一周</button
-            ><button type="button" data-period="month">近一月</button
-            ><button type="button" data-period="quarter">近三月</button>
-          </div>
-          <button
-            type="button"
-            class="ov-help ov-help-button ov-help-right"
-            data-action="definitions"
-            aria-label="数据说明"
-            data-tip="数据说明"
-          >
-            ?
-          </button>
-        </div>
-      </header>
-      <section class="ov-value-section" aria-label="四项能力使用情况">
-        <div class="ov-section-heading"><h2>云小助帮上了哪些忙</h2></div>
-        <div id="ov-value-scenes" class="ov-value-grid"></div>
-      </section>
-      <section class="ov-people" aria-labelledby="ov-people-title">
-        <div class="ov-section-heading"><h2 id="ov-people-title">团队使用情况</h2><button class="ov-link" data-value-people="all">查看员工明细 →</button></div>
-        <div class="ov-panel">
-          <div id="ov-people-stats" class="ov-stats"></div>
-          <p class="ov-team-note">主动使用与自动执行可发生在同一员工身上，使用人数按员工去重。</p>
-          <div class="ov-section-heading ov-team-chart-heading"><h3>使用人数趋势</h3><div class="ov-tabs" role="group" aria-label="使用趋势范围"><button data-team-mode="all">全部使用</button><button data-team-mode="proactive">主动使用</button><button data-team-mode="automated">自动执行</button></div></div>
-          <div class="ov-team-chart-note"><span id="ov-activity-note" class="ov-muted"></span></div>
-          <div id="ov-activity-chart"></div>
-          <div class="ov-usage-layout ov-ranking-heading">
-            <section aria-labelledby="ov-usage-title">
-              <div class="ov-section-heading"><h3 id="ov-usage-title">部门与员工</h3><div class="ov-tabs" role="group" aria-label="使用情况维度"><button type="button" data-people-tab="department">部门</button><button type="button" data-people-tab="employee">员工</button></div></div>
-              <div id="ov-people-ranking"></div>
-            </section>
-            <section aria-labelledby="ov-features-title">
-              <div class="ov-section-heading"><h3 id="ov-features-title">热门功能 Top 5<span class="ov-help" tabindex="0" role="img" aria-label="App 工具按主动使用次数从高到低展示前五项" data-tip="App 工具按主动使用次数从高到低展示前五项">?</span></h3><button type="button" class="ov-link" data-action="features">查看全部功能 →</button></div>
-              <div class="ov-feature-head"><span>排名</span><span>功能</span><span class="ov-feature-count">使用次数</span><span></span></div>
-              <div id="ov-feature-ranking"></div>
-            </section>
-          </div>
-        </div>
-      </section>
-      <div class="ov-section-heading ov-resource-heading">
-        <h2>
-          企业资源 <span class="ov-tag">全公司</span
-          ><span
-            class="ov-help"
-            tabindex="0"
-            role="img"
-            aria-label="席位与余额为当前存量，点数消耗跟随所选时间。"
-            data-tip="席位与余额为当前存量，点数消耗跟随所选时间。"
-            >?</span
-          >
-        </h2>
-      </div>
-      <div class="ov-resources">
-        <section class="ov-panel" aria-labelledby="ov-seats-title">
-          <div class="ov-section-heading">
-            <h2 id="ov-seats-title">版本席位</h2>
-            <button type="button" class="ov-link" data-action="seats">
-              查看分配 →
-            </button>
-          </div>
-          <div class="ov-seat-summary">
-            <b>30 <small>/ 32 席已分配</small></b
-            ><span class="ov-tag">2 席待分配</span>
-          </div>
-          <div id="ov-seats" class="ov-tiers"></div>
-        </section>
-        <section class="ov-panel" aria-labelledby="ov-points-title">
-          <div class="ov-section-heading">
-            <h2 id="ov-points-title">AI 点数</h2>
-            <button type="button" class="ov-link" data-action="points">
-              查看消耗明细 →
-            </button>
-          </div>
-          <div class="ov-point-meter">
-            <div class="ov-point-meter-head">
-              <span
-                >本期消耗 <b id="ov-points-total">0</b><small>点</small
-                ><em hidden id="ov-points-used-share"></em
-              ></span>
-              <span
-                >当前剩余 <b>42,000</b><small>点</small
-                ><em hidden id="ov-points-rest-share"></em
-              ></span>
-            </div>
-
-          </div>
-          <div class="ov-section-heading">
-            <h3 id="ov-point-ranking-title">员工消耗 Top 5</h3>
-            <div class="ov-tabs" role="group" aria-label="点数消耗维度">
-              <button type="button" data-points-tab="employee">员工</button
-              ><button type="button" data-points-tab="feature">功能</button>
-            </div>
-          </div>
-          <div id="ov-points-ranking"></div>
-        </section>
-      </div>
-      <footer class="ov-footer">
-        数据更新于 <span id="ov-updated"></span>
-      </footer>
-    </div>
-    <section id="ov-detail" hidden aria-label="总览详情"></section>
-    <dialog id="ov-dialog" aria-labelledby="ov-dialog-title">
-      <div class="ov-section-heading">
-        <h2 id="ov-dialog-title">数据说明</h2>
-        <button type="button" class="ov-link" data-action="close-dialog">
-          关闭 ×
-        </button>
-      </div>
-      <div id="ov-dialog-body"></div>
-    </dialog>
-  </main>
-</div></script>
+<script type="text/plain" id="srcOverview"><div class="rea-ov-page"><main class="ov-main"><div id="ov-home">
+<header class="ov-heading"><div><h1>使用总览</h1><div id="ov-home-scope" class="ov-muted ov-scope"></div></div><div class="ov-toolbar"><div class="ov-periods" role="group" aria-label="统计时间范围"><button type="button" data-period="day">今日</button><button type="button" data-period="week">近一周</button><button type="button" data-period="month">近一月</button><button type="button" data-period="quarter">近三月</button></div><button type="button" class="ov-help ov-help-button ov-help-right" data-action="definitions" aria-label="数据说明" data-tip="数据说明">?</button></div></header>
+<section class="ov-team-summary ov-panel" aria-label="团队使用摘要"><div id="ov-people-stats"></div><div id="ov-team-distribution"></div></section>
+<section class="ov-value-section" aria-label="四项能力使用情况"><div class="ov-section-heading"><h2>能力使用情况</h2></div><div id="ov-value-scenes" class="ov-value-grid"></div></section>
+<section class="ov-people ov-panel" aria-labelledby="ov-people-title"><div class="ov-section-heading"><h2 id="ov-people-title">使用人数趋势</h2><div class="ov-tabs" role="group" aria-label="使用趋势范围"><button data-team-mode="all">全部使用</button><button data-team-mode="proactive">主动使用</button><button data-team-mode="automated">自动执行</button></div></div><div class="ov-team-chart-note"><span id="ov-activity-note" class="ov-muted"></span></div><div id="ov-activity-chart"></div></section>
+<section class="ov-panel ov-departments" aria-labelledby="ov-usage-title"><div class="ov-section-heading"><h2 id="ov-usage-title">部门使用情况</h2><div class="ov-inline-actions"><button class="ov-link" data-action="features">App 工具使用 →</button><button class="ov-link" data-value-people="all">查看员工明细 →</button></div></div><div id="ov-people-ranking"></div></section>
+<section class="ov-panel ov-resource-summary" aria-label="企业资源"><div class="ov-section-heading"><h2>企业资源 <span class="ov-tag">全公司</span><span class="ov-help" tabindex="0" role="img" aria-label="席位与余额是当前存量，点数消耗跟随所选时间" data-tip="席位与余额是当前存量，点数消耗跟随所选时间">?</span></h2></div><div class="ov-resource-metrics"><button data-action="seats"><span>当前席位分配</span><b>30 <small>/ 32 席</small></b></button><button data-action="seats"><span>待分配席位</span><b>2 <small>席</small></b></button><button data-action="points"><span>本期点数消耗</span><b id="ov-points-total">0</b></button><button data-action="points"><span>当前剩余点数</span><b>42,000</b></button></div></section>
+</div><section id="ov-detail" hidden aria-label="总览详情"></section><dialog id="ov-dialog" aria-labelledby="ov-dialog-title"><div class="ov-section-heading"><h2 id="ov-dialog-title">数据说明</h2><button type="button" class="ov-link" data-action="close-dialog">关闭 ×</button></div><div id="ov-dialog-body"></div></dialog></main></div></script>
 <script type="text/plain" id="srcOverviewStyle">.rea-ov-page {
   min-height: 100%;
   background: #f6f8fb;
@@ -12990,6 +12808,79 @@ setTimeout(sbScan,120);
  .rea-ov-page .ov-scene-secondary { border-left:0; padding-left:0; }
  .rea-ov-page .ov-scene-board { align-items:flex-start; flex-direction:column; }
 }
+
+/* Overview v7: a compact summary, four capabilities and explicit drilldowns. */
+.rea-ov-page .ov-scope {font-size:12px;margin-top:8px;}
+.rea-ov-page .ov-team-summary {display:grid;grid-template-columns:216px minmax(0,1fr);gap:24px;padding:24px;}
+.rea-ov-page .ov-coverage {border:0;background:none;text-align:left;padding:0;display:flex;flex-direction:column;gap:4px;color:#646A73;}
+.rea-ov-page .ov-coverage b {font-size:32px;color:#1F2329;line-height:1.3;font-weight:600;font-variant-numeric:tabular-nums;}
+.rea-ov-page .ov-coverage b small {font-size:14px;font-weight:400;color:#646A73;}
+.rea-ov-page .ov-coverage>span:last-child {font-size:12px;}
+.rea-ov-page .ov-distribution-head {display:flex;align-items:center;justify-content:space-between;gap:16px;}
+.rea-ov-page .ov-distribution-head h2 {font-size:14px;}
+.rea-ov-page .ov-distribution-bar {display:flex;height:8px;gap:2px;margin:16px 0;border-radius:6px;overflow:hidden;}
+.rea-ov-page .ov-kind-both {background:#1677FF;}
+.rea-ov-page .ov-kind-active {background:#69B1FF;}
+.rea-ov-page .ov-kind-automatic {background:#BAE0FF;}
+.rea-ov-page .ov-kind-none {background:#E5E8EF;}
+.rea-ov-page .ov-distribution-labels {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;}
+.rea-ov-page .ov-distribution-labels button {padding:0;border:0;background:none;text-align:left;font-size:12px;white-space:nowrap;}
+.rea-ov-page .ov-distribution-labels i {display:inline-block;width:8px;height:8px;margin-right:8px;}
+.rea-ov-page .ov-distribution-labels strong {display:block;font-size:20px;font-weight:600;padding-left:16px;margin-top:4px;}
+.rea-ov-page .ov-distribution-labels small {font-weight:400;font-size:12px;color:#646A73;}
+.rea-ov-page .ov-value-section {margin:24px 0;}
+.rea-ov-page .ov-value-scene {padding:24px;min-width:0;}
+.rea-ov-page .ov-value-scene>.ov-section-heading {margin-bottom:16px;}
+.rea-ov-page .ov-value-scene .ov-link {font-size:12px;white-space:nowrap;}
+.rea-ov-page .ov-cap-content {display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.rea-ov-page .ov-cap-main,.rea-ov-page .ov-cap-secondary button {border:0;background:none;padding:0;text-align:left;color:#646A73;}
+.rea-ov-page .ov-cap-main {display:flex;flex-direction:column;align-items:flex-start;gap:4px;}
+.rea-ov-page .ov-cap-main>span,.rea-ov-page .ov-cap-main>small {font-size:12px;}
+.rea-ov-page .ov-cap-main b {font-size:32px;font-weight:600;line-height:1.4;color:#1F2329;font-variant-numeric:tabular-nums;}
+.rea-ov-page .ov-cap-main b small {font-size:14px;font-weight:400;margin-left:8px;color:#646A73;}
+.rea-ov-page .ov-cap-secondary {display:flex;flex-direction:column;justify-content:center;gap:8px;border-left:1px solid #E5E8EF;padding-left:24px;}
+.rea-ov-page .ov-cap-secondary button {display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;min-height:32px;}
+.rea-ov-page .ov-cap-secondary strong {font-size:14px;font-weight:600;color:#1F2329;white-space:nowrap;}
+.rea-ov-page .ov-cap-secondary i {font-style:normal;color:#8F959E;}
+.rea-ov-page .ov-cap-main:hover b,.rea-ov-page .ov-cap-secondary button:hover strong,.rea-ov-page .ov-distribution-labels button:hover strong,.rea-ov-page .ov-coverage:hover b {color:#1677FF;}
+.rea-ov-page .ov-cap-main:active,.rea-ov-page .ov-cap-secondary button:active,.rea-ov-page .ov-distribution-labels button:active {opacity:.7;}
+.rea-ov-page .ov-people,.rea-ov-page .ov-departments,.rea-ov-page .ov-resource-summary {margin-bottom:24px;}
+.rea-ov-page .ov-inline-actions {display:flex;gap:24px;align-items:center;}
+.rea-ov-page .ov-ref-line {border-color:#8F959E;}
+.rea-ov-page .ov-ref-line span {color:#646A73;}
+.rea-ov-page .ov-bar-value {visibility:hidden;}
+.rea-ov-page .ov-bar:hover .ov-bar-value,.rea-ov-page .ov-bar:focus-visible .ov-bar-value {visibility:visible;}
+.rea-ov-page .ov-departments table {min-width:0;}
+.rea-ov-page .ov-resource-metrics {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;}
+.rea-ov-page .ov-resource-metrics button {text-align:left;border:0;background:none;padding:0 24px 0 0;border-right:1px solid #E5E8EF;}
+.rea-ov-page .ov-resource-metrics button:last-child {border:0;}
+.rea-ov-page .ov-resource-metrics span {font-size:12px;color:#646A73;display:block;}
+.rea-ov-page .ov-resource-metrics b {font-size:20px;font-weight:600;display:block;margin-top:8px;}
+.rea-ov-page .ov-resource-metrics small {font-size:12px;font-weight:400;color:#646A73;}
+.rea-ov-page .ov-resource-metrics button:hover b {color:#1677FF;}
+.rea-ov-page .ov-detail-work {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:24px 0;}
+.rea-ov-page .ov-value-grid {grid-template-columns:repeat(2,minmax(0,1fr));}
+.rea-ov-page .ov-scene-filters {max-width:100%;flex-wrap:wrap;}
+@media(max-width:1250px) {
+ .rea-ov-page .ov-team-summary {grid-template-columns:176px minmax(0,1fr);gap:16px;}
+ .rea-ov-page .ov-cap-content {gap:16px;}
+ .rea-ov-page .ov-cap-secondary {padding-left:16px;}
+ .rea-ov-page .ov-cap-secondary button {align-items:flex-start;flex-direction:column;gap:0;}
+ .rea-ov-page .ov-distribution-labels {gap:8px;}
+}
+@media(max-width:1050px) {
+ .rea-ov-page .ov-value-grid {grid-template-columns:1fr;}
+ .rea-ov-page .ov-team-summary {grid-template-columns:1fr;}
+ .rea-ov-page .ov-cap-secondary button {flex-direction:row;}
+ .rea-ov-page .ov-resource-metrics {grid-template-columns:repeat(2,minmax(0,1fr));}
+ .rea-ov-page .ov-inline-actions {gap:16px;flex-wrap:wrap;}
+}
+@media(max-width:640px) {
+ .rea-ov-page .ov-cap-content,.rea-ov-page .ov-detail-work {grid-template-columns:1fr;}
+ .rea-ov-page .ov-cap-secondary {border:0;padding-left:0;}
+ .rea-ov-page .ov-distribution-labels {grid-template-columns:repeat(2,minmax(0,1fr));}
+ .rea-ov-page .ov-resource-metrics {gap:16px;}
+}
 </script>
 <script type="text/plain" id="srcOverviewScript">(function () {
   "use strict";
@@ -13081,6 +12972,7 @@ setTimeout(sbScan,120);
     },
   };
   const metrics = {
+    taskCompleted: {name:"本期完成执行",unit:"人次",note:"按完成回执时间统计任务执行人次，含此前下发而本期完成的任务；同一任务与员工仅计一次。"},
     automaticAdded: {name:"自动执行新增好友", unit:"人次", note:"任务或托管取得的加好友成功确认，排除 App 工具主动加好友；跨账号或重复添加按人次计。"},
     autoMessages: {name:"AI自动回复消息", unit:"条", note:"自动回复场景收到成功回执的消息条数，一轮可能发送多条消息；不包含群发与工具发送。"},
     added: {
@@ -13209,6 +13101,7 @@ setTimeout(sbScan,120);
   let peopleSort = {
     tab: savedPeopleSort.tab === "employee" ? "employee" : "department",
     key: savedPeopleSort.key || "",
+    direction:savedPeopleSort.direction || "asc",
   };
   let homeOrg = saved.homeOrg || saved.org || "all";
   if (!employees.some((employee) => employee.dept === homeOrg)) homeOrg = "all";
@@ -13693,6 +13586,12 @@ setTimeout(sbScan,120);
       done: index < task.done,
     }));
   });
+  // Explicit demo completion timestamps. Production must read completedAt from receipts.
+  const completedAssignments = taskAssignments.filter(r => r.done && r.day >= 0).map((r, index) => ({
+    ...r, dispatchedDay:r.day, day:Math.max(0,r.day-((r.task+index)%4)), id:'COMPLETED-'+r.id,
+    metric:'taskCompleted',qty:1,sources:['tasks'],active:false,platform:'多平台',feature:r.title,sequence:allRecords.length+index
+  }));
+  allRecords.push(...completedAssignments);
   const evidence = [];
   allRecords.filter((r) => r.metric === 'aiReply' || (r.metric === 'material' && r.sequence % 3 === 0)).forEach((r) => {
     const scene = r.metric === 'aiReply' ? 'assist' : 'material';
@@ -13711,16 +13610,27 @@ setTimeout(sbScan,120);
         action: success ? '已回复' : n % 13 === 0 ? '生成失败' : '发送失败'});
     }
   }
+  for (let day=0;day<90;day++) {
+    ['material','assist'].forEach((scene,index)=>evidence.push({id:`UNSHOWN-${scene}-${day}`,scene,day,employee:(day*7+index)%30,shown:false,adopted:false,
+      action:scene==='material' ? (day%2 ? '未命中素材' : '命中后未展示') : (day%2 ? '生成失败' : '生成后未展示')}));
+  }
+  evidence.filter(r=>r.scene==='auto').forEach((r,index)=>{
+    r.status=r.success?'success':index%5===0?'waiting':index%7===0?'partial':'failed';
+    if(r.status==='waiting')r.action='等待回执';
+    if(r.status==='partial')r.action='部分发送';
+  });
   const sceneNames = {material: '素材与销冠话术', tasks: '任务与自动执行', auto: 'AI自动回复', assist: 'AI辅助回复'};
   const sceneNotes = {
     material: '取用人数统计主动复制、保存、一键发送与发圈。匹配采纳率仅看聊天中实际展示的匹配会话；同一会话至少取用一条匹配素材计为采纳。复制或保存不证明最终发送。',
-    tasks: '按本期下发任务统计执行人次，完成率为截至更新时间的已执行人次 ÷ 应执行人次。包含多平台任务；员工点击启动与旗舰版托管代跑不重复计数。',
+    tasks: '本期完成按完成回执时间统计，包含此前下发的任务。本期下发完成进度按下发时间选队列，再读取当前完成状态，未到期也在分母中，不能作为履约评分。点击启动与托管代跑不重复计数。',
     auto: '统计已启用自动回复且命中回复规则的触发轮次。成功率为收到发送成功回执的轮次 ÷ 应回复轮次；一轮内多条回复只计一轮，失败重试沿用轮次 ID。成功表示发送成功，不代表客户满意。',
     assist: '会话采纳率为至少采纳一条建议的辅助会话数 ÷ 实际展示过建议的辅助会话数。同一员工、同一聊天连续使用归一会话，切换聊天或连续 30 分钟无操作后结束。填入、复制与发送均计采纳，同一会话只计一次。采纳不等于回复质量或成交。',
   };
   const inScope = (r) => r.day >= 0 && r.day < periods[period].days &&
     (route.org === 'all' || employees[r.employee].dept === route.org);
-  const sceneEvidence = (scene) => evidence.filter((r) => r.scene === scene && inScope(r));
+  const sceneAttempts = (scene) => evidence.filter(r=>r.scene===scene && inScope(r));
+  const sceneEvidence = (scene) => sceneAttempts(scene).filter(r=>scene==='auto'||r.shown);
+  const completedInScope = () => completedAssignments.filter(inScope);
   const scopedAssignments = () => taskAssignments.filter(inScope);
   const ratio = (a, b) => b ? `${(a / b * 100).toFixed(1)}%` : '—';
   // The same event set drives the coverage, trend, employee list and personal summary.
@@ -13757,48 +13667,83 @@ setTimeout(sbScan,120);
     return {total: rows.length, done: rows.filter((r) => scene === 'auto' ? r.success : r.adopted).length,
       users: new Set(rows.filter((r) => scene === 'auto' ? r.success : r.adopted).map((r) => r.employee)).size};
   }
+  const workByScene = {tasks:['automaticAdded','publish','friendSend','firstTouch'],auto:['autoMessages'],assist:['aiReply']};
+  function sceneWork(scene) {
+    return `<div class="ov-detail-work">${(workByScene[scene]||[]).map(metric=>metricButton(metric,scopedRecords())).join('')}</div>`;
+  }
+  function sceneTabs(scene, selected, entries) {
+    return `<div class="ov-tabs ov-scene-filters" role="group" aria-label="分析内容">${entries.map(([key,label])=>`<button data-scene="${scene}" data-scene-tab="${key}" aria-pressed="${selected===key}">${label}</button>`).join('')}</div>`;
+  }
   function renderValue() {
-    const records = scopedRecords(), mat = sceneStats('material'), task = sceneStats('tasks'), auto = sceneStats('auto'), assist = sceneStats('assist');
-    const cards = [
-      {id:'material', icon:'material', title:sceneNames.material, label:'取用员工', value:metricValue(records,'materialUsers'), unit:'人',
-        supporting:`${number(metricValue(records,'materialCount'))} 条素材被取用`,
-        label2:'聊天匹配采纳率', value2:ratio(mat.done,mat.total), note:`${mat.done} / ${mat.total} 次匹配会话有取用`,
-        foot:'只统计员工主动取用，自动任务发送另计。'},
-      {id:'tasks', icon:'taskExec', title:sceneNames.tasks, label:'任务完成率', value:ratio(task.done,task.total), unit:'',
-        supporting:`已执行 ${number(task.done)} / 应执行 ${number(task.total)} 人次`,
-        label2:'参与完成', value2:`${task.users} 人`, note:'点击启动与托管代跑均计入',
-        foot:'完成率按本期下发任务统计至今；工作量按实际发生时间统计，自动打招呼不计入任务完成率。'},
-      {id:'auto', icon:'autoReply', title:sceneNames.auto, label:'成功回复', value:auto.done, unit:'轮',
-        supporting:`应回复 ${number(auto.total)} 轮 · 成功率 ${ratio(auto.done,auto.total)}`,
-        label2:'未成功回复', value2:`${auto.total-auto.done} 轮`, note:'可查看生成失败与发送失败',
-        foot:'轮次与消息条数分别统计；一轮可发送多条消息，成功以回执为准。'},
-      {id:'assist', icon:'aiReply', title:sceneNames.assist, label:'会话采纳率', value:ratio(assist.done,assist.total), unit:'',
-        supporting:`${assist.done} / ${assist.total} 次辅助会话有采纳`,
-        label2:'采纳员工', value2:`${assist.users} 人`, note:'本期采纳过建议的去重员工',
-        foot:'填入、复制、发送计采纳；同次会话不重复。'},
+    const records=scopedRecords(),task=sceneStats('tasks'),auto=sceneStats('auto'),assist=sceneStats('assist'),completed=completedInScope();
+    const failed=sceneEvidence('auto').filter(r=>['failed','partial'].includes(r.status)).length;
+    const main=(attrs,label,value,unit,sub='')=>`<button class="ov-cap-main" ${attrs}><span>${label}</span><b>${number(value)}<small>${unit}</small></b>${sub?`<small>${sub}</small>`:''}</button>`;
+    const minor=(attrs,label,value)=>`<button ${attrs}><span>${label}</span><strong>${value} <i aria-hidden="true">›</i></strong></button>`;
+    const cards=[
+      {id:'material',icon:'material',main:main('data-scene="material" data-scene-tab="people"','取用员工',metricValue(records,'materialUsers'),'人'),subs:[minor('data-scene="material" data-scene-tab="records"','素材取用',number(metricValue(records,'material'))+' 次'),minor('data-scene="material" data-scene-tab="materials"','被取用素材',number(metricValue(records,'materialCount'))+' 条')]},
+      {id:'tasks',icon:'taskExec',main:main('data-scene="tasks"','本期完成执行',completed.length,'人次'),subs:[minor('data-scene="tasks" data-scene-tab="people"','参与完成',new Set(completed.map(r=>r.employee)).size+' 人'),minor('data-scene="tasks" data-scene-tab="dispatch"','本期下发完成进度',ratio(task.done,task.total))]},
+      {id:'auto',icon:'autoReply',main:main('data-scene="auto" data-outcome="success"','成功回复',auto.done,'轮'),subs:[minor('data-scene="auto"','成功率',ratio(auto.done,auto.total)),minor('data-scene="auto" data-outcome="failed"','失败 / 部分发送',failed+' 轮')]},
+      {id:'assist',icon:'aiReply',main:main('data-scene="assist"','会话采纳率',ratio(assist.done,assist.total),'',`${assist.done} / ${assist.total} 次已展示会话`),subs:[minor('data-scene="assist" data-scene-tab="people"','采纳员工',assist.users+' 人'),minor('data-scene="assist"','已展示会话',assist.total+' 次')]}
     ];
-    const workloads = {material:[['material','素材取用']], tasks:[['automaticAdded','新增好友'],['publish','发布朋友圈'],['friendSend','群发好友成功发送'],['firstTouch','自动打招呼']], auto:[['autoMessages','成功发送消息']], assist:[['aiReply','建议采纳']]};
-    const workload = scene => `<div class="ov-scene-work">${workloads[scene].map(([metric,label]) => `<button class="ov-work-item" data-metric="${metric}" data-value="${metricValue(records,metric)}"><span>${label} →</span><strong>${number(metricValue(records,metric))}<small>${metrics[metric].unit}</small></strong></button>`).join('')}</div>`;
-    $('#ov-value-scenes').innerHTML = cards.map((c) => `<section class="ov-value-scene" data-scene-card="${c.id}"><div class="ov-section-heading"><h2><span class="ov-scene-icon">${ovIcon(METRIC_ICONS[c.icon],20)}</span>${c.title}${helpSpan(sceneNotes[c.id])}</h2><button class="ov-link" data-scene="${c.id}">查看详情 →</button></div><div class="ov-scene-numbers"><div><span>${c.label}</span><b>${typeof c.value === 'number' ? number(c.value) : c.value}<small>${c.unit}</small></b><p>${c.supporting}</p></div><div class="ov-scene-secondary"><span>${c.label2}</span><strong>${c.value2}</strong><p>${c.note}</p></div></div>${workload(c.id)}<p class="ov-scene-foot">${c.foot}</p></section>`).join('');
+    $('#ov-value-scenes').innerHTML=cards.map(c=>`<section class="ov-value-scene" data-scene-card="${c.id}"><div class="ov-section-heading"><h2><span class="ov-scene-icon">${ovIcon(METRIC_ICONS[c.icon],20)}</span>${sceneNames[c.id]}${helpSpan(sceneNotes[c.id])}</h2><button class="ov-link" data-scene="${c.id}" aria-label="查看${sceneNames[c.id]}详情">查看详情 →</button></div><div class="ov-cap-content">${c.main}<div class="ov-cap-secondary">${c.subs.join('')}</div></div></section>`).join('');
   }
   function renderSceneDetail() {
-    const scene = route.scene, stats = sceneStats(scene);
-    let body = `<p class="ov-scene-definition">${sceneNotes[scene]}</p>`;
-    if (scene === 'tasks' || scene === 'auto') body += `<div class="ov-tabs ov-scene-filters" role="group" aria-label="执行结果"><button data-scene="${scene}" aria-pressed="${!route.outcome}">全部记录</button><button data-scene="${scene}" data-outcome="${scene === 'tasks' ? 'pending' : 'failed'}" aria-pressed="${!!route.outcome}">${scene === 'tasks' ? '尚未完成' : '未成功回复'}</button></div>`;
-    if (scene === 'tasks') {
-      body += summary([['已执行',stats.done,'人次'],['应执行',stats.total,'人次'],['完成率',stats.total ? (stats.done/stats.total*100).toFixed(1) : '—','%']]);
-      const rows = scopedAssignments().filter((r) => (!route.outcome || route.outcome !== 'pending' || !r.done) && `${employees[r.employee].name}${employees[r.employee].dept}${r.title}`.includes(filters.query));
-      body += `<h3 class="ov-detail-heading">${route.outcome === 'pending' ? '尚未完成的执行人次' : '任务执行人次'}</h3>` + form() + table(['任务','员工','下发日期','当前执行情况'], rows.map((r) => [`${html(r.title)}<small>任务 #${r.task}</small>`,employeeLink(r.employee),dateLabel(r.day),r.done?'已执行':'尚未完成']),true);
-      body += '<div class="ov-scene-board"><button class="ov-link" data-metric="hostingTask">查看托管执行记录 →</button><small>包括任务代跑与员工自建能力，不等同于任务完成数。</small></div>';
-      body += '<p class="ov-footnote">尚未完成包含仍在有效期内与已到期的任务，请进入任务看板核实有效期后安排跟进。</p>';
+    const scene=route.scene, records=scopedRecords(), stats=sceneStats(scene);
+    const query=r=>`${employees[r.employee].name}${employees[r.employee].dept}${r.id}${r.title||''}${r.action||''}`.includes(filters.query);
+    let body='';
+    if(scene==='material') {
+      const tab=route.tab||'records';
+      body+=sceneTabs(scene,tab,[['records','全部取用'],['people','取用员工'],['materials','素材清单'],['matching','聊天匹配']]);
+      if(tab!=='matching') {
+        const rows=selectMetric(records,'material').filter(r=>!route.material||String(r.material)===String(route.material));
+        body+=summary([['取用员工',metricValue(rows,'materialUsers'),'人'],['取用次数',rows.length,'次'],['被取用素材',metricValue(rows,'materialCount'),'条']])+form();
+        if(tab==='people') {
+          const people=[...new Set(rows.map(r=>r.employee))].map(id=>({id,rows:rows.filter(r=>r.employee===id)})).filter(p=>`${employees[p.id].name}${employees[p.id].dept}`.includes(filters.query));
+          body+=table(['员工','部门','取用次数','素材数','最近取用'],people.map(p=>[employeeLink(p.id),html(employees[p.id].dept),p.rows.length+' 次',new Set(p.rows.map(r=>r.material)).size+' 条',dateLabel(Math.min(...p.rows.map(r=>r.day)))]),true,`共 ${people.length} 名取用员工`);
+        } else if(tab==='materials') {
+          const mats=[...new Set(rows.map(r=>r.material))].map(id=>({id,item:materialSource.materials.find(m=>m.id===id),rows:rows.filter(r=>r.material===id)})).filter(m=>`${m.item.title}${m.id}`.includes(filters.query));
+          body+=table(['素材','取用次数','取用员工','操作'],mats.map(m=>[html(m.item.title),m.rows.length+' 次',new Set(m.rows.map(r=>r.employee)).size+' 人',`<button class="ov-link" data-material-records="${html(m.id)}">查看记录 →</button>`]),true,`共 ${mats.length} 条素材`);
+        } else body+=recordTable(route.material ? rows.filter(r=>String(r.material)===String(route.material)) : rows,'material');
+      } else body+=renderSessionDetail(scene);
+    } else if(scene==='tasks') {
+      const tab=route.tab||'completed';
+      body+=sceneTabs(scene,tab,[['completed','本期完成'],['people','完成人员'],['dispatch','本期下发'],['work','工作量']]);
+      if(tab==='completed') {
+        const rows=completedInScope();
+        body+=summary([['本期完成执行',rows.length,'人次'],['参与完成',new Set(rows.map(r=>r.employee)).size,'人']])+form()+table(['任务','员工','下发日期','完成日期'],rows.filter(query).sort((a,b)=>a.day-b.day).map(r=>[html(r.title),employeeLink(r.employee),dateLabel(r.dispatchedDay),dateLabel(r.day)]),true,`共 ${rows.filter(query).length} 个完成人次`);
+      } else if(tab==='people') {
+        body+=renderScenePeople('tasks',completedInScope(),'完成执行');
+      } else if(tab==='dispatch') {
+        body+=summary([['本期下发',stats.total,'人次'],['当前已完成',stats.done,'人次'],['完成进度',ratio(stats.done,stats.total),'']]);
+        body+=`<div class="ov-tabs ov-scene-filters"><button data-scene="tasks" data-scene-tab="dispatch" aria-pressed="${!route.outcome}">全部记录</button><button data-scene="tasks" data-scene-tab="dispatch" data-outcome="pending" aria-pressed="${route.outcome==='pending'}">尚未完成</button></div>`;
+        const rows=scopedAssignments().filter(r=>(!route.outcome||r.done===false)&&query(r));
+        body+=form()+table(['任务','员工','下发日期','当前执行情况'],rows.map(r=>[html(r.title),employeeLink(r.employee),dateLabel(r.day),r.done?'已执行':'尚未完成']),true);
+      } else body+=sceneWork(scene);
+      body+=`<div class="ov-scene-board"><button class="ov-link" data-metric="hostingTask">查看托管执行记录 →</button>${helpSpan('包括任务代跑和员工自建能力，不等同于任务完成数。')}</div>`;
+    } else if(scene==='auto') {
+      const all=sceneEvidence(scene),failed=all.filter(r=>['failed','partial'].includes(r.status));
+      body+=summary([['成功回复',stats.done,'轮'],['应回复',stats.total,'轮'],['失败 / 部分发送',failed.length,'轮'],['等待回执',all.filter(r=>r.status==='waiting').length,'轮']]);
+      body+=`<div class="ov-tabs ov-scene-filters">${[['','全部记录'],['success','成功回复'],['failed','失败 / 部分发送'],['waiting','等待回执']].map(([key,label])=>`<button data-scene="auto" ${key?`data-outcome="${key}"`:''} aria-pressed="${(route.outcome||'')===key}">${label}</button>`).join('')}</div>`;
+      const rows=all.filter(r=>(!route.outcome||(route.outcome==='failed'?['failed','partial'].includes(r.status):r.status===route.outcome))&&query(r));
+      body+=form()+table(['日期','轮次编号','员工','结果','回复耗时'],rows.sort((a,b)=>a.day-b.day).map(r=>[dateLabel(r.day),r.id,employeeLink(r.employee),r.action,r.success?r.latency+' 秒':'—']),true)+sceneWork(scene);
     } else {
-      body += summary([[scene === 'auto' ? '成功回复' : '有采纳会话',stats.done,scene === 'auto'?'轮':'次'],[scene === 'auto'?'应回复':'已展示会话',stats.total,scene === 'auto'?'轮':'次'],['参与员工',stats.users,'人']]);
-      let rows = sceneEvidence(scene).filter((r) => (!route.outcome || route.outcome !== 'failed' || !r.success) && `${employees[r.employee].name}${employees[r.employee].dept}${r.id}${r.action}`.includes(filters.query));
-      body += `<h3 class="ov-detail-heading">${route.outcome === 'failed' ? '未成功回复的轮次' : scene === 'auto' ? '自动回复轮次' : '会话采纳记录'}</h3>` + form() + table(['日期','会话／轮次编号','员工','结果',scene === 'auto'?'回复耗时':'关联取用记录'], rows.sort((a,b)=>a.day-b.day).map((r) => [dateLabel(r.day),r.id,employeeLink(r.employee),r.action,scene === 'auto' ? r.success ? r.latency+' 秒' : '—' : r.receipt||'—']),true);
-      if (scene === 'material') body += `<h3 class="ov-detail-heading">全部主动取用</h3>${summary([['取用员工',metricValue(scopedRecords(),'materialUsers'),'人'],['被取用素材',metricValue(scopedRecords(),'materialCount'),'条']])}<button class="ov-link" data-metric="material">查看复制、保存与发送记录 →</button>`;
+      const tab=route.tab||'sessions';
+      body+=sceneTabs(scene,tab,[['sessions','会话分析'],['people','采纳员工']]);
+      body+=tab==='people'?renderScenePeople(scene,sceneEvidence(scene).filter(r=>r.adopted),'采纳会话'):renderSessionDetail(scene)+sceneWork(scene);
     }
-    if (scene === 'material' || scene === 'tasks') body += `<div class="ov-scene-board"><button class="ov-link" data-value-board="${scene}">打开${scene === 'material'?'素材':'任务'}看板 →</button><small>专题看板以全公司范围打开，继承时间；返回保留当前部门。</small></div>`;
+    if(scene==='material'||scene==='tasks')body+=`<div class="ov-scene-board"><button class="ov-link" data-value-board="${scene}">打开${scene==='material'?'素材':'任务'}看板 →</button><span class="ov-tag">全公司</span>${helpSpan('继承时间，专题以全公司范围打开；返回保留来源部门。')}</div>`;
     return body;
+  }
+  function renderScenePeople(scene, records, label) {
+    const people=[...new Set(records.map(r=>r.employee))].map(id=>({id,rows:records.filter(r=>r.employee===id)})).filter(p=>`${employees[p.id].name}${employees[p.id].dept}`.includes(filters.query));
+    return form()+table(['员工','部门',label,'最近记录','操作'],people.map(p=>[employeeLink(p.id),html(employees[p.id].dept),p.rows.length+(scene==='tasks'?' 人次':' 次'),dateLabel(Math.min(...p.rows.map(r=>r.day))),`<button class="ov-link" data-scene="${scene}" data-scene-employee="${html(employees[p.id].name)}" ${scene==='assist'?'data-outcome="adopted"':''}>查看记录 →</button>`]),true,`共 ${people.length} 名员工`);
+  }
+  function renderSessionDetail(scene) {
+    const attempts=sceneAttempts(scene),shown=sceneEvidence(scene),adopted=shown.filter(r=>r.adopted);
+    let body=summary([['触发会话',attempts.length,'次'],['已展示',shown.length,'次'],['有采纳',adopted.length,'次'],['展示后采纳率',ratio(adopted.length,shown.length),'']]);
+    body+=`<div class="ov-tabs ov-scene-filters">${[['','全部会话'],['unshown','未展示'],['unadopted','展示未采纳'],['adopted','已采纳']].map(([key,label])=>`<button data-scene="${scene}" ${scene==='material'?'data-scene-tab="matching"':''} ${key?`data-outcome="${key}"`:''} aria-pressed="${(route.outcome||'')===key}">${label}</button>`).join('')}</div>`;
+    const rows=attempts.filter(r=>(!route.outcome||(route.outcome==='unshown'?!r.shown:route.outcome==='unadopted'?r.shown&&!r.adopted:r.adopted))&&`${employees[r.employee].name}${employees[r.employee].dept}${r.id}${r.action}`.includes(filters.query));
+    return body+form()+table(['日期','会话编号','员工','结果','关联记录'],rows.sort((a,b)=>a.day-b.day).map(r=>[dateLabel(r.day),r.id,employeeLink(r.employee),r.action,r.receipt||'—']),true);
   }
 
   function table(headers, rows, paginate = false, totalText = "") {
@@ -13832,14 +13777,10 @@ setTimeout(sbScan,120);
     return `<div class="ov-stats">${items.map(([name, value, unit, note = ""]) => `<div class="ov-stat"><span>${name}</span><b>${number(value)}<small>${unit}</small></b><small>${note}</small></div>`).join("")}</div>`;
   }
   function renderPeople() {
-    const people = valuePeople(), used = people.filter(p=>p.kind !== 'none').length;
-    const cards = [
-      ['使用员工',used,` / ${people.length} 人`,`覆盖率 ${ratio(used,people.length)}`,'used'],
-      ['主动使用',people.filter(p=>p.active).length,'人','取用素材或采纳 AI 建议','proactive'],
-      ['自动执行',people.filter(p=>p.automatic).length,'人','任务、托管或自动回复有成功记录','automated'],
-      ['暂无使用记录',people.length-used,'人','本期四项能力均无成功使用记录','none'],
-    ];
-    $('#ov-people-stats').innerHTML = cards.map(([label,value,unit,note,kind]) => `<button class="ov-stat" data-value-people="${kind}" data-value="${value}"><span>${label}</span><b>${value}<small>${unit}</small></b><small>${note}</small></button>`).join('');
+    const people=valuePeople(),used=people.filter(p=>p.kind!=='none').length;
+    $('#ov-people-stats').innerHTML=`<button class="ov-coverage" data-value-people="used" data-value="${used}"><span>四项能力使用人数</span><b>${used}<small> / ${people.length} 人</small></b><span>覆盖率 ${ratio(used,people.length)}</span></button>`;
+    const groups=[['both','两类都有'],['active','仅主动使用'],['automatic','仅自动执行'],['none','暂无记录']].map(([kind,label])=>({kind,label,count:people.filter(p=>p.kind===kind).length}));
+    $('#ov-team-distribution').innerHTML=`<div class="ov-distribution-head"><h2>团队使用情况${helpSpan('仅统计四项能力的成功使用或执行记录。四种状态互斥，合计为已授权员工。暂无记录不代表没有尝试；完整名单可查看尝试情况。')}</h2><button class="ov-link" data-value-people="all">查看员工 →</button></div><div class="ov-distribution-bar" aria-hidden="true">${groups.map(g=>`<span class="ov-kind-${g.kind}" style="flex:${g.count}"></span>`).join('')}</div><div class="ov-distribution-labels">${groups.map(g=>`<button data-value-people="${g.kind}" data-value="${g.count}"><i class="ov-kind-${g.kind}"></i>${g.label}<strong>${g.count}<small> 人</small></strong></button>`).join('')}</div>`;
     const records = teamRecords(teamMode);
     const days = periods[period].days;
     const bucketSize = days > 30 ? 7 : 1;
@@ -13908,50 +13849,16 @@ setTimeout(sbScan,120);
         })
         .join("")}</div></div>`;
     renderTeamRanking();
-    renderFeatures();
+
   }
   function renderTeamRanking() {
-    const people = valuePeople();
-    const defaultKey = peopleTab === "department" ? "rate" : "days";
-    const allowed = peopleTab === "department"
-      ? ["used", "rate", "average"]
-      : ["days", "last"];
-    const activeKey = peopleSort.tab === peopleTab && allowed.includes(peopleSort.key) ? peopleSort.key : defaultKey;
-    const compare = (rows, key) => rows.sort((a, b) => Number(b[key] ?? 0) - Number(a[key] ?? 0));
-    const header = (label, sortKey) => ({ label, sortKey, activeKey });
-    if (peopleTab === "department") {
-      const departments = [...new Set(scopedEmployees().map((employee) => employee.dept))].map((name) => {
-        const own = people.filter((p) => p.employee.dept === name), used = own.filter((p) => p.kind !== "none");
-        return { name, assigned: own.length, used: used.length, rate: own.length ? used.length / own.length : 0,
-          average: used.length ? used.reduce((total, p) => total + p.days, 0) / used.length : 0 };
-      });
-      compare(departments, activeKey);
-      $("#ov-people-ranking").innerHTML = table(
-        ["排名", header("部门", ""), header("使用 / 已分配", "used"), header("覆盖率", "rate"), header("人均使用天数", "average"), "操作"],
-        departments.slice(0, 5).map((item, index) => [
-          rankBadge(index + 1), html(item.name), `${item.used} / ${item.assigned} 人`,
-          `${(item.rate * 100).toFixed(1)}%`, `${item.average.toFixed(1)} 天`,
-          `<button type="button" class="ov-link" data-department="${html(item.name)}">查看员工 →</button>`,
-        ]),
-      );
-    } else {
-      const rows = people.map((p) => ({ ...p, last: p.last === null ? -1 : -p.last }));
-      compare(rows, activeKey);
-      $("#ov-people-ranking").innerHTML = table(
-        ["排名", header("员工", ""), header("部门", ""), header("使用天数", "days"), header("最近使用", "last")],
-        rows.slice(0, 5).map((p, index) => [
-          rankBadge(index + 1), employeeLink(p.employee.id), html(p.employee.dept), `${p.days} 天`,
-          p.last === -1 ? "暂无" : dateLabel(-p.last),
-        ]),
-      );
-    }
-  }
-  function renderFeatures() {
-    const features = featureStats();
-    $("#ov-feature-ranking").innerHTML = features
-      .slice(0, 5)
-      .map((item, index) => `<button type="button" class="ov-feature-row" data-usage-feature="${html(item.feature)}">${rankBadge(index + 1)}<span class="ov-feature-name"><strong>${html(item.feature)}</strong><span class="ov-track"><i style="width:${(item.count / features[0].count) * 100}%"></i></span></span><span class="ov-feature-count">${number(item.count)} 次</span><span aria-hidden="true">›</span></button>`)
-      .join("") || '<div class="ov-empty">所选期间暂无工具使用记录</div>';
+    const people=valuePeople(),key=peopleSort.key||'rate',asc=peopleSort.direction!=='desc';
+    const departments=[...new Set(scopedEmployees().map(e=>e.dept))].map(name=>{
+      const own=people.filter(p=>p.employee.dept===name),used=own.filter(p=>p.kind!=='none').length;
+      return {name,assigned:own.length,used,none:own.length-used,rate:own.length?used/own.length:0};
+    }).sort((a,b)=>(asc?1:-1)*(a[key]-b[key])||b.none-a.none||a.name.localeCompare(b.name,'zh-CN'));
+    const head=(label,k)=>`<th aria-sort="${key===k?(asc?'ascending':'descending'):'none'}"><button class="ov-sort" data-sort="${k}">${label} ${key===k?(asc?'↑':'↓'):'↕'}</button></th>`;
+    $('#ov-people-ranking').innerHTML=`<div class="ov-table-wrap"><table><thead><tr><th>部门</th>${head('使用 / 已授权','used')}${head('覆盖率','rate')}${head('暂无记录','none')}<th>操作</th></tr></thead><tbody>${departments.map(d=>`<tr><td>${html(d.name)}</td><td>${d.used} / ${d.assigned} 人</td><td>${ratio(d.used,d.assigned)}</td><td><button class="ov-link" data-department="${html(d.name)}" data-dept-kind="none">${d.none} 人</button></td><td><button class="ov-link" data-department="${html(d.name)}">查看员工 →</button></td></tr>`).join('')}</tbody></table></div>`;
   }
   function pointRecords() {
     return pointLedger.filter(withinWindow);
@@ -13977,27 +13884,7 @@ setTimeout(sbScan,120);
     '<path d="M3.5 8l4 3.5L12 5l4.5 6.5 4-3.5-1.8 10.5H5.3z"/>',
   ];
   function renderResources() {
-    $("#ov-seats").innerHTML = tiers
-      .map(
-        (tier, id) =>
-          `<button type="button" class="ov-tier" data-tier="${id}" title="${tier.name}：已分配 ${tier.assigned} 席，共 ${tier.bought} 席"><span class="ov-tier-top"><span class="ov-tier-icon">${ovIcon(TIER_ICONS[id], 14)}</span><span class="ov-tier-name">${tier.name}</span></span><b>${tier.assigned}<small>/ ${tier.bought} 席</small></b><span class="ov-tier-track"><i style="width:${(tier.assigned / tier.bought) * 100}%"></i></span><span class="ov-tier-note">${tier.bought - tier.assigned ? `待分配 ${tier.bought - tier.assigned} 席` : "已满"}</span></button>`,
-      )
-      .join("");
-    const total = sum(pointRecords());
-    $("#ov-points-total").textContent = number(total);
-    $("#ov-point-ranking-title").textContent =
-      pointsTab === "employee" ? "员工消耗 Top 5" : "功能消耗分布";
-    const groups = pointGroups(pointsTab);
-    const display =
-      pointsTab === "employee"
-        ? groups.filter((item) => item.key !== null).slice(0, 5)
-        : groups;
-    $("#ov-points-ranking").innerHTML = display
-      .map(
-        (item) =>
-          `<button type="button" class="ov-point-row" data-point-${pointsTab}="${item.key}"><span class="ov-point-name">${pointsTab === "employee" ? html(employees[item.key].name) : pointFeatures[item.key]}${pointsTab === "employee" ? `<small>${html(employees[item.key].dept)}</small>` : ""}</span><span class="ov-track"><i style="width:${(item.qty / Math.max(1, total)) * 100}%"></i></span><strong>${number(item.qty)} 点<small>${((item.qty / Math.max(1, total)) * 100).toFixed(1)}%</small></strong></button>`,
-      )
-      .join("");
+    $('#ov-points-total').textContent=number(sum(pointRecords()));
   }
   function form({ source = false, status = false, points = false } = {}) {
     return `<form class="ov-form" id="ov-filter"><input name="query" aria-label="搜索员工或事项" placeholder="搜索员工、部门或事项" value="${html(filters.query)}">${
@@ -14068,9 +13955,9 @@ setTimeout(sbScan,120);
       const mode = route.mode || 'all', kind = filters.status !== 'all' ? filters.status : route.kind || 'all';
       title = route.day !== undefined ? `${dateLabel(route.day)}${route.end !== route.day ? ' 至 '+dateLabel(route.end) : ''} · ${mode === 'proactive' ? '主动使用' : mode === 'automated' ? '自动执行' : '使用'}员工` : route.dept ? `${route.dept} · 员工使用明细` : '员工使用明细';
       const rows = valuePeople(mode, route.day, route.end).filter(p => (!route.dept || p.employee.dept === route.dept) && matchesKind(p,kind) && (route.day === undefined || p.days > 0) && `${p.employee.name}${p.employee.dept}${p.employee.phone}`.includes(filters.query));
-      body = '<p class="ov-scene-definition">与首页四项能力范围一致。使用天数按有成功使用或执行记录的日期去重；同一天有两类记录只计一天。登录、仅展示与失败不计入。</p>';
+      body = '';
       if (route.day === undefined) body += `<label class="ov-team-status">使用状态 <select class="ov-control" id="ov-team-status">${Object.entries(kindLabels).map(([value,label]) => `<option value="${value}" ${kind===value?'selected':''}>${label}</option>`).join('')}</select></label>`;
-      body += form() + table(['员工','部门','使用天数','主动使用天数','自动执行天数','最近使用','使用状态'],rows.map(p => [employeeLink(p.employee.id),html(p.employee.dept),`${p.days} 天`,`${p.activeDays} 天`,`${p.automaticDays} 天`,p.last === null ? '暂无' : dateLabel(p.last),kindLabels[p.kind]]),true,`共 ${rows.length} 名员工`);
+      body += form() + table(['员工','部门','使用天数','主动使用天数','自动执行天数','最近使用','使用状态','尝试记录'],rows.map(p => [employeeLink(p.employee.id),html(p.employee.dept),`${p.days} 天`,`${p.activeDays} 天`,`${p.automaticDays} 天`,p.last === null ? '暂无' : dateLabel(p.last),kindLabels[p.kind],evidence.some(r=>inScope(r)&&r.employee===p.employee.id)?'有会话 / 轮次记录':'暂无会话记录']),true,`共 ${rows.length} 名员工`);
     } else if (route.view === "metric") {
       const metric = route.metric;
       const selected = selectMetric(records, metric).filter(
@@ -14128,9 +14015,10 @@ setTimeout(sbScan,120);
       ]);
       if (!route.feature) {
         body += table(
-          ["功能", "使用次数", "操作"],
+          ["功能", "使用员工", "操作次数", "操作"],
           featureStats().map((item) => [
             html(item.feature),
+            new Set(own.filter(r=>r.feature===item.feature).map(r=>r.employee)).size+" 人",
             `${number(item.count)} 次`,
             `<button type="button" class="ov-link" data-usage-feature="${html(item.feature)}">查看记录 →</button>`,
           ]),
@@ -14266,6 +14154,7 @@ setTimeout(sbScan,120);
             ]),
           );
       }
+      if(route.employee===undefined && route.feature===undefined) body+='<h3 class="ov-detail-heading">功能消耗</h3>'+table(['功能','消耗点数','占企业本期','操作'],pointGroups('feature').map(item=>[pointFeatures[item.key],number(item.qty)+' 点',ratio(item.qty,sum(pointRecords())),`<button class="ov-link" data-point-feature="${item.key}">查看流水 →</button>`]));
       ledger = ledger.filter(
         (record) =>
           (filters.feature === "all" ||
@@ -14338,7 +14227,7 @@ setTimeout(sbScan,120);
             ]),
           );
     }
-    const help = route.view === "metric" ? metrics[route.metric].note : "";
+    const help = route.view === "metric" ? metrics[route.metric].note : route.view === "scene" ? sceneNotes[route.scene] : "";
     $("#ov-detail").innerHTML =
       `<nav class="ov-detail-back" aria-label="返回导航"><button type="button" class="ov-link" data-action="back">‹ 返回上一层</button><button type="button" class="ov-link" data-action="home">返回使用总览</button></nav><header class="ov-heading"><div><h1 tabindex="-1">${html(title)}${help ? helpSpan(help) : ""}</h1><p class="ov-muted">${route.view === "seats" ? "截至 " + dateLabel() : dateLabel(periods[period].days - 1) + " — " + dateLabel()} · ${html(scope)}</p></div>${route.view === "seats" ? "" : $("#ov-home .ov-periods").outerHTML}</header><section class="ov-panel">${body}</section>`;
   }
@@ -14396,9 +14285,7 @@ setTimeout(sbScan,120);
   function render() {
     $("#ov-home").hidden = route.view !== "home";
     $("#ov-detail").hidden = route.view === "home";
-    $("#ov-updated").textContent = new Date().toLocaleString("zh-CN", {
-      hour12: false,
-    });
+    $("#ov-home-scope").textContent = `${route.org === "all" ? "全公司" : route.org} · ${dateLabel(periods[period].days-1)} — ${dateLabel()}`;
     if (route.view === "home") {
       renderValue();
       renderPeople();
@@ -14408,14 +14295,15 @@ setTimeout(sbScan,120);
     renderTree();
   }
   function definitions() {
-    $("#ov-dialog-body").innerHTML = '<p>本页为演示数据。四项能力分别核对使用与执行情况，不合成价值分数，也不将执行量换算成收入或节省工时。</p><p>团队覆盖按素材取用、AI建议采纳、任务成功结果及AI自动回复记录去重员工。主动使用与自动执行可能重叠，分布以四种互斥状态展示。</p><p>聊天匹配会话、辅助会话与自动回复轮次是本次新增的采集设计，原型用独立演示记录展示分母、失败与未采纳。正式接入前需核实采集完整性；未接入显示“未接入”，不能显示为零。</p><p>素材取用和结果回执按发生时间筛选；任务完成率按本期下发任务统计截至更新时间的执行情况。成功发送消息统计条数，不代表去重客户或阅读人数。采纳不证明最终发送、回复质量或成交。</p><p>自动通过好友并打招呼属于规则触发的自动动作，工作量单列，不作为下发任务完成率的分母。</p><p>团队人数、趋势与员工名单统一按四项能力统计，主动使用与自动执行可重叠，总人数按员工去重。近三月按分段日均人数展示，点击查看该段使用过的去重员工。企业资源始终为全公司，消耗按所选期间、余额和席位为当前存量。</p>';
+    $("#ov-dialog-body").innerHTML = '<p>本页为演示数据。任务完成日期、未展示会话和回复等待/部分发送状态为新增演示记录，正式接口需提供独立完成回执与状态。四项能力分别核对使用与执行情况，不合成价值分数，也不将执行量换算成收入或节省工时。</p><p>团队覆盖按素材取用、AI建议采纳、任务成功结果及AI自动回复记录去重员工。主动使用与自动执行可能重叠，分布以四种互斥状态展示。</p><p>聊天匹配会话、辅助会话与自动回复轮次是本次新增的采集设计，原型用独立演示记录展示分母、失败与未采纳。正式接入前需核实采集完整性；未接入显示“未接入”，不能显示为零。</p><p>素材取用和结果回执按发生时间筛选；本期完成执行按完成时间统计，包含此前下发的任务；本期下发完成进度按下发时间选取队列并读取当前状态，含未到期任务。成功发送消息统计条数，不代表去重客户或阅读人数。采纳不证明最终发送、回复质量或成交。</p><p>自动通过好友并打招呼属于规则触发的自动动作，工作量单列，不作为下发任务完成率的分母。</p><p>团队人数、趋势与员工名单统一按四项能力统计，主动使用与自动执行可重叠，总人数按员工去重。近三月按分段日均人数展示，点击查看该段使用过的去重员工。企业资源始终为全公司，消耗按所选期间、余额和席位为当前存量。</p>';
     $("#ov-dialog").showModal();
   }
   document.addEventListener("click", (event) => {
     const button = event.target.closest("button");
     if (!button || button.disabled) return;
     const data = button.dataset;
-    if (data.scene) navigate({view:'scene',scene:data.scene,...(data.outcome ? {outcome:data.outcome} : {}),...(data.sceneEmployee ? {filters:{query:data.sceneEmployee,source:'all',feature:'all',status:'all'}} : {})});
+    if(data.materialRecords) navigate({view:'scene',scene:'material',tab:'records',material:data.materialRecords});
+    else if (data.scene) navigate({view:'scene',scene:data.scene,...(data.sceneTab?{tab:data.sceneTab}:{}),...(data.outcome ? {outcome:data.outcome} : {}),...(data.sceneEmployee ? {filters:{query:data.sceneEmployee,source:'all',feature:'all',status:'all'}} : {})});
     else if (data.teamMode) { teamMode = data.teamMode; renderPeople(); syncPressed(); }
     else if (data.valuePeople) navigate({view:'valuePeople',kind:data.valuePeople});
     else if (data.valueBoard) {
@@ -14423,7 +14311,7 @@ setTimeout(sbScan,120);
       const target = key === 'material' ? '企业微信看板' : '微小助看板';
       parent.postMessage({reaPage:target,reaOverview:stateFor({view:'home',org:homeOrg})},'*');
     } else if (data.sort) {
-      peopleSort = { tab: peopleTab, key: data.sort };
+      peopleSort = { tab:"department", key:data.sort, direction:(peopleSort.key||"rate")===data.sort ? (peopleSort.direction==="desc"?"asc":"desc") : data.sort==="none"?"desc":"asc" };
       renderPeople();
     } else if (data.period) {
       period = data.period;
@@ -14481,7 +14369,7 @@ setTimeout(sbScan,120);
         end: Number(data.end),
       });
     else if (data.department)
-      navigate({ view: "valuePeople", kind: "all", dept: data.department });
+      navigate({ view: "valuePeople", kind: data.deptKind || "all", dept: data.department });
     else if (data.org) {
       route.org = data.org;
       if (route.view === "home") homeOrg = data.org;
