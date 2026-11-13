@@ -23662,12 +23662,16 @@ tb.addEventListener("click",function(e){
     + '.rea-qf{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,380px);gap:40px;max-width:none;align-items:start}'
     + '.rea-qf-main{min-width:0}'
     + '.rea-qf-side{position:sticky;top:0;padding-top:4px}'
-    + '.rea-qf-sec{padding:0 0 8px;margin-bottom:16px;border-bottom:1px solid #E5E8EF}'
-    + '.rea-qf-sec:last-of-type{border-bottom:0}'
-    + '.rea-qf-sechd{display:flex;align-items:center;gap:8px;margin:8px 0 18px}'
-    + '.rea-qf-no{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:#E6F4FF;color:#1677FF;font-size:12px;font-weight:600;flex:none}'
-    + '.rea-qf-sechd h3{margin:0;font-size:16px;font-weight:600;color:#1F2329}'
-    + '.rea-qf-secsub{font-size:12px;color:#8F959E}'
+    /* 2026-11-13 与新小红书运营 · 新建统一：分节从「扁平分节线」改成白底卡片，
+       卡片头＝标题＋一行灰副标题，行仍贴在卡片正文里。序号圆点退休（新小红书那页也没有）。 */
+    + '.rea-qf-sec{padding:0;margin:0 0 16px;border:1px solid #F0F0F0;border-radius:8px;background:#fff}'
+    + '.rea-qf-sec:last-of-type{border-bottom:1px solid #F0F0F0}'
+    + '.rea-qf-sechd{display:block;padding:14px 20px 12px;margin:0;border-bottom:1px solid #F0F0F0}'
+    + '.rea-qf-no{display:none}'
+    + '.rea-qf-sechd h3{margin:0;font-size:16px;line-height:26px;font-weight:500;color:#333333}'
+    + '.rea-qf-secsub{display:block;margin-top:2px;font-size:13px;line-height:20px;color:#8C8C8C}'
+    + '.rea-qf-secbd{padding:2px 20px 4px}'
+    + '.rea-qf-secbd>.rea-qf-row:first-child{padding-top:14px!important}'
     + '.rea-qf-row{padding:0!important;margin:0 0 18px!important;display:flex;align-items:flex-start;width:auto!important}'
     + '.rea-qf-lab{flex:0 0 92px!important;width:92px!important;text-align:right!important;padding-right:16px!important;font-size:14px!important;line-height:32px!important;color:#646A73!important;white-space:nowrap}'
     /* 快照的必填红星是标签上的 ::after，position:absolute 且 left 按原标签宽度写死；
@@ -23862,137 +23866,136 @@ tb.addEventListener("click",function(e){
     + '.rea-baf-err.on{display:block}'
     /* ---- 2026-11-10 复刻「好友任务创建页」线框稿 ----
        版式：灰底 ＋ 白色纸面 ＋ 右栏任务概览 ＋ 贴在底部的操作条。
-       配色照线框稿：主色 #4A7AFF，正文 #253048，次要 #7C879B，
-       分隔线 #E9EDF3，控件边 #DCE2EB，浅底 #EDF3FF，页底 #F5F7FA。 */
-    /* 快照容器（._con_）是白底，铺成灰底，白纸面才立得出来 */
-    + '[class*="_con_"]{background:#F5F7FA}'
+       配色照线框稿：主色 #1677FF，正文 #333333，次要 #8C8C8C，
+       分隔线 #F0F0F0，控件边 #D9D9D9，浅底 #E6F4FF，页底 #FAFAFA。 */
+    /* 页面底色与另外三张新建页、与新小红书保持一致：白底，卡片靠细边立起来 */
+    + '[class*="_con_"]{background:#FFFFFF}'
     + '.rea-baf-form{max-width:1200px;margin:0 auto}'
-    + '.rea-baf-page{padding:6px 0 0;font-size:13px;line-height:1.6;color:#253048}'
-    + '.rea-baf-hd{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin:0 0 22px}'
-    + '.rea-baf-hd h1{margin:0;font-size:24px;line-height:1.4;font-weight:600;letter-spacing:-.6px;color:#253048}'
-    + '.rea-baf-hd p{margin:6px 0 0;font-size:12px;color:#7C879B}'
-    + '.rea-baf-badge{flex:none;margin-top:5px;padding:3px 9px;border:1px solid #E9EDF3;border-radius:5px;background:#fff;font-size:11px;line-height:1.6;color:#7C879B;white-space:nowrap}'
+    + '.rea-baf-page{padding:6px 0 0;font-size:14px;line-height:1.6;color:#333333}'
+    + '.rea-baf-hd{margin:0 0 16px}'
+    + '.rea-baf-hd h1{margin:0;font-size:16px;line-height:26px;font-weight:500;color:#333333}'
     /* 执行上限：共用那条在别页是灰底无框，这里照线框稿落成白底细边的一条 */
-    + '.rea-baf-page .rea-freq{margin:0 0 20px;padding:10px 13px;border:1px solid #E9EDF3;border-radius:7px;background:#fff;font-size:11px;line-height:1.6;color:#7C879B;gap:2px 8px;align-items:center}'
-    + '.rea-baf-page .rea-freq-k{font-weight:500;color:#253048}'
-    + '.rea-baf-page .rea-freq-v em{font-style:normal;color:#253048}'
-    + '.rea-baf-page .rea-freq-a{color:#4A7AFF;font-size:11px}'
-    + '.rea-baf-page .rea-freq-a:hover{color:#3E68E0}'
-    + '.rea-baf-page .rea-freq>svg{width:14px;height:14px;flex:none;color:#4A7AFF}'
+    + '.rea-baf-page .rea-freq{margin:0 0 20px;padding:10px 13px;border:1px solid #F0F0F0;border-radius:7px;background:#fff;font-size:11px;line-height:1.6;color:#8C8C8C;gap:2px 8px;align-items:center}'
+    + '.rea-baf-page .rea-freq-k{font-weight:500;color:#333333}'
+    + '.rea-baf-page .rea-freq-v em{font-style:normal;color:#333333}'
+    + '.rea-baf-page .rea-freq-a{color:#1677FF;font-size:11px}'
+    + '.rea-baf-page .rea-freq-a:hover{color:#4096FF}'
+    + '.rea-baf-page .rea-freq>svg{width:14px;height:14px;flex:none;color:#1677FF}'
     + '.rea-baf-layout{display:grid;grid-template-columns:minmax(0,1fr) 210px;gap:24px;align-items:start}'
-    + '.rea-baf-sheet{min-width:0;border:1px solid #E9EDF3;border-radius:7px;background:#fff}'
-    + '.rea-baf-sec{padding:28px 24px;border-bottom:1px solid #E9EDF3}'
-    + '.rea-baf-sechd{display:flex;align-items:center;gap:10px;margin:0 0 22px}'
-    + '.rea-baf-no{display:inline-flex;align-items:center;justify-content:center;flex:none;width:24px;height:24px;border-radius:7px;background:#EDF3FF;color:#4A7AFF;font:600 12px/1 Arial,sans-serif}'
-    + '.rea-baf-sechd h3{margin:0;font-size:15px;font-weight:600;line-height:1.6;color:#253048}'
-    + '.rea-baf-secsub{margin-left:auto;font-size:11px;color:#7C879B}'
-    + '.rea-baf-secbd{display:block}'
-    + '.rea-baf-row{display:grid;grid-template-columns:78px minmax(0,1fr);gap:15px;align-items:start}'
-    + '.rea-baf-row+.rea-baf-row{margin-top:19px}'
-    + '.rea-baf-lab{padding-top:9px;font-size:12px;line-height:1.6;color:#253048;white-space:nowrap}'
-    + '.rea-baf-lab.req:before{content:"*";margin-right:4px;color:#D75455}'
-    + '.rea-baf-ctl{min-width:0}'
-    + '@media(min-width:1250px){.rea-baf-sec{padding:28px 32px}.rea-baf-row{grid-template-columns:92px minmax(0,1fr);gap:22px}}'
-    /* 控件统一 38px 高：输入、下拉、标签框、群组／地区选择器都停同一条线 */
-    + '.rea-baf-ctl .ant-input,.rea-baf-ctl textarea.ant-input{box-sizing:border-box;display:block;width:100%;max-width:none;min-height:38px;padding:9px 11px;border:1px solid #DCE2EB;border-radius:6px;background:#fff;font-size:13px;line-height:1.5;color:#253048;transition:border-color .15s}'
-    + '.rea-baf-ctl .ant-input:hover{border-color:#7C879B}'
-    + '.rea-baf-ctl .ant-input:focus,.rea-baf-ctl .ant-input.ant-input-focused{border-color:#4A7AFF;box-shadow:0 0 0 2px #EDF3FF;outline:none}'
-    + '.rea-baf-ctl input.ant-input::placeholder,.rea-baf-ctl textarea.ant-input::placeholder{color:#7C879B;opacity:.85}'
+    /* 2026-11-13 与新小红书运营 · 新建统一：分节从「一叠白纸里切段」改成一张张白底卡片，
+       卡片头＝标题＋一行灰副标题；序号圆点退休。 */
+    + '.rea-baf-sheet{min-width:0;background:transparent}'
+    + '.rea-baf-sec{margin:0 0 16px;border:1px solid #F0F0F0;border-radius:8px;background:#fff}'
+    + '.rea-baf-sechd{display:block;padding:14px 20px 12px;margin:0;border-bottom:1px solid #F0F0F0}'
+    + '.rea-baf-no{display:none}'
+    + '.rea-baf-sechd h3{margin:0;font-size:16px;line-height:26px;font-weight:500;color:#333333}'
+    + '.rea-baf-secsub{display:block;margin-top:2px;font-size:13px;line-height:20px;color:#8C8C8C}'
+    + '.rea-baf-secbd{display:block;padding:14px 20px 0}'
+    + '.rea-baf-row{display:flex;align-items:flex-start;margin:0 0 18px}'
+    + '.rea-baf-secbd>.rea-baf-row:last-child{margin-bottom:14px}'
+    + '.rea-baf-lab{flex:0 0 92px;box-sizing:border-box;width:92px;padding:0 16px 0 0;text-align:right;font-size:14px;line-height:32px;color:#646A73;white-space:nowrap}'
+    + '.rea-baf-lab.req:before{content:"*";margin-right:4px;color:#FF4D4F}'
+    + '.rea-baf-ctl{flex:1 1 auto;min-width:0}'
+    /* 控件统一 32px 高，跟群发两页和快照的 AntD 控件停同一条线 */
+    + '.rea-baf-ctl .ant-input,.rea-baf-ctl textarea.ant-input{box-sizing:border-box;display:block;width:100%;max-width:640px;min-height:32px;padding:4px 11px;border:1px solid #D9D9D9;border-radius:6px;background:#fff;font-size:14px;line-height:22px;color:#333333;transition:border-color .15s}'
+    + '.rea-baf-ctl .ant-input:hover{border-color:#8C8C8C}'
+    + '.rea-baf-ctl .ant-input:focus,.rea-baf-ctl .ant-input.ant-input-focused{border-color:#1677FF;box-shadow:0 0 0 2px #E6F4FF;outline:none}'
+    + '.rea-baf-ctl input.ant-input::placeholder,.rea-baf-ctl textarea.ant-input::placeholder{color:#8C8C8C;opacity:.85}'
     + '.rea-baf-ctl .ant-input.rea-baf-inp{max-width:none}'
     /* 昵称／地区的三选一：一行排开，和 38px 的控件同高 */
-    + '.rea-baf-mode{display:flex;align-items:center;flex-wrap:wrap;gap:18px;min-height:38px}'
+    + '.rea-baf-mode{display:flex;align-items:center;flex-wrap:wrap;gap:18px;min-height:32px}'
     /* 添加方式：三块等宽卡片，选中换浅底蓝边，圆点藏掉 */
     + '.rea-baf-tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}'
-    + '.rea-baf-tiles .ant-radio-wrapper{position:relative;display:flex;align-items:center;justify-content:center;gap:6px;box-sizing:border-box;min-height:38px;margin:0;padding:0 8px;border:1px solid #DCE2EB;border-radius:6px;background:#fff;font-size:12px;line-height:1.6;color:#253048;white-space:nowrap;cursor:pointer}'
-    + '.rea-baf-tiles .ant-radio-wrapper:hover{border-color:#7C879B}'
-    + '.rea-baf-tiles .ant-radio-wrapper-checked{border-color:#4A7AFF;background:#EDF3FF;color:#4A7AFF}'
+    + '.rea-baf-tiles .ant-radio-wrapper{position:relative;display:flex;align-items:center;justify-content:center;gap:6px;box-sizing:border-box;min-height:32px;margin:0;padding:0 8px;border:1px solid #D9D9D9;border-radius:6px;background:#fff;font-size:13px;line-height:1.6;color:#333333;white-space:nowrap;cursor:pointer}'
+    + '.rea-baf-tiles .ant-radio-wrapper:hover{border-color:#8C8C8C}'
+    + '.rea-baf-tiles .ant-radio-wrapper-checked{border-color:#1677FF;background:#E6F4FF;color:#1677FF}'
     + '.rea-baf-tiles .ant-radio{position:absolute;width:1px;height:1px;margin:0;opacity:0;pointer-events:none}'
     + '.rea-baf-tiles .ant-radio-label{padding:0}'
     + '.rea-baf-ctl .ant-radio-label svg{width:14px;height:14px;flex:none;vertical-align:-2px}'
     + '.rea-baf-tiles .ant-radio-label svg{margin-right:6px}'
-    + '.rea-baf-hint{margin:6px 0 0;font-size:11px;line-height:1.6;color:#7C879B}'
+    + '.rea-baf-hint{margin:6px 0 0;font-size:12px;line-height:18px;color:#8F959E}'
     /* 快照自带的说明行上下各留 8px 内边距，比新版的说明重了一倍，压回一行的高度 */
-    + '.rea-baf-ctl [class*="_upload_box_"]>p{margin:4px 0 0;padding:0;font-size:11px;line-height:1.6;color:#7C879B}'
+    + '.rea-baf-ctl [class*="_upload_box_"]>p{margin:4px 0 0;padding:0;font-size:12px;line-height:18px;color:#8F959E}'
     /* 单选圆点换成页面主色 */
-    + '.rea-baf-ctl .ant-radio-checked .ant-radio-inner{border-color:#4A7AFF;background:#4A7AFF}'
-    + '.rea-baf-tip{box-sizing:border-box;margin-top:8px;padding:10px 12px;border-radius:6px;background:#F5F7FA;font-size:11px;line-height:1.6;color:#7C879B}'
+    + '.rea-baf-ctl .ant-radio-checked .ant-radio-inner{border-color:#1677FF;background:#1677FF}'
+    + '.rea-baf-tip{box-sizing:border-box;margin-top:8px;padding:10px 12px;border-radius:6px;background:#FAFAFA;font-size:11px;line-height:1.6;color:#8C8C8C}'
     + '.rea-baf-tip-label{flex:none;white-space:nowrap}'
-    + '.rea-baf-err{display:none;margin:6px 0 0;font-size:11px;line-height:1.6;color:#D75455}'
+    + '.rea-baf-err{display:none;margin:6px 0 0;font-size:12px;line-height:18px;color:#FF4D4F}'
     + '.rea-baf-err.on{display:block}'
     /* 群组／地区选择器的触发框跟着 38px 走 */
-    + '.rea-baf-tagbox{min-height:38px;border-color:#DCE2EB;border-radius:6px;font-size:13px}'
-    + '.rea-baf-tagbox:hover{border-color:#7C879B}'
-    + '.rea-baf-wrap.on .rea-baf-tagbox{border-color:#4A7AFF;box-shadow:0 0 0 2px #EDF3FF}'
-    + '.rea-baf-dd,.rea-baf-search input,.rea-baf-opt{font-size:13px}'
-    + '.rea-baf-opt.on{background:#EDF3FF;color:#4A7AFF}'
-    + '.rea-baf-clear{color:#4A7AFF}'
-    + '.rea-baf-gap{display:flex;align-items:center;gap:8px;font-size:13px;color:#253048}'
+    + '.rea-baf-tagbox{min-height:32px;border-color:#D9D9D9;border-radius:6px;font-size:14px}'
+    + '.rea-baf-tagbox:hover{border-color:#8C8C8C}'
+    + '.rea-baf-wrap.on .rea-baf-tagbox{border-color:#1677FF;box-shadow:0 0 0 2px #E6F4FF}'
+    + '.rea-baf-dd,.rea-baf-search input,.rea-baf-opt{font-size:14px}'
+    + '.rea-baf-opt.on{background:#E6F4FF;color:#1677FF}'
+    + '.rea-baf-clear{color:#1677FF}'
+    + '.rea-baf-gap{display:flex;align-items:center;gap:8px;font-size:14px;color:#333333}'
     + '.rea-baf-gap .rea-baf-num,.rea-baf-ctl .ant-input.rea-baf-num{width:110px;max-width:110px;text-align:center}'
     + '.rea-baf-exec{position:relative}'
-    + '.rea-baf-select{position:relative;display:flex;align-items:center;box-sizing:border-box;width:100%;max-width:none;height:38px;padding:0 32px 0 11px;border:1px solid #DCE2EB;border-radius:6px;background:#fff;font-size:13px;color:#7C879B;text-align:left;cursor:pointer;transition:border-color .15s}'
-    + '.rea-baf-select:hover{border-color:#7C879B}'
+    + '.rea-baf-select{position:relative;display:flex;align-items:center;box-sizing:border-box;width:100%;max-width:none;height:32px;padding:0 32px 0 11px;border:1px solid #D9D9D9;border-radius:6px;background:#fff;font-size:14px;color:#8C8C8C;text-align:left;cursor:pointer;transition:border-color .15s}'
+    + '.rea-baf-select:hover{border-color:#8C8C8C}'
     + '.rea-baf-seltext{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
-    + '.rea-baf-selcaret{position:absolute;right:10px;top:50%;margin-top:-6px;font-size:10px;line-height:12px;color:#7C879B;pointer-events:none}'
-    + '.rea-baf-selmenu{position:absolute;z-index:30;left:0;top:calc(100% + 4px);box-sizing:border-box;display:none;width:100%;min-width:240px;max-width:none;padding:6px;border:1px solid #E9EDF3;border-radius:6px;background:#fff;box-shadow:0 6px 16px rgba(25,38,62,.12)}'
+    + '.rea-baf-selcaret{position:absolute;right:10px;top:50%;margin-top:-6px;font-size:10px;line-height:12px;color:#8C8C8C;pointer-events:none}'
+    + '.rea-baf-selmenu{position:absolute;z-index:30;left:0;top:calc(100% + 4px);box-sizing:border-box;display:none;width:100%;min-width:240px;max-width:none;padding:6px;border:1px solid #F0F0F0;border-radius:6px;background:#fff;box-shadow:0 6px 16px rgba(25,38,62,.12)}'
     + '.rea-baf-selmenu.on{display:block}'
-    + '.rea-baf-eopt{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:8px 10px;border:0;border-radius:4px;background:transparent;font-size:13px;color:#253048;text-align:left;cursor:pointer}'
-    + '.rea-baf-eopt:hover{background:#F5F7FA}'
-    + '.rea-baf-eoptn{font-size:12px;color:#7C879B}'
+    + '.rea-baf-eopt{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:8px 10px;border:0;border-radius:4px;background:transparent;font-size:14px;color:#333333;text-align:left;cursor:pointer}'
+    + '.rea-baf-eopt:hover{background:#FAFAFA}'
+    + '.rea-baf-eoptn{font-size:12px;color:#8C8C8C}'
     /* 通知／截止：并排两格，标签在控件上方 */
     + '.rea-baf-dates{display:grid;grid-template-columns:1fr 1fr;gap:14px}'
-    + '.rea-baf-toplab{display:block;margin:0 0 7px;font-size:12px;line-height:1.6;color:#253048}'
-    + '.rea-baf-toplab.req:before{content:"*";margin-right:4px;color:#D75455}'
+    + '.rea-baf-toplab{display:block;margin:0 0 7px;font-size:12px;line-height:1.6;color:#333333}'
+    + '.rea-baf-toplab.req:before{content:"*";margin-right:4px;color:#FF4D4F}'
     + '.rea-baf-date .ant-input{min-width:0;padding:9px 9px;font-size:12px}'
     /* 更多设置：一整行摘要，点开才铺两行 */
-    + '.rea-baf-moretog{display:flex;align-items:center;gap:9px;width:100%;padding:19px 24px;border:0;background:transparent;font-size:12px;font-weight:500;line-height:1.6;color:#253048;text-align:left;cursor:pointer}'
-    + '.rea-baf-moretog svg{width:14px;height:14px;flex:none;color:#253048;transition:transform .2s}'
+    + '.rea-baf-moretog{display:flex;align-items:center;gap:9px;width:100%;padding:19px 24px;border:0;background:transparent;font-size:12px;font-weight:500;line-height:1.6;color:#333333;text-align:left;cursor:pointer}'
+    + '.rea-baf-moretog svg{width:14px;height:14px;flex:none;color:#333333;transition:transform .2s}'
     + '.rea-baf-more.open .rea-baf-moretog svg{transform:rotate(90deg)}'
-    + '.rea-baf-moretog:hover{background:#F5F7FA}'
-    + '.rea-baf-moresub{margin-left:auto;font-size:11px;font-weight:400;color:#7C879B}'
+    + '.rea-baf-moretog:hover{background:#FAFAFA}'
+    + '.rea-baf-moresub{margin-left:auto;font-size:11px;font-weight:400;color:#8C8C8C}'
     + '.rea-baf-morebd{display:none;padding:0 24px 24px}'
     + '.rea-baf-more.open .rea-baf-morebd{display:block}'
     /* 右栏：任务概览 */
     + '.rea-baf-aside{position:sticky;top:0;min-width:0}'
-    + '.rea-baf-sum{padding:18px 15px;border:1px solid #E9EDF3;border-radius:7px;background:#fff}'
-    + '.rea-baf-sumhd{display:flex;align-items:center;gap:7px;margin:0 0 20px;font-size:12px;font-weight:500;line-height:1.6;color:#253048}'
-    + '.rea-baf-sumhd svg{width:14px;height:14px;flex:none;color:#7C879B}'
-    + '.rea-baf-sumlab{font-size:11px;color:#7C879B}'
-    + '.rea-baf-sumnum{margin-top:7px;font:500 32px/1.2 Arial,sans-serif;letter-spacing:-1px;color:#253048}'
-    + '.rea-baf-sumnum span{margin-left:5px;font-size:11px;font-weight:400;letter-spacing:0;color:#7C879B}'
-    + '.rea-baf-sum hr{margin:20px 0;border:0;border-top:1px solid #E9EDF3}'
+    + '.rea-baf-sum{padding:18px 15px;border:1px solid #F0F0F0;border-radius:7px;background:#fff}'
+    + '.rea-baf-sumhd{display:flex;align-items:center;gap:7px;margin:0 0 20px;font-size:13px;font-weight:500;line-height:1.6;color:#333333}'
+    + '.rea-baf-sumhd svg{width:14px;height:14px;flex:none;color:#8C8C8C}'
+    + '.rea-baf-sumlab{font-size:12px;color:#8C8C8C}'
+    + '.rea-baf-sumnum{margin-top:7px;font:500 32px/1.2 Arial,sans-serif;letter-spacing:-1px;color:#333333}'
+    + '.rea-baf-sumnum span{margin-left:5px;font-size:12px;font-weight:400;letter-spacing:0;color:#8C8C8C}'
+    + '.rea-baf-sum hr{margin:20px 0;border:0;border-top:1px solid #F0F0F0}'
     + '.rea-baf-sum dl{margin:0;display:grid;gap:14px}'
-    + '.rea-baf-sum dt{margin:0 0 3px;font-size:11px;color:#7C879B}'
-    + '.rea-baf-sum dd{margin:0;font-size:11px;line-height:1.6;color:#253048;overflow-wrap:anywhere}'
-    + '.rea-baf-tl{display:grid;gap:18px;margin-left:4px;padding-left:14px;border-left:1px solid #E9EDF3}'
-    + '.rea-baf-tp{position:relative;font-size:11px;line-height:1.6;color:#253048}'
-    + '.rea-baf-tp p{margin:0 0 3px;color:#7C879B}'
-    + '.rea-baf-tp:before{content:"";position:absolute;left:-18px;top:6px;width:7px;height:7px;box-sizing:border-box;border:2px solid #4A7AFF;border-radius:50%;background:#fff}'
-    + '.rea-baf-tp:last-child:before{border-color:#7C879B}'
-    + '.rea-baf-sumfoot{margin-top:18px;font-size:11px;line-height:1.8;color:#7C879B}'
+    + '.rea-baf-sum dt{margin:0 0 3px;font-size:12px;color:#8C8C8C}'
+    + '.rea-baf-sum dd{margin:0;font-size:13px;line-height:1.6;color:#333333;overflow-wrap:anywhere}'
+    + '.rea-baf-tl{display:grid;gap:18px;margin-left:4px;padding-left:14px;border-left:1px solid #F0F0F0}'
+    + '.rea-baf-tp{position:relative;font-size:12px;line-height:1.6;color:#333333}'
+    + '.rea-baf-tp p{margin:0 0 3px;color:#8C8C8C}'
+    + '.rea-baf-tp:before{content:"";position:absolute;left:-18px;top:6px;width:7px;height:7px;box-sizing:border-box;border:2px solid #1677FF;border-radius:50%;background:#fff}'
+    + '.rea-baf-tp:last-child:before{border-color:#8C8C8C}'
+    + '.rea-baf-sumfoot{margin-top:18px;font-size:12px;line-height:1.8;color:#8C8C8C}'
     /* 导入名单：虚线框收起后换成一条浅底回显 */
-    + '.rea-baf-upload{padding:19px 12px;border:1px dashed #DCE2EB;border-radius:7px;background:#F5F7FA;text-align:center;cursor:pointer}'
-    + '.rea-baf-upload:hover{border-color:#4A7AFF}'
-    + '.rea-baf-upload svg{width:22px;height:22px;margin:0 auto 8px;color:#4A7AFF}'
-    + '.rea-baf-upload p{margin:0 0 5px;font-size:12px;line-height:1.6;color:#253048}'
-    + '.rea-baf-upsub{font-size:11px;color:#7C879B}'
-    + '.rea-baf-fileres{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px;border-radius:6px;background:#EDF3FF;font-size:12px;color:#4A7AFF;overflow-wrap:anywhere}'
+    + '.rea-baf-upload{padding:19px 12px;border:1px dashed #D9D9D9;border-radius:7px;background:#FAFAFA;text-align:center;cursor:pointer}'
+    + '.rea-baf-upload:hover{border-color:#1677FF}'
+    + '.rea-baf-upload svg{width:22px;height:22px;margin:0 auto 8px;color:#1677FF}'
+    + '.rea-baf-upload p{margin:0 0 5px;font-size:12px;line-height:1.6;color:#333333}'
+    + '.rea-baf-upsub{font-size:11px;color:#8C8C8C}'
+    + '.rea-baf-fileres{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px;border-radius:6px;background:#E6F4FF;font-size:12px;color:#1677FF;overflow-wrap:anywhere}'
     + '.rea-baf-filename{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
     + '.rea-baf-filex{border:0;background:transparent;padding:0 2px;font-size:14px;line-height:16px;color:inherit;cursor:pointer}'
-    + '.rea-baf-filex:hover{color:#D75455}'
-    + '.rea-baf-tags{box-sizing:border-box;display:flex;align-items:center;flex-wrap:wrap;gap:6px;width:100%;min-height:38px;padding:6px 9px;border:1px solid #DCE2EB;border-radius:6px;background:#fff;cursor:text}'
-    + '.rea-baf-tags:focus-within{border-color:#4A7AFF}'
-    + '.rea-baf-tags input{flex:1;min-width:140px;border:0;outline:0;background:transparent;font-size:13px;line-height:1.6;color:#253048}'
-    + '.rea-baf-tags input::placeholder{color:#7C879B;opacity:.85}'
-    + '.rea-baf-chip2{display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 6px;border-radius:4px;background:#EDF3FF;font-size:11px;line-height:24px;color:#4A7AFF}'
+    + '.rea-baf-filex:hover{color:#FF4D4F}'
+    + '.rea-baf-tags{box-sizing:border-box;display:flex;align-items:center;flex-wrap:wrap;gap:6px;width:100%;min-height:32px;padding:4px 9px;border:1px solid #D9D9D9;border-radius:6px;background:#fff;cursor:text}'
+    + '.rea-baf-tags:focus-within{border-color:#1677FF}'
+    + '.rea-baf-tags input{flex:1;min-width:140px;border:0;outline:0;background:transparent;font-size:14px;line-height:1.6;color:#333333}'
+    + '.rea-baf-tags input::placeholder{color:#8C8C8C;opacity:.85}'
+    + '.rea-baf-chip2{display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 6px;border-radius:4px;background:#E6F4FF;font-size:11px;line-height:24px;color:#1677FF}'
     + '.rea-baf-chipx2{border:0;background:transparent;padding:0 1px;font-size:13px;line-height:16px;color:inherit;cursor:pointer}'
-    + '.rea-baf-chipx2:hover{color:#D75455}'
+    + '.rea-baf-chipx2:hover{color:#FF4D4F}'
     /* 底部操作条：bottom:-20px 抵掉快照滚动容器的下内边距，条子才贴得住下沿 */
-    + '.rea-baf-act{position:sticky;bottom:-20px;z-index:6;display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:24px;padding:17px 24px;border-top:1px solid #E9EDF3;background:#fff}'
-    + '.rea-baf-actsum{font-size:11px;line-height:1.9;color:#7C879B}'
+    + '.rea-baf-act{position:sticky;bottom:-20px;z-index:6;display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:24px;padding:17px 24px;border-top:1px solid #F0F0F0;background:#fff}'
+    + '.rea-baf-actsum{font-size:13px;line-height:1.9;color:#646A73}'
     + '.rea-baf-actbtns{display:flex;flex:none;gap:9px}'
     + '.rea-baf-actbtns .ant-btn{height:34px;padding:0 18px;border-radius:6px;font-size:12px}'
-    + '.rea-baf-actbtns .ant-btn-primary,.rea-baf-actbtns .ant-btn-primary:not(:disabled){border-color:#4A7AFF;background:#4A7AFF;color:#fff}'
-    + '.rea-baf-actbtns .ant-btn-primary:hover{border-color:#3E68E0;background:#3E68E0}'
+    + '.rea-baf-actbtns .ant-btn-primary,.rea-baf-actbtns .ant-btn-primary:not(:disabled){border-color:#1677FF;background:#1677FF;color:#fff}'
+    + '.rea-baf-actbtns .ant-btn-primary:hover{border-color:#4096FF;background:#4096FF}'
     + '.rea-baf-actbtns .ant-btn svg{width:14px;height:14px;margin-right:6px;vertical-align:-2px}';
 
   /* 素材库弹窗的注入脚本（四页共用一份，别各页再抄一遍）。各页只传这几枚口径参数：
@@ -24573,17 +24576,29 @@ function initFq(){
     var wrap=document.createElement('div');wrap.className='rea-fq';
     FQ_L.appendChild(wrap);
 
-    var b1=fqSec('1','发给谁看','先定客户是谁，再定他们能看到什么');
-    fqPut(gScope,b1);
+    /* 2026-11-13 与新小红书运营 · 新建对齐：第一张卡是「任务安排」，
+       任务名称／执行人员／任务类型／两个时间／全局弹窗都收进来；
+       原来收在「更多设置」里的自动发送并进「发什么」。 */
+    var b1=fqSec('1','任务安排','谁发、什么时候发、提醒弹到哪');
+    fqPut(gName,b1,true);
+    fqPut(gExec,b1);
+    fqPut(gType,b1);
+    fqPut(gStart,b1);
+    fqPut(gEnd,b1);
+    b1.appendChild(fqHint(gEndHint));
+    fqPut(gPopup,b1,true);
 
-    var b2=fqSec('2','发什么','文章、素材库，或让销售现场写');
-    fqPut(gContent,b2);
+    var b2=fqSec('2','发给谁看','先定客户是谁，再定他们能看到什么');
+    fqPut(gScope,b2);
+
+    var b3=fqSec('3','发什么','文章、素材库，或让销售现场写');
+    fqPut(gContent,b3);
 
     /* ---- 临时创建：所属分类 / 描述文本 / 媒体（2026-11-10） ----
        截图口径：所属分类三选一（文本、图片、视频；链接不做），描述文本 1000 字带计数，
        图片／视频按分类露出上传位。只在「临时创建」这个来源下出现，选素材库时整块收起。 */
     var fqCat='图片',fqImgs=[],fqVid=null;
-    var tempBox=document.createElement('div');tempBox.className='rea-fq-temp';b2.appendChild(tempBox);
+    var tempBox=document.createElement('div');tempBox.className='rea-fq-temp';b3.appendChild(tempBox);
     function fqFormRow(labelText,req,cls){
       var r=document.createElement('div');r.className='rea-qf-row'+(cls?' '+cls:'');
       var lb=document.createElement('span');
@@ -24745,25 +24760,8 @@ function initFq(){
     };
     fqDrawMedia();tempPrev();
 
-    fqPut(gLoc,b2,true);
-
-    var b3=fqSec('3','什么时候发','到点通知销售，截止时间前要发完');
-    fqPut(gType,b3);
-    fqPut(gStart,b3);
-    fqPut(gEnd,b3);
-    b3.appendChild(fqHint(gEndHint));
-
-    var b4=fqSec('4','谁来发','执行这条任务的销售分组');
-    fqPut(gExec,b4);
-
-    var more=document.createElement('div');more.className='rea-qf-more';
-    var moreTog=document.createElement('div');moreTog.className='rea-qf-moretog';
-    moreTog.innerHTML='<span>更多设置</span><span class="rea-qf-moresub">任务名称 · 自动发送 · 全局弹窗</span>';
-    var moreBd=document.createElement('div');moreBd.className='rea-qf-morebd';
-    more.appendChild(moreTog);more.appendChild(moreBd);wrap.appendChild(more);
-    fqPut(gName,moreBd,true);
-    fqPut(gAuto,moreBd,true);
-    fqPut(gPopup,moreBd,true);
+    fqPut(gLoc,b3,true);
+    fqPut(gAuto,b3,true);
 
     var act=document.createElement('div');act.className='rea-qf-act';
     var actSum=document.createElement('div');actSum.className='rea-qf-actsum';
@@ -24968,13 +24966,12 @@ function initQf(){
     return 'assistant';
   }
 
-  /* ---------- 四段：先定人，再定范围、内容与时间 ----------
-     标签跟着执行人员走，所以「谁来发」排在「发给谁」前面；四段在这里一次建好，
-     后面的代码只往对应的段里放行，DOM 顺序就是阅读顺序。 */
-  var b1=sec('1','谁来发','执行这条任务的销售分组');
+  /* ---------- 三段：任务安排 → 发给谁 → 发什么（2026-11-13 与新小红书运营 · 新建对齐） ----------
+     第一张卡是「任务安排」：任务名称、执行人员、任务类型、两个时间、全局弹窗；
+     发送类型跟着内容走，落在「发什么」末尾。三段在这里一次建好，后面的代码只往对应的段里放行。 */
+  var b1=sec('1','任务安排','谁发、什么时候发、提醒弹到哪');
   var b2=sec('2','发给谁','先定范围，再写内容');
   var b3=sec('3','发什么','');
-  var b4=sec('4','什么时候发','');
 
   /* ---------- ② 发给谁 ----------
      标签是各销售自己微信里的：后台拿到的是手机定时同步的一份，可能滞后。
@@ -25242,12 +25239,7 @@ function initQf(){
   tempBtn.addEventListener('click',function(e){e.preventDefault();apply(null)});
   manual(true);tempBtn.classList.add('on');
 
-  /* ---------- ④ 什么时候发 ---------- */
-  put(rRepeat,b4,true);
-  put(rStart,b4);
-  if(rStart)b4.appendChild(hint('到达通知时间会给执行人员推送提醒。'));
-  put(rEnd,b4);
-  if(rEnd)b4.appendChild(hint('未到开始时间的任务在员工任务列表里不可见。'));
+  /* ---------- 任务安排：两个时间（行序在下面统一落位） ---------- */
   function dtInput(row,val){
     if(!row)return null;
     var ctl=row.querySelector('[class*="_upload_box_"]');
@@ -25264,7 +25256,8 @@ function initQf(){
   var startI=dtInput(rStart,'2026-10-13T16:05');
   var endI=dtInput(rEnd,'2026-10-20T16:05');
 
-  /* ---------- ① 谁来发 ---------- */
+  /* ---------- 任务安排：任务名称 → 执行人员 → 任务类型 → 两个时间 → 全局弹窗 ---------- */
+  put(rName,b1,true);
   put(rExec,b1);
   var ORGS=[{n:'华东销售组',c:12},{n:'华南销售组',c:8},{n:'销售支持组',c:5},{n:'全员',c:25}];
   var execSel=null;
@@ -25308,16 +25301,17 @@ function initQf(){
     });
   }
 
-  /* ---------- 更多设置：任务名称、发送类型、全局弹窗 ---------- */
-  var more=document.createElement('div');more.className='rea-qf-more';
-  var moreTog=document.createElement('div');moreTog.className='rea-qf-moretog';
-  moreTog.innerHTML='<span>更多设置</span><span class="rea-qf-moresub">任务名称 · 发送类型 · 全局弹窗</span>';
-  var moreBd=document.createElement('div');moreBd.className='rea-qf-morebd';
-  more.appendChild(moreTog);more.appendChild(moreBd);main.appendChild(more);
-  put(rName,moreBd,true);
-  put(rSend,moreBd,true);
-  var stTip=hint('');moreBd.appendChild(stTip);
-  put(rPopup,moreBd,true);
+  /* ---------- 任务安排收尾：两个时间与全局弹窗 ---------- */
+  put(rRepeat,b1,true);
+  put(rStart,b1);
+  if(rStart)b1.appendChild(hint('到达通知时间会给执行人员推送提醒。'));
+  put(rEnd,b1);
+  if(rEnd)b1.appendChild(hint('未到开始时间的任务在员工任务列表里不可见。'));
+  put(rPopup,b1,true);
+
+  /* ---------- 发什么收尾：发送类型跟着内容走 ---------- */
+  put(rSend,b3,true);
+  var stTip=hint('');b3.appendChild(stTip);
   /* 现网「发送类型」只有群发助手／搜索发送，这里补第三枚「文件传输助手转发」。
      克隆同组未选中的那枚，选中态仍归 REA_FX 按整组 .ant-radio-wrapper 翻转，
      不另写点击逻辑（见 群发任务-发送类型与提速-PRD §2.1、§7）。 */
@@ -25518,6 +25512,9 @@ function initQs(){
   var sf=document.querySelector('.searchform');if(sf)sf.style.display='none';
   var ft=document.querySelector('.yk-page-right-content-footer');if(ft)ft.style.display='none';
   var ph=document.querySelector('.ant-page-header');if(ph)ph.style.display='none';
+  /* 这页快照的底色是浅蓝（.subapp 242,245,250），另外两张新建页是白的；
+     卡片要立在白底上，跟新小红书一致，这里把底色抹平 */
+  var subapp=document.querySelector('.subapp');if(subapp)subapp.style.background='#fff';
   var rc=document.querySelector('.rightcontent');if(!rc)return;
 
   var crumb=document.createElement('h4');
@@ -25585,62 +25582,14 @@ function initQs(){
     e.textContent=msg||'';e.style.display=msg?'block':'none';
   }
 
-  /* ---------- ② 发给谁 ----------
-     四段先按旧编号建好、内容照旧灌进去，最后由「四段重排」把 DOM 挪成
-     谁来发 → 发给谁 → 发什么 → 什么时候发。 */
-  var b1=sec('2','发给谁','先定范围，再写内容');
-  var s1=row(b1,'群发哪些群',true,
-     '<div class="ant-radio-group ant-radio-group-outline css-vgijab">'
-     +radio('rea-qs-scope','all','全部群',true)+radio('rea-qs-scope','names','按群聊名称选择',false)
-     +'</div>'
-     +'<textarea class="ant-input css-vgijab rea-wxt-ta rea-qs-kw" rows="3" style="display:none" '
-     +'placeholder="输入群聊名称，多个用换行分隔；群名包含这个词就命中，一个群只发一次"></textarea>');
-  var kwI=q('.rea-qs-kw',s1);
-  var scopeHint=hint('');b1.appendChild(scopeHint);
-  var warn=hint('');warn.className='rea-qf-hint rea-qf-warn';b1.appendChild(warn);
+  /* ---------- 任务安排（2026-11-13 与新小红书运营 · 新建对齐）----------
+     第一张卡收「谁来发、什么时候发、提醒弹到哪」：任务名称、执行人员、两个时间、全局弹窗。
+     群发群组只有单次任务，没有任务类型这一行。 */
+  var b1=sec('1','任务安排','谁发、什么时候发、提醒弹到哪');
+  row(b1,'任务名称',false,
+     '<input type="text" class="ant-input css-vgijab ant-input-outlined rea-wxt-inp" value="群发群组任务20261013">');
 
-  /* ---------- ③ 发什么 ---------- */
-  var b2=sec('3','发什么','');
-  var s2=row(b2,'任务内容',true,
-     '<div class="rea-wxt-src">'
-     +'<button type="button" class="ant-btn css-vgijab ant-btn-primary ant-btn-color-primary ant-btn-variant-solid rea-wxt-tempbtn">临时创建</button>'
-     +'<button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined rea-wxt-srcbtn">从素材库选择</button></div>'
-     +'<div class="rea-wxt-host"></div>'
-     +'<div class="rea-wxt-temp">'
-     +'<div class="ant-radio-group ant-radio-group-outline css-vgijab">'
-     +radio('rea-qs-ctype','text','文 本',true)+radio('rea-qs-ctype','image','图 片',false)+radio('rea-qs-ctype','video','视 频',false)
-     +'</div>'
-     +'<textarea class="ant-input css-vgijab rea-wxt-ta rea-qs-ta" rows="4" placeholder="输入群发内容"></textarea>'
-     +'</div>');
-  var ta=q('.rea-qs-ta',s2),temp=q('.rea-wxt-temp',s2),host=q('.rea-wxt-host',s2),
-      srcBtn=q('.rea-wxt-srcbtn',s2),tempBtn=q('.rea-wxt-tempbtn',s2),picked=null;
-  var textHint=hint('群里看到的就是这段文字；图片或视频会单独成一条消息。');b2.appendChild(textHint);
-  function manual(v){temp.style.display=v?'':'none';textHint.style.display=v?'':'none'}
-  function apply(m){
-    picked=m;
-    if(m){setPrimary(srcBtn,true);setPrimary(tempBtn,false);manual(false)}
-    else{setPrimary(srcBtn,false);setPrimary(tempBtn,true);manual(true)}
-    showCard(host,m,function(){apply(null)});
-    render();
-  }
-  srcBtn.addEventListener('click',function(e){e.preventDefault();openPick(function(m){apply(m)},picked?picked.id:null)});
-  tempBtn.addEventListener('click',function(e){e.preventDefault();apply(null)});
-  manual(true);
-
-  /* ---------- ④ 什么时候发 ---------- */
-  var b3=sec('4','什么时候发','');
-  /* 群发群组只有单次任务，④ 段只留两个时间控件。 */
-  var s3=row(b3,'通知时间',true,
-     '<input type="datetime-local" class="ant-input css-vgijab ant-input-outlined rea-qf-dt rea-qs-start" value="2026-10-13T16:05">');
-  b3.appendChild(hint('到达通知时间会给执行人员推送提醒。'));
-  var s4=row(b3,'截止时间',true,
-     '<input type="datetime-local" class="ant-input css-vgijab ant-input-outlined rea-qf-dt rea-qs-end" value="2026-10-20T16:05">');
-  b3.appendChild(hint('未到开始时间的任务在员工任务列表里不可见。'));
-  var startI=q('.rea-qs-start',s3),endI=q('.rea-qs-end',s4);
-
-  /* ---------- ① 谁来发 ---------- */
-  var b4=sec('1','谁来发','');
-  var s5=row(b4,'执行人员',true,
+  var s5=row(b1,'执行人员',true,
      '<div class="rea-qf-exec"><button type="button" class="rea-qf-select" aria-haspopup="listbox" aria-expanded="false">'
      +'<span class="rea-qf-seltext">请选择执行人员</span><span class="rea-qf-selcaret">▾</span></button>'
      +'<div class="rea-qf-selmenu" role="listbox"></div></div>');
@@ -25673,26 +25622,16 @@ function initQs(){
     if(!s5.contains(e.target)){execMenu.classList.remove('on');execBtn.setAttribute('aria-expanded','false')}
   });
 
-  /* ---------- 四段重排：谁来发 → 发给谁 → 发什么 → 什么时候发 ---------- */
-  (function(){
-    var order=[b4,b1,b2,b3],nxt=b4.parentNode.nextSibling;
-    order.forEach(function(bd){main.insertBefore(bd.parentNode,nxt)});
-  })();
+  /* ---------- 任务安排续：两个时间 ---------- */
+  var s3=row(b1,'通知时间',true,
+     '<input type="datetime-local" class="ant-input css-vgijab ant-input-outlined rea-qf-dt rea-qs-start" value="2026-10-13T16:05">');
+  b1.appendChild(hint('到达通知时间会给执行人员推送提醒。'));
+  var s4=row(b1,'截止时间',true,
+     '<input type="datetime-local" class="ant-input css-vgijab ant-input-outlined rea-qf-dt rea-qs-end" value="2026-10-20T16:05">');
+  b1.appendChild(hint('未到开始时间的任务在员工任务列表里不可见。'));
+  var startI=q('.rea-qs-start',s3),endI=q('.rea-qs-end',s4);
 
-  /* ---------- 更多设置 ---------- */
-  var more=document.createElement('div');more.className='rea-qf-more';
-  var moreTog=document.createElement('div');moreTog.className='rea-qf-moretog';
-  moreTog.innerHTML='<span>更多设置</span><span class="rea-qf-moresub">任务名称 · 发送类型 · 全局弹窗</span>';
-  var moreBd=document.createElement('div');moreBd.className='rea-qf-morebd';
-  more.appendChild(moreTog);more.appendChild(moreBd);main.appendChild(more);
-  row(moreBd,'任务名称',false,
-     '<input type="text" class="ant-input css-vgijab ant-input-outlined rea-wxt-inp" value="群发群组任务20261013">');
-  row(moreBd,'发送类型',false,
-     '<div class="ant-radio-group ant-radio-group-outline css-vgijab">'
-     +radio('rea-qs-sendtype','per_group','逐群发送',true)+radio('rea-qs-sendtype','file_transfer','文件传输助手转发',false)
-     +'</div>');
-  var stHint=hint('');moreBd.appendChild(stHint);
-  var swCtl=row(moreBd,'全局弹窗',false,
+  var swCtl=row(b1,'全局弹窗',false,
      '<div class="rea-wxt-swrow"><button type="button" role="switch" aria-checked="false" class="rea-qf-sw"></button>'
      +'<span class="rea-wxt-hint" style="margin-left:8px">开启后，将在手机的所有页面中弹出任务提醒；关闭，则只在微信中弹出任务提醒。</span></div>');
   var sw=q('.rea-qf-sw',swCtl);
@@ -25700,6 +25639,53 @@ function initQs(){
     e.preventDefault();
     sw.setAttribute('aria-checked',sw.getAttribute('aria-checked')==='true'?'false':'true');
   });
+
+  /* ---------- 发给谁 ---------- */
+  var b2=sec('2','发给谁','先定范围，再写内容');
+  var s1=row(b2,'群发哪些群',true,
+     '<div class="ant-radio-group ant-radio-group-outline css-vgijab">'
+     +radio('rea-qs-scope','all','全部群',true)+radio('rea-qs-scope','names','按群聊名称选择',false)
+     +'</div>'
+     +'<textarea class="ant-input css-vgijab rea-wxt-ta rea-qs-kw" rows="3" style="display:none" '
+     +'placeholder="输入群聊名称，多个用换行分隔；群名包含这个词就命中，一个群只发一次"></textarea>');
+  var kwI=q('.rea-qs-kw',s1);
+  var scopeHint=hint('');b2.appendChild(scopeHint);
+  var warn=hint('');warn.className='rea-qf-hint rea-qf-warn';b2.appendChild(warn);
+
+  /* ---------- 发什么 ---------- */
+  var b3=sec('3','发什么','');
+  var s2=row(b3,'任务内容',true,
+     '<div class="rea-wxt-src">'
+     +'<button type="button" class="ant-btn css-vgijab ant-btn-primary ant-btn-color-primary ant-btn-variant-solid rea-wxt-tempbtn">临时创建</button>'
+     +'<button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined rea-wxt-srcbtn">从素材库选择</button></div>'
+     +'<div class="rea-wxt-host"></div>'
+     +'<div class="rea-wxt-temp">'
+     +'<div class="ant-radio-group ant-radio-group-outline css-vgijab">'
+     +radio('rea-qs-ctype','text','文 本',true)+radio('rea-qs-ctype','image','图 片',false)+radio('rea-qs-ctype','video','视 频',false)
+     +'</div>'
+     +'<textarea class="ant-input css-vgijab rea-wxt-ta rea-qs-ta" rows="4" placeholder="输入群发内容"></textarea>'
+     +'</div>');
+  var ta=q('.rea-qs-ta',s2),temp=q('.rea-wxt-temp',s2),host=q('.rea-wxt-host',s2),
+      srcBtn=q('.rea-wxt-srcbtn',s2),tempBtn=q('.rea-wxt-tempbtn',s2),picked=null;
+  var textHint=hint('群里看到的就是这段文字；图片或视频会单独成一条消息。');b3.appendChild(textHint);
+  function manual(v){temp.style.display=v?'':'none';textHint.style.display=v?'':'none'}
+  function apply(m){
+    picked=m;
+    if(m){setPrimary(srcBtn,true);setPrimary(tempBtn,false);manual(false)}
+    else{setPrimary(srcBtn,false);setPrimary(tempBtn,true);manual(true)}
+    showCard(host,m,function(){apply(null)});
+    render();
+  }
+  srcBtn.addEventListener('click',function(e){e.preventDefault();openPick(function(m){apply(m)},picked?picked.id:null)});
+  tempBtn.addEventListener('click',function(e){e.preventDefault();apply(null)});
+  manual(true);
+
+  /* ---------- 发什么续：发送类型跟着内容走 ---------- */
+  row(b3,'发送类型',false,
+     '<div class="ant-radio-group ant-radio-group-outline css-vgijab">'
+     +radio('rea-qs-sendtype','per_group','逐群发送',true)+radio('rea-qs-sendtype','file_transfer','文件传输助手转发',false)
+     +'</div>');
+  var stHint=hint('');b3.appendChild(stHint);
 
   /* ---------- 底部操作条 ---------- */
   var act=document.createElement('div');act.className='rea-qf-act';
@@ -26815,12 +26801,10 @@ var titleBar=document.querySelector('[class*="_titleBar_"]');
 if(titleBar)titleBar.style.display='none';
 
 var page=document.createElement('div');page.className='rea-baf-page';wrap.appendChild(page);
+/* 页头照另外三张新建页：一行标题，没有副标题、没有角标 */
 var hd=document.createElement('div');hd.className='rea-baf-hd';
 var hd1=document.createElement('h1');hd1.textContent='新建批量加好友任务';
-var hd2=document.createElement('p');hd2.textContent='设置添加对象、执行规则与时间，分配给团队成员。';
-var hdL=document.createElement('div');hdL.appendChild(hd1);hdL.appendChild(hd2);
-var hdBadge=document.createElement('span');hdBadge.className='rea-baf-badge';hdBadge.textContent='新建任务';
-hd.appendChild(hdL);hd.appendChild(hdBadge);page.appendChild(hd);
+hd.appendChild(hd1);page.appendChild(hd);
 
 /* 执行上限：只回显操作频率设置里那组数，就地打开抽屉改 */
 var limitBox=document.createElement('div');
@@ -26884,12 +26868,12 @@ function bafTake(body,row,label,req){
   return o;
 }
 
-/* 四段按阅读顺序先建好，内容仍按旧编号灌进去，最后由「四段重排」把 DOM 挪正：
-   分配方式跟着执行人员走，所以「谁来加」排到 01，加谁／怎么加／什么时候加顺延。 */
-var b1=bafSec('02','加谁','选择本次添加的对象');
-var b2=bafSec('03','怎么加','设置添加规则与好友信息');
-var b3=bafSec('04','什么时候加','安排通知与完成时间');
-var b4=bafSec('01','谁来加','指定任务执行范围');
+/* 三张卡（2026-11-13 与新小红书运营 · 新建对齐）：任务安排 → 加谁 → 怎么加。
+   任务安排收任务名称、执行人员、分配方式、两个时间与全局弹窗；分配方式跟着执行人员走。 */
+var b1=bafSec('1','任务安排','谁加、什么时候加、提醒弹到哪');
+var nameRow=bafTake(b1,ROW_NAME,'任务名称',false);
+var b2=bafSec('2','加谁','选择本次添加的对象');
+var b3=bafSec('3','怎么加','设置添加规则与好友信息');
 function bafSec(no,t,sub){
   var s=document.createElement('section');s.className='rea-baf-sec';
   s.innerHTML='<div class="rea-baf-sechd"><span class="rea-baf-no">'+no+'</span><h3></h3>'
@@ -26907,7 +26891,7 @@ var METHOD_ICONS={
   '文件导入':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.7.7l3.6 3.6A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M12 12v6"/><path d="m15 15-3-3-3 3"/></svg>',
   '添加群内好友':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 21a8 8 0 0 0-16 0"/><circle cx="10" cy="8" r="5"/><path d="M22 20c0-3.4-2-6.5-4-8a5 5 0 0 0-.5-8.3"/></svg>'
 };
-var mRow=bafTake(b1,METHOD_ROW,'添加好友方式',true);
+var mRow=bafTake(b2,METHOD_ROW,'添加好友方式',true);
 if(mRow){
   METHOD_ROW=mRow.row;
   /* 快照的单选组套上卡片壳：三枚等宽盒子，圆点藏掉，只留图标和文字 */
@@ -26942,14 +26926,14 @@ function bafMethodHint(k){
   if(methodHint)methodHint.textContent=METHOD_HINTS[k]||METHOD_HINTS.manual;
 }
 
-var phoneRow=bafTake(b1,PHONE_ROW,'手机号',true);
+var phoneRow=bafTake(b2,PHONE_ROW,'手机号',true);
 if(phoneRow){PHONE_ROW=phoneRow.row}
 
 /* 文件导入：快照里这枚单选钮没有配任何控件，选中后仍露出手机号输入框。
    这里补一行「名单文件」：一块虚线导入区，选中后换成一条带文件名的浅底回显。 */
 var fileObj=null,fileInp=null,fileNameEl=null,fileX=null,fileName='',uploadArea=null,fileRes=null;
 (function(){
-  var o=bafNewRow(b1,'名单文件',true);
+  var o=bafNewRow(b2,'名单文件',true);
   fileObj=o;fileRowEl=o.row;
   uploadArea=document.createElement('div');uploadArea.className='rea-baf-upload';
   uploadArea.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
@@ -26981,22 +26965,22 @@ var fileObj=null,fileInp=null,fileNameEl=null,fileX=null,fileName='',uploadArea=
   });
 })();
 
-var g1=bafTake(b1,gRow.row,'群组名称',true);if(g1)gRow.row=g1.row;
-var n1=bafTake(b1,nRow.row,'昵称筛选',false);if(n1)nRow.row=n1.row;
-var r1=bafTake(b1,rRow.row,'地区筛选',false);if(r1)rRow.row=r1.row;
-var i1=bafTake(b1,iRow.row,'添加间隔',false);if(i1)iRow.row=i1.row;
+var g1=bafTake(b2,gRow.row,'群组名称',true);if(g1)gRow.row=g1.row;
+var n1=bafTake(b2,nRow.row,'昵称筛选',false);if(n1)nRow.row=n1.row;
+var r1=bafTake(b2,rRow.row,'地区筛选',false);if(r1)rRow.row=r1.row;
+var i1=bafTake(b2,iRow.row,'添加间隔',false);if(i1)iRow.row=i1.row;
 
 /* ---- 03 怎么加 ---- */
 /* 成对排：两个二选一短行一行，验证消息与备注名一行，好友备忘与设置标签一行。
    类型在群内好友方式下收起，它那一行留空位，别的行不跟着错位。 */
-var t1=bafTake(b2,TYPE_ROW,'类型',false);if(t1)TYPE_ROW=t1.row;
-bafTake(b2,ROW_MASK,'是否遮挡',false);
-bafTake(b2,ROW_VERIFY,'验证消息',false);
-bafTake(b2,ROW_OPT,'备注名',false);
-bafTake(b2,ROW_MEMO,'好友备忘',false);
+var t1=bafTake(b3,TYPE_ROW,'类型',false);if(t1)TYPE_ROW=t1.row;
+bafTake(b3,ROW_MASK,'是否遮挡',false);
+bafTake(b3,ROW_VERIFY,'验证消息',false);
+bafTake(b3,ROW_OPT,'备注名',false);
+bafTake(b3,ROW_MEMO,'好友备忘',false);
 
 /* 设置标签：快照是点不动的 AntD 多选框，换成能敲能删的标签输入 */
-var tagRow=bafTake(b2,ROW_TAGS,'设置标签',false),tags=[],tagInp=null,tagBox=null;
+var tagRow=bafTake(b3,ROW_TAGS,'设置标签',false),tags=[],tagInp=null,tagBox=null;
 if(tagRow){
   tagRow.ctl.innerHTML='';
   tagBox=document.createElement('div');tagBox.className='rea-baf-tags';
@@ -27047,43 +27031,10 @@ if(tagBox){
   });
 }
 
-/* ---- 04 什么时候加 ---- */
-/* 两个时间并排，标签落在控件上方；快照那两行整行去掉，换成自己的两格 */
-var dates=document.createElement('div');dates.className='rea-baf-dates';b3.appendChild(dates);
-function bafDtCell(label,val,hint){
-  var cell=document.createElement('div');cell.className='rea-baf-date';
-  var lab=document.createElement('label');lab.className='rea-baf-toplab req';lab.textContent=label;
-  var inp=document.createElement('input');
-  inp.type='datetime-local';
-  inp.className='ant-input css-vgijab ant-input-outlined rea-baf-dt';
-  inp.value=val;
-  inp.id='rea-baf-dt-'+(label==='通知时间'?'start':'end');lab.htmlFor=inp.id;
-  cell.appendChild(lab);cell.appendChild(inp);
-  if(hint){var hp=document.createElement('p');hp.className='rea-baf-hint';hp.textContent=hint;cell.appendChild(hp)}
-  var err=document.createElement('p');err.className='rea-baf-err';cell.appendChild(err);
-  dates.appendChild(cell);
-  return {row:cell,ctl:cell,input:inp,lab:lab};
-}
-[ROW_START,ROW_END].forEach(function(r){if(r&&r.parentNode)r.parentNode.removeChild(r)});
-function two(n){return (n<10?'0':'')+n}
-function dtVal(d){return d.getFullYear()+'-'+two(d.getMonth()+1)+'-'+two(d.getDate())+'T'+two(d.getHours())+':'+two(d.getMinutes())}
-var stD=new Date();stD.setHours(16,5,0,0);
-if(stD.getTime()<Date.now())stD.setDate(stD.getDate()+1);
-var enD=new Date(stD.getTime());enD.setDate(enD.getDate()+7);
-var stRow=bafDtCell('通知时间',dtVal(stD),'到达通知时间会给执行人员推送提醒。'),startI=stRow.input;
-var enRow=bafDtCell('截止时间',dtVal(enD),'到截止时间任务停止，没加完的目标记为未执行。'),endI=enRow.input;
-/* 改通知时间时，截止时间跟着顺延 7 天——两个时间分开填容易填反 */
-startI.addEventListener('change',function(){
-  if(!startI.value)return;
-  var d=new Date(startI.value);
-  d.setDate(d.getDate()+7);
-  endI.value=dtVal(d);
-  bafErr(enRow,'');bafRender();
-});
 
-/* ---- 01 谁来加 ---- */
+/* ---- 任务安排：执行人员 ---- */
 var ORGS=[{n:'华东销售组',c:12},{n:'华南销售组',c:8},{n:'销售支持组',c:5},{n:'全员',c:25}];
-var execRow=bafTake(b4,ROW_EXEC,'执行人员',true),execSel=null;
+var execRow=bafTake(b1,ROW_EXEC,'执行人员',true),execSel=null;
 if(execRow){
   execRow.ctl.innerHTML='';
   execRow.ctl.classList.add('rea-baf-exec');
@@ -27131,7 +27082,7 @@ var ALLOC_HINTS={
   '平均分配':'名单按顺序切成连续几段，每人一段；除不尽时轮流多分一人。',
   '轮询分配':'名单按顺序一人一个轮流分，分完一轮再从头接着分。'
 };
-var allocRow=bafNewRow(b4,'分配方式',false),allocModes=null,allocHint=null;
+var allocRow=bafNewRow(b1,'分配方式',false),allocModes=null,allocHint=null;
 allocModes=modeRadios('rea-baf-alloc',['平均分配','轮询分配'],0);
 if(allocModes)allocRow.ctl.appendChild(allocModes);
 allocHint=document.createElement('p');allocHint.className='rea-baf-hint';
@@ -27140,27 +27091,38 @@ function allocOf(){return allocRow?(selectedLabel(allocRow.row)||'平均分配')
 function drawAllocHint(){allocHint.textContent=ALLOC_HINTS[allocOf()]||ALLOC_HINTS['平均分配']}
 drawAllocHint();
 
-/* ---- 四段重排：谁来加 → 加谁 → 怎么加 → 什么时候加 ---- */
-(function(){
-  var order=[b4,b1,b2,b3],nxt=b4.parentNode.nextSibling;
-  order.forEach(function(bd){sheet.insertBefore(bd.parentNode,nxt)});
-})();
-
-/* ---- 更多设置：一行摘要，点开才铺 ---- */
-var more=document.createElement('div');more.className='rea-baf-more';
-var moreTog=document.createElement('button');moreTog.type='button';moreTog.className='rea-baf-moretog';
-moreTog.setAttribute('aria-expanded','false');
-moreTog.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>'
-  +'<span>更多设置</span><span class="rea-baf-moresub">任务名称 · 全局弹窗</span>';
-var moreBd=document.createElement('div');moreBd.className='rea-baf-morebd';
-more.appendChild(moreTog);more.appendChild(moreBd);sheet.appendChild(more);
-moreTog.addEventListener('click',function(e){
-  e.preventDefault();
-  var on=more.classList.toggle('open');
-  moreTog.setAttribute('aria-expanded',on?'true':'false');
+/* ---- 任务安排续：两个时间 ＋ 全局弹窗 ----
+   快照那两行整行去掉，照其余行做成普通行；两个时间并排的格子不再用。 */
+[ROW_START,ROW_END].forEach(function(r){if(r&&r.parentNode)r.parentNode.removeChild(r)});
+function two(n){return (n<10?'0':'')+n}
+function dtVal(d){return d.getFullYear()+'-'+two(d.getMonth()+1)+'-'+two(d.getDate())+'T'+two(d.getHours())+':'+two(d.getMinutes())}
+function bafDtRow(label,val,hintText){
+  var o=bafNewRow(b1,label,true);
+  var inp=document.createElement('input');
+  inp.type='datetime-local';
+  inp.className='ant-input css-vgijab ant-input-outlined rea-baf-dt';
+  inp.value=val;
+  inp.id='rea-baf-dt-'+(label==='通知时间'?'start':'end');
+  o.lab.htmlFor=inp.id;
+  o.ctl.appendChild(inp);
+  if(hintText){var hp=document.createElement('p');hp.className='rea-baf-hint';hp.textContent=hintText;o.ctl.appendChild(hp)}
+  var err=document.createElement('p');err.className='rea-baf-err';o.ctl.appendChild(err);
+  return {row:o.row,ctl:o.ctl,input:inp,lab:o.lab};
+}
+var stD=new Date();stD.setHours(16,5,0,0);
+if(stD.getTime()<Date.now())stD.setDate(stD.getDate()+1);
+var enD=new Date(stD.getTime());enD.setDate(enD.getDate()+7);
+var stRow=bafDtRow('通知时间',dtVal(stD),'到达通知时间会给执行人员推送提醒。'),startI=stRow.input;
+var enRow=bafDtRow('截止时间',dtVal(enD),'到截止时间任务停止，没加完的目标记为未执行。'),endI=enRow.input;
+/* 改通知时间时，截止时间跟着顺延 7 天——两个时间分开填容易填反 */
+startI.addEventListener('change',function(){
+  if(!startI.value)return;
+  var d=new Date(startI.value);
+  d.setDate(d.getDate()+7);
+  endI.value=dtVal(d);
+  bafErr(enRow,'');bafRender();
 });
-var nameRow=bafTake(moreBd,ROW_NAME,'任务名称',false);
-var popupRow=bafTake(moreBd,ROW_POPUP,'全局弹窗',false);
+var popupRow=bafTake(b1,ROW_POPUP,'全局弹窗',false);
 
 /* ---- 底部操作条 ---- */
 var actRow=null;
