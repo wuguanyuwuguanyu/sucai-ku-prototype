@@ -22993,7 +22993,7 @@ function initFq(){
     var b2=fqSec('2','可见范围','');
     fqPut(gScope,b2);
 
-    var b3=fqSec('3','任务内容','');
+    var b3=fqSec('3','发送内容','');
     fqPut(gContent,b3);
 
     /* ---- 临时创建：所属分类 / 描述文本 / 媒体（2026-11-10） ----
@@ -23372,8 +23372,8 @@ function initQf(){
      第一张卡是「任务安排」：任务名称、执行人员、任务类型、两个时间、全局弹窗；
      发送类型跟着内容走，落在「发什么」末尾。三段在这里一次建好，后面的代码只往对应的段里放行。 */
   var b1=sec('1','任务安排','');
-  var b2=sec('2','群发范围','');
-  var b3=sec('3','任务内容','');
+  var b2=sec('2','发送范围','');
+  var b3=sec('3','发送内容','');
 
   /* ---------- ② 发给谁 ----------
      标签是各销售自己微信里的：后台拿到的是手机定时同步的一份，可能滞后。
@@ -24043,7 +24043,7 @@ function initQs(){
   });
 
   /* ---------- 发给谁 ---------- */
-  var b2=sec('2','群发范围','');
+  var b2=sec('2','发送范围','');
   var s1=row(b2,'群发哪些群',true,
      '<div class="ant-radio-group ant-radio-group-outline css-vgijab">'
      +radio('rea-qs-scope','all','全部群',true)+radio('rea-qs-scope','names','按群聊名称选择',false)
@@ -24055,7 +24055,7 @@ function initQs(){
   var warn=hint('');warn.className='rea-qf-hint rea-qf-warn';b2.appendChild(warn);
 
   /* ---------- 发什么 ---------- */
-  var b3=sec('3','任务内容','');
+  var b3=sec('3','发送内容','');
   var s2=row(b3,'任务内容',true,
      '<div class="rea-wxt-src">'
      +'<button type="button" class="ant-btn css-vgijab ant-btn-primary ant-btn-color-primary ant-btn-variant-solid rea-wxt-tempbtn">临时创建</button>'
@@ -25270,12 +25270,12 @@ function bafTake(body,row,label,req){
   return o;
 }
 
-/* 三张卡（2026-11-13 与新小红书运营 · 新建对齐）：任务安排 → 加谁 → 怎么加。
+/* 三张卡（2026-11-13 与新小红书运营 · 新建对齐）：任务安排 → 添加对象 → 添加设置。
    任务安排收任务名称、执行人员、分配方式、两个时间与全局弹窗；分配方式跟着执行人员走。 */
-var b1=bafSec('1','任务安排','谁加、什么时候加、提醒弹到哪');
+var b1=bafSec('1','任务安排','');
 var nameRow=bafTake(b1,ROW_NAME,'任务名称',false);
-var b2=bafSec('2','加谁','选择本次添加的对象');
-var b3=bafSec('3','怎么加','设置添加规则与好友信息');
+var b2=bafSec('2','添加对象','');
+var b3=bafSec('3','添加设置','');
 function bafSec(no,t,sub){
   var s=document.createElement('section');s.className='rea-baf-sec';
   s.innerHTML='<div class="rea-baf-sechd"><span class="rea-baf-no">'+no+'</span><h3></h3>'
