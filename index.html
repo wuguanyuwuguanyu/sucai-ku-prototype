@@ -21601,39 +21601,23 @@ function fmt(d){
   return d.getFullYear()+"/"+pad(d.getMonth()+1)+"/"+pad(d.getDate())+" "
     +pad(d.getHours())+":"+pad(d.getMinutes())+":"+pad(d.getSeconds());
 }
-/* 首次回复耗时：按已回复好友的序号摊到五档（1 小时内／1–6 小时／6–24 小时／
-   1–3 天／3 天以上），每档里再按确定性散列取一个分钟数。弹窗的「回复时间」与
-   「好友回复」页的时效分布读同一份，免得两处对不上。 */
-var DELAY_BANDS=[[0,60],[60,360],[360,1440],[1440,4320],[4320,8640]],
-    DELAY_CUTS=[0.354,0.635,0.812,0.937];
-function delayOf(j,total){
-  var p=total?j/total:0,band=0,k,lo,hi;
-  for(k=0;k<DELAY_CUTS.length;k++)if(p>=DELAY_CUTS[k])band++;
-  lo=DELAY_BANDS[band][0];hi=DELAY_BANDS[band][1];
-  lo=lo===0?6:lo+10;
-  return Math.round(lo+(hi-lo-10)*(((j*37+13)%100)/100));
-}
 /* 好友行：回复与否按比例摊开（i*replied/sent 的台阶变化），保证正好 replied 行是「是」。 */
 function friends(sent,replied,start,seed){
   sent=Math.max(0,sent|0);
   replied=Math.max(0,Math.min(sent,replied|0));
   seed=seed||0;
   var b=(start instanceof Date&&!isNaN(start.getTime()))?start:new Date(2026,8,2,9,0,0);
-  var out=[],i,d,rep,j=0,delay=0;
+  var out=[],i,d,rep;
   for(i=0;i<sent;i++){
     d=new Date(b.getTime()+(i*3+1)*60000+i*17000);
     rep=sent?Math.floor((i+1)*replied/sent)>Math.floor(i*replied/sent):false;
-    if(rep){delay=delayOf(j,replied);j++;}
     out.push({
       nick:NICK[(seed+i)%NICK.length],
       wxid:WXID[(seed+i)%WXID.length]+(1024+i),
       replied:rep,
       send:fmt(d),
-      reply:rep?fmt(new Date(d.getTime()+delay*60000)):"-",
-      text:rep?REPLY[(seed+i)%REPLY.length]:"-",
-      sendAt:d.getTime(),
-      replyAt:rep?d.getTime()+delay*60000:null,
-      delay:rep?delay:null
+      reply:rep?fmt(new Date(d.getTime()+(7+i%9)*60000)):"-",
+      text:rep?REPLY[(seed+i)%REPLY.length]:"-"
     });
   }
   return out;
@@ -21797,12 +21781,10 @@ return {open:open,friends:friends};
   function reaQfDetailJs(){
     return `(function(){
 ${reaQfListJs()}
-/* 任务信息只读回显（2026-11-13）：快照原有六行（任务名称／类型／状态／有效期／
-   素材分类／执行人员）＋「任务内容」，再补「群发范围」「标签名称」两行，正好 3×3。
-   循环方式、发送类型、是否按照整个标签发送、选择方式都在「查看任务配置快照」里，
-   详情不重复；「素材」一行也摘掉。标签名不再标「（当前标签中未找到）」，
-   同步滞后不该写进只读字段。快照只有一条演示任务，值按演示口径写；
-   拿到真实任务数据后换成读字段即可。 */
+/* 任务信息只读回显（2026-11-10）：创建页重排后，发送类型、群发范围与按微信标签
+   那三项、循环方式在详情页都没有落点。照「群发群组 · 详情」的做法在快照的
+   p 行后补只读行，不动 _online-admin.js。快照只有一条演示任务，值按演示口径写；
+   拿到真实任务数据后换成读字段即可。三个标签行只在「按微信标签」时才有值。 */
 (function(){
   var BODY=document.querySelector('[class*="_task_information_body_"]');
   if(!BODY||BODY.querySelector("[data-rea-qf-info]"))return;
@@ -21821,11 +21803,17 @@ ${reaQfListJs()}
     ref.parentNode.insertBefore(p,ref.nextSibling);
     return p;
   }
-  var rExec=findRow("执行人员：");
-  if(!rExec)return;
+  var rType=findRow("任务类型："),rExec=findRow("执行人员：");
+  if(!rType||!rExec)return;
+  /* 详情里「任务类型」是任务大类（群发好友），创建页的同名字段是循环方式，
+     这里换一个标签名，免得同一块里出现两行「任务类型」。 */
+  add(rType,"循环方式","单次任务");
   var ref=rExec;
+  ref=add(ref,"发送类型","群发助手");
   ref=add(ref,"群发范围","按微信标签");
-  ref=add(ref,"标签名称","老客户、双十一");
+  ref=add(ref,"是否按照整个标签发送","按照整个标签");
+  ref=add(ref,"选择方式","精确搜索");
+  ref=add(ref,"标签名称","老客户、双十一（当前标签中未找到）");
 })();
 function txt(n){return ((n&&n.textContent)||"").replace(/\\s+/g,"")}
 function infoVal(label){
@@ -21838,37 +21826,11 @@ function infoVal(label){
   return "";
 }
 function baseTime(){
-  var s=infoVal("任务有效期").split("~")[0];
-  var m=/^(\\d{4})\\/(\\d{1,2})\\/(\\d{1,2})\\s*(\\d{1,2}):(\\d{2})/.exec(s);
+  var s=infoVal("有效期：").split("~")[0];
+  var m=/^(\\d{4})\\/(\\d{1,2})\\/(\\d{1,2})\\s+(\\d{1,2}):(\\d{2})/.exec(s);
   return m?new Date(+m[1],+m[2]-1,+m[3],+m[4],+m[5],0):new Date(2026,8,2,9,0,0);
 }
-/* 好友行＝弹窗与「好友回复」页的共同数据源：回复率 13.4%，五个已完成发送的
-   执行人员按各自发送日错开一天（第 0～4 天），这样回复时间会落在任务周期内。
-   回复数按四舍五入分摊，五个人的合计正好 96（718 的 13.4%）。 */
-var QF_RATE=0.134;
-function rowsOf(n,emp){
-  emp=emp||0;
-  var t=new Date(baseTime().getTime()+emp*86400000);
-  return QF.friends(n,Math.round(n*QF_RATE),t,emp);
-}
-/* 「好友回复」页从这里取数，不另编一份。行里的 emp 与详情表前五位执行人员一致；
-   发送数也从表里的「群发好友数」按钮读，表改了这里跟着变。 */
-window.__reaQfReplyData=function(){
-  var trs=document.querySelectorAll(".ant-table-tbody tr.ant-table-row"),
-      out=[],e,i,tr,btn,n,rs;
-  for(e=0;e<trs.length&&e<5;e++){
-    tr=trs[e];
-    btn=tr.querySelector("td:last-child button");
-    n=btn?parseInt(txt(btn),10):0;
-    if(!n)continue;
-    rs=rowsOf(n,e);
-    for(i=0;i<rs.length;i++){
-      rs[i].emp=txt(tr.children[0]);
-      out.push(rs[i]);
-    }
-  }
-  return out;
-};
+function rowsOf(n){return QF.friends(n,Math.ceil(n/3),baseTime(),0)}
 /* 只接「群发好友数」那一列：按表头文字定位列号，不认列序（重抓后列序变了也不会接错） */
 var ths=document.querySelectorAll(".ant-table-thead th"),idx=-1,i;
 for(i=0;i<ths.length;i++){if(txt(ths[i])==="群发好友数"){idx=i;break}}
@@ -21885,191 +21847,8 @@ tb.addEventListener("click",function(e){
   if(Array.prototype.indexOf.call(tr.children,td)!==idx)return;
   var cnt=parseInt(txt(n),10);
   if(isNaN(cnt))return;
-  var rowIdx=Array.prototype.indexOf.call(tb.querySelectorAll("tr.ant-table-row"),tr);
-  QF.open(rowsOf(cnt,rowIdx),{});
+  QF.open(rowsOf(cnt),{});
 });
-})();`;
-  }
-
-  /* ============================================================
-     群发好友 · 好友回复（2026-11-13）
-
-     详情页第二个页签：任务发出去之后，这批好友回了什么、回得多快。
-     数据不另编：调用 reaQfDetailJs 暴露的 __reaQfReplyData()，读的就是
-     「群发好友数」弹窗里同一批好友行（发送时间、是否回复、回复时间、回复内容），
-     两处口径不会对不上。三段回答三个问题：四格指标看总量，每日回复量看节奏，
-     首次回复耗时看速度，最后落一张回复明细，最新在上。
-     图表自写，不引库；色值只取 ADR-0082 的 token，单系列蓝、无渐变、无卡片框。
-     只动内嵌覆盖件：不动 _online-admin.js、不重跑构建。
-     ============================================================ */
-  var REA_QFR_CSS = [
-    '.rea-qfr{padding:4px 0 0}',
-    '.rea-qfr-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;padding:18px 0 20px;border-bottom:1px solid #E5E8EF}',
-    '.rea-qfr-kpi{min-width:0}',
-    '.rea-qfr-kpi>span{display:block;font-size:12px;line-height:18px;color:#8F959E}',
-    '.rea-qfr-kpi>b{display:block;margin-top:6px;font-size:28px;line-height:1.15;font-weight:600;color:#1F2329;font-variant-numeric:tabular-nums}',
-    '.rea-qfr-kpi>b small{margin-left:4px;font-size:14px;font-weight:400;color:#646A73}',
-    '.rea-qfr-kpi>em{display:block;margin-top:6px;font-size:12px;line-height:18px;font-style:normal;color:#646A73}',
-    '.rea-qfr-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:48px;padding:24px 0 4px}',
-    '.rea-qfr-sec{min-width:0}',
-    '.rea-qfr-hd{display:flex;align-items:center;gap:6px;margin:0 0 16px;font-size:14px;line-height:20px;font-weight:600;color:#1F2329}',
-    '.rea-qfr-help{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border:1px solid #C9CED6;border-radius:50%;font-size:10px;line-height:1;color:#8F959E;cursor:help}',
-    '.rea-qfr-cols{display:flex;gap:8px;height:184px}',
-    '.rea-qfr-col{display:flex;flex:1;flex-direction:column;justify-content:flex-end;min-width:0}',
-    '.rea-qfr-col-in{display:flex;flex:1;flex-direction:column;justify-content:flex-end;align-items:center;border-bottom:1px solid #E5E8EF}',
-    '.rea-qfr-col b{font-size:12px;line-height:16px;font-weight:400;color:#646A73}',
-    '.rea-qfr-col i{display:block;width:100%;max-width:34px;border-radius:4px 4px 0 0;background:#1677FF}',
-    '.rea-qfr-col>span{margin-top:8px;font-size:12px;line-height:16px;color:#8F959E;text-align:center;white-space:nowrap}',
-    '.rea-qfr-dur{display:grid;gap:16px;padding-top:6px}',
-    '.rea-qfr-dur-row{display:grid;grid-template-columns:76px minmax(0,1fr) 36px;align-items:center;gap:12px}',
-    '.rea-qfr-dur-row>span{font-size:13px;line-height:20px;color:#646A73}',
-    '.rea-qfr-dur-track{height:10px;border-radius:5px;background:#F0F2F5}',
-    '.rea-qfr-dur-track i{display:block;height:100%;border-radius:5px;background:#1677FF}',
-    '.rea-qfr-dur-row>b{font-size:13px;line-height:20px;font-weight:500;color:#1F2329;text-align:right;font-variant-numeric:tabular-nums}',
-    '.rea-qfr-list{margin-top:32px;padding-top:24px;border-top:1px solid #E5E8EF}',
-    '.rea-qfr-scroll{max-height:420px;overflow:auto}',
-    '.rea-qfr-table{width:100%;border-collapse:collapse;table-layout:fixed}',
-    '.rea-qfr-table th{position:sticky;top:0;z-index:1;height:40px;padding:0 12px;background:#F7F8FA;font-size:12px;font-weight:400;line-height:18px;color:#646A73;text-align:left;white-space:nowrap}',
-    '.rea-qfr-table td{height:48px;padding:0 12px;border-bottom:1px solid #F0F0F2;font-size:13px;line-height:20px;color:#1F2329;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}',
-    '.rea-qfr-who b{font-weight:500}',
-    '.rea-qfr-who em{margin-left:8px;font-size:12px;font-style:normal;color:#8F959E}',
-    '.rea-qfr-foot{margin-top:12px;font-size:12px;line-height:18px;color:#8F959E}',
-    '.rea-qfr-empty{display:flex;flex:1;align-items:center;justify-content:center;padding:48px 0;font-size:13px;color:#8F959E}',
-    '.rea-qfr-table .rea-qfr-empty{display:block;text-align:center}',
-    '@media(max-width:1100px){.rea-qfr-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.rea-qfr-grid{grid-template-columns:minmax(0,1fr);gap:32px}}'
-  ].join('\n');
-
-  function reaQfReplyJs(){
-    return String.raw`(function(){
-'use strict';
-if(document.querySelector('[data-rea-qfr-pane]'))return;
-var NAV=document.querySelector('.ant-tabs-nav-list'),
-    HOLDER=document.querySelector('.ant-tabs-content'),
-    TAB=NAV&&NAV.querySelector('.ant-tabs-tab'),
-    INK=NAV&&NAV.querySelector('.ant-tabs-ink-bar');
-if(!NAV||!HOLDER||!TAB)return;
-var DATA=(window.__reaQfReplyData&&window.__reaQfReplyData())||[];
-function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
-function pad(n){return (n<10?'0':'')+n}
-function pct(v){return (isFinite(v)?v:0).toFixed(1)+'%'}
-function hm(min){
-  if(min<60)return [String(Math.round(min)),'分钟'];
-  if(min<1440)return [(min/60).toFixed(1),'小时'];
-  return [(min/1440).toFixed(1),'天'];
-}
-function fmt(ts){var d=new Date(ts);return d.getFullYear()+'/'+pad(d.getMonth()+1)+'/'+pad(d.getDate())+' '+pad(d.getHours())+':'+pad(d.getMinutes())}
-var replied=DATA.filter(function(r){return r.replied});
-var total=DATA.length,nRep=replied.length;
-var within=replied.filter(function(r){return r.delay<=1440}).length;
-var late=replied.filter(function(r){return r.delay>4320}).length;
-var ds=replied.map(function(r){return r.delay}).sort(function(a,b){return a-b});
-var avg=ds.length?ds.reduce(function(a,b){return a+b},0)/ds.length:0;
-var med=0;
-if(ds.length){var m=Math.floor(ds.length/2);med=ds.length%2?ds[m]:(ds[m-1]+ds[m])/2}
-var hMed=hm(med),hAvg=hm(avg);
-var kpi='<div class="rea-qfr-kpis">'
- +'<div class="rea-qfr-kpi"><span>已回复好友</span><b>'+nRep+'</b><em>已发送 '+total+' 条 · 回复率 '+pct(total?nRep/total*100:0)+'</em></div>'
- +'<div class="rea-qfr-kpi"><span>24 小时内回复</span><b>'+within+'</b><em>占已回复 '+pct(nRep?within/nRep*100:0)+'</em></div>'
- +'<div class="rea-qfr-kpi"><span>首次回复耗时</span><b>'+hMed[0]+'<small>'+hMed[1]+'</small></b><em>平均 '+hAvg[0]+' '+hAvg[1]+'</em></div>'
- +'<div class="rea-qfr-kpi"><span>3 天后才回复</span><b>'+late+'</b><em>占已回复 '+pct(nRep?late/nRep*100:0)+'</em></div>'
- +'</div>';
-var days={},keys=[],maxDay=0,dayMs=86400000;
-replied.forEach(function(r){
-  var d=new Date(r.replyAt),k=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
-  days[k]=(days[k]||0)+1;
-});
-/* 横轴连续到天：从最早发送日到最晚回复日，当天没有回复就留空柱，断档看得出来 */
-var startAt=null,endAt=null;
-DATA.forEach(function(r){if(startAt===null||r.sendAt<startAt)startAt=r.sendAt});
-replied.forEach(function(r){if(endAt===null||r.replyAt>endAt)endAt=r.replyAt});
-if(startAt!==null&&endAt!==null){
-  var cur=new Date(startAt),end=new Date(endAt);
-  cur.setHours(0,0,0,0);end.setHours(0,0,0,0);
-  for(;cur<=end;cur=new Date(cur.getTime()+dayMs)){
-    keys.push(cur.getFullYear()+'-'+pad(cur.getMonth()+1)+'-'+pad(cur.getDate()));
-  }
-}
-keys.forEach(function(k){if((days[k]||0)>maxDay)maxDay=days[k]||0});
-var cols='';
-keys.forEach(function(k){
-  var v=days[k]||0,h=v?Math.max(4,Math.round(v/maxDay*118)):0;
-  cols+='<div class="rea-qfr-col"><div class="rea-qfr-col-in"><b>'+(v||'')+'</b><i style="height:'+h+'px"></i></div><span>'+k.slice(5).replace('-','/')+'</span></div>';
-});
-if(!cols)cols='<div class="rea-qfr-empty">暂无好友回复</div>';
-var BANDS=[['1 小时内',0,60],['1–6 小时',60,360],['6–24 小时',360,1440],['1–3 天',1440,4320],['3 天以上',4320,Infinity]];
-/* 分档边界只算一次：24 小时与「3 天后」两张口径要和前三档／最后一档对得上 */
-var counts=BANDS.map(function(_,bi){
-  return replied.filter(function(r){
-    if(bi===0)return r.delay<60;
-    if(bi===1)return r.delay>=60&&r.delay<360;
-    if(bi===2)return r.delay>=360&&r.delay<=1440;
-    if(bi===3)return r.delay>1440&&r.delay<=4320;
-    return r.delay>4320;
-  }).length;
-});
-var maxCount=0;
-counts.forEach(function(v){if(v>maxCount)maxCount=v});
-var dur='';
-BANDS.forEach(function(b,bi){
-  var c=counts[bi],w=maxCount?Math.round(c/maxCount*100):0;
-  dur+='<div class="rea-qfr-dur-row"><span>'+b[0]+'</span><div class="rea-qfr-dur-track"><i style="width:'+w+'%"></i></div><b>'+c+'</b></div>';
-});
-var list=replied.slice().sort(function(a,b){return b.replyAt-a.replyAt});
-var rows='';
-list.forEach(function(r){
-  rows+='<tr><td><span class="rea-qfr-who"><b>'+esc(r.nick)+'</b><em>'+esc(r.wxid)+'</em></span></td>'
-    +'<td>'+esc(r.emp)+'</td>'
-    +'<td>'+fmt(r.replyAt)+'</td>'
-    +'<td title="'+esc(r.text)+'">'+esc(r.text)+'</td></tr>';
-});
-if(!rows)rows='<tr><td colspan="4"><div class="rea-qfr-empty">暂无好友回复</div></td></tr>';
-var table='<div class="rea-qfr-list"><div class="rea-qfr-hd">回复明细<span class="rea-qfr-help" title="按首次回复时间倒序；同一好友只列第一次回复。">?</span></div>'
- +'<div class="rea-qfr-scroll"><table class="rea-qfr-table"><colgroup><col style="width:24%"><col style="width:16%"><col style="width:20%"><col style="width:40%"></colgroup>'
- +'<thead><tr><th>好友</th><th>执行人员</th><th>回复时间</th><th>回复内容</th></tr></thead><tbody>'+rows+'</tbody></table></div>'
- +'<div class="rea-qfr-foot">共 '+nRep+' 条回复</div></div>';
-var body='<div class="rea-qfr">'+kpi
- +'<div class="rea-qfr-grid">'
- +'<section class="rea-qfr-sec"><div class="rea-qfr-hd">回复趋势<span class="rea-qfr-help" title="按首次回复的自然日归格；同一好友只计一次。">?</span></div><div class="rea-qfr-cols">'+cols+'</div></section>'
- +'<section class="rea-qfr-sec"><div class="rea-qfr-hd">首次回复耗时<span class="rea-qfr-help" title="从好友收到群发消息到第一次回复的间隔；按已回复好友计。">?</span></div><div class="rea-qfr-dur">'+dur+'</div></section>'
- +'</div>'+table+'</div>';
-var pane=document.createElement('div');
-pane.className='ant-tabs-tabpane ant-tabs-tabpane-hidden';
-pane.setAttribute('data-rea-qfr-pane','1');
-pane.setAttribute('role','tabpanel');
-pane.setAttribute('aria-hidden','true');
-pane.innerHTML=body;
-HOLDER.appendChild(pane);
-var firstPane=null,k2;
-for(k2=0;k2<HOLDER.children.length;k2++){
-  if(HOLDER.children[k2]!==pane&&HOLDER.children[k2].className.indexOf('ant-tabs-tabpane')>=0){firstPane=HOLDER.children[k2];break}
-}
-var tab=TAB.cloneNode(true);
-tab.removeAttribute('data-node-key');
-tab.setAttribute('data-rea-qfr-tab','1');
-tab.classList.remove('ant-tabs-tab-active');
-var btn=tab.querySelector('.ant-tabs-tab-btn');
-if(btn){btn.removeAttribute('id');btn.removeAttribute('aria-controls');btn.setAttribute('aria-selected','false');btn.setAttribute('tabindex','0');btn.textContent='好友回复'}
-NAV.insertBefore(tab,INK||null);
-function sel(t,on){
-  t.classList.toggle('ant-tabs-tab-active',on);
-  var b=t.querySelector('.ant-tabs-tab-btn');
-  if(b){b.setAttribute('aria-selected',on?'true':'false');b.setAttribute('tabindex',on?'0':'-1')}
-}
-function show(qfr){
-  sel(TAB,!qfr);sel(tab,qfr);
-  if(firstPane){
-    firstPane.classList.toggle('ant-tabs-tabpane-active',!qfr);
-    firstPane.classList.toggle('ant-tabs-tabpane-hidden',qfr);
-    firstPane.setAttribute('aria-hidden',qfr?'true':'false');
-  }
-  pane.classList.toggle('ant-tabs-tabpane-active',qfr);
-  pane.classList.toggle('ant-tabs-tabpane-hidden',!qfr);
-  pane.setAttribute('aria-hidden',qfr?'false':'true');
-  if(INK){var t=qfr?tab:TAB;INK.style.width=t.offsetWidth+'px';INK.style.left=(t.offsetLeft+t.offsetWidth/2)+'px';INK.style.transform='translateX(-50%)'}
-}
-TAB.addEventListener('click',function(){show(false)});
-tab.addEventListener('click',function(){show(true)});
-if(btn)btn.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();show(true)}});
 })();`;
   }
 
@@ -26500,7 +26279,7 @@ BT.addEventListener('click',function(e){
       state:'ended', stateText:'已结束',
       validity:'2026/11/04 09:00~2026/11/11 09:00',
       unit:'people', head:'用户名', lead:'吴官宇', leadPhone:'16702260651',
-      hide:['已发送','素材'],
+      hide:['已发送'],
       extra:'已发送 718 条',
       plan:['done','done','done','done','done','warn','warn','open','open','open'],
       labels:{done:'已执行',open:'未执行',warn:'任务中断'}
@@ -26576,6 +26355,7 @@ BT.addEventListener('click',function(e){
     '.rea-wxd-donut circle.open{stroke:#C9CED6}',
     '.rea-wxd-donut circle.warn{stroke:#FAAD14}',
     '.rea-wxd-donut circle.fail{stroke:#FF4D4F}',
+    '.rea-wxd-donut circle.pass{stroke:#52C41A}',
     '.rea-wxd-donut-c{position:absolute;inset:0;display:grid;place-content:center;text-align:center}',
     '.rea-wxd-donut-c b{font-size:20px;line-height:1.3;font-weight:600;color:#1F2329;font-variant-numeric:tabular-nums}',
     '.rea-wxd-donut-c span{font-size:12px;color:#8F959E}',
@@ -26586,22 +26366,15 @@ BT.addEventListener('click',function(e){
     '.rea-wxd-ring-lg i.open{background:#C9CED6}',
     '.rea-wxd-ring-lg i.warn{background:#FAAD14}',
     '.rea-wxd-ring-lg i.fail{background:#FF4D4F}',
+    '.rea-wxd-ring-lg i.pass{background:#52C41A}',
     '.rea-wxd-ring-lg b{margin-left:auto;font-size:12px;font-weight:400;color:#646A73}',
     '.rea-wxd-ring-ft{margin-top:12px;font-size:12px;line-height:18px;color:#8F959E}',
-    /* 批量加好友 · 详情：任务信息下方一张加好友转化漏斗（2026-11-13）。
-       四级梯形条按目标数等比收窄，色阶沿用 #1677FF 的同一色相；百分比相对上一级。 */
-    '.rea-wxd-bd .rea-wxd-info{grid-template-columns:minmax(0,1fr)}',
-    '.rea-wxd-fn{margin-top:16px;padding-top:16px;border-top:1px solid #F0F0F2}',
-    '.rea-wxd-fn-bd{display:grid;gap:6px;max-width:720px}',
-    '.rea-wxd-fn-row{display:flex;align-items:center;gap:12px}',
-    '.rea-wxd-fn-bar{display:flex;align-items:center;justify-content:space-between;flex:none;height:34px;padding:0 18px;color:#fff;font-size:13px;line-height:20px;clip-path:polygon(0 0,100% 0,96.5% 100%,3.5% 100%);min-width:0}',
-    '.rea-wxd-fn-bar>b{font-weight:600;font-variant-numeric:tabular-nums}',
-    '.rea-wxd-fn-row:nth-child(1) .rea-wxd-fn-bar{background:#1677FF}',
-    '.rea-wxd-fn-row:nth-child(2) .rea-wxd-fn-bar{background:#5B8BF0}',
-    '.rea-wxd-fn-row:nth-child(3) .rea-wxd-fn-bar{background:#8FB2F4}',
-    '.rea-wxd-fn-row:nth-child(4) .rea-wxd-fn-bar{background:#A9C6F7;color:#1F2329}',
-    '.rea-wxd-fn-rate{font-size:12px;line-height:18px;color:#646A73;white-space:nowrap}',
-    '.rea-wxd-fn-ft{margin-top:10px;font-size:12px;line-height:18px;color:#8F959E}',
+    '.rea-wxd-rings .rea-wxd-ring-hd{margin-bottom:10px}',
+    '.rea-wxd-rings .rea-wxd-ring-bd{gap:16px}',
+    '.rea-wxd-rings .rea-wxd-donut,.rea-wxd-rings .rea-wxd-donut svg{width:96px;height:96px}',
+    '.rea-wxd-rings .rea-wxd-donut-c b{font-size:18px}',
+    '.rea-wxd-rings .rea-wxd-ring-lg{gap:8px}',
+    '.rea-wxd-blk+.rea-wxd-blk{margin-top:16px;padding-top:16px;border-top:1px solid #F0F0F2}',
     '@media(max-width:1000px){.rea-wxd-info{grid-template-columns:minmax(0,1fr)}.rea-wxd-kv{grid-template-columns:repeat(2,minmax(0,1fr))!important}.rea-wxd-ring{margin-top:20px;padding:20px 0 0;border-top:1px solid #E5E8EF;border-left:0}}',
     '.rea-wxd-tb{display:inline-flex;align-items:center;gap:6px;font-size:14px;line-height:22px;color:#1F2329}',
     '.rea-wxd-tb i{width:6px;height:6px;border-radius:50%;background:#8F959E;flex:none}',
@@ -26610,34 +26383,31 @@ BT.addEventListener('click',function(e){
     '.rea-wxd-tb.fail i{background:#FF4D4F}',
     '.rea-wxd-tb.pass i{background:#52C41A}',
     '.rea-wxd-tb.open{color:#646A73}',
-    /* 客户唤醒 · 详情：右栏换成唤醒结果（2026-11-13）。
-       已唤醒＝客户回复；唤醒率＝已唤醒÷已发送，触达率＝已发送÷应触达。
-       蓝＝已回复、灰＝未回复、琥珀＝发送失败，色值取 ADR-0082 的 token。 */
-    '.rea-wxd-hx .rea-wxd-info{grid-template-columns:minmax(0,1fr) 400px}',
-    '.rea-hx-hd{display:flex;align-items:center;gap:8px;margin-bottom:14px}',
+    /* 客户唤醒 · 详情：任务信息下方并排两张图（2026-11-13）。
+       左转化漏斗：应触达 → 已发送 → 已回复（＝已唤醒），按客户条目算；
+       右执行进度：4/10 人已执行，按人次算。色值取 ADR-0082 的 token。 */
+    '.rea-wxd-hx .rea-wxd-info{grid-template-columns:minmax(0,1fr)}',
+    '.rea-hx-charts{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:40px;margin-top:14px;padding-top:14px;border-top:1px solid #F0F0F2}',
+    '.rea-hx-hd{display:flex;align-items:center;gap:8px;margin-bottom:10px}',
     '.rea-hx-t{display:inline-flex;align-items:center;gap:5px;font-size:14px;font-weight:600;line-height:20px;color:#1F2329}',
     '.rea-hx-more{margin-left:auto;border:0;background:none;padding:0;font:inherit;font-size:13px;line-height:20px;color:#1677FF;cursor:pointer;white-space:nowrap}',
     '.rea-hx-more:hover{text-decoration:underline}',
-    '.rea-hx-main{display:flex;align-items:flex-end;justify-content:space-between;gap:16px}',
-    '.rea-hx-big{display:flex;align-items:baseline;gap:6px;min-width:0}',
-    '.rea-hx-big>span{font-size:12px;line-height:18px;color:#8F959E;align-self:flex-start;margin-top:4px}',
-    '.rea-hx-big b{font-size:32px;line-height:1.15;font-weight:600;color:#1F2329;font-variant-numeric:tabular-nums}',
-    '.rea-hx-big em{font-style:normal;font-size:13px;line-height:20px;color:#646A73}',
-    '.rea-hx-rates{display:grid;gap:8px;text-align:right}',
-    '.rea-hx-rates span{display:block;font-size:12px;line-height:18px;color:#8F959E}',
-    '.rea-hx-rates b{display:block;font-size:16px;line-height:22px;font-weight:600;color:#1F2329;font-variant-numeric:tabular-nums}',
-    '.rea-hx-bar{display:flex;height:8px;margin-top:18px;border-radius:4px;overflow:hidden;background:#F0F2F5}',
-    '.rea-hx-bar i{display:block;height:100%}',
-    '.rea-hx-bar .rep,.rea-hx-lg .rep{background:#1677FF}',
-    '.rea-hx-bar .open,.rea-hx-lg .open{background:#C9CED6}',
-    '.rea-hx-bar .fail,.rea-hx-lg .fail{background:#FAAD14}',
-    '.rea-hx-lg{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:12px}',
-    '.rea-hx-lg button{display:inline-flex;align-items:center;gap:6px;border:0;background:none;padding:0;font:inherit;font-size:12px;line-height:18px;color:#646A73;cursor:pointer;white-space:nowrap}',
-    '.rea-hx-lg button:hover{color:#1677FF}',
-    '.rea-hx-lg i{width:6px;height:6px;flex:none;border-radius:50%}',
-    '.rea-hx-lg b{font-weight:500;color:#1F2329;font-variant-numeric:tabular-nums}',
-    '.rea-hx-lg button:hover b{color:#1677FF}',
-    '.rea-hx-ft{margin-top:14px;font-size:12px;line-height:18px;color:#8F959E}',
+    '.rea-hx-side{margin-left:auto;font-size:12px;line-height:18px;color:#8F959E;white-space:nowrap}',
+    '.rea-hx-fn{max-width:720px}',
+    '.rea-hx-fn-bd{display:grid;gap:5px}',
+    '.rea-hx-fn-row{display:flex;align-items:center;gap:12px;width:100%;border:0;background:none;padding:0;font:inherit;text-align:left;cursor:pointer}',
+    '.rea-hx-fn-bar{display:flex;align-items:center;justify-content:space-between;flex:none;height:30px;padding:0 18px;color:#fff;font-size:13px;line-height:20px;clip-path:polygon(0 0,100% 0,96.5% 100%,3.5% 100%);min-width:0;transition:filter .15s}',
+    '.rea-hx-fn-bar>b{font-weight:600;font-variant-numeric:tabular-nums}',
+    '.rea-hx-fn-row:hover .rea-hx-fn-bar{filter:brightness(1.06)}',
+    '.rea-hx-fn-row:nth-child(1) .rea-hx-fn-bar{background:#1677FF}',
+    '.rea-hx-fn-row:nth-child(2) .rea-hx-fn-bar{background:#5B8BF0}',
+    '.rea-hx-fn-row:nth-child(3) .rea-hx-fn-bar{background:#A9C6F7;color:#1F2329;padding:0 12px}',
+    '.rea-hx-fn-rate{font-size:12px;line-height:18px;color:#646A73;white-space:nowrap}',
+    '.rea-hx-fn-ft{margin-top:10px;font-size:12px;line-height:18px;color:#8F959E}',
+    '.rea-hx-exbd{display:flex;align-items:center;gap:20px}',
+    '.rea-hx-donut{width:84px;height:84px}',
+    '.rea-hx-donut svg{width:84px;height:84px}',
+    '.rea-hx-donut .rea-wxd-donut-c b{font-size:18px}',
     '.rea-hx-modal .ant-modal-content{position:relative}',
     '.rea-hx-modal .ant-modal-body{padding-top:4px}',
     '.rea-hx-tool{display:flex;align-items:center;gap:8px;margin-bottom:14px}',
@@ -26653,8 +26423,8 @@ BT.addEventListener('click',function(e){
     '.rea-hx-dd .ant-select-item{padding:5px 12px;border-radius:4px;cursor:pointer}',
     '.rea-hx-dd .ant-select-item-option-active{background:rgba(0,0,0,.04)}',
     '.rea-hx-dd .ant-select-item-option-selected{background:#E6F4FF;color:#1677FF}',
-    '@media(max-width:1200px){.rea-wxd-hx .rea-wxd-info{grid-template-columns:minmax(0,1fr) 340px}}',
-    '@media(max-width:1000px){.rea-wxd-hx .rea-wxd-info{grid-template-columns:minmax(0,1fr)}}'
+    '@media(max-width:1200px){.rea-hx-charts{grid-template-columns:minmax(0,1fr) 300px;gap:28px}}',
+    '@media(max-width:1000px){.rea-hx-charts{grid-template-columns:minmax(0,1fr)}.rea-hx-ex{padding-top:16px;border-top:1px solid #F0F0F2}}'
   ].join('\n');
 
   /* 任务信息重排 + 演示表行。字段在左、进度环在右（关联好友的任务信息没有标题，
@@ -26733,38 +26503,51 @@ function legendHtml(counts,order,names,unit){
   });
   return h;
 }
+function ringBlock(o){
+  return '<div class="rea-wxd-blk">'
+    +'<div class="rea-wxd-ring-hd"><span class="rea-wxd-ring-t">'+o.title+'<span class="rea-wxd-help" title="'+o.help+'">?</span></span><span>'+o.total+'</span></div>'
+    +'<div class="rea-wxd-ring-bd">'
+    +'<div class="rea-wxd-donut" role="img" aria-label="'+o.aria+'">'
+    +'<svg viewBox="0 0 120 120"><circle class="track" cx="60" cy="60" r="50"></circle>'+o.segs+'</svg>'
+    +'<div class="rea-wxd-donut-c"><b>'+o.center+'</b><span>'+o.centerLb+'</span></div>'
+    +'</div>'
+    +'<div class="rea-wxd-ring-lg">'+o.leg+'</div>'
+    +'</div>'
+    +(o.foot?'<div class="rea-wxd-ring-ft">'+o.foot+'</div>':'')
+    +'</div>';
+}
 var ring=document.createElement('div');
 if(PAGE==='批量加好友 · 详情'){
-  /* 两个状态维度不是并列的，是一条链：目标 → 已执行 → 已发申请 → 验证通过。
-     漏斗用累计值，四级严格包含下一级；用户已添加（幂等跳过）与用户不存在（真失败）
-     在「已执行」之后退出申请，不进漏斗，单列在底部。
-     所以这里不再出环：任务执行与好友状态都在同一张漏斗里，放任务信息下方。 */
+  /* 两个维度不是并列关系：任务进度按目标数，好友状态只统计已执行的那部分。
+     两个环各带各的分母，第二个环的图例与表格「执行结果」同口径；
+     验证通过才是这条任务真正加上的好友，放环心和图例第一段；用户已添加是幂等跳过，
+     用户不存在是处理过的真失败，都计入已执行。 */
   var exN=c.done+c.warn+c.fail+c.pass;
-  var sentN=c.warn+c.pass;
-  var tiers=[
-    {lb:'目标总数',n:n},
-    {lb:'已执行',n:exN},
-    {lb:'已发申请',n:sentN},
-    {lb:'验证通过',n:c.pass}
-  ];
-  var fh='',prev=n;
-  tiers.forEach(function(t,i){
-    var rate=i===0?'':(prev?Math.round(t.n/prev*100)+'%':'-');
-    fh+='<div class="rea-wxd-fn-row"><span class="rea-wxd-fn-bar" style="width:'+(n?t.n/n*100:0).toFixed(1)+'%"><span>'+t.lb+'</span><b>'+t.n+CU+'</b></span><span class="rea-wxd-fn-rate">'+rate+'</span></div>';
-    prev=t.n;
+  var ex={done:exN,open:c.open};
+  var res={pass:c.pass,warn:c.warn,done:c.done,fail:c.fail};
+  var resOrder=['pass','warn','done','fail'];
+  var resNames={pass:'验证通过',warn:'已发送验证请求',done:'用户已添加',fail:'用户不存在'};
+  var resBits=[];
+  resOrder.forEach(function(v){if(res[v])resBits.push(res[v]+CU+resNames[v])});
+  ring.className='rea-wxd-ring rea-wxd-rings';
+  ring.innerHTML=ringBlock({
+    title:'任务进度',
+    help:'按目标数统计：资料页处理完（含已是好友、用户不存在）计 1 个已执行，还没处理到的计未执行；逾期含在未执行内。',
+    total:'共 '+n+U,
+    aria:'任务进度：'+n+U+'中 '+exN+CU+'已执行，'+c.open+CU+'未执行',
+    segs:donutSvg(ex,n,['done','open']),
+    center:exN+'/'+n,centerLb:'已执行',
+    leg:legendHtml(ex,['done','open'],{done:'已执行',open:'未执行'},CU),
+    foot:CFG.extra
+  })+ringBlock({
+    title:'好友状态',
+    help:'只统计已执行的目标，口径与表格「执行结果」一致。',
+    total:'已执行 '+exN+CU,
+    aria:'好友状态：已执行 '+exN+CU+'中 '+(resBits.length?resBits.join('，'):'暂无结果'),
+    segs:donutSvg(res,exN,resOrder),
+    center:res.pass+'/'+exN,centerLb:'验证通过',
+    leg:legendHtml(res,resOrder,resNames,CU)
   });
-  var exits=[];
-  if(c.done)exits.push('用户已添加 '+c.done+CU);
-  if(c.fail)exits.push('用户不存在 '+c.fail+CU);
-  var noApply=c.done+c.fail;
-  ring.className='rea-wxd-fn';
-  ring.innerHTML=''
-    +'<div class="rea-wxd-ring-hd">'
-    +'<span class="rea-wxd-ring-t">加好友转化<span class="rea-wxd-help" title="按目标数统计：目标总数＝这条任务的全部好友目标；已执行＝资料页处理完；已发申请＝已发送验证请求＋验证通过；验证通过＝对方已通过申请。右侧百分比相对上一级。">?</span></span>'
-    +'<span>共 '+n+U+'</span>'
-    +'</div>'
-    +'<div class="rea-wxd-fn-bd">'+fh+'</div>'
-    +(exits.length?'<div class="rea-wxd-fn-ft">未发申请 '+noApply+CU+'：'+exits.join(' · ')+'</div>':'');
 }else{
   var summary;
   if(!pending){
@@ -26838,13 +26621,7 @@ info.className='rea-wxd-info';
 card.insertBefore(info,BODY);
 info.appendChild(BODY);
 BODY.classList.add('rea-wxd-kv');
-/* 批量加好友的漏斗铺在字段下方（和客户唤醒那两张图同一位置），其余页仍是右栏环。 */
-if(PAGE==='批量加好友 · 详情'){
-  card.classList.add('rea-wxd-bd');
-  card.appendChild(ring);
-}else{
-  info.appendChild(ring);
-}
+info.appendChild(ring);
 /* 表格：按表头文字找表，不认第几张（发圈页还有一张页签表） */
 function txtv(x){return norm(x&&x.textContent)}
 var heads=document.querySelectorAll('.ant-table-thead'),thead=null;
@@ -27013,13 +26790,13 @@ function open(){
 })();`;
   }
 
-  /* 客户唤醒 · 详情：右栏从「执行进度」换成「唤醒结果」（2026-11-13）。
+  /* 客户唤醒 · 详情：右栏换成转化漏斗＋执行进度（2026-11-13）。
      员工执行只是通道，创建人要看的是这批沉睡客户回来多少：
-     已唤醒 x 位、唤醒率（已回复÷已发送）、触达率（已发送÷应触达），
-     下面一条三段占比条，点任一段开客户明细并预筛。
+     漏斗应触达 → 已发送 → 已回复（＝已唤醒），执行进度 4/10 人；
+     两图都可点，开对应的客户明细并预筛。
      员工表最后一列从「应触达人数」改成「已唤醒/应触达」，点开该员工的客户明细。
      口径：客户回复即计为已唤醒；回复按任务累计，任务结束后新到的回复仍记在本任务。
-     演示数字：4/10 人已执行、应触达 720、已发送 660、已回复 128、发送失败 60。
+     演示数字：4/10 人已执行、应触达 720、已发送 660、已回复 128、未发送 60。
      只动内嵌覆盖件：不动 _online-admin.js、不重跑构建。 */
   function reaWakeJs(){
     return String.raw`(function(){
@@ -27027,41 +26804,52 @@ function open(){
 var CARD=document.querySelector('[data-rea-wxd]');
 if(!CARD)return;
 if(CARD.classList.contains('rea-wxd-hx'))return;
-/* 这一条右栏的环没有类名（reaWxDetailJs 只在批量加好友那支给它加），按位置取 */
+/* 任务信息下方并排两张图：左转化漏斗，右执行进度环（2026-11-13）。
+   漏斗按客户条目——应触达 → 已发送 → 已回复（＝已唤醒）；
+   执行进度按人次——4/10 人已执行。两图各自可点，开对应的客户明细。
+   这一条右栏原来的环没有类名（reaWxDetailJs 只在批量加好友那支加），按位置取后摘掉。 */
 var INFO=CARD.querySelector('.rea-wxd-info');
 if(!INFO||INFO.children.length<2)return;
-var RING=INFO.children[INFO.children.length-1];
-var N={reach:720,sent:660,replied:128,failed:60,done:4,people:10};
+var OLDRING=INFO.children[INFO.children.length-1];
+var N={reach:720,sent:660,replied:128,unsent:60,done:4,people:10};
 N.open=N.sent-N.replied;
 var TOTAL=180;
 var PEOPLE=[
- {n:'雅楠002',p:'13260303290',d:'测试二级三部',rep:38,fail:15},
- {n:'李佳',p:'13800138001',d:'销售一部',rep:32,fail:15},
- {n:'王敏',p:'13800138002',d:'销售一部',rep:34,fail:15},
- {n:'陈昊',p:'13800138003',d:'销售二部',rep:24,fail:15}
+ {n:'雅楠002',p:'13260303290',d:'测试二级三部',rep:38,unsent:15},
+ {n:'李佳',p:'13800138001',d:'销售一部',rep:32,unsent:15},
+ {n:'王敏',p:'13800138002',d:'销售一部',rep:34,unsent:15},
+ {n:'陈昊',p:'13800138003',d:'销售二部',rep:24,unsent:15}
 ];
 function pct(a,b){return (a/b*100).toFixed(1)+'%'}
-function wd(a,b){return (a/b*100).toFixed(2)+'%'}
 CARD.classList.add('rea-wxd-hx');
-RING.className='rea-wxd-ring rea-hx-res';
-RING.innerHTML=''
-+'<div class="rea-hx-hd"><span class="rea-hx-t">唤醒结果<span class="rea-wxd-help" title="客户在收到唤醒消息后回复，即计为已唤醒；唤醒率＝已唤醒÷已发送。回复按任务累计，任务结束后新到的回复仍记在本任务。">?</span></span>'
-+'<button type="button" class="rea-hx-more" data-hx-open="all">查看唤醒明细 ›</button></div>'
-+'<div class="rea-hx-main">'
-+'<div class="rea-hx-big"><span>已唤醒</span><b>'+N.replied+'</b><em>位</em></div>'
-+'<div class="rea-hx-rates"><div><span>触达率</span><b>'+pct(N.sent,N.reach)+'</b></div><div><span>唤醒率</span><b>'+pct(N.replied,N.sent)+'</b></div></div>'
+OLDRING.parentNode.removeChild(OLDRING);
+var tiers=[
+ {k:'all',label:'应触达',v:N.reach,w:100,rate:''},
+ {k:'sent',label:'已发送',v:N.sent,w:+(N.sent/N.reach*100).toFixed(1),rate:''},
+ {k:'replied',label:'已回复',v:N.replied,w:+(N.replied/N.reach*100).toFixed(1),rate:'唤醒率 '+pct(N.replied,N.sent)}
+],fh='',ti;
+for(ti=0;ti<tiers.length;ti++){
+  fh+='<button type="button" class="rea-hx-fn-row" data-hx-open="'+tiers[ti].k+'">'
+   +'<span class="rea-hx-fn-bar" style="width:'+tiers[ti].w+'%"><span>'+tiers[ti].label+'</span><b>'+tiers[ti].v+'</b></span>'
+   +'<span class="rea-hx-fn-rate">'+tiers[ti].rate+'</span></button>';
+}
+var charts=document.createElement('div');
+charts.className='rea-hx-charts';
+charts.innerHTML=''
++'<div class="rea-hx-fn">'
++'<div class="rea-hx-hd"><span class="rea-hx-t">转化漏斗<span class="rea-wxd-help" title="按客户条目统计：应触达＝任务圈定的客户；已发送＝员工已发出；已回复＝客户回复了唤醒消息，即已唤醒。回复按任务累计，任务结束后新到的回复仍记在本任务。">?</span></span><button type="button" class="rea-hx-more" data-hx-open="all">查看唤醒明细 ›</button></div>'
++'<div class="rea-hx-fn-bd">'+fh+'</div>'
++'<div class="rea-hx-fn-ft">未发送 '+N.unsent+' 位 · 未回复 '+N.open+' 位</div>'
 +'</div>'
-+'<div class="rea-hx-bar" role="img" aria-label="应触达 '+N.reach+' 位：已回复 '+N.replied+' 位、未回复 '+N.open+' 位、发送失败 '+N.failed+' 位">'
-+'<i class="rep" style="width:'+wd(N.replied,N.reach)+'"></i>'
-+'<i class="open" style="width:'+wd(N.open,N.reach)+'"></i>'
-+'<i class="fail" style="width:'+wd(N.failed,N.reach)+'"></i>'
-+'</div>'
-+'<div class="rea-hx-lg">'
-+'<button type="button" data-hx-open="replied"><i class="rep"></i>已回复<b>'+N.replied+'</b></button>'
-+'<button type="button" data-hx-open="open"><i class="open"></i>未回复<b>'+N.open+'</b></button>'
-+'<button type="button" data-hx-open="failed"><i class="fail"></i>发送失败<b>'+N.failed+'</b></button>'
-+'</div>'
-+'<div class="rea-hx-ft">已执行 '+N.done+'/'+N.people+' 人 · 应触达 '+N.reach+' 位</div>';
++'<div class="rea-hx-ex">'
++'<div class="rea-hx-hd"><span class="rea-hx-t">执行进度<span class="rea-wxd-help" title="按人次统计：一位执行人员计 1 次；10 人中 4 人已执行，未执行的人员还没开始触达。">?</span></span><span class="rea-hx-side">共 '+N.people+' 人</span></div>'
++'<div class="rea-hx-exbd">'
++'<div class="rea-wxd-donut rea-hx-donut" role="img" aria-label="执行进度：'+N.people+' 人中 '+N.done+' 人已执行，'+(N.people-N.done)+' 人未执行">'
++'<svg viewBox="0 0 120 120"><circle class="track" cx="60" cy="60" r="50"></circle><circle class="seg done" cx="60" cy="60" r="50" stroke-dasharray="125.66 188.5"></circle></svg>'
++'<div class="rea-wxd-donut-c"><b>'+N.done+'/'+N.people+'</b><span>已执行</span></div></div>'
++'<div class="rea-wxd-ring-lg"><div><i class="done"></i>已执行<b>'+N.done+' 人</b></div><div><i class="open"></i>未执行<b>'+(N.people-N.done)+' 人</b></div></div>'
++'</div></div>';
+CARD.appendChild(charts);
 /* 员工表最后一列：应触达人数 → 已唤醒/应触达；点开该员工的客户明细 */
 function clean(x){return String(x==null?'':x).replace(/\s+/g,'')}
 var ths=document.querySelectorAll('.ant-table-thead th'),i,k;
@@ -27092,8 +26880,8 @@ var ALL=[];
 for(var pi=0;pi<PEOPLE.length;pi++){
   var pe=PEOPLE[pi];
   for(var j=0;j<TOTAL;j++){
-    var failed=j>=TOTAL-pe.fail;
-    var replied=!failed&&j<pe.rep;
+    var unsent=j>=TOTAL-pe.unsent;
+    var replied=!unsent&&j<pe.rep;
     var st=new Date(2026,10,10,10,19,0).getTime()+(pi*TOTAL+j)*7*60000;
     var sd=new Date(st),rd=new Date(st+(5+j%17)*60000);
     var ld=new Date(2026,8,1+((pi*TOTAL+j)%28),10,0,0);
@@ -27102,12 +26890,12 @@ for(var pi=0;pi<PEOPLE.length;pi++){
       nick:NICKS[(pi*7+j)%NICKS.length],
       wxid:'wxid_'+pe.p.slice(-4)+p2(Math.floor(j/100))+p2(j%100),
       remark:REMARKS[(pi*3+j)%REMARKS.length],
-      send:failed?'-':fdt(sd),
-      content:failed?'-':CONTENT,
+      send:unsent?'-':fdt(sd),
+      content:unsent?'-':CONTENT,
       replied:replied,
       reply:replied?fdt(rd):'-',
       replyText:replied?REPLYTXT[(pi+j)%REPLYTXT.length]:'-',
-      status:failed?'发送失败':'已发送',
+      status:unsent?'未发送':'已发送',
       last:fdt(ld)
     });
   }
@@ -27197,7 +26985,7 @@ function openDD(sel){
   closeDD();
   var box=q('.ant-modal-content',ML);if(!box)return;
   var key=sel.getAttribute('data-hx-sel'),r=sel.getBoundingClientRect(),cr=box.getBoundingClientRect();
-  var opts=key==='status'?[['all','全部'],['已发送','已发送'],['发送失败','发送失败']]:[['all','全部'],['yes','已回复'],['no','未回复']];
+  var opts=key==='status'?[['all','全部'],['已发送','已发送'],['未发送','未发送']]:[['all','全部'],['yes','已回复'],['no','未回复']];
   var cur=key==='status'?ST:RP,h='',i;
   for(i=0;i<opts.length;i++){
     h+='<div class="ant-select-item ant-select-item-option'+(opts[i][0]===cur?' ant-select-item-option-selected':'')+'" data-hx-opt="'+opts[i][0]+'"><div class="ant-select-item-option-content">'+opts[i][1]+'</div></div>';
@@ -27247,7 +27035,8 @@ function openHx(opt){
   var pre=opt.preset||'all';
   if(pre==='replied')RP='yes';
   else if(pre==='open'){ST='已发送';RP='no'}
-  else if(pre==='failed')ST='发送失败';
+  else if(pre==='sent')ST='已发送';
+  else if(pre==='unsent')ST='未发送';
   if(opt.emp)KWE=String(opt.emp).replace(/\s+/g,'');
   var w=document.createElement('div');
   w.className='ant-modal-root css-vgijab';w.setAttribute('data-rea-hx-modal','1');
@@ -30750,7 +30539,7 @@ syncTip();drawRows();
     '客户唤醒': { css: REA_WX_SNAP_CSS, js: function(){ return reaWxListJs('客户唤醒'); } },
     /* 六张微信营销任务详情页（2026-11-10）：共用一张执行进度卡与 10 条演示表行。
        前面那段 js 是各页原有的任务信息回显，进度卡排在它后面（先补行、再收行）。 */
-    '群发好友 · 详情': { css: REA_QF_CSS + REA_WX_DETAIL_CSS + REA_WX_SNAP_CSS + REA_QFR_CSS, js: function(){ return reaQfDetailJs() + reaWxDetailContentJs('群发好友 · 详情') + reaWxDetailJs('群发好友 · 详情') + reaQfReplyJs(); } },
+    '群发好友 · 详情': { css: REA_QF_CSS + REA_WX_DETAIL_CSS + REA_WX_SNAP_CSS, js: function(){ return reaQfDetailJs() + reaWxDetailContentJs('群发好友 · 详情') + reaWxDetailJs('群发好友 · 详情'); } },
     '发圈 · 详情': { css: REA_FQ_DETAIL_CSS + REA_WX_DETAIL_CSS + REA_WX_SNAP_CSS, js: function(){ return reaFqDetailJs() + reaWxDetailContentJs('发圈 · 详情') + reaWxDetailJs('发圈 · 详情'); } },
     /* 微信营销任务 · 任务内容「从素材库选择」（2026-10-23）：三页共用一份弹窗与选材逻辑 */
     '发圈 · 新建': { css: REA_WXT_CSS, js: function(){ return reaWxtJs('发圈 · 新建'); } },
