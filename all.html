@@ -12894,7 +12894,7 @@ setTimeout(sbScan,120);
 .rea-ov-page .ov-distribution-labels strong {display:block;font-size:20px;font-weight:600;padding-left:16px;margin-top:4px;}
 .rea-ov-page .ov-distribution-labels small {font-weight:400;font-size:12px;color:#646A73;}
 .rea-ov-page .ov-value-section {margin:24px 0;}
-.rea-ov-page .ov-value-scene {padding:24px;min-width:0;}
+.rea-ov-page .ov-value-scene {padding:24px;min-width:0;min-height:180px;}
 .rea-ov-page .ov-value-scene>.ov-section-heading {margin-bottom:16px;}
 .rea-ov-page .ov-value-scene .ov-link {font-size:12px;white-space:nowrap;}
 .rea-ov-page .ov-cap-content {display:grid;grid-template-columns:1fr 1fr;gap:24px;}
@@ -12915,7 +12915,9 @@ setTimeout(sbScan,120);
 .rea-ov-page .ov-inline-actions {display:flex;gap:24px;align-items:center;}
 .rea-ov-page .ov-ref-line {border-color:#8F959E;}
 .rea-ov-page .ov-ref-line span {color:#646A73;}
-.rea-ov-page .ov-bar-value {visibility:hidden;}
+.rea-ov-page .ov-bar-value {padding:4px 8px;border-radius:6px;background:#1F2329;color:#FFF;line-height:1.4;box-shadow:0 6px 18px rgba(15,29,51,.18);z-index:20;visibility:hidden;}
+.rea-ov-page .ov-bar[data-edge="first"] .ov-bar-value {left:0;transform:none;}
+.rea-ov-page .ov-bar[data-edge="last"] .ov-bar-value {left:auto;right:0;transform:none;}
 .rea-ov-page .ov-bar:hover .ov-bar-value,.rea-ov-page .ov-bar:focus-visible .ov-bar-value {visibility:visible;}
 .rea-ov-page .ov-departments table {min-width:0;}
 .rea-ov-page .ov-resource-metrics {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;}
@@ -13908,11 +13910,15 @@ setTimeout(sbScan,120);
           (value) =>
             `<span class="ov-grid-line" style="bottom:${tickBottom(value)}px"></span>`,
         )
-        .join("")}<span class="ov-ref-line" style="bottom:${tickBottom(assigned)}px" title="已分配员工 ${assigned} 人"><span>已分配 ${assigned} 人</span></span>${buckets
+        .join("")}<span class="ov-ref-line" style="bottom:${tickBottom(assigned)}px" title="已授权员工 ${assigned} 人"><span>已授权 ${assigned} 人</span></span>${buckets
         .map((bucket, index) => {
           const value = Number(bucket.value.toFixed(1));
           const height = Math.max(2, (bucket.value / axisTop) * plotHeight);
-          return `<button type="button" class="ov-bar" data-day="${bucket.offset}" data-end="${bucket.end}" aria-label="${dateLabel(bucket.offset)}${bucket.end !== bucket.offset ? " 至 " + dateLabel(bucket.end) : ""}，${bucket.end !== bucket.offset ? "日均 " : ""}${number(value)} 人" title="${dateLabel(bucket.offset)} · ${value} 人"><span class="ov-bar-value" style="bottom:${height + 36}px">${number(value)}</span><i style="height:${height}px"></i><small>${index === 0 || index === buckets.length - 1 || index % Math.ceil(buckets.length / 5) === 0 ? dateLabel(bucket.offset).slice(5) : ""}</small></button>`;
+          const shortDate = (offset) => dateLabel(offset).slice(5);
+          const rangeLabel = bucket.end !== bucket.offset
+            ? `${shortDate(bucket.offset)} — ${shortDate(bucket.end)} · 日均 ${number(value)} 人`
+            : `${shortDate(bucket.offset)} · ${number(value)} 人`;
+          return `<button type="button" class="ov-bar" data-day="${bucket.offset}" data-end="${bucket.end}"${index === 0 ? ' data-edge="first"' : index === buckets.length - 1 ? ' data-edge="last"' : ""} aria-label="${dateLabel(bucket.offset)}${bucket.end !== bucket.offset ? " 至 " + dateLabel(bucket.end) : ""}，${bucket.end !== bucket.offset ? "日均 " : ""}${number(value)} 人"><span class="ov-bar-value" style="bottom:${height + 36}px">${rangeLabel}</span><i style="height:${height}px"></i><small>${index === 0 || index === buckets.length - 1 || index % Math.ceil(buckets.length / 5) === 0 ? dateLabel(bucket.offset).slice(5) : ""}</small></button>`;
         })
         .join("")}</div></div>`;
     renderTeamRanking();
