@@ -27484,18 +27484,18 @@ for(i=0;i<rows.length;i++){
   ].join('\n');
 
   /* ============================================================
-     微信营销任务 · 任务详情任务信息（2026-11-13 重排）
+     微信营销任务 · 任务详情执行进度（2026-11-10）
 
-     六张详情页（发圈／群发好友／群发群组／批量加好友／关联好友／客户唤醒）
-     原先任务信息上方单独一张进度卡，任务名／状态／有效期都在卡里，任务信息只剩配置，
-     一条任务做到哪一步得来回看两块。现按「小红书舆情监测 · 任务详情」的任务信息模块重排：
-     任务核心字段（名称／状态／有效期 ＋ 原有配置行）在左，执行进度环形图在右，
-     中间一道竖线；「查看任务配置快照」从进度卡右上角挪到「任务信息」标题右边。
+     问题：六张详情页（发圈／群发好友／群发群组／批量加好友／关联好友／客户唤醒）
+     都只有「任务信息」和一张员工/目标表，整条任务做到哪一步要自己数表。
+     做法：在任务信息上方插一张只读的进度卡——任务名、状态、有效期、完成率、
+     分段条、各状态计数、剩余时间一句给全；任务信息里同名的行收起来，只留配置。
+     口径照 prd/微信营销与看板-PRD.md §4.1–4.4：人员型按人次，数量型按目标数；
+     逾期含在未执行内，不单独占一段。
 
-     进度口径不变：人员型按人次，数量型按目标数；逾期含在未执行内，不单独占一段。
      日期按演示口径写死（快照那条任务的有效期是 2026-09/10，真钟早过了），
-     不从 Date 现算，免得过一天就换一种说法。拿到真实任务数据后，CFG.validity／
-     created 与 plan 换成读字段即可，DOM 这一层不用动。
+     不从 Date 现算，免得过一天就换一种说法。拿到真实任务数据后，CFG.when 与
+     plan 换成读字段即可，DOM 这一层不用动。
 
      只动内嵌覆盖件：不动 _online-admin.js、不重跑构建。 */
   var REA_WXD_PEOPLE = [
@@ -27513,106 +27513,100 @@ for(i=0;i<rows.length;i++){
   var REA_WXD = {
     '发圈 · 详情': {
       state:'live', stateText:'进行中',
-      validity:'2026/11/08 09:00~2026/11/13 13:51',
+      when:'有效期至 2026/11/13 13:51 · 还剩 3 天',
       unit:'people', head:'用户名',
-      hide:['已发送'],
+      hide:['任务名称','任务状态','有效期','已发送'],
       extra:'',
       plan:['done','done','done','done','done','done','open','open','open','open'],
       labels:{done:'已执行',open:'未执行'}
     },
     '群发好友 · 详情': {
       state:'ended', stateText:'已结束',
-      validity:'2026/11/04 09:00~2026/11/11 09:00',
+      when:'已于 2026/11/03 09:00 结束 · 仍有 5 人未完成',
       unit:'people', head:'用户名', lead:'吴官宇', leadPhone:'16702260651',
-      hide:['已发送'],
+      hide:['任务名称','任务状态','有效期','已发送'],
       extra:'已发送 718 条',
       plan:['done','done','done','done','done','warn','warn','open','open','open'],
       labels:{done:'已执行',open:'未执行',warn:'任务中断'}
     },
     '群发群组 · 详情': {
       state:'live', stateText:'进行中',
-      validity:'2026/11/10 17:11~2026/11/14 17:11',
+      when:'有效期至 2026/11/14 17:11 · 还剩 4 天',
       unit:'people', head:'用户名称', lead:'雅楠002', leadPhone:'13260303290',
-      hide:[],
+      hide:['任务名称','任务状态','有效期'],
       extra:'群发内容 1 条',
       plan:['done','done','done','done','done','done','done','open','open','open'],
       labels:{done:'已执行',open:'未执行'}
     },
     '批量加好友 · 详情': {
       state:'live', stateText:'进行中',
-      validity:'2026/11/10 17:11~2026/11/14 17:11',
-      created:'2026-11-10 17:11',
+      when:'有效期至 2026/11/14 17:11 · 还剩 4 天',
       unit:'items', noun:'好友', head:'微信号/手机号',
-      hide:['添加总量','未执行数','已执行数','用户不存在','用户已添加','已发送验证请求'],
+      hide:['任务名称','任务状态','有效期','添加总量','未执行数','已执行数','用户不存在','用户已添加','已发送验证请求'],
       extra:'执行人员 1 人 · 已完成 0 人',
       plan:['done','done','done','done','open','open','open','open','open','fail'],
       labels:{done:'已执行',open:'未执行',fail:'用户不存在'}
     },
     '关联好友 · 详情': {
       state:'live', stateText:'进行中',
-      validity:'2026/11/10 17:13~2026/11/14 17:13',
-      created:'2026-11-10 17:13',
+      when:'有效期至 2026/11/14 17:13 · 还剩 4 天',
       unit:'items', noun:'客户', head:'微信号',
-      hide:['关联总量','未执行数','已执行数','用户不存在','用户异常','已关联总量','未关联总量'],
+      hide:['任务名称','任务状态','有效期','关联总量','未执行数','已执行数','用户不存在','用户异常','已关联总量','未关联总量'],
       extra:'执行人员 1 人 · 已完成 0 人',
       plan:['done','done','done','open','open','open','open','open','open','fail'],
       labels:{done:'已关联',open:'未执行',fail:'用户异常'}
     },
     '客户唤醒 · 详情': {
       state:'live', stateText:'进行中',
-      validity:'2026/11/10 10:19~2026/11/14 10:19',
-      created:'2026-11-10 10:19',
+      when:'有效期至 2026/11/14 10:19 · 还剩 4 天',
       unit:'people', head:'用户名', lead:'雅楠002', leadPhone:'13260303290',
-      hide:[],
+      hide:['任务名称','任务状态','有效期'],
       extra:'应触达 720 人',
       plan:['done','done','done','done','open','open','open','open','open','open'],
       labels:{done:'已执行',open:'未执行'}
     }
   };
 
-  /* 任务信息与表格状态点的样式。任务信息照「小红书舆情监测 · 任务详情」：
-     字段在左（小灰标签在上、值在下，三列），执行进度环形图在右，中间一道竖线；
-     快照入口跟在「任务信息」标题后面。色值仍取 ADR-0082 的 token。 */
+  /* 进度卡与表格状态点的样式。整块用 #F7F8FA 浅底托住（token 的「弱分区底」），
+     不加边框、不加阴影；完成率是唯一的大数字，有效期落在任务名下一行，
+     图例只报数。进度条 10px、段间不留白缝，色值仍取 ADR-0082 的 token。 */
   var REA_WX_DETAIL_CSS = [
-    '.rea-wxd-snap{margin-left:16px;font-size:13px;line-height:20px;color:#1677FF;text-decoration:none;white-space:nowrap}',
+    '.rea-wxd{box-sizing:border-box;position:relative;margin:0 0 20px;padding:20px 24px 18px;border-radius:8px;background:#F7F8FA}',
+    '.rea-wxd-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap}',
+    '.rea-wxd-id{display:flex;align-items:center;gap:12px;min-width:0}',
+    '.rea-wxd-snap{margin-left:auto;font-size:13px;line-height:20px;color:#1677FF;text-decoration:none;white-space:nowrap}',
     '.rea-wxd-snap:hover{text-decoration:underline}',
-    '.rea-wxd-hd{display:flex;align-items:center;height:55px;border-bottom:1px solid #F0F0F2;font-size:16px;font-weight:500;color:#333}',
-    '.rea-wxd-info{display:grid;grid-template-columns:minmax(0,1fr) 320px;align-items:stretch;margin-top:16px}',
-    '.rea-wxd-kv{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:18px 24px!important;align-content:start!important;margin:0!important}',
-    '.rea-wxd-kv>p{display:block!important;flex:0 0 auto!important;width:auto!important;min-width:0;margin:0!important;white-space:normal!important;overflow-wrap:anywhere}',
-    '.rea-wxd-kv>p>span:first-child{display:block;margin-bottom:3px;font-size:12px;line-height:18px;color:#8F959E}',
-    '.rea-wxd-kv>p>span:last-child{display:block;font-size:14px;line-height:20px;color:#1F2329}',
-    '.rea-wxd-badge{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 9px;border-radius:6px;background:#F7F8FA;font-size:12px;font-weight:500;color:#646A73}',
-    '.rea-wxd-badge i{width:6px;height:6px;flex:none;border-radius:50%;background:#8F959E}',
-    '.rea-wxd-badge.live{background:#E6F4FF;color:#1677FF}',
-    '.rea-wxd-badge.live i{background:#1677FF}',
-    '.rea-wxd-ring{display:flex;flex-direction:column;min-width:0;padding-left:32px;border-left:1px solid #E5E8EF}',
-    '.rea-wxd-ring-hd{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px}',
-    '.rea-wxd-ring-t{display:inline-flex;align-items:center;gap:5px;font-size:14px;font-weight:600;line-height:20px;color:#1F2329}',
-    '.rea-wxd-ring-hd>span:last-child{font-size:12px;color:#8F959E}',
+    '.rea-wxd-name{margin:0;font-size:20px;line-height:28px;font-weight:600;color:#1F2329;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}',
+    '.rea-wxd-state{display:inline-flex;align-items:center;gap:6px;flex:none;height:24px;padding:0 10px;border:1px solid #E5E8EF;border-radius:999px;background:#fff;font-size:13px;line-height:1;color:#646A73;white-space:nowrap}',
+    '.rea-wxd-state i{width:7px;height:7px;border-radius:50%;background:#8F959E;flex:none}',
+    '.rea-wxd-state.live i{background:#1677FF}',
+    '.rea-wxd-state.done i{background:#8F959E}',
+    '.rea-wxd-when{margin-top:8px;font-size:13px;line-height:20px;color:#646A73}',
+    '.rea-wxd-note{display:inline-flex;align-items:center;gap:6px;font-style:normal;font-weight:500;color:#1F2329;white-space:nowrap}',
+    '.rea-wxd-note i{width:6px;height:6px;border-radius:50%;background:#FAAD14;flex:none}',
+    '.rea-wxd-main{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-top:16px}',
+    '.rea-wxd-pct{font-size:32px;line-height:36px;font-weight:600;color:#1F2329;font-variant-numeric:tabular-nums;letter-spacing:-.5px}',
+    '.rea-wxd-cap{padding-bottom:3px;line-height:1.35}',
+    '.rea-wxd-cap small{display:flex;align-items:center;gap:5px;font-size:12px;line-height:18px;color:#8F959E}',
+    '.rea-wxd-cap b{display:block;margin-top:1px;font-size:14px;line-height:20px;font-weight:400;color:#646A73}',
     '.rea-wxd-help{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border:1px solid #C9CED6;border-radius:50%;font-size:10px;line-height:1;color:#8F959E;cursor:help}',
-    '.rea-wxd-ring-bd{display:flex;align-items:center;gap:20px}',
-    '.rea-wxd-donut{position:relative;flex:none;width:120px;height:120px}',
-    '.rea-wxd-donut svg{display:block;width:120px;height:120px;transform:rotate(-90deg)}',
-    '.rea-wxd-donut circle{fill:none;stroke-width:12}',
-    '.rea-wxd-donut circle.track{stroke:#F0F2F5}',
-    '.rea-wxd-donut circle.done{stroke:#1677FF}',
-    '.rea-wxd-donut circle.open{stroke:#C9CED6}',
-    '.rea-wxd-donut circle.warn{stroke:#FAAD14}',
-    '.rea-wxd-donut circle.fail{stroke:#FF4D4F}',
-    '.rea-wxd-donut-c{position:absolute;inset:0;display:grid;place-content:center;text-align:center}',
-    '.rea-wxd-donut-c b{font-size:20px;line-height:1.3;font-weight:600;color:#1F2329;font-variant-numeric:tabular-nums}',
-    '.rea-wxd-donut-c span{font-size:12px;color:#8F959E}',
-    '.rea-wxd-ring-lg{display:grid;flex:1;gap:10px;min-width:0}',
-    '.rea-wxd-ring-lg>div{display:flex;align-items:center;gap:8px;font-size:13px;line-height:20px;color:#1F2329;white-space:nowrap}',
-    '.rea-wxd-ring-lg i{width:8px;height:8px;flex:none;border-radius:50%;background:#8F959E}',
-    '.rea-wxd-ring-lg i.done{background:#1677FF}',
-    '.rea-wxd-ring-lg i.open{background:#C9CED6}',
-    '.rea-wxd-ring-lg i.warn{background:#FAAD14}',
-    '.rea-wxd-ring-lg i.fail{background:#FF4D4F}',
-    '.rea-wxd-ring-lg b{margin-left:auto;font-size:12px;font-weight:400;color:#646A73}',
-    '.rea-wxd-ring-ft{margin-top:12px;font-size:12px;line-height:18px;color:#8F959E}',
-    '@media(max-width:1000px){.rea-wxd-info{grid-template-columns:minmax(0,1fr)}.rea-wxd-kv{grid-template-columns:repeat(2,minmax(0,1fr))!important}.rea-wxd-ring{margin-top:20px;padding:20px 0 0;border-top:1px solid #E5E8EF;border-left:0}}',
+    '.rea-wxd-extra{margin-left:auto;padding-bottom:4px;font-size:13px;line-height:20px;color:#646A73}',
+    '.rea-wxd-bar{display:flex;height:10px;margin-top:14px;border-radius:5px;overflow:hidden;background:#E9EDF3}',
+    '.rea-wxd-bar i{display:block;height:100%}',
+    '.rea-wxd-bar i.done{background:#1677FF}',
+    '.rea-wxd-bar i.open{background:#C9CED6}',
+    '.rea-wxd-bar i.warn{background:#FAAD14}',
+    '.rea-wxd-bar i.fail{background:#FF4D4F}',
+    '.rea-wxd-legend{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-top:10px;font-size:13px;line-height:20px;color:#646A73}',
+    '.rea-wxd-legend span{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}',
+    '.rea-wxd-legend i{width:8px;height:8px;border-radius:50%;background:#8F959E;flex:none}',
+    '.rea-wxd-legend .done i{background:#1677FF}',
+    '.rea-wxd-legend .open i{background:#C9CED6}',
+    '.rea-wxd-legend .warn i{background:#FAAD14}',
+    '.rea-wxd-legend .fail i{background:#FF4D4F}',
+    '.rea-wxd-legend b{font-weight:600;color:#1F2329}',
+    '.rea-wxd-overdue{margin-left:auto;font-size:12px;color:#646A73}',
+    '@media(max-width:900px){.rea-wxd-extra{margin-left:0}}',
     '.rea-wxd-tb{display:inline-flex;align-items:center;gap:6px;font-size:14px;line-height:22px;color:#1F2329}',
     '.rea-wxd-tb i{width:6px;height:6px;border-radius:50%;background:#8F959E;flex:none}',
     '.rea-wxd-tb.done i{background:#1677FF}',
@@ -27621,9 +27615,9 @@ for(i=0;i<rows.length;i++){
     '.rea-wxd-tb.open{color:#646A73}'
   ].join('\n');
 
-  /* 任务信息重排 + 演示表行。字段在左、进度环在右（关联好友的任务信息没有标题，
-     现场补一枚「任务信息」头），表行按 plan 重建 10 条；状态列改成点＋文字，
-     与环形图图例同色。群发好友的「群发好友数」仍是链接按钮，点击照旧开好友列表弹窗。 */
+  /* 进度卡 + 演示表行。插在任务信息之前（关联好友的任务信息在页头页签后面，
+     要插到页签之前，卡片才在第一屏），表行按 plan 重建 10 条；状态列改成点＋文字，
+     与卡片图例同色。群发好友的「群发好友数」仍是链接按钮，点击照旧开好友列表弹窗。 */
   function reaWxDetailJs(page){
     return String.raw`(function(){
 'use strict';
@@ -27646,33 +27640,25 @@ function rowOf(label){
   for(k=0;k<ps.length;k++){if(norm(ps[k].textContent).indexOf(label+'：')===0)return ps[k]}
   return null;
 }
-function setVal(label,v){
-  var p=rowOf(label);if(!p)return null;
+function valOf(label){
+  var p=rowOf(label);if(!p)return '';
   var sp=p.querySelectorAll('span');
-  if(sp.length<2)return p;
-  sp[sp.length-1].textContent=v;
-  return p;
+  return sp.length?norm(sp[sp.length-1].textContent):'';
 }
+var title=valOf('任务名称')||'';
 for(i=0;i<CFG.hide.length;i++){
   var hr=rowOf(CFG.hide[i]);
-  if(hr&&hr.parentNode)hr.parentNode.removeChild(hr);
+  if(hr)hr.style.display='none';
 }
 /* 演示口径：1 位执行人员、10 个好友，人均添加量跟着写 10（快照那条是 1，和补出来的表对不上） */
 if(PAGE==='批量加好友 · 详情'){
   var rg=rowOf('人均添加量');
   if(rg){var gs=rg.querySelectorAll('span');if(gs.length)gs[gs.length-1].textContent='10';}
 }
-/* 快照那条任务的有效期落在 2026-09/10，与补出来的 11 月执行流水对不上；
-   名称／状态／有效期现在回到字段里，值统一按演示口径写。 */
-setVal('任务状态',CFG.stateText);
-setVal('有效期',CFG.validity);
-if(CFG.created)setVal('创建时间',CFG.created);
-var validityRow=rowOf('有效期');
-if(validityRow&&validityRow.firstElementChild)validityRow.firstElementChild.textContent='任务有效期';
-
 var plan=CFG.plan,n=plan.length,c={done:0,open:0,warn:0,fail:0};
 for(i=0;i<n;i++)c[plan[i]]++;
 var done=c.done,pending=n-done;
+var pct=n?Math.round(done/n*100):0;
 function lb(v){return CFG.labels[v]||v}
 var U=CFG.unit==='items'?(' 个'+CFG.noun):' 人';
 var CU=CFG.unit==='items'?' 个':' 人';
@@ -27681,88 +27667,62 @@ if(!pending){
   summary=n+U+(CFG.unit==='items'?'全部完成':'全部执行完成');
 }else{
   var seg=[];
-  if(done)seg.push(done+CU+lb('done'));
+  if(done)seg.push(done+CU+'已执行');
   ['open','warn','fail'].forEach(function(v){if(c[v])seg.push(c[v]+CU+lb(v))});
   summary=n+U+'中 '+seg.join('，');
   if(CFG.state==='ended'&&pending)summary+='（其中 '+pending+CU+'已逾期）';
 }
-/* 环形图：一笔画完的圆按状态分段，从 12 点起顺时针；周长 2πr（r=50）。
-   段色与任务表的状态点同一套：蓝＝已执行、灰＝未执行、琥珀＝中断、红＝异常。 */
-var CIRC=2*Math.PI*50,segs='',acc=0;
+var bar='';
 ['done','open','warn','fail'].forEach(function(v){
-  if(!c[v])return;
-  var len=c[v]/n*CIRC;
-  segs+='<circle class="'+v+'" cx="60" cy="60" r="50" stroke-dasharray="'+len.toFixed(2)+' '+(CIRC-len).toFixed(2)+'" transform="rotate('+(acc/n*360).toFixed(2)+' 60 60)"></circle>';
-  acc+=c[v];
+  if(c[v])bar+='<i class="'+v+'" style="width:'+(c[v]/n*100)+'%"></i>';
 });
 var leg='';
 ['done','open','warn','fail'].forEach(function(v){
-  if(c[v])leg+='<div><i class="'+v+'"></i>'+lb(v)+'<b>'+c[v]+CU+'</b></div>';
+  if(c[v])leg+='<span class="'+v+'"><i></i>'+lb(v)+' <b>'+c[v]+'</b></span>';
 });
 var help=CFG.unit==='items'
   ?'按目标数统计：一位'+CFG.noun+'计 1 项；逾期含在未执行内。'
   :'按人次统计：一位执行人员计 1 次；逾期含在未执行内。';
-var foot=[];
-if(CFG.extra)foot.push(CFG.extra);
-if(CFG.state==='ended'&&pending)foot.push('其中 '+pending+CU+'已逾期');
-var ring=document.createElement('div');
-ring.className='rea-wxd-ring';
-ring.innerHTML=''
-+'<div class="rea-wxd-ring-hd">'
-+'<span class="rea-wxd-ring-t">'+(CFG.unit==='items'?'任务进度':'执行进度')+'<span class="rea-wxd-help" title="'+help+'">?</span></span>'
-+'<span>共 '+n+U+'</span>'
-+'</div>'
-+'<div class="rea-wxd-ring-bd">'
-+'<div class="rea-wxd-donut" role="img" aria-label="'+summary+'">'
-+'<svg viewBox="0 0 120 120"><circle class="track" cx="60" cy="60" r="50"></circle>'+segs+'</svg>'
-+'<div class="rea-wxd-donut-c"><b>'+done+'/'+n+'</b><span>'+lb('done')+'</span></div>'
-+'</div>'
-+'<div class="rea-wxd-ring-lg">'+leg+'</div>'
-+'</div>'
-+(foot.length?'<div class="rea-wxd-ring-ft">'+foot.join(' · ')+'</div>':'');
-/* 任务状态带一枚小徽标，与任务表的状态点同色（进行中蓝、已结束灰）。
-   rowOf 认「标签：」前缀，所以这一笔必须赶在去冒号之前。 */
-var stRow=rowOf('任务状态');
-if(stRow){
-  var stSp=stRow.querySelectorAll('span');
-  if(stSp.length>=2)stSp[stSp.length-1].innerHTML='<span class="rea-wxd-badge '+CFG.state+'"><i></i>'+CFG.stateText+'</span>';
+/* 已结束那句拆成两截：「已于 … 结束」照常，未完成人数前面加一枚琥珀色点，
+   颜色只落在点上，文字仍用主文字色，12–13px 下才读得清。 */
+var whenHtml=CFG.when;
+if(CFG.state==='ended'){
+  var wparts=whenHtml.split(' · ');
+  if(wparts.length>1)whenHtml=wparts[0]+' · <em class="rea-wxd-note"><i></i>'+wparts.slice(1).join(' · ')+'</em>';
 }
-/* 字段改成小灰标签在上、值在下的两行式；行序不动，值里的按钮照旧。
-   空行与空值行（如没有素材时的「素材」）直接摘掉，不占格子。 */
-var all=BODY.querySelectorAll('p');
-for(i=0;i<all.length;i++){
-  var pp=all[i];
-  if(!pp.parentNode)continue;
-  var pcs=pp.children;
-  if(!norm(pp.textContent)||(pcs.length>=2&&!norm(pcs[pcs.length-1].textContent))){
-    pp.parentNode.removeChild(pp);
-    continue;
-  }
-  if(pcs[0]&&pcs[0].tagName==='SPAN')pcs[0].textContent=pcs[0].textContent.replace(/[：:]\s*$/,'');
-}
-
-var card=BODY.parentNode;
-card.setAttribute('data-rea-wxd','1');
-var HEAD=card.querySelector('[class*="_task_information_header_"]');
-if(!HEAD){
-  HEAD=document.createElement('div');
-  HEAD.className='rea-wxd-hd';
-  HEAD.textContent='任务信息';
-  card.insertBefore(HEAD,BODY);
-}
-/* 配置快照入口：跟在「任务信息」标题后面，目标页名由当前页名推导。 */
+var capTotal='共 '+n+(CFG.unit==='items'?(' 个'+CFG.noun):' 人');
+var overdue=(CFG.state==='ended'&&pending)?'<span class="rea-wxd-overdue">其中 '+pending+CU+'已逾期</span>':'';
+var html=''
++'<div class="rea-wxd-top">'
++'<div class="rea-wxd-id"><h2 class="rea-wxd-name"></h2><span class="rea-wxd-state '+CFG.state+'"><i></i>'+CFG.stateText+'</span></div>'
++'</div>'
++'<div class="rea-wxd-when">'+whenHtml+'</div>'
++'<div class="rea-wxd-main">'
++'<strong class="rea-wxd-pct">'+(n?pct+'%':'—')+'</strong>'
++'<span class="rea-wxd-cap"><small>'+(CFG.unit==='items'?'任务进度':'执行进度')+'<span class="rea-wxd-help" title="'+help+'">?</span></small><b>'+capTotal+'</b></span>'
++(CFG.extra?'<span class="rea-wxd-extra">'+CFG.extra+'</span>':'')
++'</div>'
++'<div class="rea-wxd-bar" role="img" aria-label="'+summary+'">'+bar+'</div>'
++'<div class="rea-wxd-legend">'+leg+overdue+'</div>';
+var band=document.createElement('div');
+band.className='rea-wxd';
+band.setAttribute('data-rea-wxd','1');
+band.innerHTML=html;
+band.querySelector('.rea-wxd-name').textContent=title;
+/* 配置快照入口：六张详情页同一位置（进度卡右上角），目标页名由当前页名推导。 */
 var snap=document.createElement('a');
 snap.href='#';
 snap.className='rea-wxd-snap';
 snap.setAttribute('data-rea',PAGE.replace(' · 详情',' · 任务配置快照'));
-snap.textContent='查看任务配置快照 ›';
-HEAD.appendChild(snap);
-var info=document.createElement('div');
-info.className='rea-wxd-info';
-card.insertBefore(info,BODY);
-info.appendChild(BODY);
-BODY.classList.add('rea-wxd-kv');
-info.appendChild(ring);
+snap.textContent='查看任务配置快照';
+band.querySelector('.rea-wxd-top').appendChild(snap);
+var card=BODY.parentNode;
+var phc=card.closest?card.closest('.ant-page-header-content'):null;
+if(phc&&phc!==card&&card!==phc.firstElementChild){
+  phc.insertBefore(band,phc.firstElementChild);
+}else{
+  card.parentNode.insertBefore(band,card);
+}
 /* 表格：按表头文字找表，不认第几张（发圈页还有一张页签表） */
 function txtv(x){return norm(x&&x.textContent)}
 var heads=document.querySelectorAll('.ant-table-thead'),thead=null;
