@@ -11756,7 +11756,7 @@ setTimeout(sbScan,120);
 <script type="text/plain" id="srcOverview"><div class="rea-ov-page"><main class="ov-main"><div id="ov-home">
 <header class="ov-heading"><div><h1>使用总览</h1><div id="ov-home-scope" class="ov-muted ov-scope"></div></div><div class="ov-toolbar"><button type="button" class="ov-control ov-primary" data-value-action="report">汇报视图</button><div class="ov-periods" role="group" aria-label="统计时间范围"><button type="button" data-period="day">今日</button><button type="button" data-period="week">近一周</button><button type="button" data-period="month">近一月</button><button type="button" data-period="quarter">近三月</button></div><button type="button" class="ov-help ov-help-button ov-help-right" data-action="definitions" aria-label="数据说明" data-tip="数据说明">?</button></div></header>
 <section class="ov-value-section" aria-label="销售工作成果"><div class="ov-section-heading"><h2>销售工作成果</h2></div><div id="ov-value-scenes" class="ov-value-grid"></div></section>
-<div class="ov-section-heading ov-capabilities-heading"><h2>四项能力使用</h2></div><section class="ov-team-summary ov-panel" aria-label="团队使用摘要"><div id="ov-people-stats"></div><div id="ov-team-distribution"></div></section>
+<div class="ov-section-heading ov-capabilities-heading"><h2>团队使用情况<span class="ov-help" tabindex="0" role="img" aria-label="统计范围为本期四项能力的成功使用或执行记录。主动使用与自动执行可发生在同一员工身上，使用人数按员工去重；暂无记录不代表没有尝试。" data-tip="统计范围为本期四项能力的成功使用或执行记录。主动使用与自动执行可发生在同一员工身上，使用人数按员工去重；暂无记录不代表没有尝试。">?</span></h2><button type="button" class="ov-link" data-value-people="all">查看员工 →</button></div><section class="ov-team-summary ov-panel" aria-label="团队使用情况"><div id="ov-people-stats"></div><div id="ov-team-distribution"></div></section>
 <section class="ov-people ov-panel" aria-labelledby="ov-people-title"><div class="ov-section-heading"><h2 id="ov-people-title">使用人数趋势</h2><div class="ov-tabs" role="group" aria-label="使用趋势范围"><button data-team-mode="all">全部使用</button><button data-team-mode="proactive">主动使用</button><button data-team-mode="automated">自动执行</button></div></div><div class="ov-team-chart-note"><span id="ov-activity-note" class="ov-muted"></span></div><div id="ov-activity-chart"></div></section>
 <div class="ov-team-rankings"><section class="ov-panel ov-departments" aria-labelledby="ov-usage-title"><div class="ov-section-heading"><h2 id="ov-usage-title">部门与员工</h2><div class="ov-tabs" role="group" aria-label="使用情况维度"><button type="button" data-people-tab="department">部门</button><button type="button" data-people-tab="employee">员工</button></div></div><div id="ov-people-ranking"></div></section><section class="ov-panel ov-features" aria-labelledby="ov-features-title"><div class="ov-section-heading"><h2 id="ov-features-title">热门功能 Top 5<span class="ov-help" tabindex="0" role="img" aria-label="App 工具按主动使用次数从高到低展示前五项" data-tip="App 工具按主动使用次数从高到低展示前五项">?</span></h2><button type="button" class="ov-link" data-action="features">查看全部功能 →</button></div><div class="ov-feature-head"><span>排名</span><span>功能</span><span class="ov-feature-count">使用次数</span><span></span></div><div id="ov-feature-ranking"></div></section></div>
 <div class="ov-section-heading ov-resource-heading"><h2>企业资源 <span class="ov-tag">全公司</span><span class="ov-help" tabindex="0" role="img" aria-label="席位与余额为当前存量，点数消耗跟随所选时间。" data-tip="席位与余额为当前存量，点数消耗跟随所选时间。">?</span></h2></div><div class="ov-resources"><section class="ov-panel" aria-labelledby="ov-seats-title"><div class="ov-section-heading"><h2 id="ov-seats-title">版本席位</h2><button type="button" class="ov-link" data-action="seats">查看分配 →</button></div><div class="ov-seat-summary"><b>30 <small>/ 32 席已分配</small></b><span class="ov-tag">2 席待分配</span></div><div id="ov-seats" class="ov-tiers"></div></section><section class="ov-panel" aria-labelledby="ov-points-title"><div class="ov-section-heading"><h2 id="ov-points-title">AI 点数</h2><button type="button" class="ov-link" data-action="points">查看消耗明细 →</button></div><div class="ov-point-meter"><div class="ov-point-meter-head"><span>本期消耗 <b id="ov-points-total">0</b><small>点</small><em id="ov-points-used-share"></em></span><span>当前剩余 <b>42,000</b><small>点</small><em id="ov-points-rest-share"></em></span></div><div class="ov-point-meter-bar" role="img" aria-label="本期消耗与当前剩余占比"><i id="ov-points-used-bar" class="used"></i><i class="rest"></i></div></div><div class="ov-section-heading"><h3 id="ov-point-ranking-title">员工消耗 Top 5</h3><div class="ov-tabs" role="group" aria-label="点数消耗维度"><button type="button" data-points-tab="employee">员工</button><button type="button" data-points-tab="feature">功能</button></div></div><div id="ov-points-ranking"></div></section></div>
@@ -12881,18 +12881,11 @@ setTimeout(sbScan,120);
 .rea-ov-page .ov-coverage b {font-size:32px;color:#1F2329;line-height:1.3;font-weight:600;font-variant-numeric:tabular-nums;}
 .rea-ov-page .ov-coverage b small {font-size:14px;font-weight:400;color:#646A73;}
 .rea-ov-page .ov-coverage>span:last-child {font-size:12px;}
-.rea-ov-page .ov-distribution-head {display:flex;align-items:center;justify-content:space-between;gap:16px;}
-.rea-ov-page .ov-distribution-head h2 {font-size:14px;}
-.rea-ov-page .ov-distribution-bar {display:flex;height:8px;gap:2px;margin:16px 0;border-radius:6px;overflow:hidden;}
-.rea-ov-page .ov-kind-both {background:#1677FF;}
-.rea-ov-page .ov-kind-active {background:#69B1FF;}
-.rea-ov-page .ov-kind-automatic {background:#BAE0FF;}
-.rea-ov-page .ov-kind-none {background:#E5E8EF;}
-.rea-ov-page .ov-distribution-labels {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;}
-.rea-ov-page .ov-distribution-labels button {padding:0;border:0;background:none;text-align:left;font-size:12px;white-space:nowrap;}
-.rea-ov-page .ov-distribution-labels i {display:inline-block;width:8px;height:8px;margin-right:8px;}
-.rea-ov-page .ov-distribution-labels strong {display:block;font-size:20px;font-weight:600;padding-left:16px;margin-top:4px;}
-.rea-ov-page .ov-distribution-labels small {font-weight:400;font-size:12px;color:#646A73;}
+.rea-ov-page .ov-team-stats {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;align-content:center;}
+.rea-ov-page .ov-team-stat {display:flex;flex-direction:column;gap:4px;padding:0 0 0 24px;border:0;border-left:1px solid #E5E8EF;background:none;text-align:left;color:#646A73;font-size:12px;}
+.rea-ov-page .ov-team-stat:first-child {border-left:0;padding-left:0;}
+.rea-ov-page .ov-team-stat b {font-size:20px;font-weight:600;color:#1F2329;font-variant-numeric:tabular-nums;}
+.rea-ov-page .ov-team-stat b small {font-size:12px;font-weight:400;color:#646A73;}
 .rea-ov-page .ov-value-section {margin:24px 0;}
 .rea-ov-page .ov-value-scene {padding:24px;min-width:0;min-height:180px;}
 .rea-ov-page .ov-value-scene>.ov-section-heading {margin-bottom:16px;}
@@ -12907,8 +12900,8 @@ setTimeout(sbScan,120);
 .rea-ov-page .ov-cap-secondary button {display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;min-height:32px;}
 .rea-ov-page .ov-cap-secondary strong {font-size:14px;font-weight:600;color:#1F2329;white-space:nowrap;}
 .rea-ov-page .ov-cap-secondary i {font-style:normal;color:#8F959E;}
-.rea-ov-page .ov-cap-main:hover b,.rea-ov-page .ov-cap-secondary button:hover strong,.rea-ov-page .ov-distribution-labels button:hover strong,.rea-ov-page .ov-coverage:hover b {color:#1677FF;}
-.rea-ov-page .ov-cap-main:active,.rea-ov-page .ov-cap-secondary button:active,.rea-ov-page .ov-distribution-labels button:active {opacity:.7;}
+.rea-ov-page .ov-cap-main:hover b,.rea-ov-page .ov-cap-secondary button:hover strong,.rea-ov-page .ov-team-stat:hover b,.rea-ov-page .ov-coverage:hover b {color:#1677FF;}
+.rea-ov-page .ov-cap-main:active,.rea-ov-page .ov-cap-secondary button:active,.rea-ov-page .ov-team-stat:active {opacity:.7;}
 .rea-ov-page .ov-people,.rea-ov-page .ov-departments,.rea-ov-page .ov-resource-summary {margin-bottom:24px;}
 .rea-ov-page .ov-team-rankings {display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:24px;margin-bottom:0;}
 .rea-ov-page .ov-team-rankings > .ov-panel {margin-bottom:0;}
@@ -12935,7 +12928,7 @@ setTimeout(sbScan,120);
  .rea-ov-page .ov-cap-content {gap:16px;}
  .rea-ov-page .ov-cap-secondary {padding-left:16px;}
  .rea-ov-page .ov-cap-secondary button {align-items:flex-start;flex-direction:column;gap:0;}
- .rea-ov-page .ov-distribution-labels {gap:8px;}
+ .rea-ov-page .ov-team-stats {gap:16px;}
 }
 @media(max-width:1050px) {
  .rea-ov-page .ov-value-grid {grid-template-columns:1fr;}
@@ -12948,7 +12941,7 @@ setTimeout(sbScan,120);
 @media(max-width:640px) {
  .rea-ov-page .ov-cap-content,.rea-ov-page .ov-detail-work {grid-template-columns:1fr;}
  .rea-ov-page .ov-cap-secondary {border:0;padding-left:0;}
- .rea-ov-page .ov-distribution-labels {grid-template-columns:repeat(2,minmax(0,1fr));}
+ .rea-ov-page .ov-team-stats {grid-template-columns:repeat(2,minmax(0,1fr));}
  .rea-ov-page .ov-resource-metrics {gap:16px;}
 }
 
@@ -13978,9 +13971,9 @@ setTimeout(sbScan,120);
   }
   function renderPeople() {
     const people=valuePeople(),used=people.filter(p=>p.kind!=='none').length;
-    $('#ov-people-stats').innerHTML=`<button class="ov-coverage" data-value-people="used" data-value="${used}"><span>四项能力使用人数</span><b>${used}<small> / ${people.length} 人</small></b><span>覆盖率 ${ratio(used,people.length)}</span></button>`;
-    const groups=[['both','两类都有'],['active','仅主动使用'],['automatic','仅自动执行'],['none','暂无记录']].map(([kind,label])=>({kind,label,count:people.filter(p=>p.kind===kind).length}));
-    $('#ov-team-distribution').innerHTML=`<div class="ov-distribution-head"><h2>团队使用情况${helpSpan('仅统计四项能力的成功使用或执行记录。四种状态互斥，合计为已授权员工。暂无记录不代表没有尝试；完整名单可查看尝试情况。')}</h2><button class="ov-link" data-value-people="all">查看员工 →</button></div><div class="ov-distribution-bar" aria-hidden="true">${groups.map(g=>`<span class="ov-kind-${g.kind}" style="flex:${g.count}"></span>`).join('')}</div><div class="ov-distribution-labels">${groups.map(g=>`<button data-value-people="${g.kind}" data-value="${g.count}"><i class="ov-kind-${g.kind}"></i>${g.label}<strong>${g.count}<small> 人</small></strong></button>`).join('')}</div>`;
+    $('#ov-people-stats').innerHTML=`<button class="ov-coverage" data-value-people="used" data-value="${used}"><span>使用员工</span><b>${used}<small> / ${people.length} 人</small></b><span>覆盖率 ${ratio(used,people.length)}</span></button>`;
+    const stats=[['proactive','主动使用',people.filter(p=>p.active).length,'取用素材或采纳 AI 建议'],['automated','自动执行',people.filter(p=>p.automatic).length,'任务、托管或自动回复有成功记录'],['none','暂无使用记录',people.length-used,'本期四项能力均无成功使用记录']];
+    $('#ov-team-distribution').innerHTML=`<div class="ov-team-stats">${stats.map(([kind,label,count,note])=>`<button class="ov-team-stat" data-value-people="${kind}" data-value="${count}"><span>${label}</span><b>${count}<small> 人</small></b><small>${note}</small></button>`).join('')}</div>`;
     const records = teamRecords(teamMode);
     const days = periods[period].days;
     const bucketSize = days > 30 ? 7 : 1;
@@ -27484,6 +27477,115 @@ for(i=0;i<rows.length;i++){
   ].join('\n');
 
   /* ============================================================
+     微信营销任务列表 ·「群发内容」列（2026-11-13）
+
+     发圈、群发好友的列表本来就有「群发内容」列，但写的是素材名，看不出实际发出去什么；
+     群发群组只有「群发内容数量」，没有内容本身。三张列表统一：单元格固定一枚「查看」，
+     点开按发送场景预览——发圈按朋友圈排版，群发好友是客户收到的单聊气泡，
+     群发群组是群里收到的样子。弹窗沿用任务配置快照那套（reaWxPreviewContent），
+     只补一行按列名找列的接线，不动 _online-admin.js。 */
+  var REA_WX_LIST = {
+    '发圈': [
+      {kind:'moments', name:'张伟', title:'秋季新品主推 · 朋友圈图文', source:'云小助', location:'上海静安嘉里中心'},
+      {kind:'moments', name:'李娜', title:'国庆活动预告 · 预热视频', source:'云小助', location:'上海静安嘉里中心'},
+      {kind:'moments', name:'王强', title:'门店周年庆 · 长图文', source:'云小助', location:'上海静安嘉里中心'}
+    ],
+    '群发好友': [
+      {kind:'chat', from:'王强', text:'王哥您好，秋季新品已经到店，给您留了两套，方便的话我发您看看～'},
+      {kind:'chat', from:'李娜', text:'双十一活动提前预告：全场满减，老客户再享专属折扣，详情见图。'},
+      {kind:'chat', from:'张伟', text:'中秋快到了，祝您和家人节日快乐！'}
+    ],
+    '群发群组': [
+      {kind:'group', group:'行业交流群', text:'今日行业早报：政策动态、竞品上新与门店运营小技巧，详见群文件。'},
+      {kind:'group', group:'客户服务群', text:'本周社群活动安排：周六下午 2 点门店体验课，报名接龙～'},
+      {kind:'group', group:'门店客户群', text:'新品到货提醒：本批数量有限，需要的家人群里回复 1 预留。'}
+    ]
+  };
+
+  /* 列表页只补「查看」这枚按钮和弹窗；文案、表格其余列都还是快照原样。 */
+  function reaWxListJs(page){
+    var demo = REA_WX_LIST[page] || [];
+    var bodies = [], kinds = [], i;
+    for(i=0;i<demo.length;i++){
+      bodies.push(reaWxPreviewContent(demo[i]));
+      kinds.push(demo[i].kind);
+    }
+    return String.raw`(function(){
+'use strict';
+var BODIES=${reaJson(bodies)};
+var KINDS=${reaJson(kinds)};
+function txt(n){return String(n&&n.textContent!=null?n.textContent:'').replace(/\s+/g,'')}
+var tables=document.querySelectorAll('table'),HT=null,BT=null,i,k;
+/* AntD 把表头和表体拆成两张 table：表头那张带 thead，数据行在另一张的 tbody 里 */
+for(i=0;i<tables.length;i++){
+  var hd=tables[i].querySelector('thead');
+  if(hd&&txt(hd).indexOf('任务名称')>-1){HT=tables[i];break}
+}
+if(!HT)return;
+for(i=0;i<tables.length;i++){
+  if(tables[i].querySelector('tbody tr.ant-table-row')){BT=tables[i];break}
+}
+if(!BT)return;
+var ths=HT.querySelectorAll('thead th'),idx=-1,insert=false;
+for(i=0;i<ths.length;i++){if(txt(ths[i])==='群发内容'){idx=i;break}}
+if(idx<0){
+  for(i=0;i<ths.length;i++){if(txt(ths[i])==='群发内容数量'){idx=i;insert=true;break}}
+}
+if(idx<0)return;
+/* 群发群组：在「群发内容数量」前补一列，两张表的 colgroup / 表头 / 每行各插一格 */
+if(insert){
+  var cgH=HT.querySelector('colgroup'),cgB=BT.querySelector('colgroup');
+  if(cgH)cgH.insertBefore(document.createElement('col'),cgH.children[idx]||null);
+  if(cgB)cgB.insertBefore(document.createElement('col'),cgB.children[idx]||null);
+  var th=document.createElement('th');
+  th.className=ths[idx].className;
+  th.textContent='群发内容';
+  ths[idx].parentNode.insertBefore(th,ths[idx]);
+  var brows=BT.querySelectorAll('tbody tr.ant-table-row');
+  for(i=0;i<brows.length;i++){
+    var ctd=document.createElement('td');
+    ctd.className='ant-table-cell';
+    brows[i].insertBefore(ctd,brows[i].children[idx]||null);
+  }
+}
+var bodyRows=BT.querySelectorAll('tbody tr.ant-table-row'),n=0;
+for(i=0;i<bodyRows.length;i++){
+  var r=bodyRows[i];
+  var td=r.children[idx];
+  if(!td)continue;
+  td.textContent='';
+  var b=document.createElement('button');
+  b.type='button';b.className='rea-wxs-link';b.textContent='查看';
+  b.setAttribute('data-rea-wxl',String(n));
+  td.appendChild(b);
+  n++;
+}
+function close(w){if(w&&w.parentNode)w.parentNode.removeChild(w);document.removeEventListener('keydown',onKey)}
+function onKey(e){if(e.key==='Escape'||e.keyCode===27){var w=document.querySelector('[data-rea-wxl-modal]');if(w)close(w)}}
+function open(n){
+  var old=document.querySelector('[data-rea-wxl-modal]');if(old)close(old);
+  var kind=KINDS[n]||'chat';
+  var cls=kind==='moments'?'rea-fqc-modal':'rea-wxs-modal';
+  var width=kind==='moments'?'560px':'420px';
+  var w=document.createElement('div');
+  w.className='ant-modal-root css-vgijab';w.setAttribute('data-rea-wxl-modal','1');
+  w.innerHTML='<div class="ant-modal-mask"></div><div class="ant-modal-wrap ant-modal-centered"><div class="ant-modal css-vgijab '+cls+'" role="dialog" aria-modal="true" style="width:'+width+'">'+(BODIES[n]||BODIES[0]||'')+'</div></div>';
+  document.body.appendChild(w);
+  w.querySelector('.ant-modal-close').addEventListener('click',function(){close(w)});
+  var f=w.querySelector('[data-wxs-close]');if(f)f.addEventListener('click',function(){close(w)});
+  var m=w.querySelector('.ant-modal-wrap');if(m)m.addEventListener('click',function(e){if(e.target===m)close(w)});
+  document.addEventListener('keydown',onKey);
+}
+BT.addEventListener('click',function(e){
+  var b=e.target&&e.target.closest?e.target.closest('[data-rea-wxl]'):null;
+  if(!b)return;
+  e.preventDefault();e.stopPropagation();
+  open(parseInt(b.getAttribute('data-rea-wxl'),10)||0);
+});
+})();`;
+  }
+
+  /* ============================================================
      微信营销任务 · 任务详情任务信息（2026-11-13 重排）
 
      六张详情页（发圈／群发好友／群发群组／批量加好友／关联好友／客户唤醒）
@@ -31665,6 +31767,11 @@ syncTip();drawRows();
     [REA_YQ_LEADS]: { css: REA_YQ_CSS, js: function(){ return reaYqJs('leads'); } },
     [REA_YQ_LEAD_DETAIL]: { css: REA_YQ_CSS, js: function(){ return reaYqJs('lead-detail'); } },
     [REA_YQ_SNAPSHOT]: { css: REA_YQ_CSS, js: function(){ return reaYqJs('snapshot'); } },
+    /* 三张内容型任务的列表（2026-11-13）：「群发内容」固定一枚「查看」，点开预览发送内容；
+       群发群组原本没有这一列，补在「群发内容数量」前面。 */
+    '发圈': { css: REA_FQ_DETAIL_CSS + REA_WX_SNAP_CSS, js: function(){ return reaWxListJs('发圈'); } },
+    '群发好友': { css: REA_WX_SNAP_CSS, js: function(){ return reaWxListJs('群发好友'); } },
+    '群发群组': { css: REA_WX_SNAP_CSS, js: function(){ return reaWxListJs('群发群组'); } },
     /* 六张微信营销任务详情页（2026-11-10）：共用一张执行进度卡与 10 条演示表行。
        前面那段 js 是各页原有的任务信息回显，进度卡排在它后面（先补行、再收行）。 */
     '群发好友 · 详情': { css: REA_QF_CSS + REA_WX_DETAIL_CSS, js: function(){ return reaQfDetailJs() + reaWxDetailJs('群发好友 · 详情'); } },
