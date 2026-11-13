@@ -2666,9 +2666,9 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 @keyframes pulse{0%{box-shadow:var(--e3),0 0 0 4px rgba(255,255,255,.7)}50%{box-shadow:0 4px 12px 2px rgba(186,26,26,.45),0 0 0 9px rgba(186,26,26,.18)}100%{box-shadow:var(--e3),0 0 0 4px rgba(255,255,255,.7)}}
 /* 聊天辅助的折叠态是**一条横条**，不是球（ADR-0096）：点浮层底部那条药丸，面板压扁成横条；
    点横条展开。它只属于聊天辅助，全局素材球照旧独立、恒在。
-   条与面板同宽，落在面板原先底边那一格——折叠时以底边为轴压下去，读得出「这块面板变成了这条」。
+   条与面板同宽，落在面板原先顶边那一格——折叠时以顶边为轴向上收，读得出「这块面板向上收成了这条」。
    高度 44＝可点下限，宽度沿用面板 384.5；底色与面板同一套渐变，绿点跟头部「已就位」同色同义。 */
-.ai-bar{position:absolute;left:14px;top:412.8px;width:384.5px;height:44px;border-radius:16.5px;
+.ai-bar{position:absolute;left:14px;top:47px;width:384.5px;height:44px;border-radius:16.5px;
   background:linear-gradient(90deg,#EEEFFF,#F0F1FF);
   box-shadow:inset 0 0 0 2px rgba(255,255,255,.6),var(--e3);
   display:flex;align-items:center;gap:6px;padding:0 14px 0 14.8px;
@@ -2682,7 +2682,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .ai-bar:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
 /* 横条「等面板压完再出现」（ADR-0088 的交接口径）：时长与延迟由 aiBarShow() 按 PMOT 写成内联，
    这里只定名字与填充方式——类摘掉即回到常态。 */
-@keyframes barIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes barIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
 .ai-bar.anim-in{animation-name:barIn;animation-fill-mode:both;animation-timing-function:var(--emph)}
 .ball-badge{position:absolute;top:-4px;right:-4px;min-width:19px;height:19px;border-radius:10px;background:var(--error);color:#fff;
   font-size:10.5px;font-weight:500;display:none;align-items:center;justify-content:center;padding:0 5px;box-shadow:0 0 0 2.5px #fff}
@@ -2903,15 +2903,15 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 @keyframes panelSwapIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
 .panel.anim-out{animation:panelSwapOut .18s var(--emph) forwards;pointer-events:none}
 .panel.anim-in{animation:panelSwapIn .36s var(--emph) .06s both}
-/* 收起成横条（ADR-0096）：面板以**底边**为轴压扁成那条横条——条就落在它原先底边那一格。
+/* 收起成横条（ADR-0096）：面板以**顶边**为轴往上收成那条横条——条就落在它原先顶边那一格。
    时长与 PMOT.toBar 一致（220ms）；横条在面板落定的同一拍按 PMOT.barDelay 淡入，两者正好交班。
    前 55% 保持不透明：先让面板一路压成一条，再淡出——中途就透明的话，读不出「这块面板变成了这条」。
-   transform-origin 写在下面那条规则里（50% 100%），压扁时底边不动，横条的顶边正好接在压下来的那条上。 */
+   transform-origin 写在下面那条规则里（50% 0），压扁时顶边不动、底边一路抬上来，横条正好落在原顶边那一格。 */
 @keyframes panelToBar{from{opacity:1;transform:none;border-radius:16.5px}
   55%{opacity:1}
-  to{opacity:0;transform:scale(1,.09);border-radius:16.5px}}
+  to{opacity:0;transform:scale(1,.107);border-radius:16.5px}} /* .107 ≈ 44／409.8：压到与横条同高 */
 /* #hpPanel 也在列（ADR-0093）：从二级页收起时屏上那张卡就是清单，压成横条的是它，不是被它盖住的辅助浮层 */
-#aiPanel.to-bar,#hpPanel.to-bar{transform-origin:50% 100%;animation:panelToBar .22s var(--emph) forwards;pointer-events:none}
+#aiPanel.to-bar,#hpPanel.to-bar{transform-origin:50% 0;animation:panelToBar .22s var(--emph) forwards;pointer-events:none}
 /* 系统开了「减弱动效」时全部瞬切；JS 侧 pmotOff() 也会直接走同步分支，这里是第二道保险。
    .panel／.bmenu 也要列进去：它们首次打开走的是基类的入场动画，不归 panelShow 管。 */
 @media (prefers-reduced-motion:reduce){.panel,.bmenu,.panel.anim-out,.panel.anim-in,.panel.to-bar,.ai-bar.anim-in,.bmenu.anim-out,.ball.glide{animation:none;transition:none}}
@@ -4056,7 +4056,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
           <div class="ball" id="ball" style="right:12px;bottom:120px"></div>
           <!-- 聊天辅助的折叠态＝一条横条（ADR-0096）：点浮层底部那条药丸，面板压扁成它；点它展开。
                只属于聊天辅助，与全局素材球无关（全局球恒在，素材面板开时也不收起）。
-               位置由 aiCollapseToBar() 写成 left/top：与面板同宽，落在面板原先底边那一格；
+               位置由 aiCollapseToBar() 写成 left/top：与面板同宽，落在面板原先顶边那一格；
                只在辅助开过、当前没展开、且屏上没有别的浮层时出现。 -->
           <button type="button" class="ai-bar" id="aiBar" style="display:none" onclick="openAiPanel()" aria-label="展开聊天辅助"></button>
           <!-- 原「命中推荐弹卡」#recPop 已于 2026-10-15 整块删除（ADR-0061）：未开启聊天辅助时的命中
@@ -9768,12 +9768,12 @@ function closeBallMenu(instant){ /* 幂等：元素缺失、本来没开都不�
 function pickLib(){closeBallMenu();openPanel()}
 function pickRa(){closeBallMenu();openAiPanel()}
 /* ---------- 聊天辅助的折叠态＝一条横条（ADR-0096）----------
-   点浮层底部那条药丸，面板以底边为轴压扁成 #aiBar；点横条重新展开。收起不再做成球：
+   点浮层底部那条药丸，面板以顶边为轴向上收成 #aiBar；点横条重新展开。收起不再做成球：
    全局素材球只代表素材库这一个模块，聊天辅助再挂一颗球会让「哪颗球是哪个模块」变成要记的事。
    出现条件三条：①这个模块开过（aiBarOn——没开过不凭空长出一条）；②当前没展开（aiOpen=false）；
    ③屏上没有别的浮层（素材库面板／命中清单都和它抢同一块地方，横条比球大，压在别人身上更难看）。
    浮层右上角那枚 ✕＝关闭（ADR-0096）会把 aiBarOn 落回 false——那一下不留横条，
-   下次从入口打开再收起才回来。位置每次收起时现算：与面板同宽，落在面板原先底边那一格。 */
+   下次从入口打开再收起才回来。位置每次收起时现算：与面板同宽，落在面板原先顶边那一格。 */
 var aiBarOn=false,AI_BAR_H=44; /* AI_BAR_H 要与 CSS 的 .ai-bar height 一致 */
 function aiBarInit(){
   var b=$('aiBar');if(!b)return;
@@ -10987,7 +10987,7 @@ function hpResumeChild(){
   var b=$('hpBody');if(b)b.scrollTop=hpScroll;
   var ph=$('hpHead');if(ph&&!ph._dragged){panelDrag(ph);ph._dragged=true}
 }
-/* 收起成横条（ADR-0096）：面板以底边为轴压扁成 #aiBar，横条落在面板原先底边那一格。
+/* 收起成横条（ADR-0096）：面板以顶边为轴向上收成 #aiBar，横条落在面板原先顶边那一格。
    位置按 412×916 布局像素现算，不受外层 .phone 的 scale 影响；时长＝PMOT.toBar（220ms），
    横条的进场延迟也是 PMOT.toBar——面板落 display:none 的同一下条开始淡入，正好交班。
    减弱动效或时长为 0 时不走这条，由 closeAiPanel 落回 panelHide 的同步分支。 */
@@ -10998,7 +10998,7 @@ function aiCollapseToBar(p){
   var bar=$('aiBar');
   if(bar){
     bar.style.left=Math.max(4,Math.min(p.offsetLeft,412-p.offsetWidth-4))+'px';
-    bar.style.top=Math.max(44,Math.min(p.offsetTop+p.offsetHeight-AI_BAR_H,916-AI_BAR_H-16))+'px';
+    bar.style.top=Math.max(4,Math.min(p.offsetTop,916-AI_BAR_H-16))+'px';
   }
   p.classList.add('to-bar');
   p._pt=setTimeout(function(){
