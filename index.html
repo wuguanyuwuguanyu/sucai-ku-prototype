@@ -11756,7 +11756,7 @@ setTimeout(sbScan,120);
 <script type="text/plain" id="srcOverview"><div class="rea-ov-page"><main class="ov-main"><div id="ov-home">
 <header class="ov-heading"><div><h1>使用总览</h1><div id="ov-home-scope" class="ov-muted ov-scope"></div></div><div class="ov-toolbar"><button type="button" class="ov-control ov-primary" data-value-action="report">汇报视图</button><div class="ov-periods" role="group" aria-label="统计时间范围"><button type="button" data-period="day">今日</button><button type="button" data-period="week">近一周</button><button type="button" data-period="month">近一月</button><button type="button" data-period="quarter">近三月</button></div><button type="button" class="ov-help ov-help-button ov-help-right" data-action="definitions" aria-label="数据说明" data-tip="数据说明">?</button></div></header>
 <section class="ov-value-section" aria-label="销售工作成果"><div class="ov-section-heading"><h2>销售工作成果</h2></div><div id="ov-value-scenes" class="ov-value-grid"></div></section>
-<section class="ov-panel ov-more"><button type="button" class="ov-link" data-value-action="more" aria-expanded="false">更多场景 <span>⌄</span></button><div id="ov-more-scenes" hidden></div></section><div class="ov-section-heading ov-capabilities-heading"><h2>四项能力使用</h2><div class="ov-capability-links"><button class="ov-link" data-scene="material">素材与话术 →</button><button class="ov-link" data-scene="tasks">任务执行 →</button><button class="ov-link" data-scene="auto">自动回复 →</button><button class="ov-link" data-scene="assist">辅助回复 →</button></div></div><section class="ov-team-summary ov-panel" aria-label="团队使用摘要"><div id="ov-people-stats"></div><div id="ov-team-distribution"></div></section>
+<div class="ov-section-heading ov-capabilities-heading"><h2>四项能力使用</h2></div><section class="ov-team-summary ov-panel" aria-label="团队使用摘要"><div id="ov-people-stats"></div><div id="ov-team-distribution"></div></section>
 <section class="ov-people ov-panel" aria-labelledby="ov-people-title"><div class="ov-section-heading"><h2 id="ov-people-title">使用人数趋势</h2><div class="ov-tabs" role="group" aria-label="使用趋势范围"><button data-team-mode="all">全部使用</button><button data-team-mode="proactive">主动使用</button><button data-team-mode="automated">自动执行</button></div></div><div class="ov-team-chart-note"><span id="ov-activity-note" class="ov-muted"></span></div><div id="ov-activity-chart"></div></section>
 <div class="ov-team-rankings"><section class="ov-panel ov-departments" aria-labelledby="ov-usage-title"><div class="ov-section-heading"><h2 id="ov-usage-title">部门与员工</h2><div class="ov-tabs" role="group" aria-label="使用情况维度"><button type="button" data-people-tab="department">部门</button><button type="button" data-people-tab="employee">员工</button></div></div><div id="ov-people-ranking"></div></section><section class="ov-panel ov-features" aria-labelledby="ov-features-title"><div class="ov-section-heading"><h2 id="ov-features-title">热门功能 Top 5<span class="ov-help" tabindex="0" role="img" aria-label="App 工具按主动使用次数从高到低展示前五项" data-tip="App 工具按主动使用次数从高到低展示前五项">?</span></h2><button type="button" class="ov-link" data-action="features">查看全部功能 →</button></div><div class="ov-feature-head"><span>排名</span><span>功能</span><span class="ov-feature-count">使用次数</span><span></span></div><div id="ov-feature-ranking"></div></section></div>
 <div class="ov-section-heading ov-resource-heading"><h2>企业资源 <span class="ov-tag">全公司</span><span class="ov-help" tabindex="0" role="img" aria-label="席位与余额为当前存量，点数消耗跟随所选时间。" data-tip="席位与余额为当前存量，点数消耗跟随所选时间。">?</span></h2></div><div class="ov-resources"><section class="ov-panel" aria-labelledby="ov-seats-title"><div class="ov-section-heading"><h2 id="ov-seats-title">版本席位</h2><button type="button" class="ov-link" data-action="seats">查看分配 →</button></div><div class="ov-seat-summary"><b>30 <small>/ 32 席已分配</small></b><span class="ov-tag">2 席待分配</span></div><div id="ov-seats" class="ov-tiers"></div></section><section class="ov-panel" aria-labelledby="ov-points-title"><div class="ov-section-heading"><h2 id="ov-points-title">AI 点数</h2><button type="button" class="ov-link" data-action="points">查看消耗明细 →</button></div><div class="ov-point-meter"><div class="ov-point-meter-head"><span>本期消耗 <b id="ov-points-total">0</b><small>点</small><em id="ov-points-used-share"></em></span><span>当前剩余 <b>42,000</b><small>点</small><em id="ov-points-rest-share"></em></span></div><div class="ov-point-meter-bar" role="img" aria-label="本期消耗与当前剩余占比"><i id="ov-points-used-bar" class="used"></i><i class="rest"></i></div></div><div class="ov-section-heading"><h3 id="ov-point-ranking-title">员工消耗 Top 5</h3><div class="ov-tabs" role="group" aria-label="点数消耗维度"><button type="button" data-points-tab="employee">员工</button><button type="button" data-points-tab="feature">功能</button></div></div><div id="ov-points-ranking"></div></section></div>
@@ -12975,12 +12975,7 @@ setTimeout(sbScan,120);
 .rea-ov-page .ov-result-footer{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:12px;color:#646A73}
 .rea-ov-page .ov-result-footer b{font-weight:500;color:#1F2329;margin-left:4px}
 .rea-ov-page .ov-result-footer .ov-link{font-size:12px}
-.rea-ov-page .ov-more{padding:16px 24px;margin-bottom:24px}
-.rea-ov-page .ov-more-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:24px}
-.rea-ov-page .ov-more-grid>div{display:grid;gap:16px;font-size:14px;color:#646A73}
 .rea-ov-page .ov-capabilities-heading{margin-top:24px}
-.rea-ov-page .ov-capability-links{display:flex;flex-wrap:wrap;gap:16px}
-.rea-ov-page .ov-capability-links .ov-link{font-size:12px}
 .rea-ov-page .ov-estimate-table{width:100%;border-collapse:collapse;margin:24px 0;font-size:14px}
 .rea-ov-page .ov-estimate-table th,.rea-ov-page .ov-estimate-table td{padding:12px 8px;text-align:left;border-bottom:1px solid #E9EEF6}
 .rea-ov-page .ov-estimate-table input{width:80px;padding:8px;border:1px solid #E5E8EF;border-radius:8px;font:inherit}
@@ -12991,7 +12986,7 @@ setTimeout(sbScan,120);
 .rea-ov-page #ov-report .ov-value-intro{padding:8px}
 .rea-ov-page [hidden]{display:none!important}
 @media(max-width:1150px){.rea-ov-page .ov-value-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.rea-ov-page .ov-execution-summary{gap:24px}}
-@media(max-width:750px){.rea-ov-page .ov-value-grid{grid-template-columns:1fr}.rea-ov-page .ov-value-intro{align-items:flex-start;flex-direction:column;gap:24px}.rea-ov-page .ov-more-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.rea-ov-page .ov-time-value{font-size:32px}.rea-ov-page .ov-capabilities-heading{align-items:flex-start;flex-direction:column}}
+@media(max-width:750px){.rea-ov-page .ov-value-grid{grid-template-columns:1fr}.rea-ov-page .ov-value-intro{align-items:flex-start;flex-direction:column;gap:24px}.rea-ov-page .ov-time-value{font-size:32px}.rea-ov-page .ov-capabilities-heading{align-items:flex-start;flex-direction:column}}
 
 /* Four business scenes and one efficiency card, in the same grid. */
 .rea-ov-page .ov-value-section{margin-top:24px}
@@ -13856,7 +13851,6 @@ setTimeout(sbScan,120);
   function renderValue() {
     const records=valueRecords();
     $('#ov-value-scenes').innerHTML=valueCards(records);
-    $('#ov-more-scenes').innerHTML=`<div class="ov-more-grid">${['publish','firstTouch'].map(m=>metricButton(m,records)).join('')}<div><span>群发送</span><b>未接入</b></div><div><span>邀请入群 / 确认入群</span><b>未接入</b></div></div>`;
   }
   function estimateRows(records,seconds=valueSeconds,editable=false) {
     const e=estimateValue(records,seconds);
@@ -13883,7 +13877,6 @@ setTimeout(sbScan,120);
   function valueAction(action) {
     if(action==='report'){reportScroll=scroller().scrollTop;reportMode=true;reportCumulative=false;$('#ov-home').hidden=true;$('#ov-report').hidden=false;renderReport();const tree=document.querySelector('.yk-lefttree');if(tree)tree.hidden=true;scroller().scrollTop=0;}
     if(action==='exit-report'){reportMode=false;$('#ov-report').hidden=true;const tree=document.querySelector('.yk-lefttree');if(tree)tree.hidden=false;render();scroller().scrollTop=reportScroll;}
-    if(action==='more'){const area=$('#ov-more-scenes');area.hidden=!area.hidden;root.querySelector('[data-value-action="more"]').setAttribute('aria-expanded',!area.hidden);}
     if(action==='estimate')openEstimate();
     if(action==='cancel-estimate')$('#ov-dialog').close();
     if(action==='defaults'){root.querySelectorAll('[data-estimate-input]').forEach((el,i)=>el.value=valueDefaults[i]);updateEstimatePreview();}
