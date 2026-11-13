@@ -27527,10 +27527,11 @@ for(i=0;i<rows.length;i++){
      微信营销任务列表 ·「群发内容」列（2026-11-13）
 
      发圈、群发好友的列表本来就有「群发内容」列，但写的是素材名，看不出实际发出去什么；
-     群发群组只有「群发内容数量」，没有内容本身。三张列表统一：单元格固定一枚「查看」，
-     点开按发送场景预览——发圈按朋友圈排版，群发好友是客户收到的单聊气泡，
-     群发群组是群里收到的样子。弹窗沿用任务配置快照那套（reaWxPreviewContent），
-     只补一行按列名找列的接线，不动 _online-admin.js。 */
+     群发群组只有「群发内容数量」，没有内容本身；客户唤醒的「唤醒内容」同样只有一行素材名。
+     四张列表统一：单元格固定一枚「查看」，点开按发送场景预览——发圈按朋友圈排版，
+     群发好友与客户唤醒是客户收到的单聊气泡，群发群组是群里收到的样子。
+     弹窗沿用任务配置快照那套（reaWxPreviewContent），只补一行按列名找列的接线，
+     不动 _online-admin.js。 */
   var REA_WX_LIST = {
     '发圈': [
       {kind:'moments', name:'张伟', title:'秋季新品主推 · 朋友圈图文', source:'云小助', location:'上海静安嘉里中心'},
@@ -27546,8 +27547,15 @@ for(i=0;i<rows.length;i++){
       {kind:'group', group:'行业交流群', text:'今日行业早报：政策动态、竞品上新与门店运营小技巧，详见群文件。'},
       {kind:'group', group:'客户服务群', text:'本周社群活动安排：周六下午 2 点门店体验课，报名接龙～'},
       {kind:'group', group:'门店客户群', text:'新品到货提醒：本批数量有限，需要的家人群里回复 1 预留。'}
+    ],
+    '客户唤醒': [
+      {kind:'chat', from:'张伟', text:'您好，好久没联系了，最近店里到了新品，给您留了一份资料，方便的话回我一下～'},
+      {kind:'chat', from:'李娜', text:'王姐您好，看到您有一阵子没来了，会员权益还给您留着，需要的话我帮您安排～'},
+      {kind:'chat', from:'王强', text:'您的会员快到期了，续费有专属折扣，回复我就帮您办理～'}
     ]
   };
+  /* 各列表里那一列的列名；群发群组没有内容列，得在数量列前补一列 */
+  var REA_WX_LIST_COL = {'发圈':'群发内容','群发好友':'群发内容','群发群组':'群发内容数量','客户唤醒':'唤醒内容'};
 
   /* 列表页只补「查看」这枚按钮和弹窗；文案、表格其余列都还是快照原样。 */
   function reaWxListJs(page){
@@ -27561,6 +27569,8 @@ for(i=0;i<rows.length;i++){
 'use strict';
 var BODIES=${reaJson(bodies)};
 var KINDS=${reaJson(kinds)};
+var COL=${reaJson(REA_WX_LIST_COL[page] || '群发内容')};
+var NEED_INSERT=${reaJson(page === '群发群组')};
 function txt(n){return String(n&&n.textContent!=null?n.textContent:'').replace(/\s+/g,'')}
 var tables=document.querySelectorAll('table'),HT=null,BT=null,i,k;
 /* AntD 把表头和表体拆成两张 table：表头那张带 thead，数据行在另一张的 tbody 里 */
@@ -27573,11 +27583,8 @@ for(i=0;i<tables.length;i++){
   if(tables[i].querySelector('tbody tr.ant-table-row')){BT=tables[i];break}
 }
 if(!BT)return;
-var ths=HT.querySelectorAll('thead th'),idx=-1,insert=false;
-for(i=0;i<ths.length;i++){if(txt(ths[i])==='群发内容'){idx=i;break}}
-if(idx<0){
-  for(i=0;i<ths.length;i++){if(txt(ths[i])==='群发内容数量'){idx=i;insert=true;break}}
-}
+var ths=HT.querySelectorAll('thead th'),idx=-1,insert=NEED_INSERT;
+for(i=0;i<ths.length;i++){if(txt(ths[i])===COL){idx=i;break}}
 if(idx<0)return;
 /* 群发群组：在「群发内容数量」前补一列，两张表的 colgroup / 表头 / 每行各插一格 */
 if(insert){
@@ -31819,6 +31826,7 @@ syncTip();drawRows();
     '发圈': { css: REA_FQ_DETAIL_CSS + REA_WX_SNAP_CSS, js: function(){ return reaWxListJs('发圈'); } },
     '群发好友': { css: REA_WX_SNAP_CSS, js: function(){ return reaWxListJs('群发好友'); } },
     '群发群组': { css: REA_WX_SNAP_CSS, js: function(){ return reaWxListJs('群发群组'); } },
+    '客户唤醒': { css: REA_WX_SNAP_CSS, js: function(){ return reaWxListJs('客户唤醒'); } },
     /* 六张微信营销任务详情页（2026-11-10）：共用一张执行进度卡与 10 条演示表行。
        前面那段 js 是各页原有的任务信息回显，进度卡排在它后面（先补行、再收行）。 */
     '群发好友 · 详情': { css: REA_QF_CSS + REA_WX_DETAIL_CSS, js: function(){ return reaQfDetailJs() + reaWxDetailJs('群发好友 · 详情'); } },
