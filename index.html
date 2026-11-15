@@ -5317,7 +5317,7 @@ var CW_IMG_SRC='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(
   +"</svg>");
 var CW_AI={}, CW_FAIL={}, CW_AI_ROUND=0;
 /* AI 话术是**一人一条并发生成**的（Prompt 规格：并发 3–5）。原型用定时器把这件事演出来：
-   每张卡各自从骨架走到正文。令牌按人记——单人重生成／整批重来／×掉他，旧定时器回来时
+   每张卡各自从骨架走到正文。令牌按人记——单人重生成／×掉他，旧定时器回来时
    令牌已经换了，结果直接丢掉，不会晚一步盖掉新内容。 */
 var CW_PEND={}, CW_TOK={}, CW_QUEUE=[], CW_JOBS=[], CW_RUNNING=0, CW_FLASH={}, CW_FLUSHING=false;
 var CW_MAXC=4;
@@ -5721,13 +5721,6 @@ function cwCardsFade(ids,done){
   });
   setTimeout(done,any?160:0);
 }
-function cwRegen(){
-  var ids=cwSelByH();
-  cwCardsFade(ids,function(){
-    CW_AI_ROUND++; CW_AI={}; CW_FAIL={};
-    cwAiBegin(ids); REND['cw-content']();
-  });
-}
 function cwRegenOne(id){
   cwCardsFade([id],function(){
     CW_AI_ROUND++; delete CW_FAIL[id]; delete CW_AI[id];
@@ -6008,7 +6001,6 @@ REND['cw-content']=function(){
         +(CW_QBUSY?'正在取人…':'选好范围后，每个人的话术出现在这里')+'</span></div>';
     }else{
       ids.forEach(function(id){ h+=cwAiCardHtml(id,!!CW_FLASH[id],CW_ENTER.indexOf(id)); });
-      h+='<button class="cw-addrow" onclick="cwRegen()">全部重新生成</button>';
     }
     h+='</div>';
     /* 生成后输入卡不搬去顶部：主题和三项参数留在原地收成一条，点它回表单改。 */
