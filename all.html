@@ -26667,8 +26667,68 @@ BT.addEventListener('click',function(e){
     '.rea-hx-dd .ant-select-item{padding:5px 12px;border-radius:4px;cursor:pointer}',
     '.rea-hx-dd .ant-select-item-option-active{background:rgba(0,0,0,.04)}',
     '.rea-hx-dd .ant-select-item-option-selected{background:#E6F4FF;color:#1677FF}',
-    '@media(max-width:1000px){.rea-wxd-hx .rea-wxd-info{grid-template-columns:minmax(0,1fr)}}'
+    '@media(max-width:1000px){.rea-wxd-hx .rea-wxd-info{grid-template-columns:minmax(0,1fr)}}',
+    /* 关联好友 · 详情（2026-11-15）：版式对齐其他五张详情页，快照的「大标题卡里套页签、
+       任务信息、筛选，表格另起一卡」拆成面包屑 ＋ 任务信息卡 ＋ 列表卡（页签／筛选／表格／分页）。
+       只补搬运后需要的三块框线，卡片与分页的其余观感仍取快照自带样式。 */
+    '.rea-rel-bc{margin:0 0 12px;padding-left:10px;font-size:14px;font-weight:normal;line-height:22px}',
+    '.rea-rel-card{background:#fff;border-radius:4px;padding:0 20px 20px;margin-bottom:20px}',
+    '.rea-rel-list{padding-top:4px}',
+    '.rea-rel-list .ant-tabs-nav{margin-bottom:12px}',
+    '.rea-rel-list .searchform{margin-bottom:16px}',
+    '.rea-rel-foot{background:transparent!important;border-radius:0!important;padding:12px 24px 0!important}'
   ].join('\n');
+
+  /* 关联好友 · 详情（2026-11-15）：版式对齐其他五张详情页。
+     快照这一页的页头是一张「任务详情」大标题卡，页签、任务信息、筛选全塞在里面，
+     表格另起一张卡、分页挂在页面底部；其余详情页是「面包屑 → 任务信息卡 →
+     列表卡（页签＋筛选＋表格＋分页）」。这里把页签与筛选搬进表格卡、任务信息单独成卡，
+     大标题换成面包屑。只搬快照 DOM，不新造表格与字段。 */
+  function reaRelLayoutJs(){
+    return String.raw`(function(){
+'use strict';
+if(document.querySelector('[data-rea-rel]'))return;
+var page=document.querySelector('.yk-pageContainer');
+if(!page)return;
+var header=page.querySelector('.ant-page-header');
+var content=header&&header.querySelector('.ant-page-header-content');
+if(!content)return;
+var tabs=content.querySelector('.ant-tabs');
+var search=content.querySelector('.searchform');
+var kids=content.children,info=null,i;
+for(i=0;i<kids.length;i++){
+  if(/^_task_information_[a-z0-9]+_\d+$/.test(String(kids[i].className).split(' ')[0])){info=kids[i];break}
+}
+var grid=page.querySelector('.ant-pro-grid-content');
+var pane=tabs&&tabs.querySelector('.ant-tabs-tabpane-active');
+if(!tabs||!search||!info||!grid||!pane)return;
+/* 分页在页面容器外另挂一条白色页脚，搬进列表卡后取消白底与圆角 */
+var footer=document.querySelector('.yk-page-right-content-footer');
+var wrap=document.createElement('div');
+wrap.setAttribute('data-rea-rel','1');
+var bc=document.createElement('h4');
+bc.className='rea-rel-bc';
+bc.innerHTML='<nav class="ant-breadcrumb css-vgijab"><ol>'
+ +'<li class="ant-breadcrumb-item"><span class="ant-breadcrumb-link">微信营销任务</span></li>'
+ +'<li class="ant-breadcrumb-separator" aria-hidden="true">/</li>'
+ +'<li class="ant-breadcrumb-item"><a class="ant-breadcrumb-link" href="#" data-rea="关联好友">关联好友</a></li>'
+ +'<li class="ant-breadcrumb-separator" aria-hidden="true">/</li>'
+ +'<li class="ant-breadcrumb-item"><span class="ant-breadcrumb-link">任务详情</span></li>'
+ +'</ol></nav>';
+wrap.appendChild(bc);
+info.className+=' rea-rel-card';
+wrap.appendChild(info);
+var list=document.createElement('div');
+list.className='rea-rel-card rea-rel-list';
+pane.appendChild(search);
+pane.appendChild(grid);
+if(footer){footer.className+=' rea-rel-foot';pane.appendChild(footer)}
+list.appendChild(tabs);
+wrap.appendChild(list);
+page.insertBefore(wrap,page.firstChild);
+page.removeChild(header);
+})();`;
+  }
 
   /* 任务信息重排 + 演示表行。字段在左、进度环在右（关联好友的任务信息没有标题，
      现场补一枚「任务信息」头），表行按 plan 重建 10 条；状态列改成点＋文字，
@@ -30862,9 +30922,10 @@ syncTip();drawRows();
     '批量加好友 · 新建': { css: REA_BD_CSS, js: function(){ return reaBdJs(); } },
     '批量加好友 · 详情': { css: REA_WX_DETAIL_CSS, js: function(){ return reaBdDetailJs() + reaWxDetailJs('批量加好友 · 详情'); } },
     '群发群组 · 详情': { css: REA_WX_DETAIL_CSS + REA_WX_SNAP_CSS, js: function(){ return reaQsDetailJs() + reaWxDetailContentJs('群发群组 · 详情') + reaWxDetailJs('群发群组 · 详情'); } },
-    /* 关联好友／客户唤醒的详情原来没覆盖，这一笔补上（执行进度卡是唯一改动；
-       客户唤醒另有「查看发送内容」，见 reaWxDetailContentJs） */
-    '关联好友 · 详情': { css: REA_WX_DETAIL_CSS, js: function(){ return reaWxDetailJs('关联好友 · 详情'); } },
+    /* 关联好友／客户唤醒的详情原来没覆盖，这一笔补上；关联好友另外把快照的
+       「大标题卡」拆成面包屑＋任务信息卡＋列表卡，见 reaRelLayoutJs。
+       客户唤醒另有「查看发送内容」，见 reaWxDetailContentJs。 */
+    '关联好友 · 详情': { css: REA_WX_DETAIL_CSS, js: function(){ return reaRelLayoutJs() + reaWxDetailJs('关联好友 · 详情'); } },
     '客户唤醒 · 详情': { css: REA_WX_DETAIL_CSS + REA_WX_SNAP_CSS, js: function(){ return reaWxDetailContentJs('客户唤醒 · 详情') + reaWxDetailJs('客户唤醒 · 详情') + reaWakeJs(); } },
     /* 六张任务配置快照（2026-11-11）：运行时克隆各自详情页的壳，正文整段换成只读配置。
        发圈的「任务内容」弹窗沿用 reaFqc 那套朋友圈排版，所以带上 REA_FQ_DETAIL_CSS。 */
