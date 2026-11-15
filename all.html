@@ -1152,6 +1152,9 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .cw-shbtns .cw-btn{flex:1}
 .cw-ta{width:100%;min-height:112px;border-radius:12px;border:1px solid #DCE6FA;background:#fff;
   padding:10px 12px;font-size:14px;font-family:var(--f);color:#17263F;line-height:1.5;resize:none}
+.cw-si{width:100%;height:46px;margin-top:8px;border-radius:12px;border:1px solid #DCE6FA;background:#fff;
+  padding:0 12px;font-size:15px;font-weight:600;font-family:var(--f);color:#17263F}
+.cw-si:focus{outline:none;border-color:#2E6BFF}
 .cw-attach{margin-top:8px;display:flex;align-items:center;gap:8px;background:#EFF5FF;border-radius:12px;
   padding:10px 12px;font-size:13px;font-weight:600;color:#2E5FA8}
 .cw-attach .rm{margin-left:auto;font-size:12px;font-weight:600;color:#2E6BFF;padding:4px 2px}
@@ -5352,8 +5355,9 @@ var CW_AI={}, CW_FAIL={}, CW_AI_ROUND=0;
 var CW_PEND={}, CW_TOK={}, CW_QUEUE=[], CW_JOBS=[], CW_RUNNING=0, CW_FLASH={}, CW_FLUSHING=false;
 var CW_MAXC=4;
 /* 内容主题：必填，预填上次用过的值。CW_GEN＝AI 这次已经点过「生成话术」，
-   决定内容页画表单还是画结果；改主题就退回表单，结果不作数。 */
-var CW_TOPIC='秋季新品到店', CW_GEN=false;
+   决定内容页画表单还是画结果；点过之后不再回表单，改主题走主题条的浮层。
+   CW_TOPIC_ED 是浮层里的草稿，取消不写回 CW_TOPIC。 */
+var CW_TOPIC='秋季新品到店', CW_TOPIC_ED='', CW_GEN=false;
 /* 记录里的范围：工具页记精确窗口，待唤醒客户那条路记「手选」。
    每条另带一份 people：发给谁、成没成、这个人收到的是什么（按发送顺序）。
    详情页据此一人一行；真机上由执行脚本回报，这里只备两条演示记录。 */
@@ -5794,7 +5798,28 @@ function cwDelAi(id){
     if(cur==='cw-content')REND['cw-content']();
   });
 }
-function cwBackToForm(){ CW_GEN=false; REND['cw-content'](); }
+/* 生成之后点主题条不再回表单（回去就看不到结果、再生成还会整批清掉）：
+   原地开一个小浮层改主题，「重新生成」才按新主题整批重跑。取消什么都不动。 */
+function cwTopicSheet(){
+  CW_TOPIC_ED=CW_TOPIC;
+  var n=cwSelCount();
+  var why=CW_FROM==='tools'?'这一段没有待唤醒的客户':'还没选客户';
+  CW_SH=openSheet(
+    '<div class="cw-sh">这次想说什么</div>'
+    +'<input class="cw-si" id="cwTopicEd" maxlength="50" aria-label="这次想说什么" value="'+esc(CW_TOPIC)+'" oninput="CW_TOPIC_ED=this.value">'
+    +(n?'<div class="cw-hint">重新生成会覆盖已经生成和改过的话术</div>'
+       :'<div class="cw-hint">'+why+'</div>')
+    +'<div class="cw-shbtns"><button class="cw-btn ghost" onclick="closeSheet(CW_SH)">取消</button>'
+    +'<button class="cw-btn" onclick="cwTopicRegen()"'+(n?'':' disabled')+'>重新生成</button></div>',
+    'cw-sheet');
+}
+function cwTopicRegen(){
+  if(!CW_TOPIC_ED.trim()){ toast('先写这次想说什么'); return; }
+  if(!cwSelCount())return;
+  CW_TOPIC=CW_TOPIC_ED;
+  closeSheet(CW_SH); CW_SH=null;
+  cwGen();
+}
 function cwStrat(s){ CW_STRAT=s; REND['cw-content'](); }
 function cwTopicInput(v){
   CW_TOPIC=v;
@@ -6065,7 +6090,7 @@ REND['cw-content']=function(){
     }
     c+='</div>';
     /* 生成后输入卡不搬去顶部：主题留在原地收成一条，点它回表单改。 */
-    c+='<button class="cw-mini" onclick="cwBackToForm()" aria-label="主题 '+esc(CW_TOPIC)+'，回表单修改">'
+    c+='<button class="cw-mini" onclick="cwTopicSheet()" aria-label="主题 '+esc(CW_TOPIC)+'，改主题或重新生成">'
       +'<span class="top"><b>'+esc(CW_TOPIC)+'</b><span class="cw-chev">›</span></span>'
       +'</button>';
   }
@@ -13409,9 +13434,10 @@ setTimeout(sbScan,120);
 .rea-ov-page .ov-result-number small{font-size:14px;color:#646A73;font-weight:400}
 .rea-ov-page .ov-result-number i{font-size:14px;color:#1677FF;font-style:normal;opacity:0}
 .rea-ov-page .ov-result-number:hover i,.rea-ov-page .ov-result-number:focus-visible i{opacity:1}
-.rea-ov-page .ov-result-footer{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:12px;color:#646A73}
-.rea-ov-page .ov-result-footer b{font-weight:500;color:#1F2329;margin-left:4px}
-.rea-ov-page .ov-result-footer .ov-link{font-size:12px}
+.rea-ov-page .ov-result-footer{display:flex;flex-direction:column;align-items:flex-start;gap:8px;font-size:13px;color:#646A73}
+.rea-ov-page .ov-result-footer b{font-weight:500;color:#1F2329;margin-left:6px;font-size:14px}
+.rea-ov-page .ov-result-footer small{font-size:12px;color:#646A73;margin-left:4px}
+.rea-ov-page .ov-result-footer .ov-link{font-size:13px}
 .rea-ov-page .ov-capabilities-heading{margin-top:24px}
 .rea-ov-page [hidden]{display:none!important}
 @media(max-width:1150px){.rea-ov-page .ov-value-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.rea-ov-page .ov-execution-summary{gap:24px}}
@@ -13423,12 +13449,9 @@ setTimeout(sbScan,120);
 .rea-ov-page .ov-value-scene{display:flex;flex-direction:column;min-height:216px}
 .rea-ov-page .ov-result-heading h3{font-size:14px;font-weight:600;margin:0;color:#1F2329}
 .rea-ov-page .ov-result-heading{margin-bottom:16px;min-height:24px}
-.rea-ov-page .ov-result-pair{display:grid;grid-template-columns:1fr;gap:8px}
 .rea-ov-page .ov-result-metric{min-width:0}
-.rea-ov-page .ov-result-pair .ov-result-number{font-size:28px;gap:4px;white-space:nowrap}
 .rea-ov-page .ov-result-label{font-size:12px;color:#646A73}
 .rea-ov-page .ov-result-footer{margin-top:auto;padding-top:12px}
-.rea-ov-page .ov-result-sub .ov-result-number{font-size:24px}
 .rea-ov-page .ov-efficiency-card .ov-tag{font-size:12px}
 </script>
 <script type="text/plain" id="srcOverviewScript">(function () {
@@ -14298,20 +14321,24 @@ setTimeout(sbScan,120);
   function valueNumber(value){return value>=10000?(value/10000).toFixed(2)+'万':number(value);}
   function valueSummary(records) {
     const completed=records.filter(r=>r.metric==='taskCompleted'),done=sum(completed),hosted=metricValue(records,'hostingTask');
-    return `<section id="ov-value-summary" class="ov-value-scene ov-efficiency-card" data-result-card="efficiency"><div class="ov-result-heading"><h3>工作效率</h3><span class="ov-scene-icon">${ovIcon(METRIC_ICONS.taskExec,20)}</span></div><div class="ov-result-metric"><div class="ov-result-label">完成任务 ${helpSpan(metrics.taskCompleted.note)}</div><button class="ov-result-number" data-metric="taskCompleted" data-value="${done}" title="${number(done)} 人次">${valueNumber(done)}<small>人次</small><i aria-hidden="true">↗</i></button></div><div class="ov-result-metric ov-result-sub"><div class="ov-result-label">AI托管自动完成 ${helpSpan(metrics.hostingTask.note)}</div><button class="ov-result-number" data-metric="hostingTask" data-value="${hosted}" title="${number(hosted)} 条">${valueNumber(hosted)}<small>条</small><i aria-hidden="true">↗</i></button></div><div class="ov-result-footer"><button class="ov-link" data-scene="tasks" data-scene-tab="people">参与完成 <b>${new Set(completed.map(r=>r.employee)).size} 人</b></button></div></section>`;
+    return `<section id="ov-value-summary" class="ov-value-scene ov-efficiency-card" data-result-card="efficiency"><div class="ov-result-heading"><h3>工作效率</h3><span class="ov-scene-icon">${ovIcon(METRIC_ICONS.taskExec,20)}</span></div><div class="ov-result-metric"><div class="ov-result-label">完成任务 ${helpSpan(metrics.taskCompleted.note)}</div><button class="ov-result-number" data-metric="taskCompleted" data-value="${done}" title="${number(done)} 人次">${valueNumber(done)}<small>人次</small><i aria-hidden="true">↗</i></button></div><div class="ov-result-footer"><button type="button" class="ov-link" data-metric="hostingTask" data-value="${hosted}">AI托管自动完成 <b>${valueNumber(hosted)}</b><small>条</small></button><button type="button" class="ov-link" data-scene="tasks" data-scene-tab="people">参与完成 <b>${new Set(completed.map(r=>r.employee)).size}</b><small>人</small></button></div></section>`;
   }
   function valueCards(records) {
     const metric=(id)=>{
       const spec=valueSpecs.find(c=>c.id===id),n=metricValue(records,id);
       return `<div class="ov-result-metric"><div class="ov-result-label">${spec.name}${helpSpan(spec.note)}</div><button class="ov-result-number" data-metric="${id}" data-value="${n}" title="${number(n)} ${spec.unit}">${valueNumber(n)}<small>${spec.unit}</small><i aria-hidden="true">↗</i></button></div>`;
     };
+    const secondary=(id)=>{
+      const spec=valueSpecs.find(c=>c.id===id),n=metricValue(records,id);
+      return `<button type="button" class="ov-link" data-metric="${id}" data-value="${n}">${spec.name} <b>${valueNumber(n)}</b><small>${spec.unit}</small></button>`;
+    };
     const groups=[
-      {id:'connection',name:'建立客户联系',icon:'request',metrics:['request','autoPass','firstTouch'],footer:`<button class="ov-link" data-value-users="connection">涉及员工 <b>${new Set(connectionRecords(records).map(r=>r.employee)).size} 人</b></button>`},
-      {id:'engagement',name:'社群运营与互动',icon:'group',metrics:['interact','sportLike'],footer:`<button class="ov-link" data-metric="publish">朋友圈发布 <b>${number(metricValue(records,'publish'))} 条</b></button>`},
-      {id:'conversation',name:'客户接待与沟通',icon:'autoReply',metrics:['autoMessages','profile'],footer:`<button class="ov-link" data-metric="aiReply">AI建议采纳 <b>${number(metricValue(records,'aiReply'))} 次</b></button><span>匹配素材取用 <b>${number(sum(selectMetric(records,'communication').filter(r=>r.metric==='material')))} 次</b></span>`},
-      {id:'content',name:'企业内容复用',icon:'material',metrics:['material','materialAdded'],footer:`<button class="ov-link" data-scene="material" data-scene-tab="people">取用员工 <b>${metricValue(records,'materialUsers')} 人</b></button><button class="ov-link" data-scene="material" data-scene-tab="materials">被取用素材 <b>${metricValue(records,'materialCount')} 条</b></button>`}
+      {id:'connection',name:'建立客户联系',icon:'request',main:'request',secondary:[secondary('autoPass'),secondary('firstTouch'),`<button type="button" class="ov-link" data-value-users="connection">涉及员工 <b>${new Set(connectionRecords(records).map(r=>r.employee)).size}</b><small>人</small></button>`]},
+      {id:'engagement',name:'社群运营与互动',icon:'group',main:'interact',secondary:[secondary('sportLike'),`<button type="button" class="ov-link" data-metric="publish">朋友圈发布 <b>${number(metricValue(records,'publish'))}</b><small>条</small></button>`]},
+      {id:'conversation',name:'客户接待与沟通',icon:'autoReply',main:'autoMessages',secondary:[secondary('profile'),`<button type="button" class="ov-link" data-metric="aiReply">AI建议采纳 <b>${number(metricValue(records,'aiReply'))}</b><small>次</small></button>`,`<span>匹配素材取用 <b>${number(sum(selectMetric(records,'communication').filter(r=>r.metric==='material')))}</b><small>次</small></span>`]},
+      {id:'content',name:'企业内容复用',icon:'material',main:'material',secondary:[secondary('materialAdded'),`<button type="button" class="ov-link" data-scene="material" data-scene-tab="people">取用员工 <b>${metricValue(records,'materialUsers')}</b><small>人</small></button>`,`<button type="button" class="ov-link" data-scene="material" data-scene-tab="materials">被取用素材 <b>${metricValue(records,'materialCount')}</b><small>条</small></button>`]}
     ];
-    return valueSummary(records)+groups.map(c=>`<section class="ov-value-scene" data-result-card="${c.id}"><div class="ov-result-heading"><h3>${c.name}</h3><span class="ov-scene-icon">${ovIcon(METRIC_ICONS[c.icon]||METRIC_ICONS.message,20)}</span></div><div class="${c.metrics.length>1?'ov-result-pair':'ov-result-single'}">${c.metrics.map(metric).join('')}</div><div class="ov-result-footer">${c.footer}</div></section>`).join('');
+    return valueSummary(records)+groups.map(c=>`<section class="ov-value-scene" data-result-card="${c.id}"><div class="ov-result-heading"><h3>${c.name}</h3><span class="ov-scene-icon">${ovIcon(METRIC_ICONS[c.icon]||METRIC_ICONS.message,20)}</span></div><div class="ov-result-single">${metric(c.main)}</div><div class="ov-result-footer">${c.secondary.join('')}</div></section>`).join('');
   }
   function renderValue() {
     const records=valueRecords();
