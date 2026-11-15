@@ -14035,10 +14035,6 @@ setTimeout(sbScan,120);
       );
     return records.filter((record) => record.metric === metric);
   }
-  // The connection card's employee count spans its three actions; units differ, so they are never summed.
-  function connectionRecords(records) {
-    return successfulReceipts(records.filter(r=>['request','autoPass','firstTouch'].includes(r.metric)));
-  }
   function metricValue(records, metric) {
     const selected = selectMetric(records, metric);
     if (metric === "message") return sum(selected, "messageCount");
@@ -14333,10 +14329,10 @@ setTimeout(sbScan,120);
       return `<button type="button" class="ov-link" data-metric="${id}" data-value="${n}">${spec.name} <b>${valueNumber(n)}</b><small>${spec.unit}</small></button>`;
     };
     const groups=[
-      {id:'connection',name:'建立客户联系',icon:'request',main:'request',secondary:[secondary('autoPass'),secondary('firstTouch'),`<button type="button" class="ov-link" data-value-users="connection">涉及员工 <b>${new Set(connectionRecords(records).map(r=>r.employee)).size}</b><small>人</small></button>`]},
+      {id:'connection',name:'建立客户联系',icon:'request',main:'request',secondary:[secondary('autoPass'),secondary('firstTouch')]},
       {id:'engagement',name:'社群运营与互动',icon:'group',main:'interact',secondary:[secondary('sportLike'),`<button type="button" class="ov-link" data-metric="publish">朋友圈发布 <b>${number(metricValue(records,'publish'))}</b><small>条</small></button>`]},
       {id:'conversation',name:'客户接待与沟通',icon:'autoReply',main:'autoMessages',secondary:[secondary('profile'),`<button type="button" class="ov-link" data-metric="aiReply">AI建议采纳 <b>${number(metricValue(records,'aiReply'))}</b><small>次</small></button>`,`<span>匹配素材取用 <b>${number(sum(selectMetric(records,'communication').filter(r=>r.metric==='material')))}</b><small>次</small></span>`]},
-      {id:'content',name:'企业内容复用',icon:'material',main:'material',secondary:[secondary('materialAdded'),`<button type="button" class="ov-link" data-scene="material" data-scene-tab="people">取用员工 <b>${metricValue(records,'materialUsers')}</b><small>人</small></button>`,`<button type="button" class="ov-link" data-scene="material" data-scene-tab="materials">被取用素材 <b>${metricValue(records,'materialCount')}</b><small>条</small></button>`]}
+      {id:'content',name:'企业内容复用',icon:'material',main:'material',secondary:[secondary('materialAdded'),`<button type="button" class="ov-link" data-scene="material" data-scene-tab="people">取用员工 <b>${metricValue(records,'materialUsers')}</b><small>人</small></button>`]}
     ];
     return valueSummary(records)+groups.map(c=>`<section class="ov-value-scene" data-result-card="${c.id}"><div class="ov-result-heading"><h3>${c.name}</h3><span class="ov-scene-icon">${ovIcon(METRIC_ICONS[c.icon]||METRIC_ICONS.message,20)}</span></div><div class="ov-result-single">${metric(c.main)}</div><div class="ov-result-footer">${c.secondary.join('')}</div></section>`).join('');
   }
@@ -14667,17 +14663,7 @@ setTimeout(sbScan,120);
     let title = "使用详情",
       body = "";
     const scope = route.org === "all" ? "全公司" : route.org;
-    if (route.view === "resultUsers") {
-      const selected=route.metric==='connection'?connectionRecords(records):selectMetric(records,route.metric);
-      const people=[...new Set(selected.map(r=>r.employee))].filter(id=>`${employees[id].name}${employees[id].dept}`.includes(filters.query));
-      if(route.metric==='connection'){
-        title='建立客户联系 · 涉及员工';
-        body=form()+table(['员工','部门','发出申请','通过好友','自动打招呼','最近记录'],people.map(id=>{const own=selected.filter(r=>r.employee===id);return [employeeLink(id),html(employees[id].dept),number(metricValue(own,'request'))+' 次',number(metricValue(own,'autoPass'))+' 人',number(metricValue(own,'firstTouch'))+' 人次',dateLabel(Math.min(...own.map(r=>r.day)))];}),true,`共 ${people.length} 名员工`);
-      } else {
-        title=metrics[route.metric].name+' · 参与员工';
-        body=form()+table(['员工','部门','成果数量','最近记录'],people.map(id=>{const own=selected.filter(r=>r.employee===id);return [employeeLink(id),html(employees[id].dept),number(sum(own))+' '+metrics[route.metric].unit,dateLabel(Math.min(...own.map(r=>r.day)))];}),true,`共 ${people.length} 名员工`);
-      }
-    } else if (route.view === "scene") {
+    if (route.view === "scene") {
       title = sceneNames[route.scene];
       body = renderSceneDetail();
     } else if (route.view === "valuePeople") {
@@ -15029,7 +15015,6 @@ setTimeout(sbScan,120);
     const button = event.target.closest("button");
     if (!button || button.disabled) return;
     const data = button.dataset;
-    if(data.valueUsers){navigate({view:'resultUsers',metric:data.valueUsers});return;}
     if(data.materialRecords) navigate({view:'scene',scene:'material',tab:'records',material:data.materialRecords});
     else if (data.scene) navigate({view:'scene',scene:data.scene,...(data.sceneTab?{tab:data.sceneTab}:{}),...(data.outcome ? {outcome:data.outcome} : {}),...(data.sceneEmployee ? {filters:{query:data.sceneEmployee,source:'all',feature:'all',status:'all'}} : {})});
     else if (data.valuePeople) navigate({view:'valuePeople',kind:data.valuePeople});
