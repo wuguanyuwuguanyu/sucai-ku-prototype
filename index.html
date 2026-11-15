@@ -951,19 +951,20 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .cw-cb.on{background:linear-gradient(140deg,#1677FE,#6A5BFF);border-color:transparent}
 .cw-cb.part{border-color:#6A8FE0;background:#fff}
 .cw-cb.part::after{content:"";width:9px;height:2.4px;border-radius:2px;background:#6A8FE0}
-/* 行卡与「待唤醒客户」的 `.cust-card` 同一套尺寸：圆角 16.5、内衬 13/14、卡距 12、头像 44、
-   姓名 17.6、副行 12.1。这一页多一枚勾选框和右侧时长，其余照那张卡。 */
-.cw-row{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:#fff;
+/* 名单里的每一行就是「待唤醒客户」那张 `.cust-card`——头像、姓名、微信号＋复制、最后触达一行，
+   尺寸照搬（圆角 16.5、内衬 13/14、卡距 12、头像 44、姓名 17.6、副行 12.1），只在卡内左侧多一枚勾选框：
+   从吸底「一键唤醒」点进来，看得见的客户不该换一副长相。
+   整张卡可点＝勾选；勾选框与卡里的「复制微信号」各自 stopPropagation，一次点击只算一次。 */
+.cw-row{display:flex;align-items:center;gap:11px;width:100%;text-align:left;background:#fff;
   border-radius:16.5px;padding:13px 14px;margin-bottom:12px;position:relative;overflow:hidden;
+  min-height:95px;cursor:pointer;
   box-shadow:0 12px 24px -22px rgba(40,70,150,.95)}
+.cw-ckb{flex:none;width:22px;height:22px;padding:0;border-radius:50%;
+  display:flex;align-items:center;justify-content:center}
+.cw-top{flex:1;min-width:0}
 .cw-av{flex:none;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;
   color:#fff;font-size:17px;font-weight:600;letter-spacing:.02em;
   background:linear-gradient(-52deg,#A56EFF 6.5%,#529AFF 96.9%)}
-.cw-main{flex:1;min-width:0}
-.cw-nm{display:flex;align-items:center;font-size:17.6px;font-weight:600;color:#152C50;line-height:1.2}
-.cw-meta{margin-top:5px;font-size:12.1px;font-weight:500;color:#95A3B8;line-height:1.2}
-.cw-right{flex:none;text-align:right;font-size:11px;font-weight:500;color:#8FA3BE;line-height:1.25}
-.cw-right b{display:block;font-size:14.5px;font-weight:600;color:#173A6B}
 /* 底部操作条：左边两行汇总，右边唯一主操作。与「待唤醒客户」那枚吸底条同一形制。 */
 .cw-foot{flex:none;display:flex;align-items:center;gap:12px;padding:10px 16px calc(14px + env(safe-area-inset-bottom));
   background:#fff;position:relative;z-index:6;box-shadow:0 -14px 24px -20px rgba(40,70,150,.9)}
@@ -3667,8 +3668,8 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
           <div class="scroll cust-scroll" id="custAwakeBody"></div>
           <!-- 吸底「一键唤醒」· 客户唤醒两个入口之一（另一个在工具页「高效发送」组）。
                底栏只放这一枚主操作，不写三档人数。
-               点它落在名单的「全部」视图、三档一起带过去、默认全选；当前停在哪一档只影响页面上的列表，
-               不影响带过去的人数——想一次唤醒三档，不用在三个 Tab 里各点一次。 -->
+               点它停在当前这一档（今日／1天／1周）、只把这一档的人带过去、默认全选；
+               想一次唤醒三档，进名单后切「全部」自己勾。 -->
           <div class="cw-foot" id="custAwakeFoot">
             <button class="cw-btn block" onclick="cwFromAwake()">一键唤醒</button>
           </div>
@@ -5265,7 +5266,8 @@ var CW_RECS=[
 var CW_SH=null;
 
 function cwBand(h){ if(h>=1&&h<=6)return 0; if(h>=24&&h<168)return 1; if(h>=168&&h<336)return 2; return -1; }
-function cwDur(h){ return h<24?(h+' 小时'):(Math.floor(h/24)+' 天'); }
+/* 时间那行的写法与「待唤醒客户」页的卡一致（「未回复·3小时」不带空格），两屏的同一张卡才对得上。 */
+function cwDur(h){ return h<24?(h+'小时'):(Math.floor(h/24)+'天'); }
 function cwPool(){ return CW_CUST.filter(function(c){ return cwBand(c.h)>=0&&!(CW_SET.skip&&c.w); }); }
 function cwCust(id){ for(var i=0;i<CW_CUST.length;i++)if(CW_CUST[i].i===id)return CW_CUST[i]; return null; }
 function cwSelIds(){ var o=[]; CW_CUST.forEach(function(c){ if(CW_SEL[c.i])o.push(c.i); }); return o; }
@@ -5306,11 +5308,34 @@ function cwToggleIds(s){
   REND['cw-list']();
 }
 function cwToggle(id){ CW_SEL[id]=!CW_SEL[id]; REND['cw-list'](); }
+/* 一张卡＝「待唤醒客户」那张卡（同一套 .cust-* 类）＋左侧一枚勾选框。
+   卡是 div 不是 button：卡里还有一枚「复制微信号」的按钮，按钮不能套按钮。
+   卡、勾选框、复制各管各的点击，勾选框与复制都 stopPropagation，免得一次点击勾两次。 */
+function cwRowHtml(c){
+  var on=!!CW_SEL[c.i], wx='XX-8886666';
+  return '<div class="cw-row" onclick="cwToggle(\''+c.i+'\')">'
+    +'<button class="cw-ckb" onclick="event.stopPropagation();cwToggle(\''+c.i+'\')"'
+      +' aria-pressed="'+(on?'true':'false')+'" aria-label="选择 '+c.n+'">'+cwCbHtml(on?2:0)+'</button>'
+    +'<div class="cust-top cw-top">'
+    +'<span class="cust-av">'+c.n.charAt(0)+'</span>'
+    +'<span class="cust-main"><b class="cust-name hv-gn">'+c.n+'</b>'
+    +'<span class="cust-id">微信号：'+wx
+      +'<button class="cust-copy" onclick="event.stopPropagation();copyText(\''+wx+'\',\'微信号已复制\')"'
+      +' aria-label="复制微信号" title="复制微信号">'+I('copy',13,2)+'</button></span>'
+    +'<span class="cust-meta">最后触达：'+c.last+'　未回复·'+cwDur(c.h)+'</span></span></div></div>';
+}
 function cwView(v){
   if(v==='custom'){ cwCustomSheet(); return; }
   CW_VIEW=v; REND['cw-list']();
 }
-function cwFromAwake(){ CW_VIEW='all'; cwEnter(); }
+/* 吸底「一键唤醒」：停在刚才那一档（今日／1天／1周），只带这一档的人过去、默认全选——
+   点了「唤醒」就该唤醒眼前这些人；三档一起唤醒切到「全部」自己勾。 */
+function cwFromAwake(){
+  CW_VIEW=['today','day','week'][CUST_SEG]||'today';
+  CW_SEL={};
+  cwGroups().forEach(function(g){ g.l.forEach(function(c){ CW_SEL[c.i]=true }) });
+  cwEnter();
+}
 function cwEnter(){ CW_LIST_MODE='root'; go('cw-list'); }
 
 REND['cw-list']=function(){
@@ -5335,15 +5360,7 @@ REND['cw-list']=function(){
       +'<button class="cw-allsel" onclick="cwToggleIds(\''+ids+'\')" aria-pressed="'+(st===2?'true':'false')+'">'
       +cwCbHtml(st,1)+'全选</button></div>';
     if(!g.l.length)h+='<div class="cw-tip">这一段没有待唤醒的客户。</div>';
-    for(j=0;j<g.l.length;j++){
-      var c=g.l[j];
-      h+='<button class="cw-row" onclick="cwToggle(\''+c.i+'\')" aria-pressed="'+(CW_SEL[c.i]?'true':'false')+'">'
-        +cwCbHtml(CW_SEL[c.i]?2:0)
-        +'<span class="cw-av">'+c.n.charAt(0)+'</span>'
-        +'<span class="cw-main"><span class="cw-nm">'+c.n+'</span>'
-        +'<span class="cw-meta">最后触达 '+c.last+'</span></span>'
-        +'<span class="cw-right"><b>'+cwDur(c.h)+'</b>未回复</span></button>';
-    }
+    for(j=0;j<g.l.length;j++)h+=cwRowHtml(g.l[j]);
   }
   $('cwListBody').innerHTML=h;
   var n=cwSelCount(), over=n>CW_SET.cap;
