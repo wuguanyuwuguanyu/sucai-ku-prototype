@@ -1078,10 +1078,6 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
   transition:background .12s var(--emph),box-shadow .12s var(--emph)}
 .cw-num:focus{outline:none;background:#E9F0FE;box-shadow:inset 0 0 0 1.5px #7FA6F0}
 .cw-num::placeholder{color:#A9B8D0}
-/* 结果态：范围收成一条可点的摘要行，点开就地展开成编辑器（不动结果区的滚动位置）。 */
-.cw-scope-sum{margin-bottom:12px}
-.cw-scope-sum .top b{font-size:14px}
-.cw-aispin.sm{width:13px;height:13px;border-width:1.8px;margin-left:auto}
 /* 底栏原因行：出现时撑开、消失时收起（140ms）；点「重试」用同一行，不另起弹窗。 */
 .cw-slot{overflow:hidden}
 .cw-retry{border:0;background:transparent;padding:0;color:#2E6BFF;font-size:12px;font-weight:600;
@@ -5311,7 +5307,7 @@ var CW_RECS=[
 var CW_SH=null;
 /* 这一屏的会话态：被 × 掉的人（改范围也不回来，离开这一屏清空）、结果态范围行是否展开、
    正在入场的新卡（REND 里按顺序错开 40ms），以及「改范围＝调接口查聊天记录」的请求状态。 */
-var CW_XED={}, CW_SOPEN=false, CW_ENTER=[];
+var CW_XED={}, CW_ENTER=[];
 var CW_QBUSY=false, CW_QERR=false, CW_QSIM=false, CW_QMODE='', CW_QBEAT=0, CW_QTM=null;
 
 /* 时间那行的写法与「待唤醒客户」页的卡一致（「未回复·3小时」不带空格），两屏的同一张卡才对得上。 */
@@ -5410,10 +5406,9 @@ function cwApplyWindow(){
     });
   });
 }
-/* 直接输入：空／非正数＝清掉范围（不查人）；超界夹到边界；值没变只收起编辑器。 */
+/* 直接输入：空／非正数＝清掉范围（不查人）；超界夹到边界；值没变只重绘。 */
 function cwRangeInput(v){
   var n=parseInt(v,10), lim=CW_CUSTOM.u==='d'?90:48;
-  CW_SOPEN=false;
   if(!n||n<1){
     cwQueryStop();
     CW_CUSTOM.on=false; CW_CUSTOM.n=3; CW_SEL={}; CW_ENTER=[];
@@ -5427,7 +5422,7 @@ function cwRangeInput(v){
 }
 function cwRangeUnit(u){
   if(u===CW_CUSTOM.u)return;
-  CW_CUSTOM.u=u; CW_SOPEN=false;
+  CW_CUSTOM.u=u;
   if(CW_CUSTOM.on){
     CW_CUSTOM.n=Math.min(u==='d'?90:48,CW_CUSTOM.n);
     cwQueryRun('range'); return;
@@ -5499,7 +5494,7 @@ function awakeToggle(i){
 function awakeNext(){
   if(!awakeSelCount()){ toast('先选几个客户'); return; }
   if(cwOver()){ toast('超过单次上限，先在设置里调高或去掉几个人'); return; }
-  CW_XED={}; CW_SOPEN=false; CW_ENTER=[]; cwQueryStop();
+  CW_XED={}; CW_ENTER=[]; cwQueryStop();
   go('cw-content');
 }
 function awakeBackOrLeave(){ if(!awakeBack())back(); }
@@ -5576,7 +5571,7 @@ function awakeFoot(animate){
 function cwEnter(){
   CW_FROM='tools';
   CW_CUSTOM={n:3,u:'d',on:false};
-  CW_SEL={}; CW_XED={}; CW_SOPEN=false; CW_ENTER=[];
+  CW_SEL={}; CW_XED={}; CW_ENTER=[];
   cwQueryStop();
   CW_GEN=false;
   go('cw-content');
@@ -5653,7 +5648,7 @@ function cwGen(){
   /* 从结果页点「主题」退回表单再生成＝换了个说法，整批作废重来；第一次生成时不清。 */
   var had=false, k; for(k in CW_AI)had=true; for(k in CW_FAIL)had=true;
   if(had){ CW_AI_ROUND++; CW_AI={}; CW_FAIL={}; }
-  CW_GEN=true; CW_SOPEN=false;
+  CW_GEN=true;
   var ids=cwSelByH();
   CW_ENTER=ids.slice(0,6);
   cwAiBegin(ids); REND['cw-content']();
@@ -5704,8 +5699,8 @@ function cwDelAi(id){
     if(cur==='cw-content')REND['cw-content']();
   });
 }
-function cwBackToForm(){ CW_GEN=false; CW_SOPEN=false; REND['cw-content'](); }
-function cwStrat(s){ CW_STRAT=s; CW_SOPEN=false; REND['cw-content'](); }
+function cwBackToForm(){ CW_GEN=false; REND['cw-content'](); }
+function cwStrat(s){ CW_STRAT=s; REND['cw-content'](); }
 function cwTopicInput(v){
   CW_TOPIC=v;
   var c=$('cwTopicCnt'); if(c)c.textContent=v.length+' / 50';
@@ -5920,30 +5915,14 @@ function cwScopeHtml(){
       +'</div>'
     +'</div>';
 }
-/* 结果态的范围摘要行：只写用户自己设的那个窗口，不报人数；右边转圈＝正在按新窗口取人。 */
-function cwScopeSumHtml(){
-  var t=CW_CUSTOM.on?('未回复超过 '+CW_CUSTOM.n+' '+cwUnitN(CW_CUSTOM.u)):'还没设范围';
-  return '<button class="cw-mini cw-scope-sum" type="button" onclick="cwScopeOpen()">'
-    +'<span class="top"><b>'+t+'</b>'
-    +(CW_QBUSY?'<span class="cw-aispin sm" aria-hidden="true"></span>':'<span class="cw-chev">›</span>')
-    +'</span></button>';
-}
-function cwScopeOpen(){
-  CW_SOPEN=true; REND['cw-content']();
-  var i=$('cwContentBody').querySelector('.cw-num');
-  if(i){ i.focus(); if(i.select)i.select(); }
-}
 REND['cw-content']=function(){
   $('cwContentBack').innerHTML=I('back',24,2);
   $('cwRecIc').innerHTML=I('clock',20,2.1);
   $('cwSetIc').innerHTML=I('gear',20,2.1);
   var h='';
   /* 范围块只在工具页那条路出现；从「一键唤醒」进来时人已经手选过，返回键就回选取态。
-     生成之后收成一条摘要行，点它就地展开编辑器——结果态不必常驻一张大卡。 */
-  if(CW_FROM==='tools'){
-    if(CW_STRAT==='ai'&&CW_GEN&&!CW_SOPEN)h+=cwScopeSumHtml();
-    else h+=cwScopeHtml();
-  }
+     生成之后也不收起来：范围是结果态里最常改的东西，编辑器一直摆在原位。 */
+  if(CW_FROM==='tools')h+=cwScopeHtml();
   h+='<div class="cw-sech"><b>唤醒内容</b></div>'
     +'<div class="cw-strat">'
     +'<button class="'+(CW_STRAT==='fixed'?'on':'')+'" onclick="cwStrat(\'fixed\')">固定内容</button>'
