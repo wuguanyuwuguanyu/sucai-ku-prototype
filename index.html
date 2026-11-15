@@ -21864,21 +21864,19 @@ tb.addEventListener("click",function(e){
   /* ============================================================
      群发好友 · 好友回复（2026-11-13）
 
-     详情页第二个页签：任务发出去之后，这批好友回了什么、回得多快。
+     详情页第二个页签：任务发出去之后，这批好友回了什么。
      数据不另编：调用 reaQfDetailJs 暴露的 __reaQfReplyData()，读的就是
      「群发好友数」弹窗里同一批好友行（发送时间、是否回复、回复时间、回复内容），
-     两处口径不会对不上。四段回答四个问题：转化条看流失，四格指标看总量，
-     每日回复量看节奏，首次回复耗时看速度，最后落一张回复明细，最新在上。
-     图表自写，不引库；色值只取 ADR-0082 的 token，单系列蓝、无渐变、无卡片框。
+     两处口径不会对不上。两段回答两个问题：转化条看流失，回复明细看谁回了、回了什么。
+     色值只取 ADR-0082 的 token，单系列蓝、无渐变、无卡片框。
      只动内嵌覆盖件：不动 _online-admin.js、不重跑构建。
      ============================================================ */
   var REA_QFR_CSS = [
     '.rea-qfr{padding:4px 0 0}',
-    /* 顶部左边三级转化条、右边四格指标一行排开。
-       条宽按应触达等比收窄，但收在 480px 内、条高 18px，数字在条外——
+    /* 三级转化条：条宽按应触达等比收窄，但总宽收在 480px、条高 18px，数字在条外——
        覆盖页一屏实心蓝不超过约 10% 的那条约束，靠这个比例守住。 */
-    '.rea-qfr-top{display:grid;grid-template-columns:minmax(0,480px) minmax(0,1fr);gap:64px;align-items:start;padding:16px 0 24px;border-bottom:1px solid #E5E8EF}',
-    '.rea-qfr-fn{min-width:0}',
+    '.rea-qfr-top{padding:16px 0 0}',
+    '.rea-qfr-fn{min-width:0;max-width:480px}',
     '.rea-qfr-fn-rows{display:grid;gap:10px;padding-top:6px}',
     '.rea-qfr-fn-row{display:grid;grid-template-columns:56px minmax(0,1fr) 44px 76px;align-items:center;gap:12px}',
     '.rea-qfr-fn-row>span{font-size:12px;line-height:18px;color:#646A73;white-space:nowrap}',
@@ -21886,30 +21884,9 @@ tb.addEventListener("click",function(e){
     '.rea-qfr-fn-bar{display:block;height:100%;min-width:4px;border-radius:4px;background:#1677FF}',
     '.rea-qfr-fn-row>b{font-size:12px;line-height:18px;font-weight:600;color:#1F2329;text-align:right;font-variant-numeric:tabular-nums}',
     '.rea-qfr-fn-row>em{font-size:12px;line-height:18px;font-style:normal;color:#8F959E;text-align:right;font-variant-numeric:tabular-nums}',
-    '.rea-qfr-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;padding:0;border-bottom:0}',
-    '.rea-qfr-kpi{min-width:0}',
-    '.rea-qfr-kpi>span{display:block;font-size:12px;line-height:18px;color:#8F959E}',
-    '.rea-qfr-kpi>b{display:block;margin-top:6px;font-size:28px;line-height:1.15;font-weight:600;color:#1F2329;font-variant-numeric:tabular-nums}',
-    '.rea-qfr-kpi>b small{margin-left:4px;font-size:14px;font-weight:400;color:#646A73}',
-    '.rea-qfr-kpi>em{display:block;margin-top:6px;font-size:12px;line-height:18px;font-style:normal;color:#646A73}',
-    '.rea-qfr-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:48px;padding:24px 0 4px}',
-    '.rea-qfr-sec{min-width:0}',
     '.rea-qfr-hd{display:flex;align-items:center;gap:6px;margin:0 0 16px;font-size:14px;line-height:20px;font-weight:600;color:#1F2329}',
     '.rea-qfr-help{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border:1px solid #C9CED6;border-radius:50%;font-size:10px;line-height:1;color:#8F959E;cursor:help}',
-    '.rea-qfr-cols{display:flex;gap:8px;height:184px}',
-    '.rea-qfr-col{display:flex;flex:1;flex-direction:column;justify-content:flex-end;min-width:0}',
-    '.rea-qfr-col-in{display:flex;flex:1;flex-direction:column;justify-content:flex-end;align-items:center;border-bottom:1px solid #E5E8EF}',
-    '.rea-qfr-col b{font-size:12px;line-height:16px;font-weight:400;color:#646A73}',
-    '.rea-qfr-col i{display:block;width:18px;border-radius:2px 2px 0 0;background:#1677FF}',
-    '.rea-qfr-col>span{margin-top:8px;font-size:12px;line-height:16px;color:#8F959E;text-align:center;white-space:nowrap}',
-    '.rea-qfr-dur{display:grid;gap:14px;padding-top:6px}',
-    '.rea-qfr-dur-row{display:grid;grid-template-columns:76px minmax(0,1fr) 36px;align-items:center;gap:12px}',
-    '.rea-qfr-dur-row>span{font-size:13px;line-height:20px;color:#646A73}',
-    /* 分布用细横条，不铺灰色轨道——轨道是进度条的语义，会把这组数读成完成度 */
-    '.rea-qfr-dur-track{height:8px;background:none}',
-    '.rea-qfr-dur-track i{display:block;height:100%;border-radius:2px;background:#1677FF}',
-    '.rea-qfr-dur-row>b{font-size:13px;line-height:20px;font-weight:500;color:#1F2329;text-align:right;font-variant-numeric:tabular-nums}',
-    '.rea-qfr-list{margin-top:32px;padding-top:24px;border-top:1px solid #E5E8EF}',
+    '.rea-qfr-list{margin-top:28px;padding-top:24px;border-top:1px solid #E5E8EF}',
     '.rea-qfr-scroll{max-height:420px;overflow:auto}',
     '.rea-qfr-table{width:100%;border-collapse:collapse;table-layout:fixed}',
     '.rea-qfr-table th{position:sticky;top:0;z-index:1;height:40px;padding:0 12px;background:#F7F8FA;font-size:12px;font-weight:400;line-height:18px;color:#646A73;text-align:left;white-space:nowrap}',
@@ -21917,9 +21894,7 @@ tb.addEventListener("click",function(e){
     '.rea-qfr-who b{font-weight:500}',
     '.rea-qfr-who em{margin-left:8px;font-size:12px;font-style:normal;color:#8F959E}',
     '.rea-qfr-foot{margin-top:12px;font-size:12px;line-height:18px;color:#8F959E}',
-    '.rea-qfr-empty{display:flex;flex:1;align-items:center;justify-content:center;padding:48px 0;font-size:13px;color:#8F959E}',
-    '.rea-qfr-table .rea-qfr-empty{display:block;text-align:center}',
-    '@media(max-width:1100px){.rea-qfr-top{grid-template-columns:minmax(0,1fr);gap:28px}.rea-qfr-kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 24px}.rea-qfr-grid{grid-template-columns:minmax(0,1fr);gap:32px}}'
+    '.rea-qfr-empty{display:block;text-align:center;padding:48px 0;font-size:13px;color:#8F959E}'
   ].join('\n');
 
   function reaQfReplyJs(){
@@ -21935,71 +21910,12 @@ var DATA=(window.__reaQfReplyData&&window.__reaQfReplyData())||[];
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function pad(n){return (n<10?'0':'')+n}
 function pct(v){return (isFinite(v)?v:0).toFixed(1)+'%'}
-function hm(min){
-  if(min<60)return [String(Math.round(min)),'分钟'];
-  if(min<1440)return [(min/60).toFixed(1),'小时'];
-  return [(min/1440).toFixed(1),'天'];
-}
 function fmt(ts){var d=new Date(ts);return d.getFullYear()+'/'+pad(d.getMonth()+1)+'/'+pad(d.getDate())+' '+pad(d.getHours())+':'+pad(d.getMinutes())}
 var replied=DATA.filter(function(r){return r.replied});
 var total=DATA.length,nRep=replied.length;
 /* 应触达＝任务圈定的好友数；718 条是五名执行人员实际发出去的，差的 42 位是
    好友已删除／风控拦下／员工没上线。演示数固定 760，真实任务从字段取。 */
 var reach=760;
-var within=replied.filter(function(r){return r.delay<=1440}).length;
-var late=replied.filter(function(r){return r.delay>4320}).length;
-var ds=replied.map(function(r){return r.delay}).sort(function(a,b){return a-b});
-var avg=ds.length?ds.reduce(function(a,b){return a+b},0)/ds.length:0;
-var med=0;
-if(ds.length){var m=Math.floor(ds.length/2);med=ds.length%2?ds[m]:(ds[m-1]+ds[m])/2}
-var hMed=hm(med),hAvg=hm(avg);
-var kpi='<div class="rea-qfr-kpis">'
- +'<div class="rea-qfr-kpi"><span>已回复好友</span><b>'+nRep+'</b><em>回复率 '+pct(total?nRep/total*100:0)+'</em></div>'
- +'<div class="rea-qfr-kpi"><span>24 小时内回复</span><b>'+within+'</b><em>占已回复 '+pct(nRep?within/nRep*100:0)+'</em></div>'
- +'<div class="rea-qfr-kpi"><span>首次回复耗时</span><b>'+hMed[0]+'<small>'+hMed[1]+'</small></b><em>平均 '+hAvg[0]+' '+hAvg[1]+'</em></div>'
- +'<div class="rea-qfr-kpi"><span>3 天后才回复</span><b>'+late+'</b><em>占已回复 '+pct(nRep?late/nRep*100:0)+'</em></div>'
- +'</div>';
-var days={},keys=[],maxDay=0,dayMs=86400000;
-replied.forEach(function(r){
-  var d=new Date(r.replyAt),k=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
-  days[k]=(days[k]||0)+1;
-});
-/* 横轴连续到天：从最早发送日到最晚回复日，当天没有回复就留空柱，断档看得出来 */
-var startAt=null,endAt=null;
-DATA.forEach(function(r){if(startAt===null||r.sendAt<startAt)startAt=r.sendAt});
-replied.forEach(function(r){if(endAt===null||r.replyAt>endAt)endAt=r.replyAt});
-if(startAt!==null&&endAt!==null){
-  var cur=new Date(startAt),end=new Date(endAt);
-  cur.setHours(0,0,0,0);end.setHours(0,0,0,0);
-  for(;cur<=end;cur=new Date(cur.getTime()+dayMs)){
-    keys.push(cur.getFullYear()+'-'+pad(cur.getMonth()+1)+'-'+pad(cur.getDate()));
-  }
-}
-keys.forEach(function(k){if((days[k]||0)>maxDay)maxDay=days[k]||0});
-var cols='';
-keys.forEach(function(k){
-  var v=days[k]||0,h=v?Math.max(4,Math.round(v/maxDay*118)):0;
-  cols+='<div class="rea-qfr-col"><div class="rea-qfr-col-in"><b>'+(v||'')+'</b><i style="height:'+h+'px"></i></div><span>'+k.slice(5).replace('-','/')+'</span></div>';
-});
-if(!cols)cols='<div class="rea-qfr-empty">暂无好友回复</div>';
-var BANDS=[['1 小时内',0,60],['1–6 小时',60,360],['6–24 小时',360,1440],['1–3 天',1440,4320],['3 天以上',4320,Infinity]];
-/* 分档边界只算一次：24 小时与「3 天后」两张口径要和前三档／最后一档对得上 */
-var counts=BANDS.map(function(_,bi){
-  return replied.filter(function(r){
-    if(bi===0)return r.delay<60;
-    if(bi===1)return r.delay>=60&&r.delay<360;
-    if(bi===2)return r.delay>=360&&r.delay<=1440;
-    if(bi===3)return r.delay>1440&&r.delay<=4320;
-    return r.delay>4320;
-  }).length;
-});
-var maxCount=0;
-counts.forEach(function(v){if(v>maxCount)maxCount=v});
-var dur='';
-BANDS.forEach(function(b,bi){
-  var c=counts[bi],w=maxCount?Math.round(c/maxCount*100):0;
-  dur+='<div class="rea-qfr-dur-row"><span>'+b[0]+'</span><div class="rea-qfr-dur-track"><i style="width:'+w+'%"></i></div><b>'+c+'</b></div>';
-});
 var list=replied.slice().sort(function(a,b){return b.replyAt-a.replyAt});
 var rows='';
 list.forEach(function(r){
@@ -22025,11 +21941,7 @@ var funnel='<section class="rea-qfr-fn"><div class="rea-qfr-hd">转化<span clas
  +fnRow('已发送',total,sentRate,pct(sentRate))
  +fnRow('已回复',nRep,repReach,pct(repRate))
  +'</div></section>';
-var body='<div class="rea-qfr"><div class="rea-qfr-top">'+funnel+kpi+'</div>'
- +'<div class="rea-qfr-grid">'
- +'<section class="rea-qfr-sec"><div class="rea-qfr-hd">回复趋势<span class="rea-qfr-help" title="按首次回复的自然日归格；同一好友只计一次。">?</span></div><div class="rea-qfr-cols">'+cols+'</div></section>'
- +'<section class="rea-qfr-sec"><div class="rea-qfr-hd">首次回复耗时<span class="rea-qfr-help" title="从好友收到群发消息到第一次回复的间隔；按已回复好友计。">?</span></div><div class="rea-qfr-dur">'+dur+'</div></section>'
- +'</div>'+table+'</div>';
+var body='<div class="rea-qfr"><div class="rea-qfr-top">'+funnel+'</div>'+table+'</div>';
 var pane=document.createElement('div');
 pane.className='ant-tabs-tabpane ant-tabs-tabpane-hidden';
 pane.setAttribute('data-rea-qfr-pane','1');
