@@ -1023,6 +1023,32 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .cw-fail{display:flex;align-items:center;gap:10px;padding:9px 0}
 .cw-fail+.cw-fail{border-top:1px solid #EEF2FA}
 .cw-fail .cw-av{width:32px;height:32px;font-size:13px}
+/* 唤醒详情「发给谁」：一人一行，行尾「进入对话」；点开看这个人收到的那几条。
+   气泡是微信里的样子（灰底、绿气泡、右侧头像），属微信场景，不套 MD3。 */
+.cw-rp{display:flex;align-items:center;gap:8px;padding:6px 0}
+.cw-rp+.cw-rp,.cw-rp+.cw-fail,.cw-fail+.cw-rp{border-top:1px solid #EEF2FA}
+.cw-rpb{flex:1;min-width:0;display:flex;align-items:center;gap:10px;text-align:left;padding:4px 0;border-radius:10px}
+.cw-rp .cw-av{width:32px;height:32px;font-size:13px}
+.cw-rpm{flex:1;min-width:0;display:flex;flex-direction:column}
+.cw-rpm b{font-size:13.5px;font-weight:600;color:#17263F}
+.cw-rps{margin-top:2px;font-size:11.5px;font-weight:500;color:#12A16B}
+.cw-rp .cw-chev{font-size:12px;color:#A9B8CE;margin-left:0}
+.cw-goto{flex:none;height:28px;padding:0 12px;border-radius:999px;background:#E4F7EF;color:#12A16B;
+  font-size:12px;font-weight:600;position:relative;overflow:hidden}
+.cw-wxpv{margin:2px 0 10px 42px;padding:10px 10px 8px;animation:cwWxIn .16s var(--emph) both}
+.cw-wxmsg{display:flex;align-items:flex-start;justify-content:flex-end;gap:8px}
+.cw-wxbubs{display:flex;flex-direction:column;align-items:flex-end;gap:6px;min-width:0}
+.cw-wxbub{max-width:230px;padding:8px 10px;border-radius:8px;background:#95EC69;color:#111;
+  font-size:13px;font-weight:500;line-height:1.45;overflow-wrap:anywhere}
+.cw-wxbub.img{background:#fff;color:#3D5578;font-size:12.5px}
+.cw-wxav{flex:none;width:34px;height:34px;border-radius:6px;background:#D7E3F7;
+  display:flex;align-items:center;justify-content:center;overflow:hidden}
+.cw-wxst{display:flex;align-items:center;justify-content:flex-end;gap:5px;margin-top:7px;
+  font-size:11.5px;font-weight:600;color:#12A16B}
+.cw-wxck{width:15px;height:15px;border-radius:50%;background:#12A16B;color:#fff;font-size:9px;
+  font-weight:700;display:flex;align-items:center;justify-content:center}
+@keyframes cwWxIn{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.cw-wxpv{animation:none}}
 .cw-failm{flex:1;min-width:0;font-size:13px;font-weight:500;color:#17263F}
 .cw-why{font-size:11.5px;font-weight:500;color:#C2413A;margin-top:2px}
 .cw-tip{margin-top:12px;font-size:12px;font-weight:500;color:#7C8CA4;line-height:1.5;
@@ -5298,11 +5324,34 @@ var CW_MAXC=4;
 /* 内容主题：必填，预填上次用过的值。CW_GEN＝AI 这次已经点过「生成话术」，
    决定内容页画表单还是画结果；改主题就退回表单，结果不作数。 */
 var CW_TOPIC='秋季新品到店', CW_GEN=false;
-/* 记录里的范围：工具页记精确窗口，待唤醒客户那条路记「手选」。 */
+/* 记录里的范围：工具页记精确窗口，待唤醒客户那条路记「手选」。
+   每条另带一份 people：发给谁、成没成、这个人收到的是什么（按发送顺序）。
+   详情页据此一人一行；真机上由执行脚本回报，这里只备两条演示记录。 */
+var CW_REC_MSG2=[
+  {t:'text',c:'最近店里上了新款，给你留了一件。'},
+  {t:'text',c:'要不要我拍两张细节图给你？'}
+];
+var CW_REC_MSG3=[
+  {t:'text',c:'好久没联系了，最近店里上了秋季新品，想着你可能会喜欢。'},
+  {t:'image',c:'秋季新品主图.png'},
+  {t:'text',c:'这款有两个颜色，版型偏宽松，日常通勤都能穿。'},
+  {t:'text',c:'有空回我一句，我把细节图发你。'}
+];
+/* 名单写法：字符串＝发成功了，[名字, 失败原因]＝没发出去。 */
+function cwRecPeople(list,msgs){
+  return list.map(function(x){
+    return typeof x==='string'
+      ? {n:x,st:'ok',msgs:msgs}
+      : {n:x[0],st:'fail',why:x[1]};
+  });
+}
 var CW_RECS=[
-  {id:'r2',when:'昨天\n10:15',scope:'未回复 3–8 天',n:8,strat:'fixed',fixed:2,st:'done',ok:8,fail:0,fails:[]},
+  {id:'r2',when:'昨天\n10:15',scope:'未回复 3–8 天',n:8,strat:'fixed',fixed:2,st:'done',ok:8,fail:0,
+   people:cwRecPeople(['王芳','宋雨彤','许志远','陈立','周敏','刘洋','赵一鸣','郑凯'],CW_REC_MSG2)},
   {id:'r3',when:'11月7日\n14:30',scope:'待唤醒客户 · 手选',n:23,strat:'fixed',fixed:4,st:'part',ok:21,fail:2,
-   fails:[{n:'罗琳',why:'对方已把你删除'},{n:'蒋文博',why:'消息发送失败'}]}
+   people:cwRecPeople(['李晓霞','张大强','林晓雯',['罗琳','对方已把你删除'],'王芳','宋雨彤','许志远',
+     '陈立','周敏','刘洋','赵一鸣','郑凯',['蒋文博','消息发送失败'],'吴静','孙浩','何丽','马晓东',
+     '黄雅琴','徐子昂','高梦露','彭浩然','韩雪','曹玉兰'],CW_REC_MSG3)}
 ];
 var CW_SH=null;
 /* 这一屏的会话态：被 × 掉的人（改范围也不回来，离开这一屏清空）、结果态范围行是否展开、
@@ -6004,10 +6053,17 @@ function cwSendNow(){
 }
 function cwLaunch(ids){
   var n=ids.length;
+  /* 发出去的内容在开始时定下来，跟着记录走：固定内容抄一份，AI 按人抄他那一版。
+     之后再改内容或重新生成，不改写已经发过的这条记录。 */
+  var fixedMsgs=CW_STRAT==='fixed'?CW_FIXED.map(function(m){return {t:m.t,c:m.c}}):null;
+  var people=ids.map(function(id){
+    var c=cwCust(id);
+    return {n:c?c.n:'客户',st:'ok',msgs:fixedMsgs||[{t:'text',c:CW_AI[id]||''}]};
+  });
   var r={id:'r'+Date.now(),when:'今天\n'+cwClock(),
          scope:(CW_FROM==='awake'?'待唤醒客户 · 手选':'未回复 '+cwRangeLabel()),
          n:n,strat:CW_STRAT,fixed:CW_FIXED.length,
-         st:'run',ok:0,fail:0,fails:[],names:ids.slice()};
+         st:'run',ok:0,fail:0,people:people};
   CW_RECS.unshift(r);
   if(CW_FROM==='awake'){
     /* 这条路没离开过「待唤醒客户」：回那页，选取态一起收掉 */
@@ -6020,9 +6076,9 @@ function cwLaunch(ids){
     var rr=cwRecById(r.id); if(!rr||rr.st!=='run')return;
     var fn=Math.min(n,2);
     rr.ok=n-fn; rr.fail=fn; rr.st=fn?'part':'done';
-    rr.fails=ids.slice(0,fn).map(function(id,i){
-      var c=cwCust(id);
-      return {n:c?c.n:'客户',why:i?'消息发送失败':'对方已把你删除'};
+    rr.people.forEach(function(p,i){
+      if(i>=fn)return;
+      p.st='fail'; p.why=i?'消息发送失败':'对方已把你删除';
     });
     if(cur==='cw-records')REND['cw-records']();
     else if(cur==='cw-record')REND['cw-record']({id:rr.id});
@@ -6056,10 +6112,65 @@ REND['cw-records']=function(){
   });
   $('cwRecordsBody').innerHTML=h;
 };
+/* 记录详情：上面是这一轮的汇总，下面按发送顺序一人一行。
+   成功的人行尾「进入对话」、点行展开他在微信里收到的那几条（灰底灰聊天气泡＋右侧头像，
+   仿微信，不归 M3）；失败的人同一串里排着，只写原因，不展开。一次只开一个，
+   换人时上一条自己收起，滚动位置不动（重画后把 scrollTop 放回去）。
+   「进入对话」在原型里没有微信可跳，落一句演示提示，不做假聊天页。 */
+var CW_REXP='';   /* 详情页现在展开的是谁：记录 id＋序号 */
+function cwChatDemo(n){ toast('演示：打开与'+n+'的微信对话'); }
+function cwRecToggle(id,idx){
+  var key=id+':'+idx;
+  CW_REXP=CW_REXP===key?'':key;
+  var sc=$('cwRecordBody'), y=sc?sc.scrollTop:0;
+  REND['cw-record']({id:id});
+  if(sc)sc.scrollTop=y;
+}
+/* 发出去的头像＝当前微信，没有真实头像，用一枚浅蓝占位（同截图里的那枚人形）。 */
+function cwWxMe(){
+  return '<span class="cw-wxav" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18">'
+    +'<circle cx="12" cy="8.6" r="3.7" fill="#fff"/>'
+    +'<path d="M4.6 20.4c0-3.6 3.3-5.6 7.4-5.6s7.4 2 7.4 5.6z" fill="#fff"/></svg></span>';
+}
+function cwRecBubs(msgs){
+  return (msgs||[]).map(function(m){
+    return m.t==='image'
+      ? '<span class="cw-wxbub img">[图片] '+esc(m.c)+'</span>'
+      : '<span class="cw-wxbub">'+esc(m.c)+'</span>';
+  }).join('');
+}
+function cwRecRows(r){
+  var h='<div class="cw-card"><div class="cw-h">发给谁</div>';
+  (r.people||[]).forEach(function(p,idx){
+    if(p.st==='fail'){
+      h+='<div class="cw-fail"><span class="cw-av">'+esc(p.n.charAt(0))+'</span><div class="cw-sm">'
+        +'<div class="cw-failm">'+esc(p.n)+'</div><div class="cw-why">'+esc(p.why||'消息发送失败')+'</div></div></div>';
+      return;
+    }
+    var open=CW_REXP===r.id+':'+idx;
+    h+='<div class="cw-rp'+(open?' open':'')+'">'
+      +'<button class="cw-rpb" aria-expanded="'+(open?'true':'false')+'" onclick="cwRecToggle(\''+r.id+'\','+idx+')">'
+      +'<span class="cw-av">'+esc(p.n.charAt(0))+'</span>'
+      +'<span class="cw-rpm"><b>'+esc(p.n)+'</b><span class="cw-rps">已发送</span></span>'
+      +'<span class="cw-chev" aria-hidden="true">'+(open?'▴':'▾')+'</span></button>'
+      +'<button class="cw-goto" data-n="'+esc(p.n)+'" onclick="cwChatDemo(this.getAttribute(\'data-n\'))">进入对话</button>'
+      +'</div>';
+    if(open){
+      h+='<div class="cw-pv cw-wxpv">'
+        +'<div class="cw-wxmsg"><div class="cw-wxbubs">'+cwRecBubs(p.msgs)+'</div>'+cwWxMe()+'</div>'
+        +'<div class="cw-wxst"><span class="cw-wxck" aria-hidden="true">✓</span>已发送'
+        +((p.msgs&&p.msgs.length>1)?' '+p.msgs.length+' 条':'')+'</div>'
+        +'</div>';
+    }
+  });
+  return h+'</div>';
+}
 REND['cw-record']=function(p){
   $('cwRecordBack').innerHTML=I('back',24,2);
   var r=cwRecById(p&&p.id);
   if(!r){ $('cwRecordBody').innerHTML='<div class="cw-tip">没有这条记录。</div>'; return; }
+  /* 换了一条记录，上一条展开的人不算数 */
+  if(CW_REXP.split(':')[0]!==r.id)CW_REXP='';
   var h='<div class="cw-card" style="padding:18px 14px"><div class="cw-big">'+r.n+'<small>人</small></div>'
     +'<div class="cw-bigsub">'+cwStratN(r.strat)+' · '+(r.strat==='fixed'?('每人 '+(r.fixed||1)+' 条'):'每人 1 条专属话术')+'</div>'
     +'<div style="text-align:center;margin-top:10px">'+cwRecTag(r.st)+'</div></div>';
@@ -6069,14 +6180,7 @@ REND['cw-record']=function(p){
     +'<div class="cw-kv"><span>成功</span><b>'+r.ok+' 人</b></div>'
     +'<div class="cw-kv"><span>失败</span><b style="color:'+(r.fail?'#C2413A':'#17263F')+'">'+r.fail+' 人</b></div>'
     +'</div>';
-  if(r.fails&&r.fails.length){
-    h+='<div class="cw-card"><div class="cw-h">没发出去的人</div>';
-    r.fails.forEach(function(f){
-      h+='<div class="cw-fail"><span class="cw-av">'+f.n.charAt(0)+'</span><div class="cw-sm">'
-        +'<div class="cw-failm">'+f.n+'</div><div class="cw-why">'+f.why+'</div></div></div>';
-    });
-    h+='</div>';
-  }
+  h+=cwRecRows(r);
   h+='<div class="cw-tip">不提供重试：失败多半是对方删了好友、设了验证，或脚本被风控打断。要补发就重新选人再发一次。</div>';
   $('cwRecordBody').innerHTML=h;
 };
