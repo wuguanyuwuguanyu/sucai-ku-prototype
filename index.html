@@ -13569,15 +13569,10 @@ setTimeout(sbScan,120);
       unit: "人",
       note: "托管按规则自动通过的好友申请，按通过确认计；含对方主动添加后自动通过的人，与发出申请不是同一批。",
     },
-    groupSend: {
-      name: "群发群数",
-      unit: "个",
-      note: "群发群组任务实际发送成功的客户群数；同一任务同一群去重，不同任务可重复。",
-    },
-    groupMessages: {
-      name: "群发消息",
-      unit: "条",
-      note: "群发群组任务发送成功的消息条数；一个群多条消息分别计条。",
+    sportLike: {
+      name: "运动点赞",
+      unit: "人",
+      note: "给客户的微信运动动态点赞，按被点赞的客户去重；同一客户多次点赞只计一人。原型演示回执，微信运动点赞的生产采集尚未接入。",
     },
     friendSend: {
       name: "群发好友发送",
@@ -13616,7 +13611,7 @@ setTimeout(sbScan,120);
       note: "素材取用中选择一键发送或一键发圈的次数",
     },
     interact: {
-      name: "朋友圈互动完成",
+      name: "朋友圈互动",
       unit: "次",
       note: "按点赞或评论完成回执计",
     },
@@ -13759,13 +13754,10 @@ setTimeout(sbScan,120);
     platform: "微信 / 企业微信 / WhatsApp",
     feature: "自动通过好友申请",
   });
-  addSeries("groupSend", [18, 96, 412, 1180], ["tasks"], {
-    platform: "微信 / 企业微信",
-    feature: "群发群组",
-  });
-  addSeries("groupMessages", [54, 288, 1236, 3540], ["tasks"], {
-    platform: "微信 / 企业微信",
-    feature: "群发群组",
+  addSeries("sportLike", [3, 9, 18, 54], ["hosting"], {
+    host: true,
+    platform: "微信",
+    feature: "运动点赞",
   });
   // The task board's completed assignees use this same roster order and assignment rule.
   window.__REA_OVERVIEW_TASK_DATA.forEach((task) => {
@@ -14293,9 +14285,8 @@ setTimeout(sbScan,120);
     {id:'request',name:'发出好友申请',unit:'次',scene:'建立客户联系',icon:'request',note:metrics.request.note},
     {id:'autoPass',name:'自动通过好友',unit:'人',scene:'建立客户联系',icon:'added',note:metrics.autoPass.note},
     {id:'firstTouch',name:'自动打招呼',unit:'人次',scene:'建立客户联系',icon:'firstTouch',note:metrics.firstTouch.note},
-    {id:'groupSend',name:'群发群数',unit:'个',scene:'社群运营与互动',icon:'group',note:metrics.groupSend.note},
-    {id:'groupMessages',name:'群发消息',unit:'条',scene:'社群运营与互动',icon:'message',note:metrics.groupMessages.note},
-    {id:'interact',name:'客户互动',unit:'次',scene:'社群运营与互动',icon:'interact',note:'当前已统计朋友圈点赞与评论完成回执；微信运动点赞未接入。AI和托管仅为执行方式，同一动作不重复计。'},
+    {id:'interact',name:'朋友圈互动',unit:'次',scene:'社群运营与互动',icon:'interact',note:'朋友圈点赞与评论的完成回执，按动作计次；AI和托管仅为执行方式，同一动作不重复计。'},
+    {id:'sportLike',name:'运动点赞',unit:'人',scene:'社群运营与互动',icon:'group',note:metrics.sportLike.note},
     {id:'autoMessages',name:'AI自动回复',unit:'条',scene:'客户接待与沟通',icon:'autoReply',note:metrics.autoMessages.note+' 消息按成功发生时间归期；轮次详情仍按触发时间统计。'},
     {id:'profile',name:'AI分析',unit:'次',scene:'客户接待与沟通',icon:'profile',note:'客户画像分析完成的次数，按完成分析计；同一客户在不同时间多次分析分别计入。'},
     {id:'material',name:'企业内容取用',unit:'次',scene:'企业内容复用',icon:'material',note:'企业素材复制、保存、一键发送、一键发圈；不包含任务自动发送。聊天中匹配到并取用的一次操作也计在这里，匹配只作关联，不另算一次。'},
@@ -14316,7 +14307,7 @@ setTimeout(sbScan,120);
     };
     const groups=[
       {id:'connection',name:'建立客户联系',icon:'request',metrics:['request','autoPass','firstTouch'],footer:`<button class="ov-link" data-value-users="connection">涉及员工 <b>${new Set(connectionRecords(records).map(r=>r.employee)).size} 人</b></button>`},
-      {id:'engagement',name:'社群运营与互动',icon:'group',metrics:['groupSend','groupMessages','interact'],footer:`<button class="ov-link" data-metric="publish">朋友圈发布 <b>${number(metricValue(records,'publish'))} 条</b></button><span>运动点赞 <b>未接入</b></span>`},
+      {id:'engagement',name:'社群运营与互动',icon:'group',metrics:['interact','sportLike'],footer:`<button class="ov-link" data-metric="publish">朋友圈发布 <b>${number(metricValue(records,'publish'))} 条</b></button>`},
       {id:'conversation',name:'客户接待与沟通',icon:'autoReply',metrics:['autoMessages','profile'],footer:`<button class="ov-link" data-metric="aiReply">AI建议采纳 <b>${number(metricValue(records,'aiReply'))} 次</b></button><span>匹配素材取用 <b>${number(sum(selectMetric(records,'communication').filter(r=>r.metric==='material')))} 次</b></span>`},
       {id:'content',name:'企业内容复用',icon:'material',metrics:['material','materialAdded'],footer:`<button class="ov-link" data-scene="material" data-scene-tab="people">取用员工 <b>${metricValue(records,'materialUsers')} 人</b></button><button class="ov-link" data-scene="material" data-scene-tab="materials">被取用素材 <b>${metricValue(records,'materialCount')} 条</b></button>`}
     ];
@@ -15004,7 +14995,7 @@ setTimeout(sbScan,120);
   }
   function definitions() {
     $("#ov-dialog-title").textContent="数据说明";
-    $("#ov-dialog-body").innerHTML = '<p>本页为演示数据。任务完成日期、未展示会话和回复等待/部分发送状态为新增演示记录，正式接口需提供独立完成回执与状态。各项能力分别核对使用与执行情况，不合成价值分数，不将执行量换算成收入。客户互动只统计已有朋友圈记录，运动点赞未接入；群发群数与群发消息按群发群组任务的成功回执计。AI分析指客户画像分析完成的次数；新增素材按素材库的建档日期统计，与素材看板的新增一致。</p><p>团队使用只统计主动使用记录：素材取用、悬浮球功能与 App 工具操作。同一员工可同时使用多类，使用人数按员工去重；任务执行、托管完成与自动回复不计入。</p><p>聊天匹配会话、辅助会话与自动回复轮次是本次新增的采集设计，原型用独立演示记录展示分母、失败与未采纳。正式接入前需核实采集完整性；未接入显示“未接入”，不能显示为零。</p><p>素材取用和结果回执按发生时间筛选；本期完成执行按完成时间统计，包含此前下发的任务；本期下发完成进度按下发时间选取队列并读取当前状态，含未到期任务。成功发送消息统计条数，不代表去重客户或阅读人数。采纳不证明最终发送、回复质量或成交。</p><p>自动通过好友并打招呼属于规则触发的自动动作，工作量单列，不作为下发任务完成率的分母。</p><p>团队人数、趋势与员工名单统一按主动使用记录统计，同一员工按人只计一次。近三月按分段日均人数展示，点击查看该段使用过的去重员工。企业资源始终为全公司，消耗按所选期间、余额和席位为当前存量。</p>';
+    $("#ov-dialog-body").innerHTML = '<p>本页为演示数据。任务完成日期、未展示会话和回复等待/部分发送状态为新增演示记录，正式接口需提供独立完成回执与状态。各项能力分别核对使用与执行情况，不合成价值分数，不将执行量换算成收入。朋友圈互动按点赞与评论完成回执计次；运动点赞按被点赞的客户去重计人，现为演示回执，生产尚未接入。AI分析指客户画像分析完成的次数；新增素材按素材库的建档日期统计，与素材看板的新增一致。</p><p>团队使用只统计主动使用记录：素材取用、悬浮球功能与 App 工具操作。同一员工可同时使用多类，使用人数按员工去重；任务执行、托管完成与自动回复不计入。</p><p>聊天匹配会话、辅助会话与自动回复轮次是本次新增的采集设计，原型用独立演示记录展示分母、失败与未采纳。正式接入前需核实采集完整性；未接入显示“未接入”，不能显示为零。</p><p>素材取用和结果回执按发生时间筛选；本期完成执行按完成时间统计，包含此前下发的任务；本期下发完成进度按下发时间选取队列并读取当前状态，含未到期任务。成功发送消息统计条数，不代表去重客户或阅读人数。采纳不证明最终发送、回复质量或成交。</p><p>自动通过好友并打招呼属于规则触发的自动动作，工作量单列，不作为下发任务完成率的分母。</p><p>团队人数、趋势与员工名单统一按主动使用记录统计，同一员工按人只计一次。近三月按分段日均人数展示，点击查看该段使用过的去重员工。企业资源始终为全公司，消耗按所选期间、余额和席位为当前存量。</p>';
     $("#ov-dialog").showModal();
   }
   document.addEventListener("click", (event) => {
