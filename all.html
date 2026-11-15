@@ -892,6 +892,10 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .cw-selcard.ready .cw-ckb{opacity:1;transform:none}
 /* 底栏里那行「已选 N 人」从 0 高长出来，别让上面的主按钮跳一下 */
 .cw-fsum{overflow:hidden}
+/* 人数行右侧的「全选／全不选」：只作用于当前这一档，切档各算各的 */
+.cw-selrow{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.cw-selall{flex:none;font-size:12.5px;font-weight:600;color:#2E6BFF;padding:6px 2px;
+  border-radius:8px;position:relative;overflow:hidden}
 @media (prefers-reduced-motion:reduce){
   .cw-selcard,.cw-selcard .cw-ckb{transition:none}
 }
@@ -5540,6 +5544,29 @@ function awakeToggle(i){
   if(ck){ ck.innerHTML=cwCbHtml(CW_SEL[i]?2:0); ck.setAttribute('aria-pressed',CW_SEL[i]?'true':'false') }
   awakeFoot();
 }
+/* 全选／全不选：只作用于眼前这一档（同「只勾当前档」的口径）；卡片就地重画，滚动位置不动。
+   写成一枚按钮：眼下还有人没勾就写「全选」，都勾上了就写「全不选」。 */
+function awakeAllIds(){
+  var list=CUST_PAGES['host-awake'].lists[CUST_SEG]||[], ids=[];
+  list.forEach(function(it){ if(it.i)ids.push(it.i) });
+  return ids;
+}
+function awakeAllOn(){
+  var ids=awakeAllIds();
+  return ids.length>0&&ids.every(function(id){ return !!CW_SEL[id] });
+}
+function awakeSumHtml(n){
+  return '<span class="cw-fsump">已选 <b>'+n+'</b> 人</span>'
+    +'<button class="cw-selall" onclick="awakeAllSel()">'+(awakeAllOn()?'全不选':'全选')+'</button>';
+}
+function awakeAllSel(){
+  if(!AWAKE_SELING)return;
+  var on=awakeAllOn();
+  awakeAllIds().forEach(function(id){ CW_SEL[id]=!on });
+  var sc=$('custAwakeBody'), y=sc?sc.scrollTop:0;
+  REND['host-awake']();
+  if(sc)sc.scrollTop=y;
+}
 function awakeNext(){
   if(!awakeSelCount()){ toast('先选几个客户'); return; }
   if(cwOver()){ toast('超过单次上限，先在设置里调高或去掉几个人'); return; }
@@ -5584,11 +5611,13 @@ function awakeFoot(animate){
   if(f.getAttribute('data-mode')==='next'){
     var s0=f.querySelector('.cw-fsump');
     if(s0)s0.querySelector('b').textContent=n;
+    var all=f.querySelector('.cw-selall');
+    if(all)all.textContent=awakeAllOn()?'全不选':'全选';
     return;
   }
   if(!animate){
     f.className='cw-foot stack'; f.setAttribute('data-mode','next');
-    f.innerHTML='<div class="cw-sum"><span class="cw-fsump">已选 <b>'+n+'</b> 人</span></div>'
+    f.innerHTML='<div class="cw-sum cw-fsum cw-selrow">'+awakeSumHtml(n)+'</div>'
       +'<button class="cw-btn block" onclick="awakeNext()">下一步：写唤醒内容</button>';
     return;
   }
@@ -5598,8 +5627,8 @@ function awakeFoot(animate){
   btn.innerHTML='<span class="cw-flab">一键唤醒</span>';
   lab=btn.querySelector('.cw-flab');
   var sum=document.createElement('div');
-  sum.className='cw-sum cw-fsum';
-  sum.innerHTML='<span class="cw-fsump">已选 <b>'+n+'</b> 人</span>';
+  sum.className='cw-sum cw-fsum cw-selrow';
+  sum.innerHTML=awakeSumHtml(n);
   sum.style.height='0'; sum.style.opacity='0'; sum.style.marginBottom='0';
   f.insertBefore(sum,btn);
   requestAnimationFrame(function(){ requestAnimationFrame(function(){
