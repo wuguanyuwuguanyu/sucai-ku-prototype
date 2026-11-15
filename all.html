@@ -883,6 +883,18 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .cust-card{position:relative;padding:13px 14px;border-radius:16.5px;background:#fff;overflow:hidden;
   min-height:95px;box-shadow:0 12px 24px -22px rgba(40,70,150,.95)}
 .cust-card.has-msg{min-height:174px;padding-bottom:20px}
+/* 就地选取态（点吸底「一键唤醒」，不换页）：卡内左侧长出勾选框，内容右移 33px 让位；
+   卡高、字号、颜色、阴影都不动。逐行错峰的延迟由内联 `--d` 给，时间轴见 awakeAfterRender 上方注释。 */
+.cw-selcard{cursor:pointer;transition:padding-left .18s cubic-bezier(.2,.8,.2,1) var(--d,0ms)}
+.cw-selcard.ready{padding-left:47px}
+.cw-selcard .cw-ckb{position:absolute;left:14px;top:35px;margin-top:-11px;opacity:0;transform:scale(.7);
+  transition:opacity .18s ease var(--d,0ms),transform .18s cubic-bezier(.2,.8,.2,1) var(--d,0ms)}
+.cw-selcard.ready .cw-ckb{opacity:1;transform:none}
+/* 底栏里那行「已选 N 人」从 0 高长出来，别让上面的主按钮跳一下 */
+.cw-fsum{overflow:hidden}
+@media (prefers-reduced-motion:reduce){
+  .cw-selcard,.cw-selcard .cw-ckb{transition:none}
+}
 .cust-top{display:flex;align-items:flex-start;gap:12px}
 .cust-av{flex:none;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;
   color:#fff;font-size:17px;font-weight:600;letter-spacing:.02em;
@@ -3661,15 +3673,16 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
         <section class="screen" id="host-awake">
           <div class="cust-glow"></div>
           <div class="appbar-back cust-bar">
-            <button class="iconbtn" onclick="back()" id="custAwakeBack" title="返回"></button>
+            <!-- 选取态里这枚返回是「退出选取态」，不是离开这页（见 awakeBackOrLeave） -->
+            <button class="iconbtn" onclick="awakeBackOrLeave()" id="custAwakeBack" title="返回"></button>
             <h3>待唤醒客户</h3>
             <button class="cust-wx" id="custWxAwake" onclick="custAcctToggle()" aria-label="切换微信账号" aria-expanded="false"></button>
           </div>
           <div class="scroll cust-scroll" id="custAwakeBody"></div>
           <!-- 吸底「一键唤醒」· 客户唤醒两个入口之一（另一个在工具页「高效发送」组）。
                底栏只放这一枚主操作，不写三档人数。
-               点它停在当前这一档（今日／1天／1周）、只把这一档的人带过去、默认全选；
-               想一次唤醒三档，进名单后切「全部」自己勾。 -->
+               点它不换页：这一页就地进入选取态（卡片左侧长出勾、底栏变成「已选 N 人＋下一步」），
+               只勾当前这一档的人。选取态没有「全部／自定义」——那两段留在工具页那条路上。 -->
           <div class="cw-foot" id="custAwakeFoot">
             <button class="cw-btn block" onclick="cwFromAwake()">一键唤醒</button>
           </div>
@@ -4679,6 +4692,10 @@ function reportPage(id,params){
 }
 function go(id,params){
   if(!isPro()&&VIP_ONLY[id]) id='host-ai-up';   /* 非旗舰版：旗舰版的屏一律落到升级提示页 */
+  /* 从「待唤醒客户」的选取态走别处（底栏导航之类）＝放弃这次选人；去唤醒内容页不算，那一步要带着勾回来 */
+  if(cur==='host-awake'&&id!=='host-awake'&&id!=='cw-content'&&AWAKE_SELING){
+    AWAKE_SELING=false; AWAKE_FIX=false; AWAKE_ENTER=false;
+  }
   closeBallMenu(true); /* 切屏即收：两选一菜单只活在微信屏，别跟着切到别的页；瞬收，不留一段淡出到新屏上 */
   var to=$(id); if(!to) return;
   var from=cur?$(cur):null;
@@ -5056,18 +5073,20 @@ function taskJump(where){
    数据仍是演示值（同今日概况那六个数），不接素材库；微信号统一是稿子上的 XX-8886666。 */
 var CUST_SEG=0;
 var CUST_PAGES={
+  /* i＝与 CW_CUST 同一个客户 id：这一页的选取态直接读写 CW_SEL，
+     从「一键唤醒」进到唤醒内容页时，带过去的就是同一批人。 */
   'host-awake':{t:'待唤醒客户',label:'最后触达',tabs:['今日未回复','1天未回复','1周未回复'],lists:[
-    [{n:'许志远',m:'今天08:10　未回复·6小时'},
-     {n:'宋雨彤',m:'今天08:40　未回复·5小时'},
-     {n:'林晓雯',m:'今天09:20　未回复·4小时'},
-     {n:'李晓霞',m:'今天10:00　未回复·3小时'},
-     {n:'张大强',m:'今天10:00　未回复·3小时'},
-     {n:'王芳',m:'今天09:05　未回复·2小时'}],
-    [{n:'刘洋',m:'前天15:30　未回复·5天'},
-     {n:'周敏',m:'昨天11:05　未回复·3天'},
-     {n:'陈立',m:'昨天18:20　未回复·2天'}],
-    [{n:'吴静',m:'9月27日 09:30　未回复·10天'},
-     {n:'郑凯',m:'9月27日 10:10　未回复·7天'}]]},
+    [{i:'a6',n:'许志远',m:'今天08:10　未回复·6小时'},
+     {i:'a5',n:'宋雨彤',m:'今天08:40　未回复·5小时'},
+     {i:'a3',n:'林晓雯',m:'今天09:20　未回复·4小时'},
+     {i:'a1',n:'李晓霞',m:'今天10:00　未回复·3小时'},
+     {i:'a2',n:'张大强',m:'今天10:00　未回复·3小时'},
+     {i:'a4',n:'王芳',m:'今天09:05　未回复·2小时'}],
+    [{i:'b3',n:'刘洋',m:'前天15:30　未回复·5天'},
+     {i:'b2',n:'周敏',m:'昨天11:05　未回复·3天'},
+     {i:'b1',n:'陈立',m:'昨天18:20　未回复·2天'}],
+    [{i:'c2',n:'吴静',m:'9月27日 09:30　未回复·10天'},
+     {i:'c1',n:'郑凯',m:'9月27日 10:10　未回复·7天'}]]},
   'host-reach':{t:'待触达新客户',label:'最后触达',msg:'你好呀，朋友推荐我来找你，说你们家售后很靠谱。',items:[
     {n:'张大强',m:'今天10:00　未回复·3小时'},
     {n:'张大强',m:'今天10:00　未回复·3小时'},
@@ -5149,13 +5168,19 @@ function custAcctSync(pid){
 function custAcctToggle(){ CUST_ACCT_OPEN=!CUST_ACCT_OPEN; custAcctSync(CUST_DOM[cur]?cur:null); }
 function custAcctClose(){ CUST_ACCT_OPEN=false; custAcctSync(CUST_DOM[cur]?cur:null); }
 function custAcctPick(i){ CUST_ACCT=i; CUST_ACCT_OPEN=false; custAcctSync(CUST_DOM[cur]?cur:null); }
-function custCard(it,p){
+/* sel＝「待唤醒客户」的就地选取态：卡内左侧多一枚勾选框、整张卡可点。
+   勾选框是卡里的真按钮，卡本身不是 button（卡里还有一枚复制微信号的按钮，按钮不套按钮）。 */
+function custCard(it,p,sel,idx){
   var wx='XX-8886666';
-  return '<div class="cust-card'+(p.msg?' has-msg':'')+'">'
+  return '<div class="cust-card'+(sel?' cw-selcard':'')+(p.msg?' has-msg':'')+'"'
+    +(sel?' data-i="'+it.i+'" style="--d:'+((idx||0)*30)+'ms" onclick="awakeToggle(\''+it.i+'\')"':'')+'>'
+    +(sel?'<button class="cw-ckb" onclick="event.stopPropagation();awakeToggle(\''+it.i+'\')"'
+      +' aria-pressed="'+(CW_SEL[it.i]?'true':'false')+'" aria-label="选择 '+it.n+'">'
+      +cwCbHtml(CW_SEL[it.i]?2:0)+'</button>':'')
     +'<div class="cust-top"><span class="cust-av">'+it.n.slice(0,1)+'</span>'
     +'<span class="cust-main"><b class="cust-name hv-gn">'+it.n+'</b>'
     +'<span class="cust-id">微信号：'+wx
-      +'<button class="cust-copy" onclick="copyText(\''+wx+'\',\'微信号已复制\')" aria-label="复制微信号" title="复制微信号">'+I('copy',13,2)+'</button></span>'
+      +'<button class="cust-copy" onclick="event.stopPropagation();copyText(\''+wx+'\',\'微信号已复制\')" aria-label="复制微信号" title="复制微信号">'+I('copy',13,2)+'</button></span>'
     +'<span class="cust-meta">'+p.label+'：'+it.m+'</span></span></div>'
     +(p.msg?'<div class="cust-msg"><div class="cust-msg-h"><span class="cust-hi">Hi</span>'
       +'<span class="cust-gn">加好友打招呼语</span></div>'
@@ -5165,7 +5190,7 @@ function custCard(it,p){
 function custRender(id){
   var p=CUST_PAGES[id], dom=CUST_DOM[id];
   $(dom[1]).innerHTML=I('back',24,2);
-  var h='', list=p.items||[];
+  var h='', list=p.items||[], sel=id==='host-awake'&&AWAKE_SELING;
   if(p.tabs){
     h+='<div class="cust-seg">';
     for(var i=0;i<p.tabs.length;i++){
@@ -5175,10 +5200,11 @@ function custRender(id){
     list=p.lists[CUST_SEG]||[];
   }
   var lh='';
-  for(var j=0;j<list.length;j++)lh+=custCard(list[j],p);
+  for(var j=0;j<list.length;j++)lh+=custCard(list[j],p,sel,j);
   h+='<div class="cust-list">'+(lh||'<div class="hv-empty">暂无记录</div>')+'</div>';
   $(dom[0]).innerHTML=h;
   CUST_ACCT_OPEN=false; custAcctSync(id);
+  if(id==='host-awake')awakeAfterRender();
 }
 REND['host-awake']=function(){custRender('host-awake')};
 REND['host-reach']=function(){custRender('host-reach')};
@@ -5193,6 +5219,9 @@ REND['host-newfriend']=function(){custRender('host-newfriend')};
    演示数据用 c.w＝「N 天前已被唤醒过」：设置里「排除近期已唤醒」默认开，这一个人就不出现在三档里；
    关掉它，第 1 天那组会多出一人，用来演示这个开关真的在改名单。 */
 var CW_VIEW='all';
+/* 「待唤醒客户」就地选取态（见下方 awake* 那段）与这条流程的起点：
+   awake＝从这页的吸底「一键唤醒」进来，tools＝从工具页的「客户唤醒」进来。 */
+var AWAKE_SELING=false, AWAKE_FIX=false, AWAKE_ENTER=false, CW_FROM='tools';
 var CW_CUST=[
   {i:'a1',n:'李晓霞',last:'今天 10:00',h:3},
   {i:'a2',n:'张大强',last:'今天 10:00',h:3},
@@ -5328,17 +5357,117 @@ function cwView(v){
   if(v==='custom'){ cwCustomSheet(); return; }
   CW_VIEW=v; REND['cw-list']();
 }
-/* 吸底「一键唤醒」：停在刚才那一档（今日／1天／1周），只带这一档的人过去、默认全选——
-   点了「唤醒」就该唤醒眼前这些人；三档一起唤醒切到「全部」自己勾。 */
+/* ---------- 待唤醒客户 · 就地选取态（从吸底「一键唤醒」进入，不换页） ----------
+   点下去不 go() 到另一屏：这一页自己变成选取态。时间轴：
+   · 0ms　只有按压波纹，页面、Tab、滚动位置都不动；
+   · 60ms 起　卡片逐行（每行 +30ms）把左内衬 14→47、勾选框 scale(.7)→1，卡高与字号不动；
+   · 80ms 起　底栏上方「已选 N 人」从 0 高长出来（主按钮位置不动），120ms 处按钮文字淡切；
+   · 退出　勾与内衬一起收回、不逐行错峰，160ms 收完。
+   选取态里分段器仍是这页的三档，没有「全部／自定义」，也没有记录与设置——那两个入口留在
+   「工具页 → 客户唤醒」那条路上（#cw-list 照旧是独立页）。 */
+function awakeSelCount(){
+  var n=0,b,k,list;
+  for(b=0;b<3;b++){
+    list=CUST_PAGES['host-awake'].lists[b]||[];
+    for(k=0;k<list.length;k++)if(list[k].i&&CW_SEL[list[k].i])n++;
+  }
+  return n;
+}
+/* 只勾当前这一档的人：点了「唤醒」，唤醒的就是眼前这些。 */
 function cwFromAwake(){
-  CW_VIEW=['today','day','week'][CUST_SEG]||'today';
+  AWAKE_SELING=true; AWAKE_FIX=false; AWAKE_ENTER=true; CW_FROM='awake';
   CW_SEL={};
-  cwGroups().forEach(function(g){ g.l.forEach(function(c){ CW_SEL[c.i]=true }) });
-  cwEnter();
+  (CUST_PAGES['host-awake'].lists[CUST_SEG]||[]).forEach(function(it){ if(it.i)CW_SEL[it.i]=true });
+  REND['host-awake']();
+}
+function awakeToggle(i){
+  if(!AWAKE_SELING)return;
+  CW_SEL[i]=!CW_SEL[i];
+  var ck=document.querySelector('#custAwakeBody .cust-card[data-i="'+i+'"] .cw-ckb');
+  if(ck){ ck.innerHTML=cwCbHtml(CW_SEL[i]?2:0); ck.setAttribute('aria-pressed',CW_SEL[i]?'true':'false') }
+  awakeFoot();
+}
+function awakeNext(){
+  if(!awakeSelCount()){ toast('先选几个客户'); return; }
+  if(cwOver()){ toast('超过单次上限，先在设置里调高或去掉几个人'); return; }
+  go('cw-content');
+}
+/* 内容页「修改」进来时，底栏换成「完成」回内容页（同 #cw-list 的 fix 模式）。 */
+function awakeDone(){ AWAKE_FIX=false; go('cw-content'); }
+function awakeBackOrLeave(){ if(!awakeBack())back(); }
+function awakeBack(){
+  if(!AWAKE_SELING)return false;
+  AWAKE_SELING=false; AWAKE_FIX=false; AWAKE_ENTER=false;
+  var cards=document.querySelectorAll('#custAwakeBody .cust-card.cw-selcard'), i;
+  for(i=0;i<cards.length;i++){ cards[i].style.setProperty('--d','0ms'); cards[i].classList.remove('ready') }
+  var f=$('custAwakeFoot'), sum=f.querySelector('.cw-fsum'), lab=f.querySelector('.cw-flab');
+  if(sum){ sum.style.transition='height .16s,opacity .16s,margin-bottom .16s';
+    sum.style.height='0'; sum.style.opacity='0'; sum.style.marginBottom='0' }
+  if(lab){ lab.style.transition='opacity .1s'; lab.style.opacity='0' }
+  setTimeout(function(){ REND['host-awake']() },170);
+  return true;
+}
+function awakeFootReset(){
+  var f=$('custAwakeFoot');
+  f.className='cw-foot'; f.removeAttribute('data-mode');
+  f.innerHTML='<button class="cw-btn block" onclick="cwFromAwake()">一键唤醒</button>';
+}
+function awakeAfterRender(){
+  if(!AWAKE_SELING){ if($('custAwakeFoot').getAttribute('data-mode'))awakeFootReset(); return; }
+  var entering=AWAKE_ENTER; AWAKE_ENTER=false;
+  var cards=$('custAwakeBody').querySelectorAll('.cust-card.cw-selcard'), i;
+  if(entering){
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){
+      for(var k=0;k<cards.length;k++)cards[k].classList.add('ready');
+    }) });
+  }else{
+    for(i=0;i<cards.length;i++)cards[i].classList.add('ready');
+  }
+  awakeFoot(entering);
+}
+/* 底栏两种形态：next＝已选 N 人＋下一步；fix＝已选 N 人＋完成。
+   从「一键唤醒」变形时（animate）保留按钮本体，人数行长出来、按钮文字淡切，按钮不换位置。 */
+function awakeFoot(animate){
+  var f=$('custAwakeFoot'), n=awakeSelCount(), mode=AWAKE_FIX?'fix':'next';
+  if(f.getAttribute('data-mode')===mode){
+    var s0=f.querySelector('.cw-fsump');
+    if(s0)s0.querySelector('b').textContent=n;
+    return;
+  }
+  if(mode==='fix'||!animate){
+    f.className='cw-foot stack'; f.setAttribute('data-mode',mode);
+    f.innerHTML='<div class="cw-sum"><span class="cw-fsump">已选 <b>'+n+'</b> 人</span></div>'
+      +'<button class="cw-btn block" onclick="'+(mode==='fix'?'awakeDone()':'awakeNext()')+'">'
+      +(mode==='fix'?'完成':'下一步：写唤醒内容')+'</button>';
+    return;
+  }
+  var btn=f.querySelector('.cw-btn'), lab;
+  f.className='cw-foot stack'; f.setAttribute('data-mode','next');
+  btn.removeAttribute('onclick');
+  btn.innerHTML='<span class="cw-flab">一键唤醒</span>';
+  lab=btn.querySelector('.cw-flab');
+  var sum=document.createElement('div');
+  sum.className='cw-sum cw-fsum';
+  sum.innerHTML='<span class="cw-fsump">已选 <b>'+n+'</b> 人</span>';
+  sum.style.height='0'; sum.style.opacity='0'; sum.style.marginBottom='0';
+  f.insertBefore(sum,btn);
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){
+    sum.style.transition='height .18s cubic-bezier(.2,.8,.2,1) .08s,opacity .18s .08s,margin-bottom .18s .08s';
+    sum.style.height='24px'; sum.style.opacity='1'; sum.style.marginBottom='9px';
+    lab.style.transition='opacity .1s';
+    lab.style.opacity='0';
+  }) });
+  setTimeout(function(){
+    lab.textContent='下一步：写唤醒内容';
+    lab.style.transition='opacity .12s';
+    lab.style.opacity='1';
+    btn.setAttribute('onclick','awakeNext()'); /* 变形这 160ms 内再点一下不该又进一次 */
+  },170);
 }
 function cwEnter(){ CW_LIST_MODE='root'; go('cw-list'); }
 
 REND['cw-list']=function(){
+  CW_FROM='tools'; /* 进到这一屏＝走工具页那条路（「一键唤醒」的路不经过这里） */
   $('cwListBack').innerHTML=I('back',24,2);
   $('cwRecIc').innerHTML=I('clock',20,2.1);
   $('cwSetIc').innerHTML=I('gear',20,2.1);
@@ -5383,7 +5512,11 @@ function cwNext(){
   if(cwOver()){ toast('超过单次上限，先在设置里调高或去掉几个人'); return; }
   go('cw-content');
 }
-function cwEditList(){ CW_LIST_MODE='fix'; go('cw-list'); }
+/* 内容页「修改」：从「一键唤醒」进来的，退回那页的选取态（不换屏）；从工具页进来的照旧回名单页。 */
+function cwEditList(){
+  if(CW_FROM==='awake'){ AWAKE_FIX=true; back(); return; }
+  CW_LIST_MODE='fix'; go('cw-list');
+}
 function cwDoneList(){ CW_LIST_MODE='root'; back(); }
 
 /* 自定义 N：只改筛选条件，不动已勾选的人（切回来勾选还在）。 */
@@ -5736,9 +5869,13 @@ function cwStart(){
   var r={id:'r'+Date.now(),when:'今天\n'+cwClock(),n:n,strat:CW_STRAT,fixed:CW_FIXED.length,
          st:'run',ok:0,fail:0,fails:[],names:ids.slice()};
   CW_RECS.unshift(r);
-  go('host-tools');
+  if(CW_FROM==='awake'){
+    /* 这条路没离开过「待唤醒客户」：回那页，选取态一起收掉 */
+    AWAKE_SELING=false; AWAKE_FIX=false; AWAKE_ENTER=false;
+    back();
+  }else go('host-tools');
   toast('已开始唤醒，完成后在记录里查看');
-  /* 演示用：脚本执行期间 App 不在前台，回到工具页后状态自己跑完（真机上由脚本回报） */
+  /* 演示用：脚本执行期间 App 不在前台，回来之后状态自己跑完（真机上由脚本回报） */
   setTimeout(function(){
     var rr=cwRecById(r.id); if(!rr||rr.st!=='run')return;
     var fn=Math.min(n,2);
