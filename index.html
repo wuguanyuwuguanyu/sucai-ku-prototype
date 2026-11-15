@@ -22524,6 +22524,13 @@ function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'
 function q(s,r){return (r||document).querySelector(s)}
 function qa(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
 
+/* 快照里的 ? 图标只是 AntD 的壳：提示要 React 才画，静态页悬停没有任何反应，
+   内容区里的一律摘掉。顶栏那枚是现网外壳，不归这一页管，留着。 */
+qa('.anticon-question-circle').forEach(function(el){
+  if(el.classList.contains('topRight-icon')||el.closest('.topRight-icon'))return;
+  el.remove();
+});
+
 ${reaPickJs({tip:tip, moments:page==='发圈 · 新建', counts:false})}
 
 /* ---------- 已选素材卡（任务三页的同一形；欢迎语模版不用它，素材直接铺成表行） ---------- */
@@ -23573,7 +23580,6 @@ function initQf(){
   var tagPanel=document.createElement('div');tagPanel.className='rea-qf-tagpanel';b2.appendChild(tagPanel);
   tagPanel.innerHTML='<div class="rea-qf-trow"><span>是否按照整个标签发送</span>'
     +'<label class="rea-qf-rd"><input type="radio" name="rea-qf-whole" value="whole" checked><span class="rea-qf-rddot"></span>按照整个标签</label>'
-    +'<span class="rea-qf-help" role="img" aria-label="说明">?</span>'
     +'<label class="rea-qf-rd"><input type="radio" name="rea-qf-whole" value="part"><span class="rea-qf-rddot"></span>不按照整个标签</label></div>';
   /* 演示标签跟着执行人员走；正式版取手机同步上来的好友标签并集，同名标签已合并。 */
   var ORG_TAGS=[
@@ -24921,6 +24927,13 @@ else if(PAGE==='群发群组 · 新建')initQs();
 function norm(s){return String(s==null?'':s).replace(/\s+/g,'')}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function qa(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
+
+/* 快照里的 ? 图标只是 AntD 的壳：提示要 React 才画，静态页悬停没有任何反应，
+   内容区里的一律摘掉。顶栏那枚是现网外壳，不归这一页管，留着。 */
+qa('.anticon-question-circle').forEach(function(el){
+  if(el.classList.contains('topRight-icon')||el.closest('.topRight-icon'))return;
+  el.remove();
+});
 
 /* 与「微信群管理」演示台账对齐：只取状态「正常」的 8 个群（「wogf」被踢出群，不列）；
    台账里「二组测试号培养互动」有两条（36 人 / 102 人），按两条群记录保留，靠人数区分。 */
@@ -30224,6 +30237,12 @@ var L={
 function up(n,c){while(n&&n.nodeType===1){if(n.classList&&n.classList.contains(c))return n;n=n.parentNode}return null}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function pad(n){return (n<10?'0':'')+n}
+/* 快照里的 ? 图标只是 AntD 的壳：提示要 React 才画，静态页悬停没有任何反应，
+   内容区里的一律摘掉。顶栏那枚是现网外壳，不归这一页管，留着。 */
+[].slice.call(document.querySelectorAll('.anticon-question-circle')).forEach(function(el){
+  if(el.classList.contains('topRight-icon')||el.closest('.topRight-icon'))return;
+  el.remove();
+});
 
 /* AntD 的提示条只认 css-mncuj7 这枚 hash（与素材库新建页、自动打招呼同一套） */
 var MW=null;
