@@ -26338,8 +26338,8 @@ BT.addEventListener('click',function(e){
     '.rea-wxd-ring-hd>span:last-child{font-size:12px;color:#8F959E}',
     '.rea-wxd-help{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border:1px solid #C9CED6;border-radius:50%;font-size:10px;line-height:1;color:#8F959E;cursor:help}',
     '.rea-wxd-ring-bd{display:flex;align-items:center;gap:20px}',
-    '.rea-wxd-donut{position:relative;flex:none;width:120px;height:120px}',
-    '.rea-wxd-donut svg{display:block;width:120px;height:120px;transform:rotate(-90deg)}',
+    '.rea-wxd-donut{position:relative;flex:none;width:140px;height:140px}',
+    '.rea-wxd-donut svg{display:block;width:140px;height:140px;transform:rotate(-90deg)}',
     '.rea-wxd-donut circle{fill:none;stroke-width:12}',
     '.rea-wxd-donut circle.track{stroke:#F0F2F5}',
     '.rea-wxd-donut circle.done{stroke:#1677FF}',
@@ -26357,7 +26357,7 @@ BT.addEventListener('click',function(e){
     '.rea-wxd-donut-c{position:absolute;inset:0;display:grid;place-content:center;text-align:center}',
     '.rea-wxd-donut-c b{font-size:20px;line-height:1.3;font-weight:600;color:#1F2329;font-variant-numeric:tabular-nums}',
     '.rea-wxd-donut-c span{font-size:12px;color:#8F959E}',
-    '.rea-wxd-ring-lg{display:grid;flex:1;gap:10px;min-width:0}',
+    '.rea-wxd-ring-lg{display:grid;align-content:center;gap:10px;min-width:0}',
     '.rea-wxd-ring-lg>div{display:flex;align-items:center;gap:8px;font-size:13px;line-height:20px;color:#1F2329;white-space:nowrap}',
     '.rea-wxd-ring-lg i{width:8px;height:8px;flex:none;border-radius:50%;background:#8F959E}',
     '.rea-wxd-ring-lg i.done{background:#1677FF}',
@@ -26369,16 +26369,19 @@ BT.addEventListener('click',function(e){
     '.rea-wxd-ring-lg i.unlinked{background:#8FB2F4}',
     '.rea-wxd-ring-lg i.missing{background:#FAAD14}',
     '.rea-wxd-ring-lg i.abnormal{background:#FF4D4F}',
-    '.rea-wxd-ring-lg b{margin-left:auto;font-size:12px;font-weight:400;color:#646A73}',
+    '.rea-wxd-ring-lg b{margin-left:12px;font-size:12px;font-weight:400;color:#646A73}',
     '.rea-wxd-ring-lg .rea-wxd-ring-rate{padding-left:16px;font-size:12px;line-height:18px;color:#8F959E}',
     '.rea-wxd-rings .rea-wxd-ring-hd{margin-bottom:10px}',
+    /* 页签卡片：图表块在页签下方剩下的高度里居中，别把空白全堆在底上。 */
+    '.rea-wxd-rings .rea-wxd-tabbd{flex:1;display:flex;flex-direction:column;justify-content:center}',
+    '.rea-wxd-rings .rea-wxd-tabbd[hidden]{display:none}',
     '.rea-wxd-rings .rea-wxd-ring-bd{gap:16px}',
-    '.rea-wxd-rings .rea-wxd-donut,.rea-wxd-rings .rea-wxd-donut svg{width:96px;height:96px}',
-    '.rea-wxd-rings .rea-wxd-donut-c b{font-size:18px}',
+    '.rea-wxd-rings .rea-wxd-donut,.rea-wxd-rings .rea-wxd-donut svg{width:132px;height:132px}',
+    '.rea-wxd-rings .rea-wxd-donut-c b{font-size:20px}',
     '.rea-wxd-rings .rea-wxd-ring-lg{gap:8px}',
-    /* 关联好友 · 详情：执行结果有 4 行图例（104px），比执行情况的 96px 环高 8px，
-       切页签时卡片会跳一下。给两页的图身留同一个下限，环仍居中。 */
-    '.rea-wxd-rel .rea-wxd-ring-bd{min-height:104px}',
+    /* 关联好友 · 详情：执行结果有 4 行图例，比执行情况的两行高，切页签时卡片会跳一下。
+       给两页的图身留同一个下限（与环同高），环仍居中。 */
+    '.rea-wxd-rel .rea-wxd-ring-bd{min-height:132px}',
     '.rea-wxd-blk+.rea-wxd-blk{margin-top:16px;padding-top:16px;border-top:1px solid #F0F0F2}',
     /* 批量加好友 · 详情（2026-11-13）与群发好友 · 详情（2026-11-15）：右栏和字段同一横栏，
        页签在「执行进度」环图与转化漏斗之间切换。漏斗梯形条按第一级等比收窄，
@@ -26421,9 +26424,9 @@ BT.addEventListener('click',function(e){
     '.rea-wxd-tb.abnormal i{background:#FF4D4F}',
     '.rea-wxd-tb.open{color:#646A73}',
     /* 客户唤醒 · 详情：与批量加好友同一套「任务信息 ＋ 右栏图表」版式（2026-11-15）。
-       右栏 360px，两个页签切换：转化漏斗（按客户条目）与执行进度（按人次）。
-       漏斗沿用批量加好友那套 rea-wxd-fn-*，两边同一观感；三行条与 96px 环等高，
-       切页签卡片不跳。每级条可点，开对应客户明细，入口在漏斗脚注右侧。 */
+       右栏 360px，两个页签切换：唤醒情况（按客户条目）与执行进度（按人次）。
+       漏斗沿用批量加好友那套 rea-wxd-fn-*，两边同一观感；图表块在页签下居中，
+       切页签卡片不跳。每级条可点，开对应客户明细，入口在漏斗右下。 */
     '.rea-wxd-hx .rea-wxd-info{grid-template-columns:360px minmax(0,1fr)}',
     '.rea-wxd-hx .rea-wxd-kv{row-gap:24px!important}',
     '.rea-wxd-hx .rea-wxd-fn-bd{gap:4px}',
