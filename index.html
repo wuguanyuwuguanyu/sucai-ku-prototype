@@ -952,6 +952,11 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .cw-acts{position:absolute;right:6px;top:50%;margin-top:-22px;display:flex;align-items:center;gap:2px}
 .cw-ib{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;
   color:#2E5FA8;position:relative;overflow:hidden}
+/* 教程那枚的未读点：点开看一次就没了，只用来叫人发现第三枚图标 */
+.cw-ib .cw-dot{position:absolute;top:8px;right:8px;width:8px;height:8px;border-radius:50%;
+  background:#C2413A;box-shadow:0 0 0 2px #F4F8FF}
+/* 三枚图标时标题让出位置，别压到图标上 */
+#cw-content .cw-bar h3{right:146px}
 .cw-scroll{position:relative;z-index:1;padding:2px 16px 16px}
 /* 勾选框两处共用：工具页的范围不再带名单，只剩「待唤醒客户」就地选取态用它；
    形状与「待唤醒客户」那张卡上的勾选框是同一枚。 */
@@ -1230,6 +1235,14 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .cw-opts button{height:32px;padding:0 12px;border-radius:999px;background:#fff;border:1px solid #DCE6FA;
   font-size:12.5px;font-weight:600;color:#3A5B8F;position:relative;overflow:hidden}
 .cw-opts button.on{background:#E8F0FF;border-color:#B9CDF6;color:#1B4AA8}
+/* 教程弹层：封面＋播放按钮就是整块播放器，原型不带视频、不走网络 */
+.cw-tutvid{position:relative;margin-top:8px;border-radius:16px;overflow:hidden;aspect-ratio:16/9;
+  background:linear-gradient(135deg,#1B2B4A 0%,#2E4E86 58%,#5A6BD6 100%)}
+.cw-tutvid::before{content:'';position:absolute;inset:0;
+  background:radial-gradient(58% 62% at 74% 16%,rgba(255,255,255,.22),transparent 70%)}
+.cw-tutplay{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:62px;height:62px;
+  border-radius:50%;background:rgba(255,255,255,.94);color:#1B2A46;display:flex;align-items:center;
+  justify-content:center;box-shadow:0 10px 26px rgba(8,20,46,.34);z-index:1}
 
 /* ---------------- 宿主 App AI托管页（底部 Tab「AI托管」，居中抬起）· 逻辑照参考原型 APP-AI-001 ----------------
    口径说明：
@@ -3779,6 +3792,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
             <div class="cw-acts">
               <button class="cw-ib" id="cwRecIc" onclick="go('cw-records')" aria-label="唤醒记录" title="唤醒记录"></button>
               <button class="cw-ib" id="cwSetIc" onclick="cwSetSheet()" aria-label="设置" title="设置"></button>
+              <button class="cw-ib" id="cwTutIc" onclick="cwTutSheet()" aria-label="视频教程" title="视频教程"></button>
             </div>
           </div>
           <div class="scroll cw-scroll" id="cwContentBody"></div>
@@ -5279,6 +5293,7 @@ var CW_CUST=[
 ];
 var CW_SET={gap:10,style:'亲切',role:'客户经理',words:120};
 var CW_TMP={gap:10,style:'亲切',role:'客户经理',words:120};
+var CW_TUT_SEEN=false; /* 教程看没看过：没看过页头那枚图标带点未读 */
 var CW_STYLES=['亲切','专业','紧迫','幽默','轻松'];
 var CW_ROLES=['客户经理','售前','营销人员'];
 /* 唤醒范围：n＋单位，on=false 时没有范围（进来就是这样，不替用户预选）。 */
@@ -5980,6 +5995,7 @@ REND['cw-content']=function(){
   $('cwContentBack').innerHTML=I('back',24,2);
   $('cwRecIc').innerHTML=I('clock',20,2.1);
   $('cwSetIc').innerHTML=I('gear',20,2.1);
+  cwTutDot();
   var h='';
   /* 范围块只在工具页那条路出现；从「一键唤醒」进来时人已经手选过，返回键就回选取态。
      生成之后也不收起来：范围是结果态里最常改的东西，编辑器一直摆在原位。 */
@@ -6239,6 +6255,20 @@ function cwSetSave(){
   closeSheet(CW_SH); CW_SH=null;
   if(cur==='cw-content')REND['cw-content']();
 }
+
+/* 视频教程：页头第三枚图标打开一块演示播放器。原型不带视频、不走网络，点播放只落一句演示提示
+   （与「进入对话」同一口径）。首次进来带一枚未读点，点开看过即消。 */
+function cwTutDot(){
+  var b=$('cwTutIc'); if(!b)return;
+  b.innerHTML=I('play',18,2.2)+(CW_TUT_SEEN?'':'<i class="cw-dot"></i>');
+}
+function cwTutSheet(){
+  CW_TUT_SEEN=true; cwTutDot();
+  CW_SH=openSheet('<div class="cw-sh">客户唤醒怎么用 · 约 1 分钟</div>'
+    +'<div class="cw-tutvid"><button class="cw-tutplay" onclick="cwTutPlay()" aria-label="播放教程">'
+      +I('play',24,2)+'</button></div>','cw-sheet');
+}
+function cwTutPlay(){ toast('演示：播放客户唤醒教程视频'); }
 
 /* ---------- 宿主 App 工具页（底部 Tab「工具」）· 2026-10-16 起照**线上旗舰版**那一版重排 ---------- */
 /* 这一屏原先照 Figma 节点 267:5486 复刻（六组 32 枚：客户管理／消息触达／社群经营／群聊运营／AI赋能／企微工具），
