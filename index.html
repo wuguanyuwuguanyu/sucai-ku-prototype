@@ -26370,6 +26370,7 @@ BT.addEventListener('click',function(e){
     '.rea-wxd-ring-lg i.missing{background:#FAAD14}',
     '.rea-wxd-ring-lg i.abnormal{background:#FF4D4F}',
     '.rea-wxd-ring-lg b{margin-left:auto;font-size:12px;font-weight:400;color:#646A73}',
+    '.rea-wxd-ring-lg .rea-wxd-ring-rate{padding-left:16px;font-size:12px;line-height:18px;color:#8F959E}',
     '.rea-wxd-rings .rea-wxd-ring-hd{margin-bottom:10px}',
     '.rea-wxd-rings .rea-wxd-ring-bd{gap:16px}',
     '.rea-wxd-rings .rea-wxd-donut,.rea-wxd-rings .rea-wxd-donut svg{width:96px;height:96px}',
@@ -26696,27 +26697,28 @@ if(PAGE==='批量加好友 · 详情'){
   }
 }else if(PAGE==='群发好友 · 详情'){
   /* 右栏两个页签：执行进度（原环图）与好友回复（按好友条目）。
-     没有「应触达」这一层——任务圈定人数不在任务详情里落数，漏斗从实际发出的
-     好友条目起算：已发送 → 已回复。回复数与好友列表弹窗同源（执行人员「群发好友数」
-     × 13.4%），两处不会对不上。 */
+     没有「应触达」这一层——任务圈定人数不在任务详情里落数，回复从实际发出的
+     好友条目起算：已发送里回了多少。回复数与好友列表弹窗同源（执行人员「群发好友数」
+     × 13.4%），两处不会对不上。2026-11-15 好友回复也画成环：
+     只有两层时两根梯形条撑不满一栏，环与旁边的执行进度同形，切页签也不跳。 */
   var sentN=0,repN=0,fj;
   for(fj=0;fj<5&&fj<FRIENDS.length;fj++){sentN+=FRIENDS[fj];repN+=Math.round(FRIENDS[fj]*0.134)}
+  var repRate=sentN?(repN/sentN*100).toFixed(1):'0.0';
+  var rep={done:repN,open:sentN-repN};
   var fh=''
-    +'<div class="rea-wxd-fn-row">'
-    +'<span class="rea-wxd-fn-lb">已发送</span>'
-    +'<span class="rea-wxd-fn-track"><i class="rea-wxd-fn-bar" style="width:100%"></i></span>'
-    +'<b class="rea-wxd-fn-num">'+sentN+'</b>'
-    +'<span class="rea-wxd-fn-rate"></span></div>'
-    +'<div class="rea-wxd-fn-row">'
-    +'<span class="rea-wxd-fn-lb">已回复</span>'
-    +'<span class="rea-wxd-fn-track"><i class="rea-wxd-fn-bar" style="width:'+(sentN?Math.max(repN/sentN*100,3).toFixed(1):0)+'%"></i></span>'
-    +'<b class="rea-wxd-fn-num">'+repN+'</b>'
-    +'<span class="rea-wxd-fn-rate">'+(sentN?'回复率 '+(repN/sentN*100).toFixed(1)+'%':'-')+'</span></div>';
+    +'<div class="rea-wxd-ring-bd">'
+    +'<div class="rea-wxd-donut" role="img" aria-label="好友回复：已发送 '+sentN+' 位，已回复 '+repN+' 位，回复率 '+repRate+'%">'
+    +'<svg viewBox="0 0 120 120"><circle class="track" cx="60" cy="60" r="50"></circle>'+donutSvg(rep,sentN,['done','open'])+'</svg>'
+    +'<div class="rea-wxd-donut-c"><b>'+repN+'/'+sentN+'</b><span>已回复</span></div>'
+    +'</div>'
+    +'<div class="rea-wxd-ring-lg">'+legendHtml(rep,['done','open'],{done:'已回复',open:'未回复'},' 位')
+    +'<div class="rea-wxd-ring-rate"><span>回复率</span><b>'+repRate+'%</b></div></div>'
+    +'</div>';
   ring.className='rea-wxd-ring rea-wxd-rings';
   ring.innerHTML=''
     +'<div class="rea-wxd-tabbar" role="tablist">'
     +'<button type="button" role="tab" class="on" data-wxd-tab="exec" aria-selected="true">执行进度<span class="rea-wxd-help" title="按人次统计：一位执行人员计 1 次；逾期含在未执行内。">?</span></button>'
-    +'<button type="button" role="tab" data-wxd-tab="conv" aria-selected="false">好友回复<span class="rea-wxd-help" title="按好友条目统计：已发送＝员工实际发出的好友条目；已回复＝好友回了本任务消息。百分比相对上一级。">?</span></button>'
+    +'<button type="button" role="tab" data-wxd-tab="conv" aria-selected="false">好友回复<span class="rea-wxd-help" title="按好友条目统计：已发送＝员工实际发出的好友条目；已回复＝好友回了本任务消息；回复率＝已回复 ÷ 已发送。">?</span></button>'
     +'</div>'
     +'<div class="rea-wxd-tabbd" data-wxd-panel="exec">'
     +'<div class="rea-wxd-ring-bd">'
@@ -26728,7 +26730,7 @@ if(PAGE==='批量加好友 · 详情'){
     +'</div>'
     +'</div>'
     +'<div class="rea-wxd-tabbd" data-wxd-panel="conv" hidden>'
-    +'<div class="rea-wxd-fn-bd">'+fh+'</div>'
+    +fh
     +'</div>';
   var qbtns=ring.querySelectorAll('[data-wxd-tab]'),
       qbds=ring.querySelectorAll('[data-wxd-panel]');
