@@ -1191,11 +1191,6 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
   font-family:var(--f);color:#152C50;padding:0;line-height:1.4;letter-spacing:.01em}
 .cw-topic input::placeholder{color:#B4C1D6;font-weight:500}
 .cw-topic input:focus{outline:none}
-.cw-cfg{display:flex;align-items:center;width:100%;padding:12px 14px;background:#fff;
-  border-radius:16px;margin-top:8px;font-size:12.5px;font-weight:500;color:#5B7BAA;
-  box-shadow:0 12px 24px -24px rgba(40,70,150,.9);position:relative;overflow:hidden}
-.cw-cfg span{display:flex;align-items:baseline;gap:4px;margin-right:14px}
-.cw-cfg span:not(.cw-chev){color:#3A5B8F;font-weight:600}
 /* AI 表单：输入贴底，上方整块留给结果 */
 #cwContentBody.cw-form{display:flex;flex-direction:column;overflow:hidden;padding-bottom:0}
 .cw-mid{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:12px 0}
@@ -1209,9 +1204,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .cw-composer input::placeholder{color:#B4C1D6;font-weight:500}
 .cw-composer input:focus{outline:none}
 .cw-composer .expl{font-size:11.5px;font-weight:500;color:#95A3B8;margin-top:4px}
-.cw-composer .cw-cfg{margin-top:10px;padding:12px 0 0;border-top:1px solid #EEF2FA;
-  background:transparent;border-radius:0;box-shadow:none}
-/* AI 结果：结果在上方滚动，主题和生成参数收成贴底一条，不跟着结果跳走 */
+/* AI 结果：结果在上方滚动，主题收成贴底一条，不跟着结果跳走 */
 #cwContentBody.cw-result{display:flex;flex-direction:column;overflow:hidden;padding-bottom:0}
 .cw-results{flex:1;min-height:0;overflow-y:auto;padding-bottom:12px}
 .cw-mini{flex:none;display:block;width:100%;text-align:left;background:#fff;border-radius:16px;
@@ -1219,8 +1212,6 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .cw-mini .top{display:flex;align-items:center;gap:6px}
 .cw-mini .top b{font-size:14.5px;font-weight:600;color:#152C50;line-height:1.4}
 .cw-mini .top .cw-chev{margin-left:auto}
-.cw-mini .sub{display:flex;align-items:baseline;margin-top:5px;font-size:11.5px;font-weight:500;color:#5B7BAA}
-.cw-mini .sub span{display:flex;align-items:baseline;gap:4px;margin-right:14px;color:#3A5B8F;font-weight:600}
 /* AI 结果：一人一张卡，行尾三枚图标 */
 .cw-aicard{position:relative;overflow:hidden;background:#fff;border-radius:16px;padding:12px 14px;margin-top:10px;
   box-shadow:0 12px 24px -24px rgba(40,70,150,.9)}
@@ -6061,9 +6052,6 @@ REND['cw-content']=function(){
       +'<div class="cw-composer">'
       +'<div class="lab">这次想说什么<span class="cnt" id="cwTopicCnt">'+CW_TOPIC.length+' / 50</span></div>'
       +'<input id="cwTopic" maxlength="50" value="'+esc(CW_TOPIC)+'" placeholder="比如：秋季新品到店" oninput="cwTopicInput(this.value)">'
-      +'<button class="cw-cfg" onclick="cwSetSheet()" aria-label="生成设置：风格 '+CW_SET.style+'，角色 '+CW_SET.role+'，字数 '+CW_SET.words+'">'
-        +'<span>'+CW_SET.style+'</span><span>'+CW_SET.role+'</span>'
-        +'<span>'+CW_SET.words+' 字</span><span class="cw-chev">›</span></button>'
       +'</div>';
   }else{
     /* 改范围只换人、不自动生成：新进来的人停在「还没生成话术」，底栏换成「生成话术」。 */
@@ -6076,10 +6064,9 @@ REND['cw-content']=function(){
       ids.forEach(function(id){ c+=cwAiCardHtml(id,!!CW_FLASH[id],CW_ENTER.indexOf(id)); });
     }
     c+='</div>';
-    /* 生成后输入卡不搬去顶部：主题和三项参数留在原地收成一条，点它回表单改。 */
-    c+='<button class="cw-mini" onclick="cwBackToForm()" aria-label="主题 '+esc(CW_TOPIC)+'，生成设置：风格 '+CW_SET.style+'，角色 '+CW_SET.role+'，字数 '+CW_SET.words+'">'
+    /* 生成后输入卡不搬去顶部：主题留在原地收成一条，点它回表单改。 */
+    c+='<button class="cw-mini" onclick="cwBackToForm()" aria-label="主题 '+esc(CW_TOPIC)+'，回表单修改">'
       +'<span class="top"><b>'+esc(CW_TOPIC)+'</b><span class="cw-chev">›</span></span>'
-      +'<span class="sub"><span>'+CW_SET.style+'</span><span>'+CW_SET.role+'</span><span>'+CW_SET.words+' 字</span></span>'
       +'</button>';
   }
   h+='<div class="cw-pcard cw-pcard-c">'+c+'</div>';
