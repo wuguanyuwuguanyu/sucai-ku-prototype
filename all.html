@@ -1075,7 +1075,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .cw-fld{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;
   border-top:1px solid #E7ECF5;margin-top:8px}
 .cw-fld>span{font-size:14px;font-weight:600;color:#2D4A75}
-/* 设置弹层里的步进器（字数／间隔／上限）：范围控件不再用它，设置那三项还留着。 */
+/* 设置弹层里的步进器（字数／间隔）：范围控件不再用它，设置里这两项还留着。 */
 .cw-step{display:flex;align-items:center;gap:12px}
 .cw-step button{width:36px;height:36px;border-radius:50%;background:#E8F0FF;color:#2E6BFF;
   font-size:19px;font-weight:600;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
@@ -1230,11 +1230,6 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .cw-opts button{height:32px;padding:0 12px;border-radius:999px;background:#fff;border:1px solid #DCE6FA;
   font-size:12.5px;font-weight:600;color:#3A5B8F;position:relative;overflow:hidden}
 .cw-opts button.on{background:#E8F0FF;border-color:#B9CDF6;color:#1B4AA8}
-.cw-ro{font-size:13px;font-weight:500;color:#95A3B8}
-/* 底栏第二行就是发送设置的入口：间隔与跳过规则都在这儿，点开同一个弹层 */
-.cw-fadj{display:block;width:100%;font-size:12px;font-weight:500;color:#6E86A8;line-height:1.45;
-  text-align:left;position:relative;overflow:hidden}
-.cw-fadj b{font-weight:600;color:#8FA3BE;margin-left:2px}
 
 /* ---------------- 宿主 App AI托管页（底部 Tab「AI托管」，居中抬起）· 逻辑照参考原型 APP-AI-001 ----------------
    口径说明：
@@ -5260,8 +5255,7 @@ REND['host-newfriend']=function(){custRender('host-newfriend')};
    生成之后改范围只换人：走的人话术留在内存，新进来的人停在「还没生成话术」，
    点底栏「生成话术」才补缺的，已有话术不重跑。
    三档（今日 1–6 小时／1天 1–6 天／1周 7–13 天）归「待唤醒客户」页，两条路正式分家（ADR-0095 修订）。
-   演示数据用 c.w＝「N 天前已被唤醒过」：设置里「排除近期已唤醒」默认开，这一个人就不出现在窗口里；
-   关掉它，1–6 天那一段会多出一人，用来演示这个开关真的在改范围。 */
+   演示数据铺开在 2 小时到 71 天之间：改 N 或换单位，窗口里就是另一批人。 */
 /* 「待唤醒客户」就地选取态（见下方 awake* 那段）与这条流程的起点：
    awake＝从这页的吸底「一键唤醒」进来，tools＝从工具页的「客户唤醒」进来。 */
 var AWAKE_SELING=false, AWAKE_ENTER=false, CW_FROM='tools';
@@ -5275,7 +5269,7 @@ var CW_CUST=[
   {i:'b1',n:'陈立',last:'昨天 18:20',h:50},
   {i:'b2',n:'周敏',last:'昨天 11:05',h:79},
   {i:'b3',n:'刘洋',last:'前天 15:30',h:120},
-  {i:'b4',n:'赵一鸣',last:'昨天 16:20',h:52,w:2},
+  {i:'b4',n:'赵一鸣',last:'昨天 16:20',h:52},
   {i:'c1',n:'郑凯',last:'9月27日 10:10',h:180},
   {i:'c2',n:'吴静',last:'9月27日 09:30',h:240},
   /* 下面三条要把 N 调到 30 天以上才进窗口：没有 14 天以上的快捷档 */
@@ -5283,8 +5277,8 @@ var CW_CUST=[
   {i:'d2',n:'何丽',last:'10月10日 16:40',h:33*24},
   {i:'d3',n:'马晓东',last:'9月2日 11:00',h:71*24}
 ];
-var CW_SET={gap:10,cap:50,skip:true,style:'亲切',role:'客户经理',words:120};
-var CW_TMP={gap:10,cap:50,skip:true,style:'亲切',role:'客户经理',words:120};
+var CW_SET={gap:10,style:'亲切',role:'客户经理',words:120};
+var CW_TMP={gap:10,style:'亲切',role:'客户经理',words:120};
 var CW_STYLES=['亲切','专业','紧迫','幽默','轻松'];
 var CW_ROLES=['客户经理','售前','营销人员'];
 /* 唤醒范围：n＋单位，on=false 时没有范围（进来就是这样，不替用户预选）。 */
@@ -5375,14 +5369,13 @@ function cwSelByH(){
   });
 }
 function cwSelCount(){ return cwSelIds().length; }
-function cwOver(){ return cwSelCount()>CW_SET.cap; }
 function cwUnitN(u){ return u==='d'?'天':'小时'; }
 function cwRangeLabel(){ return CW_CUSTOM.n+'–'+(CW_CUSTOM.n+5)+' '+cwUnitN(CW_CUSTOM.u); }
 /* 窗口 [N, N+5]，两端含。on=false＝没选范围，谁都算不上。 */
 function cwWindow(){
   if(!CW_CUSTOM.on)return [];
   var th=CW_CUSTOM.n*(CW_CUSTOM.u==='d'?24:1), span=5*(CW_CUSTOM.u==='d'?24:1);
-  return cwByH(CW_CUST.filter(function(c){ return c.h>=th&&c.h<=th+span&&!(CW_SET.skip&&c.w); }));
+  return cwByH(CW_CUST.filter(function(c){ return c.h>=th&&c.h<=th+span; }));
 }
 function cwByH(list){ return list.slice().sort(function(a,b){ return b.h-a.h }); } /* 组内按未回复时长从长到短 */
 /* 换范围＝重新取人：范围就是这次发给谁。× 掉的人不进勾选，改范围也不带回来。 */
@@ -5569,7 +5562,6 @@ function awakeAllSel(){
 }
 function awakeNext(){
   if(!awakeSelCount()){ toast('先选几个客户'); return; }
-  if(cwOver()){ toast('超过单次上限，先在设置里调高或去掉几个人'); return; }
   CW_XED={}; CW_ENTER=[]; cwQueryStop();
   go('cw-content');
 }
@@ -5928,7 +5920,7 @@ function cwSlotClose(slot){
   setTimeout(function(){ if(slot._seq!==seq)return; if(slot.innerHTML===keep)slot.innerHTML=''; slot.removeAttribute('style'); },160);
 }
 function cwContentFoot(){
-  var n=cwSelCount(), over=n>CW_SET.cap;
+  var n=cwSelCount();
   /* 主操作在同一位置换名字：AI 表单态是「生成话术」，其余是「开始唤醒」。 */
   var idle=(CW_STRAT==='ai'&&!CW_GEN)?'生成话术':'开始唤醒';
   var noRange=CW_FROM==='tools'&&!CW_CUSTOM.on;
@@ -5939,8 +5931,6 @@ function cwContentFoot(){
     sum='没能取到这段客户 · <button type="button" class="cw-retry" onclick="cwQueryRetry()">重试</button>';
   }else if(noRange){
     sum='还没选唤醒范围';
-  }else if(over){
-    sum='<div class="cw-sum bad">超过单次上限 '+CW_SET.cap+' 人<br><span>把范围调小一些，或在设置里调高</span></div>';
   }else if(n===0){
     sum=CW_FROM==='tools'?'这一段没有待唤醒的客户':'还没选客户';
   }else if(CW_STRAT==='fixed'){
@@ -6055,7 +6045,7 @@ function cwClock(){
 function cwStart(){
   if(CW_QBUSY)return;
   var ids=CW_STRAT==='fixed'?cwSelIds():cwAiOk(), n=ids.length;
-  if(n===0||cwOver()){ toast('这批人发不了，回去看看范围'); return; }
+  if(n===0){ toast('这批人发不了，回去看看范围'); return; }
   if(CW_STRAT==='fixed'&&!CW_FIXED.length){ toast('先添加一条唤醒内容'); return; }
   if(CW_STRAT==='ai'&&!CW_GEN){ toast('先生成话术'); return; }
   /* 开跑前用接口再核一遍名单：在这一屏停留期间，可能有人已被别的设备唤醒过。 */
@@ -6065,7 +6055,7 @@ function cwStart(){
 /* 核对回来再发：名单以接口刚返回的那份为准。 */
 function cwSendNow(){
   var ids=CW_STRAT==='fixed'?cwSelIds():cwAiOk(), n=ids.length;
-  if(n===0||cwOver()){
+  if(n===0){
     toast('这批人发不了，回去看看范围');
     if(cur==='cw-content'){ cwContentFoot(); REND['cw-content'](); }
     return;
@@ -6206,7 +6196,7 @@ REND['cw-record']=function(p){
   $('cwRecordBody').innerHTML=h;
 };
 
-/* 设置：分两组——话术生成（风格／角色／字数）管「怎么写」，发送（账号只读／间隔／上限／排除）管「怎么发」。
+/* 设置：分两组——话术生成（风格／角色／字数）管「怎么写」，发送（间隔）管「怎么发」。
    都在右上角同一个弹层里，改动只影响下一次开始；内容页底栏那行回显的就是这里的值。 */
 function cwOpts(list,key){
   return '<div class="cw-opts">'+list.map(function(v){
@@ -6225,20 +6215,14 @@ function cwSetBody(){
       +'<button onclick="cwSetStep(\'words\',20)" aria-label="加二十字">＋</button></div></div>'
     +'<div class="cw-line"></div>'
     +'<div class="cw-grp">发送</div>'
-    +'<div class="cw-fld"><span>发送账号</span><span class="cw-ro">当前微信</span></div>'
     +'<div class="cw-fld"><span>发送间隔</span><div class="cw-step">'
       +'<button onclick="cwSetStep(\'gap\',-5)" aria-label="减五秒">−</button><b>'+CW_TMP.gap+' 秒</b>'
       +'<button onclick="cwSetStep(\'gap\',5)" aria-label="加五秒">＋</button></div></div>'
-    +'<div class="cw-fld"><span>单次上限</span><div class="cw-step">'
-      +'<button onclick="cwSetStep(\'cap\',-10)" aria-label="减十人">−</button><b>'+CW_TMP.cap+' 人</b>'
-      +'<button onclick="cwSetStep(\'cap\',10)" aria-label="加十人">＋</button></div></div>'
-    +'<div class="cw-fld"><span>排除近期已唤醒</span>'
-      +'<button class="switch'+(CW_TMP.skip?' on':'')+'" role="switch" aria-checked="'+(CW_TMP.skip?'true':'false')+'" aria-label="排除近期已唤醒" onclick="cwSetSkip()"></button></div>'
     +'<div class="cw-shbtns"><button class="cw-btn ghost" onclick="closeSheet(CW_SH)">取消</button>'
     +'<button class="cw-btn" onclick="cwSetSave()">保存</button></div>';
 }
 function cwSetSheet(){
-  CW_TMP={gap:CW_SET.gap,cap:CW_SET.cap,skip:CW_SET.skip,style:CW_SET.style,role:CW_SET.role,words:CW_SET.words};
+  CW_TMP={gap:CW_SET.gap,style:CW_SET.style,role:CW_SET.role,words:CW_SET.words};
   CW_SH=openSheet(cwSetBody(),'cw-sheet');
 }
 function cwSetPick(k,v){
@@ -6247,22 +6231,12 @@ function cwSetPick(k,v){
 }
 function cwSetStep(k,d){
   if(k==='gap')CW_TMP.gap=Math.max(5,Math.min(60,CW_TMP.gap+d));
-  else if(k==='cap')CW_TMP.cap=Math.max(10,Math.min(100,CW_TMP.cap+d));
   else CW_TMP.words=Math.max(60,Math.min(300,CW_TMP.words+d));
   CW_SH.querySelector('.sheet-body').innerHTML=cwSetBody();
 }
-function cwSetSkip(){
-  CW_TMP.skip=!CW_TMP.skip;
-  CW_SH.querySelector('.sheet-body').innerHTML=cwSetBody();
-}
 function cwSetSave(){
-  var turnedOff=CW_SET.skip&&!CW_TMP.skip, turnedOn=!CW_SET.skip&&CW_TMP.skip;
-  CW_SET={gap:CW_TMP.gap,cap:CW_TMP.cap,skip:CW_TMP.skip,style:CW_TMP.style,role:CW_TMP.role,words:CW_TMP.words};
+  CW_SET={gap:CW_TMP.gap,style:CW_TMP.style,role:CW_TMP.role,words:CW_TMP.words};
   closeSheet(CW_SH); CW_SH=null;
-  /* 关掉「排除」后新露出来的人默认勾上——范围里默认全选这条规则不因为开关而破例；
-     重开时把他们从已选里摘掉，免得底部人数把看不见的人也数进去。手剔过的人保持原样。 */
-  if(turnedOff)cwWindow().forEach(function(c){ if(CW_SEL[c.i]===undefined)CW_SEL[c.i]=true; });
-  if(turnedOn)cwWindow().forEach(function(c){ if(c.w)CW_SEL[c.i]=false; });
   if(cur==='cw-content')REND['cw-content']();
 }
 
