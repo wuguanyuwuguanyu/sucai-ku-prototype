@@ -935,8 +935,9 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
    这与后台派下来的「客户唤醒任务」是两条路：这一屏是员工自己点的、立即发的一次性动作，
    没有定时、没有循环、不落后台任务，结果只落在本机的「唤醒记录」里。
    视觉归到宿主四屏那一套：浅蓝雾顶、白卡、蓝字，主按钮用实色蓝（宿主主操作不用渐变）。
-   **一屏完成**：范围（未回复超过 N，取 [N, N+5]）＋话术同页；名单降成「查看名单」sheet，
-   只用来剔人。三档（今日／1天／1周）归「待唤醒客户」页，这条路上不再出现。 */
+   **一屏完成**：范围（未回复超过 N，取 [N, N+5]）＋话术同页。范围只有输入框与单位，
+   规则收在标题旁问号的气泡里；页面上不报人数、不带名单。三档（今日／1天／1周）归
+   「待唤醒客户」页，这条路上不出现。 */
 #cw-content,#cw-records,#cw-record{background:linear-gradient(180deg,#F0F5FF 0%,#F7F9FE 100%)}
 .cw-glow{position:absolute;left:0;right:0;top:0;height:240px;pointer-events:none;
   background:radial-gradient(56% 34% at 18% -10%,rgba(150,178,255,.34),transparent 72%),
@@ -948,29 +949,14 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .cw-ib{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;
   color:#2E5FA8;position:relative;overflow:hidden}
 .cw-scroll{position:relative;z-index:1;padding:2px 16px 16px}
-/* 分档控件直接复用「待唤醒客户」那枚 `.cust-seg`（同一槽、同一选中片），不再另画一排 chips：
-   上一步点「一键唤醒」过来，控件不该换一副长相。**筛选只筛不改已勾选的人**，选中态说的是「在看哪一段」。 */
-/* 分组头：左边「今日未回复 · 6 人」，右边三态全选。三态是：全勾 ✓／部分 –／全不选空框，
-   勾选框在「全选」二字左侧——用户看得到再点一次会怎样（Q17）。 */
-.cw-band{display:flex;align-items:center;justify-content:space-between;margin:14px 2px 8px}
-.cw-band:first-child{margin-top:4px}
-.cw-band>b{font-size:14.5px;font-weight:600;color:#173A6B;letter-spacing:.01em}
-.cw-allsel{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:#4A6B9E;
-  padding:4px 2px;border-radius:8px;position:relative;overflow:hidden}
+/* 勾选框两处共用：工具页的范围不再带名单，只剩「待唤醒客户」就地选取态用它；
+   形状与「待唤醒客户」那张卡上的勾选框是同一枚。 */
 .cw-cb{flex:none;width:22px;height:22px;border-radius:7px;border:1.6px solid #C3D3EE;background:#fff;
   display:flex;align-items:center;justify-content:center;color:#fff;transition:background .15s,border-color .15s}
 .cw-cb.sm{width:18px;height:18px;border-radius:6px}
 .cw-cb.on{background:linear-gradient(140deg,#1677FE,#6A5BFF);border-color:transparent}
 .cw-cb.part{border-color:#6A8FE0;background:#fff}
 .cw-cb.part::after{content:"";width:9px;height:2.4px;border-radius:2px;background:#6A8FE0}
-/* 名单里的每一行就是「待唤醒客户」那张 `.cust-card`——头像、姓名、微信号＋复制、最后触达一行，
-   尺寸照搬（圆角 16.5、内衬 13/14、卡距 12、头像 44、姓名 17.6、副行 12.1），只在卡内左侧多一枚勾选框：
-   从吸底「一键唤醒」点进来，看得见的客户不该换一副长相。
-   整张卡可点＝勾选；勾选框与卡里的「复制微信号」各自 stopPropagation，一次点击只算一次。 */
-.cw-row{display:flex;align-items:center;gap:11px;width:100%;text-align:left;background:#fff;
-  border-radius:16.5px;padding:13px 14px;margin-bottom:12px;position:relative;overflow:hidden;
-  min-height:95px;cursor:pointer;
-  box-shadow:0 12px 24px -22px rgba(40,70,150,.95)}
 .cw-ckb{flex:none;width:22px;height:22px;padding:0;border-radius:50%;
   display:flex;align-items:center;justify-content:center}
 .cw-top{flex:1;min-width:0}
@@ -980,7 +966,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 /* 底部操作条：左边两行汇总，右边唯一主操作。与「待唤醒客户」那枚吸底条同一形制。 */
 .cw-foot{flex:none;display:flex;align-items:center;gap:12px;padding:10px 16px calc(14px + env(safe-area-inset-bottom));
   background:#fff;position:relative;z-index:6;box-shadow:0 -14px 24px -20px rgba(40,70,150,.9)}
-/* 名单那屏和「待唤醒客户」一样只有一枚通栏主操作：人数收成上面一行，按钮换成 .block 通栏。 */
+/* 工具页这一屏只有一枚通栏主操作：被拦下时原因收成上面一行，按钮一律 .block 通栏。 */
 .cw-foot.stack{display:block;padding-top:12px}
 .cw-foot.stack .cw-sum{margin-bottom:9px;line-height:1.4}
 .cw-sum{flex:1;min-width:0;font-size:12px;font-weight:500;color:#6E86A8;line-height:1.45}
@@ -1059,6 +1045,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .cw-fld{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;
   border-top:1px solid #E7ECF5;margin-top:8px}
 .cw-fld>span{font-size:14px;font-weight:600;color:#2D4A75}
+/* 设置弹层里的步进器（字数／间隔／上限）：范围控件不再用它，设置那三项还留着。 */
 .cw-step{display:flex;align-items:center;gap:12px}
 .cw-step button{width:36px;height:36px;border-radius:50%;background:#E8F0FF;color:#2E6BFF;
   font-size:19px;font-weight:600;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
@@ -1067,18 +1054,25 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .cw-units button{height:34px;padding:0 16px;border-radius:999px;background:#fff;border:1px solid #DCE6FA;
   font-size:13px;font-weight:600;color:#3A5B8F;position:relative;overflow:hidden}
 .cw-units button.on{background:#E8F0FF;border-color:#B9CDF6;color:#1B4AA8}
-/* 「发给谁」：未回复超过 N（取 [N, N+5]）。数字可直接输入，+ / − 微调；没设值时留白（—）。 */
-.cw-scope{margin-top:4px}
-.cw-scope .cw-fld{border-top:0;margin-top:0;padding:6px 0}
-.cw-scope .cw-fld+.cw-fld{padding-top:0}
-.cw-scope .cw-step b{min-width:52px;display:flex;justify-content:center}
+/* 区块标题：工具页这条路两段——「唤醒范围」与「唤醒内容」。范围那条带一枚问号，
+   规则收在气泡里，不占屏；点空白处收起。 */
+.cw-sech{position:relative;display:flex;align-items:center;gap:7px;margin:14px 2px 0}
+.cw-sech>b{font-size:14px;font-weight:600;color:#173A6B;letter-spacing:.01em}
+.cw-sech+.cw-strat{margin-top:8px}
+.cw-info{flex:none;width:20px;height:20px;padding:0;border-radius:50%;border:1.2px solid #C3D3EE;
+  background:#fff;color:#4A6B9E;font-size:12px;font-weight:700;line-height:1;
+  display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.cw-tip{display:none;position:absolute;left:0;right:0;top:27px;z-index:8;
+  background:#17263F;color:#fff;border-radius:12px;padding:10px 12px;
+  font-size:12px;font-weight:500;line-height:1.55;box-shadow:0 14px 26px -14px rgba(20,40,80,.6)}
+.cw-sech.tipon .cw-tip{display:block}
+/* 「唤醒范围」：未回复超过 N（取 [N, N+5]）。数字直接输入，单位在数字右边；没设值时留白（—）。 */
+.cw-scope{margin-top:8px}
+.cw-scope .cw-fld{border-top:0;margin-top:0;padding:4px 0}
+.cw-scope-in{display:flex;align-items:center;gap:10px}
 .cw-num{width:52px;height:34px;text-align:center;font-family:inherit;font-size:15px;font-weight:600;
   color:#17263F;background:#F2F6FD;border:0;border-radius:10px;padding:0}
 .cw-num::placeholder{color:#A9B8D0}
-.cw-scope-n{display:flex;align-items:center;font-size:12.5px;font-weight:600;color:#4A6B9E}
-.cw-scope-n b{font-size:15px;font-weight:700;color:#173A6B;margin:0 2px;letter-spacing:-.01em}
-.cw-scope-n.none{color:#9AACC7;font-weight:500}
-.cw-see{font-size:12.5px;font-weight:600;color:#2E6BFF;padding:4px 0 4px 10px;position:relative;overflow:hidden}
 .cw-hint{margin-top:10px;font-size:12px;font-weight:500;color:#7C8CA4;line-height:1.5}
 .cw-shbtns{display:flex;gap:10px;margin-top:16px}
 .cw-shbtns .cw-btn{flex:1}
@@ -1087,8 +1081,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .cw-attach{margin-top:8px;display:flex;align-items:center;gap:8px;background:#EFF5FF;border-radius:12px;
   padding:10px 12px;font-size:13px;font-weight:600;color:#2E5FA8}
 .cw-attach .rm{margin-left:auto;font-size:12px;font-weight:600;color:#2E6BFF;padding:4px 2px}
-/* 2026-11-12 重排：名单与内容各占一屏，确认页并入内容页底栏。
-   内容页顶部「发给 N 人」整行可点回名单；固定内容与 AI 结果共用同一套行/卡。 */
+/* 2026-11-16：范围与内容同屏，确认与发送并进底栏；固定内容与 AI 结果共用同一套行/卡。 */
 .cw-srow{display:flex;align-items:center;gap:8px;width:100%;text-align:left;background:#fff;
   border-radius:16px;padding:13px 14px;margin-top:10px;position:relative;overflow:hidden;
   box-shadow:0 12px 24px -24px rgba(40,70,150,.9)}
@@ -3730,7 +3723,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
         <!-- 客户唤醒（App 工具页）· ADR-0095／docs/prd/客户唤醒-App工具页-PRD.md
              两个入口：工具页「高效发送」组的「客户唤醒」，与「待唤醒客户」页吸底的「一键唤醒」。
              **2026-11-16 并成一屏**（ADR-0095 修订）：工具页进来先选「未回复超过 N」（取 [N,N+5]，
-             不预填），同一页写话术、定参数、开始；名单降成「查看名单」sheet，只用来剔人。
+             不预填），同一页写话术、定参数、开始；范围规则收在问号气泡里，不报人数。
              工具页这条路不再有三档（全部／今日／1天／1周）与「自定义 N」弹层——那套留在
              「待唤醒客户」页，两条路的口径正式分家。
              三屏：客户唤醒（范围＋话术）→ 唤醒记录／记录详情；右上角 ⟲ 记录、⚙ 设置。
@@ -3748,7 +3741,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
             </div>
           </div>
           <div class="scroll cw-scroll" id="cwContentBody"></div>
-          <div class="cw-foot" id="cwContentFoot"></div>
+          <div class="cw-foot stack" id="cwContentFoot"></div>
         </section>
 
         <section class="screen" id="cw-records">
@@ -4737,7 +4730,7 @@ function syncNav(id,params){
 }
 
 /* ---------- Material ripple（统一按压反馈，替代缩放） ---------- */
-var RIP_SEL='.btn,.chip,.iconbtn,.cell,.wk-card,.p-card,.pc-btn,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.hv-msg,.hv-stat,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.hva-lockcard,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close,.hw-add,.cust-seg button,.cust-copy,.cust-acct-row,.cw-allsel,.cw-row,.cw-btn,.cw-ib,.cw-op,.cw-strat button,.cw-step button,.cw-units button,.cw-rec,.cw-kv .op';
+var RIP_SEL='.btn,.chip,.iconbtn,.cell,.wk-card,.p-card,.pc-btn,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.hv-msg,.hv-stat,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.hva-lockcard,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close,.hw-add,.cust-seg button,.cust-copy,.cust-acct-row,.cw-btn,.cw-ib,.cw-op,.cw-strat button,.cw-units button,.cw-rec,.cw-kv .op';
 function ripInit(){
   document.addEventListener('pointerdown',function(e){
     var t=e.target.closest ? e.target.closest(RIP_SEL) : null;
@@ -5219,7 +5212,7 @@ REND['host-newfriend']=function(){custRender('host-newfriend')};
    工具页这条路的口径只有「未回复超过 N」，取 [N, N+5]（两端含）；**不预填**，没设值就没有人。
    三档（今日 1–6 小时／1天 1–6 天／1周 7–13 天）归「待唤醒客户」页，两条路正式分家（ADR-0095 修订）。
    演示数据用 c.w＝「N 天前已被唤醒过」：设置里「排除近期已唤醒」默认开，这一个人就不出现在窗口里；
-   关掉它，1–6 天那一段会多出一人，用来演示这个开关真的在改名单。 */
+   关掉它，1–6 天那一段会多出一人，用来演示这个开关真的在改范围。 */
 /* 「待唤醒客户」就地选取态（见下方 awake* 那段）与这条流程的起点：
    awake＝从这页的吸底「一键唤醒」进来，tools＝从工具页的「客户唤醒」进来。 */
 var AWAKE_SELING=false, AWAKE_ENTER=false, CW_FROM='tools';
@@ -5292,7 +5285,7 @@ var CW_RECS=[
   {id:'r3',when:'11月7日\n14:30',scope:'待唤醒客户 · 手选',n:23,strat:'fixed',fixed:4,st:'part',ok:21,fail:2,
    fails:[{n:'罗琳',why:'对方已把你删除'},{n:'蒋文博',why:'消息发送失败'}]}
 ];
-var CW_SH=null, CW_LIST_SH=null;
+var CW_SH=null;
 
 /* 时间那行的写法与「待唤醒客户」页的卡一致（「未回复·3小时」不带空格），两屏的同一张卡才对得上。 */
 function cwDur(h){ return h<24?(h+'小时'):(Math.floor(h/24)+'天'); }
@@ -5309,26 +5302,10 @@ function cwWindow(){
   return cwByH(CW_CUST.filter(function(c){ return c.h>=th&&c.h<=th+span&&!(CW_SET.skip&&c.w); }));
 }
 function cwByH(list){ return list.slice().sort(function(a,b){ return b.h-a.h }); } /* 组内按未回复时长从长到短 */
-function cwGroups(){
-  if(!CW_CUSTOM.on)return [];
-  return [{t:'未回复 '+cwRangeLabel(),l:cwWindow()}];
-}
-/* 换范围＝重新取人：范围就是这次发给谁，手动剔掉的不带着走。 */
+/* 换范围＝重新取人：范围就是这次发给谁。 */
 function cwReseed(){
   CW_SEL={};
   cwWindow().forEach(function(c){ CW_SEL[c.i]=true });
-}
-/* + 从没设值里起步（1）；− 到 1 再点一次＝回到没选范围。 */
-function cwRangeStep(d){
-  if(!CW_CUSTOM.on){
-    if(d<0)return;
-    CW_CUSTOM.on=true; CW_CUSTOM.n=1;
-  }else{
-    if(d<0&&CW_CUSTOM.n<=1){ CW_CUSTOM.on=false; cwReseed(); REND['cw-content'](); return; }
-    var lim=CW_CUSTOM.u==='d'?90:48;
-    CW_CUSTOM.n=Math.max(1,Math.min(lim,CW_CUSTOM.n+d));
-  }
-  cwReseed(); REND['cw-content']();
 }
 /* 直接输入：空／非正数＝清掉范围；超界就夹到边界。 */
 function cwRangeInput(v){
@@ -5346,63 +5323,26 @@ function cwRangeUnit(u){
   }
   REND['cw-content']();
 }
-/* 分组头那枚勾选框：全勾 ✓／部分 –／全不选空框。点一下＝全选，再点＝全不选（Q17）。 */
-function cwCbState(list){
-  var on=0;
-  for(var i=0;i<list.length;i++)if(CW_SEL[list[i].i])on++;
-  return !on?0:(on===list.length?2:1);
-}
 function cwCbHtml(st,sm){
   var cls='cw-cb'+(sm?' sm':'')+(st===2?' on':(st===1?' part':''));
   return '<span class="'+cls+'">'+(st===2?I('check',sm?11:13,3):'')+'</span>';
 }
-function cwToggleIds(s){
-  var ids=s.split(',').filter(Boolean),i,all=true;
-  for(i=0;i<ids.length;i++)if(!CW_SEL[ids[i]])all=false;
-  for(i=0;i<ids.length;i++)CW_SEL[ids[i]]=!all;
-  cwRefresh();
+/* 「唤醒范围」那枚问号：规则收在气泡里，点空白处收起（再点问号也收起）。 */
+function cwTip(el){
+  var s=el.parentNode, open=!s.classList.contains('tipon');
+  [].forEach.call(document.querySelectorAll('.cw-sech.tipon'),function(n){
+    n.classList.remove('tipon');
+    var b=n.querySelector('.cw-info'); if(b)b.setAttribute('aria-expanded','false');
+  });
+  if(open){ s.classList.add('tipon'); el.setAttribute('aria-expanded','true'); }
 }
-function cwToggle(id){ CW_SEL[id]=!CW_SEL[id]; cwRefresh(); }
-/* 勾选只会发生在「查看名单」sheet 里：就地重画那一层，关掉时再回到内容页。 */
-function cwRefresh(){
-  if(CW_LIST_SH)CW_LIST_SH.querySelector('.sheet-body').innerHTML=cwSheetBody();
-}
-/* 一张卡＝「待唤醒客户」那张卡（同一套 .cust-* 类）＋左侧一枚勾选框。
-   卡是 div 不是 button：卡里还有一枚「复制微信号」的按钮，按钮不能套按钮。
-   卡、勾选框、复制各管各的点击，勾选框与复制都 stopPropagation，免得一次点击勾两次。 */
-function cwRowHtml(c){
-  var on=!!CW_SEL[c.i], wx='XX-8886666';
-  return '<div class="cw-row" onclick="cwToggle(\''+c.i+'\')">'
-    +'<button class="cw-ckb" onclick="event.stopPropagation();cwToggle(\''+c.i+'\')"'
-      +' aria-pressed="'+(on?'true':'false')+'" aria-label="选择 '+c.n+'">'+cwCbHtml(on?2:0)+'</button>'
-    +'<div class="cust-top cw-top">'
-    +'<span class="cust-av">'+c.n.charAt(0)+'</span>'
-    +'<span class="cust-main"><b class="cust-name hv-gn">'+c.n+'</b>'
-    +'<span class="cust-id">微信号：'+wx
-      +'<button class="cust-copy" onclick="event.stopPropagation();copyText(\''+wx+'\',\'微信号已复制\')"'
-      +' aria-label="复制微信号" title="复制微信号">'+I('copy',13,2)+'</button></span>'
-    +'<span class="cust-meta">最后触达：'+c.last+'　未回复·'+cwDur(c.h)+'</span></span></div></div>';
-}
-/* 「查看名单」sheet：范围里这批人的同款客户卡＋勾选框＋一行三态全选。
-   唯一用途是从范围里剔掉个别人（例如私下已经聊过的），剔完回内容页，底栏人数跟着变。 */
-function cwSheetBody(){
-  var gs=cwGroups(), h='', i, j;
-  for(i=0;i<gs.length;i++){
-    var g=gs[i], st=cwCbState(g.l), ids=g.l.map(function(c){return c.i}).join(',');
-    h+='<div class="cw-band"><b>'+g.t+' · '+g.l.length+' 人</b>'
-      +'<button class="cw-allsel" onclick="cwToggleIds(\''+ids+'\')" aria-pressed="'+(st===2?'true':'false')+'">'
-      +cwCbHtml(st,1)+'全选</button></div>';
-    for(j=0;j<g.l.length;j++)h+=cwRowHtml(g.l[j]);
+document.addEventListener('click',function(e){
+  var s=document.querySelector('.cw-sech.tipon');
+  if(s&&!s.contains(e.target)){
+    s.classList.remove('tipon');
+    var b=s.querySelector('.cw-info'); if(b)b.setAttribute('aria-expanded','false');
   }
-  h+='<div class="cw-shbtns"><button class="cw-btn block" onclick="cwCloseList()">完成</button></div>';
-  return h;
-}
-function cwListSheet(){
-  CW_LIST_SH=CW_SH=openSheet(cwSheetBody(),'cw-sheet');
-  /* 点遮罩也走同一条收尾：清掉这层的引用，回内容页刷新人数。 */
-  CW_LIST_SH.querySelector('[data-close]').onclick=cwCloseList;
-}
-function cwCloseList(){ closeSheet(CW_LIST_SH); CW_LIST_SH=null; CW_SH=null; REND['cw-content'](); }
+});
 /* ---------- 待唤醒客户 · 就地选取态（从吸底「一键唤醒」进入，不换页） ----------
    点下去不 go() 到另一屏：这一页自己变成选取态。时间轴：
    · 0ms　只有按压波纹，页面、Tab、滚动位置都不动；
@@ -5597,7 +5537,7 @@ function cwRegenOne(id){
   CW_AI_ROUND++; delete CW_FAIL[id]; delete CW_AI[id];
   cwAiBegin([id]); REND['cw-content']();
 }
-/* × ＝ 这次不唤醒他：卡片拿掉，名单里同步取消勾选。要找回来走「名单 → 勾上 → 补生成」。 */
+/* × ＝ 这次不唤醒他：卡片拿掉，范围里同步取消勾选；改 N 重新取人会把他带回来。 */
 function cwDelAi(id){
   var c=cwCust(id), t=CW_AI[id], f=CW_FAIL[id], wasSel=CW_SEL[id]!==false;
   cwAiCancel(id);
@@ -5717,73 +5657,69 @@ function cwAiPatch(id){
 }
 function cwContentFoot(){
   var n=cwSelCount(), over=n>CW_SET.cap;
-  var adj='间隔 '+CW_SET.gap+' 秒 · '+(CW_SET.skip?'跳过 7 天内唤醒过的':'不跳过已唤醒的');
   /* 主操作在同一位置换名字：AI 表单态是「生成话术」，其余是「开始唤醒」。 */
   var idle=(CW_STRAT==='ai'&&!CW_GEN)?'生成话术':'开始唤醒';
   var noRange=CW_FROM==='tools'&&!CW_CUSTOM.on;
-  var sum,btn;
+  /* 底栏只说拦下的原因，不报人数与发送汇总；设置收在右上角 ⚙。 */
+  var sum='',btn;
   if(noRange){
     sum='<div class="cw-sum">还没选唤醒范围</div>';
-    btn='<button class="cw-btn" disabled>'+idle+'</button>';
+    btn='<button class="cw-btn block" disabled>'+idle+'</button>';
   }else if(over){
-    sum='<div class="cw-sum bad">已选 <b>'+n+'</b> 人，上限 '+CW_SET.cap+' 人<br><span>在设置里调高，或去掉几个人</span></div>';
-    btn='<button class="cw-btn" disabled>开始唤醒</button>';
+    sum='<div class="cw-sum bad">超过单次上限 '+CW_SET.cap+' 人<br><span>把范围调小一些，或在设置里调高</span></div>';
+    btn='<button class="cw-btn block" disabled>开始唤醒</button>';
   }else if(n===0){
-    sum='<div class="cw-sum">'+(CW_FROM==='tools'?'这一段没有待唤醒的客户':'<b>0</b> 人')+'</div>';
-    btn='<button class="cw-btn" disabled>'+idle+'</button>';
+    sum='<div class="cw-sum">'+(CW_FROM==='tools'?'这一段没有待唤醒的客户':'还没选客户')+'</div>';
+    btn='<button class="cw-btn block" disabled>'+idle+'</button>';
   }else if(CW_STRAT==='fixed'){
     if(!CW_FIXED.length){
-      sum='<div class="cw-sum"><b>'+n+'</b> 人 · 还没有内容</div>';
-      btn='<button class="cw-btn" disabled>开始唤醒</button>';
+      sum='<div class="cw-sum">还没有内容</div>';
+      btn='<button class="cw-btn block" disabled>开始唤醒</button>';
     }else{
-      sum='<div class="cw-sum"><b>'+n+'</b> 人 · '+CW_FIXED.length+' 条共 '+(n*CW_FIXED.length)+' 条<br><button class="cw-fadj" onclick="cwSetSheet()">'+adj+' <b>›</b></button></div>';
-      btn='<button class="cw-btn" onclick="cwStart()">开始唤醒</button>';
+      btn='<button class="cw-btn block" onclick="cwStart()">开始唤醒</button>';
     }
   }else if(!CW_GEN){
     var empty=!CW_TOPIC.trim();
-    sum='<div class="cw-sum">'+(empty?'还没写这次想说什么':'<b>'+n+'</b> 人 · 每人 1 条')+'</div>';
-    btn='<button class="cw-btn"'+(empty?' disabled':'')+' onclick="cwGen()">生成话术</button>';
+    if(empty)sum='<div class="cw-sum">还没写这次想说什么</div>';
+    btn='<button class="cw-btn block"'+(empty?' disabled':'')+' onclick="cwGen()">生成话术</button>';
   }else{
     var pend=0; cwSelIds().forEach(function(id){ if(CW_PEND[id])pend++; });
     var ok=cwAiOk().length;
     if(pend){
-      sum='<div class="cw-sum">正在生成 <b>'+pend+'</b>/'+n+' 人</div>';
-      btn='<button class="cw-btn" disabled>开始唤醒</button>';
+      sum='<div class="cw-sum">正在生成话术…</div>';
+      btn='<button class="cw-btn block" disabled>开始唤醒</button>';
     }else if(!ok){
       sum='<div class="cw-sum bad">没有生成成功的内容<br><span>换个主题再试，或切回固定内容</span></div>';
-      btn='<button class="cw-btn" disabled>开始唤醒</button>';
+      btn='<button class="cw-btn block" disabled>开始唤醒</button>';
     }else{
-      sum='<div class="cw-sum"><b>'+ok+'</b> 人 · 每人 1 条<br><button class="cw-fadj" onclick="cwSetSheet()">'+adj+' <b>›</b></button></div>';
-      btn='<button class="cw-btn" onclick="cwStart()">开始唤醒</button>';
+      btn='<button class="cw-btn block" onclick="cwStart()">开始唤醒</button>';
     }
   }
   $('cwContentFoot').innerHTML=sum+btn;
 }
-/* 「发给谁」：工具页那条路只有这一个控件。没设值时输入框留白（—），不预填、不报数。 */
+/* 「唤醒范围」：工具页那条路只有这一个控件。没设值时输入框留白（—），不预填、不报数；
+   规则（最多取到起始时间 + 5）收在标题旁那枚问号的气泡里。 */
 function cwScopeHtml(){
   var on=CW_CUSTOM.on, u=CW_CUSTOM.u;
-  return '<div class="cw-card cw-scope">'
-    +'<div class="cw-fld">'
-      +'<span>未回复超过</span>'
-      +'<div class="cw-step">'
-        +'<button onclick="cwRangeStep(-1)"'+(on?'':' disabled')+' aria-label="减一">−</button>'
-        +'<b><input class="cw-num" type="text" inputmode="numeric" value="'+(on?CW_CUSTOM.n:'')+'" placeholder="—"'
-          +' aria-label="未回复超过多少'+cwUnitN(u)+'" onchange="cwRangeInput(this.value)"'
-          +' onkeydown="if(event.key===\'Enter\')this.blur()"></b>'
-        +'<button onclick="cwRangeStep(1)" aria-label="加一">＋</button>'
-      +'</div>'
+  return '<div class="cw-sech"><b>唤醒范围</b>'
+      +'<button class="cw-info" onclick="cwTip(this)" aria-label="范围怎么算" aria-expanded="false">?</button>'
+      +'<div class="cw-tip" role="tooltip">一次唤醒的人不宜过多，范围最多到起始时间 + 5：'
+        +'设 1 小时，就是未回复 1–6 小时的客户。</div>'
     +'</div>'
-    +'<div class="cw-fld cw-scope-b">'
-      +'<div class="cw-units">'
-        +'<button class="'+(u==='h'?'on':'')+'" onclick="cwRangeUnit(\'h\')">小时</button>'
-        +'<button class="'+(u==='d'?'on':'')+'" onclick="cwRangeUnit(\'d\')">天</button>'
+    +'<div class="cw-card cw-scope">'
+      +'<div class="cw-fld">'
+        +'<span>未回复超过</span>'
+        +'<div class="cw-scope-in">'
+          +'<input class="cw-num" type="text" inputmode="numeric" value="'+(on?CW_CUSTOM.n:'')+'" placeholder="—"'
+            +' aria-label="未回复超过多少'+cwUnitN(u)+'" onchange="cwRangeInput(this.value)"'
+            +' onkeydown="if(event.key===\'Enter\')this.blur()">'
+          +'<div class="cw-units">'
+            +'<button class="'+(u==='h'?'on':'')+'" onclick="cwRangeUnit(\'h\')">小时</button>'
+            +'<button class="'+(u==='d'?'on':'')+'" onclick="cwRangeUnit(\'d\')">天</button>'
+          +'</div>'
+        +'</div>'
       +'</div>'
-      +(on?('<span class="cw-scope-n">'+cwRangeLabel()+' · <b>'+cwSelCount()+'</b> 人'
-           +(cwWindow().length?'<button class="cw-see" onclick="cwListSheet()">查看名单 ›</button>':'')
-           +'</span>')
-         :'<span class="cw-scope-n none">还没选范围</span>')
-    +'</div>'
-  +'</div>';
+    +'</div>';
 }
 REND['cw-content']=function(){
   $('cwContentBack').innerHTML=I('back',24,2);
@@ -5792,7 +5728,8 @@ REND['cw-content']=function(){
   var h='';
   /* 范围块只在工具页那条路出现；从「一键唤醒」进来时人已经手选过，返回键就回选取态。 */
   if(CW_FROM==='tools')h+=cwScopeHtml();
-  h+='<div class="cw-strat">'
+  h+='<div class="cw-sech"><b>唤醒内容</b></div>'
+    +'<div class="cw-strat">'
     +'<button class="'+(CW_STRAT==='fixed'?'on':'')+'" onclick="CW_STRAT=\'fixed\';REND[\'cw-content\']()">固定内容</button>'
     +'<button class="'+(CW_STRAT==='ai'?'on':'')+'" onclick="CW_STRAT=\'ai\';REND[\'cw-content\']()">AI生成</button></div>';
   if(CW_STRAT==='fixed'){
@@ -5810,7 +5747,7 @@ REND['cw-content']=function(){
     });
     h+='<button class="cw-addrow" onclick="cwEditFixed(-1)">＋ 添加一条</button></div>';
   }else if(!CW_GEN){
-    h+='<div class="cw-mid"><span class="cw-empty">'+(cwSelIds().length?('生成后，'+cwSelIds().length+' 个人的话术出现在这里'):'选好范围后，每个人的话术出现在这里')+'</span></div>'
+    h+='<div class="cw-mid"><span class="cw-empty">'+(cwSelIds().length?'生成后，每个人的话术出现在这里':'选好范围后，每个人的话术出现在这里')+'</span></div>'
       +'<div class="cw-composer">'
       +'<div class="lab">这次想说什么<span class="cnt" id="cwTopicCnt">'+CW_TOPIC.length+' / 50</span></div>'
       +'<input id="cwTopic" maxlength="50" value="'+esc(CW_TOPIC)+'" placeholder="比如：秋季新品到店" oninput="cwTopicInput(this.value)">'
@@ -5819,7 +5756,7 @@ REND['cw-content']=function(){
         +'<span>'+CW_SET.words+' 字</span><span class="cw-chev">›</span></button>'
       +'</div>';
   }else{
-    /* 从名单回来时可能多了几个人：已经点过生成，就给新来的人排进生成队列，别让他们挂一张空卡。 */
+    /* 改过范围后可能多了几个人：已经点过生成，就给新来的人排进生成队列，别让他们挂一张空卡。 */
     var miss=cwSelIds().filter(function(id){ return CW_AI[id]==null&&!CW_FAIL[id]&&!CW_PEND[id]; });
     if(miss.length)cwAiBegin(miss);
     h+='<div class="cw-results">';
@@ -5846,7 +5783,7 @@ function cwClock(){
 }
 function cwStart(){
   var ids=CW_STRAT==='fixed'?cwSelIds():cwAiOk(), n=ids.length;
-  if(n===0||cwOver()){ toast('名单不对，回去看看'); return; }
+  if(n===0||cwOver()){ toast('这批人发不了，回去看看范围'); return; }
   if(CW_STRAT==='fixed'&&!CW_FIXED.length){ toast('先添加一条唤醒内容'); return; }
   if(CW_STRAT==='ai'&&!CW_GEN){ toast('先生成话术'); return; }
   var r={id:'r'+Date.now(),when:'今天\n'+cwClock(),
