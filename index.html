@@ -24621,15 +24621,10 @@ function initQs(){
     var hEl=document.createElement('p');hEl.className='rea-qf-hint';hEl.textContent=t;return hEl;
   }
   function ck(name){var el=q('input[name="'+name+'"]:checked',form);return el?el.value:''}
-  function dtLabel(v){
+  function dtFull(v){
     if(!v)return '';
     var d=v.slice(0,10).split('-'),t=v.slice(11,16);
-    return (d[1]||'')+'-'+(d[2]||'')+' '+t;
-  }
-  function dayGap(a,b){
-    if(!a||!b)return 0;
-    var n=Math.round((new Date(b)-new Date(a))/86400000);
-    return n>0?n:0;
+    return d.join('/')+' '+t;
   }
   function setErr(ctl,msg){
     if(!ctl)return;
@@ -24818,15 +24813,12 @@ function initQs(){
     if(textOnly&&ck('rea-qs-sendtype')==='file_transfer')backToPerGroup();
     var all=ck('rea-qs-scope')!=='names',ks=kws(),file=ck('rea-qs-sendtype')==='file_transfer';
     kwI.style.display=all?'none':'';
-    sumWho.textContent=all?'全部群 · 群数执行时统计'
+    sumWho.textContent=all?'全部群'
       :(ks.length?('群名关键词：'+ks.join(' / ')):'按群聊名称 · 未填');
     sumWho.title=sumWho.textContent;
     sumHow.textContent=file?'文件传输助手转发 · 每批最多 9 个群':'逐群发送 · 逐个群进会话';
     var sv=startI?startI.value:'',ev=endI?endI.value:'';
-    var gap=dayGap(sv,ev);
-    var when=sv?dtLabel(sv):'未设置';
-    if(sv)when+=' 发出';
-    if(ev)when+='，'+gap+' 天内完成';
+    var when=sv?(dtFull(sv)+(ev?'~'+dtFull(ev):'')):'未设置';
     sumWhen.textContent=when;
     sumExec.textContent=execSel?(execSel.n+' · '+execSel.c+' 人'):'未选择';
     var stName=file?'文件传输助手转发':'逐群发送';
