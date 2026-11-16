@@ -12770,14 +12770,47 @@ setTimeout(sbScan,120);
   color: #8f959e;
   font-variant-numeric: tabular-nums;
 }
-.rea-ov-page .ov-bars {
+.rea-ov-page .ov-plot {
   position: relative;
   height: 160px;
+}
+.rea-ov-page .ov-line-svg {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 32px;
+  width: 100%;
+  height: 112px;
+  overflow: visible;
+  pointer-events: none;
+}
+.rea-ov-page .ov-x-axis {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 24px;
+  pointer-events: none;
+}
+.rea-ov-page .ov-x-axis span {
+  position: absolute;
+  bottom: 4px;
+  transform: translateX(-50%);
+  font-size: 12px;
+  line-height: 1;
+  color: #646a73;
+  white-space: nowrap;
+}
+.rea-ov-page .ov-x-axis.dense span {
   display: flex;
-  align-items: stretch;
-  justify-content: center;
-  gap: 4px;
-  padding-top: 16px;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  font-size: 10px;
+  line-height: 1.1;
+}
+.rea-ov-page .ov-x-axis.dense b {
+  font-weight: 400;
 }
 .rea-ov-page .ov-grid-line {
   position: absolute;
@@ -12831,23 +12864,39 @@ setTimeout(sbScan,120);
   color: #1677ff;
 }
 .rea-ov-page .ov-bar {
-  position: relative;
-  flex: 1;
-  min-width: 0;
-  max-width: 88px;
-  border: 0;
-  border-radius: 6px 6px 0 0;
-  background: none;
+  position: absolute;
+  width: 24px;
+  height: 24px;
   padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  transform: translate(-50%, 50%);
   display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  cursor: pointer;
+}
+.rea-ov-page .ov-dot {
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid #1677ff;
+  box-shadow: 0 0 0 3px rgba(22, 119, 255, 0.14);
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.rea-ov-page .ov-bar:hover .ov-dot,
+.rea-ov-page .ov-bar:focus-visible .ov-dot,
+.rea-ov-page .ov-bar.solo .ov-dot {
+  opacity: 1;
 }
 .rea-ov-page .ov-bar-value {
   position: absolute;
   left: 50%;
+  bottom: calc(100% + 4px);
   transform: translateX(-50%);
   font-size: 12px;
   line-height: 1;
@@ -12855,21 +12904,6 @@ setTimeout(sbScan,120);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
   pointer-events: none;
-}
-.rea-ov-page .ov-bar i {
-  display: block;
-  background: #9cceff;
-  width: 56%;
-  min-height: 2px;
-  border-radius: 6px 6px 0 0;
-}
-.rea-ov-page .ov-bar:hover i {
-  background: #1677ff;
-}
-.rea-ov-page .ov-bar small {
-  font-size: 12px;
-  color: #646a73;
-  height: 24px;
 }
 .rea-ov-page .ov-track {
   display: block;
@@ -13371,9 +13405,6 @@ setTimeout(sbScan,120);
   .rea-ov-page .ov-heading,
   .rea-ov-page .ov-section-heading {
     flex-wrap: wrap;
-  }
-  .rea-ov-page .ov-bar small {
-    font-size: 12px;
   }
   .rea-ov-page .ov-source-row {
     grid-template-columns: 80px 1fr 64px;
@@ -14595,28 +14626,58 @@ setTimeout(sbScan,120);
     const tickBottom = (value) => 32 + (value / axisTop) * plotHeight;
     $("#ov-activity-note").textContent =
       days > 30 ? "每段为日均 · 单位：人" : "单位：人";
+    const pointX = (index) =>
+      buckets.length <= 1 ? 50 : ((index + 0.5) / buckets.length) * 100;
+    const pointY = (value) => (1 - value / axisTop) * plotHeight;
+    const points = buckets.map((bucket, index) => ({
+      x: pointX(index),
+      y: pointY(bucket.value),
+    }));
+    const clampY = (y) => Math.max(0, Math.min(plotHeight, y));
+    let linePath = points.length ? `M ${points[0].x.toFixed(2)} ${points[0].y.toFixed(2)}` : "";
+    for (let index = 0; index < points.length - 1; index++) {
+      const p0 = points[index - 1] || points[index];
+      const p1 = points[index];
+      const p2 = points[index + 1];
+      const p3 = points[index + 2] || p2;
+      const c1x = p1.x + (p2.x - p0.x) / 6;
+      const c1y = clampY(p1.y + (p2.y - p0.y) / 6);
+      const c2x = p2.x - (p3.x - p1.x) / 6;
+      const c2y = clampY(p2.y - (p3.y - p1.y) / 6);
+      linePath += ` C ${c1x.toFixed(2)} ${c1y.toFixed(2)}, ${c2x.toFixed(2)} ${c2y.toFixed(2)}, ${p2.x.toFixed(2)} ${p2.y.toFixed(2)}`;
+    }
+    const areaPath = points.length > 1
+      ? `${linePath} L ${points[points.length - 1].x.toFixed(2)} ${plotHeight} L ${points[0].x.toFixed(2)} ${plotHeight} Z`
+      : "";
     $("#ov-activity-chart").innerHTML =
       `<div class="ov-chart"><div class="ov-y-axis" aria-hidden="true">${ticks
         .map(
           (value) =>
             `<span style="bottom:${tickBottom(value)}px">${tickText(value)}</span>`,
         )
-        .join("")}</div><div class="ov-bars" role="group" aria-label="${days > 30 ? "每段日均主动使用员工" : "每日主动使用员工"}">${ticks
+        .join("")}</div><div class="ov-plot" role="group" aria-label="${days > 30 ? "每段日均主动使用员工" : "每日主动使用员工"}">${ticks
         .map(
           (value) =>
             `<span class="ov-grid-line" style="bottom:${tickBottom(value)}px"></span>`,
         )
-        .join("")}<span class="ov-ref-line" style="bottom:${tickBottom(assigned)}px" title="已授权员工 ${assigned} 人"><span>已授权 ${assigned} 人</span></span>${buckets
+        .join("")}<span class="ov-ref-line" style="bottom:${tickBottom(assigned)}px" title="已授权员工 ${assigned} 人"><span>已授权 ${assigned} 人</span></span><svg class="ov-line-svg" viewBox="0 0 100 ${plotHeight}" preserveAspectRatio="none" aria-hidden="true" focusable="false"><defs><linearGradient id="ov-line-fill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1677FF" stop-opacity="0.22"></stop><stop offset="1" stop-color="#1677FF" stop-opacity="0"></stop></linearGradient></defs>${areaPath ? `<path class="ov-line-area" d="${areaPath}" fill="url(#ov-line-fill)"></path>` : ""}<path class="ov-line" d="${linePath}" fill="none" stroke="#1677FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"></path></svg>${buckets
         .map((bucket, index) => {
           const value = Number(bucket.value.toFixed(1));
-          const height = Math.max(2, (bucket.value / axisTop) * plotHeight);
           const shortDate = (offset) => dateLabel(offset).slice(5);
           const rangeLabel = bucket.end !== bucket.offset
             ? `${shortDate(bucket.offset)} — ${shortDate(bucket.end)} · 日均 ${number(value)} 人`
             : `${shortDate(bucket.offset)} · ${number(value)} 人`;
-          return `<button type="button" class="ov-bar" data-day="${bucket.offset}" data-end="${bucket.end}"${index === 0 ? ' data-edge="first"' : index === buckets.length - 1 ? ' data-edge="last"' : ""} aria-label="${dateLabel(bucket.offset)}${bucket.end !== bucket.offset ? " 至 " + dateLabel(bucket.end) : ""}，${bucket.end !== bucket.offset ? "日均 " : ""}${number(value)} 人"><span class="ov-bar-value" style="bottom:${height + 36}px">${rangeLabel}</span><i style="height:${height}px"></i><small>${index === 0 || index === buckets.length - 1 || index % Math.ceil(buckets.length / 5) === 0 ? dateLabel(bucket.offset).slice(5) : ""}</small></button>`;
+          return `<button type="button" class="ov-bar${buckets.length === 1 ? " solo" : ""}" style="left:${pointX(index).toFixed(2)}%;bottom:${tickBottom(bucket.value).toFixed(2)}px" data-day="${bucket.offset}" data-end="${bucket.end}"${index === 0 ? ' data-edge="first"' : index === buckets.length - 1 ? ' data-edge="last"' : ""} aria-label="${dateLabel(bucket.offset)}${bucket.end !== bucket.offset ? " 至 " + dateLabel(bucket.end) : ""}，${bucket.end !== bucket.offset ? "日均 " : ""}${number(value)} 人"><i class="ov-dot"></i><span class="ov-bar-value">${rangeLabel}</span></button>`;
         })
-        .join("")}</div></div>`;
+        .join("")}<div class="ov-x-axis${buckets.length > 20 ? " dense" : ""}" aria-hidden="true">${buckets
+        .map((bucket, index) => {
+          const short = dateLabel(bucket.offset).slice(5);
+          const label = buckets.length > 20
+            ? `<b>${short.slice(0, 2)}</b><b>${short.slice(3)}</b>`
+            : short;
+          return `<span style="left:${pointX(index).toFixed(2)}%">${label}</span>`;
+        })
+        .join("")}</div></div></div>`;
     renderTeamRanking();
     renderFeatures();
   }
