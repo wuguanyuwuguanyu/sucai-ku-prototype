@@ -1107,11 +1107,20 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .cw-fld{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;
   border-top:1px solid #E7ECF5;margin-top:8px}
 .cw-fld>span{font-size:14px;font-weight:600;color:#2D4A75}
-/* 设置弹层里的步进器（字数／间隔）：范围控件不再用它，设置里这两项还留着。 */
-.cw-step{display:flex;align-items:center;gap:12px}
-.cw-step button{width:36px;height:36px;border-radius:50%;background:#E8F0FF;color:#2E6BFF;
-  font-size:19px;font-weight:600;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
-.cw-step b{min-width:58px;text-align:center;font-size:15px;font-weight:600;color:#17263F}
+/* 设置弹层里的数值项（字数／间隔）：直接输数字，右侧写单位与上下限 */
+.cw-numwrap{display:flex;align-items:center;gap:8px}
+.cw-num{width:64px;height:36px;border-radius:10px;border:1px solid #DCE6FA;background:#fff;
+  padding:0 10px;text-align:right;font-size:15px;font-weight:600;color:#17263F;font-family:var(--f);
+  -moz-appearance:textfield}
+.cw-num::-webkit-outer-spin-button,.cw-num::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.cw-num:focus{outline:none;border-color:#2E6BFF}
+.cw-unit{font-size:13px;font-weight:600;color:#2D4A75}
+.cw-rng{font-size:11.5px;font-weight:500;color:#95A3B8}
+/* 自己加一种回复风格：输入框＋添加入口，与预设标签同一档高度 */
+.cw-addline{display:flex;gap:8px;align-items:center;padding:0 0 4px}
+.cw-addline .cw-si{margin-top:0;height:40px;flex:1;min-width:0}
+.cw-addbtn{flex:none;height:40px;padding:0 14px;border-radius:12px;border:0;background:#E8F0FF;
+  color:#1B4AA8;font-size:13px;font-weight:600;font-family:var(--f)}
 .cw-units{display:flex;gap:8px}
 .cw-units button{height:34px;padding:0 16px;border-radius:999px;background:#fff;border:1px solid #DCE6FA;
   font-size:13px;font-weight:600;color:#3A5B8F;position:relative;overflow:hidden}
@@ -5315,10 +5324,12 @@ var CW_CUST=[
   {i:'d2',n:'何丽',last:'10月10日 16:40',h:33*24},
   {i:'d3',n:'马晓东',last:'9月2日 11:00',h:71*24}
 ];
-var CW_SET={gap:10,style:'亲切',role:'客户经理',words:120};
-var CW_TMP={gap:10,style:'亲切',role:'客户经理',words:120};
+var CW_SET={gap:10,styles:['亲切'],role:'客户经理',words:120};
+var CW_TMP={gap:10,styles:['亲切'],role:'客户经理',words:120};
 var CW_STYLES=['亲切','专业','紧迫','幽默','轻松'];
 var CW_ROLES=['客户经理','售前','营销人员'];
+var CW_MYSTYLES=[];                    /* 自己加的回复风格：本次打开 App 期间留着，下次进设置还在 */
+var CW_WORDS=[60,300], CW_GAP=[5,60];  /* 字数与发送间隔的上下限，输超了夹回边界 */
 /* 唤醒范围：n＋单位，on=false 时没有范围（进来就是这样，不替用户预选）。 */
 var CW_CUSTOM={n:3,u:'d',on:false};
 var CW_SEL={};
@@ -6267,45 +6278,82 @@ REND['cw-record']=function(p){
 };
 
 /* 设置：分两组——话术生成（风格／角色／字数）管「怎么写」，发送（间隔）管「怎么发」。
-   都在右上角同一个弹层里，改动只影响下一次开始；内容页底栏那行回显的就是这里的值。 */
-function cwOpts(list,key){
-  return '<div class="cw-opts">'+list.map(function(v){
-    return '<button class="'+(CW_TMP[key]===v?'on':'')+'" onclick="cwSetPick(\''+key+'\',\''+v+'\')">'+v+'</button>';
-  }).join('')+'</div>';
-}
+   都在右上角同一个弹层里，改动只影响下一次开始；内容页不回显这里的值。
+   风格可多选，也能自己加一种；角色点预设或直接打字；字数与间隔直接输数字，夹在上下限里。 */
+function cwA(s){ return esc(s).replace(/"/g,'&quot;') }
+function cwStyleList(){ return CW_STYLES.concat(CW_MYSTYLES) }
 function cwSetBody(){
   return '<div class="cw-sh">设置</div>'
     +'<div class="cw-grp">话术生成</div>'
     +'<div class="cw-fld" style="padding-bottom:0"><span>回复风格</span></div>'
-    +cwOpts(CW_STYLES,'style')
+    +'<div class="cw-opts" id="cwStyleOpts">'+cwStyleList().map(function(v){
+        return '<button data-v="'+cwA(v)+'" class="'+(CW_TMP.styles.indexOf(v)>=0?'on':'')+'" onclick="cwStylePick(this)">'+esc(v)+'</button>';
+      }).join('')+'</div>'
+    +'<div class="cw-addline"><input class="cw-si" id="cwStyleNew" maxlength="8" aria-label="自定义回复风格" placeholder="自定义风格" onkeydown="cwStyleKey(event)">'
+      +'<button class="cw-addbtn" onclick="cwStyleAdd()">添加</button></div>'
     +'<div class="cw-fld" style="padding-bottom:0"><span>角色</span></div>'
-    +cwOpts(CW_ROLES,'role')
-    +'<div class="cw-fld"><span>字数限制</span><div class="cw-step">'
-      +'<button onclick="cwSetStep(\'words\',-20)" aria-label="减二十字">−</button><b>'+CW_TMP.words+' 字</b>'
-      +'<button onclick="cwSetStep(\'words\',20)" aria-label="加二十字">＋</button></div></div>'
+    +'<div class="cw-opts" id="cwRoleOpts">'+CW_ROLES.map(function(v){
+        return '<button data-v="'+cwA(v)+'" class="'+(CW_TMP.role===v?'on':'')+'" onclick="cwRolePick(this)">'+esc(v)+'</button>';
+      }).join('')+'</div>'
+    +'<input class="cw-si" id="cwRoleIn" maxlength="12" aria-label="角色" placeholder="比如：门店店长" value="'+cwA(CW_TMP.role)+'" oninput="cwRoleInput(this.value)">'
+    +'<div class="cw-fld"><span>字数限制</span><div class="cw-numwrap">'
+      +'<input class="cw-num" id="cwNumWords" type="number" inputmode="numeric" min="'+CW_WORDS[0]+'" max="'+CW_WORDS[1]+'" value="'+CW_TMP.words+'" aria-label="字数限制，'+CW_WORDS[0]+' 到 '+CW_WORDS[1]+' 字" onchange="cwSetNum(\'words\',this.value)">'
+      +'<span class="cw-unit">字</span><span class="cw-rng">'+CW_WORDS[0]+'–'+CW_WORDS[1]+'</span></div></div>'
     +'<div class="cw-line"></div>'
     +'<div class="cw-grp">发送</div>'
-    +'<div class="cw-fld"><span>发送间隔</span><div class="cw-step">'
-      +'<button onclick="cwSetStep(\'gap\',-5)" aria-label="减五秒">−</button><b>'+CW_TMP.gap+' 秒</b>'
-      +'<button onclick="cwSetStep(\'gap\',5)" aria-label="加五秒">＋</button></div></div>'
+    +'<div class="cw-fld"><span>发送间隔</span><div class="cw-numwrap">'
+      +'<input class="cw-num" id="cwNumGap" type="number" inputmode="numeric" min="'+CW_GAP[0]+'" max="'+CW_GAP[1]+'" value="'+CW_TMP.gap+'" aria-label="发送间隔，'+CW_GAP[0]+' 到 '+CW_GAP[1]+' 秒" onchange="cwSetNum(\'gap\',this.value)">'
+      +'<span class="cw-unit">秒</span><span class="cw-rng">'+CW_GAP[0]+'–'+CW_GAP[1]+'</span></div></div>'
     +'<div class="cw-shbtns"><button class="cw-btn ghost" onclick="closeSheet(CW_SH)">取消</button>'
     +'<button class="cw-btn" onclick="cwSetSave()">保存</button></div>';
 }
 function cwSetSheet(){
-  CW_TMP={gap:CW_SET.gap,style:CW_SET.style,role:CW_SET.role,words:CW_SET.words};
+  CW_TMP={gap:CW_SET.gap,styles:CW_SET.styles.slice(),role:CW_SET.role,words:CW_SET.words};
   CW_SH=openSheet(cwSetBody(),'cw-sheet');
 }
-function cwSetPick(k,v){
-  CW_TMP[k]=v;
+/* 风格是开关不是单选：至少留一种，全部取消就拦一下。 */
+function cwStylePick(b){
+  var v=b.getAttribute('data-v'), i=CW_TMP.styles.indexOf(v);
+  if(i>=0){
+    if(CW_TMP.styles.length===1){ toast('至少留一种风格'); return; }
+    CW_TMP.styles.splice(i,1);
+  }else CW_TMP.styles.push(v);
+  var box=CW_SH.querySelector('#cwStyleOpts');
+  if(box)[].forEach.call(box.querySelectorAll('button'),function(x){
+    x.classList.toggle('on',CW_TMP.styles.indexOf(x.getAttribute('data-v'))>=0);
+  });
+}
+function cwStyleKey(e){ if(e.key==='Enter'){ e.preventDefault(); cwStyleAdd(); } }
+function cwStyleAdd(){
+  var el=CW_SH.querySelector('#cwStyleNew'), v=(el&&el.value||'').trim();
+  if(!v){ toast('先写一种风格'); return; }
+  if(cwStyleList().indexOf(v)<0)CW_MYSTYLES.push(v);
+  if(CW_TMP.styles.indexOf(v)<0)CW_TMP.styles.push(v);
   CW_SH.querySelector('.sheet-body').innerHTML=cwSetBody();
 }
-function cwSetStep(k,d){
-  if(k==='gap')CW_TMP.gap=Math.max(5,Math.min(60,CW_TMP.gap+d));
-  else CW_TMP.words=Math.max(60,Math.min(300,CW_TMP.words+d));
-  CW_SH.querySelector('.sheet-body').innerHTML=cwSetBody();
+/* 角色单选：点预设把输入框一起改过来，打字则让不对应的预设灭掉。 */
+function cwRolePick(b){
+  CW_TMP.role=b.getAttribute('data-v');
+  var i=CW_SH.querySelector('#cwRoleIn'); if(i)i.value=CW_TMP.role;
+  cwRoleSync();
+}
+function cwRoleInput(v){ CW_TMP.role=v; cwRoleSync(); }
+function cwRoleSync(){
+  var box=CW_SH.querySelector('#cwRoleOpts'); if(!box)return;
+  [].forEach.call(box.querySelectorAll('button'),function(x){
+    x.classList.toggle('on',x.getAttribute('data-v')===CW_TMP.role);
+  });
+}
+/* 直接输数字：空着不改，超界夹回上下限；输入框里的值同步成夹完的结果。 */
+function cwSetNum(k,v){
+  var lim=k==='gap'?CW_GAP:CW_WORDS, n=parseInt(v,10);
+  if(!n)n=CW_TMP[k];
+  CW_TMP[k]=Math.max(lim[0],Math.min(lim[1],n));
+  var el=CW_SH.querySelector(k==='gap'?'#cwNumGap':'#cwNumWords'); if(el)el.value=CW_TMP[k];
 }
 function cwSetSave(){
-  CW_SET={gap:CW_TMP.gap,style:CW_TMP.style,role:CW_TMP.role,words:CW_TMP.words};
+  if(!(CW_TMP.role||'').trim()){ toast('角色不能空着'); return; }
+  CW_SET={gap:CW_TMP.gap,styles:CW_TMP.styles.slice(),role:CW_TMP.role.trim(),words:CW_TMP.words};
   closeSheet(CW_SH); CW_SH=null;
   if(cur==='cw-content')REND['cw-content']();
 }
