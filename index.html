@@ -1040,10 +1040,6 @@ select.cw-input{-webkit-appearance:none;appearance:none;padding-right:42px;curso
   font-weight:600}
 .cw-nosend{height:32px}
 .cw-rowacts{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
-/* 使用上次内容：一枚带刷新图标的浅紫胶囊，放在表单上方。 */
-.cw-uselast{display:inline-flex;align-items:center;gap:5px;min-height:34px;padding:0 13px;margin:0 0 2px;
-  border-radius:999px;background:#F0E9FF;color:#7A3CEC;font-size:12.5px;font-weight:600;
-  position:relative;overflow:hidden}
 
 /* 主操作底栏：白条＋上缘柔影，与「待唤醒客户」那枚吸底条同形。 */
 .cw-foot{flex:none;display:flex;align-items:center;gap:12px;padding:10px 16px calc(14px + env(safe-area-inset-bottom));
@@ -4839,7 +4835,7 @@ function syncNav(id,params){
 }
 
 /* ---------- Material ripple（统一按压反馈，替代缩放） ---------- */
-var RIP_SEL='.cw-textact,.cw-message,.cw-purpose label,.btn,.chip,.iconbtn,.cell,.wk-card,.p-card,.pc-btn,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.hv-msg,.hv-stat,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.hva-lockcard,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close,.hw-add,.cust-seg button,.cust-copy,.cust-acct-row,.cw-btn,.cw-ib,.cw-op,.cw-units button,.cw-rec,.cw-kv .op,.cw-addrow,.cw-uselast,.cw-nosend,.cw-tutlink,.cw-info,.cw-rpb,.cw-goto,.cw-tutplay';
+var RIP_SEL='.cw-textact,.cw-message,.cw-purpose label,.btn,.chip,.iconbtn,.cell,.wk-card,.p-card,.pc-btn,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.hv-msg,.hv-stat,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.hva-lockcard,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close,.hw-add,.cust-seg button,.cust-copy,.cust-acct-row,.cw-btn,.cw-ib,.cw-op,.cw-units button,.cw-rec,.cw-kv .op,.cw-addrow,.cw-nosend,.cw-tutlink,.cw-info,.cw-rpb,.cw-goto,.cw-tutplay';
 function ripInit(){
   document.addEventListener('pointerdown',function(e){
     var t=e.target.closest ? e.target.closest(RIP_SEL) : null;
@@ -5382,7 +5378,7 @@ var CW_MAXC=4;
 /* 本次新增信息不自动预填；同一轮草稿与已生成消息分别保存。 */
 var CW_TOPIC='', CW_GEN=false;
 /* 原型仅演示：下列聊天均为虚构样例，不接真实模型。生成依据可在预览展开。 */
-var CW_PURPOSE='follow', CW_NEXT='auto', CW_EXPIRY='', CW_LAST=null, CW_SIG='', CW_EDITMSG=null, CW_SEND_IDS=[];
+var CW_PURPOSE='follow', CW_NEXT='auto', CW_EXPIRY='', CW_SIG='', CW_EDITMSG=null, CW_SEND_IDS=[];
 var CW_DRAFTS={}, CW_MANUAL={}, CW_LAUNCHING=false;
 var CW_PURPOSES=[['follow','跟进上次聊的事','最新进展（选填）','比如：上次问的尺码已经到店'],['news','分享新品或新消息','想告诉客户的新消息','比如：到了两款轻薄外套，可以拍实物图'],['event','告知活动','活动内容','比如：周末到店可以试穿新款'],['care','售后回访','想了解哪方面的使用情况','比如：外套的尺码和穿着感受'],['custom','自定义唤醒主题','这次想聊的主题','比如：问问上次买的围巾穿着怎么样，顺带提一句新到的冬款'],['manual','自己写唤醒话术','','']];
 /* 联系目的行首那枚图标块：色系照工具页的「同色系光晕＋渐变块」，一个目的一个色，认行不认字。 */
@@ -5411,8 +5407,6 @@ function cwPickPurpose(v){
  CW_PURPOSE=v;var d=CW_DRAFTS[v]||{};CW_TOPIC=d.text||'';CW_NEXT=d.next||'auto';CW_EXPIRY=d.expiry||'';
  CW_STRAT=v==='manual'?'fixed':'ai';REND['cw-content']();
 }
-function cwUseLast(){if(!CW_LAST)return;CW_PURPOSE=CW_LAST.purpose;CW_TOPIC=CW_LAST.text;CW_NEXT=CW_LAST.next;CW_EXPIRY=CW_LAST.expiry;CW_STRAT='ai';REND['cw-content']()}
-function cwRemember(){CW_LAST={purpose:CW_PURPOSE,text:CW_TOPIC,next:CW_NEXT,expiry:CW_EXPIRY}}
 function cwInput(v){CW_TOPIC=v;cwContentFoot()}
 function cwConfirm(title,detail,action){
  var d=openDlg('<h3>'+esc(title)+'</h3><p>'+esc(detail)+'</p><div class="cw-shbtns"><button class="cw-textact" data-cancel>取消</button><button class="cw-btn" data-ok>继续</button></div>');
@@ -5691,7 +5685,7 @@ function awakeFoot(animate){
     btn.setAttribute('onclick','awakeNext()'); /* 变形这 160ms 内再点一下不该又进一次 */
   },170);
 }
-/* 工具页进来：一屏从空范围起步——不预填、不替用户取人；主题与固定内容沿用上次。
+/* 工具页进来：一屏从空范围起步——不预填、不替用户取人，也不沿用上一轮的内容。
    排除表与查询状态按「一次唤醒」清空：上一轮 × 掉的人不该带进这一轮。 */
 function cwEnter(){
   cwResetDraft();
@@ -5803,7 +5797,7 @@ function cwGen(){
 }
 function cwGenerate(reset){
  if(reset){CW_CUST.forEach(function(c){cwAiCancel(c.i)});CW_AI={};CW_FAIL={};CW_MANUAL={}}
- CW_SIG=cwDraftSig();CW_GEN=true;cwRemember();
+ CW_SIG=cwDraftSig();CW_GEN=true;
  var ids=cwMissing();cwAiBegin(ids);go('cw-preview');
 }
 
@@ -5979,7 +5973,6 @@ REND['cw-content']=function(){
  if(CW_STRAT==='fixed')h+=cwFixedHtml()+'<button class="cw-addrow" onclick="cwEditFixed(-1)">'+I('plus',16,2.2)+'添加一条</button>';
  else{
  var p=cwPurpose();
- if(CW_LAST)h+='<button class="cw-uselast" onclick="cwUseLast()">'+I('refresh',14,2.1)+'使用上次内容</button>';
  h+='<label class="cw-field" for="cwInfo">'+p[2]+'</label><textarea id="cwInfo" class="cw-input" maxlength="1000" placeholder="'+p[3]+'" oninput="cwInput(this.value)">'+esc(CW_TOPIC)+'</textarea>';
  if(CW_PURPOSE==='event')h+='<label class="cw-field" for="cwExpiry">活动截止时间（选填）</label><input id="cwExpiry" class="cw-input" type="datetime-local" value="'+cwA(CW_EXPIRY)+'" onchange="CW_EXPIRY=this.value;cwContentFoot()">';
  h+='<label class="cw-field" for="cwNext">希望客户下一步做什么（选填）</label><select id="cwNext" class="cw-input" onchange="CW_NEXT=this.value;cwContentFoot()">'+[['auto','根据聊天内容决定'],['reply','回复近况'],['photo','看看图片'],['visit','预约时间']].map(function(a){return '<option value="'+a[0]+'"'+(CW_NEXT===a[0]?' selected':'')+'>'+a[1]+'</option>'}).join('')+'</select>';
