@@ -24480,15 +24480,10 @@ function initQf(){
     for(q=0;q<list.length;q++)if(list[q].classList.contains('ant-btn-primary'))return norm(list[q].textContent);
     return '文本';
   }
-  function dtLabel(v){
+  function dtFull(v){
     if(!v)return '';
     var d=v.slice(0,10).split('-'),t=v.slice(11,16);
-    return (d[1]||'')+'-'+(d[2]||'')+' '+t;
-  }
-  function dayGap(a,b){
-    if(!a||!b)return 0;
-    var n=Math.round((new Date(b)-new Date(a))/86400000);
-    return n>0?n:0;
+    return d.join('/')+' '+t;
   }
   function render(){
     var friends=scopeIsFriends(),all=!scopeIsTags()&&!friends;
@@ -24497,7 +24492,7 @@ function initQf(){
     var textOnly=setFileTypeOff();
     if(textOnly&&sendType()==='file')backToAssistant();
     var st=sendType();
-    sumWho.textContent=all?'全部好友 · 人数执行时统计'
+    sumWho.textContent=all?'全部好友'
       :(friends?(fn?('好友：'+fnames.join(',')):'指定微信好友 · 未填')
         :(n?('标签：'+names.join(';')+' · '+MATCH_LABEL[tagPick.mode()])
           :'按微信标签 · 未填'));
@@ -24508,11 +24503,7 @@ function initQf(){
     else how='文件传输助手转发 · 每批最多 9 个';
     sumHow.textContent=how;
     var sv=startI?startI.value:'',ev=endI?endI.value:'';
-    var rep=checkedLabel(rRepeat)||'单次任务';
-    var gap=dayGap(sv,ev);
-    var when=sv?dtLabel(sv):'未设置';
-    if(sv&&rep!=='单次任务')when+=' 起 · '+rep;else when+=' 发出';
-    if(ev)when+='，'+gap+' 天内完成';
+    var when=sv?(dtFull(sv)+(ev?'~'+dtFull(ev):'')):'未设置';
     sumWhen.textContent=when;
     sumExec.textContent=execSel?(execSel.n+' · '+execSel.c+' 人'):'未选择';
     var stName=st==='assistant'?'群发助手':st==='search'?'搜索发送':'文件传输助手转发';
@@ -31749,6 +31740,7 @@ var SIDECHAT=null,SUM={};
 })();
 function hmOf(d){return d?pad(d.getHours())+':'+pad(d.getMinutes()):''}
 function mdOf(d){return d?((d.getMonth()+1)+'-'+d.getDate()):''}
+function ymdOf(d){return d?(d.getFullYear()+'/'+pad(d.getMonth()+1)+'/'+pad(d.getDate())+' '+hmOf(d)):''}
 /* 循环方式读的是快照那组单选的选中态（REA_FX 只挪里面的 .ant-radio-checked）。 */
 function cycleLabel(){
   if(!L.type)return '单次任务';
@@ -31795,14 +31787,7 @@ function drawPreview(){
   if(SUM.how){SUM.how.textContent=msgs.length?msgs.length+' 条':'—';SUM.how.title=SUM.how.textContent}
   if(SUM.when){
     var t3='未设置';
-    if(st){
-      var rep=cycleLabel();
-      t3=rep==='单次任务'?(mdOf(st)+' '+hmOf(st)+' 发出'):(mdOf(st)+' '+hmOf(st)+' 起 · '+rep);
-      if(et){
-        var gap=Math.round((et-st)/86400000);
-        t3+='，'+(gap>0?gap:0)+' 天内完成';
-      }
-    }
+    if(st)t3=ymdOf(st)+(et?'~'+ymdOf(et):'');
     SUM.when.textContent=t3;SUM.when.title=t3;
   }
   if(ACTSUM){
