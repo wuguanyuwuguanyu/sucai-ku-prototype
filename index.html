@@ -27168,11 +27168,11 @@ BT.addEventListener('click',function(e){
        2026-11-16：六页统一 360px——字段起点与中间竖线落在同一横坐标，不再 320／360 混用。 */
     '.rea-wxd-info{display:grid;grid-template-columns:360px minmax(0,1fr);align-items:stretch;column-gap:32px;margin-top:16px}',
     '.rea-wxd-groups{display:block!important;margin:0!important;min-width:0}',
-    '.rea-wxd-group{display:grid!important;grid-template-columns:88px minmax(0,1fr)!important;column-gap:20px!important;align-items:start!important}',
-    '.rea-wxd-group+.rea-wxd-group{margin-top:16px}',
-    '.rea-wxd-gt{display:flex;align-items:center;gap:6px;margin:0;padding-top:3px;font-size:14px;line-height:20px;font-weight:600;color:#1F2329;white-space:nowrap}',
+    '.rea-wxd-groups>.rea-wxd-groups{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:28px 44px;align-items:start}',
+    '.rea-wxd-group{display:block!important;min-width:0}',
+    '.rea-wxd-gt{display:flex;align-items:center;gap:6px;margin:0 0 12px;padding-top:0;font-size:14px;line-height:20px;font-weight:600;color:#1F2329;white-space:nowrap}',
     '.rea-wxd-gt .rea-wx-secic{flex:none;color:#1677FF}',
-    '.rea-wxd-kv{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:16px 24px!important;align-content:start!important;margin:0!important}',
+    '.rea-wxd-kv{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:18px!important;align-content:start!important;margin:0!important}',
     '.rea-wxd-kv>p{display:block!important;flex:0 0 auto!important;width:auto!important;min-width:0;margin:0!important;white-space:normal!important;overflow-wrap:anywhere}',
     '.rea-wxd-kv>p>span:first-child{display:block;margin-bottom:3px;font-size:12px;line-height:18px;color:#8F959E}',
     '.rea-wxd-kv>p>span:last-child{display:block;font-size:14px;line-height:20px;color:#1F2329}',
@@ -27255,7 +27255,7 @@ BT.addEventListener('click',function(e){
     '.rea-wxd-fn-num{flex:none;width:38px;font-size:12px;line-height:18px;color:#1F2329;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}',
     '.rea-wxd-fn-rate{flex:none;width:68px;font-size:12px;line-height:18px;color:#646A73;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}',
     '.rea-wxd-fn-ft{margin-top:12px;font-size:12px;line-height:18px;color:#8F959E}',
-    '@media(max-width:1000px){.rea-wxd-info{grid-template-columns:minmax(0,1fr)}.rea-wxd-group{grid-template-columns:minmax(0,1fr)!important;row-gap:6px}.rea-wxd-gt{padding-top:0}.rea-wxd-kv{grid-template-columns:repeat(2,minmax(0,1fr))!important}.rea-wxd-ring{margin-top:20px;padding:20px 0 0;border-top:1px solid #E5E8EF;border-right:0;order:1}}',
+    '@media(max-width:1000px){.rea-wxd-info{grid-template-columns:minmax(0,1fr)}.rea-wxd-groups>.rea-wxd-groups{grid-template-columns:minmax(0,1fr)}.rea-wxd-kv{grid-template-columns:repeat(2,minmax(0,1fr))!important}.rea-wxd-ring{margin-top:20px;padding:20px 0 0;border-top:1px solid #E5E8EF;border-right:0;order:1}}',
     '.rea-wxd-tb{display:inline-flex;align-items:center;gap:6px;font-size:14px;line-height:22px;color:#1F2329}',
     '.rea-wxd-tb i{width:6px;height:6px;border-radius:50%;background:#8F959E;flex:none}',
     '.rea-wxd-tb.done i{background:#1677FF}',
@@ -31728,14 +31728,12 @@ var SIDECHAT=null,SUM={};
     +'<div class="rea-hx-sum">'
       +'<div class="rea-hx-sumrow"><span>谁来发</span><b data-hx-sum="exec">—</b></div>'
       +'<div class="rea-hx-sumrow"><span>唤醒谁</span><b data-hx-sum="who">—</b></div>'
-      +'<div class="rea-hx-sumrow"><span>发几条</span><b data-hx-sum="how">—</b></div>'
       +'<div class="rea-hx-sumrow"><span>什么时候</span><b data-hx-sum="when">—</b></div>'
     +'</div>';
   wrap.appendChild(side);
   SIDECHAT=side.querySelector('.rea-hx-chat');
   SUM.exec=side.querySelector('[data-hx-sum="exec"]');
   SUM.who=side.querySelector('[data-hx-sum="who"]');
-  SUM.how=side.querySelector('[data-hx-sum="how"]');
   SUM.when=side.querySelector('[data-hx-sum="when"]');
 })();
 function hmOf(d){return d?pad(d.getHours())+':'+pad(d.getMinutes()):''}
@@ -31784,7 +31782,6 @@ function drawPreview(){
     if(tg)t2+=' · 标签 '+tg;
     SUM.who.textContent=t2;SUM.who.title=t2;
   }
-  if(SUM.how){SUM.how.textContent=msgs.length?msgs.length+' 条':'—';SUM.how.title=SUM.how.textContent}
   if(SUM.when){
     var t3='未设置';
     if(st)t3=ymdOf(st)+(et?'~'+ymdOf(et):'');
