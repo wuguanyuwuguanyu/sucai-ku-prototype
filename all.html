@@ -22787,20 +22787,17 @@ tb.addEventListener("click",function(e){
     + '.rea-baf-err{display:none;margin:4px 0 0;max-width:680px;font-size:12px;line-height:20px;color:#ff4d4f}'
     + '.rea-baf-err.on{display:block}'
     /* ---- 2026-11-10 复刻「好友任务创建页」线框稿 ----
-       版式：灰底 ＋ 白色纸面 ＋ 右栏任务概览 ＋ 贴在底部的操作条。
+       版式：灰底上居中一列——三张白卡 ＋ 贴在底部的操作条（2026-11-16 撤掉右栏任务概览）。
        配色照线框稿：主色 #1677FF，正文 #333333，次要 #8C8C8C，
        分隔线 #F0F0F0，控件边 #D9D9D9，浅底 #E6F4FF，页底 #FAFAFA。 */
-    /* 页面底色与另外三张新建页、与新小红书保持一致：白底，卡片靠细边立起来 */
-    + '[class*="_con_"]{background:#FFFFFF}'
-    /* 与另外几张新建页同宽：内容区整幅铺开，别再限宽居中留出两侧空带 */
+    /* 内容区铺成一块灰底：白卡浮在上面，居中一列 */
+    + '[class*="_con_"]{background:#F2F5FA}'
     + '.rea-baf-form{max-width:none;margin:0}'
-    + '.rea-baf-page{padding:6px 0 0;font-size:14px;line-height:1.6;color:#333333}'
+    + '.rea-baf-page{max-width:800px;margin:0 auto;padding:6px 0 0;font-size:14px;line-height:1.6;color:#333333}'
     + '.rea-baf-hd{margin:0 0 16px}'
     + '.rea-baf-hd h1{margin:0;font-size:16px;line-height:26px;font-weight:500;color:#333333}'
-    + '.rea-baf-layout{display:grid;grid-template-columns:minmax(0,800px) 210px;gap:24px;align-items:start;justify-content:start}'
     /* 2026-11-13 与新小红书运营 · 新建统一：分节从「一叠白纸里切段」改成一张张白底卡片，
        卡片头＝标题＋一行灰副标题；序号圆点退休。 */
-    + '.rea-baf-sheet{min-width:0;background:transparent}'
     + '.rea-baf-sec{margin:0 0 16px;border:1px solid #F0F0F0;border-radius:8px;background:#fff}'
     + '.rea-baf-sechd{display:block;padding:14px 20px 12px;margin:0;border-bottom:1px solid #F0F0F0}'
     + '.rea-baf-no{display:none}'
@@ -22814,7 +22811,7 @@ tb.addEventListener("click",function(e){
     + '.rea-baf-lab.req:before{content:"*";margin-right:4px;color:#FF4D4F}'
     + '.rea-baf-ctl{flex:1 1 auto;min-width:0}'
     /* 控件统一 32px 高，跟群发两页和快照的 AntD 控件停同一条线 */
-    + '.rea-baf-ctl .ant-input,.rea-baf-ctl textarea.ant-input{box-sizing:border-box;display:block;width:100%;max-width:640px;min-height:32px;padding:4px 11px;border:1px solid #D9D9D9;border-radius:6px;background:#fff;font-size:14px;line-height:22px;color:#333333;transition:border-color .15s}'
+    + '.rea-baf-ctl .ant-input,.rea-baf-ctl textarea.ant-input{box-sizing:border-box;display:block;width:100%;max-width:none;min-height:32px;padding:4px 11px;border:1px solid #D9D9D9;border-radius:6px;background:#fff;font-size:14px;line-height:22px;color:#333333;transition:border-color .15s}'
     + '.rea-baf-ctl .ant-input:hover{border-color:#8C8C8C}'
     + '.rea-baf-ctl .ant-input:focus,.rea-baf-ctl .ant-input.ant-input-focused{border-color:#1677FF;box-shadow:0 0 0 2px #E6F4FF;outline:none}'
     + '.rea-baf-ctl input.ant-input::placeholder,.rea-baf-ctl textarea.ant-input::placeholder{color:#8C8C8C;opacity:.85}'
@@ -22822,7 +22819,7 @@ tb.addEventListener("click",function(e){
     /* 昵称／地区的三选一：一行排开，和 38px 的控件同高 */
     + '.rea-baf-mode{display:flex;align-items:center;flex-wrap:wrap;gap:18px;min-height:32px}'
     /* 添加方式：三块等宽卡片，选中换浅底蓝边，圆点藏掉 */
-    + '.rea-baf-tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;max-width:640px}'
+    + '.rea-baf-tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;max-width:none}'
     + '.rea-baf-tiles .ant-radio-wrapper{position:relative;display:flex;align-items:center;justify-content:center;gap:6px;box-sizing:border-box;min-height:32px;margin:0;padding:0 8px;border:1px solid #D9D9D9;border-radius:6px;background:#fff;font-size:13px;line-height:1.6;color:#333333;white-space:nowrap;cursor:pointer}'
     + '.rea-baf-tiles .ant-radio-wrapper:hover{border-color:#8C8C8C}'
     + '.rea-baf-tiles .ant-radio-wrapper-checked{border-color:#1677FF;background:#E6F4FF;color:#1677FF}'
@@ -22847,7 +22844,7 @@ tb.addEventListener("click",function(e){
     + '.rea-baf-gap{display:flex;align-items:center;gap:8px;font-size:14px;color:#333333}'
     + '.rea-baf-gap .rea-baf-num,.rea-baf-ctl .ant-input.rea-baf-num{width:110px;max-width:110px;text-align:center}'
     + '.rea-baf-exec{position:relative}'
-    + '.rea-baf-select{position:relative;display:flex;align-items:center;box-sizing:border-box;width:100%;max-width:640px;height:32px;padding:0 32px 0 11px;border:1px solid #D9D9D9;border-radius:6px;background:#fff;font-size:14px;color:#8C8C8C;text-align:left;cursor:pointer;transition:border-color .15s}'
+    + '.rea-baf-select{position:relative;display:flex;align-items:center;box-sizing:border-box;width:100%;max-width:none;height:32px;padding:0 32px 0 11px;border:1px solid #D9D9D9;border-radius:6px;background:#fff;font-size:14px;color:#8C8C8C;text-align:left;cursor:pointer;transition:border-color .15s}'
     + '.rea-baf-select:hover{border-color:#8C8C8C}'
     + '.rea-baf-seltext{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
     + '.rea-baf-selcaret{position:absolute;right:10px;top:50%;margin-top:-6px;font-size:10px;line-height:12px;color:#8C8C8C;pointer-events:none}'
@@ -22869,24 +22866,6 @@ tb.addEventListener("click",function(e){
     + '.rea-baf-moresub{margin-left:auto;font-size:11px;font-weight:400;color:#8C8C8C}'
     + '.rea-baf-morebd{display:none;padding:0 24px 24px}'
     + '.rea-baf-more.open .rea-baf-morebd{display:block}'
-    /* 右栏：任务概览 */
-    + '.rea-baf-aside{position:sticky;top:0;min-width:0}'
-    + '.rea-baf-sum{padding:18px 15px;border:1px solid #F0F0F0;border-radius:7px;background:#fff}'
-    + '.rea-baf-sumhd{display:flex;align-items:center;gap:7px;margin:0 0 20px;font-size:13px;font-weight:500;line-height:1.6;color:#333333}'
-    + '.rea-baf-sumhd svg{width:14px;height:14px;flex:none;color:#8C8C8C}'
-    + '.rea-baf-sumlab{font-size:12px;color:#8C8C8C}'
-    + '.rea-baf-sumnum{margin-top:7px;font:500 32px/1.2 Arial,sans-serif;letter-spacing:-1px;color:#333333}'
-    + '.rea-baf-sumnum span{margin-left:5px;font-size:12px;font-weight:400;letter-spacing:0;color:#8C8C8C}'
-    + '.rea-baf-sum hr{margin:20px 0;border:0;border-top:1px solid #F0F0F0}'
-    + '.rea-baf-sum dl{margin:0;display:grid;gap:14px}'
-    + '.rea-baf-sum dt{margin:0 0 3px;font-size:12px;color:#8C8C8C}'
-    + '.rea-baf-sum dd{margin:0;font-size:13px;line-height:1.6;color:#333333;overflow-wrap:anywhere}'
-    + '.rea-baf-tl{display:grid;gap:18px;margin-left:4px;padding-left:14px;border-left:1px solid #F0F0F0}'
-    + '.rea-baf-tp{position:relative;font-size:12px;line-height:1.6;color:#333333}'
-    + '.rea-baf-tp p{margin:0 0 3px;color:#8C8C8C}'
-    + '.rea-baf-tp:before{content:"";position:absolute;left:-18px;top:6px;width:7px;height:7px;box-sizing:border-box;border:2px solid #1677FF;border-radius:50%;background:#fff}'
-    + '.rea-baf-tp:last-child:before{border-color:#8C8C8C}'
-    + '.rea-baf-sumfoot{margin-top:18px;font-size:12px;line-height:1.8;color:#8C8C8C}'
     /* 导入名单：虚线框收起后换成一条浅底回显 */
     + '.rea-baf-upload{padding:19px 12px;border:1px dashed #D9D9D9;border-radius:7px;background:#FAFAFA;text-align:center;cursor:pointer}'
     + '.rea-baf-upload:hover{border-color:#1677FF}'
@@ -22897,7 +22876,7 @@ tb.addEventListener("click",function(e){
     + '.rea-baf-filename{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
     + '.rea-baf-filex{border:0;background:transparent;padding:0 2px;font-size:14px;line-height:16px;color:inherit;cursor:pointer}'
     + '.rea-baf-filex:hover{color:#FF4D4F}'
-    + '.rea-baf-tags{box-sizing:border-box;display:flex;align-items:center;flex-wrap:wrap;gap:6px;width:100%;max-width:640px;min-height:32px;padding:4px 9px;border:1px solid #D9D9D9;border-radius:6px;background:#fff;cursor:text}'
+    + '.rea-baf-tags{box-sizing:border-box;display:flex;align-items:center;flex-wrap:wrap;gap:6px;width:100%;max-width:none;min-height:32px;padding:4px 9px;border:1px solid #D9D9D9;border-radius:6px;background:#fff;cursor:text}'
     + '.rea-baf-tags:focus-within{border-color:#1677FF}'
     + '.rea-baf-tags input{flex:1;min-width:140px;border:0;outline:0;background:transparent;font-size:14px;line-height:1.6;color:#333333}'
     + '.rea-baf-tags input::placeholder{color:#8C8C8C;opacity:.85}'
@@ -22905,7 +22884,7 @@ tb.addEventListener("click",function(e){
     + '.rea-baf-chipx2{border:0;background:transparent;padding:0 1px;font-size:13px;line-height:16px;color:inherit;cursor:pointer}'
     + '.rea-baf-chipx2:hover{color:#FF4D4F}'
     /* 底部操作条：bottom:-20px 抵掉快照滚动容器的下内边距，条子才贴得住下沿 */
-    + '.rea-baf-act{position:sticky;bottom:-20px;z-index:6;display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:24px;padding:17px 24px;border-top:1px solid #F0F0F0;background:#fff}'
+    + '.rea-baf-act{position:sticky;bottom:-20px;z-index:6;display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:16px;padding:17px 24px;border:1px solid #F0F0F0;border-radius:8px;background:#fff}'
     + '.rea-baf-actsum{font-size:13px;line-height:1.9;color:#646A73}'
     + '.rea-baf-actbtns{display:flex;flex:none;gap:9px}'
     + '.rea-baf-actbtns .ant-btn{height:34px;padding:0 18px;border-radius:6px;font-size:12px}'
@@ -25873,9 +25852,9 @@ function toast(t){
 function back(){parent.postMessage({reaPage:'批量加好友'},'*')}
 
 /* ---------- 2026-11-10 复刻「好友任务创建页」线框稿 ----------
-   版式照线框稿：页头（标题＋说明＋新建标记）→ 白纸面表单 ＋ 右栏任务概览
-   → 贴着下沿的操作条。四段是 ① 谁来加 → ② 加谁 → ③ 怎么加 → ④ 什么时候加，
-   任务名称与全局弹窗收进「更多设置」，点开才铺。
+   版式：页头 → 三张白底卡 → 贴着下沿的操作条，整列在灰底上居中（800px）；
+   右栏任务概览与它后面的空带 2026-11-16 撤掉。
+   四段是 ① 谁来加 → ② 加谁 → ③ 怎么加 → ④ 什么时候加。
    行仍是快照原节点——单选、开关、输入框的接线不动，这里只搬位置、补几个可点控件。 */
 var FORM=METHOD_ROW.parentNode;
 var wrap=document.createElement('div');wrap.className='rea-baf-form';
@@ -25891,30 +25870,7 @@ var hd=document.createElement('div');hd.className='rea-baf-hd';
 var hd1=document.createElement('h1');hd1.textContent='新建批量加好友任务';
 hd.appendChild(hd1);page.appendChild(hd);
 
-/* 白纸面 ＋ 右栏任务概览 */
-var layout=document.createElement('div');layout.className='rea-baf-layout';page.appendChild(layout);
-var sheet=document.createElement('div');sheet.className='rea-baf-sheet';layout.appendChild(sheet);
-var aside=document.createElement('aside');aside.className='rea-baf-aside';
-aside.setAttribute('aria-label','任务配置概览');layout.appendChild(aside);
-/* 右栏：一眼核对这次任务谁来加、加谁、怎么加、什么时候加；值由 bafRender 同步 */
-aside.innerHTML='<div class="rea-baf-sum">'
-  +'<div class="rea-baf-sumhd">'
-  +'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
-  +'<rect width="8" height="4" x="8" y="2" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>'
-  +'<path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg>任务概览</div>'
-  +'<dl>'
-  +'<div><dt>执行人员</dt><dd data-k="exec">待选择</dd></div>'
-  +'<div><dt>分配方式</dt><dd data-k="alloc">平均分配</dd></div>'
-  +'</dl><hr>'
-  +'<div class="rea-baf-sumlab" data-k="lab">待添加好友</div>'
-  +'<div class="rea-baf-sumnum"><b data-k="num">0</b><span data-k="unit">人</span></div>'
-  +'<dl>'
-  +'<div><dt>添加方式</dt><dd data-k="src">手动输入</dd></div>'
-  +'<div><dt>任务类型</dt><dd data-k="type">批量添加好友</dd></div>'
-  +'</dl><hr><div class="rea-baf-tl">'
-  +'<div class="rea-baf-tp"><p>通知执行</p><div data-k="start">待设置</div></div>'
-  +'<div class="rea-baf-tp"><p>任务截止</p><div data-k="end">待设置</div></div>'
-  +'</div><div class="rea-baf-sumfoot">保存前可在此核对配置</div></div>';
+/* 三张卡直接落在页面上，没有侧栏 */
 
 /* 其余几行照标签现找，找到才搬；找不到就原样留在旧表里，不硬拼 */
 var ROW_VERIFY=rowOf('验证消息'),ROW_MEMO=rowOf('好友备忘'),ROW_MASK=rowOf('是否遮挡'),
@@ -25954,7 +25910,7 @@ function bafSec(no,t,sub){
   s.querySelector('h3').textContent=t;
   if(sub)s.querySelector('.rea-baf-secsub').textContent=sub;
   var bd=document.createElement('div');bd.className='rea-baf-secbd';
-  s.appendChild(bd);sheet.appendChild(s);return bd;
+  s.appendChild(bd);page.appendChild(s);return bd;
 }
 
 /* ---- 02 加谁 ---- */
@@ -26241,22 +26197,13 @@ function bafDtCn(v){
   var d=v.slice(0,10).split('-'),t=v.slice(11,16);
   return (+d[1])+'月'+(+d[2])+'日 '+t;
 }
-function setSum(key,val){
-  var el=aside.querySelector('[data-k="'+key+'"]');
-  if(el)el.textContent=val;
-}
 function bafRender(){
-  var k=modeKind(),src,typ='批量添加好友',n=0,unit='人',lab='待添加好友';
-  if(k==='group'){n=groupPicker.get().length||0;unit='个';lab='已选群组';src='添加群内好友'}
-  else if(k==='file'){n=fileName?1:0;unit='份';lab='名单文件';src='文件导入'}
-  else{n=phoneCount();src='手动输入'}
+  var k=modeKind(),typ='批量添加好友',n=0;
+  if(k==='group')n=groupPicker.get().length||0;
+  else if(k==='file')n=fileName?1:0;
+  else n=phoneCount();
   if(k!=='group'&&TYPE_ROW)typ=selectedLabel(TYPE_ROW)||'批量添加好友';
-  var sv=startI?startI.value:'',ev=endI?endI.value:'';
-  var exec=execSel?(execSel.n+' · '+execSel.c+' 人'):'待选择';
-  setSum('lab',lab);setSum('num',String(n));setSum('unit',unit);
-  setSum('src',src);setSum('type',typ);setSum('exec',exec);
-  setSum('alloc',k==='group'?'按群所属员工':allocOf());
-  setSum('start',bafDtCn(sv));setSum('end',bafDtCn(ev));
+  var sv=startI?startI.value:'';
   var l1;
   if(k==='group')l1='已选 '+n+' 个群组 · 人数待执行时核算';
   else if(k==='file')l1=fileName?('已选文件 '+fileName):'未选文件';
@@ -27199,22 +27146,19 @@ if(PAGE==='批量加好友 · 详情'){
     {lb:'已发申请',n:sentN},
     {lb:'验证通过',n:c.pass}
   ];
-  var fh='',prev=n;
-  tiers.forEach(function(t,i){
-    var rate=i===0?'':(prev?'占上一级 '+Math.round(t.n/prev*100)+'%':'-');
+  var fh='';
+  tiers.forEach(function(t){
     fh+='<div class="rea-wxd-fn-row">'
       +'<span class="rea-wxd-fn-lb">'+t.lb+'</span>'
       +'<span class="rea-wxd-fn-track"><i class="rea-wxd-fn-bar" style="width:'+(n?Math.max(t.n/n*100,3):0).toFixed(1)+'%"></i></span>'
       +'<span class="rea-wxd-fn-num">'+t.n+CU+'</span>'
-      +'<span class="rea-wxd-fn-rate">'+rate+'</span>'
       +'</div>';
-    prev=t.n;
   });
   ring.className='rea-wxd-ring rea-wxd-rings rea-wxd-bdtab';
   ring.innerHTML=''
     +'<div class="rea-wxd-tabbar" role="tablist">'
     +'<button type="button" role="tab" class="on" data-wxd-tab="exec" aria-selected="true">任务执行</button>'
-    +'<button type="button" role="tab" data-wxd-tab="conv" aria-selected="false">加好友进展<span class="rea-wxd-help" title="按目标数统计：目标总数＝这条任务的全部好友目标；已执行＝资料页处理完；已发申请＝已发送验证请求＋验证通过；验证通过＝对方已通过申请。百分比相对上一级。用户已添加与用户不存在不进申请，处理完就停在这一层。">?</span></button>'
+    +'<button type="button" role="tab" data-wxd-tab="conv" aria-selected="false">加好友进展<span class="rea-wxd-help" title="按目标数统计：目标总数＝这条任务的全部好友目标；已执行＝资料页处理完；已发申请＝已发送验证请求＋验证通过；验证通过＝对方已通过申请。用户已添加与用户不存在不进申请，处理完就停在这一层。">?</span></button>'
     +'</div>'
     +'<div class="rea-wxd-tabbd" data-wxd-panel="exec">'
     +'<div class="rea-wxd-ring-bd">'
