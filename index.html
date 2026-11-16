@@ -2772,7 +2772,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
    点横条展开。它只属于聊天辅助，全局素材球照旧独立、恒在。
    条与面板同宽，落在面板原先顶边那一格——折叠时以顶边为轴向上收，读得出「这块面板向上收成了这条」。
    高度 44＝可点下限，宽度沿用面板 384.5；底色与面板同一套渐变，绿点跟头部「已就位」同色同义。 */
-.ai-bar{position:absolute;left:14px;top:47px;width:384.5px;height:44px;border-radius:16.5px;
+.ai-bar{position:absolute;left:13.75px;top:34px;width:384.5px;height:44px;border-radius:16.5px;
   background:linear-gradient(90deg,#EEEFFF,#F0F1FF);
   box-shadow:inset 0 0 0 2px rgba(255,255,255,.6),var(--e3);
   display:flex;align-items:center;gap:6px;padding:0 14px 0 14.8px;
@@ -3032,7 +3032,9 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 
 /* ===== 素材库面板形态重做（ADR-0075）· 按 Figma 节点 1079:373「悬浮窗」复刻 =====
    换算与全壳同一条：稿 750 画布 × k = 412/750 = 0.54933（.phone-inner 恒 412 布局像素宽）。
-   面板 714×840 → 392.2×461.4；稿上它贴在屏底（下缘距屏底 38 → 20.9）：916 − 461.4 − 20.9 = 433.7，取 434。
+   面板 714×840 → 392.2×461.4。
+   **打开位置以产品 2026-11-16 的口径为准：页面顶部居中，不贴稿上的屏底**——top 34＝状态栏下沿，
+   left 9.9＝(412 − 392.2) / 2。每次打开都落在这里，拖过之后的下次打开也复位（见 panelHome）。
    圆角量出来 ≈46 → 25.3（不是 M3 的哪一档，故不套 --shape-*，直接写换算值）。
    底色换成稿上那块近白蓝 #EDEFFF——.panel 基类那层 --sc-low 是另外两个浮层在用的，这里按稿覆盖。
    **只加 id 特异性覆盖，一个字节都不动 .panel 基类**：基类是三块浮层共用的一副壳，理由同 #aiPanel 那条（ADR-0042）。
@@ -3050,7 +3052,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
    （这条只作兜底，滑法是滚轮／触控板：**触屏上这一排滑不动是有意的**——头部整条（含这一排 tab）是拖拽把手，
    按住不撒手就是拖面板，见 .pnav 那条与 panelDrag 里的手势补记。）
    产品若给一版不撞的间距、或点名砍哪一枚，改的就是这一段。 */
-#panel{left:9.9px;top:434px;width:392.2px;height:461.4px;border-radius:25.3px;background:#EDEFFF}
+#panel{left:9.9px;top:34px;width:392.2px;height:461.4px;border-radius:25.3px;background:#EDEFFF}
 #panel .panel-head{height:51.1px;padding:4px 9.3px 0 13.2px;gap:0;background:none;border-bottom:none}
 /* 一级视图排（ADR-0075 ①②）：头部第一件、吃掉所有剩余宽度、六枚一级视图横排。
    六枚＝全部／企业／部门／个人／朋友圈／最近使用，与素材库首页**同一套、同一顺序**；
@@ -4216,7 +4218,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
                零留白），省下的 45.6px 归内容白卡。头部同时是拖拽把手，故这 19.8px 就是拖拽条的高度。
                原头部那枚手动重看说明弹窗的 ⓘ 更早已去掉；首次自动弹的说明弹窗仍在
                （openAiPanel → aiTipsShow）。 -->
-          <div class="panel ai-panel" id="aiPanel" style="display:none;left:14px;top:47px">
+          <div class="panel ai-panel" id="aiPanel" style="display:none;left:13.75px;top:34px">
             <div class="panel-head" id="aiHead">
               <span class="ai-sub"><i></i>已就位，正在辅助中...</span>
               <button class="ai-close" onclick="aiCloseAll()" title="关闭聊天辅助" aria-label="关闭聊天辅助"><svg width="11" height="11" viewBox="0 0 20.0017 20" fill="#AAC1E5" aria-hidden="true"><path d="M10.0008 7.94717L2.48033 0.424977C1.9137 -0.141659 0.994998 -0.141659 0.428363 0.424977C-0.138273 0.991612 -0.138273 1.91031 0.428363 2.47695L7.94717 9.99914L0.424977 17.5196C-0.141659 18.0863 -0.141659 19.005 0.424977 19.5716C0.991612 20.1382 1.91031 20.1382 2.47694 19.5716L10.0008 12.0528L17.5213 19.575C17.8879 19.9415 18.4221 20.0847 18.9228 19.9505C19.4236 19.8164 19.8147 19.4253 19.9488 18.9245C20.083 18.4238 19.9398 17.8896 19.5733 17.523L12.0545 9.99914L19.5767 2.47864C19.9432 2.11209 20.0864 1.57783 19.9522 1.07712C19.8181 0.576403 19.4269 0.185299 18.9262 0.0511333C18.4255 -0.0830329 17.8913 0.0601208 17.5247 0.42667L10.0008 7.94548V7.94717Z"/></svg></button>
@@ -4237,7 +4239,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
                后者是它在 412 空间里夹取/取 top 下限的那条分支。
                元素 id 只有三个，都归本浮层的 JS 用：hpHead／hpBody（内容区，必须带 .panel-list——
                滚动指示层按这个类挑容器）／不必另起头。 -->
-          <div class="panel ai-panel" id="hpPanel" style="display:none;left:14px;top:47px">
+          <div class="panel ai-panel" id="hpPanel" style="display:none;left:13.75px;top:34px">
             <div class="panel-head" id="hpHead">
               <!-- 头部**不用 .ai-sub**：标题就是原来正文里那张分区头（「素材库」徽章 ＋「命中素材 · N 条」），
                    整块由 hpRender() 写进这里、占 .ai-sub 那一格。用户的原话："把素材库标签 命中素材 n 条
@@ -10240,24 +10242,29 @@ function ballDrag(b){
   b.addEventListener('pointercancel',function(){down=false;moved=false;b.classList.remove('drag')});
 }
 /* ---------- 全局球在素材面板打开时的「让位」（ADR-0078）----------
-   产品口径：**球恒在**——素材库面板打开也不收起。面板的常态几何（#panel 覆盖块）是
-   left 9.9 / top 434 / 392.2 × 461.4，而球的默认位（right 12 / bottom 120）恰落在面板里、
-   会压住卡片行尾的取用钮。故：球只要与面板相交，就**抬到面板上沿之上 8px**，横向不动；
-   面板一关再还原到原位置（用户若在面板开着时自己拖过球，ballLift 已清空，不还原）。
-   判据全用内联 left/top/right/bottom 的布局像素，不读 getBoundingClientRect——
-   jsdom 无布局，几何断言会「全绿但实际是坏的」。 */
+   产品口径：**球恒在**——素材库面板打开也不收起。面板打开时落在页面顶部居中（top 34），
+   球的默认位（right 12 / bottom 120）在屏底，两者本来就不相交；只有用户把球拖进面板范围时才需要让开。
+   故：球与面板相交就移到面板外 8px，横向不动（面板近全宽，左右没得挪）：优先面板上沿之上，
+   上方放不下（面板顶着状态栏）就落到下沿之下。面板一关再还原到原位置（用户若在面板开着时自己拖过球，
+   ballLift 已清空，不还原）。判据全用内联 left/top 的布局像素，面板几何读 inline 与 offset，
+   不读 getBoundingClientRect——jsdom 无布局，几何断言会「全绿但实际是坏的」。 */
 var ballLift=null;
 function ballLiftForPanel(){
-  var b=$('ball');if(!b||b.style.display==='none')return;
+  var b=$('ball'),p=$('panel');if(!b||!p||b.style.display==='none')return;
   var top=parseFloat(b.style.top);
   if(isNaN(top))top=916-parseFloat(b.style.bottom||120)-54;
   var left=parseFloat(b.style.left);
   if(isNaN(left))left=412-parseFloat(b.style.right||12)-54;
-  if(left+54<=9.9||left>=402.1||top+54<=434||top>=895.4)return; /* 不相交＝不动 */
+  var pnL=parseFloat(p.style.left);if(isNaN(pnL))pnL=9.9;
+  var pnT=parseFloat(p.style.top);if(isNaN(pnT))pnT=PANEL_HOME_TOP;
+  var pnW=p.offsetWidth||392.2,pnH=p.offsetHeight||461.4;
+  if(left+54<=pnL||left>=pnL+pnW||top+54<=pnT||top>=pnT+pnH)return; /* 不相交＝不动 */
   ballLift={left:b.style.left,top:b.style.top,right:b.style.right,bottom:b.style.bottom,edge:b.classList.contains('edge')};
   ballGlide(b);                       /* 抬升跟着面板同拍（ADR-0088），不瞬移 */
   b.style.left=left+'px';
-  b.style.top=(434-54-8)+'px';
+  var liftTop=pnT-54-8;
+  if(liftTop<70)liftTop=Math.min(pnT+pnH+8,916-54-4); /* 面板顶边上方放不下球：落到下沿之下 */
+  b.style.top=liftTop+'px';
   b.style.right='auto';b.style.bottom='auto';
 }
 function ballUnliftForPanel(){
@@ -10345,7 +10352,8 @@ function aiBarInit(){
   aiBarShow();
 }
 /* 横条可拖（ADR-0096 的后续，产品 2026-11-13「收起后依然要支持能拖动」）：折叠态自己带位置，
-   拖到哪就停在哪；点它展开时面板落回这一格（openAiPanel 里同步），再从底部药丸收起又回写到面板顶边。
+   拖到哪就停在哪；点它展开时面板落回**顶部居中**（产品 2026-11-16 口径，openAiPanel 里同步），
+   再从底部药丸收起又回写到面板顶边。
    手势与 panelDrag 同一套：4px 阈值才捕获指针、拖过的这一次在松手后 150ms 内吞掉补发的 click
    （横条的 click 自己接管展开，所以去掉 DOM 上的 inline onclick，改在这里按 _swallowUntil 判）。
    与 panelDrag 的差别只有两处：横条不做「推出屏外收起」，位置一律夹在屏内；
@@ -10465,6 +10473,15 @@ function ballGlide(b){
   if(b._gt)clearTimeout(b._gt);
   b._gt=setTimeout(function(){b._gt=null;b.classList.remove('glide')},PMOT.ball);
 }
+/* 打开时的站位（产品 2026-11-16 口径）：素材库面板与辅助回复浮层都**固定落在页面顶部居中**，
+   不沿用上一次拖到的位置。top=34＝状态栏下沿（与 panelDrag 的 minT 同一口径）；
+   横向按各自定宽现算（#panel 392.2／辅助浮层 384.5），412 是 .phone-inner 的布局宽。 */
+var PANEL_HOME_TOP=34;
+function panelHome(p,w){
+  if(!p)return;
+  p.style.left=((412-w)/2)+'px';
+  p.style.top=PANEL_HOME_TOP+'px';
+}
 function openPanel(){
   closeBallMenu();                    /* 面板开＝菜单收（菜单是球的展开，不是面板的） */
   var swap=aiOpen||hpOpen;            /* 捕获在关闭之前：有另一块在场＝这次是"换掉"，走并叠 */
@@ -10486,8 +10503,10 @@ function openPanel(){
   ballBadge();dkRefresh();
   S.pMom=false;S.pRec=true;pQ='';pSOn=false;S.pFltOpen=false;S.pExpId=null; /* 打开面板永远落「最近使用」：命中推荐排在首位，引擎递来的东西不依赖用户翻筛选；搜索条同落收起态；筛选 popover 同落收起态（上次是点 ✕ 收起面板的话 popover 会留着开）；展开态同落收起（面板重开＝回到能扫的那一屏，不停在上次摊开的那条上） */
   /* 全局球**不收起**（ADR-0078，产品口径「球恒在，素材库面板打开时也不收起」）：
-     只把与面板相交的球抬到面板上沿之上，关面板时还原。 */
-  panelShow($('panel'),swap);
+     只把与面板相交的球抬到面板外，关面板时还原。 */
+  var pn=$('panel');
+  if(!wasOpen)panelHome(pn,392.2);     /* 从关到开＝落回顶部居中；已开着再点入口不挪用户在用的位置 */
+  panelShow(pn,swap);
   ballLiftForPanel();
   panelRender();
   var ph=$('panelHead');
@@ -10550,7 +10569,7 @@ function panelDrag(el){
        历史遗留：老 #panel 的定值写在 432 空间里（432-334 与 k=inner.width/432），而它的包含块其实是 412 宽，
        于是「实时辅助」浮层（.ai-panel，宽 384.5）沿用老常量时右缘越出被裁、首拖还会无故下滑 13px——
        当时只为 .ai-panel 开了一条 412 空间的分支。**ADR-0075 把这条分支收掉了**：新 #panel 的几何
-       （left 9.9／top 434／392.2 宽）本身就是在 412 空间里量出来的（稿 750 × 412/750），
+       （392.2 宽、left 9.9 居中）本身就是在 412 空间里量出来的（稿 750 × 412/750），
        两块浮层终于同一套算法，不必再靠 isAi 分辨。三个常量随新几何重算：
        maxL = 412 − 392.2 − 4 ≈ 15.8（新面板比老面板宽得多，横向几乎没得挪）；
        minT = 34（不压状态栏）；maxT = 916 − 461.4 − 4 ≈ 450.6（不越出手势条）。 */
@@ -11245,7 +11264,7 @@ function hpOpenList(msgs,child){
    · 下钻（hpChild）＝站到辅助浮层那一格。两个节点是兄弟，不抄位置的话，辅助浮层被拖到别处、
      清单还在默认位——一眼就看出"这是又开了一块"；拖清单时由 panelDrag 把父层同步带走。
      进场也不播 popCard（就地换页），inline animation:none 压到关闭／收起时再清掉。
-   · 独立清单＝回自己的位置（上次拖到的合法位；从没拖过就是 HTML 里那对默认值 14/47）。 */
+   · 独立清单＝回自己的位置（上次拖到的合法位；从没拖过就是 HTML 里那对默认值 13.75/34，即顶部居中）。 */
 function hpPose(p){
   p=p||$('hpPanel');if(!p)return;
   if(hpChild){
@@ -11555,6 +11574,7 @@ function raFull(s){return s.lead+' '+s.pts.map(function(t,i){return (i+1)+'. '+t
 function aiToggle(){ if(aiOpen)closeAiPanel(false,true); else openAiPanel(); }
 function openAiPanel(){
   closeBallMenu();                    /* 同上：浮层开＝菜单收 */
+  var wasOpen=aiOpen;                 /* 已开着再点入口＝不挪用户在用的位置 */
   /* 收起为横条时若停在二级页，这一页不销毁（ADR-0093）：再展开还落清单，滚动位置照旧 */
   var resume=hpStash&&hpMsgs.length&&hpChild;
   var swap=panelOpen||hpOpen;         /* 捕获在关闭之前：有另一块在场＝这次是"换掉"，走并叠（ADR-0088） */
@@ -11562,15 +11582,11 @@ function openAiPanel(){
   if(!resume)closeHpPanel();          /* 同上：命中浮层也让位——开着辅助时不留在屏上（与 matchKw 的分流同一条口径） */
   hpTipHide();                        /* 辅助一开，命中就走时间线：横幅（若有）不该再挂着 */
   aiOpen=true;aiBarOn=true;           /* 开过一次就记住：收起时才有那条横条，没开过不凭空出现 */
-  /* 从折叠横条展开＝落回横条当前那一格（横条可拖，ADR-0096 后续）。面板比横条高得多，
-     横条拖到屏的下一半时面板放不下：按面板自己的高（409.8）再夹一次屏内，并把夹过的位置写回横条，
-     保持「横条恒在面板顶边那一格」这条不变量（下次收起仍落在这里）。 */
+  /* 打开初始位置固定为页面顶部居中（产品 2026-11-16）：不再落回折叠横条被拖到的那一格。
+     横条位置同步到面板这一格——收起时 aiCollapseToBar 仍按面板顶边现算，两条路径落点一致。 */
   var barr=$('aiBar'),ap=$('aiPanel');
-  if(ap&&barr&&barr.style.display!=='none'){
-    var bl=parseFloat(barr.style.left),bt=parseFloat(barr.style.top);
-    if(isFinite(bl)){ap.style.left=Math.max(4,Math.min(bl,412-384.5-4))+'px';barr.style.left=ap.style.left}
-    if(isFinite(bt)){ap.style.top=Math.max(34,Math.min(bt,916-409.8-4))+'px';barr.style.top=ap.style.top}
-  }
+  if(ap&&!wasOpen)panelHome(ap,384.5);
+  if(ap&&barr){barr.style.left=ap.style.left;barr.style.top=ap.style.top}
   aiBarHide();
   for(var i=0;i<pendingHits.length;i++)pendingHits[i].done=true; /* 打开浮层＝命中已阅、角标清零（与素材面板 openPanel 同一口径） */
   ballBadge();dkRefresh();
