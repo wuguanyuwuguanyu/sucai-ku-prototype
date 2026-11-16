@@ -23450,6 +23450,11 @@ function initFq(){
         gAuto=fqGroup('自动发送'),gType=fqGroup('任务类型'),gStart=fqGroup('通知时间'),
         gEnd=fqGroup('截止时间'),gPopup=fqGroup('全局弹窗');
 
+    /* 「任务类型」改名「循环方式」（2026-11-16）：这一行只决定单次／周／月／自定义循环，
+       任务品类另由快照「基础信息 · 任务类型」表示。同名两义去掉，与快照同词。 */
+    var gTypeLbl=findLabel('任务类型');
+    if(gTypeLbl&&gType&&gType.contains(gTypeLbl))gTypeLbl.textContent='循环方式';
+
     /* ---- 可见范围：照微信发朋友圈的「谁可以看」 ----
        一级三选一：全部好友／部分可见／不给谁看；选后两者时展开二级选择方式
        「按微信标签选择／指定微信好友」，并露出对应的名称输入。一二级同一时刻只有一枚生效。
@@ -23633,7 +23638,7 @@ function initFq(){
     FQ_L.appendChild(wrap);
 
     /* 2026-11-13 与新小红书运营 · 新建对齐：第一张卡是「任务安排」，
-       任务名称／执行人员／任务类型／两个时间／全局弹窗都收进来；
+       任务名称／执行人员／循环方式／两个时间／全局弹窗都收进来；
        原来收在「更多设置」里的自动发送并进「发什么」。 */
     var b1=fqSec('1','任务安排','');
     fqPut(gName,b1,true);
@@ -23954,6 +23959,9 @@ function initQf(){
       rScope=rowByLabel('群发范围'),rRepeat=rowByLabel('任务类型'),rPopup=rowByLabel('全局弹窗'),
       rStart=rowByLabel('通知时间'),rEnd=rowByLabel('截止时间');
   if(!rContent||!rScope||!rSend)return;   /* 快照结构变了就整页不接，保持原页 */
+  /* 「任务类型」改名「循环方式」（2026-11-16）：这一行只决定循环方式，
+     任务品类另由快照「基础信息 · 任务类型」表示，避免同名两义。 */
+  if(rRepeat){var rrl=rRepeat.querySelector('[class*="_must_white"]');if(rrl)rrl.textContent='循环方式';}
   var rAct=null,k;
   for(k=0;k<rows.length;k++){
     var ab=rows[k].querySelector('button');
@@ -24053,7 +24061,7 @@ function initQf(){
   }
 
   /* ---------- 三段：任务安排 → 发给谁 → 发什么（2026-11-13 与新小红书运营 · 新建对齐） ----------
-     第一张卡是「任务安排」：任务名称、执行人员、任务类型、两个时间、全局弹窗；
+     第一张卡是「任务安排」：任务名称、执行人员、循环方式、两个时间、全局弹窗；
      发送类型跟着内容走，落在「发什么」末尾。三段在这里一次建好，后面的代码只往对应的段里放行。 */
   var b1=sec('1','任务安排','');
   var b2=sec('2','发送范围','');
@@ -24208,7 +24216,7 @@ function initQf(){
   var startI=dtInput(rStart,'2026-10-13T16:05');
   var endI=dtInput(rEnd,'2026-10-20T16:05');
 
-  /* ---------- 任务安排：任务名称 → 执行人员 → 任务类型 → 两个时间 → 全局弹窗 ---------- */
+  /* ---------- 任务安排：任务名称 → 执行人员 → 循环方式 → 两个时间 → 全局弹窗 ---------- */
   put(rName,b1,true);
   put(rExec,b1);
   var ORGS=[{n:'华东销售组',c:12},{n:'华南销售组',c:8},{n:'销售支持组',c:5},{n:'全员',c:25}];
@@ -24548,7 +24556,7 @@ function initQs(){
 
   /* ---------- 任务安排（2026-11-13 与新小红书运营 · 新建对齐）----------
      第一张卡收「谁来发、什么时候发、提醒弹到哪」：任务名称、执行人员、两个时间、全局弹窗。
-     群发群组只有单次任务，没有任务类型这一行。 */
+     群发群组只有单次任务，没有循环方式这一行。 */
   var b1=sec('1','任务安排','');
   row(b1,'任务名称',false,
      '<input type="text" class="ant-input css-vgijab ant-input-outlined rea-wxt-inp" value="群发群组任务20261013">');
@@ -26311,6 +26319,7 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
         ]},
         {title:'发送内容',rows:[
           {label:'任务内容',preview:true},
+          {label:'任务内容来源',value:'选择文章'},
           {label:'所在位置',value:'上海静安嘉里中心'},
           {label:'自动发送',value:'开启'}
         ]}
@@ -26342,6 +26351,7 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
         ]},
         {title:'发送内容',rows:[
           {label:'任务内容',preview:true},
+          {label:'任务内容来源',value:'临时创建'},
           {label:'内容类型',value:'文本'},
           {label:'描述文本',value:'各位老板好，本周新品已到店，欢迎进店体验，老客户到店可享专属优惠。'},
           {label:'发送类型',value:'群发助手'}
@@ -26371,6 +26381,7 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
         ]},
         {title:'发送内容',rows:[
           {label:'任务内容',preview:true},
+          {label:'任务内容来源',value:'临时创建'},
           {label:'内容类型',value:'文本'},
           {label:'内容文本',value:'各位老板好，本周新品已到店，欢迎进店体验，老客户到店可享专属优惠。'},
           {label:'发送类型',value:'逐群发送'}
@@ -30738,6 +30749,9 @@ var L={
   strategy:rowBy('内容生成策略'),content:rowBy('唤醒内容'),type:rowBy('任务类型'),
   popup:rowBy('全局弹窗'),start:rowBy('通知时间'),end:rowBy('截止时间')
 };
+/* 「任务类型」改名「循环方式」（2026-11-16）：这一行只决定单次／循环，任务品类另由
+   快照「基础信息 · 任务类型」表示；与另外两张新建页、全部快照同词。 */
+if(L.type){var TL=L.type.querySelector('span[class*="_must_"]');if(TL)TL.textContent='循环方式'}
 function up(n,c){while(n&&n.nodeType===1){if(n.classList&&n.classList.contains(c))return n;n=n.parentNode}return null}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function pad(n){return (n<10?'0':'')+n}
