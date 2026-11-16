@@ -1213,7 +1213,10 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .cw-mini{flex:none;display:block;width:100%;text-align:left;background:#fff;border-radius:16px;
   padding:10px 14px;margin-bottom:16px;box-shadow:0 12px 24px -24px rgba(40,70,150,.9)}
 .cw-mini .top{display:flex;align-items:center;gap:6px}
-.cw-mini .top b{font-size:14.5px;font-weight:600;color:#152C50;line-height:1.4}
+.cw-mini .top b{min-width:0;font-size:14.5px;font-weight:600;color:#152C50;line-height:1.4;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cw-mini .top .tlab{flex:none;font-size:12px;font-weight:500;color:#7A8BA8}
+.cw-mini .top .tlab:after{content:"·";margin-left:6px}
 .cw-mini .top .cw-chev{margin-left:auto}
 /* AI 结果：一人一张卡，行尾三枚图标 */
 .cw-aicard{position:relative;overflow:hidden;background:#fff;border-radius:16px;padding:12px 14px;margin-top:10px;
@@ -5748,9 +5751,9 @@ function cwAiFlush(){
   CW_FLUSHING=false;
   if(cur==='cw-content')REND['cw-content']();
 }
-/* 先填主题，再点生成。生成前不可能缺主题，也不会在用户没说「这次想说什么」时白花一次生成。 */
+/* 先填主题，再点生成。生成前不可能缺主题，也不会在用户没写「本次唤醒主题」时白花一次生成。 */
 function cwGen(){
-  if(!CW_TOPIC.trim()){ toast('先写这次想说什么'); return; }
+  if(!CW_TOPIC.trim()){ toast('先写本次唤醒主题'); return; }
   /* 从结果页点「主题」退回表单再生成＝换了个说法，整批作废重来；第一次生成时不清。 */
   var had=false, k; for(k in CW_AI)had=true; for(k in CW_FAIL)had=true;
   if(had){ CW_AI_ROUND++; CW_AI={}; CW_FAIL={}; }
@@ -5805,8 +5808,8 @@ function cwTopicSheet(){
   var n=cwSelCount();
   var why=CW_FROM==='tools'?'这一段没有待唤醒的客户':'还没选客户';
   CW_SH=openSheet(
-    '<div class="cw-sh">这次想说什么</div>'
-    +'<input class="cw-si" id="cwTopicEd" maxlength="50" aria-label="这次想说什么" value="'+esc(CW_TOPIC)+'" oninput="CW_TOPIC_ED=this.value">'
+    '<div class="cw-sh">本次唤醒主题</div>'
+    +'<input class="cw-si" id="cwTopicEd" maxlength="50" aria-label="本次唤醒主题" placeholder="比如：秋季新品到店" value="'+esc(CW_TOPIC)+'" oninput="CW_TOPIC_ED=this.value">'
     +(n?'<div class="cw-hint">重新生成会覆盖已经生成和改过的话术</div>'
        :'<div class="cw-hint">'+why+'</div>')
     +'<div class="cw-shbtns"><button class="cw-btn ghost" onclick="closeSheet(CW_SH)">取消</button>'
@@ -5814,7 +5817,7 @@ function cwTopicSheet(){
     'cw-sheet');
 }
 function cwTopicRegen(){
-  if(!CW_TOPIC_ED.trim()){ toast('先写这次想说什么'); return; }
+  if(!CW_TOPIC_ED.trim()){ toast('先写本次唤醒主题'); return; }
   if(!cwSelCount())return;
   CW_TOPIC=CW_TOPIC_ED;
   closeSheet(CW_SH); CW_SH=null;
@@ -5996,7 +5999,7 @@ function cwContentFoot(){
     if(!CW_FIXED.length)sum='还没有内容';
     else act='cwStart()';
   }else if(!CW_GEN){
-    if(!CW_TOPIC.trim())sum='还没写这次想说什么';
+    if(!CW_TOPIC.trim())sum='还没写本次唤醒主题';
     else act='cwGen()';
   }else{
     var miss=cwMissing().length, pend=0, ok;
@@ -6075,7 +6078,7 @@ REND['cw-content']=function(){
   }else if(!CW_GEN){
     c+='<div class="cw-mid"><span class="cw-empty">'+(CW_QBUSY?'正在取人…':(cwSelIds().length?'生成后，每个人的话术出现在这里':'选好范围后，每个人的话术出现在这里'))+'</span></div>'
       +'<div class="cw-composer">'
-      +'<div class="lab">这次想说什么<span class="cnt" id="cwTopicCnt">'+CW_TOPIC.length+' / 50</span></div>'
+      +'<div class="lab">本次唤醒主题<span class="cnt" id="cwTopicCnt">'+CW_TOPIC.length+' / 50</span></div>'
       +'<input id="cwTopic" maxlength="50" value="'+esc(CW_TOPIC)+'" placeholder="比如：秋季新品到店" oninput="cwTopicInput(this.value)">'
       +'</div>';
   }else{
@@ -6090,8 +6093,8 @@ REND['cw-content']=function(){
     }
     c+='</div>';
     /* 生成后输入卡不搬去顶部：主题留在原地收成一条，点它回表单改。 */
-    c+='<button class="cw-mini" onclick="cwTopicSheet()" aria-label="主题 '+esc(CW_TOPIC)+'，改主题或重新生成">'
-      +'<span class="top"><b>'+esc(CW_TOPIC)+'</b><span class="cw-chev">›</span></span>'
+    c+='<button class="cw-mini" onclick="cwTopicSheet()" aria-label="本次唤醒主题 '+esc(CW_TOPIC)+'，改主题或重新生成">'
+      +'<span class="top"><span class="tlab">本次唤醒主题</span><b>'+esc(CW_TOPIC)+'</b><span class="cw-chev">›</span></span>'
       +'</button>';
   }
   h+='<div class="cw-pcard cw-pcard-c">'+c+'</div>';
