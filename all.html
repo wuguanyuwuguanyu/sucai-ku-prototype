@@ -5324,11 +5324,12 @@ var CW_CUST=[
   {i:'d2',n:'何丽',last:'10月10日 16:40',h:33*24},
   {i:'d3',n:'马晓东',last:'9月2日 11:00',h:71*24}
 ];
-var CW_SET={gap:10,styles:['亲切'],role:'客户经理',words:120};
-var CW_TMP={gap:10,styles:['亲切'],role:'客户经理',words:120};
-var CW_STYLES=['亲切','专业','紧迫','幽默','轻松'];
-var CW_ROLES=['客户经理','售前','营销人员'];
+var CW_SET={gap:10,styles:['亲切'],role:'销售',words:120};
+var CW_TMP={gap:10,styles:['亲切'],role:'销售',words:120};
+var CW_STYLES=['亲切','专业','幽默','轻松'];
+var CW_ROLES=['销售','客户经理','营销人员'];
 var CW_MYSTYLES=[];                    /* 自己加的回复风格：本次打开 App 期间留着，下次进设置还在 */
+var CW_EDIT={style:false,role:false};  /* 设置里「自定义」的输入框有没有展开 */
 var CW_WORDS=[60,300], CW_GAP=[5,60];  /* 字数与发送间隔的上下限，输超了夹回边界 */
 /* 唤醒范围：n＋单位，on=false 时没有范围（进来就是这样，不替用户预选）。 */
 var CW_CUSTOM={n:3,u:'d',on:false};
@@ -6279,23 +6280,31 @@ REND['cw-record']=function(p){
 
 /* 设置：分两组——话术生成（风格／角色／字数）管「怎么写」，发送（间隔）管「怎么发」。
    都在右上角同一个弹层里，改动只影响下一次开始；内容页不回显这里的值。
-   风格可多选，也能自己加一种；角色点预设或直接打字；字数与间隔直接输数字，夹在上下限里。 */
+   风格可多选、角色单选；两行标签末尾都是「自定义」，点了才展开输入框并聚焦（真机上唤出键盘）。
+   字数与间隔直接输数字，夹在上下限里。 */
 function cwA(s){ return esc(s).replace(/"/g,'&quot;') }
 function cwStyleList(){ return CW_STYLES.concat(CW_MYSTYLES) }
+function cwRoleIsCustom(){ return CW_ROLES.indexOf(CW_TMP.role)<0 }
+function cwSetRender(){ CW_SH.querySelector('.sheet-body').innerHTML=cwSetBody() }
+/* 展开输入框后把它聚焦：桌面是光标，真机是键盘。 */
+function cwSetFocus(id){ setTimeout(function(){ var el=CW_SH&&CW_SH.querySelector('#'+id); if(el)el.focus() },60) }
 function cwSetBody(){
+  var myRole=cwRoleIsCustom();
   return '<div class="cw-sh">设置</div>'
     +'<div class="cw-grp">话术生成</div>'
     +'<div class="cw-fld" style="padding-bottom:0"><span>回复风格</span></div>'
     +'<div class="cw-opts" id="cwStyleOpts">'+cwStyleList().map(function(v){
         return '<button data-v="'+cwA(v)+'" class="'+(CW_TMP.styles.indexOf(v)>=0?'on':'')+'" onclick="cwStylePick(this)">'+esc(v)+'</button>';
-      }).join('')+'</div>'
-    +'<div class="cw-addline"><input class="cw-si" id="cwStyleNew" maxlength="8" aria-label="自定义回复风格" placeholder="自定义风格" onkeydown="cwStyleKey(event)">'
-      +'<button class="cw-addbtn" onclick="cwStyleAdd()">添加</button></div>'
+      }).join('')
+      +'<button data-custom="style" class="'+(CW_EDIT.style?'on':'')+'" onclick="cwStyleCustom()">自定义</button></div>'
+    +(CW_EDIT.style?'<div class="cw-addline"><input class="cw-si" id="cwStyleNew" maxlength="8" aria-label="自定义回复风格" placeholder="比如：走心" onkeydown="cwStyleKey(event)">'
+      +'<button class="cw-addbtn" onclick="cwStyleAdd()">添加</button></div>':'')
     +'<div class="cw-fld" style="padding-bottom:0"><span>角色</span></div>'
     +'<div class="cw-opts" id="cwRoleOpts">'+CW_ROLES.map(function(v){
         return '<button data-v="'+cwA(v)+'" class="'+(CW_TMP.role===v?'on':'')+'" onclick="cwRolePick(this)">'+esc(v)+'</button>';
-      }).join('')+'</div>'
-    +'<input class="cw-si" id="cwRoleIn" maxlength="12" aria-label="角色" placeholder="比如：门店店长" value="'+cwA(CW_TMP.role)+'" oninput="cwRoleInput(this.value)">'
+      }).join('')
+      +'<button data-custom="role" class="'+((myRole||CW_EDIT.role)?'on':'')+'" onclick="cwRoleCustom()">自定义</button></div>'
+    +((myRole||CW_EDIT.role)?'<input class="cw-si" id="cwRoleIn" maxlength="12" aria-label="自定义角色" placeholder="比如：门店店长" value="'+cwA(myRole?CW_TMP.role:'')+'" oninput="cwRoleInput(this.value)">':'')
     +'<div class="cw-fld"><span>字数限制</span><div class="cw-numwrap">'
       +'<input class="cw-num" id="cwNumWords" type="number" inputmode="numeric" min="'+CW_WORDS[0]+'" max="'+CW_WORDS[1]+'" value="'+CW_TMP.words+'" aria-label="字数限制，'+CW_WORDS[0]+' 到 '+CW_WORDS[1]+' 字" onchange="cwSetNum(\'words\',this.value)">'
       +'<span class="cw-unit">字</span><span class="cw-rng">'+CW_WORDS[0]+'–'+CW_WORDS[1]+'</span></div></div>'
@@ -6309,19 +6318,27 @@ function cwSetBody(){
 }
 function cwSetSheet(){
   CW_TMP={gap:CW_SET.gap,styles:CW_SET.styles.slice(),role:CW_SET.role,words:CW_SET.words};
+  CW_EDIT={style:false,role:false};
   CW_SH=openSheet(cwSetBody(),'cw-sheet');
 }
 /* 风格是开关不是单选：至少留一种，全部取消就拦一下。 */
 function cwStylePick(b){
-  var v=b.getAttribute('data-v'), i=CW_TMP.styles.indexOf(v);
+  var v=b.getAttribute('data-v'); if(v==null)return;
+  var i=CW_TMP.styles.indexOf(v);
   if(i>=0){
     if(CW_TMP.styles.length===1){ toast('至少留一种风格'); return; }
     CW_TMP.styles.splice(i,1);
   }else CW_TMP.styles.push(v);
   var box=CW_SH.querySelector('#cwStyleOpts');
-  if(box)[].forEach.call(box.querySelectorAll('button'),function(x){
+  if(box)[].forEach.call(box.querySelectorAll('button[data-v]'),function(x){
     x.classList.toggle('on',CW_TMP.styles.indexOf(x.getAttribute('data-v'))>=0);
   });
+}
+/* 「自定义」标签：点开才长出输入框并聚焦，再点一下收起。 */
+function cwStyleCustom(){
+  CW_EDIT.style=!CW_EDIT.style;
+  cwSetRender();
+  if(CW_EDIT.style)cwSetFocus('cwStyleNew');
 }
 function cwStyleKey(e){ if(e.key==='Enter'){ e.preventDefault(); cwStyleAdd(); } }
 function cwStyleAdd(){
@@ -6329,19 +6346,29 @@ function cwStyleAdd(){
   if(!v){ toast('先写一种风格'); return; }
   if(cwStyleList().indexOf(v)<0)CW_MYSTYLES.push(v);
   if(CW_TMP.styles.indexOf(v)<0)CW_TMP.styles.push(v);
-  CW_SH.querySelector('.sheet-body').innerHTML=cwSetBody();
+  CW_EDIT.style=false;
+  cwSetRender();
 }
-/* 角色单选：点预设把输入框一起改过来，打字则让不对应的预设灭掉。 */
+/* 角色单选：点预设收起自定义输入框；点「自定义」清掉预设、展开并聚焦输入框。 */
 function cwRolePick(b){
   CW_TMP.role=b.getAttribute('data-v');
-  var i=CW_SH.querySelector('#cwRoleIn'); if(i)i.value=CW_TMP.role;
-  cwRoleSync();
+  CW_EDIT.role=false;
+  cwSetRender();
 }
-function cwRoleInput(v){ CW_TMP.role=v; cwRoleSync(); }
-function cwRoleSync(){
+function cwRoleCustom(){
+  if(!cwRoleIsCustom())CW_TMP.role='';
+  CW_EDIT.role=true;
+  cwSetRender();
+  cwSetFocus('cwRoleIn');
+}
+function cwRoleInput(v){
+  CW_TMP.role=v;
   var box=CW_SH.querySelector('#cwRoleOpts'); if(!box)return;
+  var preset=CW_ROLES.indexOf(v)>=0;
   [].forEach.call(box.querySelectorAll('button'),function(x){
-    x.classList.toggle('on',x.getAttribute('data-v')===CW_TMP.role);
+    var dv=x.getAttribute('data-v');
+    if(dv==null)x.classList.toggle('on',!preset);
+    else x.classList.toggle('on',dv===v);
   });
 }
 /* 直接输数字：空着不改，超界夹回上下限；输入框里的值同步成夹完的结果。 */
