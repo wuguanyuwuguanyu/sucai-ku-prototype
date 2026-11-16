@@ -22476,8 +22476,54 @@ tb.addEventListener("click",function(e){
     + '.rea-wxp-bubble>.rea-wxp-grid:first-child,.rea-wxp-bubble>.rea-wxp-video:first-child,.rea-wxp-bubble>.rea-wxp-file:first-child{margin-top:0}'
 ;
 
+  /* 微信标签选择器（reaTagPicker）的样式：发圈／群发好友／群发群组／客户唤醒共用一份。
+     既有左边「精确搜索／模糊搜索」小下拉，也有可打字的多选标签框。单列出来是因为
+     客户唤醒不带 REA_WXT_CSS，只加这一份就够。 */
+  var REA_TAGPICK_CSS = ''
+    + '.rea-qf-select{display:flex;align-items:center;box-sizing:border-box;width:280px;max-width:100%;height:32px;padding:0 32px 0 11px;border:1px solid #E5E8EF;border-radius:8px;background:#fff;font-size:14px;color:#8F959E;cursor:pointer;position:relative;text-align:left}'
+    + '.rea-qf-select:hover{border-color:#1677FF}'
+    + '.rea-qf-seltext{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
+    + '.rea-qf-selcaret{position:absolute;right:10px;top:50%;margin-top:-6px;font-size:10px;line-height:12px;color:#8F959E;pointer-events:none}'
+    + '.rea-qf-selmenu{position:absolute;z-index:30;left:0;top:calc(100% + 4px);box-sizing:border-box;width:280px;max-width:100%;padding:6px;border:1px solid #E5E8EF;border-radius:8px;background:#fff;box-shadow:0 6px 16px rgba(0,0,0,.08);display:none}'
+    + '.rea-qf-selmenu.on{display:block}'
+    + '.rea-qf-opt{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:8px 10px;border:0;border-radius:6px;background:transparent;font-size:14px;color:#1F2329;text-align:left;cursor:pointer}'
+    + '.rea-qf-opt:hover{background:#F7F8FA}'
+    + '.rea-qf-optn{font-size:12px;color:#8F959E}'
+    + '.rea-qf-mini{position:relative;display:inline-block}'
+    + '.rea-qf-select.rea-qf-minisel{width:168px;color:#1F2329}'
+    + '.rea-qf-mini .rea-qf-selmenu{width:168px}'
+    + '.rea-qf-tagctl{display:flex;align-items:flex-start;gap:12px;max-width:560px}'
+    + '.rea-qf-tagctl .rea-qf-mini{flex:none}'
+    + '.rea-qf-tagctl .rea-qf-select.rea-qf-minisel{width:132px}'
+    + '.rea-qf-tagctl .rea-qf-mini .rea-qf-selmenu{width:132px}'
+    + '.rea-qf-tagctl .rea-qf-listwrap{flex:1 1 auto;min-width:0}'
+    + '.rea-qf-taginp{flex:1 1 auto;min-width:80px;height:24px;padding:0;border:0;outline:0;background:transparent;font-size:14px;line-height:24px;color:#1F2329}'
+    + '.rea-qf-taginp::placeholder{color:#C9CDD4}'
+    + '.rea-qf-tagbox:focus-within{border-color:#1677FF;box-shadow:0 0 0 2px #E6F4FF}'
+    + '.rea-qf-tagbox.bad{border-color:#ff4d4f}'
+    + '.rea-qf-tagbox{position:relative;display:flex;flex-wrap:wrap;align-items:center;gap:6px;box-sizing:border-box;min-height:32px;padding:4px 26px 4px 11px;border:1px solid #E5E8EF;border-radius:8px;background:#fff;cursor:pointer}'
+    + '.rea-qf-tagbox:hover{border-color:#1677FF}'
+    + '.rea-qf-tagbox.on{border-color:#1677FF;box-shadow:0 0 0 2px #E6F4FF}'
+    + '.rea-qf-tagph{font-size:14px;line-height:24px;color:#C9CDD4}'
+    + '.rea-qf-tagchip{display:inline-flex;align-items:center;gap:2px;max-width:100%;padding:0 4px 0 8px;border-radius:4px;background:#E6F4FF;color:#1677FF;font-size:13px;line-height:24px}'
+    + '.rea-qf-tagchip>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
+    + '.rea-qf-tagx{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;padding:0;border:0;border-radius:50%;background:transparent;color:#1677FF;font-size:14px;line-height:1;cursor:pointer}'
+    + '.rea-qf-tagx:hover{background:#BEDBFF}'
+    + '.rea-qf-tagcaret{position:absolute;right:10px;top:50%;margin-top:-6px;font-size:10px;line-height:12px;color:#8F959E;pointer-events:none}'
+    + '.rea-qf-tagdd{position:absolute;z-index:30;left:0;top:calc(100% + 4px);box-sizing:border-box;width:100%;border:1px solid #E5E8EF;border-radius:8px;background:#fff;box-shadow:0 6px 16px rgba(0,0,0,.08)}'
+    + '.rea-qf-tagdd[hidden]{display:none!important}'
+    + '.rea-qf-taglist{max-height:220px;overflow:auto;padding:0 6px}'
+    + '.rea-qf-tagopt{display:flex;align-items:center;gap:8px;padding:7px 6px;border-radius:6px;font-size:14px;color:#1F2329;cursor:pointer}'
+    + '.rea-qf-tagopt:hover{background:#F7F8FA}'
+    + '.rea-qf-tagopt.on{color:#1677FF}'
+    + '.rea-qf-tagopt input{width:14px;height:14px;margin:0;accent-color:#1677FF}'
+    + '.rea-qf-tagname{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
+    + '.rea-qf-tagft{display:flex;align-items:center;justify-content:space-between;padding:8px;border-top:1px solid #F2F3F5;font-size:12px;color:#8F959E}'
+    + '.rea-qf-tagclear{padding:0;border:0;background:transparent;color:#1677FF;font-size:12px;cursor:pointer}'
+    + '.rea-qf-tagempty{padding:18px 8px;text-align:center;font-size:13px;line-height:20px;color:#8F959E}';
+
   /* 任务三页自己的样式（已选卡、发圈预览媒体、群发群组表单）。 */
-  var REA_WXT_CSS = REA_PICK_CSS
+  var REA_WXT_CSS = REA_PICK_CSS + REA_TAGPICK_CSS
     /* ---- 已选素材卡（发/群发共用的同一形） ---- */
     + '.rea-wxt-picked{display:flex;align-items:flex-start;gap:8px;margin-top:12px;padding:10px 12px;border:1px solid #f0f0f0;border-radius:6px;background:#fafafa;max-width:560px}'
     + '.rea-wxt-pkmain{flex:1;min-width:0}'
@@ -22608,56 +22654,14 @@ tb.addEventListener("click",function(e){
     + '.rea-qf-why:focus-visible{outline:2px solid rgba(250,173,20,.35);outline-offset:2px}'
     + '.rea-qf-why:after{content:attr(data-tip);position:absolute;left:50%;bottom:calc(100% + 8px);z-index:60;width:max-content;max-width:264px;padding:8px 10px;border-radius:6px;background:#1F2329;color:#fff;font-size:12px;line-height:1.6;font-weight:400;letter-spacing:0;text-align:left;white-space:normal;box-shadow:0 6px 18px rgba(15,29,51,.18);opacity:0;visibility:hidden;transform:translate(-50%,2px);transition:opacity .12s ease-out,transform .12s ease-out;pointer-events:none}'
     + '.rea-qf-why:hover:after,.rea-qf-why:focus-visible:after{opacity:1;visibility:visible;transform:translate(-50%,0)}'
-    + '.rea-qf-mini{position:relative;display:inline-block}'
-    + '.rea-qf-select.rea-qf-minisel{width:168px;color:#1F2329}'
-    + '.rea-qf-mini .rea-qf-selmenu{width:168px}'
     + '.rea-qf-tagin{display:flex;align-items:center;box-sizing:border-box;width:100%;height:32px;padding:0 11px;border:1px solid #E5E8EF;border-radius:8px;background:#fff}'
     + '.rea-qf-tagin:focus-within{border-color:#1677FF;box-shadow:0 0 0 2px #E6F4FF}'
     + '.rea-qf-tagin input{flex:1;min-width:0;border:0;outline:0;background:transparent;font-size:14px;color:#1F2329}'
     + '.rea-qf-tagin input::placeholder{color:#C9CDD4}'
     + '.rea-qf-listwrap{position:relative;max-width:560px}'
     + '.rea-qf-listwrap[hidden]{display:none!important}'
-    /* 标签选择器：左边「精确搜索／模糊搜索」，右边可多选、可打字的输入框 */
-    + '.rea-qf-tagctl{display:flex;align-items:flex-start;gap:12px;max-width:560px}'
-    + '.rea-qf-tagctl .rea-qf-mini{flex:none}'
-    + '.rea-qf-tagctl .rea-qf-select.rea-qf-minisel{width:132px}'
-    + '.rea-qf-tagctl .rea-qf-mini .rea-qf-selmenu{width:132px}'
-    + '.rea-qf-tagctl .rea-qf-listwrap{flex:1 1 auto;min-width:0}'
-    + '.rea-qf-taginp{flex:1 1 auto;min-width:80px;height:24px;padding:0;border:0;outline:0;background:transparent;font-size:14px;line-height:24px;color:#1F2329}'
-    + '.rea-qf-taginp::placeholder{color:#C9CDD4}'
-    + '.rea-qf-tagbox:focus-within{border-color:#1677FF;box-shadow:0 0 0 2px #E6F4FF}'
-    + '.rea-qf-tagbox.bad{border-color:#ff4d4f}'
-    + '.rea-qf-tagbox{position:relative;display:flex;flex-wrap:wrap;align-items:center;gap:6px;box-sizing:border-box;min-height:32px;padding:4px 26px 4px 11px;border:1px solid #E5E8EF;border-radius:8px;background:#fff;cursor:pointer}'
-    + '.rea-qf-tagbox:hover{border-color:#1677FF}'
-    + '.rea-qf-tagbox.on{border-color:#1677FF;box-shadow:0 0 0 2px #E6F4FF}'
-    + '.rea-qf-tagph{font-size:14px;line-height:24px;color:#C9CDD4}'
-    + '.rea-qf-tagchip{display:inline-flex;align-items:center;gap:2px;max-width:100%;padding:0 4px 0 8px;border-radius:4px;background:#E6F4FF;color:#1677FF;font-size:13px;line-height:24px}'
-    + '.rea-qf-tagchip>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
-    + '.rea-qf-tagx{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;padding:0;border:0;border-radius:50%;background:transparent;color:#1677FF;font-size:14px;line-height:1;cursor:pointer}'
-    + '.rea-qf-tagx:hover{background:#BEDBFF}'
-    + '.rea-qf-tagcaret{position:absolute;right:10px;top:50%;margin-top:-6px;font-size:10px;line-height:12px;color:#8F959E;pointer-events:none}'
-    + '.rea-qf-tagdd{position:absolute;z-index:30;left:0;top:calc(100% + 4px);box-sizing:border-box;width:100%;border:1px solid #E5E8EF;border-radius:8px;background:#fff;box-shadow:0 6px 16px rgba(0,0,0,.08)}'
-    + '.rea-qf-tagdd[hidden]{display:none!important}'
-    + '.rea-qf-taglist{max-height:220px;overflow:auto;padding:0 6px}'
-    + '.rea-qf-tagopt{display:flex;align-items:center;gap:8px;padding:7px 6px;border-radius:6px;font-size:14px;color:#1F2329;cursor:pointer}'
-    + '.rea-qf-tagopt:hover{background:#F7F8FA}'
-    + '.rea-qf-tagopt.on{color:#1677FF}'
-    + '.rea-qf-tagopt input{width:14px;height:14px;margin:0;accent-color:#1677FF}'
-    + '.rea-qf-tagname{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
-    + '.rea-qf-tagft{display:flex;align-items:center;justify-content:space-between;padding:8px;border-top:1px solid #F2F3F5;font-size:12px;color:#8F959E}'
-    + '.rea-qf-tagclear{padding:0;border:0;background:transparent;color:#1677FF;font-size:12px;cursor:pointer}'
-    + '.rea-qf-tagempty{padding:18px 8px;text-align:center;font-size:13px;line-height:20px;color:#8F959E}'
     + '.rea-qf-dt{width:240px;max-width:100%}'
     + '.rea-qf-exec{position:relative}'
-    + '.rea-qf-select{display:flex;align-items:center;box-sizing:border-box;width:280px;max-width:100%;height:32px;padding:0 32px 0 11px;border:1px solid #E5E8EF;border-radius:8px;background:#fff;font-size:14px;color:#8F959E;cursor:pointer;position:relative;text-align:left}'
-    + '.rea-qf-select:hover{border-color:#1677FF}'
-    + '.rea-qf-seltext{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
-    + '.rea-qf-selcaret{position:absolute;right:10px;top:50%;margin-top:-6px;font-size:10px;line-height:12px;color:#8F959E;pointer-events:none}'
-    + '.rea-qf-selmenu{position:absolute;z-index:30;left:0;top:calc(100% + 4px);box-sizing:border-box;width:280px;max-width:100%;padding:6px;border:1px solid #E5E8EF;border-radius:8px;background:#fff;box-shadow:0 6px 16px rgba(0,0,0,.08);display:none}'
-    + '.rea-qf-selmenu.on{display:block}'
-    + '.rea-qf-opt{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:8px 10px;border:0;border-radius:6px;background:transparent;font-size:14px;color:#1F2329;text-align:left;cursor:pointer}'
-    + '.rea-qf-opt:hover{background:#F7F8FA}'
-    + '.rea-qf-optn{font-size:12px;color:#8F959E}'
     + '.rea-qf-more{margin-top:8px;border-top:1px solid #E5E8EF}'
     + '.rea-qf-moretog{display:flex;align-items:center;gap:8px;width:100%;padding:12px 0;font-size:14px;color:#646A73;text-align:left}'
     + '.rea-qf-moresub{font-size:12px;color:#8F959E}'
@@ -22689,7 +22693,7 @@ tb.addEventListener("click",function(e){
     + '.rea-qf-sw[aria-checked="true"]{background:#1677FF}'
     + '.rea-qf-sw[aria-checked="true"]:after{left:20px}'
     + '.rea-qf-sw:focus-visible{box-shadow:0 0 0 2px #E6F4FF}'
-    /* ---- 发圈 · 临时创建：所属分类 / 描述文本 / 媒体（2026-11-10） ---- */
+    /* ---- 发圈 · 临时创建：内容类型 / 描述文本 / 媒体（2026-11-10） ---- */
     + '.rea-fq-temp{max-width:640px}'
     + '.rea-fq-radios{display:flex;align-items:center;gap:24px;min-height:32px}'
     + '.rea-fq-desc{position:relative;max-width:640px}'
@@ -23141,90 +23145,14 @@ function wxChat(o){
        · pill 只开弹窗、不改来源（取消后表单原样不动，不需要「记住打开前的来源」）；
        · 「移除」同时清掉来源，不留「选了来源、没有素材」的空档；
        · 保存校验只在「选了素材库来源却没选素材」时报错（群发群组那页另加必填项）。 */
-  function reaWxtJs(page){
-    var tip=page==='发圈 · 新建'
-      ? '已过滤掉不能发朋友圈的素材：含文件、图片超过 9 张、图片与视频混排、视频超过 1 条。'
-      : '先选部门工作域，再选分组。只列出能作为群发内容的素材，个人素材不在可选范围内。';
-    return `(function(){
-var PAGE=${reaJson(page)};
-var SEC_ICON=${reaJson(REA_WX_SEC_ICON)};
-/* 文件传输助手转发不可选时的原因（两页共用，挂在选项后的感叹号上） */
-var FILE_WHY='内容只有文字时不能用文件传输助手转发（微信不支持这种发送方式）；加入图片、视频或文件后可选。';
-function norm(s){return String(s==null?'':s).replace(/\\s+/g,'')}
-function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
-function q(s,r){return (r||document).querySelector(s)}
-function qa(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
-
-/* 右栏的微信会话模拟（三张新建页共用） */
-${reaWxChatJs()}
-
-${reaPickJs({tip:tip, moments:page==='发圈 · 新建', counts:false})}
-
-/* ---------- 已选素材卡（任务三页的同一形；欢迎语模版不用它，素材直接铺成表行） ---------- */
-function showCard(host,m,onClear){
-  if(!host)return;
-  host.innerHTML=m?('<div class="rea-wxt-picked"><span class="rea-wxt-pkmain">'
-    +'<span class="rea-wxt-pkt">'+esc(m.title)+'</span>'
-    +'<span class="rea-wxt-pks">'+esc(sub(m))+'</span></span>'
-    +'<button type="button" class="rea-wxt-pkx" aria-label="移除已选素材" title="移除">×</button></div>'):'';
-  var x=host.querySelector('.rea-wxt-pkx');
-  if(x)x.addEventListener('click',function(e){e.preventDefault();onClear()});
-}
-
-/* ---------- 通用小件 ---------- */
-function setPrimary(btn,on){
-  if(!btn||!btn.classList)return;
-  btn.classList.remove('ant-btn-primary','ant-btn-color-primary','ant-btn-variant-solid',
-    'ant-btn-default','ant-btn-color-default','ant-btn-variant-outlined');
-  var add=on?['ant-btn-primary','ant-btn-color-primary','ant-btn-variant-solid']
-            :['ant-btn-default','ant-btn-color-default','ant-btn-variant-outlined'];
-  for(var i=0;i<add.length;i++)btn.classList.add(add[i]);
-}
-function findLabel(t){
-  var ns=document.querySelectorAll('div,span,label'),i;
-  for(i=0;i<ns.length;i++){
-    if(ns[i].children.length)continue;
-    if(norm(ns[i].textContent)===t)return ns[i];
-  }
-  return null;
-}
-function upClass(n,frag){
-  while(n&&n!==document.body){
-    if(n.className&&String(n.className).indexOf(frag)>=0)return n;
-    n=n.parentNode;
-  }
-  return null;
-}
-function cloneSrcBtn(space,text){
-  var tpl=null,i;
-  var bs=qa('.ant-btn',space);
-  for(i=0;i<bs.length;i++)if(norm(bs[i].textContent)==='临时创建')tpl=bs[i];
-  if(!tpl)return null;
-  var item=tpl.closest('.ant-space-item');
-  if(!item)return null;
-  var cp=item.cloneNode(true),btn=cp.querySelector('button');
-  var sp=btn.querySelector('span');
-  if(sp)sp.textContent=text;else btn.textContent=text;
-  /* 排在「临时创建」前面，与参考原型的三枚选项同序（选择文章 ／ 从素材库选择 ／ 临时创建） */
-  space.insertBefore(cp,item);
-  return btn;
-}
-function toast(t){
-  var w=document.createElement('div');
-  w.className='ant-message css-mncuj7';
-  w.innerHTML='<div class="ant-message-notice-wrapper"><div class="ant-message-notice">'
-    +'<div class="ant-message-notice-content"><div class="ant-message-custom-content ant-message-info"><span></span></div></div>'
-    +'</div></div>';
-  w.querySelector('span').textContent=t;
-  document.body.appendChild(w);
-  setTimeout(function(){if(w.parentNode)w.parentNode.removeChild(w)},2400);
-}
-
-/* ---------- 微信标签选择器（2026-11-13） ----------
-   点输入框展开执行人员手机端同步过来的标签，可多选；也能直接打字，回车或分号落成标签。
-   「精确搜索／模糊搜索」只决定打字进来的标签在执行时怎么匹配；下拉里勾选的标签本身就是
-   手机上的标签名，按精确名称下发。标签跟着执行人员走，任何位置都不显示人数。 */
+  /* 可打字多选微信标签选择器：发圈／群发好友／群发群组／客户唤醒共用一份。
+     它最终落进各页 srcdoc 的脚本，所以写成返回函数源码的生成器，两个载体各插一次。 */
+  function reaTagPickerJs(){
+    return String.raw`
 function reaTagPicker(o){
+  /* 自带两个小工具：这个函数要插进各页 srcdoc，不依赖各页自己的 q／qa／esc。 */
+  function qa(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
+  function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
   o=o||{};
   var sel=[],typed=[],query='',mode='exact',busy=false,busyTimer=null;
   var MODE={exact:'精确搜索',fuzzy:'模糊搜索'};
@@ -23399,6 +23327,93 @@ function reaTagPicker(o){
     }
   };
 }
+`;
+  }
+
+  function reaWxtJs(page){
+    var tip=page==='发圈 · 新建'
+      ? '已过滤掉不能发朋友圈的素材：含文件、图片超过 9 张、图片与视频混排、视频超过 1 条。'
+      : '先选部门工作域，再选分组。只列出能作为群发内容的素材，个人素材不在可选范围内。';
+    return `(function(){
+var PAGE=${reaJson(page)};
+var SEC_ICON=${reaJson(REA_WX_SEC_ICON)};
+/* 文件传输助手转发不可选时的原因（两页共用，挂在选项后的感叹号上） */
+var FILE_WHY='内容只有文字时不能用文件传输助手转发（微信不支持这种发送方式）；加入图片、视频或文件后可选。';
+function norm(s){return String(s==null?'':s).replace(/\\s+/g,'')}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function q(s,r){return (r||document).querySelector(s)}
+function qa(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
+
+/* 右栏的微信会话模拟（三张新建页共用） */
+${reaWxChatJs()}
+
+${reaPickJs({tip:tip, moments:page==='发圈 · 新建', counts:false})}
+
+/* ---------- 已选素材卡（任务三页的同一形；欢迎语模版不用它，素材直接铺成表行） ---------- */
+function showCard(host,m,onClear){
+  if(!host)return;
+  host.innerHTML=m?('<div class="rea-wxt-picked"><span class="rea-wxt-pkmain">'
+    +'<span class="rea-wxt-pkt">'+esc(m.title)+'</span>'
+    +'<span class="rea-wxt-pks">'+esc(sub(m))+'</span></span>'
+    +'<button type="button" class="rea-wxt-pkx" aria-label="移除已选素材" title="移除">×</button></div>'):'';
+  var x=host.querySelector('.rea-wxt-pkx');
+  if(x)x.addEventListener('click',function(e){e.preventDefault();onClear()});
+}
+
+/* ---------- 通用小件 ---------- */
+function setPrimary(btn,on){
+  if(!btn||!btn.classList)return;
+  btn.classList.remove('ant-btn-primary','ant-btn-color-primary','ant-btn-variant-solid',
+    'ant-btn-default','ant-btn-color-default','ant-btn-variant-outlined');
+  var add=on?['ant-btn-primary','ant-btn-color-primary','ant-btn-variant-solid']
+            :['ant-btn-default','ant-btn-color-default','ant-btn-variant-outlined'];
+  for(var i=0;i<add.length;i++)btn.classList.add(add[i]);
+}
+function findLabel(t){
+  var ns=document.querySelectorAll('div,span,label'),i;
+  for(i=0;i<ns.length;i++){
+    if(ns[i].children.length)continue;
+    if(norm(ns[i].textContent)===t)return ns[i];
+  }
+  return null;
+}
+function upClass(n,frag){
+  while(n&&n!==document.body){
+    if(n.className&&String(n.className).indexOf(frag)>=0)return n;
+    n=n.parentNode;
+  }
+  return null;
+}
+function cloneSrcBtn(space,text){
+  var tpl=null,i;
+  var bs=qa('.ant-btn',space);
+  for(i=0;i<bs.length;i++)if(norm(bs[i].textContent)==='临时创建')tpl=bs[i];
+  if(!tpl)return null;
+  var item=tpl.closest('.ant-space-item');
+  if(!item)return null;
+  var cp=item.cloneNode(true),btn=cp.querySelector('button');
+  var sp=btn.querySelector('span');
+  if(sp)sp.textContent=text;else btn.textContent=text;
+  /* 排在「临时创建」前面，与参考原型的三枚选项同序（选择文章 ／ 从素材库选择 ／ 临时创建） */
+  space.insertBefore(cp,item);
+  return btn;
+}
+function toast(t){
+  var w=document.createElement('div');
+  w.className='ant-message css-mncuj7';
+  w.innerHTML='<div class="ant-message-notice-wrapper"><div class="ant-message-notice">'
+    +'<div class="ant-message-notice-content"><div class="ant-message-custom-content ant-message-info"><span></span></div></div>'
+    +'</div></div>';
+  w.querySelector('span').textContent=t;
+  document.body.appendChild(w);
+  setTimeout(function(){if(w.parentNode)w.parentNode.removeChild(w)},2400);
+}
+
+/* ---------- 微信标签选择器（2026-11-13） ----------
+   点输入框展开执行人员手机端同步过来的标签，可多选；也能直接打字，回车或分号落成标签。
+   「精确搜索／模糊搜索」只决定打字进来的标签在执行时怎么匹配；下拉里勾选的标签本身就是
+   手机上的标签名，按精确名称下发。标签跟着执行人员走，任何位置都不显示人数。 */
+${reaTagPickerJs()}
 
 /* 覆盖页不再走 reaNavJs 的「取消 → 回模块页」那条通用接线（它只接未覆盖的子页），
    这里补回来：三页的 取 消 都回各自的模块页。 */
@@ -23779,7 +23794,7 @@ function initFq(){
     var b1=fqSec('1','任务安排','');
     fqPut(gName,b1,true);
     fqPut(gExec,b1);
-    fqPut(gType,b1);
+    fqPut(gType,b1,true);
     fqPut(gStart,b1);
     fqPut(gEnd,b1);
     b1.appendChild(fqHint(gEndHint));
@@ -23791,8 +23806,8 @@ function initFq(){
     var b3=fqSec('3','发送内容','');
     fqPut(gContent,b3);
 
-    /* ---- 临时创建：所属分类 / 描述文本 / 媒体（2026-11-10） ----
-       截图口径：所属分类三选一（文本、图片、视频；链接不做），描述文本 1000 字带计数，
+    /* ---- 临时创建：内容类型 / 描述文本 / 媒体（2026-11-10） ----
+       截图口径：内容类型三选一（文本、图片、视频；链接不做），描述文本 1000 字带计数，
        图片／视频按分类露出上传位。只在「临时创建」这个来源下出现，选素材库时整块收起。 */
     var fqCat='图片',fqImgs=[],fqVid=null;
     var tempBox=document.createElement('div');tempBox.className='rea-fq-temp';b3.appendChild(tempBox);
@@ -23812,8 +23827,8 @@ function initFq(){
       e.textContent=msg||'';e.style.display=msg?'block':'none';
     }
 
-    /* 所属分类 */
-    var catR=fqFormRow('所属分类',true);catR.ctl.classList.add('rea-fq-radios');
+    /* 内容类型 */
+    var catR=fqFormRow('内容类型',true);catR.ctl.classList.add('rea-fq-radios');
     ['文本','图片','视频'].forEach(function(v){
       var l=document.createElement('label');l.className='rea-qf-rd';
       l.innerHTML='<input type="radio" name="rea-fq-cat" value="'+v+'"'+(v===fqCat?' checked':'')+'><span class="rea-qf-rddot"></span>'+v;
@@ -24335,6 +24350,7 @@ function initQf(){
   /* ---------- 任务安排：任务名称 → 执行人员 → 循环方式 → 两个时间 → 全局弹窗 ---------- */
   put(rName,b1,true);
   put(rExec,b1);
+  if(rExec)b1.appendChild(hint('如果需要特殊分配，请为该员工创建单独的任务。'));
   var ORGS=[{n:'华东销售组',c:12},{n:'华南销售组',c:8},{n:'销售支持组',c:5},{n:'全员',c:25}];
   var execSel=null;
   var execCtl=rExec?rExec.querySelector('[class*="_upload_box_"]'):null;
@@ -24686,6 +24702,7 @@ function initQs(){
   document.addEventListener('click',function(e){
     if(!s5.contains(e.target)){execMenu.classList.remove('on');execBtn.setAttribute('aria-expanded','false')}
   });
+  b1.appendChild(hint('如果需要特殊分配，请为该员工创建单独的任务。'));
 
   /* ---------- 任务安排续：两个时间 ---------- */
   var s3=row(b1,'通知时间',true,
@@ -24723,16 +24740,19 @@ function initQs(){
      '<div class="rea-wxt-src">'
      +'<button type="button" class="ant-btn css-vgijab ant-btn-primary ant-btn-color-primary ant-btn-variant-solid rea-wxt-tempbtn">临时创建</button>'
      +'<button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined rea-wxt-srcbtn">从素材库选择</button></div>'
-     +'<div class="rea-wxt-host"></div>'
-     +'<div class="rea-wxt-temp">'
-     +'<div class="ant-radio-group ant-radio-group-outline css-vgijab">'
+     +'<div class="rea-wxt-host"></div>');
+  var ctypeCtl=row(b3,'内容类型',false,
+     '<div class="ant-radio-group ant-radio-group-outline css-vgijab">'
      +radio('rea-qs-ctype','text','文 本',true)+radio('rea-qs-ctype','image','图 片',false)+radio('rea-qs-ctype','video','视 频',false)
-     +'</div>'
-     +'<textarea class="ant-input css-vgijab rea-wxt-ta rea-qs-ta" rows="4" placeholder="输入群发内容"></textarea>'
      +'</div>');
-  var ta=q('.rea-qs-ta',s2),temp=q('.rea-wxt-temp',s2),host=q('.rea-wxt-host',s2),
+  var textCtl=row(b3,'描述文本',false,
+     '<textarea class="ant-input css-vgijab rea-wxt-ta rea-qs-ta" rows="4" placeholder="输入群发内容"></textarea>');
+  var ta=q('.rea-qs-ta',textCtl),host=q('.rea-wxt-host',s2),
       srcBtn=q('.rea-wxt-srcbtn',s2),tempBtn=q('.rea-wxt-tempbtn',s2),picked=null;
-  function manual(v){temp.style.display=v?'':'none'}
+  function manual(v){
+    ctypeCtl.parentNode.style.display=v?'':'none';
+    textCtl.parentNode.style.display=v?'':'none';
+  }
   function apply(m){
     picked=m;
     if(m){setPrimary(srcBtn,true);setPrimary(tempBtn,false);manual(false)}
@@ -30995,7 +31015,7 @@ checkCross();
      唤醒人群的单位下拉、执行人员选择全是死的。这一笔只补交互，正文仍是快照，
      弹窗照快照那套 AntD 画（本页没换设计语言）。
      口径见 docs/prd/微信营销任务-配置快照-PRD.md §5.6；不动 _online-admin.js、不重跑构建。 */
-  var REA_HX_CSS = [
+  var REA_HX_CSS = REA_TAGPICK_CSS + '\n' + [
     '.rea-hx-sub .ant-modal{max-width:calc(100vw - 32px)}',
     '.rea-hx-sub .ant-modal-body{padding:20px 24px 4px;max-height:calc(100vh - 220px);overflow:auto}',
     '.rea-hx-sub .ant-modal-footer{display:flex;justify-content:flex-end;gap:8px}',
@@ -31107,6 +31127,7 @@ checkCross();
 (function(){
 'use strict';
 var SEC_ICON=${reaJson(REA_WX_SEC_ICON)};
+${reaTagPickerJs()}
 var ROWS=document.querySelectorAll('div[class*="_form_input_"]');
 function rowLabel(r){var s=r?r.querySelector('span[class*="_must_"]'):null;return s?(s.textContent||'').replace(/\s+/g,''):''}
 function rowBy(k){for(var i=0;i<ROWS.length;i++)if(rowLabel(ROWS[i])===k)return ROWS[i];return null}
@@ -31612,9 +31633,39 @@ if(ETRIG){
     for(j=0;j<os.length;j++){os[j].classList.toggle('on',os[j]===b);os[j].setAttribute('aria-selected',os[j]===b?'true':'false')}
     EMENU.classList.remove('on');
     selBtn.setAttribute('aria-expanded','false');
+    /* 标签跟着人走：换执行人员清掉列表里勾选的，手填的名称保留（ADR-0098 ③）。 */
+    if(tagPick){
+      var hadTags=tagPick.names().length;
+      tagPick.reload();
+      if(hadTags)msg('执行人员已更换，已选标签已清空；手填的标签保留。');
+    }
     drawPreview();
   });
 }
+
+/* ---------------- 微信标签：与发圈／群发好友同一枚可打字多选选择器（ADR-0098） ----------------
+   点开列出所选执行人员手机同步来的标签，可多选，也能直接打字、回车或分号落成标签；
+   精确搜索／模糊搜索只决定手填名称在执行时怎么匹配。演示标签跟着执行人员走。 */
+var ORG_TAGS=[
+  ['重点客户','老客户','高意向','待跟进'],
+  ['重点客户','新客户','已成交'],
+  [],
+  ['重点客户','老客户','高意向','待跟进','新客户','已成交']
+];
+var tagPick=reaTagPicker({
+  getTags:function(){
+    if(!EXECSEL)return null;
+    var i=ORGS.indexOf(EXECSEL);
+    return i>=0?ORG_TAGS[i]:[];
+  },
+  onChange:function(){drawPreview()}
+});
+(function(){
+  if(!L.tag)return;
+  var old=L.tag.querySelector('input');
+  if(old&&old.parentNode)L.tag.replaceChild(tagPick.el,old);
+  else L.tag.appendChild(tagPick.el);
+})();
 
 /* ---------------- 两个时间：与群发好友同一枚 datetime-local ---------------- */
 function dtStr(d){
@@ -31648,6 +31699,7 @@ function whenOf(row){
 }
 /* 两个时间下的说明句照群发好友 · 新建：控件下方一行 12px 灰字，不再挤在行尾。 */
 if(CARD['任务安排']){
+  if(L.exec)CARD['任务安排'].insertBefore(makeHint('如果需要特殊分配，请为该员工创建单独的任务。'),L.exec.nextSibling);
   if(L.start)CARD['任务安排'].insertBefore(makeHint('到达通知时间会给执行人员推送提醒。'),L.start.nextSibling);
   if(L.end)CARD['任务安排'].insertBefore(makeHint('未到开始时间的任务在员工任务列表里不可见。'),L.end.nextSibling);
 }
@@ -31656,6 +31708,7 @@ if(CARD['任务安排']){
 function bad(row,on){if(row)row.classList.toggle('rea-hx-bad',!!on)}
 function save(){
   var err='',row=null;
+  if(tagPick)tagPick.flush();
   if(NAME&&!NAME.value.trim()){err='请填写任务名称';row=L.name}
   if(!err&&!EXECSEL){err='请选择执行人员';row=L.exec}
   if(!err&&!CONT.length){err='请至少添加一条唤醒内容';row=L.content}
@@ -31743,11 +31796,8 @@ function cycleLabel(){
   return '单次任务';
 }
 function tagText(){
-  if(!L.tag)return '';
-  var it=L.tag.querySelector('.ant-select-selection-item'),
-      inp=L.tag.querySelector('input');
-  var t=it?(it.textContent||''):(inp?inp.value:'');
-  return String(t).replace(/\s+/g,'');
+  if(!L.tag||!tagPick)return '';
+  return tagPick.names().join('、');
 }
 function previewMsgs(){
   var out=[],i,it;
