@@ -1019,6 +1019,9 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .cw-card{background:#fff;border-radius:16px;padding:14px;margin-top:12px;
   box-shadow:0 12px 24px -24px rgba(40,70,150,.9)}
 .cw-h{font-size:13.5px;font-weight:600;color:#2D528E;margin-bottom:6px}
+/* 详情页卡头：标题在左、状态在右（唤醒结果那卡） */
+.cw-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+.cw-hd .cw-h{margin-bottom:0}
 .cw-p{font-size:12.5px;font-weight:500;color:#7C8CA4;line-height:1.55}
 .cw-strat{display:flex;gap:8px;margin:2px 0 4px}
 .cw-strat button{flex:1;height:36px;border-radius:999px;background:#fff;border:1px solid #DCE6FA;
@@ -1053,9 +1056,8 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .cw-airow.bad .cw-aitx{color:#C2413A}
 .cw-tagst{flex:none;font-size:11px;font-weight:600;border-radius:6px;padding:2px 6px;white-space:nowrap}
 .cw-tagst.wait{background:#FFF1E3;color:#B4690E}
-.cw-tagst.run{background:#E8F0FF;color:#2E6BFF}
 .cw-tagst.done{background:#E3F6EC;color:#1B8A54}
-.cw-tagst.part{background:#FFE9E6;color:#C2413A}
+.cw-tagst.cut{background:#FFF1E3;color:#B4690E}
 .cw-fail{display:flex;align-items:center;gap:10px;padding:9px 0}
 .cw-fail+.cw-fail{border-top:1px solid #EEF2FA}
 .cw-fail .cw-av{width:32px;height:32px;font-size:13px}
@@ -1091,7 +1093,6 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
   background:#EFF5FF;border-radius:12px;padding:10px 12px}
 .cw-big{font-size:44px;font-weight:700;color:#173A6B;line-height:1;letter-spacing:-.02em;text-align:center}
 .cw-big small{font-size:15px;font-weight:600;margin-left:3px;color:#5B81BD}
-.cw-bigsub{text-align:center;font-size:12.5px;font-weight:500;color:#7C8CA4;margin-top:6px}
 /* 唤醒记录：一条一次唤醒，右侧状态 */
 .cw-rec{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#fff;border-radius:16px;
   padding:12px 14px;margin-bottom:10px;position:relative;overflow:hidden;
@@ -5394,9 +5395,9 @@ function cwRecPeople(list,msgs){
   });
 }
 var CW_RECS=[
-  {id:'r2',when:'昨天\n10:15',scope:'未回复 3–8 天',n:8,strat:'fixed',fixed:2,st:'done',ok:8,fail:0,
+  {id:'r2',when:'昨天\n10:15',end:'昨天 10:47',scope:'未回复 3–8 天',n:8,strat:'fixed',fixed:2,st:'done',ok:8,fail:0,
    people:cwRecPeople(['王芳','宋雨彤','许志远','陈立','周敏','刘洋','赵一鸣','郑凯'],CW_REC_MSG2)},
-  {id:'r3',when:'11月7日\n14:30',scope:'待唤醒客户 · 手选',n:23,strat:'fixed',fixed:4,st:'part',ok:21,fail:2,
+  {id:'r3',when:'11月7日\n14:30',end:'11月7日 14:52',scope:'待唤醒客户 · 手选',n:23,strat:'fixed',fixed:4,st:'cut',ok:21,fail:2,
    people:cwRecPeople(['李晓霞','张大强','林晓雯',['罗琳','对方已把你删除'],'王芳','宋雨彤','许志远',
      '陈立','周敏','刘洋','赵一鸣','郑凯',['蒋文博','消息发送失败'],'吴静','孙浩','何丽','马晓东',
      '黄雅琴','徐子昂','高梦露','彭浩然','韩雪','曹玉兰'],CW_REC_MSG3)}
@@ -6152,29 +6153,36 @@ function cwLaunch(ids){
     var c=cwCust(id);
     return {n:c?c.n:'客户',st:'ok',msgs:fixedMsgs||[{t:'text',c:CW_AI[id]||''}]};
   });
+  /* 记录在开始时先攒着，这一轮结束后才落进唤醒记录（见 cwLaunchDone），
+     台账上没有「执行中」这种状态。 */
   var r={id:'r'+Date.now(),when:'今天\n'+cwClock(),
          scope:(CW_FROM==='awake'?'待唤醒客户 · 手选':'未回复 '+cwRangeLabel()),
          n:n,strat:CW_STRAT,fixed:CW_FIXED.length,
-         st:'run',ok:0,fail:0,people:people};
-  CW_RECS.unshift(r);
+         st:'done',ok:n,fail:0,people:people};
+  CW_PENDS.push(r);
   if(CW_FROM==='awake'){
     /* 这条路没离开过「待唤醒客户」：回那页，选取态一起收掉 */
     AWAKE_SELING=false; AWAKE_ENTER=false;
     back();
   }else go('host-tools');
   toast('已开始唤醒，完成后在记录里查看');
-  /* 演示用：脚本执行期间 App 不在前台，回来之后状态自己跑完（真机上由脚本回报） */
-  setTimeout(function(){
-    var rr=cwRecById(r.id); if(!rr||rr.st!=='run')return;
-    var fn=Math.min(n,2);
-    rr.ok=n-fn; rr.fail=fn; rr.st=fn?'part':'done';
-    rr.people.forEach(function(p,i){
-      if(i>=fn)return;
-      p.st='fail'; p.why=i?'消息发送失败':'对方已把你删除';
-    });
-    if(cur==='cw-records')REND['cw-records']();
-    else if(cur==='cw-record')REND['cw-record']({id:rr.id});
-  },8000);
+  /* 演示用：脚本执行期间 App 不在前台，回来之后这一轮自己跑完（真机上由脚本回报） */
+  if(!cwRM())setTimeout(function(){ cwLaunchDone(r) },8000);
+}
+var CW_PENDS=[];
+/* 一轮结束：补上完成时间与逐人结果，这时才落记录。冒烟直接调它结算，不等 8 秒。 */
+function cwLaunchDone(r){
+  if(!r||r.done||CW_PENDS.indexOf(r)<0)return;
+  r.done=true; CW_PENDS.splice(CW_PENDS.indexOf(r),1);
+  var fn=Math.min(r.n,2);
+  r.ok=r.n-fn; r.fail=fn; r.st=fn?'cut':'done'; r.end='今天 '+cwClock();
+  r.people.forEach(function(p,i){
+    if(i>=fn)return;
+    p.st='fail'; p.why=i?'消息发送失败':'对方已把你删除';
+  });
+  CW_RECS.unshift(r);
+  if(cur==='cw-records')REND['cw-records']();
+  else if(cur==='cw-record')REND['cw-record']({id:r.id});
 }
 function cwRecById(id){
   /* 带 id 但找不到＝这条记录不在了（例如被还原掉了），返 null；别回落到第一条，
@@ -6185,18 +6193,18 @@ function cwRecById(id){
   }
   return CW_RECS[0]||null;
 }
+/* 一条记录只有两种结局：全都发出去了是「已完成」，有人没发出去、这一轮提前停下是「已中断」。
+   执行中的这一轮不落记录——脚本在微信里跑，App 不在前台，回来时这一轮已经结束。 */
 function cwRecTag(st){
-  return st==='run'?'<span class="cw-tagst run">执行中</span>'
-    :st==='done'?'<span class="cw-tagst done">完成</span>'
-    :'<span class="cw-tagst part">部分失败</span>';
+  return st==='done'?'<span class="cw-tagst done">已完成</span>'
+    :'<span class="cw-tagst cut">已中断</span>';
 }
 REND['cw-records']=function(){
   $('cwRecordsBack').innerHTML=I('back',24,2);
   var h='';
   if(!CW_RECS.length)h='<div class="cw-tip">还没有唤醒过。</div>';
   CW_RECS.forEach(function(r){
-    var sub=cwStratN(r.strat)+(r.st==='run'?' · 执行中'
-      :(r.strat==='fixed'?' '+(r.fixed||1)+' 条':' 每人 1 条')+' · 成功 '+r.ok+(r.fail?' / 失败 '+r.fail:''));
+    var sub=cwStratN(r.strat)+(r.strat==='fixed'?' '+(r.fixed||1)+' 条':' 每人 1 条')+' · 成功 '+r.ok+(r.fail?' / 失败 '+r.fail:'');
     h+='<button class="cw-rec" onclick="go(\'cw-record\',{id:\''+r.id+'\'})">'
       +'<span class="cw-when">'+String(r.when).replace('\n','<br>')+'</span>'
       +'<span class="cw-recm"><b>唤醒 '+r.n+' 人</b><span>'+sub+'</span></span>'
@@ -6263,12 +6271,14 @@ REND['cw-record']=function(p){
   if(!r){ $('cwRecordBody').innerHTML='<div class="cw-tip">没有这条记录。</div>'; return; }
   /* 换了一条记录，上一条展开的人不算数 */
   if(CW_REXP.split(':')[0]!==r.id)CW_REXP='';
-  var h='<div class="cw-card" style="padding:18px 14px"><div class="cw-big">'+r.n+'<small>人</small></div>'
-    +'<div class="cw-bigsub">'+cwStratN(r.strat)+' · '+(r.strat==='fixed'?('每人 '+(r.fixed||1)+' 条'):'每人 1 条专属话术')+'</div>'
-    +'<div style="text-align:center;margin-top:10px">'+cwRecTag(r.st)+'</div></div>';
-  h+='<div class="cw-card">'
+  var h='<div class="cw-card" style="padding:18px 14px">'
+    +'<div class="cw-hd"><span class="cw-h">唤醒结果</span>'+cwRecTag(r.st)+'</div>'
+    +'<div class="cw-big">'+r.n+'<small>人</small></div></div>';
+  h+='<div class="cw-card"><div class="cw-h">发送信息</div>'
     +'<div class="cw-kv"><span>开始时间</span><b>'+String(r.when).replace('\n',' ')+'</b></div>'
+    +'<div class="cw-kv"><span>完成时间</span><b>'+esc(r.end||'—')+'</b></div>'
     +(r.scope?'<div class="cw-kv"><span>范围</span><b>'+esc(r.scope)+'</b></div>':'')
+    +'<div class="cw-kv"><span>发送策略</span><b>'+cwStratN(r.strat)+' · '+(r.strat==='fixed'?('每人 '+(r.fixed||1)+' 条'):'每人 1 条专属话术')+'</b></div>'
     +'<div class="cw-kv"><span>成功</span><b>'+r.ok+' 人</b></div>'
     +'<div class="cw-kv"><span>失败</span><b style="color:'+(r.fail?'#C2413A':'#17263F')+'">'+r.fail+' 人</b></div>'
     +'</div>';
