@@ -22779,9 +22779,8 @@ tb.addEventListener("click",function(e){
     + '.rea-baf-pimg{display:flex;align-items:center;gap:6px;padding:8px 12px 11px;font-size:11.5px;line-height:16px;color:#9A9A9A}'
     + '.rea-baf-pimg svg{width:13px;height:13px;fill:none;stroke:#9A9A9A;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}'
     + '.rea-baf-wtag{display:inline-block;margin:2px 4px 2px 0;padding:0 7px;border-radius:4px;background:#E7E7E7;font-size:11px;line-height:18px;color:#555555}'
-    + '.rea-baf-psw{position:relative;flex:none;width:32px;height:19px;border-radius:10px;background:#E3E3E3}'
-    + '.rea-baf-psw:after{content:"";position:absolute;top:2px;left:2px;width:15px;height:15px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.18)}'
-    + '.rea-baf-pcheck{flex:none;width:15px;height:15px;fill:none;stroke:#53BF6A;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}'
+    /* 打招呼图片在手机里演成一张缩略图，跟文字同在一个灰底块里 */
+    + '.rea-baf-pthumb{display:none;width:56px;height:56px;margin:2px 12px 11px;border-radius:4px;object-fit:cover;background:#E7E7E7}'
     + '.rea-baf-pfoot{position:absolute;left:0;right:0;bottom:0;padding:16px 0 15px;background:linear-gradient(180deg,rgba(255,255,255,0) 0%,#fff 40%,#fff 100%);text-align:center}'
     + '.rea-baf-psend{display:inline-flex;align-items:center;justify-content:center;width:46%;height:38px;border-radius:7px;background:#53BF6A;font-size:13px;font-weight:500;color:#fff}'
     + '@media(max-width:1180px){.rea-baf-cols{grid-template-columns:minmax(0,1fr);gap:24px}.rea-baf-rail{position:static}}'
@@ -24514,18 +24513,13 @@ function initQf(){
     var msgs=[];
     if(text)msgs.push({t:'text',txt:text});
     if(picked){
-      if(picked.video)msgs.push({t:'video',name:shape(picked)});
-      else if(picked.files)msgs.push({t:'file',name:shape(picked)});
+      if(picked.video)msgs.push({t:'video',name:picked.title||shape(picked)});
+      else if(picked.files)msgs.push({t:'file',name:picked.title||shape(picked)});
       else if(picked.images)msgs.push({t:'images',n:picked.images});
     }else{
       var ct=ctypeSel();
-      if(ct.indexOf('图')>=0){
-        var urls=[],ui;
-        for(ui=0;ui<fqImgs.length;ui++)urls.push(fqImgs[ui].url);
-        msgs.push({t:'images',n:urls.length||3,urls:urls});
-      }else if(ct.indexOf('视')>=0){
-        msgs.push({t:'video',name:fqVid?fqVid.name:'视频'});
-      }
+      if(ct.indexOf('图')>=0)msgs.push({t:'images',n:3});
+      else if(ct.indexOf('视')>=0)msgs.push({t:'video',name:'视频'});
     }
     chat.innerHTML=wxChat({kind:'chat',title:'微信昵称',avatar:'销',time:sv?sv.slice(11,16):'',msgs:msgs,empty:'还没有内容'});
   }
@@ -24853,8 +24847,8 @@ function initQs(){
     var ct=ck('rea-qs-ctype'),msgs=[];
     if(text)msgs.push({t:'text',txt:text});
     if(picked){
-      if(picked.video)msgs.push({t:'video',name:shape(picked)});
-      else if(picked.files)msgs.push({t:'file',name:shape(picked)});
+      if(picked.video)msgs.push({t:'video',name:picked.title||shape(picked)});
+      else if(picked.files)msgs.push({t:'file',name:picked.title||shape(picked)});
       else if(picked.images)msgs.push({t:'images',n:picked.images});
     }else{
       if(ct==='image')msgs.push({t:'images',n:3});
@@ -30912,7 +30906,6 @@ checkCross();
     '.rea-hx-main{min-width:0}',
     '.rea-hx-side{position:sticky;top:0;padding-top:4px}',
     '.rea-hx-sidehd{font-size:16px;font-weight:600;color:#1F2329}',
-    '.rea-hx-sidesub{margin:4px 0 12px;font-size:12px;line-height:18px;color:#8F959E}',
     '.rea-hx-sum{margin-top:20px;border-top:1px solid #E5E8EF}',
     '.rea-hx-sumrow{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:10px 0;border-bottom:1px solid #F7F8FA;font-size:13px}',
     '.rea-hx-sumrow span{flex:none;color:#8F959E}',
