@@ -14431,13 +14431,15 @@ setTimeout(sbScan,120);
   }
 
   const valueSpecs=[
-    {id:'request',name:'发出好友申请',unit:'次',scene:'建立客户联系',icon:'request',note:metrics.request.note},
+    {id:'added',name:'新增好友',unit:'人次',scene:'建立客户联系',icon:'added',note:metrics.added.note},
+    {id:'request',name:'申请量',unit:'次',scene:'建立客户联系',icon:'request',note:metrics.request.note},
     {id:'autoPass',name:'自动通过好友',unit:'人',scene:'建立客户联系',icon:'added',note:metrics.autoPass.note},
     {id:'firstTouch',name:'自动打招呼',unit:'人次',scene:'建立客户联系',icon:'firstTouch',note:metrics.firstTouch.note},
     {id:'publish',name:'朋友圈发布',unit:'条',scene:'社群运营与互动',icon:'publish',note:metrics.publish.note},
     {id:'interact',name:'朋友圈互动',unit:'次',scene:'社群运营与互动',icon:'interact',note:'朋友圈点赞与评论的完成回执，按动作计次；AI和托管仅为执行方式，同一动作不重复计。'},
     {id:'sportLike',name:'运动点赞',unit:'人',scene:'社群运营与互动',icon:'group',note:metrics.sportLike.note},
     {id:'autoMessages',name:'AI自动回复',unit:'条',scene:'客户接待与沟通',icon:'autoReply',note:metrics.autoMessages.note+' 消息按成功发生时间归期；轮次详情仍按触发时间统计。'},
+    {id:'aiReply',name:'AI建议采纳',unit:'次',scene:'客户接待与沟通',icon:'aiReply',note:metrics.aiReply.note},
     {id:'profile',name:'AI分析',unit:'次',scene:'客户接待与沟通',icon:'profile',note:'客户画像分析完成的次数，按完成分析计；同一客户在不同时间多次分析分别计入。'},
     {id:'material',name:'企业素材取用',unit:'次',scene:'企业内容复用',icon:'material',note:'企业素材复制、保存、一键发送、一键发圈；不包含任务自动发送。聊天中匹配到并取用的一次操作也计在这里，匹配只作关联，不另算一次。'},
     {id:'materialAdded',name:'新增素材',unit:'条',scene:'企业内容复用',icon:'materialAdded',note:metrics.materialAdded.note}
@@ -14464,7 +14466,7 @@ setTimeout(sbScan,120);
   }
   function valueSummary(records) {
     const prior=priorValueRecords(),completed=records.filter(r=>r.metric==='taskCompleted'),done=sum(completed),hosted=metricValue(records,'hostingTask'),people=new Set(completed.map(r=>r.employee)).size,priorPeople=new Set(prior.filter(r=>r.metric==='taskCompleted').map(r=>r.employee)).size;
-    return `<section id="ov-value-summary" class="ov-value-scene ov-efficiency-card" data-result-card="efficiency"><div class="ov-result-heading"><h3>工作效率</h3><span class="ov-scene-icon">${ovIcon(METRIC_ICONS.taskExec,20)}</span></div><div class="ov-result-metric"><div class="ov-result-label">完成任务 ${helpSpan(metrics.taskCompleted.note)}</div><button class="ov-result-number" data-metric="taskCompleted" data-value="${done}" title="${number(done)} 人次">${valueNumber(done)}<small>人次</small><i aria-hidden="true">↗</i></button>${changeLine(records,'taskCompleted','人次')}</div><div class="ov-result-footer"><button type="button" class="ov-link ov-foot-item" data-metric="hostingTask" data-value="${hosted}"><span class="ov-foot-label">AI托管自动完成</span><span class="ov-foot-value">${valueNumber(hosted)}<small>条</small></span>${deltaTag(hosted,metricValue(prior,'hostingTask'),'条')}</button><button type="button" class="ov-link ov-foot-item" data-scene="tasks" data-scene-tab="people"><span class="ov-foot-label">参与完成</span><span class="ov-foot-value">${people}<small>人</small></span>${deltaTag(people,priorPeople,'人')}</button></div></section>`;
+    return `<section id="ov-value-summary" class="ov-value-scene ov-efficiency-card" data-result-card="efficiency"><div class="ov-result-heading"><h3>任务执行</h3><span class="ov-scene-icon">${ovIcon(METRIC_ICONS.taskExec,20)}</span></div><div class="ov-result-metric"><div class="ov-result-label">完成任务 ${helpSpan(metrics.taskCompleted.note)}</div><button class="ov-result-number" data-metric="taskCompleted" data-value="${done}" title="${number(done)} 人次">${valueNumber(done)}<small>人次</small><i aria-hidden="true">↗</i></button>${changeLine(records,'taskCompleted','人次')}</div><div class="ov-result-footer"><button type="button" class="ov-link ov-foot-item" data-metric="hostingTask" data-value="${hosted}"><span class="ov-foot-label">AI托管自动完成</span><span class="ov-foot-value">${valueNumber(hosted)}<small>条</small></span>${deltaTag(hosted,metricValue(prior,'hostingTask'),'条')}</button><button type="button" class="ov-link ov-foot-item" data-scene="tasks" data-scene-tab="people"><span class="ov-foot-label">参与完成</span><span class="ov-foot-value">${people}<small>人</small></span>${deltaTag(people,priorPeople,'人')}</button></div></section>`;
   }
   function valueCards(records) {
     const prior=priorValueRecords();
@@ -14477,9 +14479,9 @@ setTimeout(sbScan,120);
       return `<button type="button" class="ov-link ov-foot-item" data-metric="${id}" data-value="${n}"><span class="ov-foot-label">${spec.name}</span><span class="ov-foot-value">${valueNumber(n)}<small>${spec.unit}</small></span>${deltaTag(n,metricValue(prior,id),spec.unit)}</button>`;
     };
     const groups=[
-      {id:'connection',name:'建立客户联系',icon:'request',main:'request',secondary:[secondary('autoPass'),secondary('firstTouch')]},
+      {id:'connection',name:'建立客户联系',icon:'request',main:'added',secondary:[secondary('request'),secondary('autoPass'),secondary('firstTouch')]},
       {id:'engagement',name:'社群运营与互动',icon:'group',main:'publish',secondary:[secondary('interact'),secondary('sportLike')]},
-      {id:'conversation',name:'客户接待与沟通',icon:'autoReply',main:'autoMessages',secondary:[secondary('profile'),`<button type="button" class="ov-link ov-foot-item" data-metric="aiReply"><span class="ov-foot-label">AI建议采纳</span><span class="ov-foot-value">${number(metricValue(records,'aiReply'))}<small>次</small></span>${deltaTag(metricValue(records,'aiReply'),metricValue(prior,'aiReply'),'次')}</button>`,`<span class="ov-foot-item"><span class="ov-foot-label">匹配素材取用</span><span class="ov-foot-value">${number(sum(selectMetric(records,'communication').filter(r=>r.metric==='material')))}<small>次</small></span>${deltaTag(sum(selectMetric(records,'communication').filter(r=>r.metric==='material')),sum(selectMetric(prior,'communication').filter(r=>r.metric==='material')),'次')}</span>`]},
+      {id:'conversation',name:'客户接待与沟通',icon:'autoReply',main:'aiReply',secondary:[secondary('autoMessages'),secondary('profile'),`<span class="ov-foot-item"><span class="ov-foot-label">匹配素材取用</span><span class="ov-foot-value">${number(sum(selectMetric(records,'communication').filter(r=>r.metric==='material')))}<small>次</small></span>${deltaTag(sum(selectMetric(records,'communication').filter(r=>r.metric==='material')),sum(selectMetric(prior,'communication').filter(r=>r.metric==='material')),'次')}</span>`]},
       {id:'content',name:'企业内容复用',icon:'material',main:'material',secondary:[secondary('materialAdded'),`<button type="button" class="ov-link ov-foot-item" data-scene="material" data-scene-tab="people"><span class="ov-foot-label">取用员工</span><span class="ov-foot-value">${metricValue(records,'materialUsers')}<small>人</small></span>${deltaTag(metricValue(records,'materialUsers'),metricValue(prior,'materialUsers'),'人')}</button>`]}
     ];
     return valueSummary(records)+groups.map(c=>`<section class="ov-value-scene" data-result-card="${c.id}"><div class="ov-result-heading"><h3>${c.name}</h3><span class="ov-scene-icon">${ovIcon(METRIC_ICONS[c.icon]||METRIC_ICONS.message,20)}</span></div><div class="ov-result-single">${metric(c.main)}</div><div class="ov-result-footer">${c.secondary.join('')}</div></section>`).join('');
