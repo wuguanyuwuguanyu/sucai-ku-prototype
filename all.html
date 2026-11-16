@@ -26937,21 +26937,20 @@ BT.addEventListener('click',function(e){
     '.rea-wxd-tb.abnormal i{background:#FF4D4F}',
     '.rea-wxd-tb.open{color:#646A73}',
     /* 客户唤醒 · 详情：与批量加好友同一套「任务信息 ＋ 右栏图表」版式（2026-11-15）。
-       右栏 360px，两个页签切换：唤醒情况（按客户条目）与执行进度（按人次）。
+       右栏 360px，两个页签切换：执行进度（按人次，默认）与唤醒情况（按客户条目）。
        漏斗沿用批量加好友那套 rea-wxd-fn-*，两边同一观感；图表块在页签下居中，
-       切页签卡片不跳。每级条可点，开对应客户明细，入口在漏斗右下。 */
+       切页签卡片不跳。每级条可点，开对应客户明细。2026-11-16 撤掉漏斗右下那枚
+       「查看唤醒明细」，省出的横向给条（不再留唤醒率那一列）、纵向给条高；
+       唤醒率单独一行落在漏斗下方。 */
     '.rea-wxd-hx .rea-wxd-info{grid-template-columns:360px minmax(0,1fr)}',
     '.rea-wxd-hx .rea-wxd-kv{row-gap:24px!important}',
-    '.rea-wxd-hx .rea-wxd-fn-bd{gap:4px}',
-    '.rea-wxd-hx .rea-wxd-fn-bar{height:22px}',
+    '.rea-wxd-hx .rea-wxd-fn-bd{gap:8px}',
+    '.rea-wxd-hx .rea-wxd-fn-bar{height:30px}',
     '.rea-wxd-hx .rea-wxd-fn-row{border:0;background:none;padding:0;font:inherit;width:100%;text-align:left;cursor:pointer}',
     '.rea-wxd-hx .rea-wxd-fn-row:hover .rea-wxd-fn-bar{filter:brightness(1.06)}',
     '.rea-wxd-hx .rea-wxd-fn-num{width:46px}',
-    '.rea-wxd-hx .rea-wxd-fn-rate{width:78px}',
-    '.rea-wxd-hx .rea-wxd-fn-ft{margin-top:8px}',
-    '.rea-hx-mix{display:flex;align-items:baseline;justify-content:space-between;gap:12px}',
-    '.rea-hx-more{margin-left:auto;border:0;background:none;padding:0;font:inherit;font-size:12px;line-height:18px;color:#1677FF;cursor:pointer;white-space:nowrap}',
-    '.rea-hx-more:hover{text-decoration:underline}',
+    '.rea-hx-rate{display:flex;align-items:baseline;justify-content:flex-end;gap:6px;margin-top:8px;font-size:12px;line-height:18px;color:#8F959E}',
+    '.rea-hx-rate b{font-size:12px;line-height:18px;font-weight:600;color:#1F2329;font-variant-numeric:tabular-nums}',
     '.rea-hx-modal .ant-modal-content{position:relative}',
     '.rea-hx-modal .ant-modal-body{padding-top:4px}',
     '.rea-hx-tool{display:flex;align-items:center;gap:8px;margin-bottom:14px}',
@@ -27515,7 +27514,7 @@ function open(){
      员工执行只是通道，创建人要看的是这批沉睡客户回来多少：
      漏斗应触达 → 已发送 → 已回复（＝已唤醒），执行进度 4/10 人；
      两图都可点，开对应的客户明细并预筛。
-     员工表最后一列从「应触达人数」改成「已唤醒/应触达」，点开该员工的客户明细。
+     员工表最后一列是「应触达」，只报人数、不摊已唤醒数，点开该员工的客户明细。
      口径：客户回复即计为已唤醒；回复按任务累计，任务结束后新到的回复仍记在本任务。
      演示数字：4/10 人已执行、应触达 720、已发送 660、已回复 128、未发送 60。
      只动内嵌覆盖件：不动 _online-admin.js、不重跑构建。 */
@@ -27544,16 +27543,15 @@ var PEOPLE=[
 function pct(a,b){return (a/b*100).toFixed(1)+'%'}
 CARD.classList.add('rea-wxd-hx');
 var tiers=[
- {k:'all',label:'应触达',v:N.reach,w:100,rate:''},
- {k:'sent',label:'已发送',v:N.sent,w:+(N.sent/N.reach*100).toFixed(1),rate:''},
- {k:'replied',label:'已回复',v:N.replied,w:+(N.replied/N.reach*100).toFixed(1),rate:'唤醒率 '+pct(N.replied,N.sent)}
+ {k:'all',label:'应触达',v:N.reach,w:100},
+ {k:'sent',label:'已发送',v:N.sent,w:+(N.sent/N.reach*100).toFixed(1)},
+ {k:'replied',label:'已回复',v:N.replied,w:+(N.replied/N.reach*100).toFixed(1)}
 ],fh='',ti;
 for(ti=0;ti<tiers.length;ti++){
   fh+='<button type="button" class="rea-wxd-fn-row" data-hx-open="'+tiers[ti].k+'">'
    +'<span class="rea-wxd-fn-lb">'+tiers[ti].label+'</span>'
    +'<span class="rea-wxd-fn-track"><i class="rea-wxd-fn-bar" style="width:'+tiers[ti].w+'%"></i></span>'
-   +'<b class="rea-wxd-fn-num">'+tiers[ti].v+' 位</b>'
-   +'<span class="rea-wxd-fn-rate">'+tiers[ti].rate+'</span></button>';
+   +'<b class="rea-wxd-fn-num">'+tiers[ti].v+' 位</b></button>';
 }
 /* 执行进度环与 reaWxDetailJs 里那个同一套画法（两段脚本是两个独立 IIFE，取不到那边的函数，
    就在这里就地画）：整圈轨道打底，已执行按占比画一段蓝弧。 */
@@ -27561,20 +27559,20 @@ var CIRC2=2*Math.PI*50,arcDone=+(N.done/N.people*CIRC2).toFixed(2);
 RING.className='rea-wxd-ring rea-wxd-rings';
 RING.innerHTML=''
 +'<div class="rea-wxd-tabbar" role="tablist">'
-+'<button type="button" role="tab" class="on" data-wxd-tab="conv" aria-selected="true">唤醒情况</button>'
-+'<button type="button" role="tab" data-wxd-tab="exec" aria-selected="false">执行进度</button>'
++'<button type="button" role="tab" class="on" data-wxd-tab="exec" aria-selected="true">执行进度</button>'
++'<button type="button" role="tab" data-wxd-tab="conv" aria-selected="false">唤醒情况</button>'
 +'</div>'
-+'<div class="rea-wxd-tabbd" data-wxd-panel="conv">'
-+'<div class="rea-wxd-fn-bd">'+fh+'</div>'
-+'<div class="rea-wxd-fn-ft rea-hx-mix"><button type="button" class="rea-hx-more" data-hx-open="all">查看唤醒明细 ›</button></div>'
-+'</div>'
-+'<div class="rea-wxd-tabbd" data-wxd-panel="exec" hidden>'
++'<div class="rea-wxd-tabbd" data-wxd-panel="exec">'
 +'<div class="rea-wxd-ring-bd">'
 +'<div class="rea-wxd-donut" role="img" aria-label="执行进度：'+N.people+' 人中 '+N.done+' 人已执行，'+(N.people-N.done)+' 人未执行">'
 +'<svg viewBox="0 0 120 120"><circle class="track" cx="60" cy="60" r="50"></circle><circle class="done" cx="60" cy="60" r="50" stroke-dasharray="'+arcDone+' '+(CIRC2-arcDone).toFixed(2)+'"></circle></svg>'
 +'<div class="rea-wxd-donut-c"><b>'+N.done+'/'+N.people+'</b><span>已执行</span></div></div>'
 +'<div class="rea-wxd-ring-lg"><div><i class="done"></i>已执行<b>'+N.done+' 人</b></div><div><i class="open"></i>未执行<b>'+(N.people-N.done)+' 人</b></div></div>'
-+'</div></div>';
++'</div></div>'
++'<div class="rea-wxd-tabbd" data-wxd-panel="conv" hidden>'
++'<div class="rea-wxd-fn-bd">'+fh+'</div>'
++'<div class="rea-hx-rate"><span>唤醒率</span><b>'+pct(N.replied,N.sent)+'</b></div>'
++'</div>';
 var tabBtns=RING.querySelectorAll('[data-wxd-tab]'),tabBds=RING.querySelectorAll('[data-wxd-panel]'),tbn;
 for(tbn=0;tbn<tabBtns.length;tbn++){
   tabBtns[tbn].addEventListener('click',function(){
@@ -27587,20 +27585,19 @@ for(tbn=0;tbn<tabBtns.length;tbn++){
     for(var j=0;j<tabBds.length;j++)tabBds[j].hidden=tabBds[j].getAttribute('data-wxd-panel')!==t;
   });
 }
-/* 员工表最后一列：应触达人数 → 已唤醒/应触达；点开该员工的客户明细 */
+/* 员工表最后一列：表头「应触达人数」收成「应触达」，单元格只报人数、不摊已唤醒数；
+   点开该员工的客户明细 */
 function clean(x){return String(x==null?'':x).replace(/\s+/g,'')}
 var ths=document.querySelectorAll('.ant-table-thead th'),i,k;
-for(i=0;i<ths.length;i++){if(clean(ths[i].textContent)==='应触达人数')ths[i].textContent='已唤醒/应触达'}
+for(i=0;i<ths.length;i++){if(clean(ths[i].textContent)==='应触达人数')ths[i].textContent='应触达'}
 var trs=document.querySelectorAll('.ant-table-tbody tr.ant-table-row');
 for(i=0;i<trs.length;i++){
   var tds=trs[i].children;if(!tds.length)continue;
   var nm=clean(tds[0].textContent),ppl=null;
   for(k=0;k<PEOPLE.length;k++){if(nm.indexOf(PEOPLE[k].n)>=0){ppl=PEOPLE[k];break}}
   if(!ppl)continue;
-  var td=tds[tds.length-1],btn=td.querySelector('button');
+  var btn=tds[tds.length-1].querySelector('button');
   if(!btn)continue;
-  var sp=btn.querySelector('span');
-  if(sp)sp.textContent=ppl.rep+'/'+TOTAL;else btn.textContent=ppl.rep+'/'+TOTAL;
   btn.setAttribute('data-hx-emp',ppl.n);
   btn.addEventListener('click',function(){openHx({emp:this.getAttribute('data-hx-emp')})});
 }
