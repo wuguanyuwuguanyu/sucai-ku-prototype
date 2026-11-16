@@ -22645,8 +22645,6 @@ tb.addEventListener("click",function(e){
     + '.rea-qf-actsum{font-size:13px;color:#646A73}'
     + '.rea-qf-actbtns{display:flex;gap:8px}'
     + '.rea-qf-err{display:none;margin:6px 0 0;font-size:12px;line-height:18px;color:#FF4D4F}'
-    + '.rea-qf-sidehd{font-size:16px;font-weight:600;color:#1F2329}'
-    + '.rea-qf-sidesub{margin:4px 0 12px;font-size:12px;line-height:18px;color:#8F959E}'
     + '.rea-qf-chat{display:flex;flex-direction:column}'
     + '.rea-qf-sum{margin-top:20px;border-top:1px solid #E5E8EF}'
     + '.rea-qf-sumrow{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:10px 0;border-bottom:1px solid #F7F8FA;font-size:13px}'
@@ -22860,13 +22858,6 @@ tb.addEventListener("click",function(e){
     + '.rea-baf-upload p{margin:0 0 5px;font-size:12px;line-height:1.6;color:#333333}'
     + '.rea-baf-upsub{font-size:11px;color:#8C8C8C}'
     + '.rea-baf-fileres{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px;border-radius:6px;background:#E6F4FF;font-size:12px;color:#1677FF;overflow-wrap:anywhere}'
-    /* 打招呼图片：一块 96px 虚线方框，选完换成同尺寸缩略图，右上角 × 可撤 */
-    + '.rea-baf-photopick{box-sizing:border-box;width:96px;height:96px;padding:0;border:1px dashed #D9D9D9;border-radius:7px;background:#FAFAFA;font-size:12px;line-height:1.6;color:#333333;cursor:pointer}'
-    + '.rea-baf-photopick:hover{border-color:#1677FF;color:#1677FF}'
-    + '.rea-baf-photoprev{position:relative;width:96px;height:96px}'
-    + '.rea-baf-photoprev img{display:block;width:96px;height:96px;border:1px solid #F0F0F0;border-radius:7px;background:#FAFAFA;object-fit:cover}'
-    + '.rea-baf-photox{position:absolute;top:-6px;right:-6px;box-sizing:border-box;width:18px;height:18px;padding:0;border:0;border-radius:50%;background:rgba(0,0,0,.55);font-size:12px;line-height:18px;color:#fff;text-align:center;cursor:pointer}'
-    + '.rea-baf-photox:hover{background:#FF4D4F}'
     + '.rea-baf-filename{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
     + '.rea-baf-filex{border:0;background:transparent;padding:0 2px;font-size:14px;line-height:16px;color:inherit;cursor:pointer}'
     + '.rea-baf-filex:hover{color:#FF4D4F}'
@@ -24427,9 +24418,7 @@ function initQf(){
   if(rAct&&rAct.parentNode)rAct.parentNode.removeChild(rAct);
 
   /* ---------- 右栏：客户视角预览 ＋ 四行汇总 ---------- */
-  side.innerHTML='<div class="rea-qf-sidehd">客户收到的样子</div>'
-    +'<div class="rea-qf-sidesub">以单聊消息送达，每个好友只看到自己那条。</div>'
-    +'<div class="rea-qf-chat"></div>'
+  side.innerHTML='<div class="rea-qf-chat"></div>'
     +'<div class="rea-qf-sum">'
       +'<div class="rea-qf-sumrow"><span>谁来发</span><b data-qf-sum="exec">—</b></div>'
       +'<div class="rea-qf-sumrow"><span>发给谁</span><b data-qf-sum="who">—</b></div>'
@@ -24796,9 +24785,7 @@ function initQs(){
   act.appendChild(actSum);act.appendChild(actBtns);main.appendChild(act);
 
   /* ---------- 右栏：群聊预览 ＋ 四行汇总 ---------- */
-  side.innerHTML='<div class="rea-qf-sidehd">群里收到的样子</div>'
-    +'<div class="rea-qf-sidesub">以群聊消息发出，群成员都看得到。</div>'
-    +'<div class="rea-qf-chat"></div>'
+  side.innerHTML='<div class="rea-qf-chat"></div>'
     +'<div class="rea-qf-sum">'
       +'<div class="rea-qf-sumrow"><span>谁来发</span><b data-qs-sum="exec">—</b></div>'
       +'<div class="rea-qf-sumrow"><span>发给谁</span><b data-qs-sum="who">—</b></div>'
@@ -26032,59 +26019,6 @@ var VERIFY_INP=VERIFY_CELLS?VERIFY_CELLS.ctl.querySelector('input'):null,
     REMARK_INP=REMARK_CELLS?REMARK_CELLS.ctl.querySelector('input'):null,
     MEMO_INP=MEMO_CELLS?MEMO_CELLS.ctl.querySelector('textarea'):null;
 
-/* 打招呼图片：给好友申请配一张图，跟验证消息同属打招呼内容。只收一张，
-   点虚线方框选图，选完换成同尺寸缩略图；非 jpg／png 或超过 10MB 当场拦下。 */
-var photoRow=bafNewRow(b3,'打招呼图片',false),photoFile=null,photoURL='',photoPickEl=null,
-    photoInp=null,photoPrevEl=null,photoThumbEl=null,photoErrEl=null;
-(function(){
-  photoPickEl=document.createElement('button');
-  photoPickEl.type='button';photoPickEl.className='rea-baf-photopick';
-  photoPickEl.textContent='上传图片';
-  photoInp=document.createElement('input');photoInp.type='file';
-  photoInp.accept='image/jpeg,image/png';photoInp.style.display='none';
-  photoPrevEl=document.createElement('div');photoPrevEl.className='rea-baf-photoprev';
-  photoPrevEl.style.display='none';
-  photoThumbEl=document.createElement('img');photoThumbEl.alt='打招呼图片预览';
-  var photoX=document.createElement('button');
-  photoX.type='button';photoX.className='rea-baf-photox';photoX.textContent='×';
-  photoX.setAttribute('aria-label','移除图片');
-  photoPrevEl.appendChild(photoThumbEl);photoPrevEl.appendChild(photoX);
-  var photoHint=document.createElement('p');photoHint.className='rea-baf-hint';
-  photoHint.textContent='支持 jpg、png，单张不超过 10MB。';
-  photoErrEl=document.createElement('p');photoErrEl.className='rea-baf-err';
-  photoRow.ctl.appendChild(photoPickEl);photoRow.ctl.appendChild(photoInp);
-  photoRow.ctl.appendChild(photoPrevEl);photoRow.ctl.appendChild(photoHint);
-  photoRow.ctl.appendChild(photoErrEl);
-  /* 图片跟验证消息挨着：备注名那一行之前 */
-  if(REMARK_CELLS&&REMARK_CELLS.row.parentNode===b3)b3.insertBefore(photoRow.row,REMARK_CELLS.row);
-  photoPickEl.addEventListener('click',function(e){e.preventDefault();photoInp.click()});
-  photoInp.addEventListener('change',function(){
-    var f=photoInp.files&&photoInp.files[0];if(!f)return;
-    if(!/^image\/(jpeg|png)$/.test(f.type)){
-      photoErrEl.textContent='只能上传 jpg 或 png 图片';
-      photoErrEl.classList.add('on');photoInp.value='';return;
-    }
-    if(f.size>10*1024*1024){
-      photoErrEl.textContent='图片不能超过 10MB';
-      photoErrEl.classList.add('on');photoInp.value='';return;
-    }
-    if(photoURL)URL.revokeObjectURL(photoURL);
-    photoFile=f;photoURL=URL.createObjectURL(f);
-    photoThumbEl.src=photoURL;
-    photoErrEl.classList.remove('on');
-    photoPrevEl.style.display='';photoPickEl.style.display='none';
-    bafRender();
-  });
-  photoX.addEventListener('click',function(e){
-    e.preventDefault();
-    photoFile=null;photoInp.value='';
-    if(photoURL)URL.revokeObjectURL(photoURL);
-    photoURL='';photoThumbEl.removeAttribute('src');
-    photoPrevEl.style.display='none';photoPickEl.style.display='';
-    bafRender();
-  });
-})();
-
 /* 设置标签：快照是点不动的 AntD 多选框，换成能敲能删的标签输入 */
 var tagRow=bafTake(b3,ROW_TAGS,'设置标签',false),tags=[],tagInp=null,tagBox=null;
 if(tagRow){
@@ -26350,14 +26284,15 @@ if(saveBtn)saveBtn.addEventListener('click',function(e){
 if(cancelBtn)cancelBtn.addEventListener('click',function(e){e.preventDefault();back()});
 
 /* ---------- 右栏手机预览 ----------
-   复刻微信「申请添加朋友」那一屏，把左列的验证消息／打招呼图片／备注名／好友备忘／设置标签
-   实时回显进来：验证消息用「;;」分隔多条，预览演第一条；配了图就把「添加图片」换成缩略图；
-   三项文字都空着时退回微信自己的占位（添加备注／添加标签／添加备忘）。发送是微信那一屏的
-   固定件，不接任务字段。手机只是示意，不参与保存校验。 */
+   复刻微信「申请添加朋友」那一屏，把左列的验证消息／备注名／好友备忘／设置标签
+   实时回显进来：验证消息用「;;」分隔多条，预览演第一条；三项都空着时退回微信
+   自己的占位（添加备注／添加标签／添加备忘）。其余件——添加图片、照片、朋友权限、
+   发送——是微信那一屏的固定件，不接任务字段。手机只是示意，不参与保存校验。 */
 var BAF_ICON={
   back:'<svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>',
   chev:'<svg class="rea-baf-pchev" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>',
   img:'<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="M4 17l5-5 4 4 3-3 4 4"/></svg>',
+  check:'<svg class="rea-baf-pcheck" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg>',
   sig:'<svg viewBox="0 0 18 12" aria-hidden="true"><rect x="0" y="8" width="3" height="4" rx="1" fill="currentColor"/><rect x="5" y="6" width="3" height="6" rx="1" fill="currentColor"/><rect x="10" y="3" width="3" height="9" rx="1" fill="currentColor"/><rect x="15" y="0" width="3" height="12" rx="1" fill="currentColor"/></svg>',
   wifi:'<svg viewBox="0 0 16 12" aria-hidden="true"><path d="M8 11.3l2.5-3a4 4 0 0 0-5 0z" fill="currentColor"/><path d="M3 5.8a7.5 7.5 0 0 1 10 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M.8 3a10.8 10.8 0 0 1 14.4 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
   bat:'<svg viewBox="0 0 26 12" aria-hidden="true"><rect x=".5" y=".5" width="22" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity=".4"/><rect x="2" y="2" width="17" height="8" rx="1.6" fill="currentColor"/><path d="M24 4v4a2 2 0 0 0 0-4z" fill="currentColor" fill-opacity=".45"/></svg>'
@@ -26372,14 +26307,20 @@ rail.innerHTML='<div class="rea-baf-railhd">手机预览</div>'
   +'<div class="rea-baf-pscroll">'
   +'<div class="rea-baf-plab">打招呼内容</div>'
   +'<div class="rea-baf-pbox"><div class="rea-baf-greet" data-baf-p="greet"></div>'
-    +'<div class="rea-baf-pimg" data-baf-p="greetimg">'+BAF_ICON.img+'<span>添加图片</span></div>'
-    +'<img class="rea-baf-pthumb" data-baf-p="greetthumb" alt=""></div>'
+    +'<div class="rea-baf-pimg">'+BAF_ICON.img+'<span>添加图片</span></div></div>'
   +'<div class="rea-baf-plab">备注</div>'
   +'<div class="rea-baf-pbox"><div class="rea-baf-prow"><span class="rea-baf-ph" data-baf-p="remark">添加备注</span></div></div>'
   +'<div class="rea-baf-plab">标签</div>'
   +'<div class="rea-baf-pbox"><div class="rea-baf-prow"><span class="rea-baf-ph" data-baf-p="tags">添加标签</span>'+BAF_ICON.chev+'</div></div>'
   +'<div class="rea-baf-plab">备忘</div>'
   +'<div class="rea-baf-pbox"><div class="rea-baf-prow"><span class="rea-baf-ph" data-baf-p="memo">添加备忘</span>'+BAF_ICON.chev+'</div></div>'
+  +'<div class="rea-baf-plab">照片</div>'
+  +'<div class="rea-baf-pbox"><div class="rea-baf-prow"><span class="rea-baf-ph">添加照片</span>'+BAF_ICON.chev+'</div></div>'
+  +'<div class="rea-baf-plab">朋友权限</div>'
+  +'<div class="rea-baf-pbox"><div class="rea-baf-prow"><span>聊天、朋友圈、微信运动等</span>'+BAF_ICON.check+'</div>'
+    +'<div class="rea-baf-prow"><span>不给他 (她) 看我的朋友圈和状态</span><span class="rea-baf-psw"></span></div>'
+    +'<div class="rea-baf-prow"><span>不看他 (她) 的朋友圈和状态</span><span class="rea-baf-psw"></span></div>'
+    +'<div class="rea-baf-prow"><span>仅聊天</span></div></div>'
   +'</div>'
   +'<div class="rea-baf-pfoot"><span class="rea-baf-psend">发送</span></div>'
   +'</div></div>';
@@ -26397,12 +26338,6 @@ function bafPhone(){
   if(g){
     var v=VERIFY_INP?String(VERIFY_INP.value||''):'';
     g.textContent=v.split(/;;|；；/)[0].replace(/^\s+|\s+$/g,'');
-  }
-  /* 配了图就把「添加图片」那行换成缩略图——只在打招呼内容里演一张 */
-  var gi=bafPnode('greetimg'),gt=bafPnode('greetthumb');
-  if(gi&&gt){
-    if(photoURL){gt.src=photoURL;gt.style.display='block';gi.style.display='none'}
-    else{gt.removeAttribute('src');gt.style.display='none';gi.style.display=''}
   }
   bafPtext('remark',REMARK_INP?REMARK_INP.value:'','添加备注');
   bafPtext('memo',MEMO_INP?MEMO_INP.value:'','添加备忘');
@@ -30964,7 +30899,6 @@ checkCross();
     '.rea-hx-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,380px);gap:40px;align-items:start}',
     '.rea-hx-main{min-width:0}',
     '.rea-hx-side{position:sticky;top:0;padding-top:4px}',
-    '.rea-hx-sidehd{font-size:16px;font-weight:600;color:#1F2329}',
     '.rea-hx-sum{margin-top:20px;border-top:1px solid #E5E8EF}',
     '.rea-hx-sumrow{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:10px 0;border-bottom:1px solid #F7F8FA;font-size:13px}',
     '.rea-hx-sumrow span{flex:none;color:#8F959E}',
@@ -31531,8 +31465,7 @@ var SIDECHAT=null,SUM={};
   holder.parentNode.insertBefore(wrap,holder);
   wrap.appendChild(holder);
   var side=document.createElement('aside');side.className='rea-hx-side';
-  side.innerHTML='<div class="rea-hx-sidehd">客户收到的样子</div>'
-    +'<div class="rea-hx-chat"></div>'
+  side.innerHTML='<div class="rea-hx-chat"></div>'
     +'<div class="rea-hx-sum">'
       +'<div class="rea-hx-sumrow"><span>谁来发</span><b data-hx-sum="exec">—</b></div>'
       +'<div class="rea-hx-sumrow"><span>唤醒谁</span><b data-hx-sum="who">—</b></div>'
