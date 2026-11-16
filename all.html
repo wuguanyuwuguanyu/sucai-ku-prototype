@@ -31811,7 +31811,7 @@ syncTip();drawRows();
 
   /* ---- 任务列表页的「完成进度」列（2026-10-29）----
      8 个任务列表页在快照里大多是空表，也根本没有这一列。这里在页加载时补：
-     「状态」列前插一列完成进度，每页补 3 条演示行。
+     任务名称之后紧跟一列完成进度（列表第二个字段，不进列表深处），每页补 3 条演示行。
      口径与看板逐条进度一致——已执行人次 / 应执行人次（不是任务条数，docs/10 §4）；
      任务名与人数沿用 docs/11 的看板演示集，同一条任务在任务页与看板上的进度对得上。
      只动 DOM、不碰 _online-admin.js；8 页的登记见 docs/09 §2.3。 */
@@ -31921,21 +31921,21 @@ syncTip();drawRows();
     'var hd=document.querySelector(".ant-table-thead"),tb=document.querySelector(".ant-table-tbody");',
     'if(!hd||!tb)return;',
     'var TH=hd.querySelectorAll("th"),si=-1,N0=TH.length,i,j;',
-    'for(i=0;i<N0;i++){var k=txt(TH[i]);if(k==="状态"||k==="任务状态"){si=i;break}}',
-    'if(si<0)return;  /* 找不到状态列就不插：列插歪比没有这一列更糟 */',
-    /* 表头插列 */
+    'for(i=0;i<N0;i++){var k=txt(TH[i]);if(k==="任务名称"){si=i;break}}',
+    'if(si<0)return;  /* 找不到任务名称列就不插：列插歪比没有这一列更糟；新列插在它后面 */',
+    /* 表头插列：紧跟任务名称，成为第二个字段 */
     'var th=document.createElement("th");th.className="ant-table-cell";th.setAttribute("scope","col");',
-    'th.textContent="完成进度";TH[si].parentNode.insertBefore(th,TH[si]);',
+    'th.textContent="完成进度";TH[si].parentNode.insertBefore(th,TH[si].nextSibling);',
     /* colgroup：表头表与表体表各一份，列数与原表头一致才动 */
     'var cg=document.querySelectorAll("colgroup");',
     'for(j=0;j<cg.length;j++){if(cg[j].children.length!==N0)continue;',
     '  var col=document.createElement("col");col.style.width="120px";',
-    '  cg[j].insertBefore(col,cg[j].children[si]);}',
+    '  cg[j].insertBefore(col,cg[j].children[si+1]||null);}',
     /* 测宽行（表头测宽用的隐藏 th 行）也要补一格，否则列宽对不上 */
     'var mr=tb.querySelector("tr.ant-table-measure-row");',
     'if(mr&&mr.children[si]){var mh=document.createElement("th");mh.className="ant-table-measure-cell";',
     '  mh.innerHTML="<div class=\\"ant-table-measure-cell-content\\">完成进度</div>";',
-    '  mr.insertBefore(mh,mr.children[si]);}',
+    '  mr.insertBefore(mh,mr.children[si+1]||null);}',
     /* 清空原有行（快照样例行／空表占位行），只留测宽行——倒序删，live 集合才不会跳元素 */
     'var olds=tb.querySelectorAll("tr");',
     'for(j=olds.length-1;j>=0;j--){if(olds[j].classList.contains("ant-table-measure-row"))continue;',
