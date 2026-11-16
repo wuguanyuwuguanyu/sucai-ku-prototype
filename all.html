@@ -22110,7 +22110,6 @@ for(i=0;i<rows.length;i++){
     /* 表比可视区宽 148px（横向滚动），空态整块居中在表宽上会偏右，往左挪半个溢出量 */
     '.rea-qf-modal .ant-table-placeholder .ant-empty{position:relative;left:-74px}',
     '.rea-qf-pager{margin:12px 0 0;text-align:right}',
-    '.rea-qf-help{margin-left:4px;color:rgba(0,0,0,0.45);cursor:help;vertical-align:-0.125em}',
     '.rea-qf-dd{position:absolute;z-index:1060;background:#fff;border-radius:8px;padding:4px;',
     'box-shadow:0 6px 16px 0 rgba(0,0,0,0.08),0 3px 6px -4px rgba(0,0,0,0.12),0 9px 28px 8px rgba(0,0,0,0.05)}',
     '.rea-qf-dd .ant-select-item{padding:5px 12px;border-radius:4px;cursor:pointer}',
@@ -22133,10 +22132,6 @@ var NICK=${reaJson(['林小满','顾北','周舟','沈知夏','陆远','许乐',
     REPLY=${reaJson(['收到了，谢谢','好的，稍后看看','这个活动还有吗？','已了解',
                        '麻烦发下详情','收到','可以，我转给同事','好的'])},
     HASH="css-vgijab",CLOSE=${reaJson(REA_MN_ICON.close)},
-    HELP=${reaJson(reaMnIc('question-circle', [
-      'M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z',
-      'M623.6 316.7C593.6 290.4 554 276 512 276s-81.6 14.5-111.6 40.7C369.2 344 352 380.7 352 420v7.6c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V420c0-44.1 43.1-80 96-80s96 35.9 96 80c0 31.1-22 59.6-56.1 72.7-21.2 8.1-39.2 22.3-52.1 40.9-13.1 19-19.9 41.8-19.9 64.9V620c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8v-22.7a48.3 48.3 0 0130.9-44.8c59-22.7 97.1-74.7 97.1-132.5.1-39.3-17.1-76-48.3-103.3zM472 732a40 40 0 1080 0 40 40 0 10-80 0z'
-    ]))},
     EMPTY=${reaJson('<svg width="64" height="41" viewBox="0 0 64 41" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0 1)" fill="none" fill-rule="evenodd"><ellipse fill="#F5F5F5" cx="32" cy="33" rx="32" ry="7"></ellipse><g fill-rule="nonzero" stroke="#D9D9D9"><path d="M55 12.76L44.854 1.258C44.367.474 43.656 0 42.907 0H21.093c-.749 0-1.46.474-1.947 1.257L9 12.761V22h46v-9.24z"></path><path d="M41.613 15.931c0-1.605.994-2.93 2.227-2.93H18.624c-1.233 0-2.227 1.325-2.227 2.93V41c0 1.605.994 2.93 2.227 2.93h22.989c1.233 0 2.227-1.325 2.227-2.93V15.93z" fill="#FAFAFA"></path></g></g></svg>')},
     ARROW=${reaJson('<span class="anticon anticon-down" aria-hidden="true"><svg viewBox="64 64 896 896" focusable="false" width="1em" height="1em" fill="currentColor"><path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"></path></svg></span>')};
 var ML=null,DD=null,ALL=[],KW="",REP="";
@@ -22199,8 +22194,7 @@ function tableShell(){
     +'<th class="ant-table-cell" style="width:60px">序号</th>'
     +'<th class="ant-table-cell" style="width:120px">昵称</th>'
     +'<th class="ant-table-cell" style="width:150px">微信号</th>'
-    +'<th class="ant-table-cell" style="width:104px">是否回复<span class="rea-qf-help"'
-    +' title="好友是否回复了本次群发消息">'+HELP+'</span></th>'
+    +'<th class="ant-table-cell" style="width:104px">是否回复</th>'
     +'<th class="ant-table-cell" style="width:170px">发送时间</th>'
     +'<th class="ant-table-cell" style="width:170px">回复时间</th>'
     +'<th class="ant-table-cell" style="width:178px">回复内容</th>'
@@ -22613,7 +22607,6 @@ tb.addEventListener("click",function(e){
     + '.rea-qf-rd input:checked+.rea-qf-rddot{border-color:#1677FF}'
     + '.rea-qf-rd input:checked+.rea-qf-rddot:after{content:"";position:absolute;left:3px;top:3px;width:8px;height:8px;border-radius:50%;background:#1677FF}'
     + '.rea-qf-rd input:focus-visible+.rea-qf-rddot{box-shadow:0 0 0 2px #E6F4FF}'
-    + '.rea-qf-help{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;flex:none;border:1px solid #C9CDD4;border-radius:50%;color:#8F959E;font-size:10px;line-height:1;cursor:help}'
     /* 选项不可选时的感叹号：原因收在悬停／键盘聚焦的浮层里，不占页面一行 */
     + '.rea-qf-why{position:relative;display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;flex:none;margin-left:5px;border:1px solid #C9CDD4;border-radius:50%;color:#8F959E;font:600 10px/1 Arial,sans-serif;cursor:help;vertical-align:-1px}'
     + '.rea-qf-why[hidden]{display:none!important}'
@@ -23081,13 +23074,6 @@ function norm(s){return String(s==null?'':s).replace(/\\s+/g,'')}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function q(s,r){return (r||document).querySelector(s)}
 function qa(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
-
-/* 快照里的 ? 图标只是 AntD 的壳：提示要 React 才画，静态页悬停没有任何反应，
-   内容区里的一律摘掉。顶栏那枚是现网外壳，不归这一页管，留着。 */
-qa('.anticon-question-circle').forEach(function(el){
-  if(el.classList.contains('topRight-icon')||el.closest('.topRight-icon'))return;
-  el.remove();
-});
 
 ${reaPickJs({tip:tip, moments:page==='发圈 · 新建', counts:false})}
 
@@ -24991,9 +24977,6 @@ else if(PAGE==='群发群组 · 新建')initQs();
     + '.rea-zd-sec{display:flex;align-items:center;margin:20px 0 14px;padding-top:16px;'
     +   'border-top:1px solid rgba(5,5,5,.06);font-size:14px;font-weight:500;'
     +   'color:rgba(0,0,0,.88)}'
-    + '.rea-zd-q{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;'
-    +   'margin-left:6px;border-radius:50%;border:1px solid rgba(0,0,0,.3);color:rgba(0,0,0,.4);'
-    +   'font-size:10px;font-weight:400;line-height:1;cursor:help}'
     + '.rea-zd-frow{display:flex;align-items:center;margin-bottom:12px;font-size:14px;'
     +   'color:rgba(0,0,0,.88)}'
     + '.rea-zd-cflab{flex:none;width:98px;margin-right:12px;font-weight:400;font-size:14px}'
@@ -25080,7 +25063,7 @@ else if(PAGE==='群发群组 · 新建')initQs();
     '}',
     'function cfgHtml(){',
     '  return \'<div class="rea-zd-sec">好友设置\'',
-    '    +\'<span class="rea-zd-q" title="通过好友验证后自动打标签、写备注、推送名片；备注留空时用加好友日期，其余留空或关闭就不执行">?</span></div>\'',
+    '    +\'</div>\'',
     '    +\'<div class="rea-zd-frow"><span class="rea-zd-cflab">好友验证方式：</span>\'',
     '    +cfgRadioHtml("verify",["被动验证（客户主动添加我）","主动验证（我主动添加客户）"],ST.verify)+"</div>"',
     '    +\'<div class="rea-zd-frow"><span class="rea-zd-cflab">设置标签：</span>\'',
@@ -25485,13 +25468,6 @@ else if(PAGE==='群发群组 · 新建')initQs();
 function norm(s){return String(s==null?'':s).replace(/\s+/g,'')}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function qa(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
-
-/* 快照里的 ? 图标只是 AntD 的壳：提示要 React 才画，静态页悬停没有任何反应，
-   内容区里的一律摘掉。顶栏那枚是现网外壳，不归这一页管，留着。 */
-qa('.anticon-question-circle').forEach(function(el){
-  if(el.classList.contains('topRight-icon')||el.closest('.topRight-icon'))return;
-  el.remove();
-});
 
 /* 与「微信群管理」演示台账对齐：只取状态「正常」的 8 个群（「wogf」被踢出群，不列）；
    台账里「二组测试号培养互动」有两条（36 人 / 102 人），按两条群记录保留，靠人数区分。 */
@@ -26875,7 +26851,6 @@ BT.addEventListener('click',function(e){
     '.rea-wxd-ring-hd{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px}',
     '.rea-wxd-ring-t{display:inline-flex;align-items:center;gap:5px;font-size:14px;font-weight:600;line-height:20px;color:#1F2329}',
     '.rea-wxd-ring-hd>span:last-child{font-size:12px;color:#8F959E}',
-    '.rea-wxd-help{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border:1px solid #C9CED6;border-radius:50%;font-size:10px;line-height:1;color:#8F959E;cursor:help}',
     '.rea-wxd-ring-bd{display:flex;align-items:center;gap:20px}',
     '.rea-wxd-donut{position:relative;flex:none;width:140px;height:140px}',
     '.rea-wxd-donut svg{display:block;width:140px;height:140px;transform:rotate(-90deg)}',
@@ -26936,7 +26911,6 @@ BT.addEventListener('click',function(e){
     '.rea-wxd-tabbar button:hover{color:#1677FF}',
     '.rea-wxd-tabbar button.on{color:#1F2329;font-weight:600}',
     '.rea-wxd-tabbar button.on::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;border-radius:1px;background:#1677FF}',
-    '.rea-wxd-tabbar button .rea-wxd-help{margin-left:5px;font-weight:400}',
     '.rea-wxd-tabbd[hidden]{display:none}',
     '.rea-wxd-fn-bd{display:grid;gap:8px}',
     '.rea-wxd-fn-row{display:flex;align-items:center;gap:7px}',
@@ -27159,7 +27133,7 @@ if(PAGE==='批量加好友 · 详情'){
   ring.innerHTML=''
     +'<div class="rea-wxd-tabbar" role="tablist">'
     +'<button type="button" role="tab" class="on" data-wxd-tab="exec" aria-selected="true">任务执行</button>'
-    +'<button type="button" role="tab" data-wxd-tab="conv" aria-selected="false">加好友进展<span class="rea-wxd-help" title="按目标数统计：目标总数＝这条任务的全部好友目标；已执行＝资料页处理完；已发申请＝已发送验证请求＋验证通过；验证通过＝对方已通过申请。用户已添加与用户不存在不进申请，处理完就停在这一层。">?</span></button>'
+    +'<button type="button" role="tab" data-wxd-tab="conv" aria-selected="false">加好友进展</button>'
     +'</div>'
     +'<div class="rea-wxd-tabbd" data-wxd-panel="exec">'
     +'<div class="rea-wxd-ring-bd">'
@@ -27196,12 +27170,11 @@ if(PAGE==='批量加好友 · 详情'){
   for(ri=0;ri<RES.length;ri++){res[RES[ri]]=c[RES[ri]];finished+=c[RES[ri]]}
   var ex={done:finished,open:c.open};
   var rl={linked:'已关联',unlinked:'未关联',missing:'不存在',abnormal:'好友异常'};
-  var rHelp='只数已完成的客户：已关联＝客户与本企业好友对应上；未关联＝有结果但没对应上；不存在＝查不到这个用户；好友异常＝好友状态异常。未执行的客户还没有结果。';
   ring.className='rea-wxd-ring rea-wxd-rings rea-wxd-rel';
   ring.innerHTML=''
     +'<div class="rea-wxd-tabbar" role="tablist">'
-    +'<button type="button" role="tab" class="on" data-wxd-tab="exec" aria-selected="true">执行情况<span class="rea-wxd-help" title="按客户条目统计：已完成＝这条任务里已经处理过的客户（含关联失败）；未完成＝还没处理。">?</span></button>'
-    +'<button type="button" role="tab" data-wxd-tab="res" aria-selected="false">执行结果<span class="rea-wxd-help" title="'+rHelp+'">?</span></button>'
+    +'<button type="button" role="tab" class="on" data-wxd-tab="exec" aria-selected="true">执行情况</button>'
+    +'<button type="button" role="tab" data-wxd-tab="res" aria-selected="false">执行结果</button>'
     +'</div>'
     +'<div class="rea-wxd-tabbd" data-wxd-panel="exec">'
     +'<div class="rea-wxd-ring-bd">'
@@ -27256,8 +27229,8 @@ if(PAGE==='批量加好友 · 详情'){
   ring.className='rea-wxd-ring rea-wxd-rings';
   ring.innerHTML=''
     +'<div class="rea-wxd-tabbar" role="tablist">'
-    +'<button type="button" role="tab" class="on" data-wxd-tab="exec" aria-selected="true">执行进度<span class="rea-wxd-help" title="按人次统计：一位执行人员计 1 次；逾期含在未执行内。">?</span></button>'
-    +'<button type="button" role="tab" data-wxd-tab="conv" aria-selected="false">好友回复<span class="rea-wxd-help" title="按好友条目统计：已发送＝员工实际发出的好友条目；已回复＝好友回了本任务消息；回复率＝已回复 ÷ 已发送。">?</span></button>'
+    +'<button type="button" role="tab" class="on" data-wxd-tab="exec" aria-selected="true">执行进度</button>'
+    +'<button type="button" role="tab" data-wxd-tab="conv" aria-selected="false">好友回复</button>'
     +'</div>'
     +'<div class="rea-wxd-tabbd" data-wxd-panel="exec">'
     +'<div class="rea-wxd-ring-bd">'
@@ -27295,13 +27268,10 @@ if(PAGE==='批量加好友 · 详情'){
     summary=n+U+'中 '+seg.join('，');
     if(CFG.state==='ended'&&pending)summary+='（其中 '+pending+CU+'已逾期）';
   }
-  var help=CFG.unit==='items'
-    ?'按目标数统计：一位'+CFG.noun+'计 1 项；逾期含在未执行内。'
-    :'按人次统计：一位执行人员计 1 次；逾期含在未执行内。';
   ring.className='rea-wxd-ring';
 ring.innerHTML=''
   +'<div class="rea-wxd-ring-hd">'
-  +'<span class="rea-wxd-ring-t">'+(CFG.unit==='items'?'任务进度':'执行进度')+'<span class="rea-wxd-help" title="'+help+'">?</span></span>'
+  +'<span class="rea-wxd-ring-t">'+(CFG.unit==='items'?'任务进度':'执行进度')+'</span>'
   +'<span>共 '+n+U+'</span>'
   +'</div>'
   +'<div class="rea-wxd-ring-bd">'
@@ -27591,8 +27561,8 @@ var CIRC2=2*Math.PI*50,arcDone=+(N.done/N.people*CIRC2).toFixed(2);
 RING.className='rea-wxd-ring rea-wxd-rings';
 RING.innerHTML=''
 +'<div class="rea-wxd-tabbar" role="tablist">'
-+'<button type="button" role="tab" class="on" data-wxd-tab="conv" aria-selected="true">唤醒情况<span class="rea-wxd-help" title="按客户条目统计：应触达＝任务圈定的客户；已发送＝员工已发出；已回复＝客户回复了唤醒消息，即已唤醒。回复按任务累计，任务结束后新到的回复仍记在本任务。">?</span></button>'
-+'<button type="button" role="tab" data-wxd-tab="exec" aria-selected="false">执行进度<span class="rea-wxd-help" title="按人次统计：一位执行人员计 1 次；10 人中 4 人已执行，未执行的人员还没开始触达。">?</span></button>'
++'<button type="button" role="tab" class="on" data-wxd-tab="conv" aria-selected="true">唤醒情况</button>'
++'<button type="button" role="tab" data-wxd-tab="exec" aria-selected="false">执行进度</button>'
 +'</div>'
 +'<div class="rea-wxd-tabbd" data-wxd-panel="conv">'
 +'<div class="rea-wxd-fn-bd">'+fh+'</div>'
@@ -27697,10 +27667,10 @@ function tableShell(){
   +'<colgroup><col style="width:12%"><col style="width:12%"><col style="width:13.2%"><col style="width:12%"><col style="width:6.8%"><col style="width:13.2%"><col style="width:10.4%"><col style="width:7.6%"><col style="width:12.8%"></colgroup>'
   +'<thead class="ant-table-thead"><tr>'
   +'<th class="ant-table-cell">执行员工信息</th>'
-  +'<th class="ant-table-cell">客户信息<span class="rea-wxd-help" title="客户昵称与备注；同一客户被多个员工微信触达时分别计数">?</span></th>'
+  +'<th class="ant-table-cell">客户信息</th>'
   +'<th class="ant-table-cell">发送时间</th>'
   +'<th class="ant-table-cell">发送内容</th>'
-  +'<th class="ant-table-cell">是否回复<span class="rea-wxd-help" title="客户回复了本次唤醒消息">?</span></th>'
+  +'<th class="ant-table-cell">是否回复</th>'
   +'<th class="ant-table-cell">回复时间</th>'
   +'<th class="ant-table-cell">回复内容</th>'
   +'<th class="ant-table-cell">发送状态</th>'
@@ -27822,7 +27792,6 @@ function openHx(opt){
   +'<button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-hx-reset><span>重置</span></button>'
   +'<span class="rea-hx-tool-sp"></span>'
   +'<button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-hx-export><span class="anticon anticon-download">'+DL+'</span><span>导出</span></button>'
-  +'<span class="rea-wxd-help" title="导出当前筛选结果">?</span>'
   +'</div>'
   +'<div class="rea-hx-scroll">'+tableShell()+'</div>'
   +'<div class="rea-hx-count" data-hx-count>共 0 条记录</div>'
@@ -30760,12 +30729,6 @@ var L={
 function up(n,c){while(n&&n.nodeType===1){if(n.classList&&n.classList.contains(c))return n;n=n.parentNode}return null}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function pad(n){return (n<10?'0':'')+n}
-/* 快照里的 ? 图标只是 AntD 的壳：提示要 React 才画，静态页悬停没有任何反应，
-   内容区里的一律摘掉。顶栏那枚是现网外壳，不归这一页管，留着。 */
-[].slice.call(document.querySelectorAll('.anticon-question-circle')).forEach(function(el){
-  if(el.classList.contains('topRight-icon')||el.closest('.topRight-icon'))return;
-  el.remove();
-});
 
 /* AntD 的提示条只认 css-mncuj7 这枚 hash（与素材库新建页、自动打招呼同一套） */
 var MW=null;
@@ -31518,6 +31481,18 @@ syncTip();drawRows();
     'function up(n,c){while(n&&n.nodeType===1){if(n.classList&&n.classList.contains(c))return n;n=n.parentNode}return null}',
     'function isOn(n){return !!(n&&n.classList&&n.classList.contains(CE))}',
     'function txt(n){return ((n&&n.textContent)||"").replace(/\\s+/g,"")}',
+    '',
+    '/* 快照里的 ? 图标只是 AntD 的壳：提示要 React 才画，静态页悬停没有任何反应，',
+    '   内容区里的一律摘掉。顶栏那枚是现网外壳，不归这一页管，留着。',
+    '   每页都跑一次；页面脚本可能重绘内容，故在脚本跑完后再扫一遍。 */',
+    'function dropDeadHelp(){',
+    '  var qs=document.querySelectorAll(".anticon-question-circle");',
+    '  for(var qi=0;qi<qs.length;qi++){',
+    '    if(qs[qi].classList.contains("topRight-icon")||up(qs[qi],"topRight-icon"))continue;',
+    '    qs[qi].parentNode.removeChild(qs[qi]);',
+    '  }',
+    '}',
+    'dropDeadHelp();setTimeout(dropDeadHelp,0);',
     '',
     '/* 模块页那枚「新建…」主按钮在快照里是 disabled 的（抓取瞬间的态——同一页在「· 新建」',
     '   那份里是启用的）。禁用的 <button> 连 click 都不派发，留着它新建页就永远进不去；',
