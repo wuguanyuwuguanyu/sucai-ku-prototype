@@ -21946,7 +21946,8 @@ function taskScope(rs,metric,range){
   /* 「发圈 · 详情」的覆盖脚本（2026-11-10）：创建页重排后，把详情页缺的配置补成只读行。
      快照的「任务信息」原先只有任务名称、大类、状态、有效期、素材分类、执行人员、已发送、素材；
      脚本在「执行人员」后补四行——发送范围（2026-11-16 由「谁可以看」改名并登记进统一骨架；
-     一级状态与二级标签／朋友写在同一个值里，名称最多列前 5 个）、所在位置、循环方式、自动发送。
+     值按「规则 · 明细」两段写，一级可见性和二级标签／朋友之间用「 · 」隔开，名称最多列前 5 个）、
+     所在位置、循环方式、自动发送。
      全局弹窗不回显。
      任务内容那一行由 reaWxDetailContentJs 统一补：点「查看」抬弹窗，
      弹窗里就是这条朋友圈最终发出去的样子：昵称、正文或文章卡、所在位置，照朋友圈的排版。
@@ -21987,7 +21988,7 @@ function row(label,value,attr){
   p.appendChild(a);p.appendChild(b);return p;
 }
 var rows=[
-  row('发送范围：','部分可见 · 标签：重点客户、高意向','data-rea-fq-scope'),
+  row('发送范围：','部分可见 · 重点客户、高意向','data-rea-fq-scope'),
   row('所在位置：','上海静安嘉里中心','data-rea-fq-loc'),
   row('循环方式：','单次任务','data-rea-fq-cycle'),
   row('自动发送：','开启','data-rea-fq-auto')
@@ -26740,7 +26741,8 @@ BT.addEventListener('click',function(e){
      · 创建时间六页都显示；发圈、群发好友、群发群组的快照没有这一行，由
        reaWxDetailJs 按有效期那一行的位置补，值取有效期起点。
      · 范围类字段统一成一格「发送范围」——发圈的「谁可以看」、群发好友的
-       「群发范围＋标签名称」、群发群组的「群发那些群」都并进来，值写各自口径。
+       「群发范围＋标签名称」、群发群组的「群发那些群」都并进来，值统一写
+       「规则 · 明细」两段：部分可见 · 重点客户、高意向／按微信标签 · 老客户、双十一／全部群。
      行距 28 大于列距 24（见 REA_WX_DETAIL_CSS），分组靠留白表达，不加分组标题。
      order 写的是去冒号后的标签（reaWxDetailJs 先剥冒号再重排）；表里没有的标签
      跳过、不删，会被排好的字段顶到前面——重抓后多出新字段，补进 order 即可。 */
@@ -26837,8 +26839,8 @@ BT.addEventListener('click',function(e){
     '.rea-wxd-snap:hover{text-decoration:underline}',
     '.rea-wxd-hd{display:flex;align-items:center;height:55px;border-bottom:1px solid #F0F0F2;font-size:16px;font-weight:500;color:#333}',
     /* 2026-11-15：图表在左、任务字段在右（六张微信营销详情页统一）。
-       列宽跟图表走（320／360），字段占剩下的宽度。 */
-    '.rea-wxd-info{display:grid;grid-template-columns:320px minmax(0,1fr);align-items:stretch;column-gap:32px;margin-top:16px}',
+       2026-11-16：六页统一 360px——字段起点与中间竖线落在同一横坐标，不再 320／360 混用。 */
+    '.rea-wxd-info{display:grid;grid-template-columns:360px minmax(0,1fr);align-items:stretch;column-gap:32px;margin-top:16px}',
     '.rea-wxd-kv{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:28px 24px!important;align-content:start!important;margin:0!important}',
     '.rea-wxd-kv>p{display:block!important;flex:0 0 auto!important;width:auto!important;min-width:0;margin:0!important;white-space:normal!important;overflow-wrap:anywhere}',
     '.rea-wxd-kv>p>span:first-child{display:block;margin-bottom:3px;font-size:12px;line-height:18px;color:#8F959E}',
@@ -27363,7 +27365,7 @@ card.insertBefore(info,BODY);
 info.appendChild(ring);
 info.appendChild(BODY);
 BODY.classList.add('rea-wxd-kv');
-/* 右栏要装下页签图表的页（批量加好友、群发好友、关联好友）列宽放宽到 360px；其余页仍是 320px。 */
+/* 列宽六页统一 360px（2026-11-16）；rea-wxd-bd 只留给这三页的漏斗密度与页签间距。 */
 if(PAGE==='批量加好友 · 详情'||PAGE==='群发好友 · 详情'||PAGE==='关联好友 · 详情')card.classList.add('rea-wxd-bd');
 /* 表格：按表头文字找表，不认第几张（发圈页还有一张页签表） */
 function txtv(x){return norm(x&&x.textContent)}
