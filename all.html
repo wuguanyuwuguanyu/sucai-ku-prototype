@@ -13523,18 +13523,14 @@ setTimeout(sbScan,120);
 .rea-ov-page .ov-result-number small{font-size:14px;color:#646A73;font-weight:400}
 .rea-ov-page .ov-result-number i{font-size:14px;color:#1677FF;font-style:normal;opacity:0}
 .rea-ov-page .ov-result-number:hover i,.rea-ov-page .ov-result-number:focus-visible i{opacity:1}
-.rea-ov-page .ov-result-footer{display:flex;flex-direction:column;align-items:flex-start;gap:8px;font-size:13px;color:#646A73}
-.rea-ov-page .ov-result-footer>*{display:flex;flex-wrap:wrap;align-items:baseline}
-.rea-ov-page .ov-result-footer .ov-row-main{display:flex;flex-wrap:nowrap;align-items:baseline}
-.rea-ov-page .ov-result-footer b{font-weight:500;color:#1F2329;margin-left:6px;font-size:14px}
-.rea-ov-page .ov-result-footer small{font-size:12px;color:#646A73;margin-left:4px}
-.rea-ov-page .ov-result-footer .ov-link{font-size:13px}
+.rea-ov-page .ov-result-footer{display:grid;grid-template-columns:repeat(auto-fit,minmax(60px,1fr));gap:12px 14px;width:100%;padding-top:16px;margin-top:auto;font-size:12px;color:#646A73}
+.rea-ov-page .ov-result-footer>*{display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-width:0;text-align:left;white-space:normal}
+.rea-ov-page .ov-foot-label{font-size:10px;line-height:14px;color:#646A73;white-space:nowrap}
+.rea-ov-page .ov-foot-value{font-size:16px;font-weight:600;line-height:22px;color:#1F2329;font-variant-numeric:tabular-nums;white-space:nowrap}
+.rea-ov-page .ov-foot-value small{font-size:11px;font-weight:400;color:#646A73;margin-left:4px}
 .rea-ov-page .ov-result-delta{display:flex;align-items:baseline;gap:4px;padding:0 0 12px;font-size:12px;color:#646A73}
 .rea-ov-page .ov-result-delta .ov-delta{font-size:13px;font-weight:500}
-.rea-ov-page .ov-result-footer .ov-delta{margin-left:6px;font-size:11px;font-variant-numeric:tabular-nums}
-.rea-ov-page .ov-result-footer .ov-link{font-size:12px}
-.rea-ov-page .ov-result-footer b{font-size:13px}
-.rea-ov-page .ov-result-footer small{font-size:11px}
+.rea-ov-page .ov-result-footer .ov-delta{margin-left:0;font-size:10px;line-height:14px;font-variant-numeric:tabular-nums}
 .rea-ov-page .ov-delta.up{color:#CF1322}
 .rea-ov-page .ov-delta.down{color:#237804}
 .rea-ov-page .ov-capabilities-heading{margin-top:24px}
@@ -14433,7 +14429,7 @@ setTimeout(sbScan,120);
   }
   function valueSummary(records) {
     const prior=priorValueRecords(),completed=records.filter(r=>r.metric==='taskCompleted'),done=sum(completed),hosted=metricValue(records,'hostingTask'),people=new Set(completed.map(r=>r.employee)).size,priorPeople=new Set(prior.filter(r=>r.metric==='taskCompleted').map(r=>r.employee)).size;
-    return `<section id="ov-value-summary" class="ov-value-scene ov-efficiency-card" data-result-card="efficiency"><div class="ov-result-heading"><h3>工作效率</h3><span class="ov-scene-icon">${ovIcon(METRIC_ICONS.taskExec,20)}</span></div><div class="ov-result-metric"><div class="ov-result-label">完成任务 ${helpSpan(metrics.taskCompleted.note)}</div><button class="ov-result-number" data-metric="taskCompleted" data-value="${done}" title="${number(done)} 人次">${valueNumber(done)}<small>人次</small><i aria-hidden="true">↗</i></button>${changeLine(records,'taskCompleted','人次')}</div><div class="ov-result-footer"><button type="button" class="ov-link" data-metric="hostingTask" data-value="${hosted}"><span class="ov-row-main">AI托管自动完成 <b>${valueNumber(hosted)}</b><small>条</small></span>${deltaTag(hosted,metricValue(prior,'hostingTask'),'条')}</button><button type="button" class="ov-link" data-scene="tasks" data-scene-tab="people"><span class="ov-row-main">参与完成 <b>${people}</b><small>人</small></span>${deltaTag(people,priorPeople,'人')}</button></div></section>`;
+    return `<section id="ov-value-summary" class="ov-value-scene ov-efficiency-card" data-result-card="efficiency"><div class="ov-result-heading"><h3>工作效率</h3><span class="ov-scene-icon">${ovIcon(METRIC_ICONS.taskExec,20)}</span></div><div class="ov-result-metric"><div class="ov-result-label">完成任务 ${helpSpan(metrics.taskCompleted.note)}</div><button class="ov-result-number" data-metric="taskCompleted" data-value="${done}" title="${number(done)} 人次">${valueNumber(done)}<small>人次</small><i aria-hidden="true">↗</i></button>${changeLine(records,'taskCompleted','人次')}</div><div class="ov-result-footer"><button type="button" class="ov-link ov-foot-item" data-metric="hostingTask" data-value="${hosted}"><span class="ov-foot-label">AI托管自动完成</span><span class="ov-foot-value">${valueNumber(hosted)}<small>条</small></span>${deltaTag(hosted,metricValue(prior,'hostingTask'),'条')}</button><button type="button" class="ov-link ov-foot-item" data-scene="tasks" data-scene-tab="people"><span class="ov-foot-label">参与完成</span><span class="ov-foot-value">${people}<small>人</small></span>${deltaTag(people,priorPeople,'人')}</button></div></section>`;
   }
   function valueCards(records) {
     const prior=priorValueRecords();
@@ -14443,13 +14439,13 @@ setTimeout(sbScan,120);
     };
     const secondary=(id)=>{
       const spec=valueSpecs.find(c=>c.id===id),n=metricValue(records,id);
-      return `<button type="button" class="ov-link" data-metric="${id}" data-value="${n}"><span class="ov-row-main">${spec.name} <b>${valueNumber(n)}</b><small>${spec.unit}</small></span>${deltaTag(n,metricValue(prior,id),spec.unit)}</button>`;
+      return `<button type="button" class="ov-link ov-foot-item" data-metric="${id}" data-value="${n}"><span class="ov-foot-label">${spec.name}</span><span class="ov-foot-value">${valueNumber(n)}<small>${spec.unit}</small></span>${deltaTag(n,metricValue(prior,id),spec.unit)}</button>`;
     };
     const groups=[
       {id:'connection',name:'建立客户联系',icon:'request',main:'request',secondary:[secondary('autoPass'),secondary('firstTouch')]},
       {id:'engagement',name:'社群运营与互动',icon:'group',main:'publish',secondary:[secondary('interact'),secondary('sportLike')]},
-      {id:'conversation',name:'客户接待与沟通',icon:'autoReply',main:'autoMessages',secondary:[secondary('profile'),`<button type="button" class="ov-link" data-metric="aiReply"><span class="ov-row-main">AI建议采纳 <b>${number(metricValue(records,'aiReply'))}</b><small>次</small></span>${deltaTag(metricValue(records,'aiReply'),metricValue(prior,'aiReply'),'次')}</button>`,`<span><span class="ov-row-main">匹配素材取用 <b>${number(sum(selectMetric(records,'communication').filter(r=>r.metric==='material')))}</b><small>次</small></span>${deltaTag(sum(selectMetric(records,'communication').filter(r=>r.metric==='material')),sum(selectMetric(prior,'communication').filter(r=>r.metric==='material')),'次')}</span>`]},
-      {id:'content',name:'企业内容复用',icon:'material',main:'material',secondary:[secondary('materialAdded'),`<button type="button" class="ov-link" data-scene="material" data-scene-tab="people"><span class="ov-row-main">取用员工 <b>${metricValue(records,'materialUsers')}</b><small>人</small></span>${deltaTag(metricValue(records,'materialUsers'),metricValue(prior,'materialUsers'),'人')}</button>`]}
+      {id:'conversation',name:'客户接待与沟通',icon:'autoReply',main:'autoMessages',secondary:[secondary('profile'),`<button type="button" class="ov-link ov-foot-item" data-metric="aiReply"><span class="ov-foot-label">AI建议采纳</span><span class="ov-foot-value">${number(metricValue(records,'aiReply'))}<small>次</small></span>${deltaTag(metricValue(records,'aiReply'),metricValue(prior,'aiReply'),'次')}</button>`,`<span class="ov-foot-item"><span class="ov-foot-label">匹配素材取用</span><span class="ov-foot-value">${number(sum(selectMetric(records,'communication').filter(r=>r.metric==='material')))}<small>次</small></span>${deltaTag(sum(selectMetric(records,'communication').filter(r=>r.metric==='material')),sum(selectMetric(prior,'communication').filter(r=>r.metric==='material')),'次')}</span>`]},
+      {id:'content',name:'企业内容复用',icon:'material',main:'material',secondary:[secondary('materialAdded'),`<button type="button" class="ov-link ov-foot-item" data-scene="material" data-scene-tab="people"><span class="ov-foot-label">取用员工</span><span class="ov-foot-value">${metricValue(records,'materialUsers')}<small>人</small></span>${deltaTag(metricValue(records,'materialUsers'),metricValue(prior,'materialUsers'),'人')}</button>`]}
     ];
     return valueSummary(records)+groups.map(c=>`<section class="ov-value-scene" data-result-card="${c.id}"><div class="ov-result-heading"><h3>${c.name}</h3><span class="ov-scene-icon">${ovIcon(METRIC_ICONS[c.icon]||METRIC_ICONS.message,20)}</span></div><div class="ov-result-single">${metric(c.main)}</div><div class="ov-result-footer">${c.secondary.join('')}</div></section>`).join('');
   }
