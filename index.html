@@ -1008,6 +1008,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .cw-purpose .ic.i3{background:#FFF0E2;color:#F2994A}
 .cw-purpose .ic.i4{background:#FFEAF1;color:#F2548A}
 .cw-purpose .ic.i5{background:#E4F7F2;color:#12A16B}
+.cw-purpose .ic.i6{background:#EDEBFF;color:#5B6CFF}
 .cw-purpose label:has(input:checked) .ic{background:linear-gradient(140deg,#1677FE,#7A5BFF);color:#fff;
   box-shadow:0 8px 16px -10px rgba(46,107,255,.8)}
 .cw-purpose .tx{flex:1;min-width:0;font-size:15px;font-weight:500;color:#17263F;line-height:1.3}
@@ -5383,9 +5384,9 @@ var CW_TOPIC='', CW_GEN=false;
 /* 原型仅演示：下列聊天均为虚构样例，不接真实模型。生成依据可在预览展开。 */
 var CW_PURPOSE='follow', CW_NEXT='auto', CW_EXPIRY='', CW_LAST=null, CW_SIG='', CW_EDITMSG=null, CW_SEND_IDS=[];
 var CW_DRAFTS={}, CW_MANUAL={}, CW_LAUNCHING=false;
-var CW_PURPOSES=[['follow','跟进上次聊的事','最新进展（选填）','比如：上次问的尺码已经到店'],['news','分享新品或新消息','想告诉客户的新消息','比如：到了两款轻薄外套，可以拍实物图'],['event','告知活动','活动内容','比如：周末到店可以试穿新款'],['care','售后回访','想了解哪方面的使用情况','比如：外套的尺码和穿着感受'],['manual','自己写内容','','']];
+var CW_PURPOSES=[['follow','跟进上次聊的事','最新进展（选填）','比如：上次问的尺码已经到店'],['news','分享新品或新消息','想告诉客户的新消息','比如：到了两款轻薄外套，可以拍实物图'],['event','告知活动','活动内容','比如：周末到店可以试穿新款'],['care','售后回访','想了解哪方面的使用情况','比如：外套的尺码和穿着感受'],['custom','自定义唤醒主题','这次想聊的主题','比如：问问上次买的围巾穿着怎么样，顺带提一句新到的冬款'],['manual','自己写唤醒话术','','']];
 /* 联系目的行首那枚图标块：色系照工具页的「同色系光晕＋渐变块」，一个目的一个色，认行不认字。 */
-var CW_PURPOSE_IC={follow:['i1','message'],news:['i2','sparkle'],event:['i3','megaphone'],care:['i4','thumbsup'],manual:['i5','edit']};
+var CW_PURPOSE_IC={follow:['i1','message'],news:['i2','sparkle'],event:['i3','megaphone'],care:['i4','thumbsup'],custom:['i6','intent'],manual:['i5','edit']};
 var CW_CONTEXT={
  a1:{quote:'客户：想找轻薄一点、通勤穿的外套。\n我：好的，我帮你留意一下。',topic:'轻薄的通勤外套',match:'外套'},
  a2:{quote:'客户：这件外套有深色的吗？\n我：我查一下颜色。',topic:'深色外套',match:'外套'},
@@ -5714,6 +5715,7 @@ function cwAiText(c,r,draft){
  if(purpose==='follow'){
    line=ctx.topic?'上次聊到'+ctx.topic+'，'+(info?info+'。':'你现在还有这方面的需要吗？'):(info+'。');
  }else if(purpose==='care')line='想了解一下'+info+'，你觉得怎么样？';
+ else if(purpose==='custom')line=info.replace(/^(问问|问一下|想问|了解一下|看看)/,'')+'。';
  else line=(ctx.topic&&ctx.match&&info.indexOf(ctx.match)>=0?'上次你提到'+ctx.topic+'，':'')+info+'。';
  if(purpose==='event'&&expiry)line+='活动截至'+expiry.replace('T',' ')+'。';
  if(next==='reply')end='方便说说你现在的想法吗？';
@@ -5724,6 +5726,8 @@ function cwAiText(c,r,draft){
  else if(/拍|图|照片/.test(info))end='要不要我发张图给你看看？';
  else if(!/[？?]$/.test(line))end='你想了解一下吗？';
  if(end&&/[？?]$/.test(line))line=line.replace(/你现在还有这方面的需要吗？|你觉得怎么样？$/,'');
+ /* 自定义主题：题目就是员工写的那句，自动补的通用问句会跟它撞车，默认不补。 */
+ if(purpose==='custom'&&next==='auto')end='';
  if(purpose==='follow'&&!info&&c.i==='a6'&&next==='auto'){line='之前收到的外套穿着还合适吗？';end=''}
  var msg=line+end;
  if(r%2)msg=msg.replace('上次你提到','之前你说到').replace('要不要我发张图给你看看？','需要我发张图吗？');
@@ -5834,7 +5838,7 @@ function cwEditAi(id){CW_EDITMSG={kind:'ai',id:id,t:'text',value:CW_AI[id]||'',o
 REND['cw-editor']=function(){
  var e=CW_EDITMSG;if(!e)return;
  $('cwEditorBack').innerHTML=I('back',24,2);
- $('cwEditorTitle').textContent=e.kind==='ai'?cwCust(e.id).n+' · 消息':(e.index<0?'添加内容':'编辑内容');
+ $('cwEditorTitle').textContent=e.kind==='ai'?cwCust(e.id).n+' · 消息':(e.index<0?'添加话术':'编辑话术');
  var h='<div class="cw-pcard">';
  if(e.kind==='fixed')h+='<div class="cw-type" role="group" aria-label="内容类型">'+['text','image','video'].map(function(t){return '<button type="button" class="'+(e.t===t?'on':'')+'" onclick="cwEditorType(\''+t+'\')">'+cwTypeN(t)+'</button>'}).join('')+'</div>';
  h+='<label class="cw-field" for="cwEditValue">'+(e.t==='text'?'消息内容':'附件')+'</label>';
@@ -21916,16 +21920,16 @@ function taskScope(rs,metric,range){
 
   /* 「发圈 · 详情」的覆盖脚本（2026-11-10）：创建页重排后，把详情页缺的配置补成只读行。
      快照的「任务信息」原先只有任务名称、大类、状态、有效期、素材分类、执行人员、已发送、素材；
-     脚本在「执行人员」后补四行——发送范围（2026-11-16 由「谁可以看」改名并登记进统一骨架；
+     脚本在「执行人员」后补三行——发送范围（2026-11-16 由「谁可以看」改名并登记进统一骨架；
      值按「规则 · 明细」两段写，一级可见性和二级标签／朋友之间用「 · 」隔开，名称最多列前 5 个）、
-     所在位置、循环方式、自动发送。
+     循环方式、自动发送。
      全局弹窗不回显。
      任务内容那一行由 reaWxDetailContentJs 统一补：点「查看」抬弹窗，
-     弹窗里就是这条朋友圈最终发出去的样子：昵称、正文或文章卡、所在位置，照朋友圈的排版。
+     弹窗里就是这条朋友圈最终发出去的样子：昵称、正文或文章卡，照朋友圈的排版。
      正文仍是快照，脚本只插 <p><span>标签：</span><span>值</span></p>，不抄整页；
      按「执行人员：」定位，不认行序——重抓快照后行序变了也不会插错。
      值按快照那条演示任务的口径写（发送范围：部分可见、标签重点客户与高意向／
-     文章「撒打算」／上海静安嘉里中心／单次任务／自动发送开启），
+     文章「撒打算」／单次任务／自动发送开启），
      拿到真实任务数据后换成读字段。
      页签「员工完成情况 / 任务意向动态」只留前者：「任务意向动态」那枚页签连同它的表一起摘掉，
      按页签文字定位（页签名与 tab id 都是快照生成物，不写死）。 */
@@ -21945,7 +21949,7 @@ if(tab){
 }
 var BODY=document.querySelector('[class*="_task_information_body_"]');
 if(!BODY)return;
-if(BODY.querySelector('[data-rea-fq-loc]'))return;
+if(BODY.querySelector('[data-rea-fq-scope]'))return;
 var ps=BODY.querySelectorAll('p'),i,anchor=null;
 for(i=0;i<ps.length;i++){
   var t=(ps[i].textContent||'').replace(/\s+/g,'');
@@ -21960,7 +21964,6 @@ function row(label,value,attr){
 }
 var rows=[
   row('发送范围：','部分可见 · 重点客户、高意向','data-rea-fq-scope'),
-  row('所在位置：','上海静安嘉里中心','data-rea-fq-loc'),
   row('循环方式：','单次任务','data-rea-fq-cycle'),
   row('自动发送：','开启','data-rea-fq-auto')
 ];
@@ -21974,7 +21977,7 @@ for(i=0;i<rows.length;i++){
 
   /* 「发圈 · 详情」补的只读行与内容弹窗样式。前缀用 rea-fqc-（content），
      避开新建页那组 rea-fq-*（四段结构、下拉、时间控件），两页的样式互不相干。
-     弹窗按朋友圈的排版画单条动态：头像＋昵称、正文或文章卡、所在位置、时间与赞／评论。 */
+     弹窗按朋友圈的排版画单条动态：头像＋昵称、正文或文章卡、时间与赞／评论。 */
   var REA_FQ_DETAIL_CSS=[
     '.rea-fqc-modal .ant-modal-body{padding-top:4px}',
     '.rea-fqc-moments{border-top:1px solid #ededed;border-bottom:1px solid #ededed;background:#fff}',
@@ -21987,7 +21990,6 @@ for(i=0;i<rows.length;i++){
     '.rea-fqc-mmeta{display:flex;flex-direction:column;justify-content:space-between;min-width:0;padding:2px 0}',
     '.rea-fqc-mtitle{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px;line-height:20px;color:#181818}',
     '.rea-fqc-msrc{font-size:12px;line-height:16px;color:#999}',
-    '.rea-fqc-mloc{display:flex;align-items:center;gap:3px;margin-top:8px;font-size:13px;line-height:18px;color:#576b95}',
     '.rea-fqc-mfoot{display:flex;align-items:center;justify-content:space-between;margin-top:10px;font-size:13px;line-height:20px;color:#b2b2b2}',
     '.rea-fqc-mact{padding:2px 10px;border-radius:4px;background:#f7f7f7;font-size:13px;line-height:20px;color:#576b95}'
   ].join('\n');
@@ -22491,8 +22493,6 @@ tb.addEventListener("click",function(e){
     + '.rea-wxt-pkx{border:0;background:transparent;color:#999999;font-size:18px;line-height:18px;cursor:pointer;padding:0 2px}'
     + '.rea-wxt-pkx:hover{color:#ff4d4f}'
     + '.rea-wxt-host:empty{display:none}'
-    /* 发圈右栏预览里补的媒体区（挂在 previewRight 下，不塞进 max-height:100px 的 textCon） */
-    + '.rea-wxt-pvmedia{margin-top:8px}'
     /* ---- 群发群组 · 新建：另造的表单 ---- */
     /* 栏宽照发圈/群发好友那两张现网表单的横向节奏：标签列右对齐到 ~654px，控件从 ~670px 起 */
     + '.rea-wxt-form{max-width:1240px;background:#fff;border-radius:6px;padding:8px 24px 20px}'
@@ -22515,14 +22515,44 @@ tb.addEventListener("click",function(e){
     + '.rea-wxt-temp{margin-top:12px}'
     + '.rea-wxt-foot{display:flex;justify-content:flex-end;gap:8px;padding:20px 0 0;border-top:1px solid #f0f0f0;margin-top:8px}'
     + '.rea-wxt-groupscope{max-width:560px;margin-top:8px}'
-    /* ---- 发圈 · 新建：所在位置（2026-10-26） ---- */
-    /* 行插在现网表单里，行壳 clone 自「自动发送」那一行（_addtitle1_ 没有必填红星）；
-       这里只补控件与提示，不改整页版式。色值仍取快照已有的色。 */
-    + '.rea-wxt-loc{max-width:560px}'
+    /* ---- 发圈 · 新建：右栏手机预览（2026-11-16） ----
+       右栏不再是快照那条「头像＋昵称＋一段正文」的窄列，改成手机微信「发朋友圈」页：
+       取消／发表、想法正文、九宫格（含 + 格）、谁可以看。AI帮写／提醒谁看／所在位置不画。
+       微信场景刻意仿真微信，M3 与瑞士极简两份规范都不管它（AGENTS.md）；
+       手机壳的画法与「批量加好友 · 新建」的右栏预览同一套（深色边框＋状态栏）。 */
     + '.rea-wxt-hintline{margin:6px 0 0;max-width:560px;font-size:12px;line-height:20px;color:#999999}'
-    /* 右栏效果预览里的地点行：位置不属于正文，挂在媒体区之后 */
-    + '.rea-wxt-pvloc{display:flex;align-items:center;gap:4px;margin-top:8px;font-size:12px;line-height:18px;color:#2e448f}'
-    + '.rea-wxt-pvloc svg{flex:none;width:12px;height:12px}'
+    + '.rea-momp{display:flex;flex-direction:column;justify-content:center;height:100%;box-sizing:border-box}'
+    + '.rea-momp-phone{box-sizing:border-box;flex:0 1 auto;width:100%;max-width:360px;aspect-ratio:29/60;max-height:100%;margin:auto 0;padding:9px;border-radius:40px;background:#16171C;box-shadow:0 18px 40px rgba(22,23,28,.16)}'
+    + '.rea-momp-screen{display:flex;flex-direction:column;height:100%;min-height:0;border-radius:31px;overflow:hidden;background:#fff;color:#111}'
+    + '.rea-momp-status{display:flex;flex:none;align-items:center;justify-content:space-between;height:26px;padding:0 16px;font-size:10px;font-weight:600;line-height:1;color:#111}'
+    + '.rea-momp-sicons{display:flex;align-items:center;gap:5px}'
+    + '.rea-momp-sicons svg{display:block;height:9px;width:auto}'
+    + '.rea-momp-hd{display:flex;flex:none;align-items:center;justify-content:space-between;padding:6px 14px 10px}'
+    + '.rea-momp-cancel{font-size:15px;line-height:24px;color:#191919}'
+    + '.rea-momp-post{display:inline-flex;align-items:center;height:28px;padding:0 13px;border-radius:5px;background:#07C160;color:#fff;font-size:13px;font-weight:500}'
+    + '.rea-momp-bd{flex:1;min-height:0;overflow-y:auto;padding:0 14px 14px;scrollbar-width:none}'
+    + '.rea-momp-bd::-webkit-scrollbar{width:0;height:0}'
+    + '.rea-momp-text{font-size:15px;line-height:24px;color:#191919;white-space:pre-wrap;word-break:break-word}'
+    + '.rea-momp-ph{color:#B2B2B2}'
+    + '.rea-momp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:10px}'
+    + '.rea-momp-cell{position:relative;padding-top:100%;border-radius:3px;background:#F2F2F2 center/cover no-repeat}'
+    + '.rea-momp-add{background:#F7F7F7;border:1px solid #EDEDED;box-sizing:border-box}'
+    + '.rea-momp-add:before,.rea-momp-add:after{content:"";position:absolute;left:50%;top:50%;background:#C8C9CC}'
+    + '.rea-momp-add:before{width:24px;height:1px;margin:-1px 0 0 -12px}'
+    + '.rea-momp-add:after{width:1px;height:24px;margin:-12px 0 0 -1px}'
+    + '.rea-momp-video{display:flex;align-items:center;justify-content:center;width:64%;aspect-ratio:4/3;margin-top:10px;border-radius:3px;background:#D8D8D8;color:#fff}'
+    + '.rea-momp-video svg{width:30px;height:30px}'
+    + '.rea-momp-vadd{position:relative;width:64%;aspect-ratio:4/3;margin-top:10px;border-radius:3px;background:#F7F7F7;border:1px solid #EDEDED;box-sizing:border-box}'
+    + '.rea-momp-vadd:before,.rea-momp-vadd:after{content:"";position:absolute;left:50%;top:50%;background:#C8C9CC}'
+    + '.rea-momp-vadd:before{width:24px;height:1px;margin:-1px 0 0 -12px}'
+    + '.rea-momp-vadd:after{width:1px;height:24px;margin:-12px 0 0 -1px}'
+    + '.rea-momp-vis{flex:none;padding:0 14px 16px;border-top:1px solid #EDEDED}'
+    + '.rea-momp-visrow{display:flex;align-items:center;gap:7px;padding-top:13px;font-size:14px;line-height:22px;color:#07C160}'
+    + '.rea-momp-visic{display:flex;flex:none}'
+    + '.rea-momp-chev{display:flex;flex:none;margin-left:auto;color:#C8C9CC}'
+    + '.rea-momp-vissub{padding-top:3px;font-size:12px;line-height:19px;color:#8C8C8C;word-break:break-word}'
+    + '.rea-momp-vissub[hidden]{display:none}'
+    + '.rea-momp-home{flex:none;width:104px;height:5px;margin:0 auto 8px;border-radius:3px;background:#111}'
     /* 发圈 · 新建：可见范围。两层——一级「谁可以看」定范围，二级「不给谁看」在这个范围里
        再排除一批人；二级用左侧竖线加灰标签缩进，读得出从属关系。两级各带一枚单行输入。 */
     + '.rea-fq-vis{display:flex;flex-direction:column;gap:10px;flex:1 1 auto;min-width:0;max-width:560px}'
@@ -23391,7 +23421,8 @@ function reaTagPicker(o){
 
 /* ---------- 发圈 · 新建 ---------- */
 function initFq(){
-  if(document.querySelector('.rea-wxt-loc'))return;
+  if(document.querySelector('.rea-momp'))return;
+  var visSubFn=null;   /* 右栏「谁可以看」那行小字；可见范围那段接上（定义在四段重排里） */
   var lab=findLabel('任务内容');if(!lab)return;
   /* 发圈页的「任务内容」标题与右栏是同级的两个 div（_addgroup_ 下 _addtitle_ ＋ _addright_），
      标题不在 _addright_ 里面——先找同级右栏，再退回祖先链兜底。 */
@@ -23410,26 +23441,73 @@ function initFq(){
   if(srcItem&&srcItem.parentNode===space)space.appendChild(srcItem);
   var host=document.createElement('div');host.className='rea-wxt-host';
   box.appendChild(host);
-  var picked=null,tempPrev=null;
-  function preview(m){
-    /* 临时创建也有内容（描述文本、图片、视频），没有素材时交给本页自己画预览 */
-    if(!m&&tempPrev){tempPrev();return}
-    var pr=document.querySelector('[class*="preview-module_previewRight"]')||document;
-    var ts=pr.querySelector?pr.querySelector('.textShow'):null;
-    if(ts)ts.textContent=m?m.text:'';
-    var old=document.querySelector('.rea-wxt-pvmedia');
-    if(old&&old.parentNode)old.parentNode.removeChild(old);
-    if(!m||!(m.images||m.video)){drawLoc();return}
-    var d=document.createElement('div');d.className='rea-wxt-pvmedia';
-    if(m.video)d.innerHTML='<div class="rea-wxt-pvvideo">▶<span>'+esc(shape(m))+'</span></div>';
-    else{
-      var g='',k;for(k=0;k<m.images;k++)g+='<span class="rea-wxt-pvcell"></span>';
-      d.innerHTML='<div class="rea-wxt-pvgrid">'+g+'</div>';
-    }
-    var right=document.querySelector('[class*="preview-module_previewRight"]');
-    if(right)right.appendChild(d);
-    drawLoc();
+  var picked=null;
+  /* 右栏「效果预览」＝手机微信「发朋友圈」页（2026-11-16）。
+     内容跟着来源走：素材库选中的素材给文案与媒体，临时创建给描述文本、图片与视频；
+     「谁可以看」那行小字跟着可见范围走（全部好友时不出现，与微信一致）。
+     手机只是示意，不接点击，也不参与保存校验。 */
+  var momPhone=momBuild();
+  var tempPrev=renderMom;
+  function momBuild(){
+    var pr=document.querySelector('[class*="preview-module_previewPhone"]');
+    if(!pr)return null;
+    var ct=new Date();
+    pr.innerHTML='<div class="rea-momp">'
+      +'<div class="rea-momp-phone"><div class="rea-momp-screen">'
+      +'<div class="rea-momp-status"><span>'+(ct.getHours()<10?'0':'')+ct.getHours()+':'+(ct.getMinutes()<10?'0':'')+ct.getMinutes()+'</span><span class="rea-momp-sicons">'
+      +'<svg viewBox="0 0 18 12" aria-hidden="true"><rect x="0" y="8" width="3" height="4" rx="1" fill="currentColor"/><rect x="5" y="6" width="3" height="6" rx="1" fill="currentColor"/><rect x="10" y="3" width="3" height="9" rx="1" fill="currentColor"/><rect x="15" y="0" width="3" height="12" rx="1" fill="currentColor"/></svg>'
+      +'<svg viewBox="0 0 16 12" aria-hidden="true"><path d="M8 11.3l2.5-3a4 4 0 0 0-5 0z" fill="currentColor"/><path d="M3 5.8a7.5 7.5 0 0 1 10 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M.8 3a10.8 10.8 0 0 1 14.4 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>'
+      +'<svg viewBox="0 0 26 12" aria-hidden="true"><rect x=".5" y=".5" width="22" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity=".4"/><rect x="2" y="2" width="17" height="8" rx="1.6" fill="currentColor"/><path d="M24 4v4a2 2 0 0 0 0-4z" fill="currentColor" fill-opacity=".45"/></svg>'
+      +'</span></div>'
+      +'<div class="rea-momp-hd"><span class="rea-momp-cancel">取消</span><span class="rea-momp-post">发表</span></div>'
+      +'<div class="rea-momp-bd"></div>'
+      +'<div class="rea-momp-vis"><div class="rea-momp-visrow">'
+      +'<span class="rea-momp-visic"><svg viewBox="0 0 24 24" width="19" height="19" fill="currentColor" aria-hidden="true"><circle cx="12" cy="7.6" r="3.9"/><path d="M3.6 20.4c0-4.3 3.8-7 8.4-7s8.4 2.7 8.4 7z"/></svg></span>'
+      +'<span>谁可以看</span>'
+      +'<span class="rea-momp-chev"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></span>'
+      +'</div><div class="rea-momp-vissub" hidden></div></div>'
+      +'<div class="rea-momp-home"></div>'
+      +'</div></div></div>';
+    return pr.querySelector('.rea-momp');
   }
+  function renderMom(){
+    if(!momPhone)return;
+    var bd=momPhone.querySelector('.rea-momp-bd'),
+        sub=momPhone.querySelector('.rea-momp-vissub');
+    if(!bd)return;
+    var text='',imgs=[],video='',cat='图片',k;
+    if(picked){
+      text=picked.text||'';
+      if(picked.video)video='v';
+      else for(k=0;k<(picked.images||0);k++)imgs.push('');
+      if(!picked.text&&!picked.video&&!(picked.images))cat='文本';
+    }else{
+      text=(descTa&&descTa.value)||'';
+      cat=fqCat||'图片';
+      if(cat==='视频')video=(fqVid&&fqVid.name)||'';
+      else if(fqImgs)for(k=0;k<fqImgs.length;k++)imgs.push(fqImgs[k].url||'');
+    }
+    var h=text?'<div class="rea-momp-text">'+esc(text)+'</div>'
+      :'<div class="rea-momp-text rea-momp-ph">这一刻的想法…</div>';
+    if(video){
+      h+='<div class="rea-momp-video"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5l11 6.5-11 6.5z"/></svg></div>';
+    }else if(cat==='视频'){
+      h+='<div class="rea-momp-vadd" aria-hidden="true"></div>';
+    }else if(cat!=='文本'){
+      h+='<div class="rea-momp-grid">';
+      for(k=0;k<imgs.length;k++)h+='<div class="rea-momp-cell"'
+        +(imgs[k]?' style="background-image:url('+imgs[k]+')"':'')+'></div>';
+      if(imgs.length<9)h+='<div class="rea-momp-cell rea-momp-add" aria-hidden="true"></div>';
+      h+='</div>';
+    }
+    bd.innerHTML=h;
+    if(sub){
+      var line=visSubFn?visSubFn():'';
+      sub.textContent=line||'';
+      sub.hidden=!line;
+    }
+  }
+  function preview(){renderMom()}
   function apply(m){
     picked=m;
     setPrimary(btn,!!m);
@@ -23437,7 +23515,7 @@ function initFq(){
     /* 临时创建的填写区只在「临时创建」这个来源下出现 */
     if(tempBox)tempBox.style.display=m?'none':'';
     showCard(host,m,function(){apply(null)});
-    preview(m);
+    preview();
   }
   btn.addEventListener('click',function(e){e.preventDefault();openPick(function(m){apply(m)},picked?picked.id:null)});
   tempBtn.addEventListener('click',function(e){e.preventDefault();apply(null)});
@@ -23445,54 +23523,10 @@ function initFq(){
      默认来源是临时创建，素材库那枚先按次要按钮画。 */
   setPrimary(btn,false);setPrimary(tempBtn,true);
 
-  /* ---- 所在位置（2026-10-26）：只给发圈 · 新建补这一行，群发两页不碰 ---- */
-  /* 行壳 clone 自「自动发送」那一行：_addtitle1_ 没有必填红星，_addright_ 的列向布局也够用。 */
-  function fqRow(afterText,labelText){
-    var a=findLabel(afterText);if(!a)return null;
-    var g=upClass(a,'_addgroup_');if(!g)return null;
-    var t=findLabel('自动发送');if(!t)return null;
-    var tg=upClass(t,'_addgroup_');if(!tg)return null;
-    var row=tg.cloneNode(true);
-    row.style.cssText='margin-bottom: 10px; align-items: flex-start;';
-    var lb=row.querySelector('[class*="_addtitle1_"]');if(lb)lb.textContent=labelText;
-    var rt=row.querySelector('[class*="_addright_"]');if(!rt)return null;
-    rt.innerHTML='';
-    g.parentNode.insertBefore(row,g.nextSibling);
-    return rt;
-  }
-
-  var locRight=fqRow('任务内容','所在位置'),locInput=null;
-  if(locRight){
-    locInput=document.createElement('input');
-    locInput.type='text';locInput.maxLength=30;
-    locInput.className='ant-input css-vgijab ant-input-outlined rea-wxt-loc';
-    locInput.placeholder='请输入微信地点名称（最多 30 字），不填则不显示位置';
-    locRight.appendChild(locInput);
-    var locHint=document.createElement('p');
-    locHint.className='rea-wxt-hintline';
-    locHint.textContent='按名称在微信「所在位置」里精确匹配；匹配不到就跳过位置，不影响发布。';
-    locRight.appendChild(locHint);
-  }
-  function drawLoc(){
-    var pr=document.querySelector('[class*="preview-module_previewRight"]');
-    if(!pr)return;
-    var old=pr.querySelector('.rea-wxt-pvloc');
-    if(old&&old.parentNode)old.parentNode.removeChild(old);
-    if(!locInput)return;
-    var v=String(locInput.value||'').replace(/^\\s+|\\s+$/g,'');
-    if(!v)return;
-    var d=document.createElement('div');d.className='rea-wxt-pvloc';
-    d.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg><span></span>';
-    d.querySelector('span').textContent=v;
-    var media=pr.querySelector('.rea-wxt-pvmedia');
-    if(media&&media.parentNode===pr)pr.insertBefore(d,media.nextSibling);
-    else pr.appendChild(d);
-  }
-
-  /* 自动发送说明补上位置与可见范围；只换文案，不动开关。 */
+  /* 自动发送说明补上可见范围；只换文案，不动开关。 */
   qa('p').forEach(function(p){
     if(norm(p.textContent)==='销售转发至朋友圈编辑页面后不可手动修改内容，自动完成发布操作'){
-      p.textContent='销售转发至朋友圈编辑页面后不可手动修改内容、所在位置与可见范围，自动完成发布操作';
+      p.textContent='销售转发至朋友圈编辑页面后不可手动修改内容与可见范围，自动完成发布操作';
     }
   });
 
@@ -23546,7 +23580,7 @@ function initFq(){
       var w=grp.querySelector('.ant-radio-wrapper-checked');
       return w?norm(w.textContent):'';
     }
-    var gName=fqGroup('任务名称'),gContent=fqGroup('任务内容'),gLoc=fqGroup('所在位置'),
+    var gName=fqGroup('任务名称'),gContent=fqGroup('任务内容'),
         gExec=fqGroup('执行人员'),gScope=fqGroup('选择可见好友'),
         gAuto=fqGroup('自动发送'),gType=fqGroup('任务类型'),gStart=fqGroup('通知时间'),
         gEnd=fqGroup('截止时间'),gPopup=fqGroup('全局弹窗');
@@ -23642,6 +23676,14 @@ function initFq(){
       if(m==='all')return '全部好友';
       return (m==='exclude'?'不给谁看':'部分可见')+' · '+fqVisNames().length+(fqVisBy()==='tag'?' 个标签':' 人');
     }
+    /* 右栏手机预览里「谁可以看」下面那行小字：全部好友＝不出现（微信公开时没有这一行）。 */
+    visSubFn=function(){
+      var m=fqVisMode();
+      if(m==='all')return '';
+      var names=fqVisNames();
+      return (m==='exclude'?'- 不给看：':(fqVisBy()==='tag'?'- 标签：':'- 好友：'))
+        +(names.length?names.join('、'):'未选择');
+    };
     function fqVisSync(){
       if(!visBox||!visIn)return;
       var m=fqVisMode(),by=fqVisBy(),ci=visIn.querySelector('input');
@@ -23899,30 +23941,9 @@ function initFq(){
       fqCat=e.target.value;
       fqDrawMedia();tempPrev();fqRender();
     });
-    /* 临时创建的右栏预览：文案取描述文本，媒体按分类给缩略格或视频块 */
-    tempPrev=function(){
-      var pr=document.querySelector('[class*="preview-module_previewRight"]');
-      if(!pr)return;
-      var ts=pr.querySelector('.textShow');
-      if(ts)ts.textContent=descTa.value;
-      var old=document.querySelector('.rea-wxt-pvmedia');
-      if(old&&old.parentNode)old.parentNode.removeChild(old);
-      var d=null,k;
-      if(fqCat==='图片'&&fqImgs.length){
-        d=document.createElement('div');d.className='rea-wxt-pvmedia';
-        var g='';
-        for(k=0;k<fqImgs.length;k++)g+='<span class="rea-wxt-pvcell" style="background-image:url('+fqImgs[k].url+');background-size:cover;background-position:center"></span>';
-        d.innerHTML='<div class="rea-wxt-pvgrid">'+g+'</div>';
-      }else if(fqCat==='视频'&&fqVid){
-        d=document.createElement('div');d.className='rea-wxt-pvmedia';
-        d.innerHTML='<div class="rea-wxt-pvvideo">▶<span>'+esc(fqVid.name)+'</span></div>';
-      }
-      if(d)pr.appendChild(d);
-      drawLoc();
-    };
+    /* 临时创建的右栏预览：文案取描述文本，媒体按分类给九宫格或视频块（tempPrev 就是 renderMom） */
     fqDrawMedia();tempPrev();
 
-    fqPut(gLoc,b3,true);
     fqPut(gAuto,b3,true);
 
     var act=document.createElement('div');act.className='rea-qf-act';
@@ -23972,6 +23993,7 @@ function initFq(){
     }
     function fqRender(){
       fqVisSync();
+      renderMom();   /* 可见范围、来源、分类一变，右栏手机预览跟着重画 */
       var content=picked?('素材库 · '+picked.title)
         :('临时创建 · '+fqCat+(fqCat==='文本'&&descTa.value.trim()?' · '+descTa.value.trim().split('\\n')[0].slice(0,10):''));
       var scope=fqVisSummary();
@@ -24027,9 +24049,7 @@ function initFq(){
     document.addEventListener('input',function(){setTimeout(fqRender,0)});
     fqRender();
   }
-
-  if(locInput)locInput.addEventListener('input',drawLoc);
-  drawLoc();
+  renderMom();
 }
 
 /* ---------- 群发好友 · 新建（2026-11-09 重排：四段决策 ＋ 右栏回显） ----------
@@ -25448,7 +25468,7 @@ else if(PAGE==='群发群组 · 新建')initQs();
        群发好友 · 详情      补弹窗——**没有 html**，正文就是快照那一段；脚本给「群发好友数」补好友明细弹窗，
                             行为与样式见 reaQfDetailJs 上方注释
        发圈 · 详情          只读回显——**没有 html**，正文就是快照那一段；脚本在「任务信息」的
-                            「执行人员」行后补「发送范围／任务内容／所在位置／循环方式／自动发送」五行只读值
+                            「执行人员」行后补「发送范围／循环方式／自动发送」三行只读值
        发圈 · 新建          补选材——**没有 html**，正文就是快照那一段；任务内容加「从素材库选择」，
        群发好友 · 新建      弹窗与选材逻辑共用 reaPickJs()／REA_PICK_CSS（还在 reaWxtJs 里接线）；
                             群发好友那页选中素材后收起「内容类型 / 描述文本」（来源互斥）
@@ -27037,7 +27057,7 @@ BT.addEventListener('click',function(e){
      组标题在左（88px）、字段三列在右，标题不额外占高度；标题与分组顺序直接复述
      REA_WXS 的块名与块序，两边共用一个口径。
      · 任务类型六页都不显示：页面与面包屑已经说明这条任务属于哪个模块。
-     · 创建时间、循环方式、所在位置、自动发送、素材分类、发送类型、分配方式、
+     · 创建时间、循环方式、自动发送、素材分类、发送类型、分配方式、
        人均添加量、内容生成策略都只进快照抽屉，详情不重复，所以全部列进 hide。
      · 范围类字段统一成一格「发送范围」——发圈的「谁可以看」、群发好友的
        「群发范围＋标签名称」、群发群组的「群发那些群」都并进来，值统一写
@@ -27049,8 +27069,8 @@ BT.addEventListener('click',function(e){
       state:'live', stateText:'进行中',
       validity:'2026/11/08 09:00~2026/11/13 13:51',
       unit:'people', head:'用户名',
-      /* 首屏 6 项；创建时间、循环方式、所在位置、自动发送只进快照抽屉 */
-      hide:['已发送','任务类型','素材分类','创建时间','循环方式','所在位置','自动发送'],
+      /* 首屏 6 项；创建时间、循环方式、自动发送只进快照抽屉 */
+      hide:['已发送','任务类型','素材分类','创建时间','循环方式','自动发送'],
       order:['任务名称','任务状态','任务有效期','执行人员','发送范围','任务内容'],
       groups:[
         {t:'基础信息',f:['任务状态','任务有效期']},
