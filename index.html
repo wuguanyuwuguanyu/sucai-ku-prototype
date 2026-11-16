@@ -1008,6 +1008,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .cw-purpose .ic.i3{background:#FFF0E2;color:#F2994A}
 .cw-purpose .ic.i4{background:#FFEAF1;color:#F2548A}
 .cw-purpose .ic.i5{background:#E4F7F2;color:#12A16B}
+.cw-purpose .ic.i6{background:#EDEBFF;color:#5B6CFF}
 .cw-purpose label:has(input:checked) .ic{background:linear-gradient(140deg,#1677FE,#7A5BFF);color:#fff;
   box-shadow:0 8px 16px -10px rgba(46,107,255,.8)}
 .cw-purpose .tx{flex:1;min-width:0;font-size:15px;font-weight:500;color:#17263F;line-height:1.3}
@@ -5383,9 +5384,9 @@ var CW_TOPIC='', CW_GEN=false;
 /* 原型仅演示：下列聊天均为虚构样例，不接真实模型。生成依据可在预览展开。 */
 var CW_PURPOSE='follow', CW_NEXT='auto', CW_EXPIRY='', CW_LAST=null, CW_SIG='', CW_EDITMSG=null, CW_SEND_IDS=[];
 var CW_DRAFTS={}, CW_MANUAL={}, CW_LAUNCHING=false;
-var CW_PURPOSES=[['follow','跟进上次聊的事','最新进展（选填）','比如：上次问的尺码已经到店'],['news','分享新品或新消息','想告诉客户的新消息','比如：到了两款轻薄外套，可以拍实物图'],['event','告知活动','活动内容','比如：周末到店可以试穿新款'],['care','售后回访','想了解哪方面的使用情况','比如：外套的尺码和穿着感受'],['manual','自己写内容','','']];
+var CW_PURPOSES=[['follow','跟进上次聊的事','最新进展（选填）','比如：上次问的尺码已经到店'],['news','分享新品或新消息','想告诉客户的新消息','比如：到了两款轻薄外套，可以拍实物图'],['event','告知活动','活动内容','比如：周末到店可以试穿新款'],['care','售后回访','想了解哪方面的使用情况','比如：外套的尺码和穿着感受'],['custom','自定义唤醒主题','这次想聊的主题','比如：问问上次买的围巾穿着怎么样，顺带提一句新到的冬款'],['manual','自己写唤醒话术','','']];
 /* 联系目的行首那枚图标块：色系照工具页的「同色系光晕＋渐变块」，一个目的一个色，认行不认字。 */
-var CW_PURPOSE_IC={follow:['i1','message'],news:['i2','sparkle'],event:['i3','megaphone'],care:['i4','thumbsup'],manual:['i5','edit']};
+var CW_PURPOSE_IC={follow:['i1','message'],news:['i2','sparkle'],event:['i3','megaphone'],care:['i4','thumbsup'],custom:['i6','intent'],manual:['i5','edit']};
 var CW_CONTEXT={
  a1:{quote:'客户：想找轻薄一点、通勤穿的外套。\n我：好的，我帮你留意一下。',topic:'轻薄的通勤外套',match:'外套'},
  a2:{quote:'客户：这件外套有深色的吗？\n我：我查一下颜色。',topic:'深色外套',match:'外套'},
@@ -5714,6 +5715,7 @@ function cwAiText(c,r,draft){
  if(purpose==='follow'){
    line=ctx.topic?'上次聊到'+ctx.topic+'，'+(info?info+'。':'你现在还有这方面的需要吗？'):(info+'。');
  }else if(purpose==='care')line='想了解一下'+info+'，你觉得怎么样？';
+ else if(purpose==='custom')line=info.replace(/^(问问|问一下|想问|了解一下|看看)/,'')+'。';
  else line=(ctx.topic&&ctx.match&&info.indexOf(ctx.match)>=0?'上次你提到'+ctx.topic+'，':'')+info+'。';
  if(purpose==='event'&&expiry)line+='活动截至'+expiry.replace('T',' ')+'。';
  if(next==='reply')end='方便说说你现在的想法吗？';
@@ -5724,6 +5726,8 @@ function cwAiText(c,r,draft){
  else if(/拍|图|照片/.test(info))end='要不要我发张图给你看看？';
  else if(!/[？?]$/.test(line))end='你想了解一下吗？';
  if(end&&/[？?]$/.test(line))line=line.replace(/你现在还有这方面的需要吗？|你觉得怎么样？$/,'');
+ /* 自定义主题：题目就是员工写的那句，自动补的通用问句会跟它撞车，默认不补。 */
+ if(purpose==='custom'&&next==='auto')end='';
  if(purpose==='follow'&&!info&&c.i==='a6'&&next==='auto'){line='之前收到的外套穿着还合适吗？';end=''}
  var msg=line+end;
  if(r%2)msg=msg.replace('上次你提到','之前你说到').replace('要不要我发张图给你看看？','需要我发张图吗？');
@@ -5834,7 +5838,7 @@ function cwEditAi(id){CW_EDITMSG={kind:'ai',id:id,t:'text',value:CW_AI[id]||'',o
 REND['cw-editor']=function(){
  var e=CW_EDITMSG;if(!e)return;
  $('cwEditorBack').innerHTML=I('back',24,2);
- $('cwEditorTitle').textContent=e.kind==='ai'?cwCust(e.id).n+' · 消息':(e.index<0?'添加内容':'编辑内容');
+ $('cwEditorTitle').textContent=e.kind==='ai'?cwCust(e.id).n+' · 消息':(e.index<0?'添加话术':'编辑话术');
  var h='<div class="cw-pcard">';
  if(e.kind==='fixed')h+='<div class="cw-type" role="group" aria-label="内容类型">'+['text','image','video'].map(function(t){return '<button type="button" class="'+(e.t===t?'on':'')+'" onclick="cwEditorType(\''+t+'\')">'+cwTypeN(t)+'</button>'}).join('')+'</div>';
  h+='<label class="cw-field" for="cwEditValue">'+(e.t==='text'?'消息内容':'附件')+'</label>';
@@ -12148,6 +12152,8 @@ document.addEventListener('scroll',function(e){
 setTimeout(sbScan,120);
 
 <\/script>
+
+
 </body>
 </html>
 </script>
@@ -21916,16 +21922,16 @@ function taskScope(rs,metric,range){
 
   /* 「发圈 · 详情」的覆盖脚本（2026-11-10）：创建页重排后，把详情页缺的配置补成只读行。
      快照的「任务信息」原先只有任务名称、大类、状态、有效期、素材分类、执行人员、已发送、素材；
-     脚本在「执行人员」后补四行——发送范围（2026-11-16 由「谁可以看」改名并登记进统一骨架；
+     脚本在「执行人员」后补三行——发送范围（2026-11-16 由「谁可以看」改名并登记进统一骨架；
      值按「规则 · 明细」两段写，一级可见性和二级标签／朋友之间用「 · 」隔开，名称最多列前 5 个）、
-     所在位置、循环方式、自动发送。
+     循环方式、自动发送。
      全局弹窗不回显。
      任务内容那一行由 reaWxDetailContentJs 统一补：点「查看」抬弹窗，
-     弹窗里就是这条朋友圈最终发出去的样子：昵称、正文或文章卡、所在位置，照朋友圈的排版。
+     弹窗里就是这条朋友圈最终发出去的样子：昵称、正文或文章卡，照朋友圈的排版。
      正文仍是快照，脚本只插 <p><span>标签：</span><span>值</span></p>，不抄整页；
      按「执行人员：」定位，不认行序——重抓快照后行序变了也不会插错。
      值按快照那条演示任务的口径写（发送范围：部分可见、标签重点客户与高意向／
-     文章「撒打算」／上海静安嘉里中心／单次任务／自动发送开启），
+     文章「撒打算」／单次任务／自动发送开启），
      拿到真实任务数据后换成读字段。
      页签「员工完成情况 / 任务意向动态」只留前者：「任务意向动态」那枚页签连同它的表一起摘掉，
      按页签文字定位（页签名与 tab id 都是快照生成物，不写死）。 */
@@ -21945,7 +21951,7 @@ if(tab){
 }
 var BODY=document.querySelector('[class*="_task_information_body_"]');
 if(!BODY)return;
-if(BODY.querySelector('[data-rea-fq-loc]'))return;
+if(BODY.querySelector('[data-rea-fq-scope]'))return;
 var ps=BODY.querySelectorAll('p'),i,anchor=null;
 for(i=0;i<ps.length;i++){
   var t=(ps[i].textContent||'').replace(/\s+/g,'');
@@ -21960,7 +21966,6 @@ function row(label,value,attr){
 }
 var rows=[
   row('发送范围：','部分可见 · 重点客户、高意向','data-rea-fq-scope'),
-  row('所在位置：','上海静安嘉里中心','data-rea-fq-loc'),
   row('循环方式：','单次任务','data-rea-fq-cycle'),
   row('自动发送：','开启','data-rea-fq-auto')
 ];
@@ -21974,7 +21979,7 @@ for(i=0;i<rows.length;i++){
 
   /* 「发圈 · 详情」补的只读行与内容弹窗样式。前缀用 rea-fqc-（content），
      避开新建页那组 rea-fq-*（四段结构、下拉、时间控件），两页的样式互不相干。
-     弹窗按朋友圈的排版画单条动态：头像＋昵称、正文或文章卡、所在位置、时间与赞／评论。 */
+     弹窗按朋友圈的排版画单条动态：头像＋昵称、正文或文章卡、时间与赞／评论。 */
   var REA_FQ_DETAIL_CSS=[
     '.rea-fqc-modal .ant-modal-body{padding-top:4px}',
     '.rea-fqc-moments{border-top:1px solid #ededed;border-bottom:1px solid #ededed;background:#fff}',
@@ -21987,7 +21992,6 @@ for(i=0;i<rows.length;i++){
     '.rea-fqc-mmeta{display:flex;flex-direction:column;justify-content:space-between;min-width:0;padding:2px 0}',
     '.rea-fqc-mtitle{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px;line-height:20px;color:#181818}',
     '.rea-fqc-msrc{font-size:12px;line-height:16px;color:#999}',
-    '.rea-fqc-mloc{display:flex;align-items:center;gap:3px;margin-top:8px;font-size:13px;line-height:18px;color:#576b95}',
     '.rea-fqc-mfoot{display:flex;align-items:center;justify-content:space-between;margin-top:10px;font-size:13px;line-height:20px;color:#b2b2b2}',
     '.rea-fqc-mact{padding:2px 10px;border-radius:4px;background:#f7f7f7;font-size:13px;line-height:20px;color:#576b95}'
   ].join('\n');
@@ -22491,8 +22495,6 @@ tb.addEventListener("click",function(e){
     + '.rea-wxt-pkx{border:0;background:transparent;color:#999999;font-size:18px;line-height:18px;cursor:pointer;padding:0 2px}'
     + '.rea-wxt-pkx:hover{color:#ff4d4f}'
     + '.rea-wxt-host:empty{display:none}'
-    /* 发圈右栏预览里补的媒体区（挂在 previewRight 下，不塞进 max-height:100px 的 textCon） */
-    + '.rea-wxt-pvmedia{margin-top:8px}'
     /* ---- 群发群组 · 新建：另造的表单 ---- */
     /* 栏宽照发圈/群发好友那两张现网表单的横向节奏：标签列右对齐到 ~654px，控件从 ~670px 起 */
     + '.rea-wxt-form{max-width:1240px;background:#fff;border-radius:6px;padding:8px 24px 20px}'
@@ -22515,14 +22517,44 @@ tb.addEventListener("click",function(e){
     + '.rea-wxt-temp{margin-top:12px}'
     + '.rea-wxt-foot{display:flex;justify-content:flex-end;gap:8px;padding:20px 0 0;border-top:1px solid #f0f0f0;margin-top:8px}'
     + '.rea-wxt-groupscope{max-width:560px;margin-top:8px}'
-    /* ---- 发圈 · 新建：所在位置（2026-10-26） ---- */
-    /* 行插在现网表单里，行壳 clone 自「自动发送」那一行（_addtitle1_ 没有必填红星）；
-       这里只补控件与提示，不改整页版式。色值仍取快照已有的色。 */
-    + '.rea-wxt-loc{max-width:560px}'
+    /* ---- 发圈 · 新建：右栏手机预览（2026-11-16） ----
+       右栏不再是快照那条「头像＋昵称＋一段正文」的窄列，改成手机微信「发朋友圈」页：
+       取消／发表、想法正文、九宫格（含 + 格）、谁可以看。AI帮写／提醒谁看／所在位置不画。
+       微信场景刻意仿真微信，M3 与瑞士极简两份规范都不管它（AGENTS.md）；
+       手机壳的画法与「批量加好友 · 新建」的右栏预览同一套（深色边框＋状态栏）。 */
     + '.rea-wxt-hintline{margin:6px 0 0;max-width:560px;font-size:12px;line-height:20px;color:#999999}'
-    /* 右栏效果预览里的地点行：位置不属于正文，挂在媒体区之后 */
-    + '.rea-wxt-pvloc{display:flex;align-items:center;gap:4px;margin-top:8px;font-size:12px;line-height:18px;color:#2e448f}'
-    + '.rea-wxt-pvloc svg{flex:none;width:12px;height:12px}'
+    + '.rea-momp{display:flex;flex-direction:column;justify-content:center;height:100%;box-sizing:border-box}'
+    + '.rea-momp-phone{box-sizing:border-box;flex:0 1 auto;width:100%;max-width:360px;aspect-ratio:29/60;max-height:100%;margin:auto 0;padding:9px;border-radius:40px;background:#16171C;box-shadow:0 18px 40px rgba(22,23,28,.16)}'
+    + '.rea-momp-screen{display:flex;flex-direction:column;height:100%;min-height:0;border-radius:31px;overflow:hidden;background:#fff;color:#111}'
+    + '.rea-momp-status{display:flex;flex:none;align-items:center;justify-content:space-between;height:26px;padding:0 16px;font-size:10px;font-weight:600;line-height:1;color:#111}'
+    + '.rea-momp-sicons{display:flex;align-items:center;gap:5px}'
+    + '.rea-momp-sicons svg{display:block;height:9px;width:auto}'
+    + '.rea-momp-hd{display:flex;flex:none;align-items:center;justify-content:space-between;padding:6px 14px 10px}'
+    + '.rea-momp-cancel{font-size:15px;line-height:24px;color:#191919}'
+    + '.rea-momp-post{display:inline-flex;align-items:center;height:28px;padding:0 13px;border-radius:5px;background:#07C160;color:#fff;font-size:13px;font-weight:500}'
+    + '.rea-momp-bd{flex:1;min-height:0;overflow-y:auto;padding:0 14px 14px;scrollbar-width:none}'
+    + '.rea-momp-bd::-webkit-scrollbar{width:0;height:0}'
+    + '.rea-momp-text{font-size:15px;line-height:24px;color:#191919;white-space:pre-wrap;word-break:break-word}'
+    + '.rea-momp-ph{color:#B2B2B2}'
+    + '.rea-momp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:10px}'
+    + '.rea-momp-cell{position:relative;padding-top:100%;border-radius:3px;background:#F2F2F2 center/cover no-repeat}'
+    + '.rea-momp-add{background:#F7F7F7;border:1px solid #EDEDED;box-sizing:border-box}'
+    + '.rea-momp-add:before,.rea-momp-add:after{content:"";position:absolute;left:50%;top:50%;background:#C8C9CC}'
+    + '.rea-momp-add:before{width:24px;height:1px;margin:-1px 0 0 -12px}'
+    + '.rea-momp-add:after{width:1px;height:24px;margin:-12px 0 0 -1px}'
+    + '.rea-momp-video{display:flex;align-items:center;justify-content:center;width:64%;aspect-ratio:4/3;margin-top:10px;border-radius:3px;background:#D8D8D8;color:#fff}'
+    + '.rea-momp-video svg{width:30px;height:30px}'
+    + '.rea-momp-vadd{position:relative;width:64%;aspect-ratio:4/3;margin-top:10px;border-radius:3px;background:#F7F7F7;border:1px solid #EDEDED;box-sizing:border-box}'
+    + '.rea-momp-vadd:before,.rea-momp-vadd:after{content:"";position:absolute;left:50%;top:50%;background:#C8C9CC}'
+    + '.rea-momp-vadd:before{width:24px;height:1px;margin:-1px 0 0 -12px}'
+    + '.rea-momp-vadd:after{width:1px;height:24px;margin:-12px 0 0 -1px}'
+    + '.rea-momp-vis{flex:none;padding:0 14px 16px;border-top:1px solid #EDEDED}'
+    + '.rea-momp-visrow{display:flex;align-items:center;gap:7px;padding-top:13px;font-size:14px;line-height:22px;color:#07C160}'
+    + '.rea-momp-visic{display:flex;flex:none}'
+    + '.rea-momp-chev{display:flex;flex:none;margin-left:auto;color:#C8C9CC}'
+    + '.rea-momp-vissub{padding-top:3px;font-size:12px;line-height:19px;color:#8C8C8C;word-break:break-word}'
+    + '.rea-momp-vissub[hidden]{display:none}'
+    + '.rea-momp-home{flex:none;width:104px;height:5px;margin:0 auto 8px;border-radius:3px;background:#111}'
     /* 发圈 · 新建：可见范围。两层——一级「谁可以看」定范围，二级「不给谁看」在这个范围里
        再排除一批人；二级用左侧竖线加灰标签缩进，读得出从属关系。两级各带一枚单行输入。 */
     + '.rea-fq-vis{display:flex;flex-direction:column;gap:10px;flex:1 1 auto;min-width:0;max-width:560px}'
@@ -22545,7 +22577,9 @@ tb.addEventListener("click",function(e){
     + '.rea-qf-sec:last-of-type{border-bottom:1px solid #F0F0F0}'
     + '.rea-qf-sechd{display:block;padding:14px 20px 12px;margin:0;border-bottom:1px solid #F0F0F0}'
     + '.rea-qf-no{display:none}'
-    + '.rea-qf-sechd h3{margin:0;font-size:16px;line-height:26px;font-weight:500;color:#333333}'
+    + '.rea-qf-sechd h3{display:flex;align-items:center;gap:8px;margin:0;font-size:16px;line-height:26px;font-weight:500;color:#333333}'
+    + '.rea-qf-secicon{display:flex;flex:none;color:#1677FF}'
+    + '.rea-qf-secicon svg{display:block;width:18px;height:18px}'
     + '.rea-qf-secsub{display:block;margin-top:2px;font-size:13px;line-height:20px;color:#8C8C8C}'
     + '.rea-qf-secbd{padding:2px 20px 4px}'
     + '.rea-qf-secbd>.rea-qf-row:first-child{padding-top:14px!important}'
@@ -22786,7 +22820,9 @@ tb.addEventListener("click",function(e){
     + '.rea-baf-sec{max-width:none;margin:0 0 16px;padding:0;border:1px solid #F0F0F0;border-radius:8px;background:#fff}'
     + '.rea-baf-sechd{display:block;padding:14px 20px 12px;margin:0;border-bottom:1px solid #F0F0F0}'
     + '.rea-baf-no{display:none}'
-    + '.rea-baf-sechd h3{margin:0;font-size:16px;line-height:26px;font-weight:500;color:#333333}'
+    + '.rea-baf-sechd h3{display:flex;align-items:center;gap:8px;margin:0;font-size:16px;line-height:26px;font-weight:500;color:#333333}'
+    + '.rea-baf-secicon{display:flex;flex:none;color:#1677FF}'
+    + '.rea-baf-secicon svg{display:block;width:18px;height:18px}'
     + '.rea-baf-secsub{display:block;margin-top:2px;font-size:13px;line-height:20px;color:#8C8C8C}'
     + '.rea-baf-secbd{display:block;padding:14px 20px 18px}'
     + '.rea-baf-row{display:flex;align-items:flex-start;margin:0 0 18px}'
@@ -23120,6 +23156,7 @@ function wxChat(o){
       : '先选部门工作域，再选分组。只列出能作为群发内容的素材，个人素材不在可选范围内。';
     return `(function(){
 var PAGE=${reaJson(page)};
+var SEC_ICON=${reaJson(REA_WX_SEC_ICON)};
 /* 文件传输助手转发不可选时的原因（两页共用，挂在选项后的感叹号上） */
 var FILE_WHY='内容只有文字时不能用文件传输助手转发（微信不支持这种发送方式）；加入图片、视频或文件后可选。';
 function norm(s){return String(s==null?'':s).replace(/\\s+/g,'')}
@@ -23386,7 +23423,8 @@ function reaTagPicker(o){
 
 /* ---------- 发圈 · 新建 ---------- */
 function initFq(){
-  if(document.querySelector('.rea-wxt-loc'))return;
+  if(document.querySelector('.rea-momp'))return;
+  var visSubFn=null;   /* 右栏「谁可以看」那行小字；可见范围那段接上（定义在四段重排里） */
   var lab=findLabel('任务内容');if(!lab)return;
   /* 发圈页的「任务内容」标题与右栏是同级的两个 div（_addgroup_ 下 _addtitle_ ＋ _addright_），
      标题不在 _addright_ 里面——先找同级右栏，再退回祖先链兜底。 */
@@ -23405,26 +23443,73 @@ function initFq(){
   if(srcItem&&srcItem.parentNode===space)space.appendChild(srcItem);
   var host=document.createElement('div');host.className='rea-wxt-host';
   box.appendChild(host);
-  var picked=null,tempPrev=null;
-  function preview(m){
-    /* 临时创建也有内容（描述文本、图片、视频），没有素材时交给本页自己画预览 */
-    if(!m&&tempPrev){tempPrev();return}
-    var pr=document.querySelector('[class*="preview-module_previewRight"]')||document;
-    var ts=pr.querySelector?pr.querySelector('.textShow'):null;
-    if(ts)ts.textContent=m?m.text:'';
-    var old=document.querySelector('.rea-wxt-pvmedia');
-    if(old&&old.parentNode)old.parentNode.removeChild(old);
-    if(!m||!(m.images||m.video)){drawLoc();return}
-    var d=document.createElement('div');d.className='rea-wxt-pvmedia';
-    if(m.video)d.innerHTML='<div class="rea-wxt-pvvideo">▶<span>'+esc(shape(m))+'</span></div>';
-    else{
-      var g='',k;for(k=0;k<m.images;k++)g+='<span class="rea-wxt-pvcell"></span>';
-      d.innerHTML='<div class="rea-wxt-pvgrid">'+g+'</div>';
-    }
-    var right=document.querySelector('[class*="preview-module_previewRight"]');
-    if(right)right.appendChild(d);
-    drawLoc();
+  var picked=null;
+  /* 右栏「效果预览」＝手机微信「发朋友圈」页（2026-11-16）。
+     内容跟着来源走：素材库选中的素材给文案与媒体，临时创建给描述文本、图片与视频；
+     「谁可以看」那行小字跟着可见范围走（全部好友时不出现，与微信一致）。
+     手机只是示意，不接点击，也不参与保存校验。 */
+  var momPhone=momBuild();
+  var tempPrev=renderMom;
+  function momBuild(){
+    var pr=document.querySelector('[class*="preview-module_previewPhone"]');
+    if(!pr)return null;
+    var ct=new Date();
+    pr.innerHTML='<div class="rea-momp">'
+      +'<div class="rea-momp-phone"><div class="rea-momp-screen">'
+      +'<div class="rea-momp-status"><span>'+(ct.getHours()<10?'0':'')+ct.getHours()+':'+(ct.getMinutes()<10?'0':'')+ct.getMinutes()+'</span><span class="rea-momp-sicons">'
+      +'<svg viewBox="0 0 18 12" aria-hidden="true"><rect x="0" y="8" width="3" height="4" rx="1" fill="currentColor"/><rect x="5" y="6" width="3" height="6" rx="1" fill="currentColor"/><rect x="10" y="3" width="3" height="9" rx="1" fill="currentColor"/><rect x="15" y="0" width="3" height="12" rx="1" fill="currentColor"/></svg>'
+      +'<svg viewBox="0 0 16 12" aria-hidden="true"><path d="M8 11.3l2.5-3a4 4 0 0 0-5 0z" fill="currentColor"/><path d="M3 5.8a7.5 7.5 0 0 1 10 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M.8 3a10.8 10.8 0 0 1 14.4 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>'
+      +'<svg viewBox="0 0 26 12" aria-hidden="true"><rect x=".5" y=".5" width="22" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity=".4"/><rect x="2" y="2" width="17" height="8" rx="1.6" fill="currentColor"/><path d="M24 4v4a2 2 0 0 0 0-4z" fill="currentColor" fill-opacity=".45"/></svg>'
+      +'</span></div>'
+      +'<div class="rea-momp-hd"><span class="rea-momp-cancel">取消</span><span class="rea-momp-post">发表</span></div>'
+      +'<div class="rea-momp-bd"></div>'
+      +'<div class="rea-momp-vis"><div class="rea-momp-visrow">'
+      +'<span class="rea-momp-visic"><svg viewBox="0 0 24 24" width="19" height="19" fill="currentColor" aria-hidden="true"><circle cx="12" cy="7.6" r="3.9"/><path d="M3.6 20.4c0-4.3 3.8-7 8.4-7s8.4 2.7 8.4 7z"/></svg></span>'
+      +'<span>谁可以看</span>'
+      +'<span class="rea-momp-chev"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></span>'
+      +'</div><div class="rea-momp-vissub" hidden></div></div>'
+      +'<div class="rea-momp-home"></div>'
+      +'</div></div></div>';
+    return pr.querySelector('.rea-momp');
   }
+  function renderMom(){
+    if(!momPhone)return;
+    var bd=momPhone.querySelector('.rea-momp-bd'),
+        sub=momPhone.querySelector('.rea-momp-vissub');
+    if(!bd)return;
+    var text='',imgs=[],video='',cat='图片',k;
+    if(picked){
+      text=picked.text||'';
+      if(picked.video)video='v';
+      else for(k=0;k<(picked.images||0);k++)imgs.push('');
+      if(!picked.text&&!picked.video&&!(picked.images))cat='文本';
+    }else{
+      text=(descTa&&descTa.value)||'';
+      cat=fqCat||'图片';
+      if(cat==='视频')video=(fqVid&&fqVid.name)||'';
+      else if(fqImgs)for(k=0;k<fqImgs.length;k++)imgs.push(fqImgs[k].url||'');
+    }
+    var h=text?'<div class="rea-momp-text">'+esc(text)+'</div>'
+      :'<div class="rea-momp-text rea-momp-ph">这一刻的想法…</div>';
+    if(video){
+      h+='<div class="rea-momp-video"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5l11 6.5-11 6.5z"/></svg></div>';
+    }else if(cat==='视频'){
+      h+='<div class="rea-momp-vadd" aria-hidden="true"></div>';
+    }else if(cat!=='文本'){
+      h+='<div class="rea-momp-grid">';
+      for(k=0;k<imgs.length;k++)h+='<div class="rea-momp-cell"'
+        +(imgs[k]?' style="background-image:url('+imgs[k]+')"':'')+'></div>';
+      if(imgs.length<9)h+='<div class="rea-momp-cell rea-momp-add" aria-hidden="true"></div>';
+      h+='</div>';
+    }
+    bd.innerHTML=h;
+    if(sub){
+      var line=visSubFn?visSubFn():'';
+      sub.textContent=line||'';
+      sub.hidden=!line;
+    }
+  }
+  function preview(){renderMom()}
   function apply(m){
     picked=m;
     setPrimary(btn,!!m);
@@ -23432,7 +23517,7 @@ function initFq(){
     /* 临时创建的填写区只在「临时创建」这个来源下出现 */
     if(tempBox)tempBox.style.display=m?'none':'';
     showCard(host,m,function(){apply(null)});
-    preview(m);
+    preview();
   }
   btn.addEventListener('click',function(e){e.preventDefault();openPick(function(m){apply(m)},picked?picked.id:null)});
   tempBtn.addEventListener('click',function(e){e.preventDefault();apply(null)});
@@ -23440,54 +23525,10 @@ function initFq(){
      默认来源是临时创建，素材库那枚先按次要按钮画。 */
   setPrimary(btn,false);setPrimary(tempBtn,true);
 
-  /* ---- 所在位置（2026-10-26）：只给发圈 · 新建补这一行，群发两页不碰 ---- */
-  /* 行壳 clone 自「自动发送」那一行：_addtitle1_ 没有必填红星，_addright_ 的列向布局也够用。 */
-  function fqRow(afterText,labelText){
-    var a=findLabel(afterText);if(!a)return null;
-    var g=upClass(a,'_addgroup_');if(!g)return null;
-    var t=findLabel('自动发送');if(!t)return null;
-    var tg=upClass(t,'_addgroup_');if(!tg)return null;
-    var row=tg.cloneNode(true);
-    row.style.cssText='margin-bottom: 10px; align-items: flex-start;';
-    var lb=row.querySelector('[class*="_addtitle1_"]');if(lb)lb.textContent=labelText;
-    var rt=row.querySelector('[class*="_addright_"]');if(!rt)return null;
-    rt.innerHTML='';
-    g.parentNode.insertBefore(row,g.nextSibling);
-    return rt;
-  }
-
-  var locRight=fqRow('任务内容','所在位置'),locInput=null;
-  if(locRight){
-    locInput=document.createElement('input');
-    locInput.type='text';locInput.maxLength=30;
-    locInput.className='ant-input css-vgijab ant-input-outlined rea-wxt-loc';
-    locInput.placeholder='请输入微信地点名称（最多 30 字），不填则不显示位置';
-    locRight.appendChild(locInput);
-    var locHint=document.createElement('p');
-    locHint.className='rea-wxt-hintline';
-    locHint.textContent='按名称在微信「所在位置」里精确匹配；匹配不到就跳过位置，不影响发布。';
-    locRight.appendChild(locHint);
-  }
-  function drawLoc(){
-    var pr=document.querySelector('[class*="preview-module_previewRight"]');
-    if(!pr)return;
-    var old=pr.querySelector('.rea-wxt-pvloc');
-    if(old&&old.parentNode)old.parentNode.removeChild(old);
-    if(!locInput)return;
-    var v=String(locInput.value||'').replace(/^\\s+|\\s+$/g,'');
-    if(!v)return;
-    var d=document.createElement('div');d.className='rea-wxt-pvloc';
-    d.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg><span></span>';
-    d.querySelector('span').textContent=v;
-    var media=pr.querySelector('.rea-wxt-pvmedia');
-    if(media&&media.parentNode===pr)pr.insertBefore(d,media.nextSibling);
-    else pr.appendChild(d);
-  }
-
-  /* 自动发送说明补上位置与可见范围；只换文案，不动开关。 */
+  /* 自动发送说明补上可见范围；只换文案，不动开关。 */
   qa('p').forEach(function(p){
     if(norm(p.textContent)==='销售转发至朋友圈编辑页面后不可手动修改内容，自动完成发布操作'){
-      p.textContent='销售转发至朋友圈编辑页面后不可手动修改内容、所在位置与可见范围，自动完成发布操作';
+      p.textContent='销售转发至朋友圈编辑页面后不可手动修改内容与可见范围，自动完成发布操作';
     }
   });
 
@@ -23506,9 +23547,10 @@ function initFq(){
     }
     function fqSec(no,t,sub){
       var s=document.createElement('section');s.className='rea-qf-sec';
-      s.innerHTML='<div class="rea-qf-sechd"><span class="rea-qf-no">'+no+'</span><h3></h3>'
+      s.innerHTML='<div class="rea-qf-sechd"><span class="rea-qf-no">'+no+'</span>'
+        +'<h3><span class="rea-qf-secicon">'+(SEC_ICON[t]||'')+'</span><span></span></h3>'
         +(sub?'<span class="rea-qf-secsub"></span>':'')+'</div>';
-      s.querySelector('h3').textContent=t;
+      s.querySelector('h3 span:last-child').textContent=t;
       if(sub)s.querySelector('.rea-qf-secsub').textContent=sub;
       var bd=document.createElement('div');bd.className='rea-qf-secbd';
       s.appendChild(bd);wrap.appendChild(s);return bd;
@@ -23540,7 +23582,7 @@ function initFq(){
       var w=grp.querySelector('.ant-radio-wrapper-checked');
       return w?norm(w.textContent):'';
     }
-    var gName=fqGroup('任务名称'),gContent=fqGroup('任务内容'),gLoc=fqGroup('所在位置'),
+    var gName=fqGroup('任务名称'),gContent=fqGroup('任务内容'),
         gExec=fqGroup('执行人员'),gScope=fqGroup('选择可见好友'),
         gAuto=fqGroup('自动发送'),gType=fqGroup('任务类型'),gStart=fqGroup('通知时间'),
         gEnd=fqGroup('截止时间'),gPopup=fqGroup('全局弹窗');
@@ -23636,6 +23678,14 @@ function initFq(){
       if(m==='all')return '全部好友';
       return (m==='exclude'?'不给谁看':'部分可见')+' · '+fqVisNames().length+(fqVisBy()==='tag'?' 个标签':' 人');
     }
+    /* 右栏手机预览里「谁可以看」下面那行小字：全部好友＝不出现（微信公开时没有这一行）。 */
+    visSubFn=function(){
+      var m=fqVisMode();
+      if(m==='all')return '';
+      var names=fqVisNames();
+      return (m==='exclude'?'- 不给看：':(fqVisBy()==='tag'?'- 标签：':'- 好友：'))
+        +(names.length?names.join('、'):'未选择');
+    };
     function fqVisSync(){
       if(!visBox||!visIn)return;
       var m=fqVisMode(),by=fqVisBy(),ci=visIn.querySelector('input');
@@ -23893,30 +23943,9 @@ function initFq(){
       fqCat=e.target.value;
       fqDrawMedia();tempPrev();fqRender();
     });
-    /* 临时创建的右栏预览：文案取描述文本，媒体按分类给缩略格或视频块 */
-    tempPrev=function(){
-      var pr=document.querySelector('[class*="preview-module_previewRight"]');
-      if(!pr)return;
-      var ts=pr.querySelector('.textShow');
-      if(ts)ts.textContent=descTa.value;
-      var old=document.querySelector('.rea-wxt-pvmedia');
-      if(old&&old.parentNode)old.parentNode.removeChild(old);
-      var d=null,k;
-      if(fqCat==='图片'&&fqImgs.length){
-        d=document.createElement('div');d.className='rea-wxt-pvmedia';
-        var g='';
-        for(k=0;k<fqImgs.length;k++)g+='<span class="rea-wxt-pvcell" style="background-image:url('+fqImgs[k].url+');background-size:cover;background-position:center"></span>';
-        d.innerHTML='<div class="rea-wxt-pvgrid">'+g+'</div>';
-      }else if(fqCat==='视频'&&fqVid){
-        d=document.createElement('div');d.className='rea-wxt-pvmedia';
-        d.innerHTML='<div class="rea-wxt-pvvideo">▶<span>'+esc(fqVid.name)+'</span></div>';
-      }
-      if(d)pr.appendChild(d);
-      drawLoc();
-    };
+    /* 临时创建的右栏预览：文案取描述文本，媒体按分类给九宫格或视频块（tempPrev 就是 renderMom） */
     fqDrawMedia();tempPrev();
 
-    fqPut(gLoc,b3,true);
     fqPut(gAuto,b3,true);
 
     var act=document.createElement('div');act.className='rea-qf-act';
@@ -23966,6 +23995,7 @@ function initFq(){
     }
     function fqRender(){
       fqVisSync();
+      renderMom();   /* 可见范围、来源、分类一变，右栏手机预览跟着重画 */
       var content=picked?('素材库 · '+picked.title)
         :('临时创建 · '+fqCat+(fqCat==='文本'&&descTa.value.trim()?' · '+descTa.value.trim().split('\\n')[0].slice(0,10):''));
       var scope=fqVisSummary();
@@ -24021,9 +24051,7 @@ function initFq(){
     document.addEventListener('input',function(){setTimeout(fqRender,0)});
     fqRender();
   }
-
-  if(locInput)locInput.addEventListener('input',drawLoc);
-  drawLoc();
+  renderMom();
 }
 
 /* ---------- 群发好友 · 新建（2026-11-09 重排：四段决策 ＋ 右栏回显） ----------
@@ -24080,7 +24108,9 @@ function initQf(){
   function sec(no,txt,sub){
     var s=document.createElement('section');s.className='rea-qf-sec';
     s.innerHTML='<div class="rea-qf-sechd"><span class="rea-qf-no">'+no+'</span>'
-      +'<h3>'+txt+'</h3>'+(sub?'<span class="rea-qf-secsub">'+sub+'</span>':'')+'</div>';
+      +'<h3><span class="rea-qf-secicon">'+(SEC_ICON[txt]||'')+'</span><span></span></h3>'
+      +(sub?'<span class="rea-qf-secsub">'+sub+'</span>':'')+'</div>';
+    s.querySelector('h3 span:last-child').textContent=txt;
     var bd=document.createElement('div');bd.className='rea-qf-secbd';
     s.appendChild(bd);main.appendChild(s);return bd;
   }
@@ -24606,8 +24636,10 @@ function initQs(){
 
   function sec(no,t,sub){
     var secEl=document.createElement('section');secEl.className='rea-qf-sec';
-    secEl.innerHTML='<div class="rea-qf-sechd"><span class="rea-qf-no">'+no+'</span><h3>'+t+'</h3>'
+    secEl.innerHTML='<div class="rea-qf-sechd"><span class="rea-qf-no">'+no+'</span>'
+      +'<h3><span class="rea-qf-secicon">'+(SEC_ICON[t]||'')+'</span><span></span></h3>'
       +(sub?'<span class="rea-qf-secsub">'+sub+'</span>':'')+'</div>';
+    secEl.querySelector('h3 span:last-child').textContent=t;
     var bd=document.createElement('div');bd.className='rea-qf-secbd';
     secEl.appendChild(bd);main.appendChild(secEl);return bd;
   }
@@ -25077,14 +25109,17 @@ else if(PAGE==='群发群组 · 新建')initQs();
     '  MW.appendChild(d);setTimeout(function(){if(d.parentNode)d.parentNode.removeChild(d)},2400);',
     '}',
     '',
-    'var ST={name:"",msgs:[],verify:"被动验证（客户主动添加我）",tag:"",note:"备注后缀",noteText:""};',
+    'var ST={name:"",msgs:[],verify:"被动验证（客户主动添加我）",tag:"",note:"日期前缀",noteText:""};',
     'if(NAME){NAME.value=ST.name;NAME.addEventListener("input",function(){ST.name=NAME.value})}',
     '',
     '/* ---- 「好友设置」一组（2026-11-10 照 App 的「自动打招呼 · 设置」补齐，同日重排） ----',
     '   快照那张模版弹窗只留了模版名称、回复内容与一枚名片开关；好友验证方式、设置标签、',
     '   选择备注原本只在 App 侧的员工设置页里。这一组排在回复内容之后、和名片开关连成一块：',
     '   上面是「这个模版说什么」，下面是「加好友时顺手做什么」，两件事分开读。',
-    '   好友验证方式／备注都是单选，默认值与 App 侧一致（被动验证、备注后缀），标签与备注内容可空。 */',
+    '   好友验证方式／备注都是单选：验证方式默认与 App 侧一致（被动验证）。备注默认「日期前缀」',
+    '   ——2026-11-16 加的一档（App 侧仍是备注后缀）：欢迎语模版最常见的用法就是拿加好友日期打头，',
+    '   把它做成默认项，用户不必再知道「留空＝用日期」。选中它时不需要再填备注文字，输入框不出现；',
+    '   「备注前缀／备注后缀」两档才出输入框（留空同样用日期）。标签与备注内容可空。 */',
     'function cfgRadioHtml(key,opts,cur){',
     '  var h=\'<div class="ant-radio-group ant-radio-group-outline css-vgijab" data-zd-rg="\'+key+\'">\',i,on;',
     '  for(i=0;i<opts.length;i++){on=opts[i]===cur;',
@@ -25105,9 +25140,10 @@ else if(PAGE==='群发群组 · 新建')initQs();
     '    +\'<input id="rea-zd-tag" class="ant-input css-vgijab ant-input-outlined rea-zd-cinp"\'',
     '    +\' placeholder="请输入标签，可留空" value="\'+esc(ST.tag)+\'"></div>\'',
     '    +\'<div class="rea-zd-frow"><span class="rea-zd-cflab">选择备注：</span>\'',
-    '    +cfgRadioHtml("note",["备注前缀","备注后缀"],ST.note)',
-    '    +\'<input id="rea-zd-notetext" class="ant-input css-vgijab ant-input-outlined rea-zd-cinp rea-zd-cinp-note"\'',
-    '    +\' placeholder="留空则用加好友日期" value="\'+esc(ST.noteText)+\'"></div>\';',
+    '    +cfgRadioHtml("note",["日期前缀","备注前缀","备注后缀"],ST.note)',
+    '    +(ST.note==="日期前缀"?""',
+    '      :\'<input id="rea-zd-notetext" class="ant-input css-vgijab ant-input-outlined rea-zd-cinp rea-zd-cinp-note"\'',
+    '      +\' placeholder="留空则用加好友日期" value="\'+esc(ST.noteText)+\'">\')+"</div>";',
     '}',
     'function syncRadios(rg,cur){',
     '  var ls=rg.querySelectorAll(".ant-radio-wrapper"),j,on,txt,rd,ip;',
@@ -25126,7 +25162,8 @@ else if(PAGE==='群发群组 · 新建')initQs();
     '    var rg=lab.closest("[data-zd-rg]");if(!rg)return;',
     '    var k=rg.getAttribute("data-zd-rg");',
     '    ST[k]=(lab.querySelector(".ant-radio-label")||{}).textContent||"";',
-    '    syncRadios(rg,ST[k]);',
+    '    /* 备注换档会带出／收起后面那个输入框，整段重画；验证方式只是换个选中态 */',
+    '    if(k==="note")paintCfg();else syncRadios(rg,ST[k]);',
     '  });',
     '  w.addEventListener("input",function(e){',
     '    if(e.target.id==="rea-zd-tag")ST.tag=e.target.value;',
@@ -25386,7 +25423,7 @@ else if(PAGE==='群发群组 · 新建')initQs();
     '/* 每次重新打开都是「新建」：关掉（取消／X）或保存后清空，别让上一次的稿子留在里头 */',
     'function reset(){',
     '  ST.name="";ST.msgs=[];if(NAME)NAME.value="";',
-    '  ST.verify="被动验证（客户主动添加我）";ST.tag="";ST.note="备注后缀";ST.noteText="";',
+    '  ST.verify="被动验证（客户主动添加我）";ST.tag="";ST.note="日期前缀";ST.noteText="";',
     '  paintCfg();',
     '  closeEditor();drawMsgs();drawPreview();',
     '}',
@@ -25433,7 +25470,7 @@ else if(PAGE==='群发群组 · 新建')initQs();
        群发好友 · 详情      补弹窗——**没有 html**，正文就是快照那一段；脚本给「群发好友数」补好友明细弹窗，
                             行为与样式见 reaQfDetailJs 上方注释
        发圈 · 详情          只读回显——**没有 html**，正文就是快照那一段；脚本在「任务信息」的
-                            「执行人员」行后补「发送范围／任务内容／所在位置／循环方式／自动发送」五行只读值
+                            「执行人员」行后补「发送范围／循环方式／自动发送」三行只读值
        发圈 · 新建          补选材——**没有 html**，正文就是快照那一段；任务内容加「从素材库选择」，
        群发好友 · 新建      弹窗与选材逻辑共用 reaPickJs()／REA_PICK_CSS（还在 reaWxtJs 里接线）；
                             群发好友那页选中素材后收起「内容类型 / 描述文本」（来源互斥）
@@ -25500,6 +25537,7 @@ else if(PAGE==='群发群组 · 新建')initQs();
   function reaBdJs(){
     return String.raw`(function(){
 'use strict';
+var SEC_ICON=${reaJson(REA_WX_SEC_ICON)};
 function norm(s){return String(s==null?'':s).replace(/\s+/g,'')}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function qa(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
@@ -25921,9 +25959,10 @@ var b2=bafSec('2','添加对象','');
 var b3=bafSec('3','添加设置','');
 function bafSec(no,t,sub){
   var s=document.createElement('section');s.className='rea-baf-sec';
-  s.innerHTML='<div class="rea-baf-sechd"><span class="rea-baf-no">'+no+'</span><h3></h3>'
+  s.innerHTML='<div class="rea-baf-sechd"><span class="rea-baf-no">'+no+'</span>'
+    +'<h3><span class="rea-baf-secicon">'+(SEC_ICON[t]||'')+'</span><span></span></h3>'
     +(sub?'<span class="rea-baf-secsub"></span>':'')+'</div>';
-  s.querySelector('h3').textContent=t;
+  s.querySelector('h3 span:last-child').textContent=t;
   if(sub)s.querySelector('.rea-baf-secsub').textContent=sub;
   var bd=document.createElement('div');bd.className='rea-baf-secbd';
   s.appendChild(bd);mainCol.appendChild(s);return bd;
@@ -26489,15 +26528,42 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
      六张页共用一份数据表与一个渲染器，避免六个静态块各写一遍。
      只动内嵌覆盖件：不动 _online-admin.js、不重跑构建。
      ============================================================ */
+  /* 分组标题图标（2026-11-16）：详情页任务信息、配置快照抽屉、五张新建页共用一套。
+     24 viewBox 线框、16px、stroke 1.7，颜色由容器给（#1677FF）；图标只做语义提示，
+     标题文字照常读给读屏（aria-hidden）。 */
+  var REA_WX_SEC_SVG = {
+    base:'<svg class="rea-wx-secic" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 7.8h.01"/></svg>',
+    arrange:'<svg class="rea-wx-secic" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/><path d="m9 15 2 2 4-4"/></svg>',
+    eye:'<svg class="rea-wx-secic" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/></svg>',
+    users:'<svg class="rea-wx-secic" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+    message:'<svg class="rea-wx-secic" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+    userPlus:'<svg class="rea-wx-secic" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>',
+    sliders:'<svg class="rea-wx-secic" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/><circle cx="9" cy="7" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="8" cy="17" r="2"/></svg>',
+    bell:'<svg class="rea-wx-secic" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>'
+  };
+  var REA_WX_SEC_ICON = {
+    '基础信息':REA_WX_SEC_SVG.base,
+    '任务安排':REA_WX_SEC_SVG.arrange,
+    '可见范围':REA_WX_SEC_SVG.eye,
+    '发送范围':REA_WX_SEC_SVG.users,
+    '发送内容':REA_WX_SEC_SVG.message,
+    '添加对象':REA_WX_SEC_SVG.userPlus,
+    '添加设置':REA_WX_SEC_SVG.sliders,
+    '唤醒对象':REA_WX_SEC_SVG.bell,
+    '唤醒内容':REA_WX_SEC_SVG.message,
+    '更多设置':REA_WX_SEC_SVG.sliders
+  };
   var REA_WXS = {
     /* 分组跟随创建页（2026-11-16）：快照是创建表单的只读回放，块名与顺序照抄
        「X · 新建」（任务安排／可见范围或发送范围／发送内容；批量加好友是
        任务安排／添加对象／添加设置）。创建页没有的系统字段（任务类型、状态、
        有效期、创建时间）单独收在顶部的「基础信息」。创建页不存在的字段
-       （任务发布渠道）留在「更多设置」。客户唤醒创建页没有分组，这里也去掉
-       分组标题，连着排。编号 ①②③④ 一并去掉。关联好友的新建入口是现网弹窗
-       （任务名称／通知时间／截止时间／执行人员，本身不分块），四项都归
-       「任务安排」，与其他五张的第一块同名同序，不另起「什么时候加／谁来加」。 */
+       （任务发布渠道）留在「更多设置」。客户唤醒创建页没有分组，这里也补上
+       「唤醒对象／唤醒内容」，与详情页的分组同名。编号 ①②③④ 一并去掉。
+       关联好友的新建入口是现网弹窗（任务名称／通知时间／截止时间／执行人员，
+       本身不分块），四项都归「任务安排」，与其他五张的第一块同名同序。
+       2026-11-16 起快照从右侧抽屉展开（reaWxSnapshotDrawerJs），不再另起一页；
+       详情页首屏的字段分组直接复述这里的块名与块序，两边共用一个口径。 */
     '发圈 · 任务配置快照': {
       list:'发圈', detail:'发圈 · 详情',
       base:[
@@ -26521,11 +26587,10 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
         {title:'发送内容',rows:[
           {label:'任务内容',preview:true},
           {label:'任务内容来源',value:'选择文章'},
-          {label:'所在位置',value:'上海静安嘉里中心'},
           {label:'自动发送',value:'开启'}
         ]}
       ],
-      preview:{kind:'moments',name:'张伯阳',title:'撒打算',source:'云小助',location:'上海静安嘉里中心'}
+      preview:{kind:'moments',name:'张伯阳',title:'撒打算',source:'云小助'}
     },
     '群发好友 · 任务配置快照': {
       list:'群发好友', detail:'群发好友 · 详情',
@@ -26686,34 +26751,46 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
     return h;
   }
   function wxsSection(title,rows){
-    return '<div class="rea-wxs-sec">'+(title?'<h4>'+wxsEsc(title)+'</h4>':'')+wxsRows(rows)+'</div>';
+    var icon=REA_WX_SEC_ICON[title]||'';
+    return '<div class="rea-wxs-sec">'+(title?'<h4>'+icon+'<span>'+wxsEsc(title)+'</span></h4>':'')+wxsRows(rows)+'</div>';
   }
-  function reaWxSnapshotHtml(page){
+  function wxsTaskName(d){
+    var groups=[d.base||[]].concat((d.sections||[]).map(function(s){return s.rows||[]}))
+      .concat([d.more||[]]),i,j,rows;
+    for(i=0;i<groups.length;i++){
+      rows=groups[i];
+      for(j=0;j<rows.length;j++)if(rows[j].label==='任务名称')return rows[j].value||'';
+    }
+    return '';
+  }
+  /* 快照正文：基础信息 → 各配置段 → 更多设置。抽屉与详情页共用这块的分组口径。 */
+  function reaWxSnapshotBody(page){
     var d=REA_WXS[page];
     if(!d)return '';
-    var h='';
-    h+='<div class="h-full overflow-auto"><div class="h-full"><div class="_boxadd_28xtg_149">';
-    h+='<h4 style="padding-left:10px;font-weight:normal;"><nav class="ant-breadcrumb css-vgijab"><ol>';
-    h+='<li class="ant-breadcrumb-item"><span class="ant-breadcrumb-link">微信营销任务</span></li>';
-    h+='<li class="ant-breadcrumb-separator" aria-hidden="true">/</li>';
-    h+='<li class="ant-breadcrumb-item"><a class="ant-breadcrumb-link" href="#" data-rea="'+wxsEsc(d.list)+'">'+wxsEsc(d.list)+'</a></li>';
-    h+='<li class="ant-breadcrumb-separator" aria-hidden="true">/</li>';
-    h+='<li class="ant-breadcrumb-item"><span class="ant-breadcrumb-link"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" style="padding:0;height:auto;" data-rea="'+wxsEsc(d.detail)+'"><span>任务详情</span></button></span></li>';
-    h+='<li class="ant-breadcrumb-separator" aria-hidden="true">/</li>';
-    h+='<li class="ant-breadcrumb-item"><span class="ant-breadcrumb-link">任务配置快照</span></li>';
-    h+='</ol></nav></h4>';
-    h+='<div style="height:calc(-117px + 100vh);overflow-y:auto;box-sizing:border-box;background:var(--yk-content-bg,#fff);border:1px solid rgb(241,242,245);border-radius:5px;padding:16px;margin-top:8px;">';
-    h+='<div style="margin-bottom:16px;"><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-rea="'+wxsEsc(d.detail)+'"><span>返回任务详情</span></button><span class="rea-wxs-note">只读 · 任务创建时保存的配置</span></div>';
-    h+='<div class="ant-spin-nested-loading css-vgijab"><div class="ant-spin-container">';
-    h+=wxsSection('基础信息',d.base);
+    var h=wxsSection('基础信息',d.base);
     for(var i=0;i<d.sections.length;i++)h+=wxsSection(d.sections[i].title,d.sections[i].rows);
     if(d.more&&d.more.length)h+=wxsSection('更多设置',d.more);
-    h+='</div></div></div></div></div></div>';
+    return h;
+  }
+  /* 任务配置快照抽屉（2026-11-16）：从详情页右侧展开，不再另起一页。
+     标题「任务配置快照」，下面一行是这条任务的名字与「只读」；关闭靠 ×、遮罩与 Esc。 */
+  function reaWxSnapshotDrawerHtml(page){
+    var d=REA_WXS[page];
+    if(!d)return '';
+    var name=wxsTaskName(d);
+    var h='';
+    h+='<div class="rea-wxd-mask" data-wx-snap-mask></div>';
+    h+='<aside class="rea-wxd-drawer" role="dialog" aria-modal="true" aria-labelledby="reaWxSnapTitle" aria-hidden="true" data-wx-snap-drawer>';
+    h+='<div class="rea-wxd-dhead"><div class="rea-wxd-dhtxt">';
+    h+='<h3 id="reaWxSnapTitle">任务配置快照</h3>';
+    h+='<p class="rea-wxd-dsub">'+(name?wxsEsc(name)+' · ':'')+'只读</p>';
+    h+='</div><button type="button" class="rea-wxd-x" data-wx-snap-close aria-label="关闭"><span aria-hidden="true">×</span></button></div>';
+    h+='<div class="rea-wxd-dbody">'+reaWxSnapshotBody(page)+'</div>';
+    h+='</aside>';
     return h;
   }
   function reaWxPreviewContent(p){
     var THUMB='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#98a2b3" stroke-width="1.5" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="M21 15l-4.6-4.6L7 20"/></svg>';
-    var PIN='<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>';
     var h='<div class="ant-modal-content">';
     h+='<button type="button" class="ant-modal-close" aria-label="关闭"><span class="ant-modal-close-x">×</span></button>';
     if(p.kind==='moments'){
@@ -26724,7 +26801,6 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
       h+='<div class="rea-fqc-mlink"><div class="rea-fqc-mthumb">'+THUMB+'</div>';
       h+='<div class="rea-fqc-mmeta"><div class="rea-fqc-mtitle">'+wxsEsc(p.title||'撒打算')+'</div>';
       h+='<div class="rea-fqc-msrc">'+wxsEsc(p.source||'云小助')+'</div></div></div>';
-      if(p.location)h+='<div class="rea-fqc-mloc">'+PIN+'<span>'+wxsEsc(p.location)+'</span></div>';
       h+='<div class="rea-fqc-mfoot"><span>1分钟前</span><span class="rea-fqc-mact">赞　评论</span></div>';
       h+='</div></div></div></div>';
     }else{
@@ -26741,47 +26817,87 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
     h+='</div>';
     return h;
   }
-  function reaWxSnapshotJs(page){
-    var d=REA_WXS[page]||{};
+  function reaWxSnapshotDrawerJs(page){
+    var key=REA_WXS[page]?page:page.replace(' · 详情',' · 任务配置快照');
+    var d=REA_WXS[key];
+    if(!d)return '';
     var body=d.preview?reaWxPreviewContent(d.preview):'';
-    return [
-      '(function(){',
-      'var H=' + reaJson(reaWxSnapshotHtml(page)) + ';',
-      'var B=' + reaJson(body) + ';',
-      'var KIND=' + reaJson(d.preview?d.preview.kind:'') + ';',
-      'var v=document.getElementById("subapp-viewport");',
-      'if(!v)return;',
-      'v.innerHTML=H;',
-      'if(!B)return;',
-      'function close(w){if(w&&w.parentNode)w.parentNode.removeChild(w);document.removeEventListener("keydown",onKey)}',
-      'function onKey(e){if(e.key==="Escape"||e.keyCode===27){var w=document.querySelector("[data-wxs-modal]");if(w)close(w)}}',
-      'function open(){',
-      '  var old=document.querySelector("[data-wxs-modal]");if(old)close(old);',
-      '  var w=document.createElement("div");w.className="ant-modal-root css-vgijab";w.setAttribute("data-wxs-modal","1");',
-      '  var cls=KIND==="moments"?"rea-fqc-modal":"rea-wxs-modal";',
-      '  var width=KIND==="moments"?"560px":"420px";',
-      '  w.innerHTML=\'<div class="ant-modal-mask"></div><div class="ant-modal-wrap ant-modal-centered"><div class="ant-modal css-vgijab \'+cls+\'" role="dialog" aria-modal="true" style="width:\'+width+\'">\'+B+\'</div></div>\';',
-      '  document.body.appendChild(w);',
-      '  w.querySelector(".ant-modal-close").addEventListener("click",function(){close(w)});',
-      '  var f=w.querySelector("[data-wxs-close]");if(f)f.addEventListener("click",function(){close(w)});',
-      '  var m=w.querySelector(".ant-modal-wrap");if(m)m.addEventListener("click",function(e){if(e.target===m)close(w)});',
-      '  document.addEventListener("keydown",onKey);',
-      '}',
-      'var bs=document.querySelectorAll("[data-wxs-view]"),i;',
-      'for(i=0;i<bs.length;i++)bs[i].addEventListener("click",function(e){e.preventDefault();e.stopPropagation();open()});',
-      '})();'
-    ].join('\n');
+    return String.raw`(function(){
+'use strict';
+var H=${reaJson(reaWxSnapshotDrawerHtml(key))};
+var B=${reaJson(body)};
+var KIND=${reaJson(d.preview?d.preview.kind:'')};
+var BTN=document.querySelector('[data-wx-snap]');
+if(!BTN||document.querySelector('[data-wx-snap-drawer]'))return;
+var host=document.createElement('div');
+host.className='rea-wxd-snaphost';
+host.innerHTML=H;
+document.body.appendChild(host);
+var MASK=host.querySelector('[data-wx-snap-mask]');
+var DRAWER=host.querySelector('[data-wx-snap-drawer]');
+function previewClose(w){if(w&&w.parentNode)w.parentNode.removeChild(w)}
+function previewOpen(){
+  if(!B)return;
+  var old=document.querySelector('[data-wxs-modal]');if(old)previewClose(old);
+  var w=document.createElement('div');
+  w.className='ant-modal-root css-vgijab';w.setAttribute('data-wxs-modal','1');
+  var cls=KIND==='moments'?'rea-fqc-modal':'rea-wxs-modal';
+  var width=KIND==='moments'?'560px':'420px';
+  w.innerHTML='<div class="ant-modal-mask"></div><div class="ant-modal-wrap ant-modal-centered"><div class="ant-modal css-vgijab '+cls+'" role="dialog" aria-modal="true" style="width:'+width+'">'+B+'</div></div>';
+  /* 挂在抽屉里：抽屉是 1001 的层，预览在其中自然压住抽屉内容 */
+  DRAWER.appendChild(w);
+  w.querySelector('.ant-modal-close').addEventListener('click',function(){previewClose(w)});
+  var f=w.querySelector('[data-wxs-close]');if(f)f.addEventListener('click',function(){previewClose(w)});
+  var m=w.querySelector('.ant-modal-wrap');if(m)m.addEventListener('click',function(e){if(e.target===m)previewClose(w)});
+}
+function close(){
+  previewClose(document.querySelector('[data-wxs-modal]'));
+  MASK.classList.remove('on');
+  DRAWER.classList.remove('on');
+  DRAWER.setAttribute('aria-hidden','true');
+}
+function open(){
+  MASK.classList.add('on');
+  DRAWER.classList.add('on');
+  DRAWER.setAttribute('aria-hidden','false');
+}
+BTN.addEventListener('click',open);
+host.querySelector('[data-wx-snap-close]').addEventListener('click',close);
+MASK.addEventListener('click',close);
+/* Esc 先关预览弹窗，再关抽屉；预览弹窗自己不管 Esc，统一在这里收口。 */
+document.addEventListener('keydown',function(e){
+  if(e.key!=='Escape'&&e.keyCode!==27)return;
+  if(document.querySelector('[data-wxs-modal]')){previewClose(document.querySelector('[data-wxs-modal]'));return}
+  if(DRAWER.classList.contains('on'))close();
+});
+var vs=host.querySelectorAll('[data-wxs-view]'),i;
+for(i=0;i<vs.length;i++)vs[i].addEventListener('click',function(e){e.preventDefault();e.stopPropagation();previewOpen()});
+})();`;
   }
   var REA_WX_SNAP_CSS = [
-    '.rea-wxs-note{margin-left:12px;color:#999}',
     '.rea-wxs-sec{margin-bottom:24px}',
-    '.rea-wxs-sec h4{margin:0 0 12px;padding-left:8px;border-left:3px solid #1677ff;font-size:16px;line-height:24px;font-weight:600;color:#1f2329}',
+    '.rea-wxs-sec h4{display:flex;align-items:center;gap:6px;margin:0 0 10px;font-size:14px;line-height:20px;font-weight:600;color:#1F2329}',
+    '.rea-wxs-sec h4 .rea-wx-secic{flex:none;color:#1677FF}',
     '.rea-wxs-row{display:flex;padding:8px 0;border-bottom:1px dashed #f0f0f0;font-size:14px;line-height:22px;color:#1f2329}',
     '.rea-wxs-row>span{width:160px;flex-shrink:0;color:#666}',
     '.rea-wxs-row>div{flex:1;min-width:0;white-space:pre-wrap;word-break:break-word}',
     '.rea-wxs-link{border:0;background:none;padding:0;font:inherit;color:#1677ff;cursor:pointer}',
     '.rea-wxs-link:hover{text-decoration:underline}',
     '.rea-wxs-empty{color:#999}',
+    /* 任务配置快照抽屉（2026-11-16）：右侧 560px，遮罩压住详情页；
+       z-index 1000／1001 与智能回复抽屉同一档，预览弹窗靠更高一层盖在抽屉上。 */
+    '.rea-wxd-mask{position:fixed;inset:0;z-index:1000;background:rgba(31,35,41,.45);opacity:0;visibility:hidden;transition:opacity .18s}',
+    '.rea-wxd-mask.on{opacity:1;visibility:visible}',
+    '.rea-wxd-drawer{position:fixed;top:0;right:0;bottom:0;z-index:1001;display:flex;flex-direction:column;width:560px;max-width:calc(100vw - 32px);background:#fff;box-shadow:-6px 0 16px rgba(0,0,0,.08);transform:translateX(100%);visibility:hidden;transition:transform .18s ease,visibility .18s}',
+    '.rea-wxd-drawer.on{transform:translateX(0);visibility:visible}',
+    '.rea-wxd-dhead{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex:none;padding:20px 24px 16px;border-bottom:1px solid #E5E8EF}',
+    '.rea-wxd-dhead h3{margin:0;font-size:16px;line-height:24px;font-weight:600;color:#1F2329}',
+    '.rea-wxd-dsub{margin:4px 0 0;font-size:12px;line-height:18px;color:#8F959E}',
+    '.rea-wxd-x{display:flex;align-items:center;justify-content:center;width:32px;height:32px;flex:none;margin-top:-4px;border:0;border-radius:6px;background:none;font-family:inherit;font-size:22px;line-height:1;color:#8F959E;cursor:pointer}',
+    '.rea-wxd-x:hover{background:#F7F8FA;color:#1F2329}',
+    '.rea-wxd-dbody{flex:1;overflow:auto;padding:20px 24px 32px}',
+    '.rea-wxd-dbody .rea-wxs-row{font-size:13px;line-height:20px}',
+    '.rea-wxd-dbody .rea-wxs-row>span{width:150px}',
     '.rea-wxs-modal .ant-modal-body{padding-top:12px}',
     '.rea-wxs-chat{padding:16px;border:1px solid #ededed;border-radius:8px;background:#f7f7f7}',
     '.rea-wxs-chat-hd{margin-bottom:12px;font-size:13px;color:#8f959e}',
@@ -26801,9 +26917,9 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
      不动 _online-admin.js。 */
   var REA_WX_LIST = {
     '发圈': [
-      {kind:'moments', name:'张伟', title:'秋季新品主推 · 朋友圈图文', source:'云小助', location:'上海静安嘉里中心'},
-      {kind:'moments', name:'李娜', title:'国庆活动预告 · 预热视频', source:'云小助', location:'上海静安嘉里中心'},
-      {kind:'moments', name:'王强', title:'门店周年庆 · 长图文', source:'云小助', location:'上海静安嘉里中心'}
+      {kind:'moments', name:'张伟', title:'秋季新品主推 · 朋友圈图文', source:'云小助'},
+      {kind:'moments', name:'李娜', title:'国庆活动预告 · 预热视频', source:'云小助'},
+      {kind:'moments', name:'王强', title:'门店周年庆 · 长图文', source:'云小助'}
     ],
     '群发好友': [
       {kind:'chat', from:'王强', text:'王哥您好，秋季新品已经到店，给您留了两套，方便的话我发您看看～'},
@@ -26936,81 +27052,99 @@ BT.addEventListener('click',function(e){
     {n:'林悦',p:'13800138010',d:'销售二部'}
   ];
   /* 任务信息的统一骨架（2026-11-16，方案见 docs/09 §2.3）：
-     六张详情页的前五项完全一致——第一行 任务名称／任务状态／任务有效期，
-     第二行 创建时间／执行人员；第三行起才是各任务类型自己的字段，按
-     「发什么 → 发给谁 → 怎么执行」排，够三格换行。
+     详情页首屏只放「看进度时要对照」的 6 项，按任务配置快照的分组摆：
+     基础信息（任务状态、任务有效期）、任务安排（任务名称、执行人员），再加各类型
+     自己的 1～2 项——发圈：可见范围、发送内容；群发好友与群发群组：发送范围、
+     发送内容；批量加好友：添加对象、添加设置；客户唤醒：唤醒内容；关联好友没有。
+     组标题在左（88px）、字段三列在右，标题不额外占高度；标题与分组顺序直接复述
+     REA_WXS 的块名与块序，两边共用一个口径。
      · 任务类型六页都不显示：页面与面包屑已经说明这条任务属于哪个模块。
-     · 创建时间六页都显示；发圈、群发好友、群发群组的快照没有这一行，由
-       reaWxDetailJs 按有效期那一行的位置补，值取有效期起点。
+     · 创建时间、循环方式、所在位置、自动发送、素材分类、发送类型、分配方式、
+       人均添加量、内容生成策略都只进快照抽屉，详情不重复，所以全部列进 hide。
      · 范围类字段统一成一格「发送范围」——发圈的「谁可以看」、群发好友的
        「群发范围＋标签名称」、群发群组的「群发那些群」都并进来，值统一写
        「规则 · 明细」两段：部分可见 · 重点客户、高意向／按微信标签 · 老客户、双十一／全部群。
-     行距 28 大于列距 24（见 REA_WX_DETAIL_CSS），分组靠留白表达，不加分组标题。
-     order 写的是去冒号后的标签（reaWxDetailJs 先剥冒号再重排）；表里没有的标签
-     跳过、不删，会被排好的字段顶到前面——重抓后多出新字段，补进 order 即可。 */
+     groups 里写的是去冒号后的标签（reaWxDetailJs 先剥冒号再分组）；表里没有的标签
+     跳过、不删，落到最后一组末尾——重抓后多出新字段，补进 groups 即可。 */
   var REA_WXD = {
     '发圈 · 详情': {
       state:'live', stateText:'进行中',
       validity:'2026/11/08 09:00~2026/11/13 13:51',
-      created:'2026-11-08 09:00',
       unit:'people', head:'用户名',
-      hide:['已发送','任务类型','素材分类'],
-      /* 骨架五项 → 发什么（内容、位置）→ 发给谁 → 怎么执行 */
-      order:['任务名称','任务状态','任务有效期','创建时间','执行人员',
-        '任务内容','所在位置','发送范围',
-        '循环方式','自动发送'],
-      plan:['done','done','done','done','done','done','open','open','open','open'],
+      /* 首屏 6 项；创建时间、循环方式、所在位置、自动发送只进快照抽屉 */
+      hide:['已发送','任务类型','素材分类','创建时间','循环方式','所在位置','自动发送'],
+      order:['任务名称','任务状态','任务有效期','执行人员','发送范围','任务内容'],
+      groups:[
+        {t:'基础信息',f:['任务状态','任务有效期']},
+        {t:'任务安排',f:['任务名称','执行人员']},
+        {t:'可见范围',f:['发送范围']},
+        {t:'发送内容',f:['任务内容']}
+      ],
+      plan:['done','done','done','done','done','done','open','open','open'],
       labels:{done:'已执行',open:'未执行'}
     },
     '群发好友 · 详情': {
       state:'ended', stateText:'已结束',
       validity:'2026/11/04 09:00~2026/11/11 09:00',
-      created:'2026-11-04 09:00',
       unit:'people', head:'用户名', lead:'吴官宇', leadPhone:'16702260651',
-      hide:['已发送','素材','任务类型'],
-      /* 骨架五项 → 什么素材、什么内容 → 发给谁 */
-      order:['任务名称','任务状态','任务有效期','创建时间','执行人员',
-        '素材分类','任务内容','发送范围'],
+      hide:['已发送','素材','任务类型','素材分类','创建时间'],
+      order:['任务名称','任务状态','任务有效期','执行人员','发送范围','任务内容'],
+      groups:[
+        {t:'基础信息',f:['任务状态','任务有效期']},
+        {t:'任务安排',f:['任务名称','执行人员']},
+        {t:'发送范围',f:['发送范围']},
+        {t:'发送内容',f:['任务内容']}
+      ],
       plan:['done','done','done','done','done','warn','warn','open','open','open'],
       labels:{done:'已执行',open:'未执行',warn:'任务中断'}
     },
     '群发群组 · 详情': {
       state:'live', stateText:'进行中',
       validity:'2026/11/10 17:11~2026/11/14 17:11',
-      created:'2026-11-10 17:11',
       unit:'people', head:'用户名称', lead:'雅楠002', leadPhone:'13260303290',
       /* 「群发内容数量」与任务内容重复（演示任务都是 1 条），撤掉 */
-      hide:['任务类型','群发内容数量'],
-      /* 骨架五项 → 发什么 → 发给谁 → 怎么发 */
-      order:['任务名称','任务状态','任务有效期','创建时间','执行人员',
-        '任务内容','发送范围','发送类型'],
+      hide:['任务类型','群发内容数量','发送类型','创建时间'],
+      order:['任务名称','任务状态','任务有效期','执行人员','发送范围','任务内容'],
+      groups:[
+        {t:'基础信息',f:['任务状态','任务有效期']},
+        {t:'任务安排',f:['任务名称','执行人员']},
+        {t:'发送范围',f:['发送范围']},
+        {t:'发送内容',f:['任务内容']}
+      ],
       plan:['done','done','done','done','done','done','done','open','open','open'],
       labels:{done:'已执行',open:'未执行'}
     },
     '批量加好友 · 详情': {
       state:'live', stateText:'进行中',
       validity:'2026/11/10 17:11~2026/11/14 17:11',
-      created:'2026-11-10 17:11',
       unit:'items', noun:'好友', head:'微信号/手机号',
-      /* 群内好友那四行对演示任务（手动输入）不涉及，任务发布渠道照旧留在
-         「查看任务配置快照」；创建时间回到第二行，六页统一。 */
+      /* 群内好友那四行对演示任务（手动输入）不涉及；分配方式、人均添加量、
+         任务发布渠道、创建时间只进快照抽屉。 */
       hide:['添加总量','未执行数','已执行数','用户不存在','用户已添加','已发送验证请求',
-        '群组名称','昵称筛选','地区筛选','添加间隔','任务发布渠道','任务类型'],
-      /* 骨架五项 → 怎么加、打什么标签 → 怎么分配 */
-      order:['任务名称','任务状态','任务有效期','创建时间','执行人员',
-        '添加好友方式','设置标签','分配方式','人均添加量'],
+        '群组名称','昵称筛选','地区筛选','添加间隔','任务发布渠道','任务类型',
+        '分配方式','人均添加量','创建时间'],
+      order:['任务名称','任务状态','任务有效期','执行人员','添加好友方式','设置标签'],
+      groups:[
+        {t:'基础信息',f:['任务状态','任务有效期']},
+        {t:'任务安排',f:['任务名称','执行人员']},
+        {t:'添加对象',f:['添加好友方式']},
+        {t:'添加设置',f:['设置标签']}
+      ],
       plan:['pass','pass','pass','warn','done','fail','open','open','open','open'],
       labels:{done:'用户已添加',open:'未执行',warn:'已发送验证请求',fail:'用户不存在'}
     },
     '关联好友 · 详情': {
       state:'live', stateText:'进行中',
       validity:'2026/11/10 17:13~2026/11/14 17:13',
-      created:'2026-11-10 17:13',
       unit:'items', noun:'客户', head:'微信号',
       hide:['关联总量','未执行数','已执行数','用户不存在','用户异常','已关联总量','未关联总量',
-        '任务类型'],
-      /* 没有内容与范围字段，骨架五项就是整张表 */
-      order:['任务名称','任务状态','任务有效期','创建时间','执行人员'],
+        '任务类型','创建时间'],
+      /* 没有内容与范围字段，首屏就两组四项 */
+      order:['任务名称','任务状态','任务有效期','执行人员'],
+      groups:[
+        {t:'基础信息',f:['任务状态','任务有效期']},
+        {t:'任务安排',f:['任务名称','执行人员']}
+      ],
       /* 执行结果按现网筛选里的四种落点：已关联／未关联／不存在／好友异常；
          没有结果就是还没执行，单列成 open，不进结果环。 */
       plan:['linked','linked','linked','unlinked','unlinked','missing','abnormal','open','open','open'],
@@ -27019,36 +27153,40 @@ BT.addEventListener('click',function(e){
     '客户唤醒 · 详情': {
       state:'live', stateText:'进行中',
       validity:'2026/11/10 10:19~2026/11/14 10:19',
-      created:'2026-11-10 10:19',
       unit:'people', head:'用户名', lead:'雅楠002', leadPhone:'13260303290',
-      hide:['任务类型'],
-      /* 骨架五项 → 拿什么内容唤醒 */
-      order:['任务名称','任务状态','任务有效期','创建时间','执行人员',
-        '内容生成策略','任务内容'],
+      hide:['任务类型','创建时间','内容生成策略'],
+      order:['任务名称','任务状态','任务有效期','执行人员','任务内容'],
+      groups:[
+        {t:'基础信息',f:['任务状态','任务有效期']},
+        {t:'任务安排',f:['任务名称','执行人员']},
+        {t:'唤醒内容',f:['任务内容']}
+      ],
       plan:['done','done','done','done','open','open','open','open','open','open'],
       labels:{done:'已执行',open:'未执行'}
     }
   };
 
   /* 任务信息与表格状态点的样式。任务信息：
-     字段在左（小灰标签在上、值在下，三列），执行进度环形图在右，中间一道竖线；
-     快照入口跟在「任务信息」标题后面。色值仍取 ADR-0082 的 token。
-     行距 28 大于列距 24（2026-11-16）：三列、一行一件事，行内三格读成一组，
-     组与组之间靠留白分开——之前行距 18 比列距还小，眼睛先读成三条竖列，
-     竖列里的字段互不相关，九宫格就显成乱排。 */
+     执行进度环形图在左；右边按配置快照的分组摆字段——组标题在左（88px）、
+     字段三列在右（2026-11-16），快照入口跟在「任务信息」标题后面。
+     色值仍取 ADR-0082 的 token。标题不额外占高度：第一行字段与标题齐平，
+     组与组之间只留 16px；组内一行一件事，列距 24、行距 16。 */
   var REA_WX_DETAIL_CSS = [
-    '.rea-wxd-snap{margin-left:16px;font-size:13px;line-height:20px;color:#1677FF;text-decoration:none;white-space:nowrap}',
+    '.rea-wxd-snap{margin-left:16px;padding:0;border:0;background:none;font-family:inherit;font-size:13px;line-height:20px;color:#1677FF;white-space:nowrap;cursor:pointer}',
     '.rea-wxd-snap:hover{text-decoration:underline}',
     '.rea-wxd-hd{display:flex;align-items:center;height:55px;border-bottom:1px solid #F0F0F2;font-size:16px;font-weight:500;color:#333}',
     /* 2026-11-15：图表在左、任务字段在右（六张微信营销详情页统一）。
        2026-11-16：六页统一 360px——字段起点与中间竖线落在同一横坐标，不再 320／360 混用。 */
     '.rea-wxd-info{display:grid;grid-template-columns:360px minmax(0,1fr);align-items:stretch;column-gap:32px;margin-top:16px}',
-    '.rea-wxd-kv{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:28px 24px!important;align-content:start!important;margin:0!important}',
+    '.rea-wxd-groups{display:block!important;margin:0!important;min-width:0}',
+    '.rea-wxd-group{display:grid!important;grid-template-columns:88px minmax(0,1fr)!important;column-gap:20px!important;align-items:start!important}',
+    '.rea-wxd-group+.rea-wxd-group{margin-top:16px}',
+    '.rea-wxd-gt{display:flex;align-items:center;gap:6px;margin:0;padding-top:3px;font-size:14px;line-height:20px;font-weight:600;color:#1F2329;white-space:nowrap}',
+    '.rea-wxd-gt .rea-wx-secic{flex:none;color:#1677FF}',
+    '.rea-wxd-kv{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:16px 24px!important;align-content:start!important;margin:0!important}',
     '.rea-wxd-kv>p{display:block!important;flex:0 0 auto!important;width:auto!important;min-width:0;margin:0!important;white-space:normal!important;overflow-wrap:anywhere}',
     '.rea-wxd-kv>p>span:first-child{display:block;margin-bottom:3px;font-size:12px;line-height:18px;color:#8F959E}',
     '.rea-wxd-kv>p>span:last-child{display:block;font-size:14px;line-height:20px;color:#1F2329}',
-    /* 骨架五项之后强制定格换行：第 6 个字段是各页自己的内容，不能补进第二行第三格 */
-    '.rea-wxd-kv>p.rea-wxd-kv-break{grid-column-start:1}',
     '.rea-wxd-badge{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 9px;border-radius:6px;background:#F7F8FA;font-size:12px;font-weight:500;color:#646A73}',
     '.rea-wxd-badge i{width:6px;height:6px;flex:none;border-radius:50%;background:#8F959E}',
     '.rea-wxd-badge.live{background:#E6F4FF;color:#1677FF}',
@@ -27107,9 +27245,7 @@ BT.addEventListener('click',function(e){
        页签在「执行进度」环图与转化漏斗之间切换。漏斗梯形条按第一级等比收窄，
        色阶沿用 #1677FF 的同一色相；百分比相对上一级。 */
     '.rea-wxd-bd .rea-wxd-info{grid-template-columns:360px minmax(0,1fr)}',
-    /* 字段收成 3×3 后把行距放宽到 28px，让三行与右栏等高，不留一块空底；
-       漏斗四行压到 22px 条高、4px 间距，与「任务执行」页签等高——切页签时卡片不再跳。 */
-    '.rea-wxd-bd .rea-wxd-kv{row-gap:28px!important}',
+    /* 漏斗四行压到 22px 条高、4px 间距，与「任务执行」页签等高——切页签时卡片不再跳。 */
     '.rea-wxd-bd .rea-wxd-fn-bd{gap:4px}',
     '.rea-wxd-bd .rea-wxd-fn-bar{height:22px}',
     '.rea-wxd-tabbar{display:flex;gap:22px;margin-bottom:16px;border-bottom:1px solid #F0F0F2}',
@@ -27130,7 +27266,7 @@ BT.addEventListener('click',function(e){
     '.rea-wxd-fn-num{flex:none;width:38px;font-size:12px;line-height:18px;color:#1F2329;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}',
     '.rea-wxd-fn-rate{flex:none;width:68px;font-size:12px;line-height:18px;color:#646A73;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}',
     '.rea-wxd-fn-ft{margin-top:12px;font-size:12px;line-height:18px;color:#8F959E}',
-    '@media(max-width:1000px){.rea-wxd-info{grid-template-columns:minmax(0,1fr)}.rea-wxd-kv{grid-template-columns:repeat(2,minmax(0,1fr))!important}.rea-wxd-ring{margin-top:20px;padding:20px 0 0;border-top:1px solid #E5E8EF;border-right:0;order:1}}',
+    '@media(max-width:1000px){.rea-wxd-info{grid-template-columns:minmax(0,1fr)}.rea-wxd-group{grid-template-columns:minmax(0,1fr)!important;row-gap:6px}.rea-wxd-gt{padding-top:0}.rea-wxd-kv{grid-template-columns:repeat(2,minmax(0,1fr))!important}.rea-wxd-ring{margin-top:20px;padding:20px 0 0;border-top:1px solid #E5E8EF;border-right:0;order:1}}',
     '.rea-wxd-tb{display:inline-flex;align-items:center;gap:6px;font-size:14px;line-height:22px;color:#1F2329}',
     '.rea-wxd-tb i{width:6px;height:6px;border-radius:50%;background:#8F959E;flex:none}',
     '.rea-wxd-tb.done i{background:#1677FF}',
@@ -27149,7 +27285,6 @@ BT.addEventListener('click',function(e){
        「查看唤醒明细」，省出的横向给条（不再留唤醒率那一列）、纵向给条高；
        唤醒率单独一行落在漏斗下方。 */
     '.rea-wxd-hx .rea-wxd-info{grid-template-columns:360px minmax(0,1fr)}',
-    '.rea-wxd-hx .rea-wxd-kv{row-gap:28px!important}',
     '.rea-wxd-hx .rea-wxd-fn-bd{gap:8px}',
     '.rea-wxd-hx .rea-wxd-fn-bar{height:30px}',
     '.rea-wxd-hx .rea-wxd-fn-row{border:0;background:none;padding:0;font:inherit;width:100%;text-align:left;cursor:pointer}',
@@ -27243,6 +27378,7 @@ page.removeChild(header);
 'use strict';
 var PAGE=${reaJson(page)};
 var CFG=${reaJson(REA_WXD)}[PAGE];
+var ICONS=${reaJson(REA_WX_SEC_ICON)};
 if(!CFG)return;
 if(document.querySelector('[data-rea-wxd]'))return;
 var PEOPLE=${reaJson(REA_WXD_PEOPLE)};
@@ -27271,33 +27407,12 @@ for(i=0;i<CFG.hide.length;i++){
   var hr=rowOf(CFG.hide[i]);
   if(hr&&hr.parentNode)hr.parentNode.removeChild(hr);
 }
-/* 演示口径：1 位执行人员、10 个好友，人均添加量跟着写 10（快照那条是 1，和补出来的表对不上） */
-if(PAGE==='批量加好友 · 详情'){
-  var rg=rowOf('人均添加量');
-  if(rg){var gs=rg.querySelectorAll('span');if(gs.length)gs[gs.length-1].textContent='10';}
-}
 /* 快照那条任务的有效期落在 2026-09/10，与补出来的 11 月执行流水对不上；
    名称／状态／有效期现在回到字段里，值统一按演示口径写。 */
 setVal('任务状态',CFG.stateText);
 setVal('有效期',CFG.validity);
 var validityRow=rowOf('有效期');
 if(validityRow&&validityRow.firstElementChild)validityRow.firstElementChild.textContent='任务有效期';
-/* 创建时间：六页统一显示。快照缺这一行的三页（发圈／群发好友／群发群组）没有行可改，
-   就在「任务有效期」后面补一行；rowOf 读的是上面缓存的静态 NodeList，看不到新补的行，
-   所以这一行自己建、自己写值。 */
-if(CFG.created){
-  var cr=rowOf('创建时间');
-  if(cr){
-    var cs=cr.querySelectorAll('span');
-    if(cs.length)cs[cs.length-1].textContent=CFG.created;
-  }else if(validityRow){
-    cr=document.createElement('p');
-    var cl=document.createElement('span');cl.textContent='创建时间：';
-    var cv=document.createElement('span');cv.textContent=CFG.created;
-    cr.appendChild(cl);cr.appendChild(cv);
-    validityRow.parentNode.insertBefore(cr,validityRow.nextSibling);
-  }
-}
 
 var plan=CFG.plan,n=plan.length,c={done:0,open:0,warn:0,fail:0,pass:0,linked:0,unlinked:0,missing:0,abnormal:0};
 for(i=0;i<n;i++)c[plan[i]]++;
@@ -27511,9 +27626,9 @@ if(stRow){
 }
 /* 字段改成小灰标签在上、值在下的两行式；值里的按钮照旧。
    空行与空值行（如没有素材时的「素材」）直接摘掉，不占格子。
-   六页都带 order（见 REA_WXD 上方）：按「任务本身 → 发什么给谁 → 谁怎么发」
-   重排成一行一件事，3×3 的页正好一组一行。表里没有的标签不参与重排、也不会删，
-   会被排好的字段顶到前面——重抓后真多出新字段，把它补进 order 就回到该在的位置。 */
+   然后按 CFG.groups 分组（2026-11-16）：组名与组序复述任务配置快照的块名与块序，
+   组标题在左、字段三列在右。表里没有的标签不删，落到最后一组末尾——
+   重抓后真多出新字段，把它补进 groups 就回到该在的位置。 */
 var all=BODY.querySelectorAll('p');
 for(i=0;i<all.length;i++){
   var pp=all[i];
@@ -27525,21 +27640,41 @@ for(i=0;i<all.length;i++){
   }
   if(pcs[0]&&pcs[0].tagName==='SPAN')pcs[0].textContent=pcs[0].textContent.replace(/[：:]\s*$/,'');
 }
-if(CFG.order){
-  var byLabel={},jj,el;
+if(CFG.groups&&CFG.groups.length){
+  var byLabel={},jj,el,gi,gj,row;
   var psNow=BODY.querySelectorAll('p');
   for(jj=0;jj<psNow.length;jj++){
     el=psNow[jj];
     byLabel[el.firstElementChild?norm(el.firstElementChild.textContent):'']=el;
   }
-  for(jj=0;jj<CFG.order.length;jj++){
-    if(byLabel[CFG.order[jj]])BODY.appendChild(byLabel[CFG.order[jj]]);
+  var wrap=document.createElement('div');
+  wrap.className='rea-wxd-groups';
+  for(gi=0;gi<CFG.groups.length;gi++){
+    var grp=CFG.groups[gi];
+    var kv=document.createElement('div');
+    kv.className='rea-wxd-kv';
+    for(gj=0;gj<grp.f.length;gj++){
+      row=byLabel[grp.f[gj]];
+      if(row)kv.appendChild(row);
+    }
+    if(!kv.children.length)continue;
+    var sec=document.createElement('section');
+    sec.className='rea-wxd-group';
+    var gh=document.createElement('h4');
+    gh.className='rea-wxd-gt';
+    gh.innerHTML=(ICONS[grp.t]||'')+'<span>'+grp.t+'</span>';
+    sec.appendChild(gh);sec.appendChild(kv);
+    wrap.appendChild(sec);
   }
-  /* 骨架固定五项（名称／状态／有效期／创建时间／执行人员），第六项起是本页自己的字段。
-     第六项强制从第一列起，否则它会补进第二行第三格，跟骨架混成一行。 */
-  var kvNow=BODY.querySelectorAll('p'),kb;
-  for(kb=5;kb<kvNow.length;kb++){
-    if(kvNow[kb].parentNode===BODY){kvNow[kb].classList.add('rea-wxd-kv-break');break}
+  if(wrap.children.length){
+    /* 没进任何组的字段落到最后一组末尾 */
+    var last=wrap.lastElementChild.querySelector('.rea-wxd-kv');
+    var psRest=BODY.querySelectorAll('p');
+    for(jj=0;jj<psRest.length;jj++){
+      if(psRest[jj].parentNode===BODY)last.appendChild(psRest[jj]);
+    }
+    BODY.innerHTML='';
+    BODY.appendChild(wrap);
   }
 }
 
@@ -27552,12 +27687,12 @@ if(!HEAD){
   HEAD.textContent='任务信息';
   card.insertBefore(HEAD,BODY);
 }
-/* 配置快照入口：跟在「任务信息」标题后面，目标页名由当前页名推导。 */
-var snap=document.createElement('a');
-snap.href='#';
+/* 配置快照入口：跟在「任务信息」标题后面，点开右侧抽屉（reaWxSnapshotDrawerJs 绑定）。 */
+var snap=document.createElement('button');
+snap.type='button';
 snap.className='rea-wxd-snap';
-snap.setAttribute('data-rea',PAGE.replace(' · 详情',' · 任务配置快照'));
-snap.textContent='查看任务配置快照 ›';
+snap.setAttribute('data-wx-snap','1');
+snap.textContent='查看任务配置快照';
 HEAD.appendChild(snap);
 var info=document.createElement('div');
 info.className='rea-wxd-info';
@@ -27566,7 +27701,7 @@ card.insertBefore(info,BODY);
    不认位置；窄屏靠 .rea-wxd-ring 的 order:1 把图表推回字段下面。 */
 info.appendChild(ring);
 info.appendChild(BODY);
-BODY.classList.add('rea-wxd-kv');
+BODY.classList.add('rea-wxd-groups');
 /* 列宽六页统一 360px（2026-11-16）；rea-wxd-bd 只留给这三页的漏斗密度与页签间距。 */
 if(PAGE==='批量加好友 · 详情'||PAGE==='群发好友 · 详情'||PAGE==='关联好友 · 详情')card.classList.add('rea-wxd-bd');
 /* 表格：按表头文字找表，不认第几张（发圈页还有一张页签表） */
@@ -30910,8 +31045,30 @@ checkCross();
     /* 分块卡：照「发圈 · 新建」的线框——1px 边、8px 圆角、卡头 14／20 内距＋下分隔线、卡身 2／20 */
     '.rea-hx-sec{margin:0 0 16px;border:1px solid #F0F0F0;border-radius:8px;background:#fff}',
     '.rea-hx-sechd{padding:14px 20px 12px;border-bottom:1px solid #F0F0F0}',
-    '.rea-hx-sechd h3{margin:0;font-size:16px;line-height:26px;font-weight:500;color:#333333}',
+    '.rea-hx-sechd h3{display:flex;align-items:center;gap:8px;margin:0;font-size:16px;line-height:26px;font-weight:500;color:#333333}',
+    '.rea-hx-secicon{display:flex;flex:none;color:#1677FF}',
+    '.rea-hx-secicon svg{display:block;width:18px;height:18px}',
     '.rea-hx-secbd{padding:2px 20px 4px}',
+    /* 行与标签照「群发好友 · 新建」：标签右对齐 92px（＋16 右内距＝控件从 108 起），
+       控件吃掉余下整行；说明句落在控件下方同一列。快照原本 padding:24px 20% 把表单
+       挤在中间，搬进卡后左边会空出一大条。 */
+    '.rea-hx-secbd>.rea-hx-row:first-child{padding-top:14px!important}',
+    '.rea-hx-row{padding:0!important;margin:0 0 18px!important;display:flex;align-items:flex-start;width:auto!important}',
+    '.rea-hx-row>*:not(.rea-hx-lab){flex:1 1 auto;min-width:0}',
+    '.rea-hx-lab{flex:0 0 92px!important;width:92px!important;margin:0!important;padding-right:16px!important;text-align:right!important;font-size:14px!important;line-height:32px!important;color:#646A73!important;white-space:nowrap}',
+    /* 快照的必填红星是标签上的 ::after，位置按原标签宽度写死；收掉，改由本页重画。 */
+    '.rea-hx-lab:after{content:none!important}',
+    '.rea-hx-lab.rea-hx-req:before{content:"*";color:#FF4D4F;margin-right:4px;font-family:SimSun,sans-serif}',
+    '.rea-hx-hint{margin:-8px 0 16px 108px;font-size:12px;line-height:18px;color:#8F959E;max-width:640px}',
+    '.rea-hx-hint[hidden]{display:none!important}',
+    '.rea-hx-row p{margin:8px 0 0!important;font-size:12px!important;line-height:18px!important;color:#8F959E!important}',
+    '.rea-hx-row .ant-input-affix-wrapper{width:100%}',
+    '.rea-hx-dt{width:240px;max-width:100%}',
+    /* 底部操作条：与群发好友同一形——贴视口底、左汇总右按钮；
+       bottom:-20px 抵掉快照滚动容器（._con_）自带的 20px 下内衬。 */
+    '.rea-hx-act{position:sticky;bottom:-20px;z-index:6;display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:8px;padding:14px 0;background:#fff;border-top:1px solid #E5E8EF}',
+    '.rea-hx-actsum{font-size:13px;color:#646A73}',
+    '.rea-hx-actbtns{display:flex;gap:8px}',
     /* 「唤醒内容」这格窄，标签原本被挤成一字一行；标签一律不折行 */
     '[class*="_must_"]{white-space:nowrap}',
     '.rea-hx-range{display:flex;align-items:center;gap:10px}',
@@ -30932,10 +31089,15 @@ checkCross();
     '.rea-hx-opt{display:block;width:100%;padding:5px 12px;border:0;background:none;font-size:14px;line-height:22px;color:rgba(0,0,0,.88);text-align:left;cursor:pointer}',
     '.rea-hx-opt:hover{background:#f5f5f5}',
     '.rea-hx-opt.on{color:#1677ff;font-weight:600;background:#e6f4ff}',
+    /* 执行人员：与群发好友那枚自造下拉同一形（32 高、8 圆角、280 宽） */
     '.rea-hx-exec{position:relative}',
-    '.rea-hx-execmenu{position:absolute;left:0;top:calc(100% + 4px);z-index:30;display:none;width:100%;min-width:240px;padding:4px;border:1px solid #f0f0f0;border-radius:6px;background:#fff;box-shadow:0 6px 16px rgba(0,0,0,.12)}',
+    '.rea-hx-select{display:flex;align-items:center;box-sizing:border-box;width:280px;max-width:100%;height:32px;padding:0 32px 0 11px;border:1px solid #E5E8EF;border-radius:8px;background:#fff;font-size:14px;line-height:32px;color:#8F959E;cursor:pointer;position:relative;text-align:left}',
+    '.rea-hx-select:hover{border-color:#1677FF}',
+    '.rea-hx-seltext{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+    '.rea-hx-selcaret{position:absolute;right:10px;top:50%;margin-top:-6px;font-size:10px;line-height:12px;color:#8F959E;pointer-events:none}',
+    '.rea-hx-execmenu{position:absolute;left:0;top:calc(100% + 4px);z-index:30;display:none;box-sizing:border-box;width:280px;max-width:100%;padding:6px;border:1px solid #E5E8EF;border-radius:8px;background:#fff;box-shadow:0 6px 16px rgba(0,0,0,.08)}',
     '.rea-hx-execmenu.on{display:block}',
-    '.rea-hx-execmenu .rea-hx-opt{display:flex;align-items:center;justify-content:space-between;border-radius:4px}',
+    '.rea-hx-execmenu .rea-hx-opt{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border-radius:6px}',
     '.rea-hx-execn{font-size:12px;color:#8c8c8c}',
     '.rea-hx-opt.on .rea-hx-execn{color:#1677ff}',
     '.rea-hx-drag{color:#bfbfbf;cursor:grab;font-size:14px;user-select:none}',
@@ -30962,6 +31124,7 @@ checkCross();
     return String.raw`
 (function(){
 'use strict';
+var SEC_ICON=${reaJson(REA_WX_SEC_ICON)};
 var ROWS=document.querySelectorAll('div[class*="_form_input_"]');
 function rowLabel(r){var s=r?r.querySelector('span[class*="_must_"]'):null;return s?(s.textContent||'').replace(/\s+/g,''):''}
 function rowBy(k){for(var i=0;i<ROWS.length;i++)if(rowLabel(ROWS[i])===k)return ROWS[i];return null}
@@ -30973,14 +31136,31 @@ var L={
 /* 「任务类型」改名「循环方式」（2026-11-16）：这一行只决定单次／周／月／自定义循环，
    任务品类另由快照「基础信息 · 任务类型」表示；与另外两张新建页、全部快照同词。 */
 if(L.type){var TL=L.type.querySelector('span[class*="_must_"]');if(TL)TL.textContent='循环方式'}
+/* 行的原容器（页首标题下那层）。行搬进卡后 L.name.parentNode 会变成卡身，
+   右栏与底部操作条都得挂在这一层，不能跟着走。 */
+var HOLDER=L.name?L.name.parentNode:null;
 
-/* 分块（2026-11-16）：任务安排 → 唤醒对象 → 唤醒内容，卡面照「发圈 · 新建」的线框
-   （1px 边、8px 圆角、卡头分隔线、卡身内距）。原页是一条条平铺的，这里把行搬进各自的卡，
-   控件本身不重建。 */
+/* 页首标题与分块（2026-11-16）：任务安排 → 唤醒对象 → 唤醒内容，卡面照「发圈 · 新建」的线框
+   （1px 边、8px 圆角、卡头分隔线、卡身内距）。行仍是快照原节点，这里只搬位置、补本页的行与
+   标签类，横向节奏照「群发好友 · 新建」：标签右对齐 92px，控件吃掉余下整行。
+   快照原本 padding:24px 20% 把表单挤在页面中间，搬进卡后左边会空出一大条。 */
+var TITLE=document.querySelector('[class*="_titleBar_"]');
+if(TITLE)TITLE.textContent='新建客户唤醒任务';
+var CARD={};
 (function(){
   if(!L.name)return;
   var holder=L.name.parentNode;
   if(!holder)return;
+  /* 必填星只留真正要用户决定的几行；任务名称有默认值，循环方式／全局弹窗／内容生成策略
+     也都有默认值，不挂星（与群发好友 · 新建同一口径）。 */
+  var REQ={'执行人员':1,'唤醒人群':1,'唤醒内容':1,'通知时间':1,'截止时间':1};
+  function dress(row){
+    row.classList.add('rea-hx-row');
+    var lab=row.querySelector('span[class*="_must_"]');
+    if(!lab)return;
+    lab.classList.add('rea-hx-lab');
+    if(REQ[rowLabel(row)])lab.classList.add('rea-hx-req');
+  }
   var groups=[
     ['任务安排',[L.name,L.exec,L.type,L.start,L.end,L.popup]],
     ['唤醒对象',[L.crowd,L.tag]],
@@ -30996,24 +31176,29 @@ if(L.type){var TL=L.type.querySelector('span[class*="_must_"]');if(TL)TL.textCon
   for(i=0;i<groups.length;i++){
     var sec=document.createElement('section');sec.className='rea-hx-sec';
     var hd=document.createElement('div');hd.className='rea-hx-sechd';
-    var h3=document.createElement('h3');h3.textContent=groups[i][0];hd.appendChild(h3);
+    var h3=document.createElement('h3');
+    h3.innerHTML='<span class="rea-hx-secicon">'+(SEC_ICON[groups[i][0]]||'')+'</span><span></span>';
+    h3.querySelector('span:last-child').textContent=groups[i][0];
+    hd.appendChild(h3);
     var bd=document.createElement('div');bd.className='rea-hx-secbd';
     sec.appendChild(hd);sec.appendChild(bd);
     if(anchor)holder.insertBefore(sec,anchor);else holder.appendChild(sec);
-    for(j=0;j<groups[i][1].length;j++)if(groups[i][1][j])bd.appendChild(groups[i][1][j]);
+    for(j=0;j<groups[i][1].length;j++)if(groups[i][1][j]){dress(groups[i][1][j]);bd.appendChild(groups[i][1][j])}
+    CARD[groups[i][0]]=bd;
   }
-  /* 「温馨提示」是唤醒人群那行的注脚，原先是它的下一个兄弟节点；行搬进卡后会掉队，
-     这里把它跟回唤醒人群后面 */
-  if(L.crowd)for(i=0;i<holder.children.length;i++){
+  /* 「温馨提示」原先是唤醒人群那行的下一个兄弟节点（快照另起一行、标签空着）；搬进卡后
+     这行会掉队。这里撤掉，改由本页在唤醒人群行下写一条同口径提示（见 syncTip）。 */
+  for(i=0;i<holder.children.length;i++){
     var ch=holder.children[i];
     if(ch.classList&&ch.classList.contains('rea-hx-sec'))continue;
     if(!ch.textContent||ch.textContent.indexOf('温馨提示')<0)continue;
-    L.crowd.parentNode.insertBefore(ch,L.crowd.nextSibling);break;
+    ch.parentNode.removeChild(ch);break;
   }
 })();
 function up(n,c){while(n&&n.nodeType===1){if(n.classList&&n.classList.contains(c))return n;n=n.parentNode}return null}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function pad(n){return (n<10?'0':'')+n}
+function makeHint(t){var p=document.createElement('p');p.className='rea-hx-hint';p.textContent=t;return p}
 
 /* 右栏的微信会话模拟（三张新建页共用） */
 ${reaWxChatJs()}
@@ -31370,17 +31555,17 @@ var SEL=L.crowd?L.crowd.querySelector('.ant-select'):null;
 var ITEM=L.crowd?L.crowd.querySelector('.ant-select-selection-item'):null;
 var UNIT=ITEM?(ITEM.textContent||'').trim():'小时';
 var UNITMENU=null;
-var TIP=(function(){
-  var ds=document.querySelectorAll('div'),i,t;
-  for(i=0;i<ds.length;i++){
-    t=(ds[i].textContent||'');
-    if(t.indexOf('未联系客户唤醒')>0&&ds[i].children.length===1&&ds[i].children[0].tagName==='BR')return ds[i];
-  }
-  return null;
-})();
+/* 快照那句「温馨提示」原是一整行（标签空着、字号 14 灰字）；这里收成唤醒人群行下的
+   一行说明，与群发好友的提示句同一位置、同一字号，内容与单位切换口径不变。 */
+var crowdHint=null;
+if(L.crowd){
+  crowdHint=document.createElement('p');crowdHint.className='rea-hx-hint';
+  L.crowd.parentNode.insertBefore(crowdHint,L.crowd.nextSibling);
+}
 function syncTip(){
-  if(TIP)TIP.innerHTML='为防止唤醒客户数量过大，设置了默认上限时间为起始时间+5'
-    +'<br>若设置1'+UNIT+'未联系客户唤醒，则数据则为1-6'+UNIT+'内未联系客户。';
+  if(!crowdHint)return;
+  crowdHint.textContent='温馨提示：为防止唤醒客户数量过大，设置了默认上限时间为起始时间+5；'
+    +'若设置 1 '+UNIT+'未联系客户唤醒，则数据则为 1-6'+UNIT+'内未联系客户。';
 }
 function paintUnitMenu(){
   if(!UNITMENU&&SEL){
@@ -31412,59 +31597,75 @@ if(SEL){
   });
 }
 
-/* ---------------- 执行人员：快照是静态树选择，补一层演示组织 ---------------- */
+/* ---------------- 执行人员：快照是静态树选择，换成与群发好友同一枚自造下拉 ---------------- */
 var ORGS=[{n:'华东销售组',c:12},{n:'华南销售组',c:8},{n:'销售支持组',c:5},{n:'全员',c:25}];
 var EXECSEL=null;
-var ETRIG=L.exec?L.exec.querySelector('.yk-tree-select-show'):null;
-var ETXT=L.exec?L.exec.querySelector('.yk-select-wrap span'):null;
-var EMENU=null;
+var ETRIG=L.exec?L.exec.querySelector('div'):null;
+var EMENU=null,ETXT=null;
 if(ETRIG){
-  ETRIG.classList.add('rea-hx-exec');
-  ETRIG.style.cursor='pointer';
-  ETRIG.addEventListener('click',function(e){
+  ETRIG.className='rea-hx-exec';
+  ETRIG.removeAttribute('style');
+  ETRIG.innerHTML='<button type="button" class="rea-hx-select" aria-haspopup="listbox" aria-expanded="false">'
+    +'<span class="rea-hx-seltext">请选择执行人员</span><span class="rea-hx-selcaret">▾</span></button>'
+    +'<div class="rea-hx-execmenu" role="listbox"></div>';
+  var selBtn=ETRIG.querySelector('.rea-hx-select');
+  EMENU=ETRIG.querySelector('.rea-hx-execmenu');
+  ETXT=ETRIG.querySelector('.rea-hx-seltext');
+  EMENU.innerHTML=ORGS.map(function(o,i){
+    return '<button type="button" class="rea-hx-opt" role="option" data-hx-org="'+i+'"><span>'+o.n+'</span><span class="rea-hx-execn">'+o.c+' 人</span></button>';
+  }).join('');
+  selBtn.addEventListener('click',function(e){
     e.preventDefault();e.stopPropagation();
-    if(!EMENU){
-      EMENU=document.createElement('div');EMENU.className='rea-hx-execmenu';
-      EMENU.innerHTML=ORGS.map(function(o,i){
-        return '<button type="button" class="rea-hx-opt" data-hx-org="'+i+'"><span>'+o.n+'</span><span class="rea-hx-execn">'+o.c+' 人</span></button>';
-      }).join('');
-      ETRIG.appendChild(EMENU);
-      EMENU.addEventListener('click',function(ev){
-        var b=ev.target.closest?ev.target.closest('[data-hx-org]'):null;if(!b)return;
-        ev.preventDefault();ev.stopPropagation();
-        EXECSEL=ORGS[Number(b.getAttribute('data-hx-org'))];
-        if(ETXT){ETXT.textContent=EXECSEL.n+'（'+EXECSEL.c+' 人）';ETXT.style.color='rgba(0, 0, 0, 0.88)'}
-        var os=EMENU.querySelectorAll('.rea-hx-opt'),j;
-        for(j=0;j<os.length;j++)os[j].classList.toggle('on',os[j]===b);
-        EMENU.classList.remove('on');
-      });
-    }
-    EMENU.classList.toggle('on');
+    var on=EMENU.classList.toggle('on');
+    selBtn.setAttribute('aria-expanded',on?'true':'false');
+  });
+  EMENU.addEventListener('click',function(ev){
+    var b=ev.target.closest?ev.target.closest('[data-hx-org]'):null;if(!b)return;
+    ev.preventDefault();ev.stopPropagation();
+    EXECSEL=ORGS[Number(b.getAttribute('data-hx-org'))];
+    if(ETXT){ETXT.textContent=EXECSEL.n+'（'+EXECSEL.c+' 人）';ETXT.style.color='#1F2329'}
+    var os=EMENU.querySelectorAll('.rea-hx-opt'),j;
+    for(j=0;j<os.length;j++){os[j].classList.toggle('on',os[j]===b);os[j].setAttribute('aria-selected',os[j]===b?'true':'false')}
+    EMENU.classList.remove('on');
+    selBtn.setAttribute('aria-expanded','false');
+    drawPreview();
   });
 }
 
-/* ---------------- 时间默认值 ---------------- */
-function pad2(n){return (n<10?'0':'')+n}
-function dstr(d){return d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate()}
-function tstr(d){return pad2(d.getHours())+':'+pad2(d.getMinutes())+':'+pad2(d.getSeconds())}
-function setWhen(row,date,time){
-  if(!row)return;
-  var ins=row.querySelectorAll('.ant-picker input');
-  if(ins[0])ins[0].value=date;
-  if(ins[1])ins[1].value=time;
+/* ---------------- 两个时间：与群发好友同一枚 datetime-local ---------------- */
+function dtStr(d){
+  return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())
+    +'T'+pad(d.getHours())+':'+pad(d.getMinutes());
+}
+function dtInput(row,val){
+  if(!row)return null;
+  var ctl=row.querySelector('[class*="_upload_box_"]');
+  if(!ctl)return null;
+  ctl.innerHTML='';
+  var inp=document.createElement('input');
+  inp.type='datetime-local';
+  inp.className='ant-input css-vgijab ant-input-outlined rea-hx-dt';
+  inp.value=val;
+  inp.addEventListener('input',function(){drawPreview()});
+  inp.addEventListener('change',function(){drawPreview()});
+  ctl.appendChild(inp);
+  return inp;
 }
 var NOW=new Date();
 var END=new Date(NOW.getTime()+7*24*3600*1000);
-setWhen(L.start,dstr(NOW),tstr(NOW));
-setWhen(L.end,dstr(END),tstr(NOW));
+var startI=dtInput(L.start,dtStr(NOW))
+var endI=dtInput(L.end,dtStr(END));
 function whenOf(row){
   if(!row)return null;
-  var ins=row.querySelectorAll('.ant-picker input');
-  if(!ins.length||!ins[0].value||!ins[1].value)return null;
-  var dp=ins[0].value.split(/[\/\-]/),tp=ins[1].value.split(':');
-  if(dp.length<3||tp.length<2)return null;
-  var d=new Date(Number(dp[0]),Number(dp[1])-1,Number(dp[2]),Number(tp[0])||0,Number(tp[1])||0,Number(tp[2])||0);
+  var inp=row.querySelector('.rea-hx-dt');
+  if(!inp||!inp.value)return null;
+  var d=new Date(inp.value);
   return isNaN(d.getTime())?null:d;
+}
+/* 两个时间下的说明句照群发好友 · 新建：控件下方一行 12px 灰字，不再挤在行尾。 */
+if(CARD['任务安排']){
+  if(L.start)CARD['任务安排'].insertBefore(makeHint('到达通知时间会给执行人员推送提醒。'),L.start.nextSibling);
+  if(L.end)CARD['任务安排'].insertBefore(makeHint('未到开始时间的任务在员工任务列表里不可见。'),L.end.nextSibling);
 }
 
 /* ---------------- 保存 / 取消 ---------------- */
@@ -31489,6 +31690,22 @@ for(var bi=0;bi<btns.length;bi++){
   if(bt==='保存')SAVE=btns[bi];
   else if(bt==='取消')CANCEL=btns[bi];
 }
+/* 底部操作条（2026-11-16，照群发好友 · 新建）：左一行汇总、右「取消」「保存」，
+   贴在滚动容器底沿，左栏滚到哪里都在。原来的保存行搬空后整行撤掉。 */
+var ACTSUM=null;
+(function(){
+  if(!SAVE&&!CANCEL)return;
+  var hold=HOLDER;
+  if(!hold)return;
+  var act=document.createElement('div');act.className='rea-hx-act';
+  ACTSUM=document.createElement('div');ACTSUM.className='rea-hx-actsum';
+  var actBtns=document.createElement('div');actBtns.className='rea-hx-actbtns';
+  if(CANCEL)actBtns.appendChild(CANCEL);
+  if(SAVE)actBtns.appendChild(SAVE);
+  act.appendChild(ACTSUM);act.appendChild(actBtns);hold.appendChild(act);
+  var actRow=(SAVE||CANCEL).closest('[class*="_form_input_"]');
+  if(actRow&&actRow.parentNode)actRow.parentNode.removeChild(actRow);
+})();
 if(SAVE)SAVE.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();save()});
 if(CANCEL)CANCEL.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();parent.postMessage({reaPage:'客户唤醒'},'*')});
 
@@ -31509,7 +31726,7 @@ document.addEventListener('keydown',function(e){
 /* ---------------- 右栏：客户视角的微信会话预览 ---------------- */
 var SIDECHAT=null,SUM={};
 (function(){
-  var holder=L.name?L.name.parentNode:null;
+  var holder=HOLDER;
   if(!holder||!holder.parentNode)return;
   holder.classList.add('rea-hx-main');
   var wrap=document.createElement('div');wrap.className='rea-hx-wrap';
@@ -31531,6 +31748,17 @@ var SIDECHAT=null,SUM={};
   SUM.when=side.querySelector('[data-hx-sum="when"]');
 })();
 function hmOf(d){return d?pad(d.getHours())+':'+pad(d.getMinutes()):''}
+function mdOf(d){return d?((d.getMonth()+1)+'-'+d.getDate()):''}
+/* 循环方式读的是快照那组单选的选中态（REA_FX 只挪里面的 .ant-radio-checked）。 */
+function cycleLabel(){
+  if(!L.type)return '单次任务';
+  var ws=L.type.querySelectorAll('.ant-radio-wrapper'),i;
+  for(i=0;i<ws.length;i++)if(ws[i].querySelector('.ant-radio-checked')){
+    var lab=ws[i].querySelector('.ant-radio-label');
+    return lab?(lab.textContent||'').replace(/\s+/g,''):'单次任务';
+  }
+  return '单次任务';
+}
 function tagText(){
   if(!L.tag)return '';
   var it=L.tag.querySelector('.ant-select-selection-item'),
@@ -31552,22 +31780,34 @@ function previewMsgs(){
 }
 function drawPreview(){
   if(!SIDECHAT)return;
-  var st=whenOf(L.start),msgs=previewMsgs();
+  var st=whenOf(L.start),et=whenOf(L.end),msgs=previewMsgs();
   SIDECHAT.innerHTML=wxChat({kind:'chat',title:'微信昵称',avatar:'销',time:hmOf(st),msgs:msgs,empty:'还没有唤醒内容'});
   if(SUM.exec){
-    var t=ETXT?(ETXT.textContent||'').trim():'';
-    if(!t||t.indexOf('请选择')>=0)t=EXECSEL?EXECSEL.n:'—';
-    SUM.exec.textContent=t||'—';SUM.exec.title=SUM.exec.textContent;
+    var t=EXECSEL?(EXECSEL.n+' · '+EXECSEL.c+' 人'):'未选择';
+    SUM.exec.textContent=t;SUM.exec.title=t;
   }
+  var range=(NUM?String(NUM.value||'1'):'1')+' '+UNIT+'未联系客户',tg=tagText();
   if(SUM.who){
-    var t2=(NUM?String(NUM.value||'1'):'1')+' '+UNIT+'未联系客户',tg=tagText();
+    var t2=range;
     if(tg)t2+=' · 标签 '+tg;
     SUM.who.textContent=t2;SUM.who.title=t2;
   }
   if(SUM.how){SUM.how.textContent=msgs.length?msgs.length+' 条':'—';SUM.how.title=SUM.how.textContent}
   if(SUM.when){
-    var t3=st?((st.getMonth()+1)+'-'+st.getDate()+' '+hmOf(st)):'—';
+    var t3='未设置';
+    if(st){
+      var rep=cycleLabel();
+      t3=rep==='单次任务'?(mdOf(st)+' '+hmOf(st)+' 发出'):(mdOf(st)+' '+hmOf(st)+' 起 · '+rep);
+      if(et){
+        var gap=Math.round((et-st)/86400000);
+        t3+='，'+(gap>0?gap:0)+' 天内完成';
+      }
+    }
     SUM.when.textContent=t3;SUM.when.title=t3;
+  }
+  if(ACTSUM){
+    var t4=range+(tg?' · 标签 '+tg:'')+' · '+(strategy()==='ai'?'AI生成':'固定内容');
+    ACTSUM.textContent=t4;
   }
 }
 var hxDraw=drawRows;
@@ -31632,8 +31872,8 @@ syncTip();drawRows();
     '客户唤醒': { css: REA_WX_SNAP_CSS, js: function(){ return reaWxListJs('客户唤醒'); } },
     /* 六张微信营销任务详情页（2026-11-10）：共用一张执行进度卡与 10 条演示表行。
        前面那段 js 是各页原有的任务信息回显，进度卡排在它后面（先补行、再收行）。 */
-    '群发好友 · 详情': { css: REA_QF_CSS + REA_WX_DETAIL_CSS + REA_WX_SNAP_CSS, js: function(){ return reaQfDetailJs() + reaWxDetailContentJs('群发好友 · 详情') + reaWxDetailJs('群发好友 · 详情'); } },
-    '发圈 · 详情': { css: REA_FQ_DETAIL_CSS + REA_WX_DETAIL_CSS + REA_WX_SNAP_CSS, js: function(){ return reaFqDetailJs() + reaWxDetailContentJs('发圈 · 详情') + reaWxDetailJs('发圈 · 详情'); } },
+    '群发好友 · 详情': { css: REA_QF_CSS + REA_WX_DETAIL_CSS + REA_WX_SNAP_CSS, js: function(){ return reaQfDetailJs() + reaWxDetailContentJs('群发好友 · 详情') + reaWxDetailJs('群发好友 · 详情') + reaWxSnapshotDrawerJs('群发好友 · 详情'); } },
+    '发圈 · 详情': { css: REA_FQ_DETAIL_CSS + REA_WX_DETAIL_CSS + REA_WX_SNAP_CSS, js: function(){ return reaFqDetailJs() + reaWxDetailContentJs('发圈 · 详情') + reaWxDetailJs('发圈 · 详情') + reaWxSnapshotDrawerJs('发圈 · 详情'); } },
     /* 微信营销任务 · 任务内容「从素材库选择」（2026-10-23）：三页共用一份弹窗与选材逻辑 */
     '发圈 · 新建': { css: REA_WXT_CSS, js: function(){ return reaWxtJs('发圈 · 新建'); } },
     '群发好友 · 新建': { css: REA_WXT_CSS, js: function(){ return reaWxtJs('群发好友 · 新建'); } },
@@ -31642,21 +31882,14 @@ syncTip();drawRows();
     '自动打招呼 · 新建': { css: REA_PICK_CSS + REA_ZD_CSS, js: function(){ return reaZdJs(); } },
     /* 批量加好友（2026-10-27）：新建页补「添加群内好友」与四行配置；详情页补只读回显 */
     '批量加好友 · 新建': { css: REA_BD_CSS, js: function(){ return reaBdJs(); } },
-    '批量加好友 · 详情': { css: REA_WX_DETAIL_CSS, js: function(){ return reaBdDetailJs() + reaWxDetailJs('批量加好友 · 详情'); } },
-    '群发群组 · 详情': { css: REA_WX_DETAIL_CSS + REA_WX_SNAP_CSS, js: function(){ return reaQsDetailJs() + reaWxDetailContentJs('群发群组 · 详情') + reaWxDetailJs('群发群组 · 详情'); } },
+    '批量加好友 · 详情': { css: REA_WX_DETAIL_CSS + REA_WX_SNAP_CSS, js: function(){ return reaBdDetailJs() + reaWxDetailJs('批量加好友 · 详情') + reaWxSnapshotDrawerJs('批量加好友 · 详情'); } },
+    '群发群组 · 详情': { css: REA_WX_DETAIL_CSS + REA_WX_SNAP_CSS, js: function(){ return reaQsDetailJs() + reaWxDetailContentJs('群发群组 · 详情') + reaWxDetailJs('群发群组 · 详情') + reaWxSnapshotDrawerJs('群发群组 · 详情'); } },
     /* 关联好友／客户唤醒的详情原来没覆盖，这一笔补上；关联好友另外把快照的
        「大标题卡」拆成面包屑＋任务信息卡＋列表卡，见 reaRelLayoutJs。
-       客户唤醒另有「查看发送内容」，见 reaWxDetailContentJs。 */
-    '关联好友 · 详情': { css: REA_WX_DETAIL_CSS, js: function(){ return reaRelLayoutJs() + reaWxDetailJs('关联好友 · 详情'); } },
-    '客户唤醒 · 详情': { css: REA_WX_DETAIL_CSS + REA_WX_SNAP_CSS, js: function(){ return reaWxDetailContentJs('客户唤醒 · 详情') + reaWxDetailJs('客户唤醒 · 详情') + reaWakeJs(); } },
-    /* 六张任务配置快照（2026-11-11）：运行时克隆各自详情页的壳，正文整段换成只读配置。
-       发圈的「任务内容」弹窗沿用 reaFqc 那套朋友圈排版，所以带上 REA_FQ_DETAIL_CSS。 */
-    '发圈 · 任务配置快照': { css: REA_FQ_DETAIL_CSS + REA_WX_SNAP_CSS, js: function(){ return reaWxSnapshotJs('发圈 · 任务配置快照'); } },
-    '群发好友 · 任务配置快照': { css: REA_WX_SNAP_CSS, js: function(){ return reaWxSnapshotJs('群发好友 · 任务配置快照'); } },
-    '群发群组 · 任务配置快照': { css: REA_WX_SNAP_CSS, js: function(){ return reaWxSnapshotJs('群发群组 · 任务配置快照'); } },
-    '批量加好友 · 任务配置快照': { css: REA_WX_SNAP_CSS, js: function(){ return reaWxSnapshotJs('批量加好友 · 任务配置快照'); } },
-    '关联好友 · 任务配置快照': { css: REA_WX_SNAP_CSS, js: function(){ return reaWxSnapshotJs('关联好友 · 任务配置快照'); } },
-    '客户唤醒 · 任务配置快照': { css: REA_WX_SNAP_CSS, js: function(){ return reaWxSnapshotJs('客户唤醒 · 任务配置快照'); } },
+       客户唤醒另有「查看发送内容」，见 reaWxDetailContentJs。
+       六页都带 reaWxSnapshotDrawerJs：快照从右侧抽屉展开，不再另起一页。 */
+    '关联好友 · 详情': { css: REA_WX_DETAIL_CSS + REA_WX_SNAP_CSS, js: function(){ return reaRelLayoutJs() + reaWxDetailJs('关联好友 · 详情') + reaWxSnapshotDrawerJs('关联好友 · 详情'); } },
+    '客户唤醒 · 详情': { css: REA_WX_DETAIL_CSS + REA_WX_SNAP_CSS, js: function(){ return reaWxDetailContentJs('客户唤醒 · 详情') + reaWxDetailJs('客户唤醒 · 详情') + reaWxSnapshotDrawerJs('客户唤醒 · 详情') + reaWakeJs(); } },
     /* 客户唤醒 · 新建（2026-11-11）：单位下拉、执行人员、添加回复内容弹窗（固定内容／AI 两套）
        ＋ 唤醒内容行的增删改；正文与设计语言都还是快照，只补交互 */
     '客户唤醒 · 新建': { css: REA_HX_CSS, js: reaHxJs }
@@ -31746,28 +31979,8 @@ syncTip();drawRows();
     } else {
       reaWarn('「任务配置快照」页合成失败：快照里找不到「' + REA_XHS_DETAIL + '」页');
     }
-    /* 微信营销任务的六张配置快照：各自克隆对应详情页的壳，正文由覆盖脚本整段换掉。 */
-    var wxSnaps = [
-      ['发圈 · 详情', '发圈 · 任务配置快照'],
-      ['群发好友 · 详情', '群发好友 · 任务配置快照'],
-      ['群发群组 · 详情', '群发群组 · 任务配置快照'],
-      ['批量加好友 · 详情', '批量加好友 · 任务配置快照'],
-      ['关联好友 · 详情', '关联好友 · 任务配置快照'],
-      ['客户唤醒 · 详情', '客户唤醒 · 任务配置快照']
-    ];
-    for (i = 0; i < wxSnaps.length; i++){
-      var wsrc = find(wxSnaps[i][0]);
-      if (wsrc){
-        P.pages.push({
-          name: wxSnaps[i][1],
-          rest: wsrc.rest,
-          contentStart: wsrc.contentStart,
-          contentEnd: wsrc.contentEnd
-        });
-      } else {
-        reaWarn('「' + wxSnaps[i][1] + '」页合成失败：快照里找不到「' + wxSnaps[i][0] + '」页');
-      }
-    }
+    /* 微信营销任务的配置快照不再单独成页（2026-11-16）：改从详情页右侧抽屉展开，
+       不再克隆详情页的壳，也不进页序。 */
     reaSynthDone = true;
   }
 
