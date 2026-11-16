@@ -22787,27 +22787,27 @@ tb.addEventListener("click",function(e){
     + '.rea-baf-err{display:none;margin:4px 0 0;max-width:680px;font-size:12px;line-height:20px;color:#ff4d4f}'
     + '.rea-baf-err.on{display:block}'
     /* ---- 2026-11-10 复刻「好友任务创建页」线框稿 ----
-       版式：灰底上居中一列——三张白卡 ＋ 贴在底部的操作条（2026-11-16 撤掉右栏任务概览）。
+       版式：内容区一整片白底，标题在下划线之上、设置项在 800px 一列里居中，
+       操作条贴视口下沿（2026-11-16 撤掉右栏任务概览、去掉卡片框）。
        配色照线框稿：主色 #1677FF，正文 #333333，次要 #8C8C8C，
-       分隔线 #F0F0F0，控件边 #D9D9D9，浅底 #E6F4FF，页底 #FAFAFA。 */
-    /* 内容区铺成一块灰底：白卡浮在上面，居中一列 */
-    + '[class*="_con_"]{background:#F2F5FA}'
+       分隔线 #F0F0F0，控件边 #D9D9D9，浅底 #E6F4FF。 */
+    /* 白底占满内容区：不再用灰底＋白卡，分节只是白底上的标题 */
+    + '[class*="_con_"]{background:#fff}'
     + '.rea-baf-form{max-width:none;margin:0}'
-    + '.rea-baf-page{max-width:800px;margin:0 auto;padding:6px 0 0;font-size:14px;line-height:1.6;color:#333333}'
-    + '.rea-baf-hd{margin:0 0 16px}'
+    + '.rea-baf-page{max-width:none;margin:0;padding:0;font-size:14px;line-height:1.6;color:#333333}'
+    + '.rea-baf-hd{margin:0 0 28px;padding:0 0 16px;border-bottom:1px solid #F0F0F0}'
     + '.rea-baf-hd h1{margin:0;font-size:16px;line-height:26px;font-weight:500;color:#333333}'
-    /* 2026-11-13 与新小红书运营 · 新建统一：分节从「一叠白纸里切段」改成一张张白底卡片，
-       卡片头＝标题＋一行灰副标题；序号圆点退休。 */
-    + '.rea-baf-sec{margin:0 0 16px;border:1px solid #F0F0F0;border-radius:8px;background:#fff}'
-    + '.rea-baf-sechd{display:block;padding:14px 20px 12px;margin:0;border-bottom:1px solid #F0F0F0}'
+    /* 分节：标题一行，三节在同一个居中列里靠留白分开，不画卡片也不加框线 */
+    + '.rea-baf-sec{max-width:800px;margin:0 auto 32px;border:0;border-radius:0;background:transparent}'
+    + '.rea-baf-sechd{display:block;padding:0;margin:0 0 16px;border:0}'
     + '.rea-baf-no{display:none}'
     + '.rea-baf-sechd h3{margin:0;font-size:16px;line-height:26px;font-weight:500;color:#333333}'
     + '.rea-baf-secsub{display:block;margin-top:2px;font-size:13px;line-height:20px;color:#8C8C8C}'
-    + '.rea-baf-secbd{display:block;padding:14px 20px 0}'
+    + '.rea-baf-secbd{display:block;padding:0}'
     + '.rea-baf-row{display:flex;align-items:flex-start;margin:0 0 18px}'
-    + '.rea-baf-secbd>.rea-baf-row:last-child{margin-bottom:14px}'
+    + '.rea-baf-secbd>.rea-baf-row:last-child{margin-bottom:0}'
     /* 116px 才放得下「添加好友方式」＋必填星号；92px 时文字会顶进右侧控件 */
-    + '.rea-baf-lab{flex:0 0 116px;box-sizing:border-box;width:116px;padding:0 16px 0 0;text-align:right;font-size:14px;line-height:32px;color:#646A73;white-space:nowrap}'
+    + '.rea-baf-lab{flex:0 0 116px;box-sizing:border-box;width:116px;padding:0 16px 0 0;text-align:right;font-size:14px;line-height:32px;color:#333333;white-space:nowrap}'
     + '.rea-baf-lab.req:before{content:"*";margin-right:4px;color:#FF4D4F}'
     + '.rea-baf-ctl{flex:1 1 auto;min-width:0}'
     /* 控件统一 32px 高，跟群发两页和快照的 AntD 控件停同一条线 */
@@ -22883,8 +22883,9 @@ tb.addEventListener("click",function(e){
     + '.rea-baf-chip2{display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 6px;border-radius:4px;background:#E6F4FF;font-size:11px;line-height:24px;color:#1677FF}'
     + '.rea-baf-chipx2{border:0;background:transparent;padding:0 1px;font-size:13px;line-height:16px;color:inherit;cursor:pointer}'
     + '.rea-baf-chipx2:hover{color:#FF4D4F}'
-    /* 底部操作条：bottom:-20px 抵掉快照滚动容器的下内边距，条子才贴得住下沿 */
-    + '.rea-baf-act{position:sticky;bottom:-20px;z-index:6;display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:16px;padding:17px 24px;border:1px solid #F0F0F0;border-radius:8px;background:#fff}'
+    /* 底部操作条：bottom:-20px 抵掉快照滚动容器的下内边距，条子才贴得住下沿。
+       白底页上不再套卡片框，只留一整片白衬底，滚过的行不会透出来 */
+    + '.rea-baf-act{position:sticky;bottom:-20px;z-index:6;max-width:800px;display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 auto;padding:16px 0 20px;border:0;border-top:1px solid #F0F0F0;border-radius:0;background:#fff}'
     + '.rea-baf-actsum{font-size:13px;line-height:1.9;color:#646A73}'
     + '.rea-baf-actbtns{display:flex;flex:none;gap:9px}'
     + '.rea-baf-actbtns .ant-btn{height:34px;padding:0 18px;border-radius:6px;font-size:12px}'
