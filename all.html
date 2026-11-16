@@ -13518,7 +13518,7 @@ setTimeout(sbScan,120);
 .rea-ov-page .ov-value-scene{padding:24px;min-height:180px}
 .rea-ov-page .ov-result-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .rea-ov-page .ov-result-label{font-size:14px;color:#1F2329;display:flex;gap:8px;align-items:center}
-.rea-ov-page .ov-result-number{display:flex;align-items:baseline;gap:8px;border:0;background:none;padding:4px 0 12px;cursor:pointer;font-size:36px;font-weight:600;color:#1F2329;font-variant-numeric:tabular-nums;text-align:left;white-space:nowrap}
+.rea-ov-page .ov-result-number{display:flex;align-items:baseline;gap:8px;border:0;background:none;padding:4px 0 4px;cursor:pointer;font-size:36px;font-weight:600;color:#1F2329;font-variant-numeric:tabular-nums;text-align:left;white-space:nowrap}
 .rea-ov-page .ov-result-number:hover{color:#1677FF}
 .rea-ov-page .ov-result-number small{font-size:14px;color:#646A73;font-weight:400}
 .rea-ov-page .ov-result-number i{font-size:14px;color:#1677FF;font-style:normal;opacity:0}
@@ -13527,6 +13527,9 @@ setTimeout(sbScan,120);
 .rea-ov-page .ov-result-footer b{font-weight:500;color:#1F2329;margin-left:6px;font-size:14px}
 .rea-ov-page .ov-result-footer small{font-size:12px;color:#646A73;margin-left:4px}
 .rea-ov-page .ov-result-footer .ov-link{font-size:13px}
+.rea-ov-page .ov-result-delta{display:flex;align-items:baseline;gap:4px;padding:0 0 12px;font-size:12px;color:#646A73}
+.rea-ov-page .ov-result-delta b{font-size:13px;font-weight:500;color:#1F2329;font-variant-numeric:tabular-nums}
+.rea-ov-page .ov-result-delta small{font-size:12px;color:#646A73}
 .rea-ov-page .ov-capabilities-heading{margin-top:24px}
 .rea-ov-page [hidden]{display:none!important}
 @media(max-width:1150px){.rea-ov-page .ov-value-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.rea-ov-page .ov-execution-summary{gap:24px}}
@@ -13642,7 +13645,7 @@ setTimeout(sbScan,120);
       note: "按成功确认计，同一客户跨账号或多次添加按人次累计",
     },
     publish: {
-      name: "成功发布朋友圈",
+      name: "朋友圈发布",
       unit: "条",
       note: "按成功发布回执计，托管代跑在汇总时只计一次",
     },
@@ -14393,6 +14396,7 @@ setTimeout(sbScan,120);
     {id:'request',name:'发出好友申请',unit:'次',scene:'建立客户联系',icon:'request',note:metrics.request.note},
     {id:'autoPass',name:'自动通过好友',unit:'人',scene:'建立客户联系',icon:'added',note:metrics.autoPass.note},
     {id:'firstTouch',name:'自动打招呼',unit:'人次',scene:'建立客户联系',icon:'firstTouch',note:metrics.firstTouch.note},
+    {id:'publish',name:'朋友圈发布',unit:'条',scene:'社群运营与互动',icon:'publish',note:metrics.publish.note},
     {id:'interact',name:'朋友圈互动',unit:'次',scene:'社群运营与互动',icon:'interact',note:'朋友圈点赞与评论的完成回执，按动作计次；AI和托管仅为执行方式，同一动作不重复计。'},
     {id:'sportLike',name:'运动点赞',unit:'人',scene:'社群运营与互动',icon:'group',note:metrics.sportLike.note},
     {id:'autoMessages',name:'AI自动回复',unit:'条',scene:'客户接待与沟通',icon:'autoReply',note:metrics.autoMessages.note+' 消息按成功发生时间归期；轮次详情仍按触发时间统计。'},
@@ -14403,15 +14407,25 @@ setTimeout(sbScan,120);
   function valueRecords() {
     return allRecords.filter(r=>r.day>=0&&r.day<periods[period].days&&(route.org==='all'||employees[r.employee].dept===route.org));
   }
+  function priorValueRecords() {
+    const days=periods[period].days;
+    return allRecords.filter(r=>r.day>=days&&r.day<days*2&&(route.org==='all'||employees[r.employee].dept===route.org));
+  }
   function valueNumber(value){return value>=10000?(value/10000).toFixed(2)+'万':number(value);}
+  function changeLine(records,id,unit) {
+    const days=periods[period].days,prior=priorValueRecords(),range=`${dateLabel(days*2-1)}–${dateLabel(days)}`;
+    if(days*2>90||!selectMetric(prior,id).length) return `<div class="ov-result-delta" title="上期 ${range} 没有完整同口径记录">较上期 <b>—</b></div>`;
+    const diff=metricValue(records,id)-metricValue(prior,id),sign=diff>0?'+':diff<0?'-':'';
+    return `<div class="ov-result-delta" title="上期 ${range}">较上期 <b>${sign}${valueNumber(Math.abs(diff))}</b><small>${unit}</small></div>`;
+  }
   function valueSummary(records) {
     const completed=records.filter(r=>r.metric==='taskCompleted'),done=sum(completed),hosted=metricValue(records,'hostingTask');
-    return `<section id="ov-value-summary" class="ov-value-scene ov-efficiency-card" data-result-card="efficiency"><div class="ov-result-heading"><h3>工作效率</h3><span class="ov-scene-icon">${ovIcon(METRIC_ICONS.taskExec,20)}</span></div><div class="ov-result-metric"><div class="ov-result-label">完成任务 ${helpSpan(metrics.taskCompleted.note)}</div><button class="ov-result-number" data-metric="taskCompleted" data-value="${done}" title="${number(done)} 人次">${valueNumber(done)}<small>人次</small><i aria-hidden="true">↗</i></button></div><div class="ov-result-footer"><button type="button" class="ov-link" data-metric="hostingTask" data-value="${hosted}">AI托管自动完成 <b>${valueNumber(hosted)}</b><small>条</small></button><button type="button" class="ov-link" data-scene="tasks" data-scene-tab="people">参与完成 <b>${new Set(completed.map(r=>r.employee)).size}</b><small>人</small></button></div></section>`;
+    return `<section id="ov-value-summary" class="ov-value-scene ov-efficiency-card" data-result-card="efficiency"><div class="ov-result-heading"><h3>工作效率</h3><span class="ov-scene-icon">${ovIcon(METRIC_ICONS.taskExec,20)}</span></div><div class="ov-result-metric"><div class="ov-result-label">完成任务 ${helpSpan(metrics.taskCompleted.note)}</div><button class="ov-result-number" data-metric="taskCompleted" data-value="${done}" title="${number(done)} 人次">${valueNumber(done)}<small>人次</small><i aria-hidden="true">↗</i></button>${changeLine(records,'taskCompleted','人次')}</div><div class="ov-result-footer"><button type="button" class="ov-link" data-metric="hostingTask" data-value="${hosted}">AI托管自动完成 <b>${valueNumber(hosted)}</b><small>条</small></button><button type="button" class="ov-link" data-scene="tasks" data-scene-tab="people">参与完成 <b>${new Set(completed.map(r=>r.employee)).size}</b><small>人</small></button></div></section>`;
   }
   function valueCards(records) {
     const metric=(id)=>{
       const spec=valueSpecs.find(c=>c.id===id),n=metricValue(records,id);
-      return `<div class="ov-result-metric"><div class="ov-result-label">${spec.name}${helpSpan(spec.note)}</div><button class="ov-result-number" data-metric="${id}" data-value="${n}" title="${number(n)} ${spec.unit}">${valueNumber(n)}<small>${spec.unit}</small><i aria-hidden="true">↗</i></button></div>`;
+      return `<div class="ov-result-metric"><div class="ov-result-label">${spec.name}${helpSpan(spec.note)}</div><button class="ov-result-number" data-metric="${id}" data-value="${n}" title="${number(n)} ${spec.unit}">${valueNumber(n)}<small>${spec.unit}</small><i aria-hidden="true">↗</i></button>${changeLine(records,id,spec.unit)}</div>`;
     };
     const secondary=(id)=>{
       const spec=valueSpecs.find(c=>c.id===id),n=metricValue(records,id);
@@ -14419,7 +14433,7 @@ setTimeout(sbScan,120);
     };
     const groups=[
       {id:'connection',name:'建立客户联系',icon:'request',main:'request',secondary:[secondary('autoPass'),secondary('firstTouch')]},
-      {id:'engagement',name:'社群运营与互动',icon:'group',main:'interact',secondary:[secondary('sportLike'),`<button type="button" class="ov-link" data-metric="publish">朋友圈发布 <b>${number(metricValue(records,'publish'))}</b><small>条</small></button>`]},
+      {id:'engagement',name:'社群运营与互动',icon:'group',main:'publish',secondary:[secondary('interact'),secondary('sportLike')]},
       {id:'conversation',name:'客户接待与沟通',icon:'autoReply',main:'autoMessages',secondary:[secondary('profile'),`<button type="button" class="ov-link" data-metric="aiReply">AI建议采纳 <b>${number(metricValue(records,'aiReply'))}</b><small>次</small></button>`,`<span>匹配素材取用 <b>${number(sum(selectMetric(records,'communication').filter(r=>r.metric==='material')))}</b><small>次</small></span>`]},
       {id:'content',name:'企业内容复用',icon:'material',main:'material',secondary:[secondary('materialAdded'),`<button type="button" class="ov-link" data-scene="material" data-scene-tab="people">取用员工 <b>${metricValue(records,'materialUsers')}</b><small>人</small></button>`]}
     ];
