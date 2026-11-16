@@ -13571,7 +13571,7 @@ setTimeout(sbScan,120);
       note: "员工将 AI 建议填入、复制或发送计一次采纳，同次建议去重",
     },
     material: {
-      name: "素材取用",
+      name: "企业素材取用",
       unit: "次",
       note: "员工主动复制、保存、一键发送或一键发圈",
     },
@@ -13655,7 +13655,7 @@ setTimeout(sbScan,120);
     },
   };
   metrics.firstTouch.unit="人次";
-  metrics.communication={name:"沟通辅助",unit:"次",note:"AI建议采纳与聊天匹配后素材取用，按有效操作累计；其中匹配素材取用也包含在企业内容取用中，两者不相加。演示匹配关联使用独立示意规则，生产需展示关联ID。"};
+  metrics.communication={name:"沟通辅助",unit:"次",note:"AI建议采纳与聊天匹配后素材取用，按有效操作累计；其中匹配素材取用也包含在企业素材取用中，两者不相加。演示匹配关联使用独立示意规则，生产需展示关联ID。"};
   const heroMetrics = [
     "added",
     "publish",
@@ -14311,7 +14311,7 @@ setTimeout(sbScan,120);
     {id:'sportLike',name:'运动点赞',unit:'人',scene:'社群运营与互动',icon:'group',note:metrics.sportLike.note},
     {id:'autoMessages',name:'AI自动回复',unit:'条',scene:'客户接待与沟通',icon:'autoReply',note:metrics.autoMessages.note+' 消息按成功发生时间归期；轮次详情仍按触发时间统计。'},
     {id:'profile',name:'AI分析',unit:'次',scene:'客户接待与沟通',icon:'profile',note:'客户画像分析完成的次数，按完成分析计；同一客户在不同时间多次分析分别计入。'},
-    {id:'material',name:'企业内容取用',unit:'次',scene:'企业内容复用',icon:'material',note:'企业素材复制、保存、一键发送、一键发圈；不包含任务自动发送。聊天中匹配到并取用的一次操作也计在这里，匹配只作关联，不另算一次。'},
+    {id:'material',name:'企业素材取用',unit:'次',scene:'企业内容复用',icon:'material',note:'企业素材复制、保存、一键发送、一键发圈；不包含任务自动发送。聊天中匹配到并取用的一次操作也计在这里，匹配只作关联，不另算一次。'},
     {id:'materialAdded',name:'新增素材',unit:'条',scene:'企业内容复用',icon:'materialAdded',note:metrics.materialAdded.note}
   ];
   function valueRecords() {
