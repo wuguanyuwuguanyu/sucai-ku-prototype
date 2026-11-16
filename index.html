@@ -12152,6 +12152,8 @@ document.addEventListener('scroll',function(e){
 setTimeout(sbScan,120);
 
 <\/script>
+
+
 </body>
 </html>
 </script>
@@ -27057,7 +27059,7 @@ BT.addEventListener('click',function(e){
      组标题在左（88px）、字段三列在右，标题不额外占高度；标题与分组顺序直接复述
      REA_WXS 的块名与块序，两边共用一个口径。
      · 任务类型六页都不显示：页面与面包屑已经说明这条任务属于哪个模块。
-     · 创建时间、循环方式、自动发送、素材分类、发送类型、分配方式、
+     · 创建时间、循环方式、所在位置、自动发送、素材分类、发送类型、分配方式、
        人均添加量、内容生成策略都只进快照抽屉，详情不重复，所以全部列进 hide。
      · 范围类字段统一成一格「发送范围」——发圈的「谁可以看」、群发好友的
        「群发范围＋标签名称」、群发群组的「群发那些群」都并进来，值统一写
@@ -27069,8 +27071,8 @@ BT.addEventListener('click',function(e){
       state:'live', stateText:'进行中',
       validity:'2026/11/08 09:00~2026/11/13 13:51',
       unit:'people', head:'用户名',
-      /* 首屏 6 项；创建时间、循环方式、自动发送只进快照抽屉 */
-      hide:['已发送','任务类型','素材分类','创建时间','循环方式','自动发送'],
+      /* 首屏 6 项；创建时间、循环方式、所在位置、自动发送只进快照抽屉 */
+      hide:['已发送','任务类型','素材分类','创建时间','循环方式','所在位置','自动发送'],
       order:['任务名称','任务状态','任务有效期','执行人员','发送范围','任务内容'],
       groups:[
         {t:'基础信息',f:['任务状态','任务有效期']},
@@ -31047,6 +31049,26 @@ checkCross();
     '.rea-hx-secicon{display:flex;flex:none;color:#1677FF}',
     '.rea-hx-secicon svg{display:block;width:18px;height:18px}',
     '.rea-hx-secbd{padding:2px 20px 4px}',
+    /* 行与标签照「群发好友 · 新建」：标签右对齐 92px（＋16 右内距＝控件从 108 起），
+       控件吃掉余下整行；说明句落在控件下方同一列。快照原本 padding:24px 20% 把表单
+       挤在中间，搬进卡后左边会空出一大条。 */
+    '.rea-hx-secbd>.rea-hx-row:first-child{padding-top:14px!important}',
+    '.rea-hx-row{padding:0!important;margin:0 0 18px!important;display:flex;align-items:flex-start;width:auto!important}',
+    '.rea-hx-row>*:not(.rea-hx-lab){flex:1 1 auto;min-width:0}',
+    '.rea-hx-lab{flex:0 0 92px!important;width:92px!important;margin:0!important;padding-right:16px!important;text-align:right!important;font-size:14px!important;line-height:32px!important;color:#646A73!important;white-space:nowrap}',
+    /* 快照的必填红星是标签上的 ::after，位置按原标签宽度写死；收掉，改由本页重画。 */
+    '.rea-hx-lab:after{content:none!important}',
+    '.rea-hx-lab.rea-hx-req:before{content:"*";color:#FF4D4F;margin-right:4px;font-family:SimSun,sans-serif}',
+    '.rea-hx-hint{margin:-8px 0 16px 92px;font-size:12px;line-height:18px;color:#8F959E;max-width:640px}',
+    '.rea-hx-hint[hidden]{display:none!important}',
+    '.rea-hx-row p{margin:8px 0 0!important;font-size:12px!important;line-height:18px!important;color:#8F959E!important}',
+    '.rea-hx-row .ant-input-affix-wrapper{width:100%}',
+    '.rea-hx-dt{width:240px;max-width:100%}',
+    /* 底部操作条：与群发好友同一形——贴视口底、左汇总右按钮；
+       bottom:-20px 抵掉快照滚动容器（._con_）自带的 20px 下内衬。 */
+    '.rea-hx-act{position:sticky;bottom:-20px;z-index:6;display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:8px;padding:14px 0;background:#fff;border-top:1px solid #E5E8EF}',
+    '.rea-hx-actsum{font-size:13px;color:#646A73}',
+    '.rea-hx-actbtns{display:flex;gap:8px}',
     /* 「唤醒内容」这格窄，标签原本被挤成一字一行；标签一律不折行 */
     '[class*="_must_"]{white-space:nowrap}',
     '.rea-hx-range{display:flex;align-items:center;gap:10px}',
@@ -31067,10 +31089,15 @@ checkCross();
     '.rea-hx-opt{display:block;width:100%;padding:5px 12px;border:0;background:none;font-size:14px;line-height:22px;color:rgba(0,0,0,.88);text-align:left;cursor:pointer}',
     '.rea-hx-opt:hover{background:#f5f5f5}',
     '.rea-hx-opt.on{color:#1677ff;font-weight:600;background:#e6f4ff}',
+    /* 执行人员：与群发好友那枚自造下拉同一形（32 高、8 圆角、280 宽） */
     '.rea-hx-exec{position:relative}',
-    '.rea-hx-execmenu{position:absolute;left:0;top:calc(100% + 4px);z-index:30;display:none;width:100%;min-width:240px;padding:4px;border:1px solid #f0f0f0;border-radius:6px;background:#fff;box-shadow:0 6px 16px rgba(0,0,0,.12)}',
+    '.rea-hx-select{display:flex;align-items:center;box-sizing:border-box;width:280px;max-width:100%;height:32px;padding:0 32px 0 11px;border:1px solid #E5E8EF;border-radius:8px;background:#fff;font-size:14px;line-height:32px;color:#8F959E;cursor:pointer;position:relative;text-align:left}',
+    '.rea-hx-select:hover{border-color:#1677FF}',
+    '.rea-hx-seltext{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+    '.rea-hx-selcaret{position:absolute;right:10px;top:50%;margin-top:-6px;font-size:10px;line-height:12px;color:#8F959E;pointer-events:none}',
+    '.rea-hx-execmenu{position:absolute;left:0;top:calc(100% + 4px);z-index:30;display:none;box-sizing:border-box;width:280px;max-width:100%;padding:6px;border:1px solid #E5E8EF;border-radius:8px;background:#fff;box-shadow:0 6px 16px rgba(0,0,0,.08)}',
     '.rea-hx-execmenu.on{display:block}',
-    '.rea-hx-execmenu .rea-hx-opt{display:flex;align-items:center;justify-content:space-between;border-radius:4px}',
+    '.rea-hx-execmenu .rea-hx-opt{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border-radius:6px}',
     '.rea-hx-execn{font-size:12px;color:#8c8c8c}',
     '.rea-hx-opt.on .rea-hx-execn{color:#1677ff}',
     '.rea-hx-drag{color:#bfbfbf;cursor:grab;font-size:14px;user-select:none}',
@@ -31109,14 +31136,31 @@ var L={
 /* 「任务类型」改名「循环方式」（2026-11-16）：这一行只决定单次／周／月／自定义循环，
    任务品类另由快照「基础信息 · 任务类型」表示；与另外两张新建页、全部快照同词。 */
 if(L.type){var TL=L.type.querySelector('span[class*="_must_"]');if(TL)TL.textContent='循环方式'}
+/* 行的原容器（页首标题下那层）。行搬进卡后 L.name.parentNode 会变成卡身，
+   右栏与底部操作条都得挂在这一层，不能跟着走。 */
+var HOLDER=L.name?L.name.parentNode:null;
 
-/* 分块（2026-11-16）：任务安排 → 唤醒对象 → 唤醒内容，卡面照「发圈 · 新建」的线框
-   （1px 边、8px 圆角、卡头分隔线、卡身内距）。原页是一条条平铺的，这里把行搬进各自的卡，
-   控件本身不重建。 */
+/* 页首标题与分块（2026-11-16）：任务安排 → 唤醒对象 → 唤醒内容，卡面照「发圈 · 新建」的线框
+   （1px 边、8px 圆角、卡头分隔线、卡身内距）。行仍是快照原节点，这里只搬位置、补本页的行与
+   标签类，横向节奏照「群发好友 · 新建」：标签右对齐 92px，控件吃掉余下整行。
+   快照原本 padding:24px 20% 把表单挤在页面中间，搬进卡后左边会空出一大条。 */
+var TITLE=document.querySelector('[class*="_titleBar_"]');
+if(TITLE)TITLE.textContent='新建客户唤醒任务';
+var CARD={};
 (function(){
   if(!L.name)return;
   var holder=L.name.parentNode;
   if(!holder)return;
+  /* 必填星只留真正要用户决定的几行；任务名称有默认值，循环方式／全局弹窗／内容生成策略
+     也都有默认值，不挂星（与群发好友 · 新建同一口径）。 */
+  var REQ={'执行人员':1,'唤醒人群':1,'唤醒内容':1,'通知时间':1,'截止时间':1};
+  function dress(row){
+    row.classList.add('rea-hx-row');
+    var lab=row.querySelector('span[class*="_must_"]');
+    if(!lab)return;
+    lab.classList.add('rea-hx-lab');
+    if(REQ[rowLabel(row)])lab.classList.add('rea-hx-req');
+  }
   var groups=[
     ['任务安排',[L.name,L.exec,L.type,L.start,L.end,L.popup]],
     ['唤醒对象',[L.crowd,L.tag]],
@@ -31139,20 +31183,22 @@ if(L.type){var TL=L.type.querySelector('span[class*="_must_"]');if(TL)TL.textCon
     var bd=document.createElement('div');bd.className='rea-hx-secbd';
     sec.appendChild(hd);sec.appendChild(bd);
     if(anchor)holder.insertBefore(sec,anchor);else holder.appendChild(sec);
-    for(j=0;j<groups[i][1].length;j++)if(groups[i][1][j])bd.appendChild(groups[i][1][j]);
+    for(j=0;j<groups[i][1].length;j++)if(groups[i][1][j]){dress(groups[i][1][j]);bd.appendChild(groups[i][1][j])}
+    CARD[groups[i][0]]=bd;
   }
-  /* 「温馨提示」是唤醒人群那行的注脚，原先是它的下一个兄弟节点；行搬进卡后会掉队，
-     这里把它跟回唤醒人群后面 */
-  if(L.crowd)for(i=0;i<holder.children.length;i++){
+  /* 「温馨提示」原先是唤醒人群那行的下一个兄弟节点（快照另起一行、标签空着）；搬进卡后
+     这行会掉队。这里撤掉，改由本页在唤醒人群行下写一条同口径提示（见 syncTip）。 */
+  for(i=0;i<holder.children.length;i++){
     var ch=holder.children[i];
     if(ch.classList&&ch.classList.contains('rea-hx-sec'))continue;
     if(!ch.textContent||ch.textContent.indexOf('温馨提示')<0)continue;
-    L.crowd.parentNode.insertBefore(ch,L.crowd.nextSibling);break;
+    ch.parentNode.removeChild(ch);break;
   }
 })();
 function up(n,c){while(n&&n.nodeType===1){if(n.classList&&n.classList.contains(c))return n;n=n.parentNode}return null}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function pad(n){return (n<10?'0':'')+n}
+function makeHint(t){var p=document.createElement('p');p.className='rea-hx-hint';p.textContent=t;return p}
 
 /* 右栏的微信会话模拟（三张新建页共用） */
 ${reaWxChatJs()}
@@ -31501,25 +31547,27 @@ function setNum(v){
   v=Math.max(1,Math.floor(v)||1);
   if(NUM){NUM.value=String(v);NUM.setAttribute('aria-valuenow',String(v))}
   if(NDN)NDN.classList.toggle('ant-input-number-handler-down-disabled',v<=1);
+  drawPreview();
 }
 if(NUP)NUP.addEventListener('click',function(e){e.preventDefault();setNum((Number(NUM&&NUM.value)||1)+1)});
 if(NDN)NDN.addEventListener('click',function(e){e.preventDefault();setNum((Number(NUM&&NUM.value)||1)-1)});
+if(NUM)NUM.addEventListener('input',function(){drawPreview()});
 
 var SEL=L.crowd?L.crowd.querySelector('.ant-select'):null;
 var ITEM=L.crowd?L.crowd.querySelector('.ant-select-selection-item'):null;
 var UNIT=ITEM?(ITEM.textContent||'').trim():'小时';
 var UNITMENU=null;
-var TIP=(function(){
-  var ds=document.querySelectorAll('div'),i,t;
-  for(i=0;i<ds.length;i++){
-    t=(ds[i].textContent||'');
-    if(t.indexOf('未联系客户唤醒')>0&&ds[i].children.length===1&&ds[i].children[0].tagName==='BR')return ds[i];
-  }
-  return null;
-})();
+/* 快照那句「温馨提示」原是一整行（标签空着、字号 14 灰字）；这里收成唤醒人群行下的
+   一行说明，与群发好友的提示句同一位置、同一字号，内容与单位切换口径不变。 */
+var crowdHint=null;
+if(L.crowd){
+  crowdHint=document.createElement('p');crowdHint.className='rea-hx-hint';
+  L.crowd.parentNode.insertBefore(crowdHint,L.crowd.nextSibling);
+}
 function syncTip(){
-  if(TIP)TIP.innerHTML='为防止唤醒客户数量过大，设置了默认上限时间为起始时间+5'
-    +'<br>若设置1'+UNIT+'未联系客户唤醒，则数据则为1-6'+UNIT+'内未联系客户。';
+  if(!crowdHint)return;
+  crowdHint.textContent='为防止唤醒客户数量过大，设置了默认上限时间为起始时间+5；'
+    +'若设置 1 '+UNIT+'未联系客户唤醒，则数据则为 1-6'+UNIT+'内未联系客户。';
 }
 function paintUnitMenu(){
   if(!UNITMENU&&SEL){
@@ -31536,7 +31584,7 @@ function paintUnitMenu(){
       var os=UNITMENU.querySelectorAll('[data-hx-unit]'),j;
       for(j=0;j<os.length;j++)os[j].classList.toggle('on',os[j].getAttribute('data-hx-unit')===UNIT);
       UNITMENU.classList.remove('on');SEL.classList.remove('ant-select-open');
-      syncTip();
+      syncTip();drawPreview();
     });
   }
 }
@@ -31551,59 +31599,75 @@ if(SEL){
   });
 }
 
-/* ---------------- 执行人员：快照是静态树选择，补一层演示组织 ---------------- */
+/* ---------------- 执行人员：快照是静态树选择，换成与群发好友同一枚自造下拉 ---------------- */
 var ORGS=[{n:'华东销售组',c:12},{n:'华南销售组',c:8},{n:'销售支持组',c:5},{n:'全员',c:25}];
 var EXECSEL=null;
-var ETRIG=L.exec?L.exec.querySelector('.yk-tree-select-show'):null;
-var ETXT=L.exec?L.exec.querySelector('.yk-select-wrap span'):null;
-var EMENU=null;
+var ETRIG=L.exec?L.exec.querySelector('div'):null;
+var EMENU=null,ETXT=null;
 if(ETRIG){
-  ETRIG.classList.add('rea-hx-exec');
-  ETRIG.style.cursor='pointer';
-  ETRIG.addEventListener('click',function(e){
+  ETRIG.className='rea-hx-exec';
+  ETRIG.removeAttribute('style');
+  ETRIG.innerHTML='<button type="button" class="rea-hx-select" aria-haspopup="listbox" aria-expanded="false">'
+    +'<span class="rea-hx-seltext">请选择执行人员</span><span class="rea-hx-selcaret">▾</span></button>'
+    +'<div class="rea-hx-execmenu" role="listbox"></div>';
+  var selBtn=ETRIG.querySelector('.rea-hx-select');
+  EMENU=ETRIG.querySelector('.rea-hx-execmenu');
+  ETXT=ETRIG.querySelector('.rea-hx-seltext');
+  EMENU.innerHTML=ORGS.map(function(o,i){
+    return '<button type="button" class="rea-hx-opt" role="option" data-hx-org="'+i+'"><span>'+o.n+'</span><span class="rea-hx-execn">'+o.c+' 人</span></button>';
+  }).join('');
+  selBtn.addEventListener('click',function(e){
     e.preventDefault();e.stopPropagation();
-    if(!EMENU){
-      EMENU=document.createElement('div');EMENU.className='rea-hx-execmenu';
-      EMENU.innerHTML=ORGS.map(function(o,i){
-        return '<button type="button" class="rea-hx-opt" data-hx-org="'+i+'"><span>'+o.n+'</span><span class="rea-hx-execn">'+o.c+' 人</span></button>';
-      }).join('');
-      ETRIG.appendChild(EMENU);
-      EMENU.addEventListener('click',function(ev){
-        var b=ev.target.closest?ev.target.closest('[data-hx-org]'):null;if(!b)return;
-        ev.preventDefault();ev.stopPropagation();
-        EXECSEL=ORGS[Number(b.getAttribute('data-hx-org'))];
-        if(ETXT){ETXT.textContent=EXECSEL.n+'（'+EXECSEL.c+' 人）';ETXT.style.color='rgba(0, 0, 0, 0.88)'}
-        var os=EMENU.querySelectorAll('.rea-hx-opt'),j;
-        for(j=0;j<os.length;j++)os[j].classList.toggle('on',os[j]===b);
-        EMENU.classList.remove('on');
-      });
-    }
-    EMENU.classList.toggle('on');
+    var on=EMENU.classList.toggle('on');
+    selBtn.setAttribute('aria-expanded',on?'true':'false');
+  });
+  EMENU.addEventListener('click',function(ev){
+    var b=ev.target.closest?ev.target.closest('[data-hx-org]'):null;if(!b)return;
+    ev.preventDefault();ev.stopPropagation();
+    EXECSEL=ORGS[Number(b.getAttribute('data-hx-org'))];
+    if(ETXT){ETXT.textContent=EXECSEL.n+'（'+EXECSEL.c+' 人）';ETXT.style.color='#1F2329'}
+    var os=EMENU.querySelectorAll('.rea-hx-opt'),j;
+    for(j=0;j<os.length;j++){os[j].classList.toggle('on',os[j]===b);os[j].setAttribute('aria-selected',os[j]===b?'true':'false')}
+    EMENU.classList.remove('on');
+    selBtn.setAttribute('aria-expanded','false');
+    drawPreview();
   });
 }
 
-/* ---------------- 时间默认值 ---------------- */
-function pad2(n){return (n<10?'0':'')+n}
-function dstr(d){return d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate()}
-function tstr(d){return pad2(d.getHours())+':'+pad2(d.getMinutes())+':'+pad2(d.getSeconds())}
-function setWhen(row,date,time){
-  if(!row)return;
-  var ins=row.querySelectorAll('.ant-picker input');
-  if(ins[0])ins[0].value=date;
-  if(ins[1])ins[1].value=time;
+/* ---------------- 两个时间：与群发好友同一枚 datetime-local ---------------- */
+function dtStr(d){
+  return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())
+    +'T'+pad(d.getHours())+':'+pad(d.getMinutes());
+}
+function dtInput(row,val){
+  if(!row)return null;
+  var ctl=row.querySelector('[class*="_upload_box_"]');
+  if(!ctl)return null;
+  ctl.innerHTML='';
+  var inp=document.createElement('input');
+  inp.type='datetime-local';
+  inp.className='ant-input css-vgijab ant-input-outlined rea-hx-dt';
+  inp.value=val;
+  inp.addEventListener('input',function(){drawPreview()});
+  inp.addEventListener('change',function(){drawPreview()});
+  ctl.appendChild(inp);
+  return inp;
 }
 var NOW=new Date();
 var END=new Date(NOW.getTime()+7*24*3600*1000);
-setWhen(L.start,dstr(NOW),tstr(NOW));
-setWhen(L.end,dstr(END),tstr(NOW));
+var startI=dtInput(L.start,dtStr(NOW))
+var endI=dtInput(L.end,dtStr(END));
 function whenOf(row){
   if(!row)return null;
-  var ins=row.querySelectorAll('.ant-picker input');
-  if(!ins.length||!ins[0].value||!ins[1].value)return null;
-  var dp=ins[0].value.split(/[\/\-]/),tp=ins[1].value.split(':');
-  if(dp.length<3||tp.length<2)return null;
-  var d=new Date(Number(dp[0]),Number(dp[1])-1,Number(dp[2]),Number(tp[0])||0,Number(tp[1])||0,Number(tp[2])||0);
+  var inp=row.querySelector('.rea-hx-dt');
+  if(!inp||!inp.value)return null;
+  var d=new Date(inp.value);
   return isNaN(d.getTime())?null:d;
+}
+/* 两个时间下的说明句照群发好友 · 新建：控件下方一行 12px 灰字，不再挤在行尾。 */
+if(CARD['任务安排']){
+  if(L.start)CARD['任务安排'].insertBefore(makeHint('到达通知时间会给执行人员推送提醒。'),L.start.nextSibling);
+  if(L.end)CARD['任务安排'].insertBefore(makeHint('未到开始时间的任务在员工任务列表里不可见。'),L.end.nextSibling);
 }
 
 /* ---------------- 保存 / 取消 ---------------- */
@@ -31628,6 +31692,22 @@ for(var bi=0;bi<btns.length;bi++){
   if(bt==='保存')SAVE=btns[bi];
   else if(bt==='取消')CANCEL=btns[bi];
 }
+/* 底部操作条（2026-11-16，照群发好友 · 新建）：左一行汇总、右「取消」「保存」，
+   贴在滚动容器底沿，左栏滚到哪里都在。原来的保存行搬空后整行撤掉。 */
+var ACTSUM=null;
+(function(){
+  if(!SAVE&&!CANCEL)return;
+  var hold=HOLDER;
+  if(!hold)return;
+  var act=document.createElement('div');act.className='rea-hx-act';
+  ACTSUM=document.createElement('div');ACTSUM.className='rea-hx-actsum';
+  var actBtns=document.createElement('div');actBtns.className='rea-hx-actbtns';
+  if(CANCEL)actBtns.appendChild(CANCEL);
+  if(SAVE)actBtns.appendChild(SAVE);
+  act.appendChild(ACTSUM);act.appendChild(actBtns);hold.appendChild(act);
+  var actRow=(SAVE||CANCEL).closest('[class*="_form_input_"]');
+  if(actRow&&actRow.parentNode)actRow.parentNode.removeChild(actRow);
+})();
 if(SAVE)SAVE.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();save()});
 if(CANCEL)CANCEL.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();parent.postMessage({reaPage:'客户唤醒'},'*')});
 
@@ -31648,7 +31728,7 @@ document.addEventListener('keydown',function(e){
 /* ---------------- 右栏：客户视角的微信会话预览 ---------------- */
 var SIDECHAT=null,SUM={};
 (function(){
-  var holder=L.name?L.name.parentNode:null;
+  var holder=HOLDER;
   if(!holder||!holder.parentNode)return;
   holder.classList.add('rea-hx-main');
   var wrap=document.createElement('div');wrap.className='rea-hx-wrap';
@@ -31670,6 +31750,17 @@ var SIDECHAT=null,SUM={};
   SUM.when=side.querySelector('[data-hx-sum="when"]');
 })();
 function hmOf(d){return d?pad(d.getHours())+':'+pad(d.getMinutes()):''}
+function mdOf(d){return d?((d.getMonth()+1)+'-'+d.getDate()):''}
+/* 循环方式读的是快照那组单选的选中态（REA_FX 只挪里面的 .ant-radio-checked）。 */
+function cycleLabel(){
+  if(!L.type)return '单次任务';
+  var ws=L.type.querySelectorAll('.ant-radio-wrapper'),i;
+  for(i=0;i<ws.length;i++)if(ws[i].querySelector('.ant-radio-checked')){
+    var lab=ws[i].querySelector('.ant-radio-label');
+    return lab?(lab.textContent||'').replace(/\s+/g,''):'单次任务';
+  }
+  return '单次任务';
+}
 function tagText(){
   if(!L.tag)return '';
   var it=L.tag.querySelector('.ant-select-selection-item'),
@@ -31691,22 +31782,34 @@ function previewMsgs(){
 }
 function drawPreview(){
   if(!SIDECHAT)return;
-  var st=whenOf(L.start),msgs=previewMsgs();
+  var st=whenOf(L.start),et=whenOf(L.end),msgs=previewMsgs();
   SIDECHAT.innerHTML=wxChat({kind:'chat',title:'微信昵称',avatar:'销',time:hmOf(st),msgs:msgs,empty:'还没有唤醒内容'});
   if(SUM.exec){
-    var t=ETXT?(ETXT.textContent||'').trim():'';
-    if(!t||t.indexOf('请选择')>=0)t=EXECSEL?EXECSEL.n:'—';
-    SUM.exec.textContent=t||'—';SUM.exec.title=SUM.exec.textContent;
+    var t=EXECSEL?(EXECSEL.n+' · '+EXECSEL.c+' 人'):'未选择';
+    SUM.exec.textContent=t;SUM.exec.title=t;
   }
+  var range=(NUM?String(NUM.value||'1'):'1')+' '+UNIT+'未联系客户',tg=tagText();
   if(SUM.who){
-    var t2=(NUM?String(NUM.value||'1'):'1')+' '+UNIT+'未联系客户',tg=tagText();
+    var t2=range;
     if(tg)t2+=' · 标签 '+tg;
     SUM.who.textContent=t2;SUM.who.title=t2;
   }
   if(SUM.how){SUM.how.textContent=msgs.length?msgs.length+' 条':'—';SUM.how.title=SUM.how.textContent}
   if(SUM.when){
-    var t3=st?((st.getMonth()+1)+'-'+st.getDate()+' '+hmOf(st)):'—';
+    var t3='未设置';
+    if(st){
+      var rep=cycleLabel();
+      t3=rep==='单次任务'?(mdOf(st)+' '+hmOf(st)+' 发出'):(mdOf(st)+' '+hmOf(st)+' 起 · '+rep);
+      if(et){
+        var gap=Math.round((et-st)/86400000);
+        t3+='，'+(gap>0?gap:0)+' 天内完成';
+      }
+    }
     SUM.when.textContent=t3;SUM.when.title=t3;
+  }
+  if(ACTSUM){
+    var t4=range+(tg?' · 标签 '+tg:'')+' · '+(strategy()==='ai'?'AI生成':'固定内容');
+    ACTSUM.textContent=t4;
   }
 }
 var hxDraw=drawRows;
