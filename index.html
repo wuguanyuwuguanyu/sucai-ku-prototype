@@ -26449,19 +26449,22 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
         {label:'有效期',value:'2026/10/14 10:19 ~ 2026/10/21 10:19'},
         {label:'创建时间',value:'2026-10-14 10:19'}
       ],
-      /* 创建页本来就没有分组：这里也不加标题，按创建页的填写顺序连着排 */
       sections:[
-        {title:'',rows:[
+        {title:'任务安排',rows:[
           {label:'任务名称',value:'客户唤醒任务20261014'},
           {label:'执行人员',value:'雅楠002'},
-          {label:'唤醒人群',value:'超过 24 小时未回复的客户'},
-          {label:'微信标签',value:'老客户、高意向'},
-          {label:'内容生成策略',value:'固定内容'},
-          {label:'唤醒内容',preview:true},
           {label:'循环方式',value:'单次任务'},
-          {label:'全局弹窗',value:'关闭'},
           {label:'通知时间',value:'2026-10-14 10:19'},
-          {label:'截止时间',value:'2026-10-21 10:19'}
+          {label:'截止时间',value:'2026-10-21 10:19'},
+          {label:'全局弹窗',value:'关闭'}
+        ]},
+        {title:'唤醒对象',rows:[
+          {label:'唤醒人群',value:'超过 24 小时未回复的客户'},
+          {label:'微信标签',value:'老客户、高意向'}
+        ]},
+        {title:'唤醒内容',rows:[
+          {label:'内容生成策略',value:'固定内容'},
+          {label:'唤醒内容',preview:true}
         ]}
       ],
       preview:{kind:'chat',from:'雅楠002',text:'您好，好久没联系了，最近店里到了新品，给您留了一份资料，方便的话回我一下～'}
@@ -30704,6 +30707,11 @@ checkCross();
     '.rea-hx-editcount{font-size:12px;color:#bfbfbf}',
     '.rea-hx-editarea{display:block;width:100%;height:200px;border:0;outline:none;resize:vertical;box-sizing:border-box;padding:10px 12px;font-size:14px;line-height:22px;color:rgba(0,0,0,.88);background:#fff;font-family:inherit}',
     '.rea-hx-radios .ant-radio-wrapper{margin-inline-end:24px;margin-bottom:4px}',
+    /* 分块标题：与另外几张任务创建页同字号，不加框线，靠留白分组 */
+    '.rea-hx-sec{margin:32px 0 14px;padding:0 0 10px;border-bottom:1px solid #F0F0F0}',
+    '.rea-hx-sec h3{margin:0;font-size:16px;line-height:26px;font-weight:500;color:#333333}',
+    /* 「唤醒内容」这格窄，标签原本被挤成一字一行；标签一律不折行 */
+    '[class*="_must_"]{white-space:nowrap}',
     '.rea-hx-range{display:flex;align-items:center;gap:10px}',
     '.rea-hx-num{width:110px;text-align:center}',
     '.rea-hx-dash{color:#bfbfbf}',
@@ -30749,9 +30757,51 @@ var L={
   strategy:rowBy('内容生成策略'),content:rowBy('唤醒内容'),type:rowBy('任务类型'),
   popup:rowBy('全局弹窗'),start:rowBy('通知时间'),end:rowBy('截止时间')
 };
-/* 「任务类型」改名「循环方式」（2026-11-16）：这一行只决定单次／循环，任务品类另由
-   快照「基础信息 · 任务类型」表示；与另外两张新建页、全部快照同词。 */
+/* 「任务类型」改名「循环方式」（2026-11-16）：这一行只决定单次／周／月／自定义循环，
+   任务品类另由快照「基础信息 · 任务类型」表示；与另外两张新建页、全部快照同词。 */
 if(L.type){var TL=L.type.querySelector('span[class*="_must_"]');if(TL)TL.textContent='循环方式'}
+
+/* 分块（2026-11-16）：任务安排 → 唤醒对象 → 唤醒内容，与另外几张任务创建页同构。
+   原页是一条条平铺的，这里只重排行序、在段首插标题，控件本身不重建。 */
+(function(){
+  if(!L.name)return;
+  var holder=L.name.parentNode;
+  if(!holder)return;
+  var order=[L.name,L.exec,L.type,L.start,L.end,L.popup,L.crowd,L.tag,L.strategy,L.content],i,node,save=null;
+  for(i=0;i<ROWS.length;i++){
+    var b=ROWS[i].querySelector('button');
+    if(b&&(b.textContent||'').replace(/\s+/g,'')==='保存'){save=ROWS[i];break}
+  }
+  node=save;
+  while(node&&node.parentNode!==holder)node=node.parentNode;
+  var anchor=node&&node.parentNode===holder?node:null;
+  for(i=0;i<order.length;i++){
+    if(!order[i])continue;
+    if(anchor)holder.insertBefore(order[i],anchor);else holder.appendChild(order[i]);
+  }
+  /* 标题与字段列对齐：行满宽、缩进在行内，直接取首行控件的位置与宽度 */
+  var hr=holder.getBoundingClientRect();
+  var ctl=L.name.querySelector('input');
+  var rect=ctl?ctl.getBoundingClientRect():L.name.getBoundingClientRect(),
+      padL=Math.max(0,Math.round(rect.left-hr.left)),colW=Math.max(0,Math.round(rect.width));
+  function hd(t,first){
+    var d=document.createElement('div');d.className='rea-hx-sec';
+    d.style.marginLeft=padL+'px';d.style.width=colW+'px';
+    if(first)d.style.marginTop='0';
+    var h=document.createElement('h3');h.textContent=t;d.appendChild(h);return d;
+  }
+  holder.insertBefore(hd('任务安排',true),L.name);
+  if(L.crowd)holder.insertBefore(hd('唤醒对象'),L.crowd);
+  if(L.strategy)holder.insertBefore(hd('唤醒内容'),L.strategy);
+  /* 「温馨提示」是唤醒人群那行的注脚，原先是它的下一个兄弟节点；行搬走后会留在页首，
+     这里把它跟回唤醒人群后面 */
+  if(L.crowd)for(i=0;i<holder.children.length;i++){
+    var ch=holder.children[i];
+    if(!ch.textContent||ch.textContent.indexOf('温馨提示')<0)continue;
+    if(ch.contains(L.crowd)||ch.contains(L.name)||ch===L.crowd)continue;
+    holder.insertBefore(ch,L.crowd.nextSibling);break;
+  }
+})();
 function up(n,c){while(n&&n.nodeType===1){if(n.classList&&n.classList.contains(c))return n;n=n.parentNode}return null}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function pad(n){return (n<10?'0':'')+n}
