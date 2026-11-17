@@ -17591,7 +17591,7 @@ render();
       <div style="margin-bottom: 24px;">
         <h4 style="border-left: 3px solid rgb(22, 119, 255); padding-left: 8px; margin-bottom: 12px;">回复承接</h4>
         <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">总开关</span><div style="flex: 1 1 0%; white-space: pre-wrap;">开</div></div>
-        <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">① 评论和@</span><div style="flex: 1 1 0%; white-space: pre-wrap;">开</div></div>
+        <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">① 回复评论和@</span><div style="flex: 1 1 0%; white-space: pre-wrap;">开</div></div>
         <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">只回最近</span><div style="flex: 1 1 0%; white-space: pre-wrap;">今天</div></div>
         <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">承接条件</span><div style="flex: 1 1 0%; white-space: pre-wrap;">仅关键词</div></div>
         <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">关键词</span><div style="flex: 1 1 0%; white-space: pre-wrap;">沃尔沃、多少钱</div></div>
@@ -17601,7 +17601,7 @@ render();
         <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">私信内容（联动主动发起）</span><div style="flex: 1 1 0%; white-space: pre-wrap;">固定话术 · 这里好像发不了文件，您发我微信我加您。</div></div>
         <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">私信失败时兜底评论</span><div style="flex: 1 1 0%; white-space: pre-wrap;">开</div></div>
         <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">兜底评论话术</span><div style="flex: 1 1 0%; white-space: pre-wrap;">这里发不了文件，您私信我，我发您</div></div>
-        <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">② 私信回复</span><div style="flex: 1 1 0%; white-space: pre-wrap;">关</div></div>
+        <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">② 回复私信</span><div style="flex: 1 1 0%; white-space: pre-wrap;">关</div></div>
         <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">承接模式</span><div style="flex: 1 1 0%; white-space: pre-wrap;"><span style="color: rgb(153, 153, 153);">—（未开启）</span></div></div>
         <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">话术流程</span><div style="flex: 1 1 0%; white-space: pre-wrap;"><span style="color: rgb(153, 153, 153);">—（未开启）</span></div></div>
         <div style="display: flex; padding: 8px 0px; border-bottom: 1px dashed rgb(240, 240, 240);"><span style="width: 160px; flex-shrink: 0; color: rgb(102, 102, 102);">流程结束后 AI 接管</span><div style="flex: 1 1 0%; white-space: pre-wrap;"><span style="color: rgb(153, 153, 153);">—（未开启）</span></div></div>
@@ -21445,7 +21445,7 @@ function taskScope(rs,metric,range){
    ].join('\n');
   }
 
-  /* 「新小红书运营 · 新建」的覆盖脚本：文案替换 ＋ 评论和@联动私信的配置行（登记见 docs/09 §2.3）。
+  /* 「新小红书运营 · 新建」的覆盖脚本：文案替换 ＋ 回复评论和@联动私信的配置行（登记见 docs/09 §2.3）。
      文案替换的两处现场坑：
      ① 「拓客行业」「发送消息」两枚标签里嵌着 question-circle 图标，整体重写 textContent 会把图标抹掉，
         所以只换它前面那个文本节点；
@@ -21517,7 +21517,7 @@ function taskScope(rs,metric,range){
     '    ev.preventDefault();parent.postMessage({reaPage:MOD},"*");',
     '  });',
     '}',
-    '/* 评论和@联动私信（2026-10-18）：文案替换之后再补配置行。',
+    '/* 回复评论和@联动私信（2026-10-18）：文案替换之后再补配置行。',
     '   承接条件与两个条件字段插在「评论承接」之后；「回复后同时私信」插在评论回复内容之后。',
     '   全部 clone 快照现有行，样式靠继承，不新造 AntD 结构。 */',
     'var LR=document.querySelectorAll("div[class*=\\"_form_input_\\"]"),ii;',
@@ -21536,8 +21536,8 @@ function taskScope(rs,metric,range){
     '  else if(lt==="流程结束后AI接管")rAi=LR[ii];',
     '}',
     'if(rComment&&rPrivate&&rFixed&&rMode){',
-    '  rComment.querySelector("span[class*=\\"_must_\\"]").textContent="① 评论和@";',
-    '  rPrivate.querySelector("span[class*=\\"_must_\\"]").textContent="② 私信回复";',
+    '  rComment.querySelector("span[class*=\\"_must_\\"]").textContent="① 回复评论和@";',
+    '  rPrivate.querySelector("span[class*=\\"_must_\\"]").textContent="② 回复私信";',
     '  /* 承接条件：克隆「评论回复方式」行，只留两个按钮；默认「仅关键词」 */',
     '  var mr=rMode.cloneNode(true);',
     '  mr.querySelector("span[class*=\\"_must_\\"]").textContent="承接条件";',
@@ -21555,7 +21555,7 @@ function taskScope(rs,metric,range){
     '  for(ii=0;ii<mbs.length;ii++)mbs[ii].classList.toggle("ant-radio-button-checked",ii===1);',
     '  rComment.insertAdjacentElement("afterend",mr);',
     '  /* 只回最近：克隆「评论发布时间」行（快照里本来就是四选一），改成 今天/3 天/7 天/不限；',
-    '     插在 ① 评论和@之后、承接条件之前。默认今天，老快照也按今天。 */',
+    '     插在 ① 回复评论和@之后、承接条件之前。默认今天，老快照也按今天。 */',
     '  if(rWindowSrc){',
     '    var winRow=rWindowSrc.cloneNode(true);',
     '    winRow.style.marginTop="";',
@@ -21648,14 +21648,14 @@ function taskScope(rs,metric,range){
     '    fbTextRow.style.display=(fbRow.style.display!=="none"&&fbOn())?"":"none";',
     '  };',
     '  fbRow.addEventListener("click",function(){setTimeout(syncFb,0);});',
-    '  /* 私信回复只补一句触发入口，不复制话术 */',
+    '  /* 回复私信只补一句触发入口，不复制话术 */',
     '  var prBox=rPrivate.querySelector("div[class*=\\"_upload_box\\"]");',
     '  var prHint=document.createElement("span");',
     '  prHint.style.cssText="margin-left: 8px; color: rgb(153, 153, 153);";',
-    '  prHint.textContent="触发入口：客户主动私信 · ① 评论和@联动";',
+    '  prHint.textContent="触发入口：客户主动私信 · ① 回复评论和@联动";',
     '  prBox.appendChild(prHint);',
-    '  /* 联动开关依赖私信回复：下边关了，上边不许开（置灰并回落到关）。',
-    '     同时统一收放三块配置：② 私信回复关 → 承接模式与其下全部收起；',
+    '  /* 联动开关依赖回复私信：下边关了，上边不许开（置灰并回落到关）。',
+    '     同时统一收放三块配置：② 回复私信关 → 承接模式与其下全部收起；',
     '     承接模式＝直接AI数字员工 → 话术流程／AI接管收起；',
     '     开场私信（私信内容）只在「回复后同时私信」开着且走自定义流程时露出（它只服务联动私信）。 */',
     '  var prSw=prBox.querySelector("button[role=switch]");',
@@ -21675,7 +21675,7 @@ function taskScope(rs,metric,range){
     '  };',
     '  var syncLink=function(){',
     '    if(lkSw){',
-    '      /* 联动开关不再置灰：私信回复关着时也能直接点开 */',
+    '      /* 联动开关不再置灰：回复私信关着时也能直接点开 */',
     '      lkSw.disabled=false;',
     '      lkSw.classList.remove("ant-switch-disabled");',
     '      if(!prOn()&&lkSw.getAttribute("aria-checked")==="true"){',
@@ -21689,7 +21689,7 @@ function taskScope(rs,metric,range){
     '  prBox.addEventListener("click",function(){setTimeout(syncLink,0);});',
     '  lkRow.addEventListener("click",function(){',
     '    setTimeout(function(){',
-    '      /* 用户只开联动：顺手把私信回复一起打开，不要求先下去开 */',
+    '      /* 用户只开联动：顺手把回复私信一起打开，不要求先下去开 */',
     '      if(lkOn()&&!prOn()&&prSw)prSw.click();',
     '      syncLink();',
     '    },0);',
@@ -21745,7 +21745,7 @@ function taskScope(rs,metric,range){
     '    opBox.appendChild(opGrid);',
     '    lkRow.insertAdjacentElement("afterend",opRow);',
     '  }',
-    '  /* 承接模式切换与「私信回复」开关都走同一套收放（见 syncShow） */',
+    '  /* 承接模式切换与「回复私信」开关都走同一套收放（见 syncShow） */',
     '  if(rPrMode){',
     '    var prModeBox=rPrMode.querySelector("div[class*=\\"_upload_box\\"]");',
     '    if(prModeBox)prModeBox.addEventListener("click",function(){setTimeout(syncLink,0);});',
@@ -21784,7 +21784,7 @@ function taskScope(rs,metric,range){
     '    {title:"找谁",sub:"搜什么，在哪些笔记和评论里找",rows:["关键词类型","录入方式","搜索关键词","笔记发布时间","筛选词","评论发布时间","拓客所属地","客户年龄段","客户性别","客户粉丝数量"]},',
     '    {title:"不找谁",sub:"排除掉这些人，避免重复打扰",rows:["跳过笔记作者","过滤已执行客户","过滤赞助笔记"]},',
     '    {title:"第一句话",sub:"第一次接触，发私信还是回评论",rows:["首次触达方式","消息生成类型","沟通身份","沟通风格"]},',
-    '    {title:"回复消息",sub:"任务执行期间收到的评论和私信，都按这套规则处理",rows:["用户回复后自动承接","① 评论和@","只回最近","承接条件","关键词","评论回复方式","固定话术","回复后同时私信","私信内容","私信失败时兜底评论","兜底评论话术","② 私信回复","承接模式","话术流程","流程结束后AI接管"]},',
+    '    {title:"回复消息",sub:"任务执行期间收到的评论和私信，都按这套规则处理",rows:["用户回复后自动承接","① 回复评论和@","只回最近","承接条件","关键词","评论回复方式","固定话术","回复后同时私信","私信内容","私信失败时兜底评论","兜底评论话术","② 回复私信","承接模式","话术流程","流程结束后AI接管"]},',
     '    {title:"执行节奏",rows:["单次执行上限","执行频率","查看评论、私信回复频率"]}',
     '  ];',
     '  var cardRefs={};',
@@ -21826,7 +21826,7 @@ function taskScope(rs,metric,range){
     '    var d=document.createElement("div");d.className="rea-xhs-sep";d.setAttribute("data-rea-grp","1");',
     '    r.parentNode.insertBefore(d,r);',
     '  };',
-    '  sepBefore("① 评论和@");sepBefore("② 私信回复");',
+    '  sepBefore("① 回复评论和@");sepBefore("② 回复私信");',
     '  /* 「过滤已执行客户」的去重口径说明这次不展示，开关本身照旧 */',
     '  var fRow=byLabel["过滤已执行客户"];',
     '  if(fRow){[].slice.call(fRow.querySelectorAll("p")).forEach(function(p){',
@@ -21854,8 +21854,8 @@ function taskScope(rs,metric,range){
     '  if(masterRow){',
     '    var mlab=masterRow.querySelector("span[class*=_must_]");if(mlab)mlab.textContent="自动回复客户消息";',
     '  }',
-    '  ["① 评论和@","只回最近","承接条件","关键词","评论回复方式","固定话术","回复后同时私信","私信内容",',
-    '   "私信失败时兜底评论","兜底评论话术","② 私信回复","承接模式","话术流程","流程结束后AI接管"].forEach(function(nm){',
+    '  ["① 回复评论和@","只回最近","承接条件","关键词","评论回复方式","固定话术","回复后同时私信","私信内容",',
+    '   "私信失败时兜底评论","兜底评论话术","② 回复私信","承接模式","话术流程","流程结束后AI接管"].forEach(function(nm){',
     '    var r=byLabel[nm];if(r)r.setAttribute("data-rea-grp","1");',
     '  });',
     '  var card5=cardRefs["回复消息"];',
@@ -21919,9 +21919,9 @@ function taskScope(rs,metric,range){
     '    var master=onOf("用户回复后自动承接");',
     '    var cond=labelChecked("承接条件"),how=labelChecked("评论回复方式"),mode=labelChecked("承接模式");',
     '    if(master&&cond==="仅关键词"&&!valOf("关键词"))list.push({k:"miss",t:"承接条件选了「仅关键词」，但关键词是空的",row:"关键词"});',
-    '    if(master&&onOf("① 评论和@")&&how==="固定话术"&&!valOf("固定话术"))list.push({k:"miss",t:"评论回复方式选了「固定话术」，但固定话术是空的",row:"固定话术"});',
-    '    if(master&&onOf("② 私信回复")&&mode==="自定义话术流程"&&!valOf("话术流程"))list.push({k:"miss",t:"私信回复选了「自定义话术流程」，但话术流程还没有内容",row:"话术流程"});',
-    '    if(master&&onOf("回复后同时私信")&&!onOf("② 私信回复"))list.push({k:"conflict",t:"「回复后同时私信」开着，但「② 私信回复」是关的——客户回私信后没人接",row:"② 私信回复"});',
+    '    if(master&&onOf("① 回复评论和@")&&how==="固定话术"&&!valOf("固定话术"))list.push({k:"miss",t:"评论回复方式选了「固定话术」，但固定话术是空的",row:"固定话术"});',
+    '    if(master&&onOf("② 回复私信")&&mode==="自定义话术流程"&&!valOf("话术流程"))list.push({k:"miss",t:"回复私信选了「自定义话术流程」，但话术流程还没有内容",row:"话术流程"});',
+    '    if(master&&onOf("回复后同时私信")&&!onOf("② 回复私信"))list.push({k:"conflict",t:"「回复后同时私信」开着，但「② 回复私信」是关的——客户回私信后没人接",row:"② 回复私信"});',
     '    if(master&&onOf("回复后同时私信")&&mode==="自定义话术流程"&&!valOf("私信内容"))list.push({k:"miss",t:"「回复后同时私信」开着，但私信内容是空的",row:"私信内容"});',
     '    /* 「私信失败时兜底评论」是开关：开着才要兜底话术；它只在这行露出时才校验（承接模式 direct 时整行收起） */',
     '    var fbShown=!!(fbRow&&fbRow.offsetParent!==null);',
@@ -22519,8 +22519,8 @@ tb.addEventListener("click",function(e){
     + '.rea-wxp-bubble>.rea-wxp-grid:first-child,.rea-wxp-bubble>.rea-wxp-video:first-child,.rea-wxp-bubble>.rea-wxp-file:first-child{margin-top:0}'
 ;
 
-  /* 微信标签选择器（reaTagPicker）的样式：发圈／群发好友／群发群组／客户唤醒共用一份。
-     既有左边「精确搜索／模糊搜索」小下拉，也有可打字的多选标签框。单列出来是因为
+  /* 微信标签选择器（reaTagPicker）的样式：发圈／群发好友／客户唤醒共用一份。
+     两个添加入口（从手机标签选择／手动输入）共用一个已选名单。单列出来是因为
      客户唤醒不带 REA_WXT_CSS，只加这一份就够。 */
   var REA_TAGPICK_CSS = ''
     + '.rea-qf-select{display:flex;align-items:center;box-sizing:border-box;width:280px;max-width:100%;height:32px;padding:0 32px 0 11px;border:1px solid #E5E8EF;border-radius:8px;background:#fff;font-size:14px;color:#8F959E;cursor:pointer;position:relative;text-align:left}'
@@ -22532,14 +22532,23 @@ tb.addEventListener("click",function(e){
     + '.rea-qf-opt{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:8px 10px;border:0;border-radius:6px;background:transparent;font-size:14px;color:#1F2329;text-align:left;cursor:pointer}'
     + '.rea-qf-opt:hover{background:#F7F8FA}'
     + '.rea-qf-optn{font-size:12px;color:#8F959E}'
-    + '.rea-qf-mini{position:relative;display:inline-block}'
-    + '.rea-qf-select.rea-qf-minisel{width:168px;color:#1F2329}'
-    + '.rea-qf-mini .rea-qf-selmenu{width:168px}'
-    + '.rea-qf-tagctl{display:flex;align-items:flex-start;gap:12px;max-width:560px}'
-    + '.rea-qf-tagctl .rea-qf-mini{flex:none}'
-    + '.rea-qf-tagctl .rea-qf-select.rea-qf-minisel{width:132px}'
-    + '.rea-qf-tagctl .rea-qf-mini .rea-qf-selmenu{width:132px}'
-    + '.rea-qf-tagctl .rea-qf-listwrap{flex:1 1 auto;min-width:0}'
+    + '.rea-qf-tagctl{display:block;max-width:560px}'
+    + '.rea-qf-tabs{display:inline-flex;align-items:center;gap:2px;padding:3px;border-radius:8px;background:#F7F8FA}'
+    + '.rea-qf-tab{display:inline-flex;align-items:center;gap:5px;height:26px;padding:0 12px;border:0;border-radius:6px;background:transparent;font-family:inherit;font-size:13px;line-height:26px;color:#646A73;cursor:pointer;white-space:nowrap}'
+    + '.rea-qf-tab:hover{color:#1677FF}'
+    + '.rea-qf-tab.on{background:#E6F4FF;color:#1677FF;font-weight:500}'
+    + '.rea-qf-tabn{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;min-width:16px;height:16px;padding:0 4px;border-radius:8px;background:#E9EDF2;font-size:11px;line-height:16px;font-weight:400;color:#646A73}'
+    + '.rea-qf-tab.on .rea-qf-tabn{background:#CFE4FF;color:#1677FF}'
+    + '.rea-qf-tabn[hidden]{display:none!important}'
+    + '.rea-qf-panel{margin-top:10px}'
+    + '.rea-qf-panel[hidden]{display:none!important}'
+    + '.rea-qf-panel .rea-qf-listwrap{max-width:none}'
+    + '.rea-qf-mrow{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:10px;font-size:14px;color:#1F2329}'
+    + '.rea-qf-mrow>span:first-child{flex:none;color:#646A73}'
+    + '.rea-qf-ta{display:block;box-sizing:border-box;width:100%;max-width:560px;min-height:76px;padding:7px 11px;border:1px solid #E5E8EF;border-radius:8px;background:#fff;font-family:inherit;font-size:14px;line-height:22px;color:#1F2329;resize:vertical;outline:0}'
+    + '.rea-qf-ta::placeholder{color:#C9CDD4}'
+    + '.rea-qf-ta:focus{border-color:#1677FF;box-shadow:0 0 0 2px #E6F4FF}'
+    + '.rea-qf-ta.bad{border-color:#ff4d4f}'
     + '.rea-qf-taginp{flex:1 1 auto;min-width:80px;height:24px;padding:0;border:0;outline:0;background:transparent;font-size:14px;line-height:24px;color:#1F2329}'
     + '.rea-qf-taginp::placeholder{color:#C9CDD4}'
     + '.rea-qf-tagbox:focus-within{border-color:#1677FF;box-shadow:0 0 0 2px #E6F4FF}'
@@ -22547,7 +22556,6 @@ tb.addEventListener("click",function(e){
     + '.rea-qf-tagbox{position:relative;display:flex;flex-wrap:wrap;align-items:center;gap:6px;box-sizing:border-box;min-height:32px;padding:4px 26px 4px 11px;border:1px solid #E5E8EF;border-radius:8px;background:#fff;cursor:pointer}'
     + '.rea-qf-tagbox:hover{border-color:#1677FF}'
     + '.rea-qf-tagbox.on{border-color:#1677FF;box-shadow:0 0 0 2px #E6F4FF}'
-    + '.rea-qf-tagph{font-size:14px;line-height:24px;color:#C9CDD4}'
     + '.rea-qf-tagchip{display:inline-flex;align-items:center;gap:2px;max-width:100%;padding:0 4px 0 8px;border-radius:4px;background:#E6F4FF;color:#1677FF;font-size:13px;line-height:24px}'
     + '.rea-qf-tagchip>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
     + '.rea-qf-tagx{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;padding:0;border:0;border-radius:50%;background:transparent;color:#1677FF;font-size:14px;line-height:1;cursor:pointer}'
@@ -22642,6 +22650,9 @@ tb.addEventListener("click",function(e){
     + '.rea-fq-vis .ant-radio-group{white-space:nowrap}'
     + '.rea-fq-visub{display:flex;flex-direction:column;gap:8px;padding:2px 0 0 12px;border-left:2px solid #E5E8EF}'
     + '.rea-fq-visubrd{display:flex;align-items:center;gap:20px;flex-wrap:wrap;min-height:24px}'
+    + '.rea-fq-visubrow{display:flex;align-items:flex-start;gap:10px}'
+    + '.rea-fq-visublab{flex:none;font-size:13px;line-height:32px;color:#646A73}'
+    + '.rea-fq-visubrow .rea-qf-tagctl{flex:1 1 auto;min-width:0;max-width:none}'
     + '.rea-fq-vis .rea-qf-tagin{display:none}'
     + '.rea-fq-vis .rea-qf-tagin input{width:100%}'
     + '.rea-fq-vis .rea-qf-err{margin-top:0}'
@@ -22682,6 +22693,10 @@ tb.addEventListener("click",function(e){
     + '.rea-qf-ctype .ant-btn-primary{background:#E6F4FF!important;border-color:#E6F4FF!important;color:#1677FF!important}'
     + '.rea-qf-tagpanel{margin:-8px 0 4px 108px;max-width:560px}'
     + '.rea-qf-tagpanel[hidden]{display:none!important}'
+    + '.rea-qf-tagrow{align-items:flex-start!important}'
+    + '.rea-qf-tagrow>span:first-child{line-height:32px}'
+    + '.rea-qf-tagbody{flex:1 1 auto;min-width:0}'
+    + '.rea-qf-tagbody .rea-qf-tagctl{max-width:none}'
     + '.rea-qf-trow{display:flex;align-items:center;gap:16px;margin-bottom:12px;font-size:14px;color:#1F2329}'
     + '.rea-qf-trow>span:first-child{flex:none;color:#646A73}'
     + '.rea-qf-rd{position:relative;display:inline-flex;align-items:center;gap:8px;color:#1F2329;cursor:pointer}'
@@ -23197,60 +23212,92 @@ function reaTagPicker(o){
   function qa(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
   function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
   o=o||{};
-  var sel=[],typed=[],query='',mode='exact',busy=false,busyTimer=null;
-  var MODE={exact:'精确搜索',fuzzy:'模糊搜索'};
+  var sel=[],query='',mode='exact',busy=false,busyTimer=null,tab='phone';
+  var MODE={exact:'精确匹配',fuzzy:'模糊匹配'};
+  reaTagPicker._n=(reaTagPicker._n||0)+1;
+  var rn='rea-qf-tag'+reaTagPicker._n;
   var host=document.createElement('div');host.className='rea-qf-tagctl';
   host.innerHTML=
-     '<div class="rea-qf-mini">'
-    +'<button type="button" class="rea-qf-select rea-qf-minisel" aria-label="选择方式" aria-haspopup="listbox" aria-expanded="false">'
-    +'<span class="rea-qf-seltext">精确搜索</span><span class="rea-qf-selcaret">▾</span></button>'
-    +'<div class="rea-qf-selmenu" role="listbox">'
-    +'<button type="button" class="rea-qf-opt" role="option" data-mode="exact" aria-selected="true">精确搜索</button>'
-    +'<button type="button" class="rea-qf-opt" role="option" data-mode="fuzzy" aria-selected="false">模糊搜索</button>'
-    +'</div></div>'
+     '<div class="rea-qf-tabs" role="tablist" aria-label="标签添加方式">'
+    +'<button type="button" class="rea-qf-tab on" role="tab" data-tab="phone" aria-selected="true" aria-controls="'+rn+'-phone" id="'+rn+'-phone-tab">从手机标签选择<span class="rea-qf-tabn" hidden></span></button>'
+    +'<button type="button" class="rea-qf-tab" role="tab" data-tab="manual" aria-selected="false" aria-controls="'+rn+'-manual" id="'+rn+'-manual-tab">手动输入<span class="rea-qf-tabn" hidden></span></button>'
+    +'</div>'
+    +'<div class="rea-qf-panel" id="'+rn+'-phone" role="tabpanel" data-panel="phone" aria-labelledby="'+rn+'-phone-tab">'
     +'<div class="rea-qf-listwrap">'
     +'<div class="rea-qf-tagbox" role="combobox" aria-haspopup="listbox" aria-expanded="false">'
-    +'<input class="rea-qf-taginp" type="text" autocomplete="off" aria-label="微信标签" placeholder="请选择或输入微信标签">'
+    +'<input class="rea-qf-taginp" type="text" autocomplete="off" aria-label="搜索手机标签" placeholder="搜索或选择手机标签">'
     +'<span class="rea-qf-tagcaret">▾</span></div>'
     +'<div class="rea-qf-tagdd" hidden>'
-    +'<div class="rea-qf-taglist" role="listbox" aria-label="微信标签" aria-multiselectable="true"></div>'
-    +'<div class="rea-qf-tagft"><span>已选 0 个标签</span><button type="button" class="rea-qf-tagclear">清空</button></div>'
-    +'</div></div>';
-  var box=host.querySelector('.rea-qf-tagbox'),inp=host.querySelector('.rea-qf-taginp'),
+    +'<div class="rea-qf-taglist" role="listbox" aria-label="手机标签" aria-multiselectable="true"></div>'
+    +'<div class="rea-qf-tagft"><span>已选 0 个手机标签</span><button type="button" class="rea-qf-tagclear">清空</button></div>'
+    +'</div></div></div>'
+    +'<div class="rea-qf-panel" id="'+rn+'-manual" role="tabpanel" data-panel="manual" aria-labelledby="'+rn+'-manual-tab" hidden>'
+    +'<div class="rea-qf-mrow"><span>匹配方式</span>'
+    +'<label class="rea-qf-rd"><input type="radio" name="'+rn+'-match" value="exact" checked><span class="rea-qf-rddot"></span>精确匹配</label>'
+    +'<label class="rea-qf-rd"><input type="radio" name="'+rn+'-match" value="fuzzy"><span class="rea-qf-rddot"></span>模糊匹配</label></div>'
+    +'<textarea class="rea-qf-ta" rows="3" aria-label="手动输入标签" placeholder="一行一个标签"></textarea>'
+    +'</div>';
+  var tabs=qa('.rea-qf-tab',host),
+      phonePanel=host.querySelector('[data-panel="phone"]'),
+      manualPanel=host.querySelector('[data-panel="manual"]'),
+      box=host.querySelector('.rea-qf-tagbox'),inp=host.querySelector('.rea-qf-taginp'),
       dd=host.querySelector('.rea-qf-tagdd'),list=host.querySelector('.rea-qf-taglist'),
       ft=host.querySelector('.rea-qf-tagft span'),clearBtn=host.querySelector('.rea-qf-tagclear'),
-      modeBtn=host.querySelector('.rea-qf-select'),modeMenu=host.querySelector('.rea-qf-selmenu'),
-      modeText=host.querySelector('.rea-qf-seltext');
+      ta=host.querySelector('.rea-qf-ta'),
+      modeInputs=qa('.rea-qf-mrow input',host),
+      tabPhone=tabs[0],tabManual=tabs[1];
 
-  function names(){
-    var out=[],i,n;
+  function trimName(v){return String(v==null?'':v).replace(/^\s+|\s+$/g,'')}
+  function phoneNames(){
+    var out=[],i;
     for(i=0;i<sel.length;i++)if(out.indexOf(sel[i])<0)out.push(sel[i]);
-    for(i=0;i<typed.length;i++){n=typed[i];if(out.indexOf(n)<0)out.push(n)}
+    return out;
+  }
+  /* 手动输入只按换行切：标签名里可能有逗号、分号，不能当分隔符。 */
+  function manualNames(){
+    var out=[],parts=String(ta.value||'').split(/\r?\n/),i,n;
+    for(i=0;i<parts.length;i++){
+      n=trimName(parts[i]);
+      if(n&&out.indexOf(n)<0)out.push(n);
+    }
+    return out;
+  }
+  function names(){
+    var out=phoneNames(),m=manualNames(),i;
+    for(i=0;i<m.length;i++)if(out.indexOf(m[i])<0)out.push(m[i]);
     return out;
   }
   function fire(){if(o.onChange)o.onChange()}
+  function countBadges(){
+    var np=phoneNames().length,nm=manualNames().length,
+        bp=tabPhone.querySelector('.rea-qf-tabn'),
+        bm=tabManual.querySelector('.rea-qf-tabn');
+    if(bp){bp.textContent=np?String(np):'';bp.hidden=!np}
+    if(bm){bm.textContent=nm?String(nm):'';bm.hidden=!nm}
+  }
   function chips(){
     qa('.rea-qf-tagchip',box).forEach(function(c){c.parentNode.removeChild(c)});
-    var all=names(),i,c,n;
+    var all=phoneNames(),i,c,n;
     for(i=0;i<all.length;i++){
       n=all[i];c=document.createElement('span');c.className='rea-qf-tagchip';
       c.innerHTML='<span>'+esc(n)+'</span><button type="button" class="rea-qf-tagx" data-tag="'+esc(n)
         +'" aria-label="移除'+esc(n)+'">×</button>';
       box.insertBefore(c,inp);
     }
-    inp.placeholder=all.length?'':'请选择或输入微信标签';
-    ft.textContent='已选 '+all.length+' 个标签';
+    inp.placeholder=all.length?'':'搜索或选择手机标签';
+    ft.textContent='已选 '+all.length+' 个手机标签';
     box.setAttribute('aria-expanded',dd.hidden?'false':'true');
+    countBadges();
   }
   function drawList(){
     var tags=typeof o.getTags==='function'?o.getTags():[];
     if(tags===null){list.innerHTML='<div class="rea-qf-tagempty">先选择执行人员，再选标签。</div>';return}
     if(busy){list.innerHTML='<div class="rea-qf-tagempty">标签还在从手机同步，稍后再试。</div>';return}
-    if(!tags.length){list.innerHTML='<div class="rea-qf-tagempty">该执行人员的微信里还没有标签；可以直接输入标签名。</div>';return}
+    if(!tags.length){list.innerHTML='<div class="rea-qf-tagempty">该执行人员的微信里还没有标签，可切换到手动输入。</div>';return}
     var q=query.toLowerCase(),items=[],i;
     for(i=0;i<tags.length;i++)if(!q||tags[i].toLowerCase().indexOf(q)>=0)items.push(tags[i]);
-    if(!items.length){list.innerHTML='<div class="rea-qf-tagempty">没有匹配的标签；按回车直接用它。</div>';return}
-    var all=names(),h='',n,on;
+    if(!items.length){list.innerHTML='<div class="rea-qf-tagempty">没有匹配的标签。</div>';return}
+    var all=phoneNames(),h='',n,on;
     for(i=0;i<items.length;i++){
       n=items[i];on=all.indexOf(n)>=0;
       h+='<label class="rea-qf-tagopt'+(on?' on':'')+'">'
@@ -23261,28 +23308,28 @@ function reaTagPicker(o){
   }
   function draw(){chips();if(!dd.hidden)drawList()}
   function openDD(){
-    if(!dd.hidden)return;
+    if(tab!=='phone'||!dd.hidden)return;
     dd.hidden=false;box.classList.add('on');drawList();chips();
     try{inp.focus()}catch(e){}
   }
   function closeDD(){dd.hidden=true;box.classList.remove('on');chips()}
-  function removeName(n){
-    var i=sel.indexOf(n);if(i>=0)sel.splice(i,1);
-    i=typed.indexOf(n);if(i>=0)typed.splice(i,1);
-  }
-  function addTyped(v){
-    var n=String(v||'').replace(/^\s+|\s+$/g,'');
-    if(!n||names().indexOf(n)>=0)return;
-    typed.push(n);
-  }
-  function commitText(){
-    var parts=inp.value.split(/[;；]/),i;
-    for(i=0;i<parts.length;i++)addTyped(parts[i]);
-    inp.value='';query='';
+  function removePhone(n){var i=sel.indexOf(n);if(i>=0)sel.splice(i,1)}
+  function setTab(t){
+    if(t!=='phone'&&t!=='manual')return;
+    tab=t;
+    for(var i=0;i<tabs.length;i++){
+      var on=tabs[i].getAttribute('data-tab')===t;
+      tabs[i].classList.toggle('on',on);
+      tabs[i].setAttribute('aria-selected',on?'true':'false');
+    }
+    phonePanel.hidden=t!=='phone';
+    manualPanel.hidden=t!=='manual';
+    if(t!=='phone')closeDD();
+    countBadges();fire();
   }
   box.addEventListener('click',function(e){
     var x=e.target.closest?e.target.closest('.rea-qf-tagx'):null;
-    if(x){e.preventDefault();e.stopPropagation();removeName(x.getAttribute('data-tag'));draw();fire();inp.focus();return}
+    if(x){e.preventDefault();e.stopPropagation();removePhone(x.getAttribute('data-tag'));draw();fire();inp.focus();return}
     if(e.target===inp){openDD();return}
     e.preventDefault();inp.focus();openDD();
   });
@@ -23290,78 +23337,73 @@ function reaTagPicker(o){
   inp.addEventListener('blur',function(e){
     var to=e.relatedTarget;
     if(to&&host.contains(to))return;
-    if(inp.value){commitText();draw();fire()}
+    setTimeout(function(){
+      var a=document.activeElement;
+      if(!a||!host.contains(a))closeDD();
+    },0);
   });
-  inp.addEventListener('input',function(){
-    var v=inp.value;
-    if(/[;；]/.test(v)){
-      var parts=v.split(/[;；]/),last=parts.pop(),i;
-      for(i=0;i<parts.length;i++)addTyped(parts[i]);
-      inp.value=last;
-    }
-    query=inp.value;
-    openDD();drawList();chips();fire();
-  });
+  inp.addEventListener('input',function(){query=inp.value;openDD();drawList()});
   inp.addEventListener('keydown',function(e){
     var k=e.key||'';
-    if(k==='Enter'||e.keyCode===13){e.preventDefault();commitText();draw();fire();return}
+    if(k==='Enter'||e.keyCode===13){
+      e.preventDefault();
+      var first=list.querySelector('input[type="checkbox"]');
+      if(first){first.checked=!first.checked;first.dispatchEvent(new Event('change',{bubbles:true}))}
+      return;
+    }
     if(k==='Escape'||e.keyCode===27){closeDD();return}
     if((k==='Backspace'||e.keyCode===8)&&!inp.value){
-      var all=names();
-      if(all.length){e.preventDefault();removeName(all[all.length-1]);draw();fire()}
+      var all=phoneNames();
+      if(all.length){e.preventDefault();removePhone(all[all.length-1]);draw();fire()}
     }
   });
   list.addEventListener('change',function(e){
     var c=e.target;
     if(!c||c.type!=='checkbox')return;
-    var n=c.getAttribute('data-tag'),i;
-    if(c.checked){
-      i=typed.indexOf(n);if(i>=0)typed.splice(i,1);
-      if(sel.indexOf(n)<0)sel.push(n);
-    }else removeName(n);
+    var n=c.getAttribute('data-tag');
+    if(c.checked){if(sel.indexOf(n)<0)sel.push(n)}
+    else removePhone(n);
     draw();fire();
   });
   clearBtn.addEventListener('click',function(e){
-    e.preventDefault();sel=[];typed=[];inp.value='';query='';draw();fire();
+    e.preventDefault();e.stopPropagation();sel=[];query='';inp.value='';draw();fire();
   });
-  modeBtn.addEventListener('click',function(e){
-    e.preventDefault();e.stopPropagation();
-    var on=modeMenu.classList.toggle('on');
-    modeBtn.setAttribute('aria-expanded',on?'true':'false');
-  });
-  modeMenu.addEventListener('click',function(e){
-    var b=e.target.closest?e.target.closest('.rea-qf-opt'):null;if(!b)return;
-    e.preventDefault();setMode(b.getAttribute('data-mode'));
-    modeMenu.classList.remove('on');modeBtn.setAttribute('aria-expanded','false');
-  });
-  document.addEventListener('click',function(e){
-    if(!host.contains(e.target)){
-      if(modeMenu.classList.contains('on')){modeMenu.classList.remove('on');modeBtn.setAttribute('aria-expanded','false')}
-      if(!dd.hidden){
-        if(inp.value){var had=names().length;commitText();chips();if(names().length!==had)fire()}
-        closeDD();
-      }
-    }
-  });
+  ta.addEventListener('input',function(){countBadges();fire()});
+  for(var mi=0;mi<modeInputs.length;mi++){
+    modeInputs[mi].addEventListener('change',function(e){
+      if(!e.target||!e.target.checked)return;
+      mode=e.target.value==='fuzzy'?'fuzzy':'exact';fire();
+    });
+  }
+  for(var ti=0;ti<tabs.length;ti++){
+    tabs[ti].addEventListener('click',function(e){
+      e.preventDefault();setTab(this.getAttribute('data-tab'));
+    });
+  }
+  document.addEventListener('click',function(e){if(!host.contains(e.target))closeDD()});
   function setMode(m){
     if(!MODE[m])return;
-    mode=m;modeText.textContent=MODE[m];
-    qa('.rea-qf-opt',modeMenu).forEach(function(b){
-      b.setAttribute('aria-selected',b.getAttribute('data-mode')===m?'true':'false');
-    });
+    mode=m;
+    for(var i=0;i<modeInputs.length;i++)modeInputs[i].checked=modeInputs[i].value===m;
     fire();
   }
   chips();
   return {
     el:host,
     names:names,
+    phoneNames:phoneNames,
+    manualNames:manualNames,
+    phoneCount:function(){return phoneNames().length},
+    hasManual:function(){return manualNames().length>0},
     mode:function(){return mode},
     setMode:setMode,
-    input:function(){return inp},
-    markBad:function(on){box.classList.toggle('bad',!!on)},
-    flush:function(){if(inp.value){commitText();draw();fire()}},
-    focus:openDD,
-    clear:function(){sel=[];typed=[];inp.value='';query='';draw()},
+    tab:function(){return tab},
+    setTab:setTab,
+    input:function(){return tab==='manual'?ta:inp},
+    markBad:function(on){box.classList.toggle('bad',!!on&&tab==='phone');ta.classList.toggle('bad',!!on&&tab==='manual')},
+    flush:function(){countBadges()},
+    focus:function(){if(tab==='manual'){try{ta.focus()}catch(e){}}else openDD()},
+    clear:function(){sel=[];query='';inp.value='';ta.value='';draw();countBadges()},
     reload:function(){
       sel=[];       /* 标签跟着人走：手机列表里选的清掉；手填的名称可能在新执行人员身上也有，保留 */
       busy=true;if(busyTimer)clearTimeout(busyTimer);
@@ -23452,10 +23494,10 @@ function toast(t){
   setTimeout(function(){if(w.parentNode)w.parentNode.removeChild(w)},2400);
 }
 
-/* ---------- 微信标签选择器（2026-11-13） ----------
-   点输入框展开执行人员手机端同步过来的标签，可多选；也能直接打字，回车或分号落成标签。
-   「精确搜索／模糊搜索」只决定打字进来的标签在执行时怎么匹配；下拉里勾选的标签本身就是
-   手机上的标签名，按精确名称下发。标签跟着执行人员走，任何位置都不显示人数。 */
+/* ---------- 微信标签选择器（2026-11-13，2026-11-17 改为两个添加入口） ----------
+   两个入口共用一个已选名单：「从手机标签选择」点开执行人员手机端同步过来的标签，复选多选，
+   框内打字只过滤；「手动输入」一行一个标签，默认精确匹配，可切模糊匹配。下拉里选中的标签
+   本身就是手机上的标签名，按精确名称下发。标签跟着执行人员走，任何位置都不显示人数。 */
 ${reaTagPickerJs()}
 
 /* 覆盖页不再走 reaNavJs 的「取消 → 回模块页」那条通用接线（它只接未覆盖的子页），
@@ -23648,7 +23690,7 @@ function initFq(){
     var scopeLbl=gScope?findLabel('选择可见好友'):null;
     if(scopeLbl)scopeLbl.textContent='谁可以看';
     if(gScope)gScope.classList.add('rea-fq-visrow');
-    var visBox=null,visSub=null,visIn=null,visErr=null,visLast='all',visByLast='tag';
+    var visBox=null,visSub=null,visIn=null,visErr=null,visLast='all',visByLast='tag',visTagRow=null;
     var fqTagPick=null;
     /* 演示标签跟着执行人员走；正式版取手机同步上来的好友标签并集，同名标签已合并。 */
     var FQ_ORG_TAGS=[
@@ -23677,8 +23719,8 @@ function initFq(){
         visIn=document.createElement('label');visIn.className='rea-qf-tagin';
         visIn.innerHTML='<input type="text" autocomplete="off">';
         visErr=document.createElement('p');visErr.className='rea-qf-err';
-        /* 按微信标签：点输入框展开执行人员手机里的标签，可多选，也能直接打字；
-           精确搜索／模糊搜索只决定打字进来的标签在执行时怎么匹配。 */
+        /* 按微信标签：两个添加入口共用一个名单——从执行人员手机同步上来的标签下拉多选，
+           或手动输入（一行一个，默认精确匹配，可切模糊）；匹配方式只作用于手填的标签。 */
         fqTagPick=reaTagPicker({
           getTags:function(){
             if(!execSel)return null;
@@ -23687,7 +23729,10 @@ function initFq(){
           },
           onChange:function(){fqRender()}
         });
-        visSub.appendChild(fqTagPick.el);
+        visTagRow=document.createElement('div');visTagRow.className='rea-fq-visubrow';
+        visTagRow.innerHTML='<span class="rea-fq-visublab">标签</span>';
+        visTagRow.appendChild(fqTagPick.el);
+        visSub.appendChild(visTagRow);
         visSub.appendChild(visIn);visSub.appendChild(visErr);
         visBox.appendChild(visSub);
         var visInput=visIn.querySelector('input');
@@ -23749,7 +23794,7 @@ function initFq(){
       var need=(m==='partial'||m==='exclude');
       if(visSub)visSub.style.display=need?'flex':'none';
       if(!need)return;
-      if(fqTagPick)fqTagPick.el.style.display=by==='tag'?'':'none';
+      if(visTagRow)visTagRow.style.display=by==='tag'?'':'none';
       visIn.style.display=by==='friend'?'flex':'none';
       if(ci){
         ci.placeholder='输入好友备注名，多个用 ; 分隔';
@@ -23800,7 +23845,7 @@ function initFq(){
           if(sp)sp.textContent=execSel.n+'（'+execSel.c+' 人）';
           selMenu.classList.remove('on');selBtn.setAttribute('aria-expanded','false');
           fqSetErr(gExec,'');
-          if(fqTagPick){var hadTags=fqTagPick.names().length;fqTagPick.reload();
+          if(fqTagPick){var hadTags=fqTagPick.phoneCount();fqTagPick.reload();
             if(hadTags)toast('执行人员已更换，已选标签已清空；手填的标签保留。')}
           fqRender();
         });
@@ -24071,7 +24116,7 @@ function initFq(){
       if(vby==='tag'&&fqTagPick)fqTagPick.flush();
       var vn=fqVisNames(),vmsg='',vi;
       if((vm==='partial'||vm==='exclude')&&!vn.length){
-        vmsg=(vm==='exclude'?'请填写不给谁看的':'请填写')+(vby==='tag'?'标签名称':'好友备注名');
+        vmsg='请'+(vby==='tag'?'选择或填写':'填写')+(vm==='exclude'?'不给谁看的':'')+(vby==='tag'?'标签名称':'好友备注名');
       }else if(vn.length>100){
         vmsg='最多填写 100 个名称';
       }else{
@@ -24082,7 +24127,8 @@ function initFq(){
         var vinp=(vby==='tag'&&fqTagPick)?fqTagPick.input():(visIn?visIn.querySelector('input'):null);
         if(fqTagPick)fqTagPick.markBad(!!vmsg&&vby==='tag');
         if(vinp){
-          vinp.classList.toggle('bad',!!vmsg&&vby!=='tag');
+          /* 标签选择器自己管 bad 样式（手机框／手填框）；这里只给好友名称输入框挂 */
+          if(vby!=='tag')vinp.classList.toggle('bad',!!vmsg);
           if(vmsg){try{vinp.focus()}catch(ign){}}
         }
       }
@@ -24110,8 +24156,8 @@ function initFq(){
    预览与四行汇总。富文本编辑器、单选、开关仍是快照原节点（REA_FX 的接线不动），
    这里只加本页标记类与新的排序容器。
    ① 段的「按微信标签」照现网：标签在各销售自己的微信里，后台查不到名单也统计不了
-   好友数，所以只给「是否按照整个标签发送／精确搜索／标签名输入框」，页面上任何位置
-   都不出现预估人数。 */
+   好友数，所以只给「是否按照整个标签发送」和两个添加入口（手机标签多选／手动输入），
+   页面上任何位置都不出现预估人数。 */
 function initQf(){
   var con=document.querySelector('[class*="_con_"]');if(!con)return;
   var title=con.querySelector('[class*="_titleBar_"]');
@@ -24267,6 +24313,10 @@ function initQf(){
   tagPanel.innerHTML='<div class="rea-qf-trow"><span>是否按照整个标签发送</span>'
     +'<label class="rea-qf-rd"><input type="radio" name="rea-qf-whole" value="whole" checked><span class="rea-qf-rddot"></span>按照整个标签</label>'
     +'<label class="rea-qf-rd"><input type="radio" name="rea-qf-whole" value="part"><span class="rea-qf-rddot"></span>不按照整个标签</label></div>';
+  var tagRow=document.createElement('div');tagRow.className='rea-qf-trow rea-qf-tagrow';
+  tagRow.innerHTML='<span>标签</span>';
+  var tagBody=document.createElement('div');tagBody.className='rea-qf-tagbody';
+  tagRow.appendChild(tagBody);tagPanel.appendChild(tagRow);
   /* 演示标签跟着执行人员走；正式版取手机同步上来的好友标签并集，同名标签已合并。 */
   var ORG_TAGS=[
     ['重点客户','老客户','高意向','待跟进'],
@@ -24274,10 +24324,9 @@ function initQf(){
     [],
     ['重点客户','老客户','高意向','待跟进','新客户','已成交']
   ];
-  var MATCH_LABEL={exact:'精确搜索',fuzzy:'模糊搜索'},
-      MATCH_TIP={exact:'标签名要完全一致才算命中',fuzzy:'标签名包含这几个字就算命中'};
-  /* 点输入框展开执行人员手机里的标签，可多选，也能直接打字；模式只决定打字进来的
-     标签在执行时怎么匹配，不影响勾选。 */
+  var MATCH_LABEL={exact:'精确匹配',fuzzy:'模糊匹配'};
+  /* 两个添加入口共用一个名单：手机标签下拉多选，手填的一行一个；
+     匹配方式只作用于手填的标签，下拉选中的标签名本来就是精确的。 */
   var tagPick=reaTagPicker({
     getTags:function(){
       if(!execSel)return null;
@@ -24286,14 +24335,14 @@ function initQf(){
     },
     onChange:function(){render()}
   });
-  tagPanel.appendChild(tagPick.el);
+  tagBody.appendChild(tagPick.el);
   function wholeOn(){
     var r=tagPanel.querySelector('input[name="rea-qf-whole"]:checked');
     return !r||r.value==='whole';
   }
   function tagSelection(){return tagPick.names()}
   function onExecChange(){
-    var had=tagPick.names().length;
+    var had=tagPick.phoneCount();
     tagPick.reload();
     if(had)toast('执行人员已更换，已选标签已清空；手填的标签保留。');
   }
@@ -24544,9 +24593,10 @@ function initQf(){
     var textOnly=setFileTypeOff();
     if(textOnly&&sendType()==='file')backToAssistant();
     var st=sendType();
+    var manualFuzzy=tagPick.hasManual()&&tagPick.mode()==='fuzzy';
     sumWho.textContent=all?'全部好友'
       :(friends?(fn?('好友：'+fnames.join(',')):'指定微信好友 · 未填')
-        :(n?('标签：'+names.join(';')+' · '+MATCH_LABEL[tagPick.mode()])
+        :(n?('标签：'+names.join(';')+(manualFuzzy?' · '+MATCH_LABEL.fuzzy:''))
           :'按微信标签 · 未填'));
     sumWho.title=sumWho.textContent;
     var how;
@@ -24567,13 +24617,17 @@ function initQf(){
         :('好友昵称在各销售自己的微信里，按昵称匹配；人数以各人手机为准。');
     }else if(!all){
       /* 没选标签时不给说明；选了才提示匹配口径与人数口径。 */
-      tagHint.textContent=n?('已选 '+n+' 个标签，'+MATCH_TIP[tagPick.mode()]+'；人数以各人手机为准。'):'';
+      tagHint.textContent=n?(manualFuzzy
+        ?('已选 '+n+' 个标签；手填的标签按模糊匹配，标签名包含这几个字就算命中；人数以各人手机为准。')
+        :('已选 '+n+' 个标签；人数以各人手机为准。')):'';
     }else{
       tagHint.textContent='每位执行人员发给自己微信里的全部好友；人数以各人手机为准，后台不预先统计。';
     }
     tagHint.hidden=!tagHint.textContent;
-    if(!all&&!friends&&n>=2&&wholeOn()){
-      warn.style.display='';warn.textContent='已选 '+n+' 个标签；按整个标签发送时，同时在多个标签里的好友可能收到多次。';
+    if(!all&&!friends&&wholeOn()&&(n>=2||manualFuzzy)){
+      warn.style.display='';warn.textContent=manualFuzzy
+        ?'手填的标签按模糊匹配，可能命中多个标签；按整个标签发送时，同时在多个标签里的好友可能收到多次。'
+        :'已选 '+n+' 个标签；按整个标签发送时，同时在多个标签里的好友可能收到多次。';
     }else if(all&&st==='file'){
       warn.style.display='';warn.textContent='全部好友用文件传输助手转发要在选择器里一批批勾，大批量建议改用群发助手。';
     }else{warn.style.display='none';warn.textContent='';}
@@ -26657,7 +26711,8 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
         {title:'发送范围',rows:[
           {label:'群发范围',value:'按微信标签'},
           {label:'是否按照整个标签发送',value:'按照整个标签'},
-          {label:'选择方式',value:'精确搜索'},
+          {label:'标签来源',value:'从手机标签选择、手动输入'},
+          {label:'匹配方式',value:'手填精确匹配'},
           {label:'标签名称',value:'老客户、双十一'}
         ]},
         {title:'发送内容',rows:[
@@ -31678,7 +31733,7 @@ if(ETRIG){
     selBtn.setAttribute('aria-expanded','false');
     /* 标签跟着人走：换执行人员清掉列表里勾选的，手填的名称保留（ADR-0098 ③）。 */
     if(tagPick){
-      var hadTags=tagPick.names().length;
+      var hadTags=tagPick.phoneCount();
       tagPick.reload();
       if(hadTags)msg('执行人员已更换，已选标签已清空；手填的标签保留。');
     }
@@ -31686,9 +31741,9 @@ if(ETRIG){
   });
 }
 
-/* ---------------- 微信标签：与发圈／群发好友同一枚可打字多选选择器（ADR-0098） ----------------
-   点开列出所选执行人员手机同步来的标签，可多选，也能直接打字、回车或分号落成标签；
-   精确搜索／模糊搜索只决定手填名称在执行时怎么匹配。演示标签跟着执行人员走。 */
+/* ---------------- 微信标签：与发圈／群发好友同一枚选择器（ADR-0098、ADR-0110） ----------------
+   两个添加入口共用一个名单：从执行人员手机同步来的标签下拉多选；手填的一行一个，
+   默认精确匹配，可切模糊。匹配方式只作用于手填的标签。演示标签跟着执行人员走。 */
 var ORG_TAGS=[
   ['重点客户','老客户','高意向','待跟进'],
   ['重点客户','新客户','已成交'],
