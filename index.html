@@ -940,7 +940,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
    没有定时、没有循环、不落后台任务，结果只落在本机的「唤醒记录」里。
    **视觉与宿主四屏同一套**（首页／任务／工具／待唤醒客户）：浅蓝雾顶＋两团蓝紫光晕、
    白卡 20 圆角＋蓝调柔影、紫→蓝渐变头像、✦ 段头、蓝实色主操作。
-   范围、联系目的、预览、记录、详情五屏共用这一族类名；待唤醒客户的就地选取态也复用
+   范围、共同消息、预览、记录、详情共用这一族类名；待唤醒客户的就地选取态也复用
    `.cw-cb/.cw-ckb/.cw-foot/.cw-btn`，改这里时那一屏一起看。 */
 #cw-content,#cw-preview,#cw-editor,#cw-records,#cw-record{
   background:linear-gradient(180deg,#F0F5FF 0%,#F7F9FE 100%)}
@@ -991,32 +991,6 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
   font-size:13.5px;font-weight:600;color:#2D528E;position:relative;overflow:hidden}
 .cw-units button.on{background:#fff;color:#1677FE;font-weight:700;
   box-shadow:0 6px 14px -12px rgba(40,70,150,.9)}
-
-/* 联系目的：五行单选。行首一枚彩色图标块（工具页那族同色系画法），
-   选中＝整行浅蓝底＋描边、图标块换成蓝紫渐变实心、行尾蓝圆打勾。 */
-.cw-purpose{display:flex;flex-direction:column;gap:6px;margin-top:14px}
-.cw-purpose label{position:relative;display:flex;align-items:center;gap:12px;min-height:56px;
-  padding:8px 10px 8px 8px;border-radius:14px;cursor:pointer;overflow:hidden;
-  transition:background .18s var(--emph),box-shadow .18s var(--emph)}
-.cw-purpose label:hover{background:#F7F9FE}
-.cw-purpose label:has(input:checked){background:#F2F7FF;box-shadow:inset 0 0 0 1.5px #D5E4FF}
-.cw-purpose label:has(input:focus-visible){outline:2px solid #7FA6F0;outline-offset:2px}
-.cw-purpose .ic{flex:none;width:38px;height:38px;border-radius:12px;
-  display:flex;align-items:center;justify-content:center}
-.cw-purpose .ic.i1{background:#E8F0FF;color:#2E6BFF}
-.cw-purpose .ic.i2{background:#F0E9FF;color:#8B4DFF}
-.cw-purpose .ic.i3{background:#FFF0E2;color:#F2994A}
-.cw-purpose .ic.i4{background:#FFEAF1;color:#F2548A}
-.cw-purpose .ic.i5{background:#E4F7F2;color:#12A16B}
-.cw-purpose .ic.i6{background:#EDEBFF;color:#5B6CFF}
-.cw-purpose label:has(input:checked) .ic{background:linear-gradient(140deg,#1677FE,#7A5BFF);color:#fff;
-  box-shadow:0 8px 16px -10px rgba(46,107,255,.8)}
-.cw-purpose .tx{flex:1;min-width:0;font-size:15px;font-weight:500;color:#17263F;line-height:1.3}
-.cw-purpose label:has(input:checked) .tx{font-weight:600;color:#102953}
-.cw-purpose input{flex:none;-webkit-appearance:none;appearance:none;width:22px;height:22px;margin:0;
-  border-radius:50%;border:1.8px solid #C3D3EE;background:#fff;cursor:pointer}
-.cw-purpose input:checked{border-color:#1677FE;background:#1677FE
-  url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") center/14px 14px no-repeat}
 
 /* 表单：软填充输入框（无硬描边、圆角 14），聚焦才亮一圈。下拉自绘箭头，去掉浏览器默认外观。 */
 .cw-field{display:flex;align-items:center;justify-content:space-between;gap:8px;
@@ -1227,6 +1201,33 @@ select.cw-input{-webkit-appearance:none;appearance:none;padding-right:42px;curso
   font-weight:700;display:flex;align-items:center;justify-content:center}
 @keyframes cwWxIn{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
 
+/* 共同消息编辑、可采用的写作建议与按人差异。 */
+#cw-content,#cw-preview,#cw-editor{background:var(--surface)}
+#cw-content>.cw-glow,#cw-preview>.cw-glow,#cw-editor>.cw-glow{display:none}
+#cw-content .cw-bar h3,#cw-preview .cw-bar h3,#cw-editor .cw-bar h3{justify-content:flex-start;left:64px;right:100px;font-size:22px;color:var(--on-surface)}
+#cw-content .cw-bar,#cw-preview .cw-bar,#cw-editor .cw-bar{min-height:64px}
+#cw-content .cw-pcard,#cw-preview .cw-pcard,#cw-preview .cw-aicard,#cw-editor .cw-pcard{background:var(--sc-low);box-shadow:none;border-radius:12px}
+#cw-content .cw-btn,#cw-preview .cw-btn,#cw-editor .cw-btn{background:var(--primary);color:var(--on-primary);min-height:48px}
+#cw-content .cw-btn:disabled,#cw-preview .cw-btn:disabled{background:var(--sc-highest);color:var(--on-surface-variant);opacity:.6}
+#cwContentFoot,#cwPreviewFoot,#cw-editor .cw-foot{background:var(--surface);box-shadow:none}
+.cw-main-input{margin-top:16px;min-height:176px!important}
+#cw-content .cw-input,#cw-editor .cw-input{background:var(--sc-high);border-radius:4px 4px 0 0;border:0;border-bottom:1px solid var(--outline);color:var(--on-surface)}
+#cw-content .cw-input:focus,#cw-editor .cw-input:focus{border-bottom:2px solid var(--primary)}
+.cw-section-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.cw-section-head .cw-question{flex:1;font-size:16px}
+.cw-shared-text{font-size:15px;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--on-surface);margin:8px 0}
+.cw-shared-img{max-width:160px;max-height:180px;border-radius:8px}
+.cw-suggest{color:var(--on-secondary-container);background:var(--secondary-container);border-radius:12px;padding:16px;margin-top:12px}
+.cw-diff{margin-top:12px;line-height:1.65}.cw-diff span{display:block;font-size:12px;color:var(--on-surface-variant);margin-bottom:4px}
+.cw-diff mark{background:var(--secondary-container);color:var(--on-secondary-container);box-decoration-break:clone;padding:2px 4px}
+.cw-group-title{margin:20px 0 12px;font-size:16px}
+.cw-full summary,.cw-same-group>summary{min-height:48px;display:flex;align-items:center;cursor:pointer;color:var(--primary)}
+.cw-full summary::after,.cw-same-group>summary::after{content:'⌄';margin-left:auto}
+.cw-full[open]>summary::after,.cw-same-group[open]>summary::after{content:'⌃'}
+#cw-preview .cw-textact,#cw-content .cw-textact,#cw-editor .cw-textact,#cw-preview .cw-nosend{min-height:48px;color:var(--primary);background:transparent;border:0;padding:8px 12px}
+#cw-preview .cw-nosend{flex:none}#cw-preview .cw-aicard{margin-top:12px}
+#cw-preview .cw-av{background:var(--secondary-container);color:var(--on-secondary-container)}
+#cw-content .cw-ib{height:48px;width:48px;box-shadow:none;color:var(--primary);background:transparent}
 /* 编辑器：内容类型走同一套浅蓝槽分段器，输入区给足高度。 */
 .cw-type{display:flex;gap:2px;padding:4px;border-radius:999px;background:#E8F0FF;margin-bottom:18px}
 .cw-type button{flex:1;height:36px;border-radius:999px;border:0;background:transparent;
@@ -3809,7 +3810,7 @@ body[data-motion="fade"] .panel.anim-in{animation:panelSwapIn .36s var(--emph) .
 
         <!-- 客户唤醒（App 工具页）· ADR-0095／docs/prd/客户唤醒-App工具页-PRD.md
              两个入口：工具页「高效发送」组的「客户唤醒」，与「待唤醒客户」页吸底的「一键唤醒」。
-             **2026-11-16 并成一屏**（ADR-0095 修订）：工具页进来先选「未回复超过 N」（取 [N,N+5]，
+             **2026-11-17 共同消息流程**（PRD v1.2）：工具页进来先选「未回复超过 N」（取 [N,N+5]，
              不预填），同一页写话术、定参数、开始；范围规则收在问号气泡里，不报人数。
              工具页这条路不再有三档（全部／今日／1天／1周）与「自定义 N」弹层——那套留在
              「待唤醒客户」页，两条路的口径正式分家。
@@ -4835,7 +4836,7 @@ function syncNav(id,params){
 }
 
 /* ---------- Material ripple（统一按压反馈，替代缩放） ---------- */
-var RIP_SEL='.cw-textact,.cw-message,.cw-purpose label,.btn,.chip,.iconbtn,.cell,.wk-card,.p-card,.pc-btn,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.hv-msg,.hv-stat,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.hva-lockcard,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close,.hw-add,.cust-seg button,.cust-copy,.cust-acct-row,.cw-btn,.cw-ib,.cw-op,.cw-units button,.cw-rec,.cw-kv .op,.cw-addrow,.cw-nosend,.cw-tutlink,.cw-info,.cw-rpb,.cw-goto,.cw-tutplay';
+var RIP_SEL='.cw-textact,.cw-message,.btn,.chip,.iconbtn,.cell,.wk-card,.p-card,.pc-btn,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.hv-msg,.hv-stat,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.hva-lockcard,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close,.hw-add,.cust-seg button,.cust-copy,.cust-acct-row,.cw-btn,.cw-ib,.cw-op,.cw-units button,.cw-rec,.cw-kv .op,.cw-addrow,.cw-nosend,.cw-tutlink,.cw-info,.cw-rpb,.cw-goto,.cw-tutplay';
 function ripInit(){
   document.addEventListener('pointerdown',function(e){
     var t=e.target.closest ? e.target.closest(RIP_SEL) : null;
@@ -5312,7 +5313,7 @@ REND['host-chat']=function(){custRender('host-chat')};
 REND['host-newfriend']=function(){custRender('host-newfriend')};
 
 /* ---------- 客户唤醒（App 工具页）· ADR-0095 ----------
-   员工自助的一次性唤醒：选一段时间没回的客户 → 写内容（固定一套／按人 AI 生成）→ 立即开始。
+   员工自助的一次性唤醒：按原入口选人 → 写好共同消息 → 检查个人调整 → 立即开始。
    与后台派下来的「客户唤醒任务」是两条路：不建任务、不分配、不进任务列表与看板，结果只落本机记录。
    工具页这条路的口径只有「未回复超过 N」，取 [N, N+5]（两端含）；**不预填**，没设值就没有人。
    改 N／换单位＝调接口重查这一段的人（cwQuery*，只认最后一次请求），不是本地重算一张表；
@@ -5375,39 +5376,65 @@ var CW_AI={}, CW_FAIL={}, CW_AI_ROUND=0;
    令牌已经换了，结果直接丢掉，不会晚一步盖掉新内容。 */
 var CW_PEND={}, CW_TOK={}, CW_QUEUE=[], CW_JOBS=[], CW_RUNNING=0, CW_FLUSHING=false;
 var CW_MAXC=4;
-/* 本次新增信息不自动预填；同一轮草稿与已生成消息分别保存。 */
-var CW_TOPIC='', CW_GEN=false;
-/* 原型仅演示：下列聊天均为虚构样例，不接真实模型。生成依据可在预览展开。 */
-var CW_PURPOSE='follow', CW_NEXT='auto', CW_EXPIRY='', CW_SIG='', CW_EDITMSG=null, CW_SEND_IDS=[];
-var CW_DRAFTS={}, CW_MANUAL={}, CW_LAUNCHING=false;
-var CW_PURPOSES=[['follow','跟进上次聊的事','最新进展（选填）','比如：上次问的尺码已经到店'],['news','分享新品或新消息','想告诉客户的新消息','比如：到了两款轻薄外套，可以拍实物图'],['event','告知活动','活动内容','比如：周末到店可以试穿新款'],['care','售后回访','想了解哪方面的使用情况','比如：外套的尺码和穿着感受'],['custom','自定义唤醒主题','这次想聊的主题','比如：问问上次买的围巾穿着怎么样，顺带提一句新到的冬款'],['manual','自己写唤醒话术','','']];
-/* 联系目的行首那枚图标块：色系照工具页的「同色系光晕＋渐变块」，一个目的一个色，认行不认字。 */
-var CW_PURPOSE_IC={follow:['i1','message'],news:['i2','sparkle'],event:['i3','megaphone'],care:['i4','thumbsup'],custom:['i6','intent'],manual:['i5','edit']};
+/* 一条共同消息，AI 写作建议与按人接话分开；原型使用虚构聊天和确定性演示。 */
+var CW_MESSAGE='',CW_BASE='',CW_ATTACH_BASE=[],CW_GEN=false,CW_SIG='',CW_EDITMSG=null,CW_SEND_IDS=[],CW_SEND_VERSION='';
+var CW_MANUAL={},CW_KIND={},CW_OPEN={},CW_EVIDENCE={},CW_LAUNCHING=false;
+var CW_WRITE={token:0,busy:false,input:'',candidate:'',error:'',timer:null};
 var CW_CONTEXT={
- a1:{quote:'客户：想找轻薄一点、通勤穿的外套。\n我：好的，我帮你留意一下。',topic:'轻薄的通勤外套',match:'外套'},
- a2:{quote:'客户：这件外套有深色的吗？\n我：我查一下颜色。',topic:'深色外套',match:'外套'},
- a3:{quote:'客户：这件的尺码我再考虑一下。\n我：好，有需要随时找我。',topic:'外套尺码',match:'尺码'},
- a4:{quote:'客户：你好。\n我：你好。',topic:'',match:''},
- a5:{quote:'客户：最近先不买了，暂时别发推荐了。\n我：好的。',topic:'',declined:true},
- a6:{quote:'客户：外套收到了，我明天穿一下。\n我：好的。',topic:'外套的穿着感受',match:'售后'},
- b1:{quote:'客户：想看看轻薄外套。\n我：有新款我告诉你。',topic:'轻薄外套',match:'外套'},
- b2:{quote:'客户：预算我还得再考虑。\n我：好的。',topic:'预算',match:'价格'},
- b3:{quote:'客户：你好。\n我：你好。',topic:'',match:''},
- b4:{quote:'客户：什么时候方便到店？\n我：我确认一下。',topic:'到店时间',match:'到店'}
+ a1:{quote:'客户：出差时网络经常断，没网能用吗？\n我：目前需要联网，我留意一下后续更新。',key:'离线',opening:'你之前问过没网时能不能用，',alternate:'上次聊到出差时网络不稳定，'},
+ a2:{quote:'客户：价格我再考虑一下。\n我：好的，有需要可以联系我。'},
+ a3:{quote:'客户：上次申请的退款还没到账。\n我：我帮你查一下。',issue:'上次退款问题还未解决'},
+ a4:{quote:'客户：你好。\n我：你好。'},
+ a5:{quote:'客户：最近先不买了，暂时别发推荐了。\n我：好的。',issue:'客户已表示暂时不需要推荐'},
+ a6:{quote:'客户：想找轻薄的通勤外套。\n我：有合适的新款我告诉你。',key:'外套',opening:'你之前提过想找轻薄的通勤外套，',alternate:'上次聊到你想看轻薄的外套，'},
+ b1:{quote:'客户：这款鞋穿着偏紧。\n我：我看看怎么处理。',issue:'尺码问题还没有处理完'},
+ b2:{quote:'客户：我再考虑一下预算。\n我：好的。'},
+ b3:{quote:'客户：你好。\n我：你好。'},
+ b4:{quote:'客户：能离线使用就方便了。\n我：有更新我告诉你。',key:'离线',opening:'你之前提到离线使用会更方便，',alternate:'上次你问过离线使用，'}
 };
-function cwPurpose(){return CW_PURPOSES.filter(function(p){return p[0]===CW_PURPOSE})[0]}
-function cwDraftSig(){return JSON.stringify([CW_PURPOSE,CW_TOPIC.trim(),CW_NEXT,CW_EXPIRY])}
+function cwDraftSig(){return JSON.stringify([CW_MESSAGE.trim(),CW_FIXED])}
 function cwRender(){if(cur==='cw-preview')REND['cw-preview']();else if(cur==='cw-content')REND['cw-content']()}
+function cwWriteCancel(){clearTimeout(CW_WRITE.timer);CW_WRITE.token++;CW_WRITE.busy=false;CW_WRITE.candidate='';CW_WRITE.error=''}
 function cwResetDraft(){
- CW_CUST.forEach(function(c){cwAiCancel(c.i)}); CW_AI={};CW_FAIL={};CW_GEN=false;CW_SIG='';CW_MANUAL={};CW_LAUNCHING=false;
- CW_PURPOSE='follow';CW_TOPIC='';CW_NEXT='auto';CW_EXPIRY='';CW_STRAT='ai';CW_DRAFTS={};CW_FIXED=[];
+ CW_CUST.forEach(function(c){cwAiCancel(c.i)});cwWriteCancel();
+ CW_AI={};CW_FAIL={};CW_KIND={};CW_OPEN={};CW_EVIDENCE={};CW_MANUAL={};CW_GEN=false;CW_SIG='';CW_LAUNCHING=false;
+ CW_MESSAGE='';CW_BASE='';CW_ATTACH_BASE=[];CW_STRAT='ai';CW_FIXED=[];
 }
-function cwPickPurpose(v){
- CW_DRAFTS[CW_PURPOSE]={text:CW_TOPIC,next:CW_NEXT,expiry:CW_EXPIRY};
- CW_PURPOSE=v;var d=CW_DRAFTS[v]||{};CW_TOPIC=d.text||'';CW_NEXT=d.next||'auto';CW_EXPIRY=d.expiry||'';
- CW_STRAT=v==='manual'?'fixed':'ai';REND['cw-content']();
+function cwInput(v){CW_MESSAGE=v;cwWriteCancel();cwWritePanel();cwContentFoot()}
+function cwWriteStart(){
+ if(!CW_MESSAGE.trim()||CW_WRITE.busy)return;
+ cwWriteCancel();CW_WRITE.input=CW_MESSAGE;CW_WRITE.busy=true;
+ var token=CW_WRITE.token;CW_WRITE.timer=setTimeout(function(){cwWriteDone(token)},650);cwWritePanel();cwContentFoot();
 }
-function cwInput(v){CW_TOPIC=v;cwContentFoot()}
+function cwWriteDone(token){
+ if(token!==CW_WRITE.token)return;
+ clearTimeout(CW_WRITE.timer);CW_WRITE.busy=false;
+ var v=CW_WRITE.input.trim();
+ if(window.CW_WRITE_SIMFAIL){window.CW_WRITE_SIMFAIL=false;CW_WRITE.error='暂时没能写好，请重试。原文已保留。'}
+ else if(/^(最近)?(有)?(活动|优惠)[。！!]?$/u.test(v))CW_WRITE.error='这次活动具体是什么，适用于哪些产品或客户？请补充到消息里。';
+ else{
+   // 演示仅整理停顿和语气，不补价格、权益、库存或个人经历。
+   var candidate=v.replace(/[；;]/g,'。').replace(/，?已上线[。]?$/,'，已经上线。').replace(/[。]{2,}/g,'。');
+   if(!/[。！？!?]$/.test(candidate))candidate+='。';
+   if(/^专业版新增离线(使用)?功能[，,；; ]*(已|已经)上线[。]?$/.test(v))candidate='专业版新增了离线使用功能，现在已经上线。要不要了解一下怎么用？';
+   else if(/试穿活动/.test(candidate)&&!/？|\?/.test(candidate))candidate+='你有兴趣来看看吗？';
+   CW_WRITE.candidate=candidate;
+ }
+ if(cur==='cw-content'){cwWritePanel();cwContentFoot()}
+}
+function cwWriteApply(){
+ if(!CW_WRITE.candidate||CW_MESSAGE!==CW_WRITE.input)return;
+ var old=CW_MESSAGE,next=CW_WRITE.candidate;CW_MESSAGE=next;cwWriteCancel();REND['cw-content']();
+ toast('已采用 AI 建议','撤销',function(){if(CW_MESSAGE!==next){toast('消息已继续编辑，请在编辑器中修改');return}CW_MESSAGE=old;cwRender()});
+}
+function cwWriteKeep(){cwWriteCancel();cwWritePanel();cwContentFoot()}
+function cwWritePanel(){
+ var box=$('cwWritePanel');if(!box)return;
+ var w=CW_WRITE;
+ box.innerHTML=w.busy?'<div class="cw-sum" role="status">正在整理消息…</div>':w.error?'<div class="cw-alert" role="status">'+esc(w.error)+'</div>':w.candidate?'<div class="cw-suggest"><b>AI 建议</b><div class="cw-shared-text">'+esc(w.candidate)+'</div><div class="cw-rowacts"><button class="cw-textact" onclick="cwWriteApply()">采用建议</button><button class="cw-textact" onclick="cwWriteKeep()">保留原文</button></div></div>':'';
+ var btn=$('cwWriteBtn');if(btn){btn.disabled=w.busy||!CW_MESSAGE.trim();btn.textContent=w.busy?'正在写…':'AI 帮我写'}
+}
+
 function cwConfirm(title,detail,action){
  var d=openDlg('<h3>'+esc(title)+'</h3><p>'+esc(detail)+'</p><div class="cw-shbtns"><button class="cw-textact" data-cancel>取消</button><button class="cw-btn" data-ok>继续</button></div>');
  d.querySelector('[data-cancel]').onclick=function(){d.remove()};d.querySelector('[data-ok]').onclick=function(){d.remove();action()};
@@ -5699,33 +5726,14 @@ function cwEnter(){
 
 /* 唤醒内容：两套策略——固定内容（一套多人）／AI生成（按人各一条）。 */
 function cwTypeN(t){ return t==='text'?'文本':(t==='image'?'图片':'视频'); }
-function cwStratN(s){ return s==='fixed'?'固定内容':'AI生成'; }
+function cwStratN(s){return s==='shared'?'本次消息与个别调整':s==='fixed'?'固定内容':'AI生成'}
 function cwAiText(c,r,draft){
- var d=draft||{purpose:CW_PURPOSE,text:CW_TOPIC,next:CW_NEXT,expiry:CW_EXPIRY};
- var purpose=d.purpose,next=d.next,expiry=d.expiry;
- var ctx=CW_CONTEXT[c.i]||{}, info=d.text.trim().replace(/[。！？]+$/,''), line='', end='';
- if(ctx.declined)return {error:'客户已表示暂时不需要推荐'};
- if(!info&&!ctx.topic)return {error:'缺少可用信息，请补充内容或自己写'};
- if(purpose==='follow'){
-   line=ctx.topic?'上次聊到'+ctx.topic+'，'+(info?info+'。':'你现在还有这方面的需要吗？'):(info+'。');
- }else if(purpose==='care')line='想了解一下'+info+'，你觉得怎么样？';
- else if(purpose==='custom')line=info.replace(/^(问问|问一下|想问|了解一下|看看)/,'')+'。';
- else line=(ctx.topic&&ctx.match&&info.indexOf(ctx.match)>=0?'上次你提到'+ctx.topic+'，':'')+info+'。';
- if(purpose==='event'&&expiry)line+='活动截至'+expiry.replace('T',' ')+'。';
- if(next==='reply')end='方便说说你现在的想法吗？';
- else if(next==='photo'){
-   if(!/拍|图|照片/.test(info))return {error:'请先补充可以提供哪些图片，或调整下一步'};
-   end='要不要我发张图给你看看？';
- }else if(next==='visit')end='你想约什么时间？';
- else if(/拍|图|照片/.test(info))end='要不要我发张图给你看看？';
- else if(!/[？?]$/.test(line))end='你想了解一下吗？';
- if(end&&/[？?]$/.test(line))line=line.replace(/你现在还有这方面的需要吗？|你觉得怎么样？$/,'');
- /* 自定义主题：题目就是员工写的那句，自动补的通用问句会跟它撞车，默认不补。 */
- if(purpose==='custom'&&next==='auto')end='';
- if(purpose==='follow'&&!info&&c.i==='a6'&&next==='auto'){line='之前收到的外套穿着还合适吗？';end=''}
- var msg=line+end;
- if(r%2)msg=msg.replace('上次你提到','之前你说到').replace('要不要我发张图给你看看？','需要我发张图吗？');
- return {text:msg};
+ var d=draft||{message:CW_BASE,context:CW_CONTEXT[c.i]},ctx=d.context||{};
+ if(ctx.readError)return {error:'聊天记录暂时读取失败',kind:'read_error'};
+ if(ctx.issue)return {error:ctx.issue,kind:'review'};
+ var opening=ctx.key&&d.message.indexOf(ctx.key)>=0?(r%2?ctx.alternate:ctx.opening):'';
+ opening=(opening||'').replace(/[，,]$/,'。');
+ return {text:opening+d.message,opening:opening,kind:opening?'adjusted':'same',evidence:opening?ctx.quote:''};
 }
 function cwAiOk(){ return cwSelIds().filter(function(id){return CW_AI[id]!=null&&!CW_FAIL[id]}); }
 function cwAiJobDur(id){
@@ -5738,7 +5746,7 @@ function cwAiBegin(ids){
     CW_QUEUE=CW_QUEUE.filter(function(j){return j.id!==id});
     CW_TOK[id]=(CW_TOK[id]||0)+1;
     CW_PEND[id]=1;
-    CW_QUEUE.push({id:id,tok:CW_TOK[id],dur:cwAiJobDur(id),round:CW_AI_ROUND,draft:{purpose:CW_PURPOSE,text:CW_TOPIC,next:CW_NEXT,expiry:CW_EXPIRY}});
+    CW_QUEUE.push({id:id,tok:CW_TOK[id],dur:cwAiJobDur(id),round:CW_AI_ROUND,draft:{message:CW_BASE,context:JSON.parse(JSON.stringify(CW_CONTEXT[id]||{}))}});
   });
   cwAiPump();
 }
@@ -5756,7 +5764,7 @@ function cwAiDone(job){
   if(CW_TOK[job.id]===job.tok){
     delete CW_PEND[job.id];
     var out=cwAiText(cwCust(job.id),job.round,job.draft);
-    if(out.error){CW_FAIL[job.id]=out.error;delete CW_AI[job.id]}else{CW_AI[job.id]=out.text;delete CW_FAIL[job.id]}
+    if(out.error){CW_FAIL[job.id]=out.error;CW_KIND[job.id]=out.kind;CW_EVIDENCE[job.id]=job.draft.context.quote||'';delete CW_AI[job.id];delete CW_OPEN[job.id]}else{CW_AI[job.id]=out.text;CW_OPEN[job.id]=out.opening;CW_KIND[job.id]=out.kind;CW_EVIDENCE[job.id]=out.evidence;delete CW_FAIL[job.id]}
     if(!CW_FLUSHING&&cur==='cw-preview'&&CW_GEN&&CW_STRAT==='ai')cwAiPatch(job.id);
   }
   cwAiPump();
@@ -5776,29 +5784,29 @@ function cwAiFlush(){
   CW_FLUSHING=false;
   cwRender();
 }
-/* 准备页先检查输入；改了联系目的/事实后，由用户确认替换已有消息。 */
+/* 共同消息只确认一次；变更后重查自动结果，保留手改并标记待核对。 */
 function cwPrepError(){
  if(CW_QBUSY)return '正在取人…';
  if(CW_QERR)return '没能取到这段客户';
  if(CW_FROM==='tools'&&!CW_CUSTOM.on)return '还没选唤醒范围';
  if(!cwSelCount())return CW_FROM==='tools'?'这一段没有待唤醒的客户':'还没选客户';
- if(CW_STRAT==='fixed')return CW_FIXED.length?'':'还没有内容';
- if(CW_PURPOSE!=='follow'&&!CW_TOPIC.trim())return '请填写'+cwPurpose()[2];
- if(CW_PURPOSE==='event'&&CW_EXPIRY&&new Date(CW_EXPIRY).getTime()<=Date.now())return '活动截止时间已过，请更新';
+ if(!CW_MESSAGE.trim()&&!CW_FIXED.length)return '还没有消息内容';
+ if(CW_WRITE.busy)return '正在整理消息…';
+ if(CW_WRITE.candidate)return '请选择采用建议或保留原文';
  return '';
 }
 function cwGen(){
  var err=cwPrepError();if(err){toast(err);return}
- if(CW_STRAT==='fixed'){go('cw-preview');return}
- if(CW_SIG&&CW_SIG!==cwDraftSig()&&(Object.keys(CW_AI).length||Object.keys(CW_FAIL).length||Object.keys(CW_PEND).length)){
-   cwConfirm('重新生成消息？','本次联系内容已修改，将替换已有消息，包括你手动编辑过的内容。',function(){cwGenerate(true)});return;
+ var sig=cwDraftSig(),changed=!!CW_SIG&&CW_SIG!==sig;
+ CW_BASE=CW_MESSAGE.trim();CW_ATTACH_BASE=JSON.parse(JSON.stringify(CW_FIXED));
+ if(changed){
+   CW_CUST.forEach(function(c){
+     var id=c.i;cwAiCancel(id);
+     if(CW_MANUAL[id])CW_FAIL[id]='本次消息已修改，请核对手动内容';
+     else{delete CW_AI[id];delete CW_FAIL[id];delete CW_KIND[id];delete CW_OPEN[id];delete CW_EVIDENCE[id]}
+   });
  }
- cwGenerate(false);
-}
-function cwGenerate(reset){
- if(reset){CW_CUST.forEach(function(c){cwAiCancel(c.i)});CW_AI={};CW_FAIL={};CW_MANUAL={}}
- CW_SIG=cwDraftSig();CW_GEN=true;
- var ids=cwMissing();cwAiBegin(ids);go('cw-preview');
+ CW_SIG=sig;CW_GEN=true;cwAiBegin(cwMissing());go('cw-preview');
 }
 
 function cwMissing(){
@@ -5806,29 +5814,33 @@ function cwMissing(){
 }
 function cwRegenOne(id){
  function run(){CW_AI_ROUND++;delete CW_FAIL[id];delete CW_AI[id];delete CW_MANUAL[id];cwAiBegin([id]);cwRender()}
- if(CW_MANUAL[id])cwConfirm('替换手动编辑的消息？','换个说法会替换这位客户的当前消息，其他客户不受影响。',run);else run();
+ if(CW_MANUAL[id])cwConfirm('替换手动编辑的消息？','将使用本次共同消息，重新检查这位客户的聊天并调整开场。',run);else run();
 }
-function cwDelAi(id){
- var c=cwCust(id);cwAiCancel(id);CW_XED[id]=1;CW_SEL[id]=false;cwRender();
- toast('本次不发送给'+c.n,'撤销',function(){
-   delete CW_XED[id];
-   if(CW_FROM==='awake'||cwWindow().some(function(x){return x.i===id}))CW_SEL[id]=true;
-   cwRender();
- });
+function cwRestoreIds(ids){ids.forEach(function(id){delete CW_XED[id];if(CW_FROM==='awake'||cwWindow().some(function(c){return c.i===id}))CW_SEL[id]=true});cwRender()}
+function cwDelAi(id){cwAiCancel(id);CW_XED[id]=1;CW_SEL[id]=false;cwRender();toast('本次不发送给'+cwCust(id).n,'撤销',function(){cwRestoreIds([id])})}
+function cwOmitIssues(){
+ var ids=cwSelIds().filter(function(id){return !!CW_FAIL[id]});
+ ids.forEach(function(id){cwAiCancel(id);CW_XED[id]=1;CW_SEL[id]=false});cwRender();
+ toast('本次不发送给这 '+ids.length+' 人','撤销',function(){cwRestoreIds(ids)});
 }
+function cwUseBase(id){
+ cwAiCancel(id);CW_AI[id]=CW_BASE;CW_OPEN[id]='';CW_KIND[id]='same';CW_MANUAL[id]=true;delete CW_FAIL[id];cwRender();
+}
+function cwKeepManual(id){delete CW_FAIL[id];cwRender()}
 function cwTone(id,mode){
- var old=CW_AI[id]||'', next=old;
- if(mode==='short')next=old.replace(/上次你提到|之前你说到/g,'你提过').replace(/方便说说你现在的想法吗？/g,'你现在怎么想？').replace(/要不要我发张图给你看看？/g,'要看图吗？').replace(/你想了解一下吗？/g,'想了解吗？');
- else next=old.replace(/上次聊到/g,'之前聊的').replace(/你想了解一下吗？/g,'想看看吗？').replace(/方便说说你现在的想法吗？/g,'你现在怎么想呀？');
- if(next===old){toast(mode==='short'?'这条消息已经很简短，可以点正文继续编辑':'已是自然表达，可以点正文继续编辑');return}
- CW_AI[id]=next;CW_MANUAL[id]=true;cwRender();
- toast('已调整这条消息','撤销',function(){CW_AI[id]=old;cwRender()});
+ var old=CW_AI[id]||'',oldOpen=CW_OPEN[id]||'',text=CW_MANUAL[id]?old:oldOpen,next=text;
+ if(mode==='short')next=text.replace(/你之前提过想找/g,'你提过想找').replace(/你之前问过/g,'你问过').replace(/上次聊到你想看/g,'你想看');
+ else next=text.replace(/你之前问过/g,'之前你问起').replace(/你之前提过想找/g,'之前你说想找');
+ if(next===text){toast('可以点编辑，直接调整这条消息');return}
+ CW_AI[id]=CW_MANUAL[id]?next:next+CW_BASE;CW_OPEN[id]=CW_MANUAL[id]?'':next;cwRender();
+ var changed=CW_AI[id];toast('已调整这条消息','撤销',function(){if(CW_AI[id]!==changed)return;CW_AI[id]=old;CW_OPEN[id]=oldOpen;cwRender()});
 }
 
 function cwEditFixed(i){
+ if(cur==='cw-preview'){back();}
  var m=i>=0?CW_FIXED[i]:{t:'text',c:''};CW_EDITMSG={kind:'fixed',index:i,t:m.t,value:m.c,original:JSON.stringify([m.t,m.c])};go('cw-editor');
 }
-function cwEditAi(id){CW_EDITMSG={kind:'ai',id:id,t:'text',value:CW_AI[id]||'',original:JSON.stringify(['text',CW_AI[id]||''])};go('cw-editor')}
+function cwEditAi(id){CW_EDITMSG={kind:'ai',id:id,t:'text',value:CW_AI[id]==null?CW_BASE:CW_AI[id],original:JSON.stringify(['text',CW_AI[id]==null?CW_BASE:CW_AI[id]])};go('cw-editor')}
 REND['cw-editor']=function(){
  var e=CW_EDITMSG;if(!e)return;
  $('cwEditorBack').innerHTML=I('back',24,2);
@@ -5845,7 +5857,7 @@ function cwEditorType(t){CW_EDITMSG.t=t;CW_EDITMSG.value='';REND['cw-editor']()}
 function cwPickFile(){CW_EDITMSG.value=CW_EDITMSG.t==='image'?'秋季新品主图.png':'门店实拍.mp4';REND['cw-editor']();toast('演示：已选择示例附件')}
 function cwEditorSave(){
  var e=CW_EDITMSG,v=e.value.trim();if(!v){toast(e.t==='text'?'请填写消息内容':'请先选择附件');return}
- if(e.kind==='ai'){cwAiCancel(e.id);CW_AI[e.id]=v;delete CW_FAIL[e.id];CW_MANUAL[e.id]=true}
+ if(e.kind==='ai'){cwAiCancel(e.id);CW_AI[e.id]=v;delete CW_FAIL[e.id];CW_MANUAL[e.id]=true;CW_KIND[e.id]='manual';CW_OPEN[e.id]=''}
  else if(e.index<0)CW_FIXED.push({t:e.t,c:v});else CW_FIXED[e.index]={t:e.t,c:v};
  CW_EDITMSG=null;back();
 }
@@ -5858,23 +5870,38 @@ function cwDelFixed(i){var m=CW_FIXED.splice(i,1)[0];cwRender();toast('已删除
 /* 一张 AI 结果卡：生成中画骨架，回来了落正文（成功）、原因（失败），或缺少信息。
    data-aic 让并发回包能只换那一张，不必整页重绘——重绘会把其余骨架的微光一起打回起点。
    enterIdx>=0：这张是刚进窗口的，按序号错开 40ms 入场。 */
-function cwAiCardHtml(id,fresh,enterIdx){
- var c=cwCust(id),run=!!CW_PEND[id],bad=CW_FAIL[id],missing=CW_AI[id]==null,ctx=CW_CONTEXT[id];
- var h='<article class="cw-aicard" data-aic="'+id+'"><div class="cw-aichd"><span class="cw-av">'+esc(c.n.charAt(0))+'</span>'
-   +'<span class="cw-nmwrap"><span class="nm">'+esc(c.n)+'</span><span class="cw-meta">未回复 '+cwDur(c.h)+'</span></span>';
- h+='<button class="cw-nosend" onclick="cwDelAi(\''+id+'\')">不发送</button></div>';
- if(run)h+='<div class="cw-skel" role="status" aria-label="正在生成消息"><i></i><i></i></div>';
- else if(bad||missing)h+='<div class="cw-alert">'+I('alert',16,2)+'<span>'+esc(bad||'还没有生成消息')+'</span></div><div class="cw-rowacts"><button class="cw-textact" onclick="cwEditAi(\''+id+'\')">自己写</button><button class="cw-textact" onclick="cwRegenOne(\''+id+'\')">重新生成</button></div>';
- else h+='<button class="cw-message" aria-label="编辑'+esc(c.n)+'的消息" onclick="cwEditAi(\''+id+'\')">'+esc(CW_AI[id])+'</button><div class="cw-rowacts"><button class="cw-textact" onclick="cwTone(\''+id+'\',\'short\')">更简短</button><button class="cw-textact" onclick="cwTone(\''+id+'\',\'natural\')">更自然</button><button class="cw-textact" onclick="cwRegenOne(\''+id+'\')">换个说法</button></div>';
- h+='<details class="cw-evidence"><summary>参考的聊天</summary><p>'+esc(ctx?ctx.quote:'没有可参考的聊天记录')+'</p></details></article>';
- return h;
+function cwPreviewMessages(id){
+ var text=CW_AI[id]==null?CW_BASE:CW_AI[id];
+ return (text?[{t:'text',c:text}]:[]).concat(CW_ATTACH_BASE.map(function(m){return {t:m.t,c:m.c}}));
+}
+function cwFullMessageHtml(id){return cwPreviewMessages(id).map(function(m){return '<div class="cw-shared-text">'+esc(m.t==='text'?m.c:'［'+cwTypeN(m.t)+'］'+m.c)+'</div>'}).join('')}
+function cwAiCardHtml(id){
+ var c=cwCust(id),run=!!CW_PEND[id],bad=CW_FAIL[id],kind=CW_KIND[id],ctx=CW_CONTEXT[id];
+ var h='<article class="cw-aicard" data-aic="'+id+'"><div class="cw-aichd"><span class="cw-av">'+esc(c.n.charAt(0))+'</span><span class="cw-nmwrap"><span class="nm">'+esc(c.n)+'</span></span><button class="cw-nosend" onclick="cwDelAi(\''+id+'\')">不发送</button></div>';
+ if(run)return h+'<div class="cw-skel" role="status" aria-label="正在检查聊天"><i></i><i></i></div></article>';
+ if(bad){
+   h+='<div class="cw-alert">'+esc(bad)+'</div>';
+   if(CW_MANUAL[id]&&CW_AI[id]!=null)h+='<div class="cw-shared-text">'+esc(CW_AI[id])+'</div><button class="cw-textact" onclick="cwKeepManual(\''+id+'\')">确认保留手改消息</button>';
+   if(kind==='read_error')h+='<button class="cw-textact" onclick="cwRegenOne(\''+id+'\')">重新检查</button>';
+   h+='<div class="cw-rowacts"><button class="cw-textact" onclick="cwEditAi(\''+id+'\')">单独编辑</button><button class="cw-textact" onclick="cwUseBase(\''+id+'\')">仍发送本次消息</button></div>';
+ }else{
+   if(kind==='adjusted'&&CW_OPEN[id])h+='<div class="cw-diff"><span>新增开场</span><mark>'+esc(CW_OPEN[id])+'</mark></div>';
+   else if(kind==='manual')h+='<div class="cw-shared-text">'+esc(CW_AI[id])+'</div>';
+   h+='<details class="cw-full"><summary>查看完整消息</summary>'+cwFullMessageHtml(id)+'</details><div class="cw-rowacts"><button class="cw-textact" aria-label="编辑'+esc(c.n)+'的消息" onclick="cwEditAi(\''+id+'\')">编辑</button>';
+   if(kind==='adjusted'||kind==='manual')h+='<button class="cw-textact" onclick="cwTone(\''+id+'\',\'short\')">更简短</button><button class="cw-textact" onclick="cwTone(\''+id+'\',\'natural\')">更自然</button><button class="cw-textact" onclick="cwRegenOne(\''+id+'\')">换个说法</button>';
+   h+='</div>';
+ }
+ if(bad||kind==='adjusted')h+='<details class="cw-evidence"><summary>参考的聊天</summary><p>'+esc(CW_EVIDENCE[id]||(ctx?ctx.quote:'没有可参考的聊天记录'))+'</p></details>';
+ return h+'</article>';
+}
+function cwAiPatch(){
+ // 分组随结果变化，但已展开的完整消息、聊天依据和滚动位置保留。
+ var body=$('cwPreviewBody'),y=body.scrollTop,opened=[];
+ body.querySelectorAll('details[open]').forEach(function(el){var card=el.closest('[data-aic]');opened.push([card?card.getAttribute('data-aic'):'',el.className])});
+ REND['cw-preview']();
+ opened.forEach(function(a){var root=a[0]?body.querySelector('[data-aic="'+a[0]+'"]'):body;if(root){var el=root.querySelector('details.'+a[1].split(/\s+/).join('.'));if(el)el.open=true}});body.scrollTop=y;
 }
 
-function cwAiPatch(id){
- var old=$('cwPreviewBody').querySelector('[data-aic="'+id+'"]');
- if(old){var t=document.createElement('div');t.innerHTML=cwAiCardHtml(id);old.replaceWith(t.firstChild)}
- cwPreviewFoot();
-}
 
 /* 准备页底栏保留教程和主操作；预览页显示实际发送人数。
    原因行出现时撑开、消失时收起（140ms），按钮原地换名字，不做整块重建——重建会让按钮每帧跳一下。 */
@@ -5927,12 +5954,12 @@ function cwSlotClose(slot){
 }
 function cwContentFoot(){
  var err=cwPrepError(),sum=err?'<div class="cw-sum">'+esc(err)+(CW_QERR?' · <button class="cw-textact" onclick="cwQueryRetry()">重试</button>':'')+'</div>':'';
- cwFootSet(sum,CW_STRAT==='fixed'?'预览消息':(CW_SIG===cwDraftSig()&&CW_GEN?'查看消息':'生成消息'),err?null:'cwGen()');
+ cwFootSet(sum,'预览消息',err?null:'cwGen()');
 }
 function cwPreviewFoot(){
  var ids=cwSelIds(),pending=ids.filter(function(id){return CW_PEND[id]}).length;
- var bad=CW_STRAT==='ai'?ids.filter(function(id){return !CW_PEND[id]&&(CW_FAIL[id]||CW_AI[id]==null)}).length:0;
- var err=CW_QBUSY?'正在核对名单…':CW_QERR?'名单核对失败，请重试':!ids.length?'没有待发送的客户':pending?'正在生成 '+pending+' 人的消息…':bad?bad+' 人还没有可发送的消息，请补充或取消发送':CW_STRAT==='fixed'&&!CW_FIXED.length?'还没有内容':'';
+ var bad=ids.filter(function(id){return !CW_PEND[id]&&(CW_FAIL[id]||CW_AI[id]==null)}).length;
+ var err=CW_QBUSY?'正在核对名单…':CW_QERR?'名单核对失败，请重试':!ids.length?'没有待发送的客户':pending?'正在检查 '+pending+' 人的聊天…':bad?bad+' 人需要处理':(!CW_BASE&&!CW_ATTACH_BASE.length)?'还没有内容':'';
  $('cwPreviewFoot').innerHTML=(err?'<div class="cw-sum" role="status">'+esc(err)+'</div>':'')
  +'<button class="cw-btn block" '+(err&&!CW_QERR?'disabled':'onclick="cwStart()"')+'>去微信发送 · '+ids.length+' 人</button>';
 }
@@ -5963,33 +5990,20 @@ function cwFixedHtml(){
 REND['cw-content']=function(){
  $('cwContentBack').innerHTML=I('back',24,2);$('cwRecIc').innerHTML=I('clock',20,2.1);$('cwSetIc').innerHTML=I('gear',20,2.1);
  var h=CW_FROM==='tools'?'<div class="cw-pcard cw-scope">'+cwScopeHtml()+'</div>':'';
- h+='<div class="cw-pcard"><h2 class="cw-question"><span class="sp" aria-hidden="true">'+I('sparkle',18,1.8)+'</span>这次想和客户聊什么？</h2>'
-   +'<div class="cw-purpose" role="radiogroup" aria-label="联系目的">';
- CW_PURPOSES.forEach(function(p){
-   var ic=CW_PURPOSE_IC[p[0]]||['i1','message'];
-   h+='<label><span class="ic '+ic[0]+'" aria-hidden="true">'+I(ic[1],20,1.9)+'</span><span class="tx">'+p[1]+'</span>'
-     +'<input type="radio" name="cwPurpose" value="'+p[0]+'" '+(CW_PURPOSE===p[0]?'checked':'')+' onchange="cwPickPurpose(this.value)"></label>';
- });h+='</div>';
- if(CW_STRAT==='fixed')h+=cwFixedHtml()+'<button class="cw-addrow" onclick="cwEditFixed(-1)">'+I('plus',16,2.2)+'添加一条</button>';
- else{
- var p=cwPurpose();
- h+='<label class="cw-field" for="cwInfo">'+p[2]+'</label><textarea id="cwInfo" class="cw-input" maxlength="1000" placeholder="'+p[3]+'" oninput="cwInput(this.value)">'+esc(CW_TOPIC)+'</textarea>';
- if(CW_PURPOSE==='event')h+='<label class="cw-field" for="cwExpiry">活动截止时间（选填）</label><input id="cwExpiry" class="cw-input" type="datetime-local" value="'+cwA(CW_EXPIRY)+'" onchange="CW_EXPIRY=this.value;cwContentFoot()">';
- h+='<label class="cw-field" for="cwNext">希望客户下一步做什么（选填）</label><select id="cwNext" class="cw-input" onchange="CW_NEXT=this.value;cwContentFoot()">'+[['auto','根据聊天内容决定'],['reply','回复近况'],['photo','看看图片'],['visit','预约时间']].map(function(a){return '<option value="'+a[0]+'"'+(CW_NEXT===a[0]?' selected':'')+'>'+a[1]+'</option>'}).join('')+'</select>';
- }
- h+='</div>';$('cwContentBody').className='scroll cw-scroll';$('cwContentBody').innerHTML=h;cwContentFoot();
+ h+='<div class="cw-pcard"><label class="cw-question" for="cwMessage">本次消息</label><textarea id="cwMessage" class="cw-input cw-main-input" maxlength="1000" placeholder="写下要告诉客户的新消息，或粘贴完整文案" oninput="cwInput(this.value)">'+esc(CW_MESSAGE)+'</textarea><div class="cw-rowacts"><button id="cwWriteBtn" class="cw-textact" onclick="cwWriteStart()">AI 帮我写</button></div><div id="cwWritePanel"></div></div>';
+ h+='<div class="cw-pcard">'+cwFixedHtml()+'<button class="cw-addrow" onclick="cwEditFixed(-1)">'+I('plus',16,2.2)+'添加图片、视频或其他消息</button></div>';
+ $('cwContentBody').className='scroll cw-scroll';$('cwContentBody').innerHTML=h;cwWritePanel();cwContentFoot();
 };
 REND['cw-preview']=function(){
  $('cwPreviewBack').innerHTML=I('back',24,2);
- var ids=cwSelByH(),h='';
- if(CW_STRAT==='fixed'){
- h='<div class="cw-pcard"><h2 class="cw-question"><span class="sp" aria-hidden="true">'+I('sparkle',18,1.8)+'</span>发送内容</h2>'
-   +cwFixedHtml()+'<button class="cw-addrow" onclick="cwEditFixed(-1)">'+I('plus',16,2.2)+'添加一条</button></div>'
-   +'<div class="cw-pcard"><h2 class="cw-question"><span class="sp" aria-hidden="true">'+I('sparkle',18,1.8)+'</span>发送给 '+ids.length+' 人</h2>';
- ids.forEach(function(id){h+='<div class="cw-aichd cw-prow"><span class="cw-av">'+esc(cwCust(id).n.charAt(0))+'</span><span class="cw-nmwrap"><span class="nm">'+esc(cwCust(id).n)+'</span></span><button class="cw-nosend" onclick="cwDelAi(\''+id+'\')">不发送</button></div>'});
- h+='</div>';
- }else ids.forEach(function(id){h+=cwAiCardHtml(id)});
- if(!ids.length)h='<div class="cw-alert">'+I('alert',16,2)+'<span>没有待发送的客户</span></div>';
+ var ids=cwSelByH(),pending=[],issues=[],adjusted=[],same=[];
+ ids.forEach(function(id){if(CW_PEND[id])pending.push(id);else if(CW_FAIL[id]||CW_AI[id]==null)issues.push(id);else if(CW_KIND[id]==='same')same.push(id);else adjusted.push(id)});
+ var h='<div class="cw-pcard"><div class="cw-section-head"><h2 class="cw-question">本次消息</h2><button class="cw-textact" onclick="back()">修改</button></div><div class="cw-shared-text">'+esc(CW_BASE)+'</div>'+CW_ATTACH_BASE.map(function(m){return '<div class="cw-shared-text">'+(m.t==='image'?'<img class="cw-shared-img" src="'+CW_IMG_SRC+'" alt="'+esc(m.c)+'">':esc(m.t==='text'?m.c:'［视频］'+m.c))+'</div>'}).join('')+'</div>';
+ if(issues.length)h+='<section class="cw-review-group"><div class="cw-section-head"><h2 class="cw-question">需要处理 '+issues.length+' 人</h2><button class="cw-textact" onclick="cwOmitIssues()">本次都不发送</button></div>'+issues.map(cwAiCardHtml).join('')+'</section>';
+ if(pending.length)h+='<section><h2 class="cw-question cw-group-title">正在检查 '+pending.length+' 人</h2>'+pending.map(cwAiCardHtml).join('')+'</section>';
+ if(adjusted.length)h+='<section><h2 class="cw-question cw-group-title">个别调整 '+adjusted.length+' 人</h2>'+adjusted.map(cwAiCardHtml).join('')+'</section>';
+ if(same.length)h+='<details class="cw-same-group cw-pcard"><summary>使用本次消息 '+same.length+' 人</summary>'+same.map(cwAiCardHtml).join('')+'</details>';
+ if(!ids.length)h+='<div class="cw-alert">没有待发送的客户</div>';
  $('cwPreviewBody').innerHTML=h;cwPreviewFoot();
 };
 
@@ -6003,19 +6017,21 @@ function cwDay(){
   var d=new Date();
   return (d.getMonth()+1)+'月'+d.getDate()+'日';
 }
+function cwSendVersion(){return JSON.stringify([CW_SIG,cwSelIds().map(function(id){return [id,CW_AI[id]]}),CW_ATTACH_BASE])}
 function cwStart(){
  if(CW_QBUSY||CW_LAUNCHING)return;
- if(CW_PURPOSE==='event'&&CW_EXPIRY&&new Date(CW_EXPIRY).getTime()<=Date.now()){toast('活动截止时间已过，请返回更新内容');return}
  var ids=cwSelIds();
- if(!ids.length||CW_STRAT==='fixed'&&!CW_FIXED.length||CW_STRAT==='ai'&&ids.some(function(id){return CW_PEND[id]||CW_FAIL[id]||!CW_AI[id]})){cwPreviewFoot();return}
- CW_SEND_IDS=ids.slice();
+ if(!ids.length||(!CW_BASE&&!CW_ATTACH_BASE.length)||ids.some(function(id){return CW_PEND[id]||CW_FAIL[id]||CW_AI[id]==null})){cwPreviewFoot();return}
+ if(cwDraftSig()!==CW_SIG){toast('消息已修改，请重新预览');return}
+ CW_SEND_IDS=ids.slice();CW_SEND_VERSION=cwSendVersion();
  if(CW_FROM==='tools'){cwQueryRun('send');return}
  cwLaunch(ids);
 }
 function cwSendNow(){
  var ids=cwSelIds();
- if(ids.length!==CW_SEND_IDS.length){cwRender();toast('名单已更新，请确认剩余客户后再发送');return}
- if(CW_STRAT==='ai'&&ids.some(function(id){return CW_PEND[id]||CW_FAIL[id]||!CW_AI[id]})){cwRender();return}
+ if(cur!=='cw-preview'||cwDraftSig()!==CW_SIG){cwRender();toast('已取消发送，请重新预览');return}
+ if(ids.length!==CW_SEND_IDS.length||cwSendVersion()!==CW_SEND_VERSION){cwRender();toast('名单已更新，请确认剩余客户后再发送');return}
+ if(ids.some(function(id){return CW_PEND[id]||CW_FAIL[id]||CW_AI[id]==null})){cwRender();return}
  cwLaunch(ids);
 }
 
@@ -6025,16 +6041,15 @@ function cwLaunch(ids){
   var n=ids.length;
   /* 发出去的内容在开始时定下来，跟着记录走：固定内容抄一份，AI 按人抄他那一版。
      之后再改内容或重新生成，不改写已经发过的这条记录。 */
-  var fixedMsgs=CW_STRAT==='fixed'?CW_FIXED.map(function(m){return {t:m.t,c:m.c}}):null;
   var people=ids.map(function(id){
     var c=cwCust(id);
-    return {n:c?c.n:'客户',st:'ok',msgs:fixedMsgs||[{t:'text',c:CW_AI[id]||''}]};
+    return {n:c?c.n:'客户',st:'ok',msgs:cwPreviewMessages(id)};
   });
   /* 记录在开始时先攒着，这一轮结束后才落进唤醒记录（见 cwLaunchDone），
      台账上没有「执行中」这种状态。 */
   var r={id:'r'+Date.now(),when:cwDay()+'\n'+cwClock(),
          scope:(CW_FROM==='awake'?'待唤醒客户 · 手选':'未回复 '+cwRangeLabel()),
-         n:n,strat:CW_STRAT,fixed:CW_FIXED.length,gap:CW_SET.gap,
+         n:n,strat:'shared',fixed:(CW_BASE?1:0)+CW_ATTACH_BASE.length,gap:CW_SET.gap,
          st:'done',ok:n,fail:0,people:people};
   CW_PENDS.push(r);
   if(CW_FROM==='awake'){
@@ -6081,7 +6096,7 @@ REND['cw-records']=function(){
   var h='';
   if(!CW_RECS.length)h='<div class="cw-empty-state"><span class="ic" aria-hidden="true">'+I('clock',32,1.8)+'</span><p>还没有唤醒过。</p></div>';
   CW_RECS.forEach(function(r){
-    var sub=cwStratN(r.strat)+(r.strat==='fixed'?' '+(r.fixed||1)+' 条':' 每人 1 条')+' · 成功 '+r.ok+(r.fail?' / 失败 '+r.fail:'');
+    var sub=cwStratN(r.strat)+((r.strat==='fixed'||r.strat==='shared')?' '+(r.fixed||1)+' 条':' 每人 1 条')+' · 成功 '+r.ok+(r.fail?' / 失败 '+r.fail:'');
     h+='<button class="cw-rec" onclick="go(\'cw-record\',{id:\''+r.id+'\'})">'
       +'<span class="cw-when">'+String(r.when).replace('\n','<br>')+'</span>'
       +'<span class="cw-recm"><b>唤醒 '+r.n+' 人</b><span>'+sub+'</span></span>'
@@ -6161,7 +6176,7 @@ REND['cw-record']=function(p){
       +'<div class="cw-kv"><span>开始时间</span><b>'+String(r.when).replace('\n',' ')+'</b></div>'
       +'<div class="cw-kv"><span>完成时间</span><b>'+esc(r.end||'—')+'</b></div>'
       +(r.scope?'<div class="cw-kv"><span>范围</span><b>'+esc(r.scope)+'</b></div>':'')
-      +'<div class="cw-kv"><span>发送策略</span><b>'+cwStratN(r.strat)+' · '+(r.strat==='fixed'?('每人 '+(r.fixed||1)+' 条'):'每人 1 条专属话术')+'</b></div>'
+      +'<div class="cw-kv"><span>发送策略</span><b>'+cwStratN(r.strat)+' · '+((r.strat==='fixed'||r.strat==='shared')?('每人 '+(r.fixed||1)+' 条'):'每人 1 条专属话术')+'</b></div>'
     +'</div></div>';
   h+=cwRecRows(r);
   h+='<div class="cw-note"><span class="ic" aria-hidden="true">'+I('info',16,2)+'</span>'
@@ -27181,11 +27196,11 @@ BT.addEventListener('click',function(e){
        2026-11-16：六页统一 360px——字段起点与中间竖线落在同一横坐标，不再 320／360 混用。 */
     '.rea-wxd-info{display:grid;grid-template-columns:360px minmax(0,1fr);align-items:stretch;column-gap:32px;margin-top:16px}',
     '.rea-wxd-groups{display:block!important;margin:0!important;min-width:0}',
-    '.rea-wxd-group{display:grid!important;grid-template-columns:88px minmax(0,1fr)!important;column-gap:20px!important;align-items:start!important}',
-    '.rea-wxd-group+.rea-wxd-group{margin-top:16px}',
-    '.rea-wxd-gt{display:flex;align-items:center;gap:6px;margin:0;padding-top:3px;font-size:14px;line-height:20px;font-weight:600;color:#1F2329;white-space:nowrap}',
+    '.rea-wxd-groups>.rea-wxd-groups{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:28px 44px;align-items:start}',
+    '.rea-wxd-group{display:block!important;min-width:0}',
+    '.rea-wxd-gt{display:flex;align-items:center;gap:6px;margin:0 0 12px;padding-top:0;font-size:14px;line-height:20px;font-weight:600;color:#1F2329;white-space:nowrap}',
     '.rea-wxd-gt .rea-wx-secic{flex:none;color:#1677FF}',
-    '.rea-wxd-kv{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:16px 24px!important;align-content:start!important;margin:0!important}',
+    '.rea-wxd-kv{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:18px!important;align-content:start!important;margin:0!important}',
     '.rea-wxd-kv>p{display:block!important;flex:0 0 auto!important;width:auto!important;min-width:0;margin:0!important;white-space:normal!important;overflow-wrap:anywhere}',
     '.rea-wxd-kv>p>span:first-child{display:block;margin-bottom:3px;font-size:12px;line-height:18px;color:#8F959E}',
     '.rea-wxd-kv>p>span:last-child{display:block;font-size:14px;line-height:20px;color:#1F2329}',
@@ -27268,7 +27283,7 @@ BT.addEventListener('click',function(e){
     '.rea-wxd-fn-num{flex:none;width:38px;font-size:12px;line-height:18px;color:#1F2329;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}',
     '.rea-wxd-fn-rate{flex:none;width:68px;font-size:12px;line-height:18px;color:#646A73;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}',
     '.rea-wxd-fn-ft{margin-top:12px;font-size:12px;line-height:18px;color:#8F959E}',
-    '@media(max-width:1000px){.rea-wxd-info{grid-template-columns:minmax(0,1fr)}.rea-wxd-group{grid-template-columns:minmax(0,1fr)!important;row-gap:6px}.rea-wxd-gt{padding-top:0}.rea-wxd-kv{grid-template-columns:repeat(2,minmax(0,1fr))!important}.rea-wxd-ring{margin-top:20px;padding:20px 0 0;border-top:1px solid #E5E8EF;border-right:0;order:1}}',
+    '@media(max-width:1000px){.rea-wxd-info{grid-template-columns:minmax(0,1fr)}.rea-wxd-groups>.rea-wxd-groups{grid-template-columns:minmax(0,1fr)}.rea-wxd-kv{grid-template-columns:repeat(2,minmax(0,1fr))!important}.rea-wxd-ring{margin-top:20px;padding:20px 0 0;border-top:1px solid #E5E8EF;border-right:0;order:1}}',
     '.rea-wxd-tb{display:inline-flex;align-items:center;gap:6px;font-size:14px;line-height:22px;color:#1F2329}',
     '.rea-wxd-tb i{width:6px;height:6px;border-radius:50%;background:#8F959E;flex:none}',
     '.rea-wxd-tb.done i{background:#1677FF}',
