@@ -27196,11 +27196,11 @@ BT.addEventListener('click',function(e){
        2026-11-16：六页统一 360px——字段起点与中间竖线落在同一横坐标，不再 320／360 混用。 */
     '.rea-wxd-info{display:grid;grid-template-columns:360px minmax(0,1fr);align-items:stretch;column-gap:32px;margin-top:16px}',
     '.rea-wxd-groups{display:block!important;margin:0!important;min-width:0}',
-    '.rea-wxd-groups>.rea-wxd-groups{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:28px 44px;align-items:start}',
-    '.rea-wxd-group{display:block!important;min-width:0}',
-    '.rea-wxd-gt{display:flex;align-items:center;gap:6px;margin:0 0 12px;padding-top:0;font-size:14px;line-height:20px;font-weight:600;color:#1F2329;white-space:nowrap}',
+    '.rea-wxd-group{display:grid!important;grid-template-columns:88px minmax(0,1fr)!important;column-gap:20px!important;align-items:start!important}',
+    '.rea-wxd-group+.rea-wxd-group{margin-top:16px}',
+    '.rea-wxd-gt{display:flex;align-items:center;gap:6px;margin:0;padding-top:3px;font-size:14px;line-height:20px;font-weight:600;color:#1F2329;white-space:nowrap}',
     '.rea-wxd-gt .rea-wx-secic{flex:none;color:#1677FF}',
-    '.rea-wxd-kv{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:18px!important;align-content:start!important;margin:0!important}',
+    '.rea-wxd-kv{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:16px 24px!important;align-content:start!important;margin:0!important}',
     '.rea-wxd-kv>p{display:block!important;flex:0 0 auto!important;width:auto!important;min-width:0;margin:0!important;white-space:normal!important;overflow-wrap:anywhere}',
     '.rea-wxd-kv>p>span:first-child{display:block;margin-bottom:3px;font-size:12px;line-height:18px;color:#8F959E}',
     '.rea-wxd-kv>p>span:last-child{display:block;font-size:14px;line-height:20px;color:#1F2329}',
@@ -27283,7 +27283,7 @@ BT.addEventListener('click',function(e){
     '.rea-wxd-fn-num{flex:none;width:38px;font-size:12px;line-height:18px;color:#1F2329;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}',
     '.rea-wxd-fn-rate{flex:none;width:68px;font-size:12px;line-height:18px;color:#646A73;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}',
     '.rea-wxd-fn-ft{margin-top:12px;font-size:12px;line-height:18px;color:#8F959E}',
-    '@media(max-width:1000px){.rea-wxd-info{grid-template-columns:minmax(0,1fr)}.rea-wxd-groups>.rea-wxd-groups{grid-template-columns:minmax(0,1fr)}.rea-wxd-kv{grid-template-columns:repeat(2,minmax(0,1fr))!important}.rea-wxd-ring{margin-top:20px;padding:20px 0 0;border-top:1px solid #E5E8EF;border-right:0;order:1}}',
+    '@media(max-width:1000px){.rea-wxd-info{grid-template-columns:minmax(0,1fr)}.rea-wxd-group{grid-template-columns:minmax(0,1fr)!important;row-gap:6px}.rea-wxd-gt{padding-top:0}.rea-wxd-kv{grid-template-columns:repeat(2,minmax(0,1fr))!important}.rea-wxd-ring{margin-top:20px;padding:20px 0 0;border-top:1px solid #E5E8EF;border-right:0;order:1}}',
     '.rea-wxd-tb{display:inline-flex;align-items:center;gap:6px;font-size:14px;line-height:22px;color:#1F2329}',
     '.rea-wxd-tb i{width:6px;height:6px;border-radius:50%;background:#8F959E;flex:none}',
     '.rea-wxd-tb.done i{background:#1677FF}',
@@ -33059,9 +33059,12 @@ document.addEventListener('click',function(event){
   var reaWait = null;
   /* 载体相对本文件定位：正本在 prototype/all.html，同目录一份；
      但「历史版本」里的快照放在 prototype/_history/all-NNNN.html，得回上一层找。
-     故按顺序试这两个相对路径。注：快照读到的永远是**当前**那份载体，
-     因为载体复刻的是线上后台，不是本仓库的历史——这点与 _history 的语义不同，已知即可。 */
-  var REA_SRC = ['_online-admin.js', '../_online-admin.js'];
+     故按顺序试这两个相对路径。单独把 all.html 发给别人时这两个都没有，
+     最后再试对外预览站那份（要联网）——这样只发一个文件也能看视图③。
+     注：快照读到的永远是**当前**那份载体，因为载体复刻的是线上后台，
+     不是本仓库的历史——这点与 _history 的语义不同，已知即可。 */
+  var REA_SRC = ['_online-admin.js', '../_online-admin.js',
+    'https://wuguanyuwuguanyu.github.io/sucai-ku-prototype/_online-admin.js'];
   function reaLoad(cb){
     if (window.__REAL_ADMIN__){ cb(); return; }
     if (reaWait){ reaWait.push(cb); return; }
@@ -33083,8 +33086,9 @@ document.addEventListener('click',function(event){
         if (++i < REA_SRC.length){ attempt(); return; }
         reaWait = null;
         reaSay(
-          '线上后台复刻未能加载：没找到 _online-admin.js（约 7.8MB 的快照载体）。'
-          + '它应与 all.html 同目录、随仓库一起分发。');
+          '线上后台复刻未能加载：没找到 _online-admin.js（约 8.9MB 的快照载体），'
+          + '也连不上对外预览站的副本。要么把它和 all.html 放在同一目录，'
+          + '要么确认网络后刷新重试。');
       };
       document.head.appendChild(s);
     }
