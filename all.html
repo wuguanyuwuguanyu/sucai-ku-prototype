@@ -22578,6 +22578,8 @@ tb.addEventListener("click",function(e){
     + '.rea-qf-tagopt.on{color:#1677FF}'
     + '.rea-qf-tagopt input{width:14px;height:14px;margin:0;accent-color:#1677FF}'
     + '.rea-qf-tagname{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
+    + '.rea-qf-tagmore{padding:6px 12px 0;font-size:12px;line-height:18px;color:#8F959E}'
+    + '.rea-qf-tagmore[hidden]{display:none!important}'
     + '.rea-qf-tagft{display:flex;align-items:center;justify-content:space-between;padding:8px;border-top:1px solid #F2F3F5;font-size:12px;color:#8F959E}'
     + '.rea-qf-tagclear{padding:0;border:0;background:transparent;color:#1677FF;font-size:12px;cursor:pointer}'
     + '.rea-qf-tagempty{padding:18px 8px;text-align:center;font-size:13px;line-height:20px;color:#8F959E}';
@@ -23245,6 +23247,7 @@ function reaTagPicker(o){
     +'<span class="rea-qf-tagcaret">▾</span></div>'
     +'<div class="rea-qf-tagdd" hidden>'
     +'<div class="rea-qf-taglist" role="listbox" aria-label="手机标签" aria-multiselectable="true"></div>'
+    +'<div class="rea-qf-tagmore" hidden></div>'
     +'<div class="rea-qf-tagft"><span>已选 0 个手机标签</span><button type="button" class="rea-qf-tagclear">清空</button></div>'
     +'</div></div></div>'
     +'<div class="rea-qf-panel" id="'+rn+'-manual" role="tabpanel" data-panel="manual" aria-labelledby="'+rn+'-manual-tab" hidden>'
@@ -23258,7 +23261,8 @@ function reaTagPicker(o){
       manualPanel=host.querySelector('[data-panel="manual"]'),
       box=host.querySelector('.rea-qf-tagbox'),inp=host.querySelector('.rea-qf-taginp'),
       dd=host.querySelector('.rea-qf-tagdd'),list=host.querySelector('.rea-qf-taglist'),
-      ft=host.querySelector('.rea-qf-tagft span'),clearBtn=host.querySelector('.rea-qf-tagclear'),
+      ft=host.querySelector('.rea-qf-tagft span'),more=host.querySelector('.rea-qf-tagmore'),
+      clearBtn=host.querySelector('.rea-qf-tagclear'),
       ta=host.querySelector('.rea-qf-ta'),
       modeInputs=qa('.rea-qf-mrow input',host),
       tabPhone=tabs[0],tabManual=tabs[1];
@@ -23305,22 +23309,39 @@ function reaTagPicker(o){
     box.setAttribute('aria-expanded',dd.hidden?'false':'true');
     countBadges();
   }
+  /* 标签多时的渲染上限：空查询只给可浏览的短名单，输入后只渲染命中项；
+     两种情况都在面板底部报总量与下一步，不把上千个节点一次塞进 DOM。 */
+  var CAP_EMPTY=60,CAP_FILTER=200,sortedFor=null,sortedTags=[];
+  function orderedTags(tags){
+    if(tags!==sortedFor){
+      sortedFor=tags;
+      sortedTags=tags.slice().sort(function(a,b){return a.localeCompare(b,'zh-CN')});
+    }
+    return sortedTags;
+  }
   function drawList(){
     var tags=typeof o.getTags==='function'?o.getTags():[];
+    more.hidden=true;more.textContent='';
     if(tags===null){list.innerHTML='<div class="rea-qf-tagempty">先选择执行人员，再选标签。</div>';return}
     if(busy){list.innerHTML='<div class="rea-qf-tagempty">标签还在从手机同步，稍后再试。</div>';return}
     if(!tags.length){list.innerHTML='<div class="rea-qf-tagempty">该执行人员的微信里还没有标签，可切换到手动输入。</div>';return}
-    var q=query.toLowerCase(),items=[],i;
-    for(i=0;i<tags.length;i++)if(!q||tags[i].toLowerCase().indexOf(q)>=0)items.push(tags[i]);
+    var q=query.toLowerCase(),items=[],ordered=orderedTags(tags),i;
+    for(i=0;i<ordered.length;i++)if(!q||ordered[i].toLowerCase().indexOf(q)>=0)items.push(ordered[i]);
     if(!items.length){list.innerHTML='<div class="rea-qf-tagempty">没有匹配的标签。</div>';return}
-    var all=phoneNames(),h='',n,on;
-    for(i=0;i<items.length;i++){
+    var total=items.length,cap=q?CAP_FILTER:CAP_EMPTY,shown=Math.min(total,cap),
+        all=phoneNames(),h='',n,on;
+    for(i=0;i<shown;i++){
       n=items[i];on=all.indexOf(n)>=0;
       h+='<label class="rea-qf-tagopt'+(on?' on':'')+'">'
         +'<input type="checkbox" data-tag="'+esc(n)+'"'+(on?' checked':'')+'>'
         +'<span class="rea-qf-tagname">'+esc(n)+'</span></label>';
     }
     list.innerHTML=h;
+    if(total>cap){
+      more.textContent=q?('还有 '+(total-cap)+' 个匹配，继续输入以收窄')
+                        :('共 '+total+' 个标签，输入名称继续筛选');
+      more.hidden=false;
+    }
   }
   function draw(){chips();if(!dd.hidden)drawList()}
   function openDD(){
@@ -23362,7 +23383,10 @@ function reaTagPicker(o){
   inp.addEventListener('keydown',function(e){
     var k=e.key||'';
     if(k==='Enter'||e.keyCode===13){
+      if(e.isComposing)return;
       e.preventDefault();
+      /* 空查询不落签：面板开着时回车多半是想确认或收起，不该误勾第一条。 */
+      if(!inp.value)return;
       var first=list.querySelector('input[type="checkbox"]');
       if(first){first.checked=!first.checked;first.dispatchEvent(new Event('change',{bubbles:true}))}
       return;
@@ -24334,12 +24358,21 @@ function initQf(){
   tagRow.innerHTML='<span>标签</span>';
   var tagBody=document.createElement('div');tagBody.className='rea-qf-tagbody';
   tagRow.appendChild(tagBody);tagPanel.appendChild(tagRow);
-  /* 演示标签跟着执行人员走；正式版取手机同步上来的好友标签并集，同名标签已合并。 */
+  /* 演示标签跟着执行人员走；正式版取手机同步上来的好友标签并集，同名标签已合并。
+     「全员」这一份故意放大到上千个，用来走查标签多时的短名单、输入收窄与「共 N 个」提示。 */
+  var BIG_TAGS=(function(){
+    var out=['重点客户','老客户','高意向','待跟进','新客户','已成交'],
+        city=['华东','华南','华北','西南','线上','线下'],
+        qtr=['2026Q1','2026Q2','2026Q3','2026Q4'],i,j,k;
+    for(i=0;i<city.length;i++)for(j=0;j<qtr.length;j++)for(k=1;k<=60;k++)
+      out.push(city[i]+'·'+qtr[j]+'·批次'+('0'+k).slice(-2));
+    return out;
+  })();
   var ORG_TAGS=[
     ['重点客户','老客户','高意向','待跟进'],
     ['重点客户','新客户','已成交'],
     [],
-    ['重点客户','老客户','高意向','待跟进','新客户','已成交']
+    BIG_TAGS
   ];
   var MATCH_LABEL={exact:'精确匹配',fuzzy:'模糊匹配'};
   /* 两个添加入口共用一个名单：手机标签下拉多选，手填的一行一个；
