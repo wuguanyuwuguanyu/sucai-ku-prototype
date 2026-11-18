@@ -1525,16 +1525,13 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
 .cw-pcard.cw-gapcard{display:flex;align-items:center;justify-content:space-between;gap:12px;
   padding:12px 14px 12px 18px}
 .cw-gap-lb{font-size:14px;font-weight:600;color:#102953}
-.cw-gap-stp{display:flex;align-items:center;gap:2px}
-.cw-gap-stp b{min-width:54px;text-align:center;font-size:15px;font-weight:700;color:#1D5FD1;
-  font-variant-numeric:tabular-nums}
-.cw-gap-bt{position:relative;flex:none;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-  background:#F2F6FF;color:#2E6BFF;box-shadow:inset 0 0 0 1px rgba(219,229,248,.9);
-  transition:background .16s var(--emph),color .16s var(--emph)}
-/* 视觉 36、触控 48（M3 下限），两者不互相绑 */
-.cw-gap-bt::after{content:"";position:absolute;inset:-6px;border-radius:50%}
-.cw-gap-bt:active{background:#E4EDFF}
-.cw-gap-bt:disabled{background:#F7F9FD;color:#C0CBDE;box-shadow:none;cursor:default}
+.cw-gap-val{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:#617A9E}
+.cw-gap-in{width:64px;height:48px;padding:0 10px;border-radius:14px;text-align:center;
+  border:1px solid #E3EAF8;background:#F5F8FF;color:#1D5FD1;
+  font:700 15px/1 var(--f);font-variant-numeric:tabular-nums;
+  transition:background .2s var(--emph),border-color .2s var(--emph),box-shadow .2s var(--emph)}
+.cw-gap-in:focus{outline:none;background:#fff;border-color:#8FB3F5;
+  box-shadow:0 10px 20px -18px rgba(40,70,150,.7)}
 .cw-undostrip{background:linear-gradient(120deg,#F1EEFF,#E7F0FF);color:#3E56C9;
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.8)}
 /* 主操作：纯色胶囊只加强柔影与顶部高光，不换渐变填充 */
@@ -7328,25 +7325,23 @@ function cwScopeHtml(){
     +'</div>';
 }
 function cwA(s){ return esc(s).replace(/"/g,'&quot;') }
-/* 发送间隔是唯一还要调的发送参数，直接摆在内容页上：5–60 秒，按 5 秒一档加减。 */
+/* 发送间隔是唯一还要调的发送参数，直接摆在内容页上，填一个 5–60 之间的秒数。 */
 function cwGapBlockHtml(){
   return '<div class="cw-pcard cw-gapcard">'
-    +'<span class="cw-gap-lb">发送间隔</span>'
-    +'<div class="cw-gap-stp">'
-      +'<button type="button" class="cw-gap-bt" onclick="cwGapStep(-5)" aria-label="缩短发送间隔"'+(CW_SET.gap<=CW_GAP[0]?' disabled':'')+'>'+I('minus',16,2.2)+'</button>'
-      +'<b id="cwGapVal">'+CW_SET.gap+' 秒</b>'
-      +'<button type="button" class="cw-gap-bt" onclick="cwGapStep(5)" aria-label="加长发送间隔"'+(CW_SET.gap>=CW_GAP[1]?' disabled':'')+'>'+I('plus',16,2.2)+'</button>'
+    +'<label class="cw-gap-lb" for="cwGapInput">发送间隔</label>'
+    +'<div class="cw-gap-val">'
+      +'<input class="cw-gap-in" id="cwGapInput" type="text" inputmode="numeric" value="'+CW_SET.gap+'"'
+        +' aria-label="发送间隔，'+CW_GAP[0]+' 到 '+CW_GAP[1]+' 秒" onchange="cwGapInput(this.value)"'
+        +' onkeydown="if(event.key===\'Enter\')this.blur()">'
+      +'<span>秒</span>'
     +'</div>'
   +'</div>';
 }
-function cwGapStep(d){
-  var n=CW_SET.gap+d;
-  if(n<CW_GAP[0]||n>CW_GAP[1])return;
-  CW_SET.gap=n;
-  var v=$('cwGapVal'); if(v)v.textContent=n+' 秒';
-  var bs=document.querySelectorAll('#cwContentBody .cw-gap-bt');
-  if(bs.length!==2)return;
-  bs[0].disabled=n<=CW_GAP[0]; bs[1].disabled=n>=CW_GAP[1];
+/* 空值保持原值，越界收到最近的边界；改完把框里的数回写成最终值。 */
+function cwGapInput(v){
+  var n=parseInt(v,10);
+  if(n)CW_SET.gap=Math.max(CW_GAP[0],Math.min(CW_GAP[1],n));
+  var el=$('cwGapInput'); if(el)el.value=CW_SET.gap;
 }
 /* 视频教程：底栏主操作上方那行「不会用？点击查看视频教程」打开一块演示播放器。原型不带视频、
    不走网络，点播放只落一句演示提示（与「进入对话」同一口径）。 */
