@@ -248,10 +248,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
    背景与遮罩都能铺满。 */
 .screen::before,.screen::after{content:"";display:block;flex:none;height:34px}
 .screen::after{height:22px}
-/* 切屏（go）＝M3 fade-through 的「先出后进」：旧屏 90ms 淡出，新屏从第 90ms 起 210ms 淡入。
-   旧写法只给新屏挂淡入、旧屏原地不动，中段两屏都可见，密集页之间切（首页↔任务）会看到两层文字叠印。 */
-.anim-push{animation:m3In .21s var(--emph) .09s both}
-.anim-leave{animation:m3Out .09s ease forwards}
+.anim-push{animation:m3In .3s var(--emph)}
 .anim-pop{animation:m3In .3s var(--emph)}
 .anim-exit{animation:m3Out .14s ease forwards}
 @keyframes m3In{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
