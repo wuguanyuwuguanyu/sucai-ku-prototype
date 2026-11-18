@@ -16965,8 +16965,8 @@ render();
     <div class="rea-bd-card rea-bd-card--w4">
       <div class="rea-bd-ch"><h6>使用覆盖</h6></div>
       <div class="rea-mb-cov">
-        <div class="rea-bd-donut rea-mb-donut" id="rea-mb-donut">
-          <svg class="rea-bd-donut-lines" id="rea-mb-lines" aria-hidden="true">
+        <div class="rea-mb-donut" id="rea-mb-donut">
+          <svg class="rea-mb-donut-lines" id="rea-mb-lines" aria-hidden="true">
             <polyline data-mb-leader="u"></polyline>
             <polyline data-mb-leader="p"></polyline>
             <polyline data-mb-leader="e"></polyline>
@@ -16980,7 +16980,7 @@ render();
             </svg>
             <span class="rea-bd-ring-mid"><b data-mb-sum="all">0</b><span>条素材</span></span>
           </div>
-          <ul class="rea-bd-donut-lbls rea-mb-lbls" id="rea-mb-lbls">
+          <ul class="rea-mb-lbls" id="rea-mb-lbls">
             <li data-mb-lbl="u" data-mb-seg="used" data-side="r" role="button" tabindex="0" title="进素材明细，只看用过的"><span class="nm">用过</span><span class="dn"><b>0</b> 条 · <span class="pct">0%</span></span></li>
             <li data-mb-lbl="p" data-mb-seg="pub" data-side="l" role="button" tabindex="0" title="进素材明细，只看没用过且已发布的"><span class="nm">没用过 · 已发布</span><span class="dn"><b>0</b> 条 · <span class="pct">0%</span></span></li>
             <li data-mb-lbl="e" data-mb-seg="exp" data-side="r" role="button" tabindex="0" title="进素材明细，只看没用过且已过期的"><span class="nm">没用过 · 已过期</span><span class="dn"><b>0</b> 条 · <span class="pct">0%</span></span></li>
@@ -18448,7 +18448,14 @@ body .subapp{background:#F6F8FB!important}
 
 /* ---------- 使用覆盖 ---------- */
 .rea-mb-cov{display:flex;flex:1 1 auto;flex-direction:column;min-height:0}
-.rea-mb-donut{position:relative;width:100%;height:192px}
+.rea-mb-donut{position:relative;width:100%;flex:1 1 auto;min-height:192px}
+/* 环外引线标注：SVG 引线压在环上，标注按弧中点绝对定位在环两侧（top 由 paintLabels 现算）。
+   这层底子原来挂在任务看板的 .rea-bd-donut* 上，随那次改版删了，素材看板沿用不了，补在这里。 */
+.rea-mb-donut-lines{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.rea-mb-donut-lines polyline{fill:none;stroke:#D6DBE3;stroke-width:1;stroke-linecap:round;stroke-linejoin:round}
+.rea-mb-lbls{list-style:none;margin:0;padding:0}
+.rea-mb-lbls li{position:absolute;transform:translateY(-50%);white-space:nowrap;cursor:pointer;border-radius:4px}
+.rea-mb-lbls li:focus-visible{outline:2px solid #1677FF;outline-offset:1px}
 .rea-mb-ring{width:116px;height:116px;margin:-58px 0 0 -58px}
 .rea-mb-ring svg{display:block;width:100%;height:100%;transform:rotate(-90deg)}
 .rea-mb-ring circle{fill:none;stroke-width:15}
@@ -18462,10 +18469,12 @@ body .subapp{background:#F6F8FB!important}
 .rea-mb-lbls .nm{display:block;color:#1F2329;font-size:10.5px;font-weight:500;letter-spacing:0}
 .rea-mb-lbls .dn{display:block;color:#8F959E;font-size:10.5px;font-variant-numeric:tabular-nums}
 .rea-mb-lbls .dn b{color:#1F2329;font-weight:600}
-.rea-mb-lbls li[data-side="r"]{left:calc(50% + 72px);text-align:left}
-.rea-mb-lbls li[data-side="l"]{right:calc(50% + 72px);text-align:right}
+.rea-mb-lbls li[data-side="r"]{left:calc(50% + 64px);text-align:left}
+.rea-mb-lbls li[data-side="l"]{right:calc(50% + 64px);text-align:right}
 .rea-mb-lbls li:hover .nm{color:#1677FF}
-.rea-mb-foot{display:flex;align-items:center;gap:12px;margin-top:auto;padding-top:10px;border-top:1px solid #F0F2F5;color:#8F959E;font-size:12px}
+.rea-mb-foot{display:flex;align-items:center;gap:12px;margin-top:auto;padding-top:10px;border-top:1px solid #F0F2F5;color:#8F959E;font-size:12px;word-break:keep-all}
+/* 覆盖环卡底这一行最长：12px 在窄格（w4 约 340 宽）会折成「… 82 / 次」，降到 11px 能排进一行。 */
+#rea-mb-cov-foot{font-size:11px}
 .rea-mb-foot .rea-bd-links{margin-left:auto}
 .rea-mb-sub{color:#8F959E;font-size:12px;margin-left:4px}
 
@@ -28671,8 +28680,8 @@ function paintLabels(o,total){
       if(g[j].pg){
         g[j].pg.setAttribute("points",
           (cx+60*Math.sin(g[j].a)).toFixed(1)+","+(cy-60*Math.cos(g[j].a)).toFixed(1)+" "+
-          (cx+dir*72).toFixed(1)+","+g[j].y.toFixed(1)+" "+
-          (cx+dir*84).toFixed(1)+","+g[j].y.toFixed(1));
+          (cx+dir*60).toFixed(1)+","+g[j].y.toFixed(1)+" "+
+          (cx+dir*64).toFixed(1)+","+g[j].y.toFixed(1));
       }
     }
   }
