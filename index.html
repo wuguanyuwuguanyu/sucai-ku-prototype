@@ -1286,14 +1286,31 @@ textarea.cw-ta::placeholder{color:var(--on-surface-variant)}
   border-radius:12px;background:var(--secondary-container);color:var(--on-secondary-container);font-size:13px}
 .cw-awakehd{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px;font-size:14px;color:var(--on-surface-variant)}
 .cw-awakehd b{font-size:16px;color:var(--on-surface)}
-/* 添加内容底部弹层 */
-.cws-row{display:flex;align-items:center;gap:14px;width:100%;min-height:64px;padding:8px 6px;border-radius:12px;text-align:left}
-.cws-row:active{background:var(--sc)}
-.cws-ic{flex:none;width:40px;height:40px;border-radius:50%;background:var(--sc-high);color:var(--primary);
+/* 添加内容 / 加参考资料底部抽屉：整幅从屏底上滑，白底、渐变图标块、浅蓝行卡——
+   与首页、AI托管同一套（浅紫雾顶·白卡柔影·紫→蓝渐变），不再走 M3 的灰底列表观感 */
+.cws-sheet{background:#fff;animation:cwsSheetUp .32s var(--emph)}
+.cws-sheet.bye{animation:cwsSheetDown .22s ease forwards}
+.cws-sheet .grabber{width:38px;height:4px;background:#DFE6F4;margin:10px auto 4px}
+.cws-sheet .sheet-body{padding:8px 16px calc(20px + env(safe-area-inset-bottom))}
+.cws-sheet .cw-sh{font-size:20px;font-weight:700;letter-spacing:.01em;margin:6px 4px 16px}
+@keyframes cwsSheetUp{from{transform:translateY(100%)}to{transform:none}}
+@keyframes cwsSheetDown{to{transform:translateY(100%)}}
+.cws-row{display:flex;align-items:center;gap:14px;width:100%;padding:14px;border-radius:18px;text-align:left;
+  background:#F7F9FF;
+  box-shadow:inset 0 0 0 1px rgba(219,229,248,.9),0 12px 24px -26px rgba(40,70,150,.9);
+  transition:background .18s var(--emph),transform .14s var(--emph)}
+.cws-row+.cws-row{margin-top:10px}
+.cws-row:active{background:#EEF3FF;transform:scale(.985)}
+.cws-sheet .cws-row{animation:cwsRowIn .34s var(--emph) backwards}
+.cws-sheet .cws-row:nth-of-type(2){animation-delay:.05s}
+.cws-ic{flex:none;width:44px;height:44px;border-radius:14px;color:#fff;
+  background:linear-gradient(-52deg,#A56EFF 6.5%,#529AFF 96.9%);
+  box-shadow:0 10px 18px -12px rgba(110,90,255,.75),inset 0 1px 0 rgba(255,255,255,.35);
   display:flex;align-items:center;justify-content:center}
-.cws-t{display:flex;flex-direction:column;gap:2px}
-.cws-t b{font-size:16px;font-weight:500;color:var(--on-surface)}
-.cws-t small{font-size:12px;color:var(--on-surface-variant)}
+.cws-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.cws-t b{font-size:16px;font-weight:600;color:#17263F}
+.cws-t small{font-size:12.5px;line-height:1.5;color:#6C85A8}
+.cws-chev{flex:none;display:flex;color:#B4C2DA}
 
 /* ---- AI 帮写：全屏对话 ---- */
 #cw-compose{display:flex;flex-direction:column}
@@ -1589,6 +1606,21 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
 .cwc-send{background:#1677FE;position:relative;overflow:hidden;
   box-shadow:0 10px 20px -12px rgba(22,119,254,.75);transition:background .18s var(--emph)}
 .cwc-send:active{background:#0F63DA}
+/* AI 帮写按底部抽屉入场：点「AI 帮写」后整页面板从屏底上滑，顶上留一道遮罩；
+   内容仍是全屏对话，只换入场／退场方式。面板压住状态栏以下的区域，圆角顶＋抓柄与全站浮层同一口径。 */
+.cw-drawer-scrim{position:absolute;inset:0;background:rgba(16,28,52,.42);
+  opacity:0;visibility:hidden;transition:opacity .24s ease,visibility 0s linear .24s}
+.cw-drawer-scrim.on{opacity:1;visibility:visible;animation:cwScrimIn .24s ease forwards;transition:none}
+@keyframes cwScrimIn{from{opacity:0}to{opacity:1}}
+#cw-compose{top:52px;border-radius:28px 28px 0 0;box-shadow:0 -24px 60px -26px rgba(16,34,70,.55)}
+#cw-compose::before{height:0}
+.cwc-grab{position:absolute;left:50%;top:10px;transform:translateX(-50%);width:38px;height:4px;
+  border-radius:2px;background:#CCD7EA;z-index:3}
+@keyframes cwDrawerUp{from{transform:translateY(102%)}to{transform:none}}
+@keyframes cwDrawerDown{to{transform:translateY(102%)}}
+#cw-compose.cw-drawer-in{animation:cwDrawerUp .34s var(--emph)}
+/* 这一条比 .anim-exit 重：退场走滑下，别再叠一层淡出把面板按回原位 */
+#cw-compose.cw-drawer-out{animation:cwDrawerDown .22s cubic-bezier(.34,0,.8,.2) forwards}
 
 /* ---- 选择素材：搜索栏与一级 chip 照首页的画法（白底、渐变描边选中） ---- */
 .cwp-search{background:#fff;color:#7C8CA4;
@@ -1619,8 +1651,10 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
 
 @media (prefers-reduced-motion:reduce){
   .cw-it.fresh,.cw-it-gap,.cwp-list.cw-in .cwp-card,.cwc-turn-in,.cwc-sumbody,
-  .cwc-empty .ic,.cw-up::before{animation:none}
-  .cw-del-zone,.cw-del-lid,body.cw-dragging #cwContentFoot{transition:none}
+  .cwc-empty .ic,.cw-up::before,.cws-sheet,.cws-sheet .cws-row,
+  #cw-compose.cw-drawer-in,#cw-compose.cw-drawer-out{animation:none}
+  .cw-del-zone,.cw-del-lid,body.cw-dragging #cwContentFoot,.cws-row,
+  .cw-drawer-scrim{transition:none}
   .cw-unit-thumb{transition:none}
 }
 
@@ -4198,11 +4232,14 @@ body[data-motion="fade"] .panel.anim-in{animation:panelSwapIn .36s var(--emph) .
           <div class="cw-foot stack" id="cwContentFoot"></div>
         </section>
 
+        <!-- AI 帮写按底部抽屉呈现：遮罩压住下面那屏，面板从屏底上滑 -->
+        <div class="cw-drawer-scrim" id="cwComposeScrim" onclick="cwComposeClose()"></div>
         <!-- AI 帮写：Android 全屏对话页（PRD §6）。顶部关闭、中间单层滚动、底部固定输入。
              只产出通用文案与候选：采用才回填主编辑页，关闭不采用，参考资料默认不发送。 -->
         <section class="screen" id="cw-compose">
+          <div class="cwc-grab" aria-hidden="true"></div>
           <div class="cwc-bar">
-            <button class="iconbtn" onclick="back()" id="cwComposeClose" aria-label="关闭 AI 对话"></button><h3>AI 帮写</h3>
+            <button class="iconbtn" onclick="cwComposeClose()" id="cwComposeClose" aria-label="关闭 AI 对话"></button><h3>AI 帮写</h3>
           </div>
           <div class="scroll cwc-scroll" id="cwComposeBody"></div>
           <div class="cwc-foot">
@@ -5239,6 +5276,10 @@ function syncNav(id,params){
   for(var i=0;i<ls.length;i++){ls[i].classList.remove('on')}
   var el=document.querySelector('.nav-i[data-vid="'+id+'"]');
   if(el)el.classList.add('on');
+  /* AI 帮写是抽屉：它不在栈顶时遮罩一并收走（采用候选、去选素材、开始发送等）
+     ——遮罩状态跟着当前屏走，别让它在别的屏上再拦一次点击 */
+  var sc=$('cwComposeScrim');
+  if(sc){ if(id==='cw-compose')sc.classList.add('on'); else sc.classList.remove('on') }
 }
 
 /* ---------- Material ripple（统一按压反馈，替代缩放） ---------- */
@@ -6424,13 +6465,14 @@ function cwTextAdd(){
 }
 function cwSheetRow(icon,title,sub,act){
   return '<button class="cws-row" onclick="'+act+'"><span class="cws-ic" aria-hidden="true">'+I(icon,22,1.9)+'</span>'
-    +'<span class="cws-t"><b>'+title+'</b><small>'+sub+'</small></span></button>';
+    +'<span class="cws-t"><b>'+title+'</b><small>'+sub+'</small></span>'
+    +'<span class="cws-chev" aria-hidden="true">'+I('chev',18,2.2)+'</span></button>';
 }
 function cwAddSheet(){
   CW_SH=openSheet('<div class="cw-sh">添加内容</div>'
     +cwSheetRow('message','文字','在末尾加一段文字','cwTextAdd()')
     +cwSheetRow('photos','从相册选择','图片或视频','cwAlbumAdd()')
-    +cwSheetRow('folder','从素材库选择','文字、图片、视频按原顺序加入','cwPickOpen(\'content\')'),'cw-sheet');
+    +cwSheetRow('folder','从素材库选择','文字、图片、视频按原顺序加入','cwPickOpen(\'content\')'),'cw-sheet cws-sheet');
 }
 /* 相册：演示一条媒体从「上传中」到可用。window.CW_UPLOAD_FAIL＝1 时落到失败态，
    失败项不静默跳过：发送被拦住，用户可以重试或移除。 */
@@ -6508,8 +6550,24 @@ function cwSupported(t){ return t==='text'||t==='image'||t==='video' }
 function cwRefById(id){ var a=CW_CHAT.refs; for(var i=0;i<a.length;i++)if(a[i].id===id)return a[i]; return null }
 function cwComposeOpen(){
   if(!CW_CHAT)cwResetChat();
+  var s=$('cw-compose');
+  if(s)s.classList.remove('cw-drawer-out');
   go('cw-compose');
+  if(s&&!cwRM()){ /* 抽屉入场：撤掉全站那层淡入，换成整幅上滑 */
+    s.classList.remove('anim-push');
+    s.classList.add('cw-drawer-in');
+    setTimeout(function(){s.classList.remove('cw-drawer-in')},360);
+  }
   if(!CW_CHAT.turns.length&&cwHasContent())cwChatAsk('',{auto:true,op:'auto'});
+}
+/* 关闭 AI 帮写：先让抽屉滑下去，再真正退栈；滑动期间动画规则压过 back() 的淡出，不会先跳回原位。 */
+function cwComposeClose(){
+  var s=$('cw-compose');
+  if(!s||!s.classList.contains('active')){back();return}
+  if(s.classList.contains('cw-drawer-out'))return;
+  s.classList.add('cw-drawer-out');
+  setTimeout(function(){back()},230);
+  setTimeout(function(){s.classList.remove('cw-drawer-out')},620);
 }
 /* 来源事实：主编辑页的内容 ＋ 对话里已读取的参考资料。读取失败的不参与成稿。 */
 function cwAiSources(){
@@ -6651,7 +6709,7 @@ function cwChatStop(){
 function cwComposeAdd(){
   CW_SH=openSheet('<div class="cw-sh">加参考资料</div>'
     +cwSheetRow('photos','从相册选择','图片或视频，只作为写作参考','cwComposeAlbum()')
-    +cwSheetRow('folder','从素材库选择','只作为参考，不会自动发送','cwPickOpen(\'chat\')'),'cw-sheet');
+    +cwSheetRow('folder','从素材库选择','只作为参考，不会自动发送','cwPickOpen(\'chat\')'),'cw-sheet cws-sheet');
 }
 function cwComposeAlbum(){
   closeSheet(CW_SH); CW_SH=null;
