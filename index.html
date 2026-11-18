@@ -24347,12 +24347,20 @@ function initQf(){
     if(had)toast('执行人员已更换，已选标签已清空；手填的标签保留。');
   }
   /* 指定微信好友：昵称同样在各销售自己的微信里，后台列不出名单，只让运营按昵称
-     手填，多个用 , 分隔；执行时在每人好友里按昵称匹配，页面同样不预估人数。 */
+     手填，多个用 , 分隔；执行时在每人好友里按昵称匹配，页面同样不预估人数。
+     匹配方式与手填标签同口径：精确匹配（默认）＝昵称完全一致，模糊匹配＝昵称包含即命中。 */
   var friendPanel=document.createElement('div');friendPanel.className='rea-qf-tagpanel';b2.appendChild(friendPanel);
-  friendPanel.innerHTML='<div class="rea-qf-trow"><label class="rea-qf-tagin">'
+  friendPanel.innerHTML='<div class="rea-qf-trow"><span>匹配方式</span>'
+    +'<label class="rea-qf-rd"><input type="radio" name="rea-qf-fmatch" value="exact" checked><span class="rea-qf-rddot"></span>精确匹配</label>'
+    +'<label class="rea-qf-rd"><input type="radio" name="rea-qf-fmatch" value="fuzzy"><span class="rea-qf-rddot"></span>模糊匹配</label></div>'
+    +'<div class="rea-qf-trow"><label class="rea-qf-tagin">'
     +'<input type="text" aria-label="好友昵称" placeholder="请输入好友昵称，多个昵称请用&quot;,&quot;隔开">'
     +'</label></div>';
-  var friendInput=friendPanel.querySelector('input');
+  var friendInput=friendPanel.querySelector('.rea-qf-tagin input');
+  function friendFuzzy(){
+    var r=friendPanel.querySelector('input[name="rea-qf-fmatch"]:checked');
+    return !!r&&r.value==='fuzzy';
+  }
   /* 好友昵称按 , 与全角，分隔，去空去重。 */
   function friendNames(){
     var seen={},out=[],list=friendInput.value.split(/[,，]/),q,v;
@@ -24594,8 +24602,9 @@ function initQf(){
     if(textOnly&&sendType()==='file')backToAssistant();
     var st=sendType();
     var manualFuzzy=tagPick.hasManual()&&tagPick.mode()==='fuzzy';
+    var friendModeFuzzy=friendFuzzy();
     sumWho.textContent=all?'全部好友'
-      :(friends?(fn?('好友：'+fnames.join(',')):'指定微信好友 · 未填')
+      :(friends?(fn?('好友：'+fnames.join(',')+(friendModeFuzzy?' · '+MATCH_LABEL.fuzzy:'')):'指定微信好友 · 未填')
         :(n?('标签：'+names.join(';')+(manualFuzzy?' · '+MATCH_LABEL.fuzzy:''))
           :'按微信标签 · 未填'));
     sumWho.title=sumWho.textContent;
@@ -24613,7 +24622,9 @@ function initQf(){
       :(n?n+' 个标签':'标签未填'));
     actSum.textContent=scopeWord+' · '+stName;
     if(friends){
-      tagHint.textContent=fn?('已填 '+fn+' 个好友昵称，按昵称匹配；人数以各人手机为准。')
+      tagHint.textContent=fn?(friendModeFuzzy
+        ?('已填 '+fn+' 个好友昵称，按模糊匹配，昵称包含这几个字就算命中；人数以各人手机为准。')
+        :('已填 '+fn+' 个好友昵称，按精确匹配；人数以各人手机为准。'))
         :('好友昵称在各销售自己的微信里，按昵称匹配；人数以各人手机为准。');
     }else if(!all){
       /* 没选标签时不给说明；选了才提示匹配口径与人数口径。 */
