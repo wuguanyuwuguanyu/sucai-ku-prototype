@@ -1333,14 +1333,19 @@ textarea.cw-ta::placeholder{color:var(--on-surface-variant)}
 .cwc-input::placeholder{color:var(--on-surface-variant)}
 .cwc-send{flex:none;width:48px;height:48px;border-radius:50%;background:var(--primary);color:var(--on-primary);
   display:flex;align-items:center;justify-content:center}
-.cwc-sum{margin:8px 0 12px}
-.cwc-sumbtn{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 14px;border-radius:999px;
-  background:var(--sc-low);color:var(--on-surface-variant);font-size:13px;font-weight:500}
-.cwc-sumbtn .arw{margin-left:2px}
-.cwc-sumbody{padding:10px 14px;margin-top:6px;border-radius:12px;background:var(--sc-low)}
-.cwc-sumrow{display:flex;gap:10px;padding:4px 0;font-size:13px;line-height:1.6}
-.cwc-sumrow .k{flex:none;color:var(--on-surface-variant);min-width:32px}
-.cwc-sumrow .v{min-width:0;color:var(--on-surface);word-break:break-word}
+/* 带进 AI 的内容＝右侧一条用户气泡：文字显示正文，图片／视频显示缩略与名称 */
+.cwc-sent{padding:12px 16px}
+.cwc-sent p+p{margin-top:8px}
+.cwc-sent-m{margin:8px 0 0;border-radius:12px;overflow:hidden;max-width:220px;line-height:0}
+.cwc-sent-m img{display:block;width:100%}
+.cwc-sent-f{display:flex;align-items:center;gap:6px;margin-top:8px;padding:8px 10px;border-radius:10px;
+  background:rgba(255,255,255,.66);font-size:13px;white-space:normal}
+/* 采用这一版：主操作放在气泡下一行，复制／再改改做文字入口 */
+.cwc-actrow{display:flex;align-items:center;gap:2px;margin:10px 0 2px}
+.cwc-use{display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 18px;border-radius:999px;
+  background:var(--primary);color:var(--on-primary);font-size:14px;font-weight:600}
+.cwc-use.ghost,.cwc-use.used{background:#EEF3FF;color:#2E6BFF}
+.cwc-mini{height:40px;padding:0 10px;font-size:13.5px;font-weight:500;color:var(--on-surface-variant)}
 .cwc-empty{margin:120px auto 0;max-width:300px;text-align:center;color:var(--on-surface-variant)}
 .cwc-empty .ic{display:inline-flex;color:var(--primary);margin-bottom:14px}
 .cwc-empty h4{font-size:20px;font-weight:500;color:var(--on-surface);margin-bottom:6px}
@@ -1350,11 +1355,9 @@ textarea.cw-ta::placeholder{color:var(--on-surface-variant)}
 .cwc-note{margin:14px 0;padding-left:14px;border-left:3px solid var(--primary-container);
   color:var(--on-surface);font-size:15px;line-height:1.7;white-space:pre-wrap}
 .cwc-cand{margin:14px 0 10px;padding:18px;border-radius:16px;background:var(--sc-low)}
-.cwc-candtext{font-size:16px;line-height:1.8;color:var(--on-surface);white-space:pre-wrap;margin-bottom:14px}
+.cwc-candtext{font-size:16px;line-height:1.8;color:var(--on-surface);white-space:pre-wrap}
 .cwc-cand.stale{opacity:.72}
 .cwc-stale{font-size:12px;font-weight:600;color:var(--amber);margin-bottom:8px}
-.cwc-prev{margin:14px 0;padding:12px 14px;border-radius:12px;background:var(--sc-low);color:var(--on-surface-variant)}
-.cwc-prev p{margin-top:8px;font-size:14px;line-height:1.7;white-space:pre-wrap}
 .cwc-tag{flex:none;font-size:11px;font-weight:600;padding:3px 8px;border-radius:999px;
   background:var(--primary-container);color:var(--on-primary-container)}
 .cwc-quick{display:flex;flex-direction:column;align-items:flex-start;margin:2px 0 8px}
@@ -1618,18 +1621,17 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
 .cwc-cand::before{content:"";position:absolute;left:18px;right:18px;top:0;height:2px;
   border-radius:0 0 2px 2px;background:linear-gradient(90deg,#9452FF,#1677FE);opacity:.65}
 .cwc-candtext{font-size:16px;line-height:1.8;color:#17263F}
-.cwc-prev{background:#F6F8FF;border-radius:16px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.8)}
+.cwc-use{background:#1677FE;color:#fff;
+  box-shadow:0 10px 20px -16px rgba(22,119,254,.85),inset 0 1px 0 rgba(255,255,255,.22)}
+.cwc-use.used{background:#E8F0FF;color:#2E6BFF;box-shadow:none}
+.cwc-mini{color:#617A9E;transition:color .18s var(--emph)}
+.cwc-mini:active{color:#2E6BFF}
 .cwc-tag{background:linear-gradient(120deg,#EEE8FF,#E3EEFF);color:#5A4FCF}
 .cwc-more{color:#617A9E;transition:color .18s var(--emph)}
 .cwc-more:active{color:#2E6BFF}
 .cwc-ref{background:#FBF9FF;border-radius:18px;box-shadow:inset 0 0 0 1px rgba(228,220,255,.9)}
 .cwc-refm{background:#fff;border-radius:10px;box-shadow:inset 0 0 0 1px rgba(232,236,248,.9)}
 .cwc-busy{color:#617A9E}
-.cwc-sumbtn{background:#fff;border:1px solid #E3EAF8;color:#466DAD;position:relative;overflow:hidden;
-  box-shadow:0 10px 22px -22px rgba(40,70,150,.8)}
-.cwc-sumbody{background:#FBF9FF;box-shadow:inset 0 0 0 1px rgba(228,220,255,.8);
-  animation:cwcSumIn .2s var(--emph) both}
-@keyframes cwcSumIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
 .cwc-turn{display:flow-root}
 .cwc-turn-in{animation:cwcTurnIn .34s var(--emph) both}
 @keyframes cwcTurnIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
@@ -1686,7 +1688,7 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
 @keyframes cwRowIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
 @media (prefers-reduced-motion:reduce){
-  .cw-it.fresh,.cw-it-gap,.cwp-list.cw-in .cwp-card,.cwc-turn-in,.cwc-sumbody,
+  .cw-it.fresh,.cw-it-gap,.cwp-list.cw-in .cwp-card,.cwc-turn-in,
   .cwc-empty .ic,.cw-up::before,.cws-sheet,.cws-sheet .cws-row,
   #cw-compose.cw-drawer-in,#cw-compose.cw-drawer-out{animation:none}
   .cw-del-zone,.cw-del-lid,body.cw-dragging #cwContentFoot,.cws-row,
@@ -5327,7 +5329,7 @@ function syncNav(id,params){
 }
 
 /* ---------- Material ripple（统一按压反馈，替代缩放） ---------- */
-var RIP_SEL='.cw-textact,.cw-message,.btn,.chip,.iconbtn,.cell,.wk-card,.p-card,.pc-btn,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.hv-msg,.hv-stat,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.hva-lockcard,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close,.hw-add,.cust-seg button,.cust-copy,.cust-acct-row,.cw-btn,.cw-ib,.cw-op,.cw-units button,.cw-rec,.cw-kv .op,.cw-addrow,.cw-nosend,.cw-tutlink,.cw-info,.cw-rpb,.cw-goto,.cw-tutplay,.cw-rcpt,.cw-ai-link,.cwc-more,.cwc-send,.cwc-sumbtn,.cwp-tabs button,.cwp-grps button';
+var RIP_SEL='.cw-textact,.cw-message,.btn,.chip,.iconbtn,.cell,.wk-card,.p-card,.pc-btn,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.hv-msg,.hv-stat,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.hva-lockcard,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close,.hw-add,.cust-seg button,.cust-copy,.cust-acct-row,.cw-btn,.cw-ib,.cw-op,.cw-units button,.cw-rec,.cw-kv .op,.cw-addrow,.cw-nosend,.cw-tutlink,.cw-info,.cw-rpb,.cw-goto,.cw-tutplay,.cw-rcpt,.cw-ai-link,.cwc-more,.cwc-use,.cwc-mini,.cwc-send,.cwp-tabs button,.cwp-grps button';
 function ripInit(){
   document.addEventListener('pointerdown',function(e){
     var t=e.target.closest ? e.target.closest(RIP_SEL) : null;
@@ -5884,7 +5886,7 @@ function cwDropEmptyText(){
 }
 function cwResetChat(){
   if(CW_CHAT&&CW_CHAT.timer)clearTimeout(CW_CHAT.timer);
-  CW_CHAT={ver:0,token:0,busy:false,timer:null,turns:[],cand:null,refs:[],undo:null,sumOpen:false,lastReq:'',rendered:0};
+  CW_CHAT={ver:0,token:0,busy:false,timer:null,turns:[],refs:[],undo:null,lastReq:'',rendered:0};
   CW_REF_SEQ=0;
 }
 function cwResetDraft(){ CW_ITEMS=[]; CW_ITEM_SEQ=0; CW_MAT=null; cwResetChat(); CW_LAUNCHING=false; }
@@ -6553,7 +6555,12 @@ function cwUndoHtml(){
   return '<div class="cw-undostrip"><span>已回填 AI 文案</span><button class="cw-textact" onclick="cwUndoApply()">撤销</button></div>';
 }
 function cwRestoreItems(items){
-  CW_ITEMS=items; if(CW_CHAT)CW_CHAT.undo=null; cwBumpVer(); cwRender(); toast('已恢复回填前的内容');
+  CW_ITEMS=items;
+  if(CW_CHAT){
+    CW_CHAT.undo=null;
+    CW_CHAT.turns.forEach(function(t){ if(t.cand)t.cand.used=false });
+  }
+  cwBumpVer(); cwRender(); toast('已恢复回填前的内容');
 }
 function cwUndoApply(){
   var u=CW_CHAT&&CW_CHAT.undo; if(!u){toast('没有可撤销的回填');return}
@@ -6729,7 +6736,7 @@ function cwChatAsk(req,opts){
   if(CW_CHAT.busy)return;
   if(!o.auto&&!text)return;
   if(!o.auto)CW_CHAT.turns.push({role:'user',text:text});
-  CW_CHAT.busy=true; CW_CHAT.cand=null; CW_CHAT.lastReq=o.op||'';
+  CW_CHAT.busy=true; CW_CHAT.lastReq=o.op||'';
   var tok=++CW_CHAT.token;
   var out=cwAiReply(text,o.op||'');
   var run=function(){
@@ -6738,7 +6745,6 @@ function cwChatAsk(req,opts){
     if(window.CW_CHAT_FAIL){window.CW_CHAT_FAIL=false;CW_CHAT.turns.push({role:'ai',kind:'note',text:'这次没能生成，原稿和你的要求都还在。可以重试一次。'});cwComposeRender();return}
     if(out.kind==='question')CW_CHAT.turns.push({role:'ai',kind:'question',text:out.text});
     else CW_CHAT.turns.push({role:'ai',kind:'draft',text:out.text||'',cand:out.cand});
-    if(out.cand)CW_CHAT.cand=out.cand;
     cwComposeRender();
   };
   cwComposeRender();
@@ -6800,12 +6806,11 @@ function cwJoinRef(id){
   cwDropEmptyText(); r.joined=true; cwBumpVer(); cwComposeRender();
   toast('已加入发送内容');
 }
-function cwUseLabel(){
-  var n=cwTextBlocks().filter(function(i){return String(i.c||'').trim()}).length;
-  return n>1?'使用这版 · 替换 '+n+' 段文字':'使用这版';
-}
-function cwUseCand(){
-  var c=CW_CHAT&&CW_CHAT.cand; if(!c||CW_CHAT.busy)return;
+/* 采用某一轮：找那一轮自己的候选，不认「最新那一版」。
+   采用会改草稿文字，但不算换资料——不 bump ver，否则其余几轮会一起变「基于之前素材」，正好挡住往回选。 */
+function cwUseCand(ix){
+  var t=CW_CHAT&&CW_CHAT.turns[ix], c=t&&t.cand;
+  if(!c||CW_CHAT.busy)return;
   if(c.ver!==CW_CHAT.ver){toast('资料已变化，先按当前资料重新生成');return}
   var before=JSON.parse(JSON.stringify(CW_ITEMS));
   var texts=cwTextBlocks(), anchor=texts[0];
@@ -6816,24 +6821,47 @@ function cwUseCand(){
     CW_ITEMS.unshift({id:cwItemSeq(),t:'text',c:c.text});
   }
   CW_CHAT.undo={items:before,sig:cwItemsSig()};
-  CW_CHAT.cand=null; cwBumpVer();
+  CW_CHAT.turns.forEach(function(x){ if(x.cand)x.cand.used=false });
+  c.used=true;
   stack=stack.filter(function(p){return p.id!=='cw-compose'});
   go('cw-content');
   toast('已使用这版','撤销',cwUndoApply);
 }
+/* 点气泡上的「复制」：取这一轮候选的正文，不碰草稿 */
+function cwCopyCand(ix){
+  var t=CW_CHAT&&CW_CHAT.turns[ix], c=t&&t.cand; if(!c)return;
+  var done=function(){ toast('已复制') }, fail=function(){ toast('复制失败，可长按文字手动复制') };
+  try{
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(c.text).then(done,fail); return;
+    }
+  }catch(e){}
+  var ta=document.createElement('textarea'); ta.value=c.text; ta.style.position='fixed'; ta.style.opacity='0';
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy')?done():fail() }catch(e){ fail() }
+  ta.remove();
+}
+/* 「再改改」把光标送回输入框，让用户接着提要求；不发请求 */
+function cwFocusInput(){
+  var el=$('cwChatInput'); if(!el)return;
+  el.focus(); el.setSelectionRange(el.value.length,el.value.length);
+}
+/* 带进 AI 帮写的内容：按用户刚发的一条消息摆在右侧。
+   文字直接显示正文，图片／视频给缩略或文件名——不再另做「本次内容 · N 项」的可折叠摘要。 */
 function cwRefSummaryHtml(){
-  if(!cwHasContent())return '';
-  var n=CW_ITEMS.filter(function(i){return i.t!=='text'||String(i.c||'').trim()}).length;
-  var h='<div class="cwc-sum"><button class="cwc-sumbtn" aria-expanded="'+(CW_CHAT.sumOpen?'true':'false')+'" onclick="cwToggleSum()">'
-    +I('doc',16,1.9)+'本次内容 · '+n+' 项<span class="arw">'+(CW_CHAT.sumOpen?'⌃':'⌄')+'</span></button>';
-  if(CW_CHAT.sumOpen){
-    h+='<div class="cwc-sumbody">'+CW_ITEMS.filter(function(i){return i.t!=='text'||String(i.c||'').trim()}).map(function(i){
-      return '<div class="cwc-sumrow"><span class="k">'+cwTypeN(i.t)+'</span><span class="v">'+esc(i.t==='text'?i.c:i.c)+'</span></div>';
-    }).join('')+'</div>';
-  }
+  var items=CW_ITEMS.filter(function(i){return i.t==='text'?String(i.c||'').trim():i.up!=='fail'});
+  if(!items.length)return '';
+  var h='<div class="cwc-user cwc-sent">';
+  items.forEach(function(i){
+    if(i.t==='text')h+='<p>'+esc(i.c)+'</p>';
+    else if(i.t==='image')h+='<figure class="cwc-sent-m"><img src="'+(i.src||CW_IMG_SRC)+'" alt="'+esc(i.c||'图片')+'"></figure>';
+    else{
+      var ic=i.t==='video'?'play':(i.t==='voice'?'wave':(i.t==='image'?'image':'file'));
+      h+='<div class="cwc-sent-f">'+I(ic,16,2)+'<span>'+esc(i.c||cwTypeN(i.t))+'</span></div>';
+    }
+  });
   return h+'</div>';
 }
-function cwToggleSum(){ CW_CHAT.sumOpen=!CW_CHAT.sumOpen; cwComposeRender() }
 function cwRefCardHtml(r){
   var st=r.read==='fail'?'未读取，可补文字说明':r.read==='partial'?'已读取字幕，画面未解析':'已读取画面与文字';
   var h='<div class="cwc-ref" data-ref="'+r.id+'"><div class="cwc-refhd"><b>'+esc(r.title)+'</b><span class="cwc-tag">参考素材</span></div>'
@@ -6843,28 +6871,34 @@ function cwRefCardHtml(r){
     +'<button class="cw-textact" onclick="cwRemoveRef(\''+r.id+'\')">移除</button></span></div></div>';
   return h;
 }
-function cwTurnHtml(t,latest){
+/* 一轮生成结果：气泡只放正文，采用／复制放在下一行；
+   每一轮都带自己的采用入口，往上翻到哪一版都能用，已采用的标「已使用」。 */
+function cwTurnHtml(t,latest,ix){
   if(t.kind==='ref'){var r=cwRefById(t.ref);return r?cwRefCardHtml(r):''}
   if(t.role==='user')return '<div class="cwc-user">'+esc(t.text)+'</div>';
   if(t.kind==='draft'){
-    var stale=t.cand.ver!==CW_CHAT.ver;
+    var stale=t.cand.ver!==CW_CHAT.ver, used=!!t.cand.used;
     var h='';
     if(t.text)h+='<div class="cwc-note">'+esc(t.text)+'</div>';
-    if(latest){
-      h+='<div class="cwc-cand'+(stale?' stale':'')+'">'
-        +(stale?'<div class="cwc-stale">基于之前素材</div>':'')
-        +'<div class="cwc-candtext">'+esc(t.cand.text)+'</div>'
-        +(stale
-          ?'<button class="cw-btn ghost" '+(CW_CHAT.busy?'disabled':'onclick="cwChatAsk(\'\',{op:\'auto\'})"')+'>按当前资料重新生成</button>'
-          :'<button class="cw-btn" '+(CW_CHAT.busy?'disabled':'onclick="cwUseCand()"')+'>'+cwUseLabel()+'</button>')
-        +'</div>';
-      if(!stale&&!CW_CHAT.busy)h+='<div class="cwc-quick">'
-        +'<button class="cwc-more" onclick="cwChatAsk(\'更简短\',{op:\'short\'})">更简短<span class="arw" aria-hidden="true">↗</span></button>'
-        +'<button class="cwc-more" onclick="cwChatAsk(\'更自然\',{op:\'natural\'})">更自然<span class="arw" aria-hidden="true">↗</span></button>'
-        +'<button class="cwc-more" onclick="cwChatAsk(\'换一种写法\',{op:\'rewrite\'})">换一种写法<span class="arw" aria-hidden="true">↗</span></button></div>';
+    h+='<div class="cwc-cand'+(stale?' stale':'')+'">'
+      +(stale?'<div class="cwc-stale">基于之前素材</div>':'')
+      +'<div class="cwc-candtext">'+esc(t.cand.text)+'</div>'
+      +'</div>';
+    h+='<div class="cwc-actrow">';
+    if(used){
+      h+='<span class="cwc-use used">'+I('check',15,2.2)+'已使用</span>';
+    }else if(stale){
+      h+='<button class="cwc-use ghost" '+(CW_CHAT.busy?'disabled':'onclick="cwChatAsk(\'\',{op:\'auto\'})"')+'>按当前资料重新生成</button>';
     }else{
-      h+='<div class="cwc-prev"><span class="cwc-tag">上一版</span><p>'+esc(t.cand.text)+'</p></div>';
+      h+='<button class="cwc-use" '+(CW_CHAT.busy?'disabled':'onclick="cwUseCand('+ix+')"')+'>用这版</button>';
     }
+    h+='<button class="cwc-mini" onclick="cwCopyCand('+ix+')">复制</button>';
+    if(latest&&!stale&&!used&&!CW_CHAT.busy)h+='<button class="cwc-mini" onclick="cwFocusInput()">再改改</button>';
+    h+='</div>';
+    if(latest&&!stale&&!CW_CHAT.busy)h+='<div class="cwc-quick">'
+      +'<button class="cwc-more" onclick="cwChatAsk(\'更简短\',{op:\'short\'})">更简短<span class="arw" aria-hidden="true">↗</span></button>'
+      +'<button class="cwc-more" onclick="cwChatAsk(\'更自然\',{op:\'natural\'})">更自然<span class="arw" aria-hidden="true">↗</span></button>'
+      +'<button class="cwc-more" onclick="cwChatAsk(\'换一种写法\',{op:\'rewrite\'})">换一种写法<span class="arw" aria-hidden="true">↗</span></button></div>';
     return h;
   }
   return '<div class="cwc-note">'+esc(t.text)+'</div>';
@@ -6877,7 +6911,7 @@ function cwComposeHtml(){
       +'<h4>这次想和客户说什么？</h4><p>也可以添加素材。</p></div>';
   }
   CW_CHAT.turns.forEach(function(t,ix){
-    var th=cwTurnHtml(t,ix===last);
+    var th=cwTurnHtml(t,ix===last,ix);
     if(th)h+='<div class="cwc-turn">'+th+'</div>';
   });
   if(CW_CHAT.busy)h+='<div class="cwc-busy" role="status"><span class="cwc-dots"><i></i><i></i><i></i></span>正在写<button class="cw-textact" onclick="cwChatStop()">停止</button></div>';
