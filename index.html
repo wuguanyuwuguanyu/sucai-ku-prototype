@@ -1382,21 +1382,37 @@ textarea.cw-ta::placeholder{color:var(--on-surface-variant)}
 .cwp-grps::-webkit-scrollbar{display:none}
 .cwp-grps button{flex:none;min-height:30px;padding:0 12px;border-radius:8px;font-size:12px;color:var(--on-surface-variant)}
 .cwp-grps button.on{background:var(--sc);color:var(--on-surface);font-weight:600}
-.cwp-card{padding:14px 0;border-bottom:1px solid var(--outline-variant)}
-.cwp-hd{display:flex;align-items:center;gap:8px}
-.cwp-hd b{flex:1;min-width:0;font-size:16px;font-weight:600;color:var(--on-surface)}
-.cwp-src{flex:none;font-size:11px;padding:2px 8px;border-radius:999px;background:var(--sc-high);color:var(--on-surface-variant)}
-.cwp-meta{margin-top:4px;font-size:12px;color:var(--on-surface-variant)}
-.cwp-msgs{margin-top:10px}
-.cwp-msg{display:flex;align-items:flex-start;gap:10px;padding:8px 0;font-size:13px;line-height:1.6;color:var(--on-surface)}
-.cwp-msg .cw-cb{margin-top:2px}
-.cwp-msg.no{color:var(--on-surface-variant)}
-.cwp-msg.no .cwp-mc{color:var(--on-surface-variant)}
-.cwp-mt{flex:none;min-width:34px;color:var(--on-surface-variant);font-size:12px}
-.cwp-mc{flex:1;min-width:0;word-break:break-word}
-.cwp-no{flex:none;font-size:11px;color:var(--error)}
-.cwp-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px}
-.cwp-foot .cw-btn.sm{min-height:40px;border-radius:999px;padding:0 16px;font-size:13px}
+/* 卡片＝素材库那张白卡（标题＋关键词、右侧 ＋／展开箭头、右上角来源角标），点行原地展开微信发送模拟。
+   ＋ 是整条添加：选一条素材＝选它全部消息，不在卡内逐条勾选（2026-11-19）。 */
+.cwp-list{display:flex;flex-direction:column;gap:12px;padding:0 0 8px}
+.cwp-card{position:relative;background:#fff;border-radius:16px;overflow:hidden}
+.cwp-row{display:flex;align-items:center;gap:6px;min-height:76px;padding:11px 12px 12px 18px;cursor:pointer}
+.cwp-row.on{background:#F1F2FE}
+.cwp-spk{display:none;flex:none;line-height:0}
+.cwp-row.on .cwp-spk{display:block}
+.cwp-b{flex:1;min-width:0}
+.cwp-b .lc-h{display:flex;align-items:center;gap:7px;min-width:0}
+.cwp-b h5{font-size:16.5px;font-weight:700;letter-spacing:.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  background-image:linear-gradient(96deg,#2A62B4,#0F2A58);-webkit-background-clip:text;background-clip:text;
+  color:transparent;-webkit-text-fill-color:transparent}
+.cwp-b p{margin-top:7px;font-size:13.5px;font-weight:500;color:#6387C0;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cwp-arr{flex:none;color:#8AA5CF;line-height:0;transition:transform .2s var(--emph)}
+.cwp-row.on .cwp-arr{transform:rotate(-90deg)}
+.cwp-add{flex:none;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:#EEF3FF;color:#2E6BFF;line-height:0;transition:background .16s var(--emph),color .16s var(--emph)}
+.cwp-add:active{background:#E1EBFF}
+.cwp-add.done{background:linear-gradient(140deg,#1677FE,#6A5BFF);color:#fff}
+.cwp-add[disabled]{background:#F3F6FC;color:#C3CFE2}
+.cwp-open{display:none;border-top:1px solid #EDF1F9;background:#fff;padding:12px 14px 14px}
+.cwp-open.on{display:block}
+.cwp-open .wx-sim{background:none;border-radius:0;padding:0}
+.cwp-open .wx-row{align-items:flex-start;gap:8px}
+.cwp-open .wx-b{color:#1F1F1F;max-width:calc(100% - 40px)}
+#cw-pick .lc-tag{flex:none;font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px;letter-spacing:.02em}
+#cw-pick .lc-tag.new{background:#E6FFF0;color:#17D861}
+#cw-pick .lc-tag.upd{background:#E3EFFF;color:#1677FF}
+#cw-pick .lc-tag.bad{background:#FFF1F0;color:#C2413A}
 
 /* ---- 预览与记录 ---- */
 .cw-rcpt{display:flex;align-items:center;justify-content:space-between;width:100%;text-align:left;
@@ -1651,18 +1667,13 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
 .cwp-grps button{position:relative;overflow:hidden;color:#6B84AC;transition:background .18s,color .18s}
 .cwp-grps button.on{background:#fff;color:#2E6BFF;font-weight:700;
   box-shadow:0 6px 14px -16px rgba(40,70,150,.8)}
-.cwp-card{background:#fff;border-radius:18px;padding:14px 16px;margin-bottom:10px;border-bottom:0;
-  box-shadow:0 12px 26px -26px rgba(40,70,150,.95),inset 0 0 0 1px rgba(255,255,255,.7)}
+.cwp-card{box-shadow:0 12px 26px -24px rgba(40,70,150,1)}
 .cwp-list.cw-in .cwp-card{animation:cwRowIn .3s var(--emph) both}
 .cwp-list.cw-in .cwp-card:nth-child(2){animation-delay:.03s}
 .cwp-list.cw-in .cwp-card:nth-child(3){animation-delay:.06s}
 .cwp-list.cw-in .cwp-card:nth-child(4){animation-delay:.09s}
 .cwp-list.cw-in .cwp-card:nth-child(5){animation-delay:.12s}
 .cwp-list.cw-in .cwp-card:nth-child(6){animation-delay:.15s}
-.cwp-src{background:#EEF3FF;color:#3E6BB8}
-.cwp-msgs{background:#F8FAFF;border-radius:12px;padding:2px 10px;
-  box-shadow:inset 0 0 0 1px rgba(232,238,250,.8)}
-.cwp-msg+.cwp-msg{border-top:1px solid rgba(228,234,246,.9)}
 @keyframes cwRowIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
 @media (prefers-reduced-motion:reduce){
@@ -5833,7 +5844,7 @@ var CW_SH=null;
 
 /* 发送草稿：有序条目（文本 / 图片 / 视频），顺序就是发送顺序。
    文本逐条可改；图片/视频带上传态（ing / fail），失败项不静默跳过。 */
-var CW_ITEMS=[], CW_ITEM_SEQ=0, CW_ADDED={}, CW_FRESH_ID='';
+var CW_ITEMS=[], CW_ITEM_SEQ=0, CW_MAT=null, CW_FRESH_ID='';
 function cwMarkFresh(id){ CW_FRESH_ID=id; setTimeout(function(){ if(CW_FRESH_ID===id)CW_FRESH_ID='' },600) }
 /* AI 会话：独立保存要求、参考资料、轮次与候选。ver＝当前资料版本，换资料就 +1，
    旧候选据此标「基于之前素材」，采用前必须按当前资料重新生成。 */
@@ -5859,7 +5870,7 @@ function cwResetChat(){
   CW_CHAT={ver:0,token:0,busy:false,timer:null,turns:[],cand:null,refs:[],undo:null,sumOpen:false,lastReq:'',rendered:0};
   CW_REF_SEQ=0;
 }
-function cwResetDraft(){ CW_ITEMS=[]; CW_ITEM_SEQ=0; CW_ADDED={}; cwResetChat(); CW_LAUNCHING=false; }
+function cwResetDraft(){ CW_ITEMS=[]; CW_ITEM_SEQ=0; CW_MAT=null; cwResetChat(); CW_LAUNCHING=false; }
 function cwRender(){ if(cur&&REND[cur])REND[cur]({}); }
 
 /* ---------- 记录里的范围与人数 ---------- */
@@ -6737,7 +6748,8 @@ function cwAddRef(p,msgs){
   var txt=msgs.filter(function(m){return m.t==='text'}).map(function(m){return m.c}).join('\n');
   var media=msgs.filter(function(m){return m.t!=='text'})[0];
   var read='full';
-  if(media&&media.t==='video')read=/发布会/.test(p.title)?'fail':'partial';
+  if(msgs.some(function(m){return m.t==='file'||m.t==='voice'}))read='fail';
+  else if(media&&media.t==='video')read=/发布会/.test(p.title)?'fail':'partial';
   var ref={id:'ref'+(++CW_REF_SEQ),pid:p.id,title:p.title,t:media?media.t:'text',
     msgs:msgs.map(function(m){return {t:m.t,c:m.c}}),txt:txt,read:read,joined:false};
   CW_CHAT.refs.push(ref); CW_CHAT.turns.push({role:'ai',kind:'ref',ref:ref.id});
@@ -6863,10 +6875,10 @@ function cwComposeRender(){
 REND['cw-compose']=function(){ $('cwComposeClose').innerHTML=I('x',24,2); cwComposeRender() };
 
 /* ================= 素材选择（复用素材库数据与读法） ================= */
-var CW_PICK={origin:'content',tab:'全部',grp:'全部',q:'',exp:'',sel:{},enter:false};
+var CW_PICK={origin:'content',tab:'全部',grp:'全部',q:'',exp:'',enter:false};
 function cwPickOpen(origin){
   closeSheet();
-  CW_PICK.origin=origin; CW_PICK.tab='全部'; CW_PICK.grp='全部'; CW_PICK.q=''; CW_PICK.exp=''; CW_PICK.sel={};
+  CW_PICK.origin=origin; CW_PICK.tab='全部'; CW_PICK.grp='全部'; CW_PICK.q=''; CW_PICK.exp='';
   CW_PICK.enter=true;
   setTimeout(function(){
     CW_PICK.enter=false;
@@ -6917,34 +6929,42 @@ function cwPickFiltered(){
     return true;
   });
 }
+function cwPickUnTypes(p){
+  return cwPickUnsupported(p).map(function(m){return cwTypeN(m.t)})
+    .filter(function(v,i,a){return a.indexOf(v)===i}).join('、');
+}
+/* 发送内容最多一条素材：换一条＝整条替换，手输文字不动。素材仍是复制，之后改素材不影响本轮草稿 */
+function cwMatAlive(){
+  return !!(CW_MAT&&CW_MAT.ids.some(function(id){return !!cwItemById(id)}));
+}
+function cwMatHas(pid){ return !!(CW_MAT&&CW_MAT.pid===pid&&cwMatAlive()) }
 function cwPickRowHtml(p){
-  var open=CW_PICK.exp===p.id, un=cwPickUnsupported(p), has=CW_ADDED[p.id]||(CW_CHAT&&CW_CHAT.refs.some(function(r){return r.pid===p.id}));
-  var h='<div class="cwp-card"><div class="cwp-hd"><b>'+esc(p.title)+'</b><span class="cwp-src">'+p.src+'</span></div>'
-    +'<div class="cwp-meta">'+p.msgs.map(function(m){return cwTypeN(m.t)}).join('、')+' · '+p.msgs.length+' 项</div>';
-  if(open){
-    h+='<div class="cwp-msgs">';
-    p.msgs.forEach(function(m,ix){
-      var ok=cwSupported(m.t);
-      var checked=ok&&(CW_PICK.sel[p.id]||[]).indexOf(ix)>=0;
-      h+='<div class="cwp-msg'+(ok?'':' no')+'">'
-        +'<button class="cw-cb'+(checked?' on':'')+'" '+(ok?'onclick="cwPickSel(\''+p.id+'\','+ix+')" aria-pressed="'+(checked?'true':'false')+'"':'disabled aria-disabled="true"')+'>'
-        +(checked?I('check',13,3):'')+'</button>'
-        +'<span class="cwp-mt">'+cwTypeN(m.t)+'</span>'
-        +'<span class="cwp-mc">'+esc(m.t==='text'?m.c:m.c)+'</span>'
-        +(ok?'':'<span class="cwp-no">唤醒不支持</span>')+'</div>';
-    });
-    h+='</div>';
-  }
-  h+='<div class="cwp-foot"><button class="cw-textact" onclick="cwPickToggle(\''+p.id+'\')">'+(open?'收起预览':'展开预览')+'</button>';
-  if(un.length&&!open){
-    h+='<button class="cw-btn sm" disabled>含'+un.map(function(m){return cwTypeN(m.t)}).filter(function(v,i,a){return a.indexOf(v)===i}).join('、')+'，展开选择</button>';
-  }else if(un.length){
-    var n=(CW_PICK.sel[p.id]||[]).length;
-    h+='<button class="cw-btn sm" onclick="cwPickAdd(\''+p.id+'\')">'+(has?'已添加':(CW_PICK.origin==='chat'?'作为参考':'添加到发送内容'))+'</button>';
-  }else{
-    h+='<button class="cw-btn sm'+(has?' ghost':'')+'" onclick="cwPickAdd(\''+p.id+'\')">'+(has?(CW_PICK.origin==='chat'?'已参考':'已添加'):(CW_PICK.origin==='chat'?'作为参考':'添加到发送内容'))+'</button>';
-  }
-  return h+'</div></div>';
+  var open=CW_PICK.exp===p.id;
+  var blocked=CW_PICK.origin!=='chat'&&!cwPickOk(p);
+  var has=CW_PICK.origin==='chat'
+    ?!!(CW_CHAT&&CW_CHAT.refs.some(function(r){return r.pid===p.id}))
+    :cwMatHas(p.id);
+  var mixed=(CW_PICK.tab==='全部'||CW_PICK.tab==='最近使用')&&CW_PICK.grp==='全部';
+  var kws=matKeywords(p.ref);
+  var line=kws.length?kws.map(function(k){return '#'+esc(k)}).join(' ')
+    :(hasText(p.ref)?'':'无文字内容，附件可直接发送');
+  var bad=blocked?'<span class="lc-tag bad">含'+cwPickUnTypes(p)+'</span>':'';
+  var aria=has?'已添加，再点可重新添加'
+    :(blocked?'含'+cwPickUnTypes(p)+'，不能用于唤醒'
+    :(CW_PICK.origin==='chat'?'作为参考':'添加到发送内容'));
+  return '<div class="cwp-card">'
+    +(mixed?srcTagHtml(p.src):'')
+    +'<div class="cwp-row'+(open?' on':'')+'" data-p="'+esc(p.id)+'" aria-expanded="'+(open?'true':'false')+'" onclick="cwPickToggle(\''+p.id+'\')">'
+      +'<span class="cwp-spk">'+hvSpk(17)+'</span>'
+      +'<div class="cwp-b"><div class="lc-h"><h5>'+esc(p.title)+'</h5>'+bad+chgTagHtml(p.ref)+'</div>'
+      +(line?'<p>'+line+'</p>':'')+'</div>'
+      +'<button class="cwp-add'+(has?' done':'')+'" '
+        +(blocked?'disabled aria-disabled="true"':'onclick="event.stopPropagation();cwPickAdd(\''+p.id+'\')"')
+        +' aria-label="'+esc(aria)+'">'+(has?I('check',16,2.4):I('plus',17,2.4))+'</button>'
+      +'<span class="cwp-arr">'+I('chev',17,2.2)+'</span>'
+    +'</div>'
+    +(open?'<div class="cwp-open on">'+wxSendSim(p.ref)+'</div>':'')
+  +'</div>';
 }
 function cwPickListHtml(){
   var list=cwPickFiltered();
@@ -6960,42 +6980,40 @@ function cwPickRefresh(){
 }
 function cwPickToggle(id){
   CW_PICK.exp=CW_PICK.exp===id?'':id;
-  var p=cwPickById(id);
-  if(p&&CW_PICK.exp===id){
-    var sel=[]; p.msgs.forEach(function(m,ix){ if(cwSupported(m.t))sel.push(ix) });
-    CW_PICK.sel[id]=sel;
-  }
   cwPickRefresh();
-}
-function cwPickSel(id,ix){
-  var a=CW_PICK.sel[id]||[]; var k=a.indexOf(ix);
-  if(k>=0)a.splice(k,1); else a.push(ix);
-  CW_PICK.sel[id]=a; cwPickRefresh();
+  if(CW_PICK.exp===id){
+    var row=document.querySelector('#cwPickList .cwp-row[data-p="'+id+'"]');
+    if(row&&row.scrollIntoView){try{row.scrollIntoView({behavior:'smooth',block:'start'})}catch(e){}}
+  }
 }
 function cwPickSearch(v){ CW_PICK.q=v||''; cwPickRefresh() }
 function cwPickTab(t){ CW_PICK.tab=t; CW_PICK.grp='全部'; CW_PICK.exp=''; REND['cw-pick']() }
 function cwPickGrp(g){ CW_PICK.grp=g; CW_PICK.exp=''; cwPickRefresh() }
 function cwPickAdd(id,force){
   var p=cwPickById(id); if(!p)return;
-  var msgs;
-  if(cwPickOk(p))msgs=p.msgs.slice();
-  else{
-    var sel=(CW_PICK.sel[id]||[]).slice().sort(function(a,b){return a-b});
-    msgs=sel.map(function(ix){return p.msgs[ix]}).filter(Boolean);
-    if(!msgs.length){toast('先勾选要'+(CW_PICK.origin==='chat'?'参考':'添加')+'的项目');return}
-  }
   if(CW_PICK.origin==='chat'){
     if(CW_CHAT.refs.some(function(r){return r.pid===p.id})){toast('这条素材已经在参考资料里');return}
-    cwAddRef(p,msgs); toast('已加入参考资料');
-  }else{
-    if(CW_ADDED[p.id]&&!force){
-      toast('这条素材已在发送内容里','继续添加',function(){cwPickAdd(id,true)});
-      return;
-    }
-    msgs.forEach(function(m){ CW_ITEMS.push({id:cwItemSeq(),t:m.t,c:m.c,from:p.title}) });
-    if(CW_ITEMS.length)cwMarkFresh(CW_ITEMS[CW_ITEMS.length-1].id);
-    cwDropEmptyText(); CW_ADDED[p.id]=1; cwBumpVer(); toast('已添加到发送内容');
+    cwAddRef(p,p.msgs.slice()); toast('已加入参考资料'); cwPickRefresh(); return;
   }
+  if(!cwPickOk(p)){toast('含'+cwPickUnTypes(p)+'的素材不能用于唤醒');return}
+  if(cwMatHas(p.id)&&!force){
+    toast('这条素材已在发送内容里','重新添加',function(){cwPickAdd(id,true)});
+    return;
+  }
+  var at=-1, oldIds=[];
+  if(CW_MAT){
+    CW_ITEMS.forEach(function(it,ix){
+      if(CW_MAT.ids.indexOf(it.id)>=0){ if(at<0)at=ix; oldIds.push(it.id); }
+    });
+  }
+  CW_ITEMS=CW_ITEMS.filter(function(it){return oldIds.indexOf(it.id)<0});
+  var nw=p.msgs.map(function(m){return {id:cwItemSeq(),t:m.t,c:m.c,from:p.title}});
+  at=(at<0||at>CW_ITEMS.length)?CW_ITEMS.length:at;
+  CW_ITEMS.splice.apply(CW_ITEMS,[at,0].concat(nw));
+  CW_MAT={pid:p.id,title:p.title,ids:nw.map(function(it){return it.id})};
+  cwDropEmptyText(); cwBumpVer();
+  if(nw.length)cwMarkFresh(nw[nw.length-1].id);
+  toast(oldIds.length?'已替换发送内容里的素材':'已添加到发送内容');
   cwPickRefresh();
 }
 REND['cw-pick']=function(){
