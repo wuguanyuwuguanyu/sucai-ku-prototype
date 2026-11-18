@@ -25652,18 +25652,6 @@ function norm(s){return String(s==null?'':s).replace(/\s+/g,'')}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function qa(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
 
-/* 与「微信群管理」演示台账对齐：只取状态「正常」的 8 个群（「wogf」被踢出群，不列）；
-   台账里「二组测试号培养互动」有两条（36 人 / 102 人），按两条群记录保留，靠人数区分。 */
-var GROUPS=[
-  {id:'g1',name:'测试功能',owner:'张猛',count:38},
-  {id:'g2',name:'趣销销测试专用小分队',owner:'张猛',count:57},
-  {id:'g3',name:'北方华创集团及所属公司入职通知群',owner:'张猛',count:397},
-  {id:'g4',name:'二组测试号培养互动',owner:'张猛',count:36},
-  {id:'g5',name:'微管控发包群',owner:'张猛',count:8},
-  {id:'g6',name:'二组测试号培养互动',owner:'张猛',count:102},
-  {id:'g7',name:'测试使用',owner:'张猛',count:33},
-  {id:'g8',name:'我的鸿蒙',owner:'张猛',count:5}
-];
 var REGIONS=['北京','上海','天津','重庆','河北','山西','辽宁','吉林','黑龙江','江苏','浙江','安徽','福建','江西','山东','河南','湖北','湖南','广东','海南','四川','贵州','云南','陕西','甘肃','青海','内蒙古','广西','西藏','宁夏','新疆','香港','澳门','台湾','海外'];
 
 function rowOf(label){
@@ -25889,16 +25877,32 @@ var anchor=PHONE_ROW||(TIP_ROW&&TIP_ROW.nextElementSibling)||METHOD_ROW.nextSibl
   else METHOD_ROW.parentNode.appendChild(o.row);
 });
 
-var groupPicker=makePicker({
-  items:GROUPS.map(function(g){return {id:g.id,name:g.name,meta:g.owner+' · '+g.count+' 人'}}),
-  placeholder:'请选择要执行任务的微信群',
-  kind:'群组',
-  footer:function(n){return '已选 '+n+' 个群'}
-});
+/* 群组名称手填 + 匹配方式（2026-11-18）：不再用台账下拉，运营直接写群名；
+   精确匹配＝群名完全一致，模糊匹配＝群名包含即命中，与指定微信好友的匹配方式同口径。 */
+var groupInput=null;
+function groupNames(){
+  if(!groupInput)return [];
+  var seen={},out=[],list=groupInput.value.split(/[,，]/),i,v;
+  for(i=0;i<list.length;i++){
+    v=list[i].replace(/^\s+|\s+$/g,'');
+    if(!v||seen[v])continue;
+    seen[v]=1;out.push(v);
+  }
+  return out;
+}
+function groupFuzzy(){return !!gRow&&selectedLabel(gRow.row)==='模糊匹配'}
 if(gRow){
-  gRow.box.appendChild(groupPicker.el);
+  var gRadios=modeRadios('rea-baf-gmatch',['精确匹配','模糊匹配'],0);
+  if(gRadios)gRow.box.appendChild(gRadios);
+  var gVal=document.createElement('div');gVal.className='rea-baf-val';
+  groupInput=document.createElement('input');
+  groupInput.type='text';groupInput.maxLength=200;
+  groupInput.className='ant-input css-vgijab ant-input-outlined rea-baf-inp';
+  groupInput.style.maxWidth='none';
+  groupInput.placeholder='输入群名称，多个用逗号分隔';
+  gVal.appendChild(groupInput);gRow.box.appendChild(gVal);
   var gh=document.createElement('p');gh.className='rea-baf-hint';
-  gh.textContent='只列出「微信群管理」里状态正常的群；每个群由它的所属员工执行，所选群的所属员工必须在执行人员里。';
+  gh.textContent='按群名称匹配「微信群管理」里状态正常的群；匹配到的群由它的所属员工执行，所属员工必须在执行人员里。';
   gRow.box.appendChild(gh);
   var ge=document.createElement('p');ge.className='rea-baf-err';gRow.box.appendChild(ge);
 }
@@ -25937,21 +25941,17 @@ if(rRow){
   var re=document.createElement('p');re.className='rea-baf-err';rRow.box.appendChild(re);
 }
 
-var gmin=null,gmax=null;
+var gapI=null;
 if(iRow){
   var gap=document.createElement('div');gap.className='rea-baf-gap';
-  gmin=document.createElement('input');gmin.type='number';gmin.min='30';gmin.max='600';gmin.value='60';
-  gmin.className='ant-input css-vgijab ant-input-outlined rea-baf-num';
-  gmin.setAttribute('aria-label','最短间隔（秒）');
-  var dash=document.createElement('span');dash.textContent='—';
-  gmax=document.createElement('input');gmax.type='number';gmax.min='30';gmax.max='600';gmax.value='120';
-  gmax.className='ant-input css-vgijab ant-input-outlined rea-baf-num';
-  gmax.setAttribute('aria-label','最长间隔（秒）');
+  gapI=document.createElement('input');gapI.type='number';gapI.min='1';gapI.value='5';
+  gapI.className='ant-input css-vgijab ant-input-outlined rea-baf-num';
+  gapI.setAttribute('aria-label','添加间隔（秒）');
   var sec=document.createElement('span');sec.textContent='秒';
-  gap.appendChild(gmin);gap.appendChild(dash);gap.appendChild(gmax);gap.appendChild(sec);
+  gap.appendChild(gapI);gap.appendChild(sec);
   iRow.box.appendChild(gap);
   var ih=document.createElement('p');ih.className='rea-baf-hint';
-  ih.textContent='每条好友申请之间随机等待；建议不低于 60 秒，间隔越短越容易被微信限制。间隔越长任务耗时越久，请给任务留足有效期。';
+  ih.textContent='每条好友申请之间等待这么多秒；间隔越短越容易被微信限制，间隔越长任务耗时越久，请给任务留足有效期。';
   iRow.box.appendChild(ih);
   var ie=document.createElement('p');ie.className='rea-baf-err';iRow.box.appendChild(ie);
 }
@@ -25976,10 +25976,7 @@ function syncMethod(){
   if(TYPE_ROW)show(TYPE_ROW,!g);
   if(allocRow)show(allocRow.row,!g);
   /* 整行收起时把开着的下拉一并关掉，免得切回来还是一副开着的样 */
-  if(!g){
-    groupPicker.close();
-    if(regionPicker)regionPicker.close();
-  }
+  if(!g&&regionPicker)regionPicker.close();
   if(bafReady){bafMethodHint(k);bafRender()}
 }
 function syncModes(){
@@ -26422,13 +26419,13 @@ function bafDtCn(v){
 }
 function bafRender(){
   var k=modeKind(),typ='批量添加好友',n=0;
-  if(k==='group')n=groupPicker.get().length||0;
+  if(k==='group')n=groupNames().length||0;
   else if(k==='file')n=fileName?1:0;
   else n=phoneCount();
   if(k!=='group'&&TYPE_ROW)typ=selectedLabel(TYPE_ROW)||'批量添加好友';
   var sv=startI?startI.value:'';
   var l1;
-  if(k==='group')l1='已选 '+n+' 个群组 · 人数待执行时核算';
+  if(k==='group')l1='已填 '+n+' 个群名 · 人数待执行时核算'+(groupFuzzy()?' · 模糊匹配':'');
   else if(k==='file')l1=fileName?('已选文件 '+fileName):'未选文件';
   else l1='已录入 '+n+' 位好友';
   if(k!=='group')l1+=' · '+typ;
@@ -26450,13 +26447,13 @@ function validate(){
   }
   if(k==='file'&&!fileName){bafErr(fileObj,'请选择号码文件');ok=false}
   if(k==='group'){
-    if(gRow&&!groupPicker.get().length){bafErr(gRow,'请至少选择一个群');ok=false}
+    if(gRow&&!groupNames().length){bafErr(gRow,'请填写群组名称');ok=false}
     if(nRow&&modeOf(nRow.row)!=='不限'&&!nInput.value.replace(/\s+/g,'')){bafErr(nRow,'请填写昵称关键词');ok=false}
     if(rRow&&modeOf(rRow.row)!=='不限'&&!regionPicker.get().length){bafErr(rRow,'请选择地区');ok=false}
     if(iRow){
-      var a=Number(gmin.value),b=Number(gmax.value);
-      if(!isFinite(a)||!isFinite(b)||Math.floor(a)!==a||Math.floor(b)!==b||a<30||b>600||a>b){
-        bafErr(iRow,'间隔需为整数秒，30 ≤ 最短 ≤ 最长 ≤ 600');ok=false;
+      var a=Number(gapI.value);
+      if(!isFinite(a)||Math.floor(a)!==a||a<1){
+        bafErr(iRow,'间隔需为正整数秒');ok=false;
       }
     }
   }
