@@ -1350,16 +1350,12 @@ textarea.cw-ta::placeholder{color:var(--on-surface-variant)}
 .cwc-empty .ic{display:inline-flex;color:var(--primary);margin-bottom:14px}
 .cwc-empty h4{font-size:20px;font-weight:500;color:var(--on-surface);margin-bottom:6px}
 .cwc-empty p{font-size:14px}
-/* 空草稿的五个场景入口；有了回复后收成候选下方一行「换个目的」 */
+/* 空草稿的五个场景入口 */
 .cwc-purpose{display:flex;flex-direction:column;margin:22px 4px 8px}
 .cwc-popt{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:48px;
   padding:0 4px;font-size:15px;font-weight:500;color:var(--on-surface);text-align:left}
 .cwc-popt+.cwc-popt{border-top:1px solid var(--outline-variant)}
 .cwc-popt .ch{display:flex;color:var(--on-surface-variant)}
-.cwc-purprow{display:flex;flex-wrap:wrap;align-items:center;gap:2px 12px;margin:4px 0 10px}
-.cwc-purprow .lb{font-size:12.5px;color:var(--on-surface-variant)}
-.cwc-purp{min-height:48px;padding:0 2px;font-size:13.5px;color:var(--on-surface-variant)}
-.cwc-purp.on{color:var(--primary);font-weight:600}
 .cwc-user{margin:16px 0 12px 44px;padding:12px 16px;border-radius:18px 4px 18px 18px;
   background:var(--secondary-container);color:var(--on-secondary-container);font-size:15px;line-height:1.6;white-space:pre-wrap}
 .cwc-note{margin:14px 0;padding-left:14px;border-left:3px solid var(--primary-container);
@@ -1624,9 +1620,6 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
 .cwc-popt{color:#17263F}
 .cwc-popt+.cwc-popt{border-top-color:#E6EDF9}
 .cwc-popt .ch{color:#9AA9BF}
-.cwc-purprow .lb{color:#9AA9BF}
-.cwc-purp{color:#617A9E;transition:color .18s var(--emph)}
-.cwc-purp.on{color:#1677FE}
 .cwc-user{margin-left:48px;border-radius:18px 6px 18px 18px;color:#1B2B4A;
   background:linear-gradient(135deg,#E9E6FF 0%,#E2EEFF 100%);
   box-shadow:0 10px 22px -22px rgba(70,80,180,.9)}
@@ -5345,7 +5338,7 @@ function syncNav(id,params){
 }
 
 /* ---------- Material ripple（统一按压反馈，替代缩放） ---------- */
-var RIP_SEL='.cw-textact,.cw-message,.btn,.chip,.iconbtn,.cell,.wk-card,.p-card,.pc-btn,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.hv-msg,.hv-stat,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.hva-lockcard,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close,.hw-add,.cust-seg button,.cust-copy,.cust-acct-row,.cw-btn,.cw-ib,.cw-op,.cw-units button,.cw-rec,.cw-kv .op,.cw-addrow,.cw-nosend,.cw-tutlink,.cw-info,.cw-rpb,.cw-goto,.cw-tutplay,.cw-rcpt,.cw-ai-link,.cwc-more,.cwc-use,.cwc-mini,.cwc-popt,.cwc-purp,.cwc-send,.cwp-tabs button,.cwp-grps button';
+var RIP_SEL='.cw-textact,.cw-message,.btn,.chip,.iconbtn,.cell,.wk-card,.p-card,.pc-btn,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.hv-msg,.hv-stat,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.hva-lockcard,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close,.hw-add,.cust-seg button,.cust-copy,.cust-acct-row,.cw-btn,.cw-ib,.cw-op,.cw-units button,.cw-rec,.cw-kv .op,.cw-addrow,.cw-nosend,.cw-tutlink,.cw-info,.cw-rpb,.cw-goto,.cw-tutplay,.cw-rcpt,.cw-ai-link,.cwc-more,.cwc-use,.cwc-mini,.cwc-popt,.cwc-send,.cwp-tabs button,.cwp-grps button';
 function ripInit(){
   document.addEventListener('pointerdown',function(e){
     var t=e.target.closest ? e.target.closest(RIP_SEL) : null;
@@ -6992,19 +6985,6 @@ function cwPurposePick(k){
   CW_CHAT.turns.push({role:'ai',kind:'guide',text:p.g});
   cwComposeRender(); cwFocusInput();
 }
-/* 已有内容或已有回复时：当前目的高亮，点别的按同一批事实重写 */
-function cwPurposesHtml(){
-  var act=CW_CHAT.purpose||'';
-  return '<div class="cwc-purprow"><span class="lb">换个目的</span>'
-    +CW_PURPOSES.map(function(p){
-      return '<button class="cwc-purp'+(p.k===act?' on':'')+'" onclick="cwPurposeSwitch(\''+p.k+'\')">'+p.n+'</button>';
-    }).join('')+'</div>';
-}
-function cwPurposeSwitch(k){
-  if(CW_CHAT.busy||CW_CHAT.purpose===k)return;
-  var p=cwPurp(k); if(!p)return;
-  cwChatAsk('换成「'+p.n+'」',{op:'purpose',purpose:k});
-}
 function cwComposeHtml(){
   var h=cwRefSummaryHtml(),last=-1,i;
   for(i=CW_CHAT.turns.length-1;i>=0;i--)if(CW_CHAT.turns[i].kind==='draft'){last=i;break}
@@ -7020,7 +7000,6 @@ function cwComposeHtml(){
     var th=cwTurnHtml(t,ix===last,ix);
     if(th)h+='<div class="cwc-turn">'+th+'</div>';
   });
-  if(CW_CHAT.turns.length&&!CW_CHAT.busy)h+=cwPurposesHtml();
   if(CW_CHAT.busy)h+='<div class="cwc-busy" role="status"><span class="cwc-dots"><i></i><i></i><i></i></span>正在写<button class="cw-textact" onclick="cwChatStop()">停止</button></div>';
   return h;
 }
