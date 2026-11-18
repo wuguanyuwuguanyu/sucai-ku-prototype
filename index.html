@@ -1069,6 +1069,11 @@ select.cw-input{-webkit-appearance:none;appearance:none;padding-right:42px;curso
 .cw-crow .cw-message img{display:block;max-width:160px;width:100%;border-radius:10px}
 .cw-no{flex:none;width:24px;height:24px;border-radius:8px;background:#EEF3FF;color:#2E6BFF;
   font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:9px}
+.cw-ai-link{display:inline-flex;align-items:center;gap:5px;margin-left:auto;min-height:34px;padding:0 8px;
+  border-radius:10px;background:transparent;color:#6A4DFF;font-size:13px;font-weight:600;
+  position:relative;overflow:hidden}
+.cw-ai-link svg{flex:none;width:14px;height:14px;color:#7B5BFF}
+.cw-ai-link:active{background:#F2EEFF}
 .cw-addrow{display:flex;align-items:center;justify-content:center;gap:5px;width:100%;height:46px;margin-top:4px;
   border-radius:14px;border:1.4px dashed #C9D8EF;background:#FBFCFE;
   font-size:13.5px;font-weight:600;color:#2E6BFF;position:relative;overflow:hidden}
@@ -1277,9 +1282,6 @@ textarea.cw-ta::placeholder{color:var(--on-surface-variant)}
 .cw-media small{position:relative;font-size:12px}
 .cw-media .ic{position:relative;color:var(--primary)}
 .cw-up{margin-top:6px;font-size:12.5px;color:var(--on-surface-variant)}
-.cw-acts2{display:flex;gap:8px;margin-top:14px}
-.cw-acts2 .cw-btn{flex:1;justify-content:center;gap:6px;min-height:48px;border-radius:999px}
-.cw-btn.ghost.ai{background:var(--secondary-container);color:var(--on-secondary-container)}
 .cw-undostrip{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:12px;padding:6px 6px 6px 16px;
   border-radius:12px;background:var(--secondary-container);color:var(--on-secondary-container);font-size:13px}
 .cw-awakehd{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px;font-size:14px;color:var(--on-surface-variant)}
@@ -1496,19 +1498,9 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
 .cw-del-tx{white-space:nowrap}
 .cw-del-lid{transform-box:fill-box;transform-origin:0% 100%;transition:transform .22s var(--emph)}
 .cw-del-zone.open .cw-del-lid{transform:rotate(-34deg)}
-/* 「添加内容／AI 帮写」两枚白底动作块：渐变圆形图标托底，标题深海军蓝 */
-#cw-content .cw-acts2 .cw-btn{flex:1;height:58px;min-height:58px;justify-content:flex-start;gap:10px;
-  padding:0 14px;border-radius:18px;background:#fff;color:#1D3B6B;font-size:14.5px;
-  box-shadow:0 12px 24px -22px rgba(40,70,150,.9),inset 0 0 0 1px rgba(226,234,250,.9)}
-#cw-content .cw-acts2 .cw-btn svg{flex:none;width:18px;height:18px;padding:9px;box-sizing:content-box;
-  border-radius:50%;color:#fff}
-#cw-content .cw-acts2 .cw-btn:first-child svg{background:linear-gradient(142deg,#4DA3FF,#6A5BFF);
-  box-shadow:0 10px 18px -12px rgba(80,100,255,.85)}
-#cw-content .cw-acts2 .cw-btn.ai svg{background:linear-gradient(142deg,#B27BFF,#FF7BC1);
-  box-shadow:0 10px 18px -12px rgba(170,100,255,.85);animation:cwAiGlow 3.6s ease-in-out infinite}
-@keyframes cwAiGlow{
-  0%,100%{box-shadow:0 10px 18px -12px rgba(170,100,255,.85)}
-  50%{box-shadow:0 10px 22px -9px rgba(190,110,255,.95)}}
+/* 「添加内容」是发送内容卡里唯一的主操作；AI 帮写收在段头右侧做文字入口 */
+.cw-add-btn{width:100%;height:50px;min-height:50px;gap:8px;margin-top:14px;font-size:15px}
+.cw-add-btn svg{flex:none}
 .cw-undostrip{background:linear-gradient(120deg,#F1EEFF,#E7F0FF);color:#3E56C9;
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.8)}
 /* 主操作：纯色胶囊只加强柔影与顶部高光，不换渐变填充 */
@@ -1624,7 +1616,7 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
 
 @media (prefers-reduced-motion:reduce){
   .cw-it.fresh,.cw-it-gap,.cwp-list.cw-in .cwp-card,.cwc-turn-in,.cwc-sumbody,
-  #cw-content .cw-acts2 .cw-btn.ai svg,.cwc-empty .ic,.cw-up::before{animation:none}
+  .cwc-empty .ic,.cw-up::before{animation:none}
   .cw-del-zone,.cw-del-lid,body.cw-dragging #cwContentFoot{transition:none}
   .cw-unit-thumb{transition:none}
 }
@@ -5247,7 +5239,7 @@ function syncNav(id,params){
 }
 
 /* ---------- Material ripple（统一按压反馈，替代缩放） ---------- */
-var RIP_SEL='.cw-textact,.cw-message,.btn,.chip,.iconbtn,.cell,.wk-card,.p-card,.pc-btn,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.hv-msg,.hv-stat,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.hva-lockcard,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close,.hw-add,.cust-seg button,.cust-copy,.cust-acct-row,.cw-btn,.cw-ib,.cw-op,.cw-units button,.cw-rec,.cw-kv .op,.cw-addrow,.cw-nosend,.cw-tutlink,.cw-info,.cw-rpb,.cw-goto,.cw-tutplay,.cw-rcpt,.cwc-chip,.cwc-send,.cwc-sumbtn,.cwp-tabs button,.cwp-grps button';
+var RIP_SEL='.cw-textact,.cw-message,.btn,.chip,.iconbtn,.cell,.wk-card,.p-card,.pc-btn,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.hv-msg,.hv-stat,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.hva-lockcard,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close,.hw-add,.cust-seg button,.cust-copy,.cust-acct-row,.cw-btn,.cw-ib,.cw-op,.cw-units button,.cw-rec,.cw-kv .op,.cw-addrow,.cw-nosend,.cw-tutlink,.cw-info,.cw-rpb,.cw-goto,.cw-tutplay,.cw-rcpt,.cw-ai-link,.cwc-chip,.cwc-send,.cwc-sumbtn,.cwp-tabs button,.cwp-grps button';
 function ripInit(){
   document.addEventListener('pointerdown',function(e){
     var t=e.target.closest ? e.target.closest(RIP_SEL) : null;
@@ -6480,12 +6472,11 @@ function cwUndoApply(){
 }
 function cwContentBlockHtml(){
   return '<div class="cw-pcard">'
-    +'<div class="cw-rowhd"><span class="sp" aria-hidden="true">'+I('sparkle',16,1.8)+'</span><b>发送内容</b></div>'
+    +'<div class="cw-rowhd"><span class="sp" aria-hidden="true">'+I('sparkle',16,1.8)+'</span><b>发送内容</b>'
+      +'<button class="cw-ai-link" onclick="cwComposeOpen()">'+I('sparkle',13,1.8)+'AI 帮写</button></div>'
     +'<div class="cw-items">'+cwItemsHtml()+'</div>'
-    +'<div class="cw-acts2">'
-      +'<button class="cw-btn ghost" onclick="cwAddSheet()">'+I('plus',17,2.2)+'添加内容</button>'
-      +'<button class="cw-btn ghost ai" onclick="cwComposeOpen()">'+I('sparkle',17,1.8)+'AI 帮写</button>'
-    +'</div></div>';
+    +'<button class="cw-btn block cw-add-btn" onclick="cwAddSheet()">'+I('plus',18,2.2)+'添加内容</button>'
+    +'</div>';
 }
 REND['cw-content']=function(){
   /* 别把正在拖的节点连同占位一起重画掉：真有外部重绘时先把拖拽收干净 */
