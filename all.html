@@ -5005,7 +5005,11 @@ function back(){
   if(from){from.classList.add('anim-exit')}
   setTimeout(function(){
     to.classList.remove('anim-pop');
-    if(from&&from.id!==cur){from.classList.remove('active','anim-exit')}
+    /* 同 go()：340ms 内又切回这一屏时它仍是当前屏，只收退出动画，不能再把 active 拿去 */
+    if(from){
+      from.classList.remove('anim-exit');
+      if(from.id!==cur)from.classList.remove('active');
+    }
   },340);
   cur=curS.id; syncNav(curS.id,curS.params);
   reportPage(curS.id,curS.params);
@@ -5964,7 +5968,7 @@ function cwUndoApply(){
 }
 function cwContentBlockHtml(){
   return '<div class="cw-pcard">'
-    +'<div class="cw-rowhd"><b>发送内容</b>'+(CW_ITEMS.length>1?'<span class="cw-rowsub">按顺序发送</span>':'')+'</div>'
+    +'<div class="cw-rowhd"><b>发送内容</b></div>'
     +'<div class="cw-items">'+cwItemsHtml()+'</div>'
     +'<div class="cw-acts2">'
       +'<button class="cw-btn ghost" onclick="cwAddSheet()">'+I('plus',17,2.2)+'添加内容</button>'
@@ -6150,7 +6154,7 @@ function cwAddRef(p,msgs){
 function cwRemoveRef(id){
   var r=cwRefById(id); if(!r)return;
   var ix=CW_CHAT.refs.indexOf(r); CW_CHAT.refs.splice(ix,1);
-  CW_CHAT.turns=CW_CHAT.turns.filter(function(t){return !(t.kind==='ref'&&t.ref===id)});
+  /* 留着一轮记录不删：渲染时找不到 ref 就自动不画，撤销把 ref 放回去卡片能原位回来 */
   cwBumpVer(); cwComposeRender();
   toast('已移除参考素材','撤销',function(){
     if(cwRefById(id))return;
@@ -6226,9 +6230,9 @@ function cwTurnHtml(t,latest){
           :'<button class="cw-btn" '+(CW_CHAT.busy?'disabled':'onclick="cwUseCand()"')+'>'+cwUseLabel()+'</button>')
         +'</div>';
       if(!stale&&!CW_CHAT.busy)h+='<div class="cwc-quick">'
-        +'<button class="cw-chip" onclick="cwChatAsk(\'更简短\',{op:\'short\'})">更简短</button>'
-        +'<button class="cw-chip" onclick="cwChatAsk(\'更自然\',{op:\'natural\'})">更自然</button>'
-        +'<button class="cw-chip" onclick="cwChatAsk(\'换一种写法\',{op:\'rewrite\'})">换一种写法</button></div>';
+        +'<button class="cwc-chip" onclick="cwChatAsk(\'更简短\',{op:\'short\'})">更简短</button>'
+        +'<button class="cwc-chip" onclick="cwChatAsk(\'更自然\',{op:\'natural\'})">更自然</button>'
+        +'<button class="cwc-chip" onclick="cwChatAsk(\'换一种写法\',{op:\'rewrite\'})">换一种写法</button></div>';
     }else{
       h+='<div class="cwc-prev"><span class="cwc-tag">上一版</span><p>'+esc(t.cand.text)+'</p></div>';
     }
@@ -6437,7 +6441,7 @@ REND['cw-preview']=function(){
 REND['cw-people']=function(){
   $('cwPeopleBack').innerHTML=I('back',24,2);
   var ids=cwSelByH();
-  var h='<div class="cw-people"><div class="cw-peoplect"><span>共 '+ids.length+' 人，所有人收到同一份内容。</span>'
+  var h='<div class="cw-people"><div class="cw-peoplect"><span>共 '+ids.length+' 人</span>'
     +'<button class="cw-textact" onclick="cwEditPeople()">修改</button></div>';
   h+=ids.map(function(id){ var c=cwCust(id); if(!c)return '';
     return '<div class="cw-rp"><span class="cw-av">'+esc(c.n.charAt(0))+'</span><span class="cw-rpm"><b>'+esc(c.n)+'</b><span class="cw-rps2">未回复 · '+cwDur(c.h)+'</span></span></div>';
