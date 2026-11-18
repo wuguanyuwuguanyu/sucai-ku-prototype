@@ -1023,8 +1023,14 @@ select.cw-input{-webkit-appearance:none;appearance:none;padding-right:42px;curso
 .cw-sum{flex:1;min-width:0;font-size:12.5px;font-weight:500;color:#617A9E;line-height:1.5}
 .cw-sum>b{font-size:16px;font-weight:700;color:#173A6B;margin:0 2px}
 .cw-sum.bad,.cw-sum.bad>b{color:#C2413A}
-.cw-tutlink{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;
-  padding:0 0 8px;font-size:12.5px;font-weight:500;color:#7C8CA4;position:relative;overflow:hidden}
+/* 底栏顶行：拦截原因在左、教程链接在右，同一行；没有原因时教程自己居中。长原因放不下时教程换行，不裁原因。 */
+.cw-tier{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;padding:0 0 8px}
+.cw-tier .cw-slot{flex:1 1 auto;min-width:0}
+.cw-tier:not(.has-sum) .cw-tutlink{flex:1 1 100%;justify-content:center;margin-left:0}
+.cw-foot.stack .cw-slot .cw-sum{margin-bottom:0}
+.cw-tutlink{display:flex;align-items:center;justify-content:center;gap:6px;
+  padding:0;font-size:12.5px;font-weight:500;color:#7C8CA4;position:relative;overflow:hidden}
+.cw-tier .cw-tutlink{flex:0 0 auto;margin-left:auto}
 .cw-tutlink .ic{width:16px;height:16px;color:#2E6BFF;display:flex}
 .cw-tutlink b{font-weight:600;color:#2E6BFF}
 .cw-btn{flex:none;display:flex;align-items:center;justify-content:center;height:46px;padding:0 22px;
@@ -7279,13 +7285,16 @@ function cwConfirm(title,detail,action){
 function cwFootSet(sum,label,act){
   var f=$('cwContentFoot'); if(!f)return;
   if(!f.getAttribute('data-ready')){
-    f.innerHTML='<button class="cw-tutlink" type="button" onclick="cwTutSheet()">'
+    f.innerHTML='<div class="cw-tier">'
+      +'<div class="cw-slot"></div>'
+      +'<button class="cw-tutlink" type="button" onclick="cwTutSheet()">'
       +'<span class="ic" aria-hidden="true">'+I('play',14,2.2)+'</span>'
       +'<span>不会用？</span><b>点击查看视频教程</b></button>'
-      +'<div class="cw-slot"></div><button class="cw-btn block" type="button"></button>';
+      +'</div><button class="cw-btn block" type="button"></button>';
     f.setAttribute('data-ready','1');
   }
-  var slot=f.querySelector('.cw-slot'), b=f.querySelector('.cw-btn');
+  var slot=f.querySelector('.cw-slot'), b=f.querySelector('.cw-btn'), tier=f.querySelector('.cw-tier');
+  if(tier)tier.classList.toggle('has-sum',!!sum);
   var had=slot.childNodes.length>0;
   if(sum){
     if(slot.innerHTML!==sum)slot.innerHTML=sum;
