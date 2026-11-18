@@ -1472,6 +1472,16 @@ textarea.cw-ta:focus{background:#fff;border-color:#8FB3F5;
   border:2px solid #D8E4FA;border-top-color:#2E6BFF;animation:cwSpin .8s linear infinite}
 .cw-it.fresh{animation:cwItemIn .4s var(--emph) both}
 @keyframes cwItemIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+/* 长按拖拽：条目浮起、原位留虚线槽，其它条目由 JS 的 FLIP 让位（见 cwDragUpdate） */
+.cw-it{position:relative}
+.cw-it.dragging{position:fixed;z-index:40;margin:0!important;background:#fff;border-radius:16px;
+  box-shadow:0 24px 48px -20px rgba(40,60,140,.55),0 0 0 1px rgba(255,255,255,.9);
+  pointer-events:none;will-change:transform;transform-origin:50% 50%}
+.cw-it.dragging .cw-itacts{opacity:.45;pointer-events:none}
+.cw-it-gap{box-sizing:border-box;border:1.5px dashed #C9D8EF;border-radius:16px;
+  background:rgba(240,246,255,.55);pointer-events:none;animation:cwGapIn .18s var(--emph)}
+@keyframes cwGapIn{from{opacity:0;transform:scale(.98)}to{opacity:1;transform:none}}
+body.cw-dragging{user-select:none;-webkit-user-select:none;cursor:grabbing}
 /* 「添加内容／AI 帮写」两枚白底动作块：渐变圆形图标托底，标题深海军蓝 */
 #cw-content .cw-acts2 .cw-btn{flex:1;height:58px;min-height:58px;justify-content:flex-start;gap:10px;
   padding:0 14px;border-radius:18px;background:#fff;color:#1D3B6B;font-size:14.5px;
@@ -1599,7 +1609,7 @@ textarea.cw-ta:focus{background:#fff;border-color:#8FB3F5;
 @keyframes cwRowIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
 @media (prefers-reduced-motion:reduce){
-  .cw-it.fresh,.cwp-list.cw-in .cwp-card,.cwc-turn-in,.cwc-sumbody,
+  .cw-it.fresh,.cw-it-gap,.cwp-list.cw-in .cwp-card,.cwc-turn-in,.cwc-sumbody,
   #cw-content .cw-acts2 .cw-btn.ai svg,.cwc-empty .ic,.cw-up::before{animation:none}
   .cw-unit-thumb{transition:none}
 }
@@ -6114,6 +6124,211 @@ function cwItemMove(id,dir){
     });
   });
 }
+/* ---------- 发送内容 · 长按拖拽排序 ----------
+   长按条目 320ms → 原条目 fixed 到手指下、放大 1.03，原位插入一块虚线占位；拖过其它条目的中点时
+   把占位挪过去，其它条目用 FLIP 让位；松手先把条目动画落到占位，再提交 CW_ITEMS 顺序并重绘。
+   上移／下移按钮保留，拖拽只是多一条更快的手势。 */
+var CW_DRAG=null, CW_DRAG_CLICK=0;
+function cwDragArm(e){
+  if(CW_DRAG)return;
+  if(e.isPrimary===false||e.button>0)return;
+  var t=e.target;
+  if(!t||!t.closest)return;
+  var it=t.closest('#cwContentBody .cw-it');
+  if(!it||it.classList.contains('cw-it-gap')||t.closest('.cw-iact'))return;
+  if(CW_ITEMS.length<2)return;
+  var d={el:it,id:it.getAttribute('data-item'),x:e.clientX,y:e.clientY,lastX:e.clientX,lastY:e.clientY,
+    pid:e.pointerId,timer:null,active:false,dropping:false};
+  d.timer=setTimeout(function(){ cwDragBegin(d) },320);
+  CW_DRAG=d;
+}
+function cwDragBegin(d){
+  if(!d||CW_DRAG!==d||d.active)return;
+  if(!d.el.isConnected){cwDragClear(d);return}
+  var it=d.el, r=it.getBoundingClientRect();
+  d.timer=null; d.active=true;
+  d.rect={left:r.left,top:r.top,width:r.width,height:r.height};
+  d.offY=d.y-r.top;
+  d.dx=0; d.dy=0;
+  CW_DRAG_CLICK=Date.now();
+  if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();
+  try{ if(navigator.vibrate)navigator.vibrate(8) }catch(err){}
+  try{ if(document.getSelection)document.getSelection().removeAllRanges() }catch(err){}
+  document.body.classList.add('cw-dragging');
+  var gap=document.createElement('div');
+  gap.className='cw-it cw-it-gap';
+  gap.setAttribute('aria-hidden','true');
+  gap.style.height=r.height+'px';
+  it.parentNode.insertBefore(gap,it);
+  d.gap=gap; d.list=it.parentNode;
+  it.classList.add('dragging');
+  it.style.left=r.left+'px'; it.style.top=r.top+'px'; it.style.width=r.width+'px';
+  it.style.transform='translate3d(0,0,0) scale(1.03)';
+  cwDragUpdate();
+  d.raf=requestAnimationFrame(cwDragLoop);
+}
+function cwDragUpdate(){
+  var d=CW_DRAG; if(!d||!d.active||d.dropping)return;
+  var list=d.list, gap=d.gap;
+  if(!list||!gap||!gap.parentNode)return;
+  var lr=list.getBoundingClientRect();
+  var cy=d.lastY-d.offY+d.rect.height/2;      /* 手指抓的那一点在条目里的位置不变，用条目中心比较 */
+  var rel=cy-lr.top;
+  var gt=gap.offsetTop;
+  var gm=parseFloat(getComputedStyle(gap).marginTop)||0;
+  var gh=gap.offsetHeight+gm;
+  var lt=list.offsetTop;
+  var sibs=[];
+  [].forEach.call(list.children,function(n){
+    if(n!==d.el&&n.classList.contains('cw-it')&&!n.classList.contains('cw-it-gap'))sibs.push(n);
+  });
+  var idx=sibs.length, i, n, top;
+  for(i=0;i<sibs.length;i++){
+    n=sibs[i]; top=n.offsetTop-lt;
+    if(n.offsetTop>=gt)top-=gh;               /* 把占位抽掉后的位置，避免占位来回跳 */
+    if(rel<top+n.offsetHeight/2){idx=i;break}
+  }
+  var anchor=sibs[idx]||null;
+  if(gap.nextSibling===anchor)return;
+  var before={}, gapBefore=gap.getBoundingClientRect().top;
+  sibs.forEach(function(x){ before[x.getAttribute('data-item')]=x.getBoundingClientRect().top });
+  list.insertBefore(gap,anchor);
+  /* 拖到哪儿，序号就按落点先排好；松手重绘后同一套号码 */
+  sibs.forEach(function(x,i){
+    var no=x.querySelector('.cw-itno');
+    if(no)no.textContent=String(i<idx?i+1:i+2);
+  });
+  var gno=d.el.querySelector('.cw-itno');
+  if(gno)gno.textContent=String(idx+1);
+  if(cwRM())return;
+  var glide=function(el,y0){
+    var y1=el.getBoundingClientRect().top;
+    if(Math.abs(y1-y0)<1)return;
+    el.style.transition='none'; el.style.transform='translateY('+(y0-y1)+'px)';
+    requestAnimationFrame(function(){
+      el.style.transition='transform .2s var(--emph)'; el.style.transform='';
+      el.addEventListener('transitionend',function(){el.style.transition='';el.style.transform=''},{once:true});
+    });
+  };
+  glide(gap,gapBefore);
+  sibs.forEach(function(x){ glide(x,before[x.getAttribute('data-item')]) });
+}
+function cwDragLoop(){
+  var d=CW_DRAG; if(!d||!d.active||d.dropping)return;
+  var sc=$('cwContentBody');
+  if(sc){
+    var r=sc.getBoundingClientRect(), y=d.lastY, sp=0;
+    if(y<r.top+64)sp=-Math.min(12,Math.ceil((r.top+64-y)/4));
+    else if(y>r.bottom-64)sp=Math.min(12,Math.ceil((y-r.bottom+64)/4));
+    if(sp){
+      var y0=sc.scrollTop; sc.scrollTop=y0+sp;
+      if(sc.scrollTop!==y0)cwDragUpdate();
+    }
+  }
+  d.raf=requestAnimationFrame(cwDragLoop);
+}
+function cwDragMove(e){
+  var d=CW_DRAG; if(!d||e.pointerId!==d.pid)return;
+  d.lastX=e.clientX; d.lastY=e.clientY;
+  if(!d.active){
+    if(Math.abs(e.clientX-d.x)>8||Math.abs(e.clientY-d.y)>8)cwDragClear(d);  /* 先动＝想滚页，让位给滚动 */
+    return;
+  }
+  if(e.cancelable)e.preventDefault();
+  d.dx=e.clientX-d.x; d.dy=e.clientY-d.y;
+  d.el.style.transform='translate3d('+d.dx+'px,'+d.dy+'px,0) scale(1.03)';
+  cwDragUpdate();
+}
+function cwDragClear(d){
+  if(!d)return;
+  if(d.timer)clearTimeout(d.timer);
+  if(d.raf)cancelAnimationFrame(d.raf);
+  if(d.gap&&d.gap.parentNode)d.gap.parentNode.removeChild(d.gap);
+  if(d.el){
+    d.el.classList.remove('dragging');
+    d.el.style.position=''; d.el.style.left=''; d.el.style.top=''; d.el.style.width=''; d.el.style.transform='';
+  }
+  document.body.classList.remove('cw-dragging');
+  if(CW_DRAG===d)CW_DRAG=null;
+}
+function cwDragEnd(e){
+  var d=CW_DRAG; if(!d)return;
+  if(e&&e.pointerId!==undefined&&e.pointerId!==d.pid)return;
+  if(!d.active){cwDragClear(d);return}
+  if(d.dropping)return;
+  if(e&&e.cancelable)e.preventDefault();
+  d.dropping=true;
+  CW_DRAG_CLICK=Date.now();
+  if(d.timer){clearTimeout(d.timer);d.timer=null}
+  if(d.raf){cancelAnimationFrame(d.raf);d.raf=null}
+  d.dx=d.lastX-d.x; d.dy=d.lastY-d.y;
+  var it=d.el, gap=d.gap, list=d.list, fin=null;
+  if(gap&&gap.parentNode&&list){
+    var lr=list.getBoundingClientRect();
+    fin={left:lr.left+(gap.offsetLeft-list.offsetLeft),top:lr.top+(gap.offsetTop-list.offsetTop)};
+  }
+  var finish=function(){
+    if(CW_DRAG!==d)return;
+    var target=null;
+    if(gap&&gap.parentNode){
+      var kids=[];
+      [].forEach.call(gap.parentNode.children,function(n){
+        if(n.classList.contains('cw-it')&&n!==it)kids.push(n);
+      });
+      target=kids.indexOf(gap);
+    }
+    var ix=-1,i;
+    for(i=0;i<CW_ITEMS.length;i++)if(CW_ITEMS[i].id===d.id)ix=i;
+    if(target!=null&&target>=0&&ix>=0&&target!==ix){
+      var moved=CW_ITEMS.splice(ix,1)[0];
+      CW_ITEMS.splice(target,0,moved);
+      cwBumpVer();
+    }
+    if(gap&&gap.parentNode)gap.parentNode.removeChild(gap);
+    it.classList.remove('dragging');
+    it.style.position=''; it.style.left=''; it.style.top=''; it.style.width=''; it.style.transform='';
+    document.body.classList.remove('cw-dragging');
+    CW_DRAG=null;
+    var sc=$('cwContentBody'), y=sc?sc.scrollTop:0;
+    REND['cw-content']();
+    if(sc)sc.scrollTop=y;
+  };
+  if(cwRM()||!fin){finish();return}
+  var anim=it.animate([
+    {transform:'translate3d('+d.dx+'px,'+d.dy+'px,0) scale(1.03)'},
+    {transform:'translate3d('+(fin.left-d.rect.left)+'px,'+(fin.top-d.rect.top)+'px,0) scale(1)'}
+  ],{duration:190,easing:'cubic-bezier(.2,0,0,1)'});
+  anim.finished.then(finish,finish);
+}
+document.addEventListener('pointerdown',function(e){
+  if(e.target&&e.target.closest&&e.target.closest('#cwContentBody .cw-it'))cwDragArm(e);
+},true);
+document.addEventListener('pointermove',function(e){
+  if(CW_DRAG&&e.pointerId===CW_DRAG.pid)cwDragMove(e);
+},{passive:false});
+document.addEventListener('pointerup',function(e){
+  if(CW_DRAG&&e.pointerId===CW_DRAG.pid)cwDragEnd(e);
+});
+document.addEventListener('pointercancel',function(e){
+  if(CW_DRAG&&e.pointerId===CW_DRAG.pid)cwDragEnd(e);
+});
+document.addEventListener('touchmove',function(e){
+  if(CW_DRAG&&CW_DRAG.active)e.preventDefault();
+},{passive:false});
+document.addEventListener('selectstart',function(e){
+  if(CW_DRAG&&CW_DRAG.active)e.preventDefault();
+});
+document.addEventListener('dragstart',function(e){
+  if(CW_DRAG&&CW_DRAG.active)e.preventDefault();
+});
+document.addEventListener('contextmenu',function(e){
+  if(CW_DRAG&&(CW_DRAG.active||CW_DRAG.timer))e.preventDefault();
+});
+document.addEventListener('click',function(e){
+  if(Date.now()-CW_DRAG_CLICK<450){e.preventDefault();e.stopPropagation()}
+},true);
+window.addEventListener('blur',function(){ if(CW_DRAG)cwDragEnd(null) });
+
 function cwItemRemove(id){
   var ix=-1,i;
   for(i=0;i<CW_ITEMS.length;i++)if(CW_ITEMS[i].id===id)ix=i;
@@ -6192,6 +6407,8 @@ function cwContentBlockHtml(){
     +'</div></div>';
 }
 REND['cw-content']=function(){
+  /* 别把正在拖的节点连同占位一起重画掉：真有外部重绘时先把拖拽收干净 */
+  if(CW_DRAG)cwDragClear(CW_DRAG);
   $('cwContentBack').innerHTML=I('back',24,2);$('cwRecIc').innerHTML=I('clock',20,2.1);$('cwSetIc').innerHTML=I('gear',20,2.1);
   cwEnsureDraft();
   var h='';
