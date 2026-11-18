@@ -22578,9 +22578,13 @@ tb.addEventListener("click",function(e){
     + '.rea-qf-tagopt.on{color:#1677FF}'
     + '.rea-qf-tagopt input{width:14px;height:14px;margin:0;accent-color:#1677FF}'
     + '.rea-qf-tagname{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
+    + '.rea-qf-tagrest{display:inline-flex;align-items:center;padding:0 8px;border-radius:4px;background:#F2F3F5;color:#646A73;font-size:13px;line-height:24px}'
     + '.rea-qf-tagmore{padding:6px 12px 0;font-size:12px;line-height:18px;color:#8F959E}'
     + '.rea-qf-tagmore[hidden]{display:none!important}'
     + '.rea-qf-tagft{display:flex;align-items:center;justify-content:space-between;padding:8px;border-top:1px solid #F2F3F5;font-size:12px;color:#8F959E}'
+    + '.rea-qf-tagftacts{display:inline-flex;align-items:center;gap:14px}'
+    + '.rea-qf-tagall{padding:0;border:0;background:transparent;color:#1677FF;font-size:12px;cursor:pointer}'
+    + '.rea-qf-tagall[hidden]{display:none!important}'
     + '.rea-qf-tagclear{padding:0;border:0;background:transparent;color:#1677FF;font-size:12px;cursor:pointer}'
     + '.rea-qf-tagempty{padding:18px 8px;text-align:center;font-size:13px;line-height:20px;color:#8F959E}';
 
@@ -23248,7 +23252,9 @@ function reaTagPicker(o){
     +'<div class="rea-qf-tagdd" hidden>'
     +'<div class="rea-qf-taglist" role="listbox" aria-label="手机标签" aria-multiselectable="true"></div>'
     +'<div class="rea-qf-tagmore" hidden></div>'
-    +'<div class="rea-qf-tagft"><span>已选 0 个手机标签</span><button type="button" class="rea-qf-tagclear">清空</button></div>'
+    +'<div class="rea-qf-tagft"><span>已选 0 个手机标签</span>'
+    +'<span class="rea-qf-tagftacts"><button type="button" class="rea-qf-tagall" hidden>全选</button>'
+    +'<button type="button" class="rea-qf-tagclear">清空</button></span></div>'
     +'</div></div></div>'
     +'<div class="rea-qf-panel" id="'+rn+'-manual" role="tabpanel" data-panel="manual" aria-labelledby="'+rn+'-manual-tab" hidden>'
     +'<div class="rea-qf-mrow"><span>匹配方式</span>'
@@ -23262,7 +23268,7 @@ function reaTagPicker(o){
       box=host.querySelector('.rea-qf-tagbox'),inp=host.querySelector('.rea-qf-taginp'),
       dd=host.querySelector('.rea-qf-tagdd'),list=host.querySelector('.rea-qf-taglist'),
       ft=host.querySelector('.rea-qf-tagft span'),more=host.querySelector('.rea-qf-tagmore'),
-      clearBtn=host.querySelector('.rea-qf-tagclear'),
+      allBtn=host.querySelector('.rea-qf-tagall'),clearBtn=host.querySelector('.rea-qf-tagclear'),
       ta=host.querySelector('.rea-qf-ta'),
       modeInputs=qa('.rea-qf-mrow input',host),
       tabPhone=tabs[0],tabManual=tabs[1];
@@ -23296,12 +23302,20 @@ function reaTagPicker(o){
     if(bm){bm.textContent=nm?String(nm):'';bm.hidden=!nm}
   }
   function chips(){
-    qa('.rea-qf-tagchip',box).forEach(function(c){c.parentNode.removeChild(c)});
-    var all=phoneNames(),i,c,n;
-    for(i=0;i<all.length;i++){
+    qa('.rea-qf-tagchip,.rea-qf-tagrest',box).forEach(function(c){c.parentNode.removeChild(c)});
+    var all=phoneNames(),shown=Math.min(all.length,6),i,c,n;
+    for(i=0;i<shown;i++){
       n=all[i];c=document.createElement('span');c.className='rea-qf-tagchip';
       c.innerHTML='<span>'+esc(n)+'</span><button type="button" class="rea-qf-tagx" data-tag="'+esc(n)
         +'" aria-label="移除'+esc(n)+'">×</button>';
+      box.insertBefore(c,inp);
+    }
+    /* 一次全选可能上百上千个，chips 只留前 6 个，其余折成 +N；
+       要看或取消某一个，输入名称把它筛出来，在列表里改勾选。 */
+    if(all.length>shown){
+      c=document.createElement('span');c.className='rea-qf-tagrest';
+      c.textContent='+'+(all.length-shown);
+      c.setAttribute('aria-label','还有 '+(all.length-shown)+' 个已选标签');
       box.insertBefore(c,inp);
     }
     inp.placeholder=all.length?'':'搜索或选择手机标签';
@@ -23319,9 +23333,16 @@ function reaTagPicker(o){
     }
     return sortedTags;
   }
+  function currentMatches(){
+    var tags=typeof o.getTags==='function'?o.getTags():[];
+    if(tags===null||busy||!tags.length)return [];
+    var q=query.toLowerCase(),ordered=orderedTags(tags),out=[],i;
+    for(i=0;i<ordered.length;i++)if(!q||ordered[i].toLowerCase().indexOf(q)>=0)out.push(ordered[i]);
+    return out;
+  }
   function drawList(){
     var tags=typeof o.getTags==='function'?o.getTags():[];
-    more.hidden=true;more.textContent='';
+    more.hidden=true;more.textContent='';allBtn.hidden=true;
     if(tags===null){list.innerHTML='<div class="rea-qf-tagempty">先选择执行人员，再选标签。</div>';return}
     if(busy){list.innerHTML='<div class="rea-qf-tagempty">标签还在从手机同步，稍后再试。</div>';return}
     if(!tags.length){list.innerHTML='<div class="rea-qf-tagempty">该执行人员的微信里还没有标签，可切换到手动输入。</div>';return}
@@ -23342,6 +23363,12 @@ function reaTagPicker(o){
                         :('共 '+total+' 个标签，输入名称继续筛选');
       more.hidden=false;
     }
+    /* 全选作用于当前筛选出的全部标签，不只是这次渲染出来的那些；
+       按钮文字写明范围，避免空查询时误以为只选眼前几十条。 */
+    var everyOn=true,j;
+    for(j=0;j<items.length;j++)if(all.indexOf(items[j])<0){everyOn=false;break}
+    allBtn.hidden=false;
+    allBtn.textContent=everyOn?'取消全选':(q?'全选匹配标签':'全选全部标签');
   }
   function draw(){chips();if(!dd.hidden)drawList()}
   function openDD(){
@@ -23407,6 +23434,18 @@ function reaTagPicker(o){
   });
   clearBtn.addEventListener('click',function(e){
     e.preventDefault();e.stopPropagation();sel=[];query='';inp.value='';draw();fire();
+  });
+  allBtn.addEventListener('mousedown',function(e){e.preventDefault()});
+  allBtn.addEventListener('click',function(e){
+    e.preventDefault();e.stopPropagation();
+    var items=currentMatches(),all=phoneNames(),everyOn=true,i,n;
+    for(i=0;i<items.length;i++)if(all.indexOf(items[i])<0){everyOn=false;break}
+    for(i=0;i<items.length;i++){
+      n=items[i];
+      if(everyOn)removePhone(n);
+      else if(sel.indexOf(n)<0)sel.push(n);
+    }
+    draw();fire();
   });
   ta.addEventListener('input',function(){countBadges();fire()});
   for(var mi=0;mi<modeInputs.length;mi++){
