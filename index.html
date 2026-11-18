@@ -248,7 +248,10 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
    背景与遮罩都能铺满。 */
 .screen::before,.screen::after{content:"";display:block;flex:none;height:34px}
 .screen::after{height:22px}
-.anim-push{animation:m3In .3s var(--emph)}
+/* 切屏（go）＝M3 fade-through 的「先出后进」：旧屏 90ms 淡出，新屏从第 90ms 起 210ms 淡入。
+   旧写法只给新屏挂淡入、旧屏原地不动，中段两屏都可见，密集页之间切（首页↔任务）会看到两层文字叠印。 */
+.anim-push{animation:m3In .21s var(--emph) .09s both}
+.anim-leave{animation:m3Out .09s ease forwards}
 .anim-pop{animation:m3In .3s var(--emph)}
 .anim-exit{animation:m3Out .14s ease forwards}
 @keyframes m3In{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
@@ -5269,13 +5272,20 @@ function go(id,params){
   var to=$(id); if(!to) return;
   var from=cur?$(cur):null;
   render(id,params);
+  to.classList.remove('anim-leave');   /* 320ms 内又切回这一屏：先把上次的退场类收掉，否则旧退场会把它按回透明 */
   to.classList.add('active','anim-push');
   var fromId=cur;
+  /* 旧屏先退场（M3 fade-through 的先出后进）。同屏重进（from===to）时不加，两类 opacity 动画会打架 */
+  if(from&&from!==to) from.classList.add('anim-leave');
   setTimeout(function(){
     to.classList.remove('anim-push');
+    /* 退场类无条件收掉：这 320ms 里旧屏可能又被 go()/back() 切回来当了当前屏，
+       留着 .anim-leave 的 forwards 会在后来撤掉淡入类时把它按回透明（整屏空白） */
+    var f=fromId?$(fromId):null;
+    if(f)f.classList.remove('anim-leave');
     /* 连点/脚本连续切屏时，这一个定时器可能已经过期：只收拾「已经不是当前屏」的那一屏，
        否则会把后来才亮起来的屏又按回去（变成整屏空白） */
-    if(fromId&&fromId!==id&&fromId!==cur){var f=$(fromId);if(f)f.classList.remove('active')}
+    if(f&&fromId!==id&&fromId!==cur)f.classList.remove('active')
   },320);
   if(stack.length&&stack[stack.length-1].id===id)stack.pop();
   stack.push({id:id,params:params||{}});
@@ -5289,6 +5299,7 @@ function back(){
   var curS=stack[stack.length-1];
   var from=$(cur); var to=$(curS.id);
   render(curS.id,curS.params);
+  to.classList.remove('anim-leave');   /* go() 的退场还没被 320ms 定时器收掉就按了返回：先收掉，别让它在淡入之后又把它按回透明 */
   to.classList.add('active','anim-pop');
   if(from){from.classList.add('anim-exit')}
   setTimeout(function(){
@@ -5924,10 +5935,11 @@ function cwQueryDone(tok){
     if(keep.length!==CW_SEND_IDS.length){ cwRender(); toast('接收客户已变为 '+keep.length+' 人，请重新确认'); return; }
     cwSendNow(); return;
   }
-  /* 预览发送才取人：取回来先落名单，再进预览；一个人都没有就停在内容页提示改范围。 */
+  /* 预览发送才取人：取回来先落名单，再进预览；一个人都没有就停在内容页提示改范围。
+     等人时用户已经离开内容页（比如去开 AI 帮写）就不再跳转，名单留在那里。 */
   cwApplyWindow();
   if(!cwSelCount()){ toast('这段时间没有未回复的客户，调大范围再试'); return; }
-  go('cw-preview');
+  if(cur==='cw-content')go('cw-preview');
 }
 /* 清掉范围时连在飞的查询一起作废：别让它回来又把人选上。 */
 function cwQueryStop(){ clearTimeout(CW_QTM); CW_QTM=null; CW_QBEAT++; CW_QBUSY=false; CW_QERR=false; CW_QMODE=''; }
