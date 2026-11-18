@@ -1350,6 +1350,16 @@ textarea.cw-ta::placeholder{color:var(--on-surface-variant)}
 .cwc-empty .ic{display:inline-flex;color:var(--primary);margin-bottom:14px}
 .cwc-empty h4{font-size:20px;font-weight:500;color:var(--on-surface);margin-bottom:6px}
 .cwc-empty p{font-size:14px}
+/* 空草稿的五个场景入口；有了回复后收成候选下方一行「换个目的」 */
+.cwc-purpose{display:flex;flex-direction:column;margin:22px 4px 8px}
+.cwc-popt{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:48px;
+  padding:0 4px;font-size:15px;font-weight:500;color:var(--on-surface);text-align:left}
+.cwc-popt+.cwc-popt{border-top:1px solid var(--outline-variant)}
+.cwc-popt .ch{display:flex;color:var(--on-surface-variant)}
+.cwc-purprow{display:flex;flex-wrap:wrap;align-items:center;gap:2px 12px;margin:4px 0 10px}
+.cwc-purprow .lb{font-size:12.5px;color:var(--on-surface-variant)}
+.cwc-purp{min-height:48px;padding:0 2px;font-size:13.5px;color:var(--on-surface-variant)}
+.cwc-purp.on{color:var(--primary);font-weight:600}
 .cwc-user{margin:16px 0 12px 44px;padding:12px 16px;border-radius:18px 4px 18px 18px;
   background:var(--secondary-container);color:var(--on-secondary-container);font-size:15px;line-height:1.6;white-space:pre-wrap}
 .cwc-note{margin:14px 0;padding-left:14px;border-left:3px solid var(--primary-container);
@@ -1611,6 +1621,12 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
 @keyframes cwFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 .cwc-empty h4{font-size:21px;font-weight:600;color:#102953}
 .cwc-empty p{font-size:14px;color:#617A9E}
+.cwc-popt{color:#17263F}
+.cwc-popt+.cwc-popt{border-top-color:#E6EDF9}
+.cwc-popt .ch{color:#9AA9BF}
+.cwc-purprow .lb{color:#9AA9BF}
+.cwc-purp{color:#617A9E;transition:color .18s var(--emph)}
+.cwc-purp.on{color:#1677FE}
 .cwc-user{margin-left:48px;border-radius:18px 6px 18px 18px;color:#1B2B4A;
   background:linear-gradient(135deg,#E9E6FF 0%,#E2EEFF 100%);
   box-shadow:0 10px 22px -22px rgba(70,80,180,.9)}
@@ -5329,7 +5345,7 @@ function syncNav(id,params){
 }
 
 /* ---------- Material ripple（统一按压反馈，替代缩放） ---------- */
-var RIP_SEL='.cw-textact,.cw-message,.btn,.chip,.iconbtn,.cell,.wk-card,.p-card,.pc-btn,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.hv-msg,.hv-stat,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.hva-lockcard,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close,.hw-add,.cust-seg button,.cust-copy,.cust-acct-row,.cw-btn,.cw-ib,.cw-op,.cw-units button,.cw-rec,.cw-kv .op,.cw-addrow,.cw-nosend,.cw-tutlink,.cw-info,.cw-rpb,.cw-goto,.cw-tutplay,.cw-rcpt,.cw-ai-link,.cwc-more,.cwc-use,.cwc-mini,.cwc-send,.cwp-tabs button,.cwp-grps button';
+var RIP_SEL='.cw-textact,.cw-message,.btn,.chip,.iconbtn,.cell,.wk-card,.p-card,.pc-btn,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.hv-msg,.hv-stat,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.hva-lockcard,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close,.hw-add,.cust-seg button,.cust-copy,.cust-acct-row,.cw-btn,.cw-ib,.cw-op,.cw-units button,.cw-rec,.cw-kv .op,.cw-addrow,.cw-nosend,.cw-tutlink,.cw-info,.cw-rpb,.cw-goto,.cw-tutplay,.cw-rcpt,.cw-ai-link,.cwc-more,.cwc-use,.cwc-mini,.cwc-popt,.cwc-purp,.cwc-send,.cwp-tabs button,.cwp-grps button';
 function ripInit(){
   document.addEventListener('pointerdown',function(e){
     var t=e.target.closest ? e.target.closest(RIP_SEL) : null;
@@ -5868,6 +5884,25 @@ function cwMarkFresh(id){ CW_FRESH_ID=id; setTimeout(function(){ if(CW_FRESH_ID=
 /* AI 会话：独立保存要求、参考资料、轮次与候选。ver＝当前资料版本，换资料就 +1，
    旧候选据此标「基于之前素材」，采用前必须按当前资料重新生成。 */
 var CW_CHAT=null, CW_REF_SEQ=0;
+/* 唤醒目的：空草稿时当思路入口，已有内容时当换向开关。
+   g＝这个场景下让用户补的那句背景；问候不需要任何事实，直接写。 */
+var CW_PURPOSES=[
+  {k:'new',n:'有新品到店',g:'这次到的是什么新品？什么时候能试？说一句就行。'},
+  {k:'activity',n:'有活动或优惠',g:'这次是什么活动？说说时间和优惠，比如「本周六满 1000 减 200」。'},
+  {k:'repeat',n:'老客户复购提醒',g:'上次买的是什么？大概什么时候该补货？'},
+  {k:'after',n:'售后或使用回访',g:'想回访哪件事？比如货没收到、用得不顺手，或者想问问体验。'},
+  {k:'greet',n:'没什么事，问候一下',g:''}
+];
+function cwPurp(k){ for(var i=0;i<CW_PURPOSES.length;i++)if(CW_PURPOSES[i].k===k)return CW_PURPOSES[i]; return null }
+function cwInferPurpose(){
+  var s=cwAiSources().map(function(x){return x.c||''}).join('\n');
+  if(/满\s*\d|[\d.]+\s*折|优惠|活动|促销/.test(s))return 'activity';
+  if(/新品|新款|上新|试穿/.test(s))return 'new';
+  if(/售后|退货|换货|维修|没收到/.test(s))return 'after';
+  if(/复购|补货|用完|回购/.test(s))return 'repeat';
+  if(/好久|最近|问候|联系/.test(s))return 'greet';
+  return '';
+}
 
 /* ---------- 草稿与版本 ---------- */
 function cwItemSeq(){ return 'it'+(++CW_ITEM_SEQ) }
@@ -5886,7 +5921,7 @@ function cwDropEmptyText(){
 }
 function cwResetChat(){
   if(CW_CHAT&&CW_CHAT.timer)clearTimeout(CW_CHAT.timer);
-  CW_CHAT={ver:0,token:0,busy:false,timer:null,turns:[],refs:[],undo:null,lastReq:'',rendered:0};
+  CW_CHAT={ver:0,token:0,busy:false,timer:null,turns:[],refs:[],undo:null,lastReq:'',rendered:0,purpose:''};
   CW_REF_SEQ=0;
 }
 function cwResetDraft(){ CW_ITEMS=[]; CW_ITEM_SEQ=0; CW_MAT=null; cwResetChat(); CW_LAUNCHING=false; }
@@ -6616,7 +6651,10 @@ function cwComposeOpen(){
     s.classList.add('cw-drawer-in');
     setTimeout(function(){s.classList.remove('cw-drawer-in')},360);
   }
-  if(!CW_CHAT.turns.length&&cwHasContent())cwChatAsk('',{auto:true,op:'auto'});
+  if(!CW_CHAT.turns.length&&cwHasContent()){
+    if(!CW_CHAT.purpose)CW_CHAT.purpose=cwInferPurpose();
+    cwChatAsk('',{auto:true,op:'auto'});
+  }
 }
 /* 关闭 AI 帮写：先让抽屉滑下去，再真正退栈；滑动期间动画规则压过 back() 的淡出，不会先跳回原位。 */
 function cwComposeClose(){
@@ -6641,7 +6679,7 @@ function cwAiSources(){
   return a;
 }
 function cwAiFactTime(s){
-  var m=String(s).match(/(?:(?:本|这)周[一二三四五六日天]|今天|明天|后天|\d{1,2}月\d{1,2}日)[^，。；\n]{0,8}?\d{1,2}[:：]\d{2}\s*[–—\-~～至到]\s*\d{1,2}[:：]\d{2}/);
+  var m=String(s).match(/(?:(?:本|这)?周[一二三四五六日天]|今天|明天|后天|\d{1,2}月\d{1,2}日)[^，。；\n]{0,8}?\d{1,2}[:：]\d{2}\s*[–—\-~～至到]\s*\d{1,2}[:：]\d{2}/);
   return m?m[0].replace(/\s+/g,''):'';
 }
 function cwAiFactPrice(s){
@@ -6683,6 +6721,41 @@ function cwAiTone(text,op){
     .replace(/^(.+?)，店里有(.+?)活动，你有兴趣来看看吗？$/,'$2就在$1，有兴趣的话来店里看看？')
     .replace(/^(.+?)，店里有(.+?)活动，有空可以来看看。$/,'$2就在$1，有空来店里看看。');
 }
+/* 按选定场景写：同一批事实，五种不同的开头与落点。
+   问候不需要事实；其余四种缺关键事实时只问一句。 */
+function cwPurposeReply(q,joined,all){
+  var time=cwAiFactTime(q)||cwAiFactTime(joined);
+  var price=cwAiFactPrice(q)||cwAiFactPrice(joined);
+  var topic=cwAiFactTopic(q)||cwAiFactTopic(joined);
+  var own=all.filter(function(x){return x.src==='draft'&&x.c})[0];
+  var base=own?String(own.c||'').trim():'';
+  var baseCore=base.replace(/[。！？!?，,]$/,'');
+  var core=String(q||baseCore||topic||'').replace(/[。！？!?，,]$/,'');
+  var notes=[];
+  CW_CHAT.refs.forEach(function(r){
+    if(r.read==='fail')notes.push('「'+r.title+'」没能读取，先用其他资料写。');
+    else if(r.read==='partial')notes.push('「'+r.title+'」只读取到字幕，画面还没解析，这版只用了读到的内容。');
+  });
+  var draft=function(text){ return {kind:'draft',text:notes.join(''),cand:{text:text,ver:cwFreshVer()}} };
+  var say=function(s){ s=String(s).replace(/[。！？!?，,]$/,''); return s+(/[吗呢吧]$/.test(s)?'？':'。') };
+  switch(CW_CHAT.purpose){
+    case 'activity':
+      if(!time&&!price&&!topic)return {kind:'question',text:'这次是什么活动？说一句时间和优惠，我照着写。'};
+      return draft(say((time?time+'，':'')+'店里有'+(topic?topic+'活动':'活动')+(price?'，'+price:'')+'，有兴趣来看看吗'));
+    case 'new':
+      if(!core)return {kind:'question',text:'到的是什么新品？什么时候能试？'};
+      return draft(say((time&&core!==baseCore?time+'，':'')+core+'，感兴趣的话来看看'));
+    case 'repeat':
+      if(!core)return {kind:'question',text:'上次买的是什么？大概什么时候该补货？'};
+      core=core.replace(/^上次买的(?:是)?/,'');
+      return draft('上次买的'+core+'应该快用完了吧？需要的话我帮您留一份。');
+    case 'after':
+      return draft((core?(/^上次/.test(core)?core:'上次的'+core):'上次的事')+'处理得还顺吗？有问题随时找我。');
+    case 'greet':
+      return draft('好久没联系了，最近还好吗？有空随时找我。');
+  }
+  return null;
+}
 /* 规则版「写作」：先看资料能确认的事实，再决定出一版还是追问一次。
    这是原型演示，不接真实模型；文案只由素材文字、用户要求与已确认的事实拼成。 */
 function cwAiReply(req,op){
@@ -6691,6 +6764,11 @@ function cwAiReply(req,op){
   if(op==='short'||op==='natural'||op==='rewrite'){
     if(!prev)return {kind:'question',text:'先说说这次想和客户聊什么，我再按这个要求改。'};
     return {kind:'draft',text:'',cand:{text:cwAiTone(prev,op),ver:cwFreshVer()}};
+  }
+  if(CW_CHAT.purpose){
+    var chatFacts=CW_CHAT.turns.filter(function(t){return t.role==='user'&&t.text}).map(function(t){return t.text}).join('\n');
+    var pr=cwPurposeReply(op==='purpose'?'':q,joined+'\n'+chatFacts,all);
+    if(pr)return pr;
   }
   if(/^[\d\s.,!?，。！？、；;：:…—\-]+$/.test(q)||(q&&q.length<2))
     return {kind:'question',text:'想和客户说什么？可以告诉我活动内容，或者加一张海报，我照着写。'};
@@ -6736,6 +6814,7 @@ function cwChatAsk(req,opts){
   if(CW_CHAT.busy)return;
   if(!o.auto&&!text)return;
   if(!o.auto)CW_CHAT.turns.push({role:'user',text:text});
+  if(o.purpose)CW_CHAT.purpose=o.purpose;
   CW_CHAT.busy=true; CW_CHAT.lastReq=o.op||'';
   var tok=++CW_CHAT.token;
   var out=cwAiReply(text,o.op||'');
@@ -6903,17 +6982,45 @@ function cwTurnHtml(t,latest,ix){
   }
   return '<div class="cwc-note">'+esc(t.text)+'</div>';
 }
+/* 空草稿：五个场景当入口；选完把该场景要补的背景写成一句引导，等用户补完再生成。
+   问候不需要背景，直接出稿。 */
+function cwPurposePick(k){
+  if(CW_CHAT.busy)return;
+  var p=cwPurp(k); if(!p)return;
+  CW_CHAT.purpose=k;
+  if(k==='greet'){ cwChatAsk('',{auto:true,op:'purpose'}); return; }
+  CW_CHAT.turns.push({role:'ai',kind:'guide',text:p.g});
+  cwComposeRender(); cwFocusInput();
+}
+/* 已有内容或已有回复时：当前目的高亮，点别的按同一批事实重写 */
+function cwPurposesHtml(){
+  var act=CW_CHAT.purpose||'';
+  return '<div class="cwc-purprow"><span class="lb">换个目的</span>'
+    +CW_PURPOSES.map(function(p){
+      return '<button class="cwc-purp'+(p.k===act?' on':'')+'" onclick="cwPurposeSwitch(\''+p.k+'\')">'+p.n+'</button>';
+    }).join('')+'</div>';
+}
+function cwPurposeSwitch(k){
+  if(CW_CHAT.busy||CW_CHAT.purpose===k)return;
+  var p=cwPurp(k); if(!p)return;
+  cwChatAsk('换成「'+p.n+'」',{op:'purpose',purpose:k});
+}
 function cwComposeHtml(){
   var h=cwRefSummaryHtml(),last=-1,i;
   for(i=CW_CHAT.turns.length-1;i>=0;i--)if(CW_CHAT.turns[i].kind==='draft'){last=i;break}
   if(!CW_CHAT.turns.length&&!CW_CHAT.busy){
     h+='<div class="cwc-empty"><span class="ic" aria-hidden="true">'+I('sparkle',34,1.6)+'</span>'
-      +'<h4>这次想和客户说什么？</h4><p>也可以添加素材。</p></div>';
+      +'<h4>这次想和客户说什么？</h4><p>也可以添加素材。</p></div>'
+      +'<div class="cwc-purpose">'+CW_PURPOSES.map(function(p){
+        return '<button class="cwc-popt" onclick="cwPurposePick(\''+p.k+'\')"><span>'+p.n+'</span>'
+          +'<span class="ch" aria-hidden="true">'+I('chev',16,2.2)+'</span></button>';
+      }).join('')+'</div>';
   }
   CW_CHAT.turns.forEach(function(t,ix){
     var th=cwTurnHtml(t,ix===last,ix);
     if(th)h+='<div class="cwc-turn">'+th+'</div>';
   });
+  if(CW_CHAT.turns.length&&!CW_CHAT.busy)h+=cwPurposesHtml();
   if(CW_CHAT.busy)h+='<div class="cwc-busy" role="status"><span class="cwc-dots"><i></i><i></i><i></i></span>正在写<button class="cw-textact" onclick="cwChatStop()">停止</button></div>';
   return h;
 }
