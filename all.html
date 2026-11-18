@@ -1270,9 +1270,6 @@ textarea.cw-ta{width:100%;min-height:48px;padding:12px 14px;border-radius:4px 4p
   font:400 16px/1.65 var(--f);resize:none;overflow:hidden;display:block}
 textarea.cw-ta:focus{outline:none;border-bottom:2px solid var(--primary);background:var(--sc)}
 textarea.cw-ta::placeholder{color:var(--on-surface-variant)}
-.cw-itacts{display:flex;justify-content:flex-end;gap:2px;margin-top:4px}
-.cw-iact{min-height:36px;padding:0 10px;border-radius:999px;font-size:12.5px;font-weight:500;color:var(--on-surface-variant)}
-.cw-iact.danger{color:var(--error)}
 .cw-media{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
   width:100%;min-height:132px;padding:12px;border-radius:12px;background:var(--sc);color:var(--on-surface-variant);overflow:hidden}
 .cw-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.92}
@@ -1461,9 +1458,6 @@ textarea.cw-ta:focus{background:#fff;border-color:#8FB3F5;
 .cw-it+.cw-it{border-top:0;margin-top:4px}
 .cw-itno{background:linear-gradient(140deg,#EAF1FF,#EDE7FF);color:#3E56C9;
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.8)}
-.cw-iact{color:#617A9E;position:relative;overflow:hidden;
-  transition:background .18s var(--emph),color .18s var(--emph)}
-.cw-iact.danger{color:#C2413A}
 .cw-media{border-radius:18px;background:linear-gradient(150deg,#F1F5FF,#EEE9FF);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.8)}
 .cw-media img{border-radius:18px}
@@ -1477,11 +1471,29 @@ textarea.cw-ta:focus{background:#fff;border-color:#8FB3F5;
 .cw-it.dragging{position:fixed;z-index:40;margin:0!important;background:#fff;border-radius:16px;
   box-shadow:0 24px 48px -20px rgba(40,60,140,.55),0 0 0 1px rgba(255,255,255,.9);
   pointer-events:none;will-change:transform;transform-origin:50% 50%}
-.cw-it.dragging .cw-itacts{opacity:.45;pointer-events:none}
+.cw-it.dragging.over-del{box-shadow:0 0 0 2px rgba(229,72,77,.55),0 24px 48px -20px rgba(120,40,40,.5)}
 .cw-it-gap{box-sizing:border-box;border:1.5px dashed #C9D8EF;border-radius:16px;
-  background:rgba(240,246,255,.55);pointer-events:none;animation:cwGapIn .18s var(--emph)}
+  background:rgba(240,246,255,.55);pointer-events:none;animation:cwGapIn .18s var(--emph);
+  transition:opacity .18s var(--emph)}
 @keyframes cwGapIn{from{opacity:0;transform:scale(.98)}to{opacity:1;transform:none}}
 body.cw-dragging{user-select:none;-webkit-user-select:none;cursor:grabbing}
+body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opacity .18s var(--emph)}
+/* 拖拽删除区：开始拖才从底部升起；拖进去时垃圾桶掀盖、文案切换 */
+.cw-del-zone{position:fixed;left:50%;bottom:calc(26px + env(safe-area-inset-bottom));z-index:45;
+  display:flex;align-items:center;gap:10px;height:54px;padding:0 18px 0 10px;border-radius:999px;
+  background:#fff;border:1px solid #FFD9D7;color:#C2413A;font-size:13.5px;font-weight:600;
+  box-shadow:0 18px 36px -20px rgba(180,50,50,.45);
+  transform:translate(-50%,140%);opacity:0;pointer-events:none;
+  transition:transform .24s var(--emph),opacity .2s var(--emph),background .18s,border-color .18s,box-shadow .18s}
+.cw-del-zone.on{transform:translate(-50%,0);opacity:1}
+.cw-del-zone.open{background:#FFF6F5;border-color:#E5484D;
+  box-shadow:0 20px 38px -16px rgba(200,50,50,.55)}
+.cw-del-ic{flex:none;width:36px;height:36px;border-radius:50%;background:#FFF1F0;color:#D93025;
+  display:flex;align-items:center;justify-content:center;transition:background .18s,color .18s}
+.cw-del-zone.open .cw-del-ic{background:#FDE0DD}
+.cw-del-tx{white-space:nowrap}
+.cw-del-lid{transform-box:fill-box;transform-origin:0% 100%;transition:transform .22s var(--emph)}
+.cw-del-zone.open .cw-del-lid{transform:rotate(-34deg)}
 /* 「添加内容／AI 帮写」两枚白底动作块：渐变圆形图标托底，标题深海军蓝 */
 #cw-content .cw-acts2 .cw-btn{flex:1;height:58px;min-height:58px;justify-content:flex-start;gap:10px;
   padding:0 14px;border-radius:18px;background:#fff;color:#1D3B6B;font-size:14.5px;
@@ -1611,6 +1623,7 @@ body.cw-dragging{user-select:none;-webkit-user-select:none;cursor:grabbing}
 @media (prefers-reduced-motion:reduce){
   .cw-it.fresh,.cw-it-gap,.cwp-list.cw-in .cwp-card,.cwc-turn-in,.cwc-sumbody,
   #cw-content .cw-acts2 .cw-btn.ai svg,.cwc-empty .ic,.cw-up::before{animation:none}
+  .cw-del-zone,.cw-del-lid,body.cw-dragging #cwContentFoot{transition:none}
   .cw-unit-thumb{transition:none}
 }
 
@@ -5232,7 +5245,7 @@ function syncNav(id,params){
 }
 
 /* ---------- Material ripple（统一按压反馈，替代缩放） ---------- */
-var RIP_SEL='.cw-textact,.cw-message,.btn,.chip,.iconbtn,.cell,.wk-card,.p-card,.pc-btn,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.hv-msg,.hv-stat,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.hva-lockcard,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close,.hw-add,.cust-seg button,.cust-copy,.cust-acct-row,.cw-btn,.cw-ib,.cw-op,.cw-units button,.cw-rec,.cw-kv .op,.cw-addrow,.cw-nosend,.cw-tutlink,.cw-info,.cw-rpb,.cw-goto,.cw-tutplay,.cw-iact,.cw-rcpt,.cwc-chip,.cwc-send,.cwc-sumbtn,.cwp-tabs button,.cwp-grps button';
+var RIP_SEL='.cw-textact,.cw-message,.btn,.chip,.iconbtn,.cell,.wk-card,.p-card,.pc-btn,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.hv-msg,.hv-stat,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.hva-lockcard,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close,.hw-add,.cust-seg button,.cust-copy,.cust-acct-row,.cw-btn,.cw-ib,.cw-op,.cw-units button,.cw-rec,.cw-kv .op,.cw-addrow,.cw-nosend,.cw-tutlink,.cw-info,.cw-rpb,.cw-goto,.cw-tutplay,.cw-rcpt,.cwc-chip,.cwc-send,.cwc-sumbtn,.cwp-tabs button,.cwp-grps button';
 function ripInit(){
   document.addEventListener('pointerdown',function(e){
     var t=e.target.closest ? e.target.closest(RIP_SEL) : null;
@@ -6064,15 +6077,6 @@ function cwMediaView(id){
     openSheet('<div class="cw-sh">'+esc(it.c)+'</div><div class="cw-tutvid"><button class="cw-tutplay" onclick="toast(\'演示：播放\')" aria-label="播放视频">'+I('play',24,2)+'</button></div>','cw-sheet');
   }
 }
-function cwItemActsHtml(it,ix){
-  /* 只有一块文字时它就是输入框本身：清空即清空，不给一个点了会再补回空框的「移除」 */
-  if(CW_ITEMS.length===1&&it.t==='text')return '';
-  var h='<div class="cw-itacts">';
-  if(ix>0)h+='<button class="cw-iact" onclick="cwItemMove(\''+it.id+'\',-1)">上移</button>';
-  if(ix<CW_ITEMS.length-1)h+='<button class="cw-iact" onclick="cwItemMove(\''+it.id+'\',1)">下移</button>';
-  h+='<button class="cw-iact danger" onclick="cwItemRemove(\''+it.id+'\')">移除</button></div>';
-  return h;
-}
 function cwItemsHtml(){
   var multi=CW_ITEMS.length>1;
   return CW_ITEMS.map(function(it,ix){
@@ -6084,7 +6088,7 @@ function cwItemsHtml(){
         +(ix===0&&CW_ITEMS.length===1?'':' data-no="'+(ix+1)+'"')
         +' oninput="cwItemInput(this,\''+it.id+'\')">'+esc(it.c)+'</textarea>';
     }else h+=cwMediaHtml(it);
-    h+=cwItemActsHtml(it,ix)+'</div></div>';
+    h+='</div></div>';
     return h;
   }).join('');
 }
@@ -6101,44 +6105,86 @@ function cwItemInput(el,id){
   if(it){ it.c=el.value; cwBumpVer(); }
   cwGrow(el); cwContentFoot();
 }
-function cwItemMove(id,dir){
-  var ix=-1,i;
-  for(i=0;i<CW_ITEMS.length;i++)if(CW_ITEMS[i].id===id)ix=i;
-  if(ix<0)return;
-  var to=ix+dir; if(to<0||to>=CW_ITEMS.length)return;
-  var it=CW_ITEMS.splice(ix,1)[0]; CW_ITEMS.splice(to,0,it);
-  /* FLIP：先把调序前每条的位置记下来，重绘后从旧位置滑到新位置，别整块闪一下 */
-  var before={};
-  if(!cwRM())[].forEach.call(document.querySelectorAll('#cwContentBody .cw-it'),function(n){
-    before[n.getAttribute('data-item')]=n.getBoundingClientRect().top;
-  });
-  cwBumpVer(); REND['cw-content']();
-  if(cwRM())return;
-  [].forEach.call(document.querySelectorAll('#cwContentBody .cw-it'),function(n){
-    var k=n.getAttribute('data-item'), y0=before[k], y1=n.getBoundingClientRect().top;
-    if(y0==null||Math.abs(y1-y0)<1)return;
-    n.style.transition='none'; n.style.transform='translateY('+(y0-y1)+'px)';
-    requestAnimationFrame(function(){
-      n.style.transition='transform .3s var(--emph)'; n.style.transform='';
-      n.addEventListener('transitionend',function(){n.style.transition='';n.style.transform=''},{once:true});
-    });
-  });
+/* ---------- 发送内容 · 长按拖拽排序／删除 ----------
+   长按条目 320ms → 原条目 fixed 到手指下、放大 1.03，原位插入一块虚线占位；开始移动后底部升起删除区；
+   拖过其它条目的中点时把占位挪过去，其它条目用 FLIP 让位；松手先把条目动画落到占位，再提交顺序。
+   拖进删除区时垃圾桶掀盖、文案切到「松手即可删除」，松手删除（沿用带撤销的 Snackbar）。 */
+var CW_DRAG=null, CW_DRAG_CLICK=0, CW_DEL_TM=null;
+function cwTrashSvg(){
+  return '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor"'
+    +' stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+    +'<g class="cw-del-lid"><path d="M4 6.6h16"/><path d="M9 6.6V4.3h6v2.3"/></g>'
+    +'<path d="M6.4 6.6 7.4 20h9.2l1-13.4"/>'
+    +'<path d="M10 10.6v5.2M14 10.6v5.2" opacity=".55"/></svg>';
 }
-/* ---------- 发送内容 · 长按拖拽排序 ----------
-   长按条目 320ms → 原条目 fixed 到手指下、放大 1.03，原位插入一块虚线占位；拖过其它条目的中点时
-   把占位挪过去，其它条目用 FLIP 让位；松手先把条目动画落到占位，再提交 CW_ITEMS 顺序并重绘。
-   上移／下移按钮保留，拖拽只是多一条更快的手势。 */
-var CW_DRAG=null, CW_DRAG_CLICK=0;
+function cwDelZone(show){
+  var z=$('cwDelZone');
+  if(show){
+    if(CW_DEL_TM){clearTimeout(CW_DEL_TM);CW_DEL_TM=null}
+    if(!z){
+      z=document.createElement('div');
+      z.className='cw-del-zone'; z.id='cwDelZone';
+      z.setAttribute('role','status'); z.setAttribute('aria-live','polite');
+      z.innerHTML='<span class="cw-del-ic" aria-hidden="true">'+cwTrashSvg()+'</span>'
+        +'<span class="cw-del-tx">移动到此处删除</span>';
+      ($('cw-content')||document.body).appendChild(z);
+    }
+    void z.offsetWidth;
+    z.classList.add('on');
+    return z;
+  }
+  if(!z)return;
+  z.classList.remove('on','open');
+  if(CW_DEL_TM)clearTimeout(CW_DEL_TM);
+  var kill=function(){ CW_DEL_TM=null; if(z.parentNode)z.parentNode.removeChild(z) };
+  if(cwRM())kill(); else CW_DEL_TM=setTimeout(kill,240);
+}
+function cwDelZoneState(over){
+  var z=$('cwDelZone'); if(!z)return;
+  z.classList.toggle('open',!!over);
+  var tx=z.querySelector('.cw-del-tx');
+  if(tx)tx.textContent=over?'松手即可删除':'移动到此处删除';
+  if(CW_DRAG&&CW_DRAG.el)CW_DRAG.el.classList.toggle('over-del',!!over);
+  if(CW_DRAG&&CW_DRAG.gap)CW_DRAG.gap.style.opacity=over?'.35':'';  /* 进删除区时让位槽退到后面 */
+}
+function cwDragOverDel(d){
+  var z=$('cwDelZone'); if(!z||!z.classList.contains('on'))return false;
+  var r=z.getBoundingClientRect();
+  return d.lastX>=r.left-10&&d.lastX<=r.right+10&&d.lastY>=r.top-10&&d.lastY<=r.bottom+10;
+}
+function cwDragDelete(d){
+  var it=d.el, gap=d.gap, z=$('cwDelZone'), zr=z?z.getBoundingClientRect():null;
+  var finish=function(){
+    if(CW_DRAG!==d)return;
+    if(gap&&gap.parentNode)gap.parentNode.removeChild(gap);
+    if(it){
+      it.classList.remove('dragging','over-del');
+      it.style.position=''; it.style.left=''; it.style.top=''; it.style.width=''; it.style.transform='';
+    }
+    document.body.classList.remove('cw-dragging');
+    CW_DRAG=null;
+    cwDelZone(false);
+    cwItemRemove(d.id);
+  };
+  if(cwRM()||!zr){finish();return}
+  var r=it.getBoundingClientRect();
+  var dx=zr.left+zr.width/2-(r.left+r.width/2);
+  var dy=zr.top+zr.height/2-(r.top+r.height/2);
+  var anim=it.animate([
+    {transform:'translate3d('+d.dx+'px,'+d.dy+'px,0) scale(1.03)',opacity:1},
+    {transform:'translate3d('+(d.dx+dx)+'px,'+(d.dy+dy)+'px,0) scale(.5)',opacity:0}
+  ],{duration:220,easing:'cubic-bezier(.4,0,.2,1)'});
+  anim.finished.then(finish,finish);
+}
 function cwDragArm(e){
   if(CW_DRAG)return;
   if(e.isPrimary===false||e.button>0)return;
   var t=e.target;
   if(!t||!t.closest)return;
   var it=t.closest('#cwContentBody .cw-it');
-  if(!it||it.classList.contains('cw-it-gap')||t.closest('.cw-iact'))return;
-  if(CW_ITEMS.length<2)return;
+  if(!it||it.classList.contains('cw-it-gap')||t.closest('button'))return;
   var d={el:it,id:it.getAttribute('data-item'),x:e.clientX,y:e.clientY,lastX:e.clientX,lastY:e.clientY,
-    pid:e.pointerId,timer:null,active:false,dropping:false};
+    pid:e.pointerId,timer:null,active:false,dropping:false,overDel:false,zoneShown:false};
   d.timer=setTimeout(function(){ cwDragBegin(d) },320);
   CW_DRAG=d;
 }
@@ -6171,6 +6217,13 @@ function cwDragUpdate(){
   var d=CW_DRAG; if(!d||!d.active||d.dropping)return;
   var list=d.list, gap=d.gap;
   if(!list||!gap||!gap.parentNode)return;
+  var over=cwDragOverDel(d);
+  if(over!==!!d.overDel){
+    d.overDel=over;
+    cwDelZoneState(over);
+    if(over){ try{ if(navigator.vibrate)navigator.vibrate(8) }catch(err){} }
+  }
+  if(over)return;                            /* 到了删除区就冻结让位，松手删除 */
   var lr=list.getBoundingClientRect();
   var cy=d.lastY-d.offY+d.rect.height/2;      /* 手指抓的那一点在条目里的位置不变，用条目中心比较 */
   var rel=cy-lr.top;
@@ -6237,6 +6290,10 @@ function cwDragMove(e){
   if(e.cancelable)e.preventDefault();
   d.dx=e.clientX-d.x; d.dy=e.clientY-d.y;
   d.el.style.transform='translate3d('+d.dx+'px,'+d.dy+'px,0) scale(1.03)';
+  if(!d.zoneShown&&(Math.abs(d.dx)>6||Math.abs(d.dy)>6)){
+    d.zoneShown=true;
+    cwDelZone(true);                         /* 真开始拖了才把删除区升起来 */
+  }
   cwDragUpdate();
 }
 function cwDragClear(d){
@@ -6245,10 +6302,11 @@ function cwDragClear(d){
   if(d.raf)cancelAnimationFrame(d.raf);
   if(d.gap&&d.gap.parentNode)d.gap.parentNode.removeChild(d.gap);
   if(d.el){
-    d.el.classList.remove('dragging');
+    d.el.classList.remove('dragging','over-del');
     d.el.style.position=''; d.el.style.left=''; d.el.style.top=''; d.el.style.width=''; d.el.style.transform='';
   }
   document.body.classList.remove('cw-dragging');
+  cwDelZone(false);
   if(CW_DRAG===d)CW_DRAG=null;
 }
 function cwDragEnd(e){
@@ -6262,6 +6320,8 @@ function cwDragEnd(e){
   if(d.timer){clearTimeout(d.timer);d.timer=null}
   if(d.raf){cancelAnimationFrame(d.raf);d.raf=null}
   d.dx=d.lastX-d.x; d.dy=d.lastY-d.y;
+  var cancelled=!e||e.type==='pointercancel';
+  if(d.overDel&&!cancelled){ cwDragDelete(d); return; }
   var it=d.el, gap=d.gap, list=d.list, fin=null;
   if(gap&&gap.parentNode&&list){
     var lr=list.getBoundingClientRect();
@@ -6285,9 +6345,10 @@ function cwDragEnd(e){
       cwBumpVer();
     }
     if(gap&&gap.parentNode)gap.parentNode.removeChild(gap);
-    it.classList.remove('dragging');
+    it.classList.remove('dragging','over-del');
     it.style.position=''; it.style.left=''; it.style.top=''; it.style.width=''; it.style.transform='';
     document.body.classList.remove('cw-dragging');
+    cwDelZone(false);
     CW_DRAG=null;
     var sc=$('cwContentBody'), y=sc?sc.scrollTop:0;
     REND['cw-content']();
@@ -6335,9 +6396,14 @@ function cwItemRemove(id){
   if(ix<0)return;
   var it=CW_ITEMS.splice(ix,1)[0];
   cwBumpVer(); REND['cw-content']();
-  toast('已移除这条内容','撤销',function(){
+  toast('已删除这条内容','撤销',function(){
     if(cwItemById(it.id))return;
-    CW_ITEMS.splice(Math.min(ix,CW_ITEMS.length),0,it); cwBumpVer(); cwRender();
+    CW_ITEMS.splice(Math.min(ix,CW_ITEMS.length),0,it);
+    /* 删掉最后一条时重绘会补一块空文字；恢复项插回去后别把这块空框一起留下 */
+    if(CW_ITEMS.length>1)CW_ITEMS=CW_ITEMS.filter(function(x){
+      return x===it||x.t!=='text'||String(x.c||'').trim();
+    });
+    cwBumpVer(); cwRender();
   });
 }
 function cwTextAdd(){
