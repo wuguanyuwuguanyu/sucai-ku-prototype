@@ -22841,7 +22841,7 @@ ${reaQfListJs()}
    2026-11-16 统一骨架：「群发范围」与「标签名称」并成一格「发送范围」，
    值照发圈的写法把两级用「 · 」连起来（按微信标签 · 老客户、双十一）；
    任务类型不再显示，创建时间由 reaWxDetailJs 补。
-   循环方式、发送类型、是否按照整个标签发送、选择方式都在「查看任务配置快照」里，
+   循环方式、发送方式、是否按照整个标签发送、选择方式都在「查看任务配置快照」里，
    详情不重复；「素材」一行也摘掉。标签名不再标「（当前标签中未找到）」，
    同步滞后不该写进只读字段。快照只有一条演示任务，值按演示口径写；
    拿到真实任务数据后换成读字段即可。 */
@@ -24752,7 +24752,7 @@ function initFq(){
 /* ---------- 群发好友 · 新建（2026-11-09 重排：四段决策 ＋ 右栏回显） ----------
    现网快照把 11 行表单平铺在一列：发送类型／执行人员挡在最前，群发范围排到第 7 行，
    右侧半屏空着。这一版只搬原节点、不重造控件——按「发给谁 → 发什么 → 什么时候发 →
-   谁来发」重排成四段，任务名称／发送类型／全局弹窗收进「更多设置」；右栏给客户视角的
+   谁来发」重排成四段，任务名称／发送方式／全局弹窗收进「更多设置」；右栏给客户视角的
    预览与四行汇总。富文本编辑器、单选、开关仍是快照原节点（REA_FX 的接线不动），
    这里只加本页标记类与新的排序容器。
    ① 段的「按微信标签」照现网：标签在各销售自己的微信里，后台查不到名单也统计不了
@@ -24772,6 +24772,7 @@ function initQf(){
     }
     return null;
   }
+  /* 快照里的行标签仍是现网原文「发送类型」，先按它定位，再在下面改成「发送方式」。 */
   var rName=rowByLabel('任务名称'),rExec=rowByLabel('执行人员'),rSend=rowByLabel('发送类型'),
       rContent=rowByLabel('任务内容'),rCtype=rowByLabel('内容类型'),rText=rowByLabel('描述文本'),
       rScope=rowByLabel('群发范围'),rRepeat=rowByLabel('任务类型'),rPopup=rowByLabel('全局弹窗'),
@@ -24780,6 +24781,9 @@ function initQf(){
   /* 「任务类型」改名「循环方式」（2026-11-16）：这一行只决定循环方式，
      任务品类另由快照「基础信息 · 任务类型」表示，避免同名两义。 */
   if(rRepeat){var rrl=rRepeat.querySelector('[class*="_must_white"]');if(rrl)rrl.textContent='循环方式';}
+  /* 「发送类型」改名「发送方式」（2026-11-18）：这一行选的是怎么发，
+     与内容类型、任务类型都不是一回事；快照原节点只换标签文字。 */
+  if(rSend){var rsl=rSend.querySelector('[class*="_must_white"]');if(rsl)rsl.textContent='发送方式';}
   var rAct=null,k;
   for(k=0;k<rows.length;k++){
     var ab=rows[k].querySelector('button');
@@ -24852,7 +24856,7 @@ function initQf(){
   }
 
   /* 内容只有文字时，文件传输助手转发不可选：微信不支持用这种方式发纯文字内容
-     （群发任务-发送类型与提速-PRD §2.1）。临时创建看内容类型，素材看有没有图片／视频／文件。
+     （群发任务-发送方式与提速-PRD §2.1）。临时创建看内容类型，素材看有没有图片／视频／文件。
      禁用只挂 AntD 自己的类，REA_FX 认 ant-radio-wrapper-disabled，点了不翻。 */
   var sendTypeGrp=null,sendTypeFile=null;
   function contentTextOnly(){
@@ -24882,7 +24886,7 @@ function initQf(){
 
   /* ---------- 三段：任务安排 → 发给谁 → 发什么（2026-11-13 与新小红书运营 · 新建对齐） ----------
      第一张卡是「任务安排」：任务名称、执行人员、循环方式、两个时间、全局弹窗；
-     发送类型跟着内容走，落在「发什么」末尾。三段在这里一次建好，后面的代码只往对应的段里放行。 */
+     发送方式跟着内容走，落在「发什么」末尾。三段在这里一次建好，后面的代码只往对应的段里放行。 */
   var b1=sec('1','任务安排','');
   var b2=sec('2','发送范围','');
   var b3=sec('3','发送内容','');
@@ -24895,7 +24899,7 @@ function initQf(){
      免得被快照的 REA_FX 按「同名单选组」插手。 */
   put(rScope,b2);
   /* 群发范围补第三枚「指定微信好友」：克隆同组最后一枚，选中态仍归 REA_FX
-     按整组翻转（与「发送类型」补第三项同一套做法）。 */
+     按整组翻转（与「发送方式」补第三项同一套做法）。 */
   (function(){
     var grp=rScope.querySelector('.ant-radio-group');if(!grp)return;
     if(grp.querySelector('[data-rea-scope="friends"]'))return;
@@ -25131,13 +25135,13 @@ function initQf(){
   if(rEnd)b1.appendChild(hint('未到开始时间的任务在员工任务列表里不可见。'));
   put(rPopup,b1,true);
 
-  /* ---------- 发什么收尾：发送类型跟着内容走 ---------- */
+  /* ---------- 发什么收尾：发送方式跟着内容走 ---------- */
   put(rSend,b3,true);
   var stTip=hint('');b3.appendChild(stTip);
   var stWhy=null;
-  /* 现网「发送类型」只有群发助手／搜索发送，这里补第三枚「文件传输助手转发」。
+  /* 现网这一行叫「发送类型」，只有群发助手／搜索发送；这里补第三枚「文件传输助手转发」，
      克隆同组未选中的那枚，选中态仍归 REA_FX 按整组 .ant-radio-wrapper 翻转，
-     不另写点击逻辑（见 群发任务-发送类型与提速-PRD §2.1、§7）。 */
+     不另写点击逻辑（见 群发任务-发送方式与提速-PRD §2.1、§7）。 */
   (function(){
     var grp=rSend.querySelector('.ant-radio-group');if(!grp)return;
     sendTypeGrp=grp;
@@ -25336,7 +25340,7 @@ function initQf(){
 /* ---------- 群发群组 · 新建（快照里没有表单，这一页整页另造） ----------
    2026-11-09 与「群发好友 · 新建」同口径重排，2026-11-11 改成「谁来发 → 发给谁 →
    发什么 → 什么时候发」四段，右栏常驻群聊预览与四行汇总，底部一条 sticky 操作条；任务名称、
-   发送类型、全局弹窗收进「更多设置」。群在各销售自己的微信里，后台列不出群名单、
+   发送方式、全局弹窗收进「更多设置」。群在各销售自己的微信里，后台列不出群名单、
    也算不了群数，所以页面上不出现预估数量，只让运营把群名写成「一个词覆盖一批群」。 */
 function initQs(){
   var pc=document.querySelector('.pagecontent');if(pc)pc.style.display='none';
@@ -25508,8 +25512,8 @@ function initQs(){
   tempBtn.addEventListener('click',function(e){e.preventDefault();apply(null)});
   manual(true);
 
-  /* ---------- 发什么续：发送类型跟着内容走 ---------- */
-  var stCtl=row(b3,'发送类型',false,
+  /* ---------- 发什么续：发送方式跟着内容走 ---------- */
+  var stCtl=row(b3,'发送方式',false,
      '<div class="ant-radio-group ant-radio-group-outline css-vgijab">'
      +radio('rea-qs-sendtype','per_group','逐群发送',true)+radio('rea-qs-sendtype','file_transfer','文件传输助手转发',false)
      +'</div>');
@@ -25529,7 +25533,7 @@ function initQs(){
     stFileWrap.appendChild(stWhy);
   }
   /* 内容只有文字时，文件传输助手转发不可选：微信不支持用这种方式发纯文字内容
-     （群发任务-发送类型与提速-PRD §2.2）。临时创建看内容类型，素材看有没有媒体。 */
+     （群发任务-发送方式与提速-PRD §2.2）。临时创建看内容类型，素材看有没有媒体。 */
   function contentTextOnly(){
     if(picked)return !(picked.images||picked.video||picked.files);
     return ck('rea-qs-ctype')==='text';
@@ -27225,9 +27229,9 @@ for(i=0;i<rows.length;i++){
   }
 
   /* 群发群组 · 详情：补只读回显（2026-11-10）。
-     创建页重排后，「任务内容」与「发送类型」在详情页没有落点；在「群发内容数量」后补行。
+     创建页重排后，「任务内容」与「发送方式」在详情页没有落点；在「群发内容数量」后补行。
      「任务内容」那一行由 reaWxDetailContentJs 统一补成一枚「查看」（2026-11-13）；
-     这里只补「发送类型」。
+     这里只补「发送方式」。
      2026-11-16 统一骨架：「群发那些群」改名「发送范围」，与发圈、群发好友对齐；
      「群发内容数量」与任务内容重复，由 reaWxDetailJs 摘掉。
      群发群组只有单次任务，不补循环方式；两个时间、执行人员照快照。
@@ -27246,7 +27250,7 @@ for(i=0;i<ps.length;i++){
 if(scope&&scope.firstElementChild)scope.firstElementChild.textContent='发送范围：';
 if(!anchor||!anchor.parentNode)return;
 var p=document.createElement('p');
-var a=document.createElement('span');a.textContent='发送类型：';
+var a=document.createElement('span');a.textContent='发送方式：';
 var b=document.createElement('span');b.textContent='逐群发送';
 p.appendChild(a);p.appendChild(b);
 anchor.parentNode.insertBefore(p,anchor.nextSibling);
@@ -27360,7 +27364,7 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
           {label:'任务内容来源',value:'临时创建'},
           {label:'内容类型',value:'文本'},
           {label:'描述文本',value:'各位老板好，本周新品已到店，欢迎进店体验，老客户到店可享专属优惠。'},
-          {label:'发送类型',value:'群发助手'}
+          {label:'发送方式',value:'群发助手'}
         ]}
       ],
       preview:{kind:'chat',from:'吴官宇',text:'各位老板好，本周新品已到店，欢迎进店体验，老客户到店可享专属优惠。'}
@@ -27390,7 +27394,7 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
           {label:'任务内容来源',value:'临时创建'},
           {label:'内容类型',value:'文本'},
           {label:'内容文本',value:'各位老板好，本周新品已到店，欢迎进店体验，老客户到店可享专属优惠。'},
-          {label:'发送类型',value:'逐群发送'}
+          {label:'发送方式',value:'逐群发送'}
         ]}
       ],
       preview:{kind:'group',group:'公司客户群',from:'雅楠002',text:'各位老板好，本周新品已到店，欢迎进店体验，老客户到店可享专属优惠。'}
@@ -27803,7 +27807,7 @@ BT.addEventListener('click',function(e){
      组标题在左（88px）、字段三列在右，标题不额外占高度；标题与分组顺序复述
      REA_WXS 的块名与块序。
      · 任务类型六页都不显示：页面与面包屑已经说明这条任务属于哪个模块。
-     · 创建时间、循环方式、自动发送、素材分类、发送类型、分配方式、
+     · 创建时间、循环方式、自动发送、素材分类、发送方式、分配方式、
        人均添加量、内容生成策略都只进快照抽屉，详情不重复，所以全部列进 hide。
      · 范围类字段统一成一格「发送范围」——发圈的「谁可以看」、群发好友的
        「群发范围＋标签名称」、群发群组的「群发那些群」都并进来，值统一写
@@ -27847,7 +27851,7 @@ BT.addEventListener('click',function(e){
       validity:'2026/11/10 17:11~2026/11/14 17:11',
       unit:'people', head:'用户名称', lead:'雅楠002', leadPhone:'13260303290',
       /* 「群发内容数量」与任务内容重复（演示任务都是 1 条），撤掉 */
-      hide:['任务类型','群发内容数量','发送类型','创建时间'],
+      hide:['任务类型','群发内容数量','发送方式','创建时间'],
       order:['任务名称','任务状态','任务有效期','执行人员','发送范围','任务内容'],
       groups:[
         {t:'基础信息',f:['任务名称','任务状态']},
