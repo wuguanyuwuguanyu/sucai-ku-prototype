@@ -1202,18 +1202,11 @@ select.cw-input{-webkit-appearance:none;appearance:none;padding-right:42px;curso
 @keyframes cwWxIn{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
 
 /* 共同消息编辑、可采用的写作建议与按人差异。 */
-#cw-content,#cw-preview,#cw-editor{background:var(--surface)}
-#cw-content>.cw-glow,#cw-preview>.cw-glow,#cw-editor>.cw-glow{display:none}
-#cw-content .cw-bar h3,#cw-preview .cw-bar h3,#cw-editor .cw-bar h3{justify-content:flex-start;left:64px;right:100px;font-size:22px;color:var(--on-surface)}
-#cw-content .cw-bar,#cw-preview .cw-bar,#cw-editor .cw-bar{min-height:64px}
-#cw-content .cw-pcard,#cw-preview .cw-pcard,#cw-preview .cw-aicard,#cw-editor .cw-pcard{background:var(--sc-low);box-shadow:none;border-radius:12px}
-#cw-content .cw-btn,#cw-preview .cw-btn,#cw-editor .cw-btn{background:var(--primary);color:var(--on-primary);min-height:48px}
-#cw-content .cw-btn:disabled,#cw-preview .cw-btn:disabled{background:var(--sc-highest);color:var(--on-surface-variant);opacity:.6}
-#cwContentFoot,#cwPreviewFoot,#cw-editor .cw-foot{background:var(--surface);box-shadow:none}
 .cw-main-input{margin-top:16px;min-height:176px!important}
 #cw-content .cw-input,#cw-editor .cw-input{background:var(--sc-high);border-radius:4px 4px 0 0;border:0;border-bottom:1px solid var(--outline);color:var(--on-surface)}
 #cw-content .cw-input:focus,#cw-editor .cw-input:focus{border-bottom:2px solid var(--primary)}
 .cw-section-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.cw-section-head .sp{flex:none;width:16px;height:16px;color:#7B5BFF;display:flex}
 .cw-section-head .cw-question{flex:1;font-size:16px}
 .cw-shared-text{font-size:15px;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--on-surface);margin:8px 0}
 .cw-shared-img{max-width:160px;max-height:180px;border-radius:8px}
@@ -1224,10 +1217,7 @@ select.cw-input{-webkit-appearance:none;appearance:none;padding-right:42px;curso
 .cw-full summary,.cw-same-group>summary{min-height:48px;display:flex;align-items:center;cursor:pointer;color:var(--primary)}
 .cw-full summary::after,.cw-same-group>summary::after{content:'⌄';margin-left:auto}
 .cw-full[open]>summary::after,.cw-same-group[open]>summary::after{content:'⌃'}
-#cw-preview .cw-textact,#cw-content .cw-textact,#cw-editor .cw-textact,#cw-preview .cw-nosend{min-height:48px;color:var(--primary);background:transparent;border:0;padding:8px 12px}
 #cw-preview .cw-nosend{flex:none}#cw-preview .cw-aicard{margin-top:12px}
-#cw-preview .cw-av{background:var(--secondary-container);color:var(--on-secondary-container)}
-#cw-content .cw-ib{height:48px;width:48px;box-shadow:none;color:var(--primary);background:transparent}
 /* 编辑器：内容类型走同一套浅蓝槽分段器，输入区给足高度。 */
 .cw-type{display:flex;gap:2px;padding:4px;border-radius:999px;background:#E8F0FF;margin-bottom:18px}
 .cw-type button{flex:1;height:36px;border-radius:999px;border:0;background:transparent;
@@ -1258,10 +1248,13 @@ select.cw-input{-webkit-appearance:none;appearance:none;padding-right:42px;curso
   justify-content:center;box-shadow:0 10px 26px rgba(8,20,46,.34);z-index:1}
 
 /* ---------------- 客户唤醒 · 发送内容 / AI 对话 / 选素材（2026-11-18，PRD v1.4） ----------------
-   这三屏走 M3：色调分层、无卡片框、一屏一个主操作。素材卡与聊天区的语音/微信观感不归这里。 */
+   与宿主首页／工具／AI托管同一套视觉：浅紫雾顶、白卡柔影、渐变图标块；一屏一个主操作。
+   素材卡与聊天区的语音/微信观感不归这里。具体升级见下面「视觉对齐宿主」那一段。 */
 #cw-compose,#cw-pick,#cw-people{background:var(--surface)}
 #cw-content>.cw-glow,#cw-preview>.cw-glow,#cw-people>.cw-glow,#cw-pick>.cw-glow{display:none}
-.cw-rowhd{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:6px}
+.cw-rowhd{display:flex;align-items:center;justify-content:flex-start;gap:7px;margin-bottom:6px}
+.cw-rowhd .sp,.cw-section-head .sp{flex:none;width:16px;height:16px;color:#7B5BFF;display:flex}
+.cw-rowhd .sp svg,.cw-section-head .sp svg{display:block}
 .cw-rowhd>b,.cw-rowhd-b{font-size:16px;font-weight:600;color:var(--on-surface)}
 .cw-rowsub{font-size:12px;color:var(--on-surface-variant)}
 .cw-rowhd-b{flex:1}
@@ -1362,12 +1355,14 @@ textarea.cw-ta::placeholder{color:var(--on-surface-variant)}
 .cwp-search{display:flex;align-items:center;gap:10px;height:52px;padding:0 16px;margin:4px 0 10px;
   border-radius:26px;background:var(--sc-high);color:var(--on-surface-variant)}
 .cwp-search input{flex:1;min-width:0;font-size:15px;color:var(--on-surface)}
-.cwp-tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:6px;scrollbar-width:none}
+.cwp-tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:6px;scrollbar-width:none;
+  -webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent)}
 .cwp-tabs::-webkit-scrollbar{display:none}
 .cwp-tabs button{flex:none;min-height:36px;padding:0 14px;border-radius:999px;font-size:13px;font-weight:500;
   color:var(--on-surface-variant);background:var(--sc-low)}
 .cwp-tabs button.on{background:var(--secondary-container);color:var(--on-secondary-container);font-weight:600}
-.cwp-grps{display:flex;gap:6px;overflow-x:auto;padding:0 0 8px;margin-bottom:2px;scrollbar-width:none}
+.cwp-grps{display:flex;gap:6px;overflow-x:auto;padding:0 0 8px;margin-bottom:2px;scrollbar-width:none;
+  -webkit-mask-image:linear-gradient(90deg,#000 90%,transparent);mask-image:linear-gradient(90deg,#000 90%,transparent)}
 .cwp-grps::-webkit-scrollbar{display:none}
 .cwp-grps button{flex:none;min-height:30px;padding:0 12px;border-radius:8px;font-size:12px;color:var(--on-surface-variant)}
 .cwp-grps button.on{background:var(--sc);color:var(--on-surface);font-weight:600}
@@ -1404,6 +1399,210 @@ textarea.cw-ta::placeholder{color:var(--on-surface-variant)}
 .cw-snap{display:flex;flex-direction:column;gap:8px}
 .cw-snapi{display:flex;gap:10px;font-size:14px;line-height:1.65;color:var(--on-surface)}
 .cw-snapi .cw-itno{width:22px;height:22px;margin-top:0;font-size:11px;border-radius:6px}
+
+/* ================= 客户唤醒 · 视觉对齐宿主首页／工具／AI托管（2026-11-19） =================
+   这一族四屏原先有一套「M3 色调分层、无卡片框」的覆盖，和首页那套浅紫雾顶＋白卡柔影并排像两个产品。
+   现在统一回宿主三屏的语言：浅紫→白底、两团蓝紫光晕、粗圆角白卡（白边＋蓝调柔影）、
+   ✦ 段头、渐变图标块；主操作仍是纯色 M3 胶囊（渐变只给图标与文字，不给按钮填充）。
+   动效只做「有动作才发生」的那几处：分段器滑块、条目调序 FLIP、新条目入场、对话新消息上浮、
+   参考摘要展开、上传转圈；不铺常驻动画，重绘时不整页重播。 */
+#cw-content,#cw-preview,#cw-editor,#cw-compose,#cw-pick,#cw-people,#cw-records,#cw-record{
+  background:
+    radial-gradient(120% 54% at 12% -8%,rgba(150,118,255,.20),transparent 62%),
+    radial-gradient(110% 46% at 100% 0%,rgba(92,142,255,.15),transparent 60%),
+    linear-gradient(180deg,#F2F3FE 0%,#F7F8FE 44%,#FFFFFF 100%)}
+.cw-glow{height:230px;opacity:.8}
+/* 顶栏：标题居中、深海军蓝；返回裸图标、右侧动作保留白圆钮（首页那枚消息钮的画法） */
+.cw-bar h3{font-size:20px;font-weight:600;color:#102953;letter-spacing:.01em}
+.cw-bar{min-height:64px}
+#cw-content .cw-ib{width:40px;height:40px;background:#fff;color:#2E6BFF;
+  box-shadow:0 10px 20px -16px rgba(40,70,150,.95),inset 0 0 0 1px rgba(255,255,255,.7)}
+/* 白卡：粗圆角＋白边＋蓝调柔影 */
+.cw-pcard{background:#fff;border-radius:22px;padding:18px;
+  box-shadow:0 14px 30px -26px rgba(40,70,150,.95),inset 0 0 0 1px rgba(255,255,255,.7)}
+/* 段头吃渐变深蓝字；带图标的段头保持实色（渐变会把 SVG 的 currentColor 一起吃掉） */
+.cw-sech>b,.cw-rowhd>b,.cw-rowhd-b{
+  background-image:linear-gradient(96deg,#0F2A58,#2A62B4);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.cw-rowhd>b,.cw-rowhd-b{font-size:16.5px;font-weight:700}
+.cw-h{font-size:16px;font-weight:700;color:#102953}
+/* 唤醒范围：一张浅蓝→浅紫的渐变卡，右上压一团白光；数字框与分段器都吃白玻璃底 */
+.cw-pcard.cw-scope{overflow:hidden;
+  background:
+    radial-gradient(90% 130% at 92% 4%,rgba(255,255,255,.95),rgba(255,255,255,0) 58%),
+    radial-gradient(80% 120% at 0% 100%,rgba(198,188,255,.38),rgba(198,188,255,0) 62%),
+    linear-gradient(112deg,#EFF5FF 0%,#E9EFFE 46%,#F1ECFF 100%);
+  box-shadow:0 16px 32px -26px rgba(60,70,160,.9),inset 0 0 0 1px rgba(255,255,255,.85)}
+.cw-pcard.cw-scope::after{content:"";position:absolute;right:-30px;top:-42px;width:132px;height:132px;
+  border-radius:50%;pointer-events:none;z-index:0;
+  background:radial-gradient(circle at 36% 30%,rgba(255,255,255,.95),rgba(255,255,255,0) 68%)}
+.cw-pcard.cw-scope>*{position:relative;z-index:1}
+/* 问号气泡要压过下面那行输入与分段器（同为 z-index:1 的兄弟，后画的会盖住它） */
+.cw-pcard.cw-scope .cw-sech{z-index:3}
+.cw-num{background:rgba(255,255,255,.92);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.95),0 8px 18px -16px rgba(40,70,150,.75)}
+.cw-num:focus{background:#fff;box-shadow:inset 0 0 0 1.5px #7FA6F0,0 10px 20px -16px rgba(40,70,150,.8)}
+/* 分段器：白色滑块在浅槽里滑过去，不再靠每个按钮自己换底 */
+.cw-units{position:relative;padding:4px;gap:0;background:rgba(255,255,255,.62);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.9)}
+.cw-unit-thumb{position:absolute;left:4px;top:4px;bottom:4px;width:58px;border-radius:999px;
+  background:#fff;box-shadow:0 6px 14px -10px rgba(40,70,150,.8);
+  transition:transform .28s var(--emph)}
+.cw-units[data-u="d"] .cw-unit-thumb{transform:translateX(58px)}
+.cw-units button{width:58px;padding:0;position:relative;z-index:1;background:transparent;
+  color:#4C6FA8;transition:color .2s var(--emph)}
+.cw-units button.on{background:transparent;box-shadow:none;color:#1677FE}
+/* 发送内容：软底输入块＋白卡聚焦；序号用浅蓝紫渐变块 */
+textarea.cw-ta{background:#F5F8FF;border:1px solid #E3EAF8;border-radius:16px;padding:14px 16px;
+  box-shadow:0 8px 18px -20px rgba(40,70,150,.6);
+  transition:background .2s var(--emph),border-color .2s var(--emph),box-shadow .2s var(--emph)}
+textarea.cw-ta:focus{background:#fff;border-color:#8FB3F5;
+  box-shadow:0 12px 24px -22px rgba(40,70,150,.8)}
+.cw-it+.cw-it{border-top:0;margin-top:4px}
+.cw-itno{background:linear-gradient(140deg,#EAF1FF,#EDE7FF);color:#3E56C9;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.8)}
+.cw-iact{color:#617A9E;position:relative;overflow:hidden;
+  transition:background .18s var(--emph),color .18s var(--emph)}
+.cw-iact.danger{color:#C2413A}
+.cw-media{border-radius:18px;background:linear-gradient(150deg,#F1F5FF,#EEE9FF);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.8)}
+.cw-media img{border-radius:18px}
+.cw-up{display:flex;align-items:center;gap:8px;color:#617A9E}
+.cw-up::before{content:"";flex:none;width:14px;height:14px;border-radius:50%;
+  border:2px solid #D8E4FA;border-top-color:#2E6BFF;animation:cwSpin .8s linear infinite}
+.cw-it.fresh{animation:cwItemIn .4s var(--emph) both}
+@keyframes cwItemIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+/* 「添加内容／AI 帮写」两枚白底动作块：渐变圆形图标托底，标题深海军蓝 */
+#cw-content .cw-acts2 .cw-btn{flex:1;height:58px;min-height:58px;justify-content:flex-start;gap:10px;
+  padding:0 14px;border-radius:18px;background:#fff;color:#1D3B6B;font-size:14.5px;
+  box-shadow:0 12px 24px -22px rgba(40,70,150,.9),inset 0 0 0 1px rgba(226,234,250,.9)}
+#cw-content .cw-acts2 .cw-btn svg{flex:none;width:18px;height:18px;padding:9px;box-sizing:content-box;
+  border-radius:50%;color:#fff}
+#cw-content .cw-acts2 .cw-btn:first-child svg{background:linear-gradient(142deg,#4DA3FF,#6A5BFF);
+  box-shadow:0 10px 18px -12px rgba(80,100,255,.85)}
+#cw-content .cw-acts2 .cw-btn.ai svg{background:linear-gradient(142deg,#B27BFF,#FF7BC1);
+  box-shadow:0 10px 18px -12px rgba(170,100,255,.85);animation:cwAiGlow 3.6s ease-in-out infinite}
+@keyframes cwAiGlow{
+  0%,100%{box-shadow:0 10px 18px -12px rgba(170,100,255,.85)}
+  50%{box-shadow:0 10px 22px -9px rgba(190,110,255,.95)}}
+.cw-undostrip{background:linear-gradient(120deg,#F1EEFF,#E7F0FF);color:#3E56C9;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.8)}
+/* 主操作：纯色胶囊只加强柔影与顶部高光，不换渐变填充 */
+.cw-btn{background:#1677FE;color:#fff;
+  box-shadow:0 12px 22px -16px rgba(22,119,254,.8),inset 0 1px 0 rgba(255,255,255,.25);
+  transition:background .18s var(--emph),box-shadow .18s var(--emph)}
+.cw-btn:disabled,.cw-btn[disabled]{background:#E6ECF7;color:#9AA6B8;box-shadow:none;opacity:1}
+.cw-foot,#cwContentFoot,#cwPreviewFoot,#cw-editor .cw-foot{background:rgba(255,255,255,.94);
+  backdrop-filter:blur(12px);box-shadow:0 -16px 30px -26px rgba(40,70,150,.9)}
+.cw-textact{background:#EEF3FF;color:#2E6BFF;transition:background .18s var(--emph)}
+/* 预览：接收人数卡上那枚人数吃渐变，右缘箭头收进浅蓝圆片 */
+.cw-rcpt{border-radius:22px;padding:16px 18px;position:relative;overflow:hidden;
+  transition:box-shadow .2s var(--emph)}
+.cw-rcpt b{font-size:20px;font-weight:700;
+  background-image:linear-gradient(96deg,#0F2A58,#2A62B4);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.cw-rcpt .cw-chev{width:28px;height:28px;background:#EEF3FF;color:#2E6BFF;font-size:15px}
+.cw-pvrow+.cw-pvrow{border-top:1px dashed rgba(210,220,240,.85);padding-top:12px;margin-top:2px}
+.cw-pvimg{border-radius:14px;box-shadow:0 14px 28px -22px rgba(40,70,150,.9)}
+/* 接收名单：整页一张白卡，行间细线，头像走宿主紫→蓝渐变 */
+.cw-people{background:#fff;border-radius:22px;padding:16px 16px 6px;
+  box-shadow:0 14px 30px -26px rgba(40,70,150,.95),inset 0 0 0 1px rgba(255,255,255,.7)}
+.cw-people .cw-rp+.cw-rp{border-top:1px solid #F0F4FB}
+.cw-people .cw-av{background:linear-gradient(-52deg,#A56EFF 6.5%,#529AFF 96.9%);color:#fff}
+.cw-peoplect{color:#5B81BD}
+/* 记录：日期块浅蓝紫渐变；状态胶囊保持原语义色 */
+.cw-rec{border-radius:20px;box-shadow:0 14px 28px -26px rgba(40,70,150,.95),inset 0 0 0 1px rgba(255,255,255,.7)}
+.cw-when{background:linear-gradient(155deg,#EAF1FF,#EDE7FF);color:#3E56C9;border-radius:14px;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.85)}
+.cw-card{border-radius:22px;box-shadow:0 14px 30px -26px rgba(40,70,150,.95),inset 0 0 0 1px rgba(255,255,255,.7)}
+.cw-kv.stat{background:linear-gradient(150deg,#F4F7FF,#EDF1FF)}
+.cw-kv.stat.ok{background:linear-gradient(150deg,#EDF9F3,#E7F7EF)}
+.cw-kv.stat.bad{background:linear-gradient(150deg,#FFF3F2,#FFEDEC)}
+.cw-kv.stat b{font-size:22px}
+
+/* ---- AI 帮写：对话页的层次与反馈 ---- */
+#cw-compose{display:flex;flex-direction:column}
+.cwc-bar{position:relative;flex:none;display:flex;align-items:center;gap:8px;min-height:64px;padding:0 8px;
+  background:linear-gradient(180deg,rgba(246,246,255,.94),rgba(246,246,255,0));z-index:2}
+.cwc-bar h3{position:absolute;left:56px;right:56px;top:0;bottom:0;display:flex;align-items:center;
+  justify-content:center;font-size:20px;font-weight:600;color:#102953;letter-spacing:.01em;pointer-events:none}
+.cwc-scroll{padding:6px 16px 24px}
+.cwc-empty{margin-top:110px;max-width:320px}
+.cwc-empty .ic{width:76px;height:76px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;
+  background:radial-gradient(62% 58% at 34% 26%,#FFFFFF 0%,#E7E2FF 42%,#CBD9FF 100%);
+  box-shadow:0 18px 36px -20px rgba(120,100,255,.85),inset 0 0 0 1px rgba(255,255,255,.9);
+  color:#7B5BFF;animation:cwFloat 4.6s ease-in-out infinite}
+@keyframes cwFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.cwc-empty h4{font-size:21px;font-weight:600;color:#102953}
+.cwc-empty p{font-size:14px;color:#617A9E}
+.cwc-user{margin-left:48px;border-radius:18px 6px 18px 18px;color:#1B2B4A;
+  background:linear-gradient(135deg,#E9E6FF 0%,#E2EEFF 100%);
+  box-shadow:0 10px 22px -22px rgba(70,80,180,.9)}
+.cwc-note{padding:10px 14px;border-left:3px solid #C6C0FF;border-radius:0 12px 12px 0;
+  background:rgba(255,255,255,.58);color:#2A3656}
+.cwc-cand{background:#fff;border-radius:20px;padding:18px;position:relative;overflow:hidden;
+  box-shadow:0 14px 30px -26px rgba(40,70,150,.95),inset 0 0 0 1px rgba(255,255,255,.75)}
+.cwc-cand::before{content:"";position:absolute;left:18px;right:18px;top:0;height:2px;
+  border-radius:0 0 2px 2px;background:linear-gradient(90deg,#9452FF,#1677FE);opacity:.65}
+.cwc-candtext{font-size:16px;line-height:1.8;color:#17263F}
+.cwc-prev{background:#F6F8FF;border-radius:16px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.8)}
+.cwc-tag{background:linear-gradient(120deg,#EEE8FF,#E3EEFF);color:#5A4FCF}
+.cwc-chip{background:#fff;border:1px solid #DCE6F7;color:#466DAD;position:relative;overflow:hidden;
+  box-shadow:0 8px 18px -18px rgba(40,70,150,.75);
+  transition:background .18s var(--emph),border-color .18s var(--emph),color .18s var(--emph)}
+.cwc-ref{background:#FBF9FF;border-radius:18px;box-shadow:inset 0 0 0 1px rgba(228,220,255,.9)}
+.cwc-refm{background:#fff;border-radius:10px;box-shadow:inset 0 0 0 1px rgba(232,236,248,.9)}
+.cwc-busy{color:#617A9E}
+.cwc-sumbtn{background:#fff;border:1px solid #E3EAF8;color:#466DAD;position:relative;overflow:hidden;
+  box-shadow:0 10px 22px -22px rgba(40,70,150,.8)}
+.cwc-sumbody{background:#FBF9FF;box-shadow:inset 0 0 0 1px rgba(228,220,255,.8);
+  animation:cwcSumIn .2s var(--emph) both}
+@keyframes cwcSumIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.cwc-turn{display:flow-root}
+.cwc-turn-in{animation:cwcTurnIn .34s var(--emph) both}
+@keyframes cwcTurnIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.cwc-foot{background:rgba(255,255,255,.94);backdrop-filter:blur(12px);
+  box-shadow:0 -16px 30px -26px rgba(40,70,150,.9);
+  padding:10px 10px calc(12px + env(safe-area-inset-bottom))}
+.cwc-input{background:#F2F6FF;box-shadow:inset 0 0 0 1px rgba(224,232,248,.9);
+  transition:background .2s var(--emph),box-shadow .2s var(--emph)}
+.cwc-input:focus{outline:none;background:#fff;box-shadow:inset 0 0 0 1.5px #7FA6F0}
+.cwc-send{background:#1677FE;position:relative;overflow:hidden;
+  box-shadow:0 10px 20px -12px rgba(22,119,254,.75);transition:background .18s var(--emph)}
+.cwc-send:active{background:#0F63DA}
+
+/* ---- 选择素材：搜索栏与一级 chip 照首页的画法（白底、渐变描边选中） ---- */
+.cwp-search{background:#fff;color:#7C8CA4;
+  box-shadow:0 12px 26px -24px rgba(40,70,150,.9),inset 0 0 0 1px rgba(230,236,248,.9);
+  transition:box-shadow .2s var(--emph)}
+.cwp-search:focus-within{box-shadow:0 14px 30px -24px rgba(40,70,150,.9),inset 0 0 0 1.5px #8FB3F5}
+.cwp-tabs button{position:relative;overflow:hidden;background:#fff;border:1px solid #DCE6F7;color:#5B81BD;
+  box-shadow:0 8px 18px -18px rgba(40,70,150,.8);
+  transition:border-color .2s var(--emph),color .2s var(--emph),box-shadow .2s var(--emph)}
+.cwp-tabs button.on{background:linear-gradient(#fff,#fff) padding-box,linear-gradient(110deg,#9452FF,#1677FE) border-box;
+  border-color:transparent;color:#3E56C9;font-weight:700}
+.cwp-grps button{position:relative;overflow:hidden;color:#6B84AC;transition:background .18s,color .18s}
+.cwp-grps button.on{background:#fff;color:#2E6BFF;font-weight:700;
+  box-shadow:0 6px 14px -16px rgba(40,70,150,.8)}
+.cwp-card{background:#fff;border-radius:18px;padding:14px 16px;margin-bottom:10px;border-bottom:0;
+  box-shadow:0 12px 26px -26px rgba(40,70,150,.95),inset 0 0 0 1px rgba(255,255,255,.7)}
+.cwp-list.cw-in .cwp-card{animation:cwRowIn .3s var(--emph) both}
+.cwp-list.cw-in .cwp-card:nth-child(2){animation-delay:.03s}
+.cwp-list.cw-in .cwp-card:nth-child(3){animation-delay:.06s}
+.cwp-list.cw-in .cwp-card:nth-child(4){animation-delay:.09s}
+.cwp-list.cw-in .cwp-card:nth-child(5){animation-delay:.12s}
+.cwp-list.cw-in .cwp-card:nth-child(6){animation-delay:.15s}
+.cwp-src{background:#EEF3FF;color:#3E6BB8}
+.cwp-msgs{background:#F8FAFF;border-radius:12px;padding:2px 10px;
+  box-shadow:inset 0 0 0 1px rgba(232,238,250,.8)}
+.cwp-msg+.cwp-msg{border-top:1px solid rgba(228,234,246,.9)}
+@keyframes cwRowIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+@media (prefers-reduced-motion:reduce){
+  .cw-it.fresh,.cwp-list.cw-in .cwp-card,.cwc-turn-in,.cwc-sumbody,
+  #cw-content .cw-acts2 .cw-btn.ai svg,.cwc-empty .ic,.cw-up::before{animation:none}
+  .cw-unit-thumb{transition:none}
+}
 
 /* ---------------- 宿主 App AI托管页（底部 Tab「AI托管」，居中抬起）· 逻辑照参考原型 APP-AI-001 ----------------
    口径说明：
@@ -5023,7 +5222,7 @@ function syncNav(id,params){
 }
 
 /* ---------- Material ripple（统一按压反馈，替代缩放） ---------- */
-var RIP_SEL='.cw-textact,.cw-message,.btn,.chip,.iconbtn,.cell,.wk-card,.p-card,.pc-btn,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.hv-msg,.hv-stat,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.hva-lockcard,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close,.hw-add,.cust-seg button,.cust-copy,.cust-acct-row,.cw-btn,.cw-ib,.cw-op,.cw-units button,.cw-rec,.cw-kv .op,.cw-addrow,.cw-nosend,.cw-tutlink,.cw-info,.cw-rpb,.cw-goto,.cw-tutplay';
+var RIP_SEL='.cw-textact,.cw-message,.btn,.chip,.iconbtn,.cell,.wk-card,.p-card,.pc-btn,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.hv-msg,.hv-stat,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.hva-lockcard,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close,.hw-add,.cust-seg button,.cust-copy,.cust-acct-row,.cw-btn,.cw-ib,.cw-op,.cw-units button,.cw-rec,.cw-kv .op,.cw-addrow,.cw-nosend,.cw-tutlink,.cw-info,.cw-rpb,.cw-goto,.cw-tutplay,.cw-iact,.cw-rcpt,.cwc-chip,.cwc-send,.cwc-sumbtn,.cwp-tabs button,.cwp-grps button';
 function ripInit(){
   document.addEventListener('pointerdown',function(e){
     var t=e.target.closest ? e.target.closest(RIP_SEL) : null;
@@ -5551,13 +5750,14 @@ var CW_SET={gap:10}, CW_TMP={gap:10}, CW_GAP=[5,60];
 /* 唤醒范围：n＋单位，on=false 时没有范围（进来就是这样，不替用户预选）。 */
 var CW_CUSTOM={n:3,u:'d',on:false};
 var CW_SEL={}, CW_XED={};
-var CW_QBUSY=false, CW_QERR=false, CW_QSIM=false, CW_QMODE='', CW_QBEAT=0, CW_QTM=null;
+var CW_QBUSY=false, CW_QERR=false, CW_QSIM=false, CW_QMODE='', CW_QBEAT=0, CW_QTM=null, CW_UNIT_FROM='';
 var CW_LAUNCHING=false, CW_SEND_IDS=[], CW_SEND_VERSION='', CW_PENDS=[], CW_REXP='';
 var CW_SH=null;
 
 /* 发送草稿：有序条目（文本 / 图片 / 视频），顺序就是发送顺序。
    文本逐条可改；图片/视频带上传态（ing / fail），失败项不静默跳过。 */
-var CW_ITEMS=[], CW_ITEM_SEQ=0, CW_ADDED={};
+var CW_ITEMS=[], CW_ITEM_SEQ=0, CW_ADDED={}, CW_FRESH_ID='';
+function cwMarkFresh(id){ CW_FRESH_ID=id; setTimeout(function(){ if(CW_FRESH_ID===id)CW_FRESH_ID='' },600) }
 /* AI 会话：独立保存要求、参考资料、轮次与候选。ver＝当前资料版本，换资料就 +1，
    旧候选据此标「基于之前素材」，采用前必须按当前资料重新生成。 */
 var CW_CHAT=null, CW_REF_SEQ=0;
@@ -5579,7 +5779,7 @@ function cwDropEmptyText(){
 }
 function cwResetChat(){
   if(CW_CHAT&&CW_CHAT.timer)clearTimeout(CW_CHAT.timer);
-  CW_CHAT={ver:0,token:0,busy:false,timer:null,turns:[],cand:null,refs:[],undo:null,sumOpen:false,lastReq:''};
+  CW_CHAT={ver:0,token:0,busy:false,timer:null,turns:[],cand:null,refs:[],undo:null,sumOpen:false,lastReq:'',rendered:0};
   CW_REF_SEQ=0;
 }
 function cwResetDraft(){ CW_ITEMS=[]; CW_ITEM_SEQ=0; CW_ADDED={}; cwResetChat(); CW_LAUNCHING=false; }
@@ -5657,6 +5857,7 @@ function cwRangeInput(v){
 }
 function cwRangeUnit(u){
   if(u===CW_CUSTOM.u)return;
+  CW_UNIT_FROM=CW_CUSTOM.u;
   CW_CUSTOM.u=u;
   if(CW_CUSTOM.on){
     CW_CUSTOM.n=Math.min(u==='d'?90:48,CW_CUSTOM.n);
@@ -5865,7 +6066,7 @@ function cwItemActsHtml(it,ix){
 function cwItemsHtml(){
   var multi=CW_ITEMS.length>1;
   return CW_ITEMS.map(function(it,ix){
-    var h='<div class="cw-it'+(it.t!=='text'?' media':'')+'" data-item="'+it.id+'">';
+    var h='<div class="cw-it'+(it.t!=='text'?' media':'')+(it.id===CW_FRESH_ID?' fresh':'')+'" data-item="'+it.id+'">';
     if(multi)h+='<span class="cw-itno" aria-hidden="true">'+(ix+1)+'</span>';
     h+='<div class="cw-itmain">';
     if(it.t==='text'){
@@ -5896,7 +6097,22 @@ function cwItemMove(id,dir){
   if(ix<0)return;
   var to=ix+dir; if(to<0||to>=CW_ITEMS.length)return;
   var it=CW_ITEMS.splice(ix,1)[0]; CW_ITEMS.splice(to,0,it);
+  /* FLIP：先把调序前每条的位置记下来，重绘后从旧位置滑到新位置，别整块闪一下 */
+  var before={};
+  if(!cwRM())[].forEach.call(document.querySelectorAll('#cwContentBody .cw-it'),function(n){
+    before[n.getAttribute('data-item')]=n.getBoundingClientRect().top;
+  });
   cwBumpVer(); REND['cw-content']();
+  if(cwRM())return;
+  [].forEach.call(document.querySelectorAll('#cwContentBody .cw-it'),function(n){
+    var k=n.getAttribute('data-item'), y0=before[k], y1=n.getBoundingClientRect().top;
+    if(y0==null||Math.abs(y1-y0)<1)return;
+    n.style.transition='none'; n.style.transform='translateY('+(y0-y1)+'px)';
+    requestAnimationFrame(function(){
+      n.style.transition='transform .3s var(--emph)'; n.style.transform='';
+      n.addEventListener('transitionend',function(){n.style.transition='';n.style.transform=''},{once:true});
+    });
+  });
 }
 function cwItemRemove(id){
   var ix=-1,i;
@@ -5911,7 +6127,7 @@ function cwItemRemove(id){
 }
 function cwTextAdd(){
   closeSheet(CW_SH); CW_SH=null;
-  cwAddTextBlock(''); REND['cw-content']();
+  var it=cwAddTextBlock(''); cwMarkFresh(it.id); REND['cw-content']();
   var ta=document.querySelectorAll('#cwContentBody textarea.cw-ta');
   if(ta.length)ta[ta.length-1].focus();
 }
@@ -5930,7 +6146,7 @@ function cwAddSheet(){
 function cwAlbumAdd(kind){
   closeSheet(CW_SH); CW_SH=null;
   var it={id:cwItemSeq(),t:kind==='video'?'video':'image',c:kind==='video'?'门店实拍.mp4':'门店实拍.jpg',src:kind==='video'?'':CW_IMG_SRC,up:'ing'};
-  CW_ITEMS.push(it); cwBumpVer(); REND['cw-content']();
+  CW_ITEMS.push(it); cwMarkFresh(it.id); cwBumpVer(); REND['cw-content']();
   if(window.CW_TESTFAST){
     if(window.CW_UPLOAD_FAIL){ it.up='fail'; it.why='上传中断，请重试' } else it.up='';
     cwRender(); return;
@@ -5968,7 +6184,7 @@ function cwUndoApply(){
 }
 function cwContentBlockHtml(){
   return '<div class="cw-pcard">'
-    +'<div class="cw-rowhd"><b>发送内容</b></div>'
+    +'<div class="cw-rowhd"><span class="sp" aria-hidden="true">'+I('sparkle',16,1.8)+'</span><b>发送内容</b></div>'
     +'<div class="cw-items">'+cwItemsHtml()+'</div>'
     +'<div class="cw-acts2">'
       +'<button class="cw-btn ghost" onclick="cwAddSheet()">'+I('plus',17,2.2)+'添加内容</button>'
@@ -5982,8 +6198,18 @@ REND['cw-content']=function(){
   if(CW_FROM==='tools')h+='<div class="cw-pcard cw-scope">'+cwScopeHtml()+'</div>';
   else h+='<div class="cw-awakehd"><span>已选 <b>'+cwSelCount()+'</b> 人</span><button class="cw-textact" onclick="cwEditPeople()">修改</button></div>';
   h+=cwContentBlockHtml()+cwUndoHtml();
-  $('cwContentBody').className='scroll cw-scroll';$('cwContentBody').innerHTML=h;cwGrowAll();cwContentFoot();
+  $('cwContentBody').className='scroll cw-scroll';$('cwContentBody').innerHTML=h;cwGrowAll();cwUnitAnim();cwContentFoot();
 };
+/* 换单位后整张范围卡会重绘，新元素自己不会从上一位滑过来：拿 Web Animations 补一段 旧→新 的位移 */
+function cwUnitAnim(){
+  if(!CW_UNIT_FROM)return;
+  var th=document.querySelector('#cwContentBody .cw-unit-thumb'), from=CW_UNIT_FROM;
+  CW_UNIT_FROM='';
+  if(!th||cwRM())return;
+  var x=function(u){return u==='d'?58:0};
+  th.animate([{transform:'translateX('+x(from)+'px)'},{transform:'translateX('+x(CW_CUSTOM.u)+'px)'}],
+    {duration:280,easing:'cubic-bezier(.2,0,0,1)'});
+}
 
 /* ================= AI 帮写（全屏对话） ================= */
 function cwSupported(t){ return t==='text'||t==='image'||t==='video' }
@@ -6168,6 +6394,7 @@ function cwJoinRef(id){
   var msgs=r.msgs.filter(function(m){return cwSupported(m.t)});
   if(!msgs.length){toast('这条参考里没有可发送的内容');return}
   msgs.forEach(function(m){ CW_ITEMS.push({id:cwItemSeq(),t:m.t,c:m.c,from:r.title}) });
+  if(CW_ITEMS.length)cwMarkFresh(CW_ITEMS[CW_ITEMS.length-1].id);
   cwDropEmptyText(); r.joined=true; cwBumpVer(); cwComposeRender();
   toast('已加入发送内容');
 }
@@ -6247,23 +6474,38 @@ function cwComposeHtml(){
     h+='<div class="cwc-empty"><span class="ic" aria-hidden="true">'+I('sparkle',34,1.6)+'</span>'
       +'<h4>这次想和客户说什么？</h4><p>也可以添加素材。</p></div>';
   }
-  CW_CHAT.turns.forEach(function(t,ix){ h+=cwTurnHtml(t,ix===last) });
+  CW_CHAT.turns.forEach(function(t,ix){
+    var th=cwTurnHtml(t,ix===last);
+    if(th)h+='<div class="cwc-turn">'+th+'</div>';
+  });
   if(CW_CHAT.busy)h+='<div class="cwc-busy" role="status"><span class="cwc-dots"><i></i><i></i><i></i></span>正在写<button class="cw-textact" onclick="cwChatStop()">停止</button></div>';
   return h;
 }
 function cwComposeRender(){
   if(!CW_CHAT)return;
   var b=$('cwComposeBody'); if(!b)return;
+  /* 只有真多了新一轮才让最新那条上浮；展开摘要、切候选这类重绘不重播 */
+  var grew=CW_CHAT.turns.length>(CW_CHAT.rendered||0);
   b.innerHTML=cwComposeHtml();
+  if(grew&&!cwRM()){
+    var turns=b.querySelectorAll('.cwc-turn');
+    if(turns.length)turns[turns.length-1].classList.add('cwc-turn-in');
+  }
+  CW_CHAT.rendered=CW_CHAT.turns.length;
   b.scrollTop=b.scrollHeight;
 }
 REND['cw-compose']=function(){ $('cwComposeClose').innerHTML=I('x',24,2); cwComposeRender() };
 
 /* ================= 素材选择（复用素材库数据与读法） ================= */
-var CW_PICK={origin:'content',tab:'全部',grp:'全部',q:'',exp:'',sel:{}};
+var CW_PICK={origin:'content',tab:'全部',grp:'全部',q:'',exp:'',sel:{},enter:false};
 function cwPickOpen(origin){
   closeSheet();
   CW_PICK.origin=origin; CW_PICK.tab='全部'; CW_PICK.grp='全部'; CW_PICK.q=''; CW_PICK.exp=''; CW_PICK.sel={};
+  CW_PICK.enter=true;
+  setTimeout(function(){
+    CW_PICK.enter=false;
+    var l=$('cwPickList'); if(l)l.classList.remove('cw-in');   /* 入场只播一次，别让搜索每次重绘都再放一遍 */
+  },520);
   go('cw-pick');
 }
 function cwPickMsgs(m){ return msgsOf(m).map(function(x){return {t:x.t,c:x.t==='text'?(x.txt||''):(x.n||''),n:x.n||''}}) }
@@ -6346,6 +6588,7 @@ function cwPickListHtml(){
 function cwPickRefresh(){
   var box=$('cwPickList'); if(!box)return;
   var y=box.parentNode?box.parentNode.scrollTop:0;
+  if(!CW_PICK.enter)box.classList.remove('cw-in');
   box.innerHTML=cwPickListHtml();
   if(box.parentNode)box.parentNode.scrollTop=y;
 }
@@ -6384,6 +6627,7 @@ function cwPickAdd(id,force){
       return;
     }
     msgs.forEach(function(m){ CW_ITEMS.push({id:cwItemSeq(),t:m.t,c:m.c,from:p.title}) });
+    if(CW_ITEMS.length)cwMarkFresh(CW_ITEMS[CW_ITEMS.length-1].id);
     cwDropEmptyText(); CW_ADDED[p.id]=1; cwBumpVer(); toast('已添加到发送内容');
   }
   cwPickRefresh();
@@ -6397,7 +6641,7 @@ REND['cw-pick']=function(){
   var grps=cwPickGrps();
   if(grps.length)h+='<div class="cwp-grps"><button class="'+(CW_PICK.grp==='全部'?'on':'')+'" onclick="cwPickGrp(\'全部\')">全部分组</button>'
     +grps.map(function(g){return '<button class="'+(CW_PICK.grp===g?'on':'')+'" onclick="cwPickGrp(\''+g+'\')">'+esc(g)+'</button>'}).join('')+'</div>';
-  h+='<div class="cwp-list" id="cwPickList">'+cwPickListHtml()+'</div>';
+  h+='<div class="cwp-list'+(CW_PICK.enter?' cw-in':'')+'" id="cwPickList">'+cwPickListHtml()+'</div>';
   $('cwPickBody').innerHTML=h;
 };
 
@@ -6434,7 +6678,7 @@ function cwPreviewFoot(){
 REND['cw-preview']=function(){
   $('cwPreviewBack').innerHTML=I('back',24,2);
   var h='<button class="cw-pcard cw-rcpt" onclick="go(\'cw-people\')"><span>接收客户 <b>'+cwSelCount()+'</b> 人</span><span class="cw-chev" aria-hidden="true">›</span></button>';
-  h+='<div class="cw-pcard"><div class="cw-section-head"><b class="cw-rowhd-b">发送内容</b><button class="cw-textact" onclick="back()">修改内容</button></div>'
+  h+='<div class="cw-pcard"><div class="cw-section-head"><span class="sp" aria-hidden="true">'+I('sparkle',16,1.8)+'</span><b class="cw-rowhd-b">发送内容</b><button class="cw-textact" onclick="back()">修改内容</button></div>'
     +'<div class="cw-pvpane">'+cwPreviewItemsHtml()+'</div></div>';
   $('cwPreviewBody').innerHTML=h;cwPreviewFoot();
 };
@@ -6707,7 +6951,8 @@ function cwScopeHtml(){
       +'<input class="cw-num" type="text" inputmode="numeric" value="'+(on?CW_CUSTOM.n:'')+'" placeholder="—"'
         +' aria-label="未回复超过多少'+cwUnitN(u)+'" onchange="cwRangeInput(this.value)"'
         +' onkeydown="if(event.key===\'Enter\')this.blur()">'
-      +'<div class="cw-units">'
+      +'<div class="cw-units" data-u="'+u+'">'
+        +'<i class="cw-unit-thumb" aria-hidden="true"></i>'
         +'<button class="'+(u==='h'?'on':'')+'" onclick="cwRangeUnit(\'h\')">小时</button>'
         +'<button class="'+(u==='d'?'on':'')+'" onclick="cwRangeUnit(\'d\')">天</button>'
       +'</div>'
