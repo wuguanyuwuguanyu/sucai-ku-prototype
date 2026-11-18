@@ -1608,10 +1608,15 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
 .cwc-send:active{background:#0F63DA}
 /* AI 帮写按底部抽屉入场：点「AI 帮写」后整页面板从屏底上滑，顶上留一道遮罩；
    内容仍是全屏对话，只换入场／退场方式。面板压住状态栏以下的区域，圆角顶＋抓柄与全站浮层同一口径。 */
-.cw-drawer-scrim{position:absolute;inset:0;background:rgba(16,28,52,.42);
+.cw-drawer-scrim{position:absolute;inset:0;z-index:50;background:rgba(16,28,52,.42);
   opacity:0;visibility:hidden;transition:opacity .24s ease,visibility 0s linear .24s}
 .cw-drawer-scrim.on{opacity:1;visibility:visible;animation:cwScrimIn .24s ease forwards;transition:none}
 @keyframes cwScrimIn{from{opacity:0}to{opacity:1}}
+/* 入场那 320ms 里旧屏还挂着 active，屏内的 .cw-scroll（z1）、.cw-foot（z6）、删除区（z45）
+   都比普通屏高；不给抽屉自己抬一层，那些卡片会从抽屉身上压过去。遮罩与抽屉都压到
+   内容屏之上、状态栏（55）与浮层根（80）之下。drawer-top 只在它是当前屏时挂上，
+   让开到 cw-pick 这类"往后的屏"时仍由新屏压住它。 */
+#cw-compose.drawer-top{z-index:51}
 #cw-compose{top:52px;border-radius:28px 28px 0 0;box-shadow:0 -24px 60px -26px rgba(16,34,70,.55)}
 #cw-compose::before{height:0}
 .cwc-grab{position:absolute;left:50%;top:10px;transform:translateX(-50%);width:38px;height:4px;
@@ -5278,8 +5283,9 @@ function syncNav(id,params){
   if(el)el.classList.add('on');
   /* AI 帮写是抽屉：它不在栈顶时遮罩一并收走（采用候选、去选素材、开始发送等）
      ——遮罩状态跟着当前屏走，别让它在别的屏上再拦一次点击 */
-  var sc=$('cwComposeScrim');
+  var sc=$('cwComposeScrim'), cp=$('cw-compose');
   if(sc){ if(id==='cw-compose')sc.classList.add('on'); else sc.classList.remove('on') }
+  if(cp){ if(id==='cw-compose')cp.classList.add('drawer-top'); else cp.classList.remove('drawer-top') }
 }
 
 /* ---------- Material ripple（统一按压反馈，替代缩放） ---------- */
