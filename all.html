@@ -248,7 +248,10 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
    背景与遮罩都能铺满。 */
 .screen::before,.screen::after{content:"";display:block;flex:none;height:34px}
 .screen::after{height:22px}
-.anim-push{animation:m3In .3s var(--emph)}
+/* 切屏（go）＝M3 fade-through 的「先出后进」：旧屏 90ms 淡出，新屏从第 90ms 起 210ms 淡入。
+   旧写法只给新屏挂淡入、旧屏原地不动，中段两屏都可见，密集页之间切（首页↔任务）会看到两层文字叠印。 */
+.anim-push{animation:m3In .21s var(--emph) .09s both}
+.anim-leave{animation:m3Out .09s ease forwards}
 .anim-pop{animation:m3In .3s var(--emph)}
 .anim-exit{animation:m3Out .14s ease forwards}
 @keyframes m3In{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
@@ -1354,9 +1357,10 @@ textarea.cw-ta::placeholder{color:var(--on-surface-variant)}
 .cwc-prev p{margin-top:8px;font-size:14px;line-height:1.7;white-space:pre-wrap}
 .cwc-tag{flex:none;font-size:11px;font-weight:600;padding:3px 8px;border-radius:999px;
   background:var(--primary-container);color:var(--on-primary-container)}
-.cwc-quick{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 6px}
-.cwc-chip{min-height:36px;padding:0 14px;border-radius:999px;border:1px solid var(--outline-variant);
-  font-size:13px;font-weight:500;color:var(--on-surface)}
+.cwc-quick{display:flex;flex-direction:column;align-items:flex-start;margin:2px 0 8px}
+.cwc-more{display:flex;align-items:center;gap:6px;min-height:48px;padding:0;text-align:left;
+  font-size:15px;font-weight:500;color:var(--on-surface-variant)}
+.cwc-more .arw{font-size:14px;line-height:1;color:#9AA9BF}
 .cwc-ref{margin:12px 0;padding:14px;border-radius:14px;background:var(--sc)}
 .cwc-refhd{display:flex;align-items:center;gap:8px}
 .cwc-refhd b{flex:1;min-width:0;font-size:15px;font-weight:600;color:var(--on-surface)}
@@ -1616,9 +1620,8 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
 .cwc-candtext{font-size:16px;line-height:1.8;color:#17263F}
 .cwc-prev{background:#F6F8FF;border-radius:16px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.8)}
 .cwc-tag{background:linear-gradient(120deg,#EEE8FF,#E3EEFF);color:#5A4FCF}
-.cwc-chip{background:#fff;border:1px solid #DCE6F7;color:#466DAD;position:relative;overflow:hidden;
-  box-shadow:0 8px 18px -18px rgba(40,70,150,.75);
-  transition:background .18s var(--emph),border-color .18s var(--emph),color .18s var(--emph)}
+.cwc-more{color:#617A9E;transition:color .18s var(--emph)}
+.cwc-more:active{color:#2E6BFF}
 .cwc-ref{background:#FBF9FF;border-radius:18px;box-shadow:inset 0 0 0 1px rgba(228,220,255,.9)}
 .cwc-refm{background:#fff;border-radius:10px;box-shadow:inset 0 0 0 1px rgba(232,236,248,.9)}
 .cwc-busy{color:#617A9E}
@@ -5316,7 +5319,7 @@ function syncNav(id,params){
 }
 
 /* ---------- Material ripple（统一按压反馈，替代缩放） ---------- */
-var RIP_SEL='.cw-textact,.cw-message,.btn,.chip,.iconbtn,.cell,.wk-card,.p-card,.pc-btn,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.hv-msg,.hv-stat,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.hva-lockcard,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close,.hw-add,.cust-seg button,.cust-copy,.cust-acct-row,.cw-btn,.cw-ib,.cw-op,.cw-units button,.cw-rec,.cw-kv .op,.cw-addrow,.cw-nosend,.cw-tutlink,.cw-info,.cw-rpb,.cw-goto,.cw-tutplay,.cw-rcpt,.cw-ai-link,.cwc-chip,.cwc-send,.cwc-sumbtn,.cwp-tabs button,.cwp-grps button';
+var RIP_SEL='.cw-textact,.cw-message,.btn,.chip,.iconbtn,.cell,.wk-card,.p-card,.pc-btn,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.hv-msg,.hv-stat,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.hva-lockcard,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close,.hw-add,.cust-seg button,.cust-copy,.cust-acct-row,.cw-btn,.cw-ib,.cw-op,.cw-units button,.cw-rec,.cw-kv .op,.cw-addrow,.cw-nosend,.cw-tutlink,.cw-info,.cw-rpb,.cw-goto,.cw-tutplay,.cw-rcpt,.cw-ai-link,.cwc-more,.cwc-send,.cwc-sumbtn,.cwp-tabs button,.cwp-grps button';
 function ripInit(){
   document.addEventListener('pointerdown',function(e){
     var t=e.target.closest ? e.target.closest(RIP_SEL) : null;
@@ -5899,7 +5902,7 @@ function cwWindow(){
   return cwByH(CW_CUST.filter(function(c){ return c.h>=th&&c.h<=th+span; }));
 }
 function cwByH(list){ return list.slice().sort(function(a,b){ return b.h-a.h }) }
-/* 换范围＝重新取人：只换人，不动文案、不重解析素材。 */
+/* 取人只在点「预览发送」时发起（2026-11-19）：改范围只清掉上一份名单，不动文案、不重解析素材。 */
 function cwReseed(){
   CW_SEL={};
   cwWindow().forEach(function(c){ if(!CW_XED[c.i])CW_SEL[c.i]=true });
@@ -5924,18 +5927,22 @@ function cwQueryDone(tok){
     if(keep.length!==CW_SEND_IDS.length){ cwRender(); toast('接收客户已变为 '+keep.length+' 人，请重新确认'); return; }
     cwSendNow(); return;
   }
+  /* 预览发送才取人：取回来先落名单，再进预览；一个人都没有就停在内容页提示改范围。 */
   cwApplyWindow();
+  if(!cwSelCount()){ toast('这段时间没有未回复的客户，调大范围再试'); return; }
+  go('cw-preview');
 }
 /* 清掉范围时连在飞的查询一起作废：别让它回来又把人选上。 */
 function cwQueryStop(){ clearTimeout(CW_QTM); CW_QTM=null; CW_QBEAT++; CW_QBUSY=false; CW_QERR=false; CW_QMODE=''; }
-function cwQueryRetry(){ if(!CW_QBUSY)cwQueryRun(CW_QMODE==='send'?'send':'range'); }
+function cwQueryRetry(){ if(!CW_QBUSY)cwQueryRun(CW_QMODE==='send'?'send':'preview'); }
 /* 冒烟用：把在飞的查询立即跑完（真机上是接口回来）。 */
 function cwQueryFlush(){ if(!CW_QTM)return; clearTimeout(CW_QTM); cwQueryDone(CW_QBEAT); }
 /* 冒烟置 window.CW_TESTFAST＝1 时同样全走瞬时分支，断言才不用等真实计时。 */
 function cwRM(){ return !!window.CW_TESTFAST||!!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches); }
 
 function cwApplyWindow(){cwReseed();cwRender()}
-/* 直接输入：空／非正数＝清掉范围（不查人）；超界夹到边界；值没变只重绘。 */
+/* 直接输入：空／非正数＝清掉范围；超界夹到边界；值没变只重绘。
+   范围一变，上一份名单就作废（在飞的取人一起取消），等点「预览发送」再取人。 */
 function cwRangeInput(v){
   var n=parseInt(v,10), lim=CW_CUSTOM.u==='d'?90:48;
   if(!n||n<1){
@@ -5947,7 +5954,8 @@ function cwRangeInput(v){
   var same=CW_CUSTOM.on&&CW_CUSTOM.n===n;
   CW_CUSTOM.n=n; CW_CUSTOM.on=true;
   if(same){ cwRender(); return; }
-  cwQueryRun('range');
+  cwQueryStop(); CW_SEL={};
+  cwRender();
 }
 function cwRangeUnit(u){
   if(u===CW_CUSTOM.u)return;
@@ -5955,7 +5963,8 @@ function cwRangeUnit(u){
   CW_CUSTOM.u=u;
   if(CW_CUSTOM.on){
     CW_CUSTOM.n=Math.min(u==='d'?90:48,CW_CUSTOM.n);
-    cwQueryRun('range'); return;
+    cwQueryStop(); CW_SEL={};
+    cwRender(); return;
   }
   cwRender();
 }
@@ -6841,9 +6850,9 @@ function cwTurnHtml(t,latest){
           :'<button class="cw-btn" '+(CW_CHAT.busy?'disabled':'onclick="cwUseCand()"')+'>'+cwUseLabel()+'</button>')
         +'</div>';
       if(!stale&&!CW_CHAT.busy)h+='<div class="cwc-quick">'
-        +'<button class="cwc-chip" onclick="cwChatAsk(\'更简短\',{op:\'short\'})">更简短</button>'
-        +'<button class="cwc-chip" onclick="cwChatAsk(\'更自然\',{op:\'natural\'})">更自然</button>'
-        +'<button class="cwc-chip" onclick="cwChatAsk(\'换一种写法\',{op:\'rewrite\'})">换一种写法</button></div>';
+        +'<button class="cwc-more" onclick="cwChatAsk(\'更简短\',{op:\'short\'})">更简短<span class="arw" aria-hidden="true">↗</span></button>'
+        +'<button class="cwc-more" onclick="cwChatAsk(\'更自然\',{op:\'natural\'})">更自然<span class="arw" aria-hidden="true">↗</span></button>'
+        +'<button class="cwc-more" onclick="cwChatAsk(\'换一种写法\',{op:\'rewrite\'})">换一种写法<span class="arw" aria-hidden="true">↗</span></button></div>';
     }else{
       h+='<div class="cwc-prev"><span class="cwc-tag">上一版</span><p>'+esc(t.cand.text)+'</p></div>';
     }
@@ -7045,20 +7054,39 @@ function cwPreviewItemsHtml(){
     return '<div class="cw-pvrow">'+no+(it.t==='image'?'<img class="cw-pvimg" src="'+(it.src||CW_IMG_SRC)+'" alt="'+esc(it.c)+'">':cwMediaHtml(it))+'</div>';
   }).join('');
 }
-function cwPreviewBlocked(){
-  if(CW_FROM==='tools'&&CW_QBUSY)return '正在取人…';
-  if(CW_FROM==='tools'&&CW_QERR)return '没能取到客户，请重试';
-  if(CW_FROM==='tools'&&!CW_CUSTOM.on)return '先设置未回复范围';
-  if(!cwSelCount())return '还没有可发送的客户';
+/* 内容页与预览页共用的内容检查；内容页不查名单——名单是点「预览发送」才取的。 */
+function cwContentErr(){
   if(CW_ITEMS.some(function(i){return i.up==='ing'}))return '附件还在上传';
   if(CW_ITEMS.some(function(i){return i.up==='fail'}))return '有附件上传失败，请重试或移除';
   if(!cwHasContent())return '还没有要发送的内容';
   return '';
 }
+function cwContentBlocked(){
+  if(CW_FROM==='tools'&&CW_QBUSY)return '正在获取客户…';
+  if(CW_FROM==='tools'&&!CW_CUSTOM.on)return '先设置未回复范围';
+  return cwContentErr();
+}
+function cwPreviewBlocked(){
+  if(CW_FROM==='tools'&&CW_QBUSY)return '正在获取客户…';
+  if(CW_FROM==='tools'&&CW_QERR)return '没能取到客户，请重试';
+  if(CW_FROM==='tools'&&!CW_CUSTOM.on)return '先设置未回复范围';
+  if(!cwSelCount())return '还没有可发送的客户';
+  return cwContentErr();
+}
 function cwContentFoot(){
-  var err=cwPreviewBlocked();
-  var sum=err?'<div class="cw-sum">'+esc(err)+(CW_QERR?' · <button class="cw-textact" onclick="cwQueryRetry()">重试</button>':'')+'</div>':'';
-  cwFootSet(sum,'预览发送',(cwHasContent()&&cwSelCount())?'go(\'cw-preview\')':null);
+  var err=cwContentBlocked();
+  var note=err||(CW_FROM==='tools'&&CW_QERR?'没能取到客户，请重试':'');
+  var sum=note?'<div class="cw-sum">'+esc(note)+(CW_QERR&&!CW_QBUSY?' · <button class="cw-textact" onclick="cwQueryRetry()">重试</button>':'')+'</div>':'';
+  cwFootSet(sum,'预览发送',err?'':'cwPreviewGo()');
+}
+/* 「预览发送」：工具入口先按范围取人，拿到名单才进预览；手选入口名单已经在手，直接进。 */
+function cwPreviewGo(){
+  if(CW_QBUSY)return;
+  if(CW_FROM!=='tools'){ go('cw-preview'); return; }
+  if(!CW_CUSTOM.on){ cwContentFoot(); toast('先设置未回复范围'); return; }
+  var bad=cwContentErr();
+  if(bad){ cwContentFoot(); toast(bad); return; }
+  cwQueryRun('preview');
 }
 function cwPreviewFoot(){
   var err=cwPreviewBlocked(),retry=(CW_QERR?' · <button class="cw-textact" onclick="cwQueryRetry()">重试</button>':'');
