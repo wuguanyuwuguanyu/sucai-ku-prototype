@@ -1499,8 +1499,11 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
 .cw-del-lid{transform-box:fill-box;transform-origin:0% 100%;transition:transform .22s var(--emph)}
 .cw-del-zone.open .cw-del-lid{transform:rotate(-34deg)}
 /* 「添加内容」是发送内容卡里唯一的主操作；AI 帮写收在段头右侧做文字入口 */
-.cw-add-btn{width:100%;height:50px;min-height:50px;gap:8px;margin-top:14px;font-size:15px}
-.cw-add-btn svg{flex:none}
+.cw-btn.cw-add-btn{width:100%;height:50px;min-height:50px;gap:8px;margin-top:14px;font-size:15px;
+  background:#E8F0FF;color:#1D5FD1;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.9),0 10px 22px -24px rgba(40,70,150,.8)}
+.cw-btn.cw-add-btn:active{background:#DCE9FF}
+.cw-btn.cw-add-btn svg{flex:none}
 .cw-undostrip{background:linear-gradient(120deg,#F1EEFF,#E7F0FF);color:#3E56C9;
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.8)}
 /* 主操作：纯色胶囊只加强柔影与顶部高光，不换渐变填充 */
