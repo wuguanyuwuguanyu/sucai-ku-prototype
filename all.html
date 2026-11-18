@@ -22700,14 +22700,21 @@ tb.addEventListener("click",function(e){
     + '.rea-qf-src .ant-btn.on{background:#E6F4FF!important;border-color:#E6F4FF!important;color:#1677FF!important;font-weight:500}'
     + '.rea-qf-ctype .ant-btn{height:28px!important;padding:0 12px!important;border:1px solid #E5E8EF!important;background:#fff!important;color:#646A73!important;font-size:13px!important;box-shadow:none!important}'
     + '.rea-qf-ctype .ant-btn-primary{background:#E6F4FF!important;border-color:#E6F4FF!important;color:#1677FF!important}'
-    + '.rea-qf-tagpanel{margin:-8px 0 4px 108px;max-width:560px}'
+    /* 发送范围整卡的标签列加宽到放得下「是否按照整个标签发送」：外层行与卡内的
+       子行（是否按照整个标签发送／标签／匹配方式）共用同一列，单选项、标签页、
+       输入框都从同一条竖线起，读起来是同一组设置。 */
+    + '.rea-qf-scope .rea-qf-lab{flex:0 0 160px!important;width:160px!important}'
+    + '.rea-qf-scope .rea-qf-hint{margin-left:180px}'
+    + '.rea-qf-tagpanel{margin:-8px 0 4px 0;max-width:740px}'
     + '.rea-qf-tagpanel[hidden]{display:none!important}'
     + '.rea-qf-tagrow{align-items:flex-start!important}'
     + '.rea-qf-tagrow>span:first-child{line-height:32px}'
     + '.rea-qf-tagbody{flex:1 1 auto;min-width:0}'
     + '.rea-qf-tagbody .rea-qf-tagctl{max-width:none}'
     + '.rea-qf-trow{display:flex;align-items:center;gap:16px;margin-bottom:12px;font-size:14px;color:#1F2329}'
-    + '.rea-qf-trow>span:first-child{flex:none;color:#646A73}'
+    /* 与 .rea-qf-lab 同一右沿：文字右沿都是 144px；控件也都从 180px 起
+       （内层 164＋gap16，外层 160＋margin20）。 */
+    + '.rea-qf-trow>span:first-child{flex:0 0 164px;box-sizing:border-box;padding-right:20px;text-align:right;white-space:nowrap;color:#646A73}'
     + '.rea-qf-rd{position:relative;display:inline-flex;align-items:center;gap:8px;color:#1F2329;cursor:pointer}'
     + '.rea-qf-rd input{position:absolute;opacity:0;width:0;height:0}'
     + '.rea-qf-rddot{position:relative;box-sizing:border-box;width:16px;height:16px;flex:none;border:1px solid #D9D9D9;border-radius:50%;background:#fff;transition:border-color .15s}'
@@ -24295,6 +24302,7 @@ function initQf(){
   var b1=sec('1','任务安排','');
   var b2=sec('2','发送范围','');
   var b3=sec('3','发送内容','');
+  b2.classList.add('rea-qf-scope');
 
   /* ---------- ② 发给谁 ----------
      标签是各销售自己微信里的：后台拿到的是手机定时同步的一份，可能滞后。
@@ -24362,7 +24370,7 @@ function initQf(){
   friendPanel.innerHTML='<div class="rea-qf-trow"><span>匹配方式</span>'
     +'<label class="rea-qf-rd"><input type="radio" name="rea-qf-fmatch" value="exact" checked><span class="rea-qf-rddot"></span>精确匹配</label>'
     +'<label class="rea-qf-rd"><input type="radio" name="rea-qf-fmatch" value="fuzzy"><span class="rea-qf-rddot"></span>模糊匹配</label></div>'
-    +'<div class="rea-qf-trow"><label class="rea-qf-tagin">'
+    +'<div class="rea-qf-trow"><span aria-hidden="true"></span><label class="rea-qf-tagin">'
     +'<input type="text" aria-label="好友昵称" placeholder="请输入好友昵称，多个昵称请用&quot;,&quot;隔开">'
     +'</label></div>';
   var friendInput=friendPanel.querySelector('.rea-qf-tagin input');
