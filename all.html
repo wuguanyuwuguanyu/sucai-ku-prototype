@@ -24444,8 +24444,12 @@ function initQf(){
     +'<label class="rea-qf-rd"><input type="radio" name="rea-qf-fmatch" value="fuzzy"><span class="rea-qf-rddot"></span>模糊匹配</label></div>'
     +'<div class="rea-qf-trow"><span aria-hidden="true"></span><label class="rea-qf-tagin">'
     +'<input type="text" aria-label="好友昵称" placeholder="请输入好友昵称，多个昵称请用&quot;,&quot;隔开">'
-    +'</label></div>';
+    +'</label></div>'
+    +'<p class="rea-qf-hint rea-qf-fhint" hidden></p>'
+    +'<p class="rea-qf-err rea-qf-ferr" hidden></p>';
   var friendInput=friendPanel.querySelector('.rea-qf-tagin input');
+  var friendHint=friendPanel.querySelector('.rea-qf-fhint');
+  var friendErr=friendPanel.querySelector('.rea-qf-ferr');
   function friendFuzzy(){
     var r=friendPanel.querySelector('input[name="rea-qf-fmatch"]:checked');
     return !!r&&r.value==='fuzzy';
@@ -24458,6 +24462,22 @@ function initQf(){
       if(v&&!seen[v]){seen[v]=1;out.push(v)}
     }
     return out;
+  }
+  /* 群发好友是发私信，模糊匹配必须至少两个字，太短的词会命中一片人。
+     精确匹配不受这条限制。 */
+  function friendShort(){
+    if(!friendFuzzy())return false;
+    var ns=friendNames(),q;
+    for(q=0;q<ns.length;q++)if(ns[q].length<2)return true;
+    return false;
+  }
+  function drawFriendHints(){
+    var show=scopeIsFriends()&&friendFuzzy();
+    friendHint.hidden=!show;
+    friendHint.textContent=show?'模糊匹配可能命中多个好友，请确认昵称足够具体，避免发错。':'';
+    var bad=scopeIsFriends()&&friendShort();
+    friendErr.hidden=!bad;
+    friendErr.textContent=bad?'模糊匹配时，每个昵称至少输入 2 个字符。':'';
   }
   function drawPanel(){tagPanel.hidden=!scopeIsTags();friendPanel.hidden=!scopeIsFriends()}
   var tagHint=hint('');b2.appendChild(tagHint);
@@ -24692,6 +24712,7 @@ function initQf(){
     var st=sendType();
     var manualFuzzy=tagPick.hasManual()&&tagPick.mode()==='fuzzy';
     var friendModeFuzzy=friendFuzzy();
+    drawFriendHints();
     sumWho.textContent=all?'全部好友'
       :(friends?(fn?('好友：'+fnames.join(',')+(friendModeFuzzy?' · '+MATCH_LABEL.fuzzy:'')):'指定微信好友 · 未填')
         :(n?('标签：'+names.join(';')+(manualFuzzy?' · '+MATCH_LABEL.fuzzy:''))
@@ -24731,11 +24752,15 @@ function initQf(){
     }else if(all&&st==='file'){
       warn.style.display='';warn.textContent='全部好友用文件传输助手转发要在选择器里一批批勾，大批量建议改用群发助手。';
     }else{warn.style.display='none';warn.textContent='';}
-    stTip.textContent=st==='assistant'
-      ?'推荐。微信内置群发，一次最多 200 人；客户收到的是一条普通消息。'
-      :(st==='search'
-        ?'逐人进会话发送，最慢；好处是能逐个看到发送结果。'
-        :'先把内容发到文件传输助手，再按批转发；每批最多 9 个好友。适合小批量、指定标签，或群发助手发不了的内容。');
+    stTip.textContent=textOnly
+      ?(picked
+        ?'所选素材只有文字，文件传输助手转发不可用；换成含图片、视频或文件的素材后可选。'
+        :'内容只有文字时，文件传输助手转发不可用；加入图片、视频或文件后可选。')
+      :(st==='assistant'
+        ?'推荐。微信内置群发，一次最多 200 人；客户收到的是一条普通消息。'
+        :(st==='search'
+          ?'逐人进会话发送，最慢；好处是能逐个看到发送结果。'
+          :'先把内容发到文件传输助手，再按批转发；每批最多 9 个好友。适合小批量、指定标签，或群发助手发不了的内容。'));
     if(stWhy)stWhy.hidden=!textOnly;
     var text=picked?picked.text:editorText();
     var msgs=[];
@@ -24768,6 +24793,7 @@ function initQf(){
     if(scopeIsTags())tagPick.flush();
     if(scopeIsTags()&&!tagSelection().length){setErr(rScope,'按微信标签群发时，请至少填写或选择一个标签');ok=false}
     else if(scopeIsFriends()&&!friendNames().length){setErr(rScope,'指定微信好友群发时，请至少填写一个好友昵称');ok=false}
+    else if(scopeIsFriends()&&friendShort()){setErr(rScope,'模糊匹配时，每个昵称至少输入 2 个字符');ok=false}
     else setErr(rScope,'');
     if(!picked&&!editorText()&&ctypeSel()==='文本'){
       setErr(rContent,'请从素材库选一条素材，或临时写完内容');ok=false;
@@ -25064,8 +25090,15 @@ function initQs(){
     if(all&&file){
       warn.style.display='';warn.textContent='全部群用文件传输助手转发要一批批勾，建议把「群发哪些群」写成能覆盖一批的群名关键词。';
     }else{warn.style.display='none';warn.textContent='';}
-    stHint.style.display=file?'':'none';
-    stHint.textContent=file?'先把内容发到文件传输助手，再按批转发；每批最多 9 个群。建议把「群发哪些群」写成能覆盖一批的群名关键词。':'';
+    if(textOnly){
+      stHint.style.display='';
+      stHint.textContent=picked
+        ?'所选素材只有文字，文件传输助手转发不可用；换成含图片、视频或文件的素材后可选。'
+        :'内容只有文字时，文件传输助手转发不可用；加入图片、视频或文件后可选。';
+    }else{
+      stHint.style.display=file?'':'none';
+      stHint.textContent=file?'先把内容发到文件传输助手，再按批转发；每批最多 9 个群。建议把「群发哪些群」写成能覆盖一批的群名关键词。':'';
+    }
     if(stWhy)stWhy.hidden=!textOnly;
     var text=picked?picked.text:(ta.value||'');
     var ct=ck('rea-qs-ctype'),msgs=[];
@@ -25318,7 +25351,7 @@ else if(PAGE==='群发群组 · 新建')initQs();
     '   好友验证方式／备注都是单选：验证方式默认与 App 侧一致（被动验证）。备注默认「日期前缀」',
     '   ——2026-11-16 加的一档（App 侧仍是备注后缀）：欢迎语模版最常见的用法就是拿加好友日期打头，',
     '   把它做成默认项，用户不必再知道「留空＝用日期」。选中它时不需要再填备注文字，输入框不出现；',
-    '   「备注前缀／备注后缀」两档才出输入框（留空同样用日期）。标签与备注内容可空。 */',
+    '   「备注前缀／备注后缀」两档才出输入框（留空同样用日期），「不备注」同样不出输入框。标签与备注内容可空。 */',
     'function cfgRadioHtml(key,opts,cur){',
     '  var h=\'<div class="ant-radio-group ant-radio-group-outline css-vgijab" data-zd-rg="\'+key+\'">\',i,on;',
     '  for(i=0;i<opts.length;i++){on=opts[i]===cur;',
@@ -25339,10 +25372,10 @@ else if(PAGE==='群发群组 · 新建')initQs();
     '    +\'<input id="rea-zd-tag" class="ant-input css-vgijab ant-input-outlined rea-zd-cinp"\'',
     '    +\' placeholder="请输入标签，可留空" value="\'+esc(ST.tag)+\'"></div>\'',
     '    +\'<div class="rea-zd-frow"><span class="rea-zd-cflab">选择备注：</span>\'',
-    '    +cfgRadioHtml("note",["日期前缀","备注前缀","备注后缀"],ST.note)',
-    '    +(ST.note==="日期前缀"?""',
-    '      :\'<input id="rea-zd-notetext" class="ant-input css-vgijab ant-input-outlined rea-zd-cinp rea-zd-cinp-note"\'',
-    '      +\' placeholder="留空则用加好友日期" value="\'+esc(ST.noteText)+\'">\')+"</div>";',
+    '    +cfgRadioHtml("note",["日期前缀","备注前缀","备注后缀","不备注"],ST.note)',
+    '    +((ST.note==="备注前缀"||ST.note==="备注后缀")',
+    '      ?\'<input id="rea-zd-notetext" class="ant-input css-vgijab ant-input-outlined rea-zd-cinp rea-zd-cinp-note"\'',
+    '      +\' placeholder="留空则用加好友日期" value="\'+esc(ST.noteText)+\'">\' : "")+"</div>";',
     '}',
     'function syncRadios(rg,cur){',
     '  var ls=rg.querySelectorAll(".ant-radio-wrapper"),j,on,txt,rd,ip;',
@@ -25935,20 +25968,9 @@ function makePicker(opts){
 
 function show(el,on){if(el)el.style.display=on?'':'none'}
 
-/* ---- 第三枚单选钮 ---- */
-var mg=METHOD_ROW.querySelector('.ant-radio-group');
-var mls=mg?mg.querySelectorAll('.ant-radio-wrapper'):[];
-if(mg&&mls.length>=2){
-  var third=mls[1].cloneNode(true);
-  third.className='ant-radio-wrapper css-vgijab';
-  var thrad=third.querySelector('.ant-radio');
-  if(thrad)thrad.className='ant-radio ant-wave-target';
-  var thin=third.querySelector('input');
-  if(thin){thin.name=mls[0].querySelector('input').name;thin.value='2';thin.checked=false;thin.removeAttribute('checked');}
-  var thtx=third.querySelector('.ant-radio-label');
-  if(thtx)thtx.textContent='添加群内好友';
-  mg.appendChild(third);
-}
+/* 2026-11-18 评审：添加群内好友本期不做，第三枚单选钮不再补。
+   四行配置（群组名称／昵称筛选／地区筛选／添加间隔）仍留在 DOM 里但始终收起，
+   切方式时只露手动输入与文件导入两条。 */
 
 /* ---- 四行配置：群组名称 / 昵称筛选 / 地区筛选 / 添加间隔 ---- */
 var gRow=cloneRow('群组名称',true),nRow=cloneRow('昵称筛选',false),
@@ -26877,6 +26899,7 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
           {label:'类型',value:'批量添加好友'},
           {label:'是否遮挡',value:'否'},
           {label:'验证消息',value:'您好，我是云小助的顾问'},
+          {label:'打招呼图片',value:'—（未设置）',empty:true},
           {label:'备注名',value:'周总'},
           {label:'好友备忘',value:'10 月展会客户'},
           {label:'设置标签',value:'重点客户、高意向'}
@@ -27330,7 +27353,7 @@ BT.addEventListener('click',function(e){
         {t:'添加对象',f:['添加好友方式']},
         {t:'添加设置',f:['设置标签']}
       ],
-      plan:['pass','pass','pass','warn','done','fail','open','open','open','open'],
+      plan:['warn','warn','warn','warn','done','fail','open','open','open','open'],
       labels:{done:'用户已添加',open:'未执行',warn:'已发送验证请求',fail:'用户不存在'}
     },
     '关联好友 · 详情': {
@@ -27645,16 +27668,16 @@ var ring=document.createElement('div');
 if(PAGE==='批量加好友 · 详情'){
   /* 两个维度是一张图里的两层，不是两张并列的图：任务执行看处理到哪，加好友进展看
      处理之后走到哪一步。两个页签放在字段右侧同一横栏，并排会挤，切换才读得清。
-     漏斗用累计值，四级严格包含下一级；用户已添加（幂等跳过）与用户不存在（真失败）
-     在「已执行」之后退出申请，不进漏斗。 */
-  var exN=c.done+c.warn+c.fail+c.pass;
-  var sentN=c.warn+c.pass;
+     漏斗用累计值，三级严格包含下一级；用户已添加（幂等跳过）与用户不存在（真失败）
+     在「已执行」之后退出申请，不进漏斗。
+     验证通过要等好友侧回传，手机端拿不到，本期只到「已发申请」。 */
+  var exN=c.done+c.warn+c.fail;
+  var sentN=c.warn;
   var ex={done:exN,open:c.open};
   var tiers=[
     {lb:'目标总数',n:n},
     {lb:'已执行',n:exN},
-    {lb:'已发申请',n:sentN},
-    {lb:'验证通过',n:c.pass}
+    {lb:'已发申请',n:sentN}
   ];
   var fh='';
   tiers.forEach(function(t){
@@ -27975,7 +27998,7 @@ function fill(tr,idx,v){
     setCell(td[4],v==='done'?TIMES[idx%TIMES.length]:'-');
     setBtn(td[5],v==='done'?'180':'-',true);
   }else if(PAGE==='批量加好友 · 详情'){
-    var RES={pass:'验证通过',warn:'已发送验证请求',done:'用户已添加',fail:'用户不存在'};
+    var RES={warn:'已发送验证请求',done:'用户已添加',fail:'用户不存在'};
     setCell(td[0],TARGETS[idx%TARGETS.length]);
     setCell(td[1],'您好，我是云小助的顾问');
     setCell(td[2],(v==='open'||v==='fail')?'-':REMARKS[idx%REMARKS.length]);
