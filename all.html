@@ -1349,7 +1349,6 @@ textarea.cw-ta::placeholder{color:var(--on-surface-variant)}
 .cwc-empty{margin:120px auto 0;max-width:300px;text-align:center;color:var(--on-surface-variant)}
 .cwc-empty .ic{display:inline-flex;color:var(--primary);margin-bottom:14px}
 .cwc-empty h4{font-size:20px;font-weight:500;color:var(--on-surface);margin-bottom:6px}
-.cwc-empty p{font-size:14px}
 /* 空草稿的五个场景入口 */
 .cwc-purpose{display:flex;flex-direction:column;margin:22px 4px 8px}
 .cwc-popt{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:48px;
@@ -1616,7 +1615,6 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
   color:#7B5BFF;animation:cwFloat 4.6s ease-in-out infinite}
 @keyframes cwFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 .cwc-empty h4{font-size:21px;font-weight:600;color:#102953}
-.cwc-empty p{font-size:14px;color:#617A9E}
 .cwc-popt{color:#17263F}
 .cwc-popt+.cwc-popt{border-top-color:#E6EDF9}
 .cwc-popt .ch{color:#9AA9BF}
@@ -6990,7 +6988,7 @@ function cwComposeHtml(){
   for(i=CW_CHAT.turns.length-1;i>=0;i--)if(CW_CHAT.turns[i].kind==='draft'){last=i;break}
   if(!CW_CHAT.turns.length&&!CW_CHAT.busy){
     h+='<div class="cwc-empty"><span class="ic" aria-hidden="true">'+I('sparkle',34,1.6)+'</span>'
-      +'<h4>这次想和客户说什么？</h4><p>也可以添加素材。</p></div>'
+      +'<h4>这次想和客户说什么？</h4></div>'
       +'<div class="cwc-purpose">'+CW_PURPOSES.map(function(p){
         return '<button class="cwc-popt" onclick="cwPurposePick(\''+p.k+'\')"><span>'+p.n+'</span>'
           +'<span class="ch" aria-hidden="true">'+I('chev',16,2.2)+'</span></button>';
