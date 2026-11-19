@@ -1647,6 +1647,27 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
 .cw-persbasis{font-size:12px;line-height:1.55;color:#7A8CA8;margin:0 0 8px 41px;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .cw-persbasis.warn{color:#B4741F}
+/* 依据＝打开最近聊天原样看：一行入口＋只读弹窗（客户左、我右） */
+.cw-perschat{display:flex;align-items:center;gap:7px;width:calc(100% - 41px);margin:0 0 8px 41px;
+  min-height:32px;padding:0 10px;border-radius:10px;background:#F7F9FF;color:#4C6FA8;
+  font-size:12px;font-weight:600;text-align:left;
+  transition:background .18s var(--emph)}
+.cw-perschat svg{flex:none;color:#7B5BFF}
+.cw-perschat .chev{margin-left:auto;color:#9AA9BF;font-size:14px;line-height:1}
+.cw-perschat:active{background:#EEF3FF}
+.cw-chathead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:6px 4px 14px}
+.cw-chathead b{font-size:18px;font-weight:700;color:#17263F}
+.cw-chatlog{display:flex;flex-direction:column;gap:14px;padding-bottom:8px}
+.cw-clrow{display:flex;align-items:flex-start;gap:9px;max-width:88%}
+.cw-clrow.m{align-self:flex-end;flex-direction:row-reverse;text-align:right}
+.cw-clav{flex:none;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(-52deg,#A56EFF 6.5%,#529AFF 96.9%);color:#fff;font-size:12px;font-weight:600}
+.cw-clrow.m .cw-clav{background:#DCE9FF;color:#2E6BFF}
+.cw-clmain{min-width:0}
+.cw-clmeta{font-size:11px;color:#8A9AB5;margin-bottom:4px}
+.cw-clbub{display:inline-block;padding:10px 13px;border-radius:14px 14px 14px 4px;background:#F4F7FF;
+  color:#17263F;font-size:14.5px;line-height:1.6;white-space:pre-wrap;word-break:break-word;text-align:left}
+.cw-clrow.m .cw-clbub{border-radius:14px 14px 4px 14px;background:#E8F0FF;color:#123B73}
 .cw-pers .cw-ta{min-height:44px;padding:11px 14px;font-size:15px}
 .cw-persacts{display:flex;align-items:center;gap:8px;margin:8px 0 0 41px}
 .cw-persact{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;
@@ -5424,7 +5445,7 @@ function syncNav(id,params){
 }
 
 /* ---------- Material ripple（统一按压反馈，替代缩放） ---------- */
-var RIP_SEL='.cw-textact,.cw-message,.btn,.chip,.iconbtn,.cell,.wk-card,.p-card,.pc-btn,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.hv-msg,.hv-stat,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.hva-lockcard,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close,.hw-add,.cust-seg button,.cust-copy,.cust-acct-row,.cw-btn,.cw-ib,.cw-op,.cw-units button,.cw-rec,.cw-kv .op,.cw-addrow,.cw-nosend,.cw-tutlink,.cw-info,.cw-rpb,.cw-goto,.cw-tutplay,.cw-rcpt,.cw-ai-link,.cw-persact,.cwc-more,.cwc-use,.cwc-mini,.cwc-popt,.cwc-send,.cwp-tabs button,.cwp-grps button';
+var RIP_SEL='.cw-textact,.cw-message,.btn,.chip,.iconbtn,.cell,.wk-card,.p-card,.pc-btn,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.hv-msg,.hv-stat,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.hva-lockcard,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close,.hw-add,.cust-seg button,.cust-copy,.cust-acct-row,.cw-btn,.cw-ib,.cw-op,.cw-units button,.cw-rec,.cw-kv .op,.cw-addrow,.cw-nosend,.cw-tutlink,.cw-info,.cw-rpb,.cw-goto,.cw-tutplay,.cw-rcpt,.cw-ai-link,.cw-persact,.cw-perschat,.cwc-more,.cwc-use,.cwc-mini,.cwc-popt,.cwc-send,.cwp-tabs button,.cwp-grps button';
 function ripInit(){
   document.addEventListener('pointerdown',function(e){
     var t=e.target.closest ? e.target.closest(RIP_SEL) : null;
@@ -5903,28 +5924,56 @@ REND['host-newfriend']=function(){custRender('host-newfriend')};
 /* ---------- 客户唤醒（App 工具页）· ADR-0095 / docs/prd/客户唤醒-App工具页-PRD.md ----------
    两个入口选人（工具页按范围取人／待唤醒客户原页勾选），之后共用同一条内容流程：
    准备发送内容 →（可选）AI 对话写作 → 预览 → 去微信发送 → 结束后看记录。
-   同一批客户收到同一份内容；AI 不读客户聊天、不按人生成，也不产生逐人开场。
+   内容有两种：统一话术（同一批客户收到同一份，不读聊天）与按聊天记录逐人写
+   （读最近 20 条，锚点是本方最后一条未获回复的消息，只发文字；ADR-0112）。两种草稿各存各的。
    主编辑页（cw-content）管最终发送内容；AI 对话（cw-compose）管要求、参考资料与候选。
    对话里加的素材默认只参考，点「加入发送内容」才进发送列表——两边各存各的，不互相混入。
    素材一律复用 App 素材库的数据与读法（MATS／PS、msgsOf、visMats），不另造一份。 */
 
 var AWAKE_SELING=false, AWAKE_ENTER=false, CW_FROM='tools';
 /* tags＝这台手机微信里给好友打的标签；演示数据，用来验证「按标签取人」的并集口径。 */
-/* say＝该客户最近一次有内容的消息（逐人写法唯一的话题来源）；chatFail＝演示聊天读取失败，
-   retry 后能读到。这两项是演示数据，真实来源是手机脚本逐人导出的一对一聊天尾部。 */
+/* chat＝一对一聊天尾部（演示 3–4 条，真实取最近 20 条）。待唤醒的前提是客户一段时间没回，
+   所以最后一条必须是本方（f:'m'）；客户此前说什么放在前面当话题上下文。
+   chatFail＝演示聊天读取失败，重试后能读到。真实来源是手机脚本逐人导出的聊天尾部。 */
 var CW_CUST=[
-  {i:'a1',n:'李晓霞',last:'今天 10:00',h:3,tags:['老客户','VIP'],say:'那件驼色大衣还有 M 码吗？'},
-  {i:'a2',n:'张大强',last:'今天 10:00',h:3,tags:['新客户'],say:'先看看，有优惠再说。'},
-  {i:'a3',n:'林晓雯',last:'今天 09:20',h:4,tags:['老客户','社群'],say:'上次的面膜用完了，最近还有活动吗？'},
-  {i:'a4',n:'王芳',last:'今天 09:05',h:2,tags:['意向客户'],say:'周六带孩子过来试一下。'},
-  {i:'a5',n:'宋雨彤',last:'今天 08:40',h:5,tags:['VIP','社群'],say:'帮我把上次那个链接再发一下。'},
-  {i:'a6',n:'许志远',last:'今天 08:10',h:6,tags:['新客户'],say:'刚加上，先了解一下。'},
-  {i:'b1',n:'陈立',last:'昨天 18:20',h:50,tags:['老客户','已成交'],say:'上个月买的鞋挺舒服的。'},
-  {i:'b2',n:'周敏',last:'昨天 11:05',h:79,tags:['意向客户'],say:'这个价格有点高，我再考虑一下。'},
-  {i:'b3',n:'刘洋',last:'前天 15:30',h:120,tags:['社群'],say:'群里那个活动还有名额吗？'},
-  {i:'b4',n:'赵一鸣',last:'昨天 16:20',h:52,tags:['老客户','已成交'],say:'有新货记得告诉我。'},
-  {i:'c1',n:'郑凯',last:'9月27日 10:10',h:180,tags:['老客户'],say:'最近没空，年底再说。',chatFail:true},
-  {i:'c2',n:'吴静',last:'9月27日 09:30',h:240,tags:['待跟进'],say:'想问一下保修的事。'},
+  {i:'a1',n:'李晓霞',last:'今天 10:00',h:3,tags:['老客户','VIP'],chat:[
+    {f:'c',t:'那件驼色大衣还有 M 码吗？',at:'11月16日 15:20'},
+    {f:'m',t:'我帮你查一下，到了联系你。',at:'11月16日 15:22'}]},
+  {i:'a2',n:'张大强',last:'今天 10:00',h:3,tags:['新客户'],chat:[
+    {f:'c',t:'先看看，有优惠再说。',at:'11月16日 14:05'},
+    {f:'m',t:'行，有优惠我告诉你。',at:'11月16日 14:07'}]},
+  {i:'a3',n:'林晓雯',last:'今天 09:20',h:4,tags:['老客户','社群'],chat:[
+    {f:'c',t:'上次的面膜用完了，最近还有活动吗？',at:'11月16日 09:20'},
+    {f:'m',t:'我帮你看看，有合适的优惠告诉你。',at:'11月16日 09:25'}]},
+  {i:'a4',n:'王芳',last:'今天 09:05',h:2,tags:['意向客户'],chat:[
+    {f:'c',t:'周六带孩子过来试一下。',at:'11月16日 09:05'},
+    {f:'m',t:'好，周六见。',at:'11月16日 09:06'}]},
+  {i:'a5',n:'宋雨彤',last:'今天 08:40',h:5,tags:['VIP','社群'],chat:[
+    {f:'c',t:'帮我把上次那个链接再发一下。',at:'11月16日 08:40'},
+    {f:'m',t:'发你了，有需要随时找我。',at:'11月16日 08:41'}]},
+  {i:'a6',n:'许志远',last:'今天 08:10',h:6,tags:['新客户'],chat:[
+    {f:'c',t:'刚加上，先了解一下。',at:'11月16日 08:10'},
+    {f:'m',t:'好，我先发份目录给你看看。',at:'11月16日 08:12'}]},
+  {i:'b1',n:'陈立',last:'昨天 18:20',h:50,tags:['老客户','已成交'],chat:[
+    {f:'c',t:'上个月买的鞋挺舒服的。',at:'11月15日 18:20'},
+    {f:'m',t:'穿着合适就好。',at:'11月15日 18:22'}]},
+  {i:'b2',n:'周敏',last:'昨天 11:05',h:79,tags:['意向客户'],chat:[
+    {f:'c',t:'这个价格有点高，我再考虑一下。',at:'11月15日 11:05'},
+    {f:'m',t:'好，考虑好随时找我。',at:'11月15日 11:06'}]},
+  {i:'b3',n:'刘洋',last:'前天 15:30',h:120,tags:['社群'],chat:[
+    {f:'c',t:'群里那个活动还有名额吗？',at:'11月14日 15:30'},
+    {f:'m',t:'我帮你问一下。',at:'11月14日 15:32'},
+    {f:'c',t:'好的，谢谢',at:'11月14日 15:33'},
+    {f:'m',t:'有消息我第一时间告诉你。',at:'11月14日 15:34'}]},
+  {i:'b4',n:'赵一鸣',last:'昨天 16:20',h:52,tags:['老客户','已成交'],chat:[
+    {f:'c',t:'有新货记得告诉我。',at:'11月15日 16:20'},
+    {f:'m',t:'好，到了我告诉你。',at:'11月15日 16:22'}]},
+  {i:'c1',n:'郑凯',last:'9月27日 10:10',h:180,tags:['老客户'],chatFail:true,chat:[
+    {f:'c',t:'最近没空，年底再说。',at:'9月27日 10:10'},
+    {f:'m',t:'好，年底再联系你。',at:'9月27日 10:12'}]},
+  {i:'c2',n:'吴静',last:'9月27日 09:30',h:240,tags:['待跟进'],chat:[
+    {f:'c',t:'想问一下保修的事。',at:'9月27日 09:30'},
+    {f:'m',t:'我帮你确认一下。',at:'9月27日 09:32'}]},
   /* 下面三条要把 N 调到 30 天以上才进窗口：没有 14 天以上的快捷档；同时演示「没有聊天记录」的兜底 */
   {i:'d1',n:'孙浩',last:'10月12日 09:20',h:31*24,tags:['新客户']},
   {i:'d2',n:'何丽',last:'10月10日 16:40',h:33*24,tags:['VIP']},
@@ -5971,7 +6020,7 @@ function cwMarkFresh(id){ CW_FRESH_ID=id; setTimeout(function(){ if(CW_FRESH_ID=
    旧候选据此标「基于之前素材」，采用前必须按当前资料重新生成。 */
 var CW_CHAT=null, CW_REF_SEQ=0;
 /* 逐人写法（PRD §6.6）：与统一草稿各存各的。on=false 时对象留着——切回同一份内容再回来，
-   名单没变就直接恢复上次的文案，不重新生成。people[id]={st,text,basis,generic,manual,why,gen,prev,shown}。 */
+   名单没变就直接恢复上次的文案，不重新生成。people[id]={st,text,generic,manual,why,gen,prev,shown}。 */
 var CW_PERS=null, CW_PERS_SEQ=0, CW_PERS_TIMERS=[], CW_PVALL=false, CW_MODE_ANIM=false;
 /* 唤醒目的：空草稿时当思路入口，已有内容时当换向开关。
    g＝这个场景下让用户补的那句背景；问候不需要任何事实，直接写。 */
@@ -6319,7 +6368,8 @@ function cwEnter(){
 
 /* ================= 按聊天记录逐人写（PRD §6.6） =================
    与统一内容各存各的：统一草稿在 CW_ITEMS，逐人文案在 CW_PERS。只发文字，附件留在统一模式里。
-   依据只有客户最近一条有内容的聊天原句；没有聊天记录走本地通用问候，读聊天失败标红可重试。
+   输入是最近 20 条聊天；待唤醒的前提是客户没回，最后一条必须来自本方，文案接着本方上一句写。
+   没有聊天记录走本地通用问候，读聊天失败标红可重试；最后一条是客户时标「对方刚回过」不生成。
    这里不接真实模型与聊天接口，文案由规则演示，但状态、失败与竞态按真实链路设计。 */
 function cwPersReset(){
   CW_PERS_TIMERS.forEach(function(t){clearTimeout(t)});
@@ -6379,7 +6429,7 @@ function cwPersBegin(){
   cwPersReset();
   var p={on:true,busy:true,token:++CW_PERS_SEQ,total:ids.length,done:0,order:ids.slice(),people:{}};
   ids.forEach(function(id){
-    p.people[id]={st:'writing',text:'',basis:'',generic:false,manual:false,why:'',gen:0,prev:'',shown:false};
+    p.people[id]={st:'writing',text:'',generic:false,manual:false,why:'',gen:0,prev:'',shown:false};
   });
   CW_PERS=p; CW_PVALL=false; CW_MODE_ANIM=true;
   cwRender();
@@ -6394,40 +6444,70 @@ function cwPersSchedule(){
   });
 }
 /* 原型里的“模型”：只承接聊天里出现过的事；没有聊天记录就不请求模型，走本地通用问候。 */
+function cwPersLast(c,who){
+  var h=(c&&c.chat)||[];
+  for(var i=h.length-1;i>=0;i--)if(h[i].f===who)return h[i].t||'';
+  return '';
+}
+/* 客户最后一条可能只是「好的，谢谢」；话题要往前找最后一条有内容的。 */
+function cwPersAck(t){
+  var s=String(t||'').replace(/[\s，,。.!！~～、]/g,'');
+  return /^(好的?|好嘞|行|嗯|哦|收到了?|谢谢|多谢|ok|OK|👌|🙏)+$/.test(s);
+}
+function cwPersLastC(c){
+  var h=(c&&c.chat)||[];
+  for(var i=h.length-1;i>=0;i--){
+    if(h[i].f!=='c')continue;
+    var t=String(h[i].t||'').trim();
+    if(t&&!cwPersAck(t))return t;
+  }
+  return cwPersLast(c,'c');
+}
+/* 原型里的“模型”：输入是聊天尾部，锚点是最后一条本方消息。文案接着本方上一句往下说，
+   不重新回答客户已经问过、本方也已经回过的旧问题；没有结果就只写还在跟进，不编进展。 */
 function cwPersCompose(c,retry){
   if(!c)return {fail:true,why:'客户不在名单里'};
   if(c.chatFail&&!retry)return {fail:true,why:'没读到最近的聊天记录'};
-  var say=String(c.say||'').trim();
-  if(!say){
+  var chat=(c.chat||[]).slice(-20);
+  if(!chat.length){
     var old=(c.tags||[]).some(function(t){return /老客户|已成交|VIP/.test(t)});
     return {text:old?'好久没联系了，最近还好吗？店里到了些新东西，有空随时找我。'
                    :'你好，之前加了好友还没怎么聊过。有需要随时找我。',
-            basis:'没有聊天记录，用了通用问候',generic:true};
+            generic:true};
   }
-  var text='';
-  /* 聊天里只出现了客户的问题，没有确认答案：只承接话题并说明去核实，不写「还有名额」「这周有活动」
-     「到了新色」这类没有依据的事实。价格、库存、活动、时间与承诺都不替销售先答应。 */
-  if(/大衣|M 码|码/.test(say))text='大衣的 M 码我帮你查一下，有货就给你留着。';
-  else if(/面膜/.test(say))text='面膜的活动我帮你看看，有合适的优惠就告诉你。';
-  else if(/带孩子|周六|试/.test(say))text='周六带孩子过来吧，我帮你留意合适的款，到了提前跟你说。';
-  else if(/名额|群/.test(say))text='名额我帮你确认一下，有位置就给你留着。';
-  else if(/链接/.test(say))text='那个链接我重新发你，有需要随时找我。';
-  else if(/鞋|舒服/.test(say))text='鞋穿着合适就好。有合适的款我拍给你看看。';
-  else if(/价格|考虑/.test(say))text='价格我帮你再算算，有更合适的方式就告诉你。';
-  else if(/新货/.test(say))text='有新品到了我拍给你看看。';
-  else if(/保修|售后/.test(say))text='保修的事我帮你确认一下，有结果就告诉你。';
-  else if(/年底|没空/.test(say))text='年底有空的话，我这边有合适的款拍给你看看。';
-  else if(/了解一下|刚加/.test(say))text='我先发一份目录给你看看，有想了解的随时问我。';
-  else if(/优惠/.test(say))text='有优惠我第一时间告诉你，合适的款也帮你留意着。';
-  else text='好久没联系了，最近还好吗？有空随时找我聊聊。';
-  return {text:text,basis:'客户上次说「'+say+'」'};
+  var last=chat[chat.length-1];
+  if(last.f!=='m')return {fail:true,why:'对方刚回过，暂不需要唤醒'};
+  var lastMe=String(last.t||''), lastC=cwPersLastC(c), text='';
+  if(/发你|发给你|发份|发了/.test(lastMe)){
+    if(/链接/.test(lastC))text='上次发的链接收到了吗？有别的问题随时找我。';
+    else if(/目录|了解/.test(lastC))text='目录看了吗？有想了解的随时问我。';
+    else text='上次发的东西收到了吗？有需要随时找我。';
+  }
+  else if(/查一下|查查|问一下|确认一下|帮你看看|我看看|留意/.test(lastMe)){
+    if(/大衣|M 码|码/.test(lastC))text='大衣的 M 码我还在帮你留意，有消息就告诉你。';
+    else if(/面膜|活动|优惠/.test(lastC))text='面膜的优惠我还在帮你留意，有合适的就告诉你。';
+    else if(/名额|群/.test(lastC))text='活动名额我还在帮你确认，有位置就给你留着。';
+    else if(/保修|售后/.test(lastC))text='保修的事我还在帮你确认，有结果就告诉你。';
+    else text='上次说的事我还在帮你跟进，有消息就告诉你。';
+  }
+  else if(/周六|见面|过来/.test(lastMe))text='周六过来之前跟我说一声，我帮你把合适的款留出来。';
+  else if(/优惠|活动/.test(lastMe))text='最近有合适的款我拍给你看看？';
+  else if(/年底|再联系/.test(lastMe))text='快年底了，有合适的款我拍给你看看？';
+  else if(/考虑|随时找我/.test(lastMe))text='上次那款你要是还想要，我再帮你看看有没有更合适的方式。';
+  else if(/合适就好|到了我告诉你/.test(lastMe))text='最近有合适的款我拍给你看看？';
+  else if(/有消息|告诉你/.test(lastMe)){
+    if(/名额|活动|群/.test(lastC))text='活动名额我还在帮你确认，有位置就给你留着。';
+    else text='上次说的事我还在帮你跟进，有消息就告诉你。';
+  }
+  else text='最近有合适的款我拍给你看看？';
+  return {text:text};
 }
 function cwPersWriteOne(id,tok,silent){
   var p=CW_PERS; if(!p||p.token!==tok)return;
   var pe=p.people[id]; if(!pe||pe.st!=='writing')return;
   var r=cwPersCompose(cwCust(id),pe.gen>0);
   if(r.fail){pe.st='fail';pe.why=r.why}
-  else{pe.st='ready';pe.text=r.text;pe.basis=r.basis;pe.generic=!!r.generic;pe.manual=false}
+  else{pe.st='ready';pe.text=r.text;pe.generic=!!r.generic;pe.manual=false}
   p.done++;
   if(p.done>=p.total)p.busy=false;
   if(!silent){cwPersPaintRow(id);cwPersProgressPaint();cwContentFoot()}
@@ -6450,8 +6530,8 @@ function cwPersFlush(){
 function cwPersRewrite(id){
   var p=CW_PERS; if(!p)return;
   var pe=p.people[id]; if(!pe||pe.st==='writing')return;
-  var old={text:pe.text,basis:pe.basis,generic:pe.generic,manual:pe.manual};
-  pe.st='writing';pe.gen=(pe.gen||0)+1;pe.text='';pe.basis='';pe.shown=false;
+  var old={text:pe.text,generic:pe.generic,manual:pe.manual};
+  pe.st='writing';pe.gen=(pe.gen||0)+1;pe.text='';pe.shown=false;
   cwPersPaintRow(id);cwContentFoot();
   var tok=p.token;
   var run=function(){
@@ -6459,13 +6539,13 @@ function cwPersRewrite(id){
     var pe2=p2.people[id]; if(!pe2||pe2.st!=='writing')return;
     var r=cwPersCompose(cwCust(id),true);
     if(r.fail){pe2.st='fail';pe2.why=r.why}
-    else{pe2.st='ready';pe2.text=r.text;pe2.basis=r.basis;pe2.generic=!!r.generic;pe2.manual=false;pe2.shown=false}
+    else{pe2.st='ready';pe2.text=r.text;pe2.generic=!!r.generic;pe2.manual=false;pe2.shown=false}
     cwPersPaintRow(id);cwContentFoot();
     if(!r.fail){
       var c=cwCust(id);
       toast('已重写 '+(c?c.n:'这句'),'撤销',function(){
         var pe3=CW_PERS&&CW_PERS.people[id]; if(!pe3)return;
-        pe3.st='ready';pe3.text=old.text;pe3.basis=old.basis;pe3.generic=old.generic;pe3.manual=old.manual;pe3.shown=false;
+        pe3.st='ready';pe3.text=old.text;pe3.generic=old.generic;pe3.manual=old.manual;pe3.shown=false;
         cwPersPaintRow(id);cwContentFoot();
       },5000);
     }
@@ -6484,7 +6564,7 @@ function cwPersRetry(id){
     var pe2=p2.people[id]; if(!pe2||pe2.st!=='writing')return;
     var r=cwPersCompose(cwCust(id),true);
     if(r.fail){pe2.st='fail';pe2.why=r.why}
-    else{pe2.st='ready';pe2.text=r.text;pe2.basis=r.basis;pe2.generic=!!r.generic;pe2.manual=false;pe2.shown=false}
+    else{pe2.st='ready';pe2.text=r.text;pe2.generic=!!r.generic;pe2.manual=false;pe2.shown=false}
     cwPersPaintRow(id);cwContentFoot();
   };
   if(window.CW_TESTFAST){run();return}
@@ -6547,10 +6627,20 @@ function cwPersGuard(onYes,onNo){
 }
 
 /* ---------- 逐人列表的渲染 ---------- */
-function cwPersBasis(pe){
-  var b=pe.manual?'手动填写':(pe.basis||'');
-  if(b.length>44)b=b.slice(0,44)+'…';
-  return b;
+/* 「依据」不再是内联一句客户旧话，而是打开最近聊天原样看：客户在左、我在右，最多 20 条。 */
+function cwPersChatOpen(id){
+  var c=cwCust(id);
+  if(!c||!c.chat||!c.chat.length)return;
+  var rows=c.chat.slice(-20).map(function(m){
+    var mine=m.f==='m';
+    return '<div class="cw-clrow'+(mine?' m':'')+'">'
+      +'<span class="cw-clav">'+(mine?'我':esc((c.n||'客').charAt(0)))+'</span>'
+      +'<div class="cw-clmain"><div class="cw-clmeta">'+(mine?'我':'客户')+(m.at?' · '+esc(m.at):'')+'</div>'
+      +'<div class="cw-clbub">'+esc(m.t||'')+'</div></div></div>';
+  }).join('');
+  openSheet('<div class="cw-chathead"><b>与'+esc(c.n||'客户')+'的最近聊天</b>'
+    +'<button type="button" class="cw-textact" onclick="closeSheets()">关闭</button></div>'
+    +'<div class="cw-chatlog">'+rows+'</div>','cw-sheet cws-sheet');
 }
 /* 行内动作只出图标：转圈＝重写／重试，叉＝不发，勾＝恢复。文字收进 title 与可访问名。 */
 function cwPersActBtn(act,id,icon,label,cls){
@@ -6572,7 +6662,16 @@ function cwPersRowHtml(id){
   if(pe.st==='fail')stHtml='<span class="cw-persst fail">'+(pe.why==='已停止，没有写完'?'已停止':(pe.why||'没读到最近的聊天记录'))+'</span>';
   else if(pe.st==='skip')stHtml='<span class="cw-persst">不发</span>';
   else if(pe.manual)stHtml='<span class="cw-persst ok">已手写</span>';
-  var basis=pe.st==='fail'?'':'<div class="cw-persbasis'+(pe.generic?' warn':'')+'">'+esc(cwPersBasis(pe))+'</div>';
+  var basis='';
+  if(pe.st!=='fail'){
+    if(pe.generic)basis='<div class="cw-persbasis warn">没有聊天记录，用了通用问候</div>';
+    else{
+      var cn=c&&c.chat?Math.min(c.chat.length,20):0;
+      basis='<button type="button" class="cw-perschat" onclick="cwPersChatOpen(\''+id+'\')"'
+        +' aria-label="查看与'+esc(name)+'的最近聊天" title="查看聊天记录">'
+        +I('chat2',14,2)+'<span>最近聊天 · '+cn+' 条</span><span class="chev" aria-hidden="true">›</span></button>';
+    }
+  }
   var ta='<textarea class="cw-ta cw-persta" rows="1" aria-label="给 '+esc(name)+' 的唤醒文案"'
     +' placeholder="'+(pe.st==='fail'?'手动写一条':'输入要发送的内容')+'"'
     +' oninput="cwPersInput(this,\''+id+'\')">'+esc(pe.text||'')+'</textarea>';
