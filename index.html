@@ -994,6 +994,39 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
   font-size:13.5px;font-weight:600;color:#2D528E;position:relative;overflow:hidden}
 .cw-units button.on{background:#fff;color:#1677FE;font-weight:700;
   box-shadow:0 6px 14px -12px rgba(40,70,150,.9)}
+/* 微信标签：范围卡里的一行设置，点开底部选择浮层。与上面那条范围输入用一条发丝线分隔。 */
+.cw-tagh{display:flex;align-items:center;gap:10px;width:100%;min-height:52px;margin-top:14px;padding:13px 0 0;
+  border:0;border-top:1px solid #EEF2FA;border-radius:0;background:none;font-family:var(--f);text-align:left;
+  position:relative;overflow:hidden}
+.cw-tagh-lab{flex:none;font-size:14px;font-weight:500;color:#466DAD}
+.cw-tagh-val{flex:1;min-width:0;text-align:right;font-size:14px;font-weight:600;color:#8CA0BF;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cw-tagh-val.on{color:#102953}
+.cw-tagh-chev{flex:none;width:18px;height:18px;color:#94A8C8;display:flex}
+/* 标签浮层：标题与「确定」常驻，中间列表跟着 .sheet-body 这根唯一滚轴走。 */
+.cw-tagsh .sheet-body{padding:0}
+.cw-tagsh-head{position:sticky;top:0;z-index:3;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
+  background:var(--sc-low);padding:4px 8px 6px 10px}
+.cw-tagsh-head b{font-size:17px;font-weight:700;color:#102953;text-align:center;letter-spacing:.01em}
+.cw-tagsh-act{justify-self:start;min-height:44px;padding:0 10px;border:0;border-radius:999px;background:none;
+  font-family:var(--f);font-size:14px;font-weight:600;color:#2E6BFF;position:relative;overflow:hidden}
+.cw-tagsh-act.right{justify-self:end;display:inline-flex;align-items:center;gap:5px}
+.cw-tagsh-act .ic,.cw-tagsh-act svg{flex:none}
+.cw-tagsh-search{display:flex;align-items:center;gap:9px;margin:4px 16px 12px;padding:0 16px;height:48px;
+  border-radius:999px;background:#fff;color:#94A8C8;box-shadow:inset 0 0 0 1px #E6EDF9}
+.cw-tagsh-search input{flex:1;min-width:0;border:0;background:none;outline:none;
+  font:500 15px/1 var(--f);color:#102953}
+.cw-tagsh-search input::placeholder{color:#A9B8D0}
+.cw-taglist{margin:0 16px 8px;background:#fff;border-radius:16px;overflow:hidden}
+.cw-tagrow{display:flex;align-items:center;gap:12px;width:100%;min-height:54px;padding:0 16px;border:0;
+  border-top:1px solid #EEF2FA;background:#fff;font-family:var(--f);text-align:left;position:relative;overflow:hidden}
+.cw-tagrow:first-child{border-top:0}
+.cw-tagrow-n{flex:1;min-width:0;font-size:15px;font-weight:500;color:#102953;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cw-tagnone{padding:26px 16px;text-align:center;font-size:13px;color:#8CA0BF}
+.cw-tagft{position:sticky;bottom:0;z-index:3;background:var(--sc-low);
+  padding:12px 16px calc(16px + env(safe-area-inset-bottom))}
+.cw-tagft .cw-btn{height:52px;font-size:16px}
 
 /* 表单：软填充输入框（无硬描边、圆角 14），聚焦才亮一圈。下拉自绘箭头，去掉浏览器默认外观。 */
 .cw-field{display:flex;align-items:center;justify-content:space-between;gap:8px;
@@ -4962,7 +4995,7 @@ function mePill(){var p=$('mePill');if(p)p.textContent='当前销售 · '+ME.nam
 function mePick(i){
   ME=DEMO_ME[i];closeSheet();mePill();meHeroPaint();
   /* 换账号不串数据（PRD §9）：上一账号的名单、草稿与 AI 对话都不带过来 */
-  if(typeof cwResetDraft==='function'){cwResetDraft();CW_SEL={};CW_XED={};CW_CUSTOM.on=false;cwQueryStop();cwResetRecords();}
+  if(typeof cwResetDraft==='function'){cwResetDraft();CW_SEL={};CW_XED={};CW_CUSTOM.on=false;CW_CUSTOM.tags=[];cwQueryStop();cwResetRecords();}
   REND['host-home']&&REND['host-home']();
   REND['library']&&REND['library']();
 }
@@ -5821,24 +5854,27 @@ REND['host-newfriend']=function(){custRender('host-newfriend')};
    素材一律复用 App 素材库的数据与读法（MATS／PS、msgsOf、visMats），不另造一份。 */
 
 var AWAKE_SELING=false, AWAKE_ENTER=false, CW_FROM='tools';
+/* tags＝这台手机微信里给好友打的标签；演示数据，用来验证「按标签取人」的并集口径。 */
 var CW_CUST=[
-  {i:'a1',n:'李晓霞',last:'今天 10:00',h:3},
-  {i:'a2',n:'张大强',last:'今天 10:00',h:3},
-  {i:'a3',n:'林晓雯',last:'今天 09:20',h:4},
-  {i:'a4',n:'王芳',last:'今天 09:05',h:2},
-  {i:'a5',n:'宋雨彤',last:'今天 08:40',h:5},
-  {i:'a6',n:'许志远',last:'今天 08:10',h:6},
-  {i:'b1',n:'陈立',last:'昨天 18:20',h:50},
-  {i:'b2',n:'周敏',last:'昨天 11:05',h:79},
-  {i:'b3',n:'刘洋',last:'前天 15:30',h:120},
-  {i:'b4',n:'赵一鸣',last:'昨天 16:20',h:52},
-  {i:'c1',n:'郑凯',last:'9月27日 10:10',h:180},
-  {i:'c2',n:'吴静',last:'9月27日 09:30',h:240},
+  {i:'a1',n:'李晓霞',last:'今天 10:00',h:3,tags:['老客户','VIP']},
+  {i:'a2',n:'张大强',last:'今天 10:00',h:3,tags:['新客户']},
+  {i:'a3',n:'林晓雯',last:'今天 09:20',h:4,tags:['老客户','社群']},
+  {i:'a4',n:'王芳',last:'今天 09:05',h:2,tags:['意向客户']},
+  {i:'a5',n:'宋雨彤',last:'今天 08:40',h:5,tags:['VIP','社群']},
+  {i:'a6',n:'许志远',last:'今天 08:10',h:6,tags:['新客户']},
+  {i:'b1',n:'陈立',last:'昨天 18:20',h:50,tags:['老客户','已成交']},
+  {i:'b2',n:'周敏',last:'昨天 11:05',h:79,tags:['意向客户']},
+  {i:'b3',n:'刘洋',last:'前天 15:30',h:120,tags:['社群']},
+  {i:'b4',n:'赵一鸣',last:'昨天 16:20',h:52,tags:['老客户','已成交']},
+  {i:'c1',n:'郑凯',last:'9月27日 10:10',h:180,tags:['老客户']},
+  {i:'c2',n:'吴静',last:'9月27日 09:30',h:240,tags:['待跟进']},
   /* 下面三条要把 N 调到 30 天以上才进窗口：没有 14 天以上的快捷档 */
-  {i:'d1',n:'孙浩',last:'10月12日 09:20',h:31*24},
-  {i:'d2',n:'何丽',last:'10月10日 16:40',h:33*24},
-  {i:'d3',n:'马晓东',last:'9月2日 11:00',h:71*24}
+  {i:'d1',n:'孙浩',last:'10月12日 09:20',h:31*24,tags:['新客户']},
+  {i:'d2',n:'何丽',last:'10月10日 16:40',h:33*24,tags:['VIP']},
+  {i:'d3',n:'马晓东',last:'9月2日 11:00',h:71*24,tags:['意向客户']}
 ];
+/* 手机微信里的标签（演示）。真实来源是脚本从手机标签页同步，原型不接这条链路。 */
+var CW_PHONE_TAGS=['老客户','新客户','VIP','意向客户','社群','待跟进','已成交','员工内购'];
 var CW_IMG_SRC='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(
   "<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'>"
   +"<defs>"
@@ -5861,8 +5897,10 @@ var CW_IMG_SRC='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(
   +"<path d='M96 196l26 10M204 196l-26 10' stroke='#8B6839' stroke-width='2.4' stroke-linecap='round' opacity='.65'/>"
   +"</svg>");
 var CW_SET={gap:10}, CW_GAP=[5,60];
-/* 唤醒范围：n＋单位，on=false 时没有范围（进来就是这样，不替用户预选）。 */
-var CW_CUSTOM={n:3,u:'d',on:false};
+/* 唤醒范围：n＋单位，on=false 时没有范围（进来就是这样，不替用户预选）。
+   tags＝按手机微信标签收窄，空数组表示不限；有标签时取这些标签下好友的并集。 */
+var CW_CUSTOM={n:3,u:'d',on:false,tags:[]};
+var CW_TAGD=[], CW_TAGQ='', CW_TAGW=null;
 var CW_SEL={}, CW_XED={};
 var CW_QBUSY=false, CW_QERR=false, CW_QSIM=false, CW_QMODE='', CW_QBEAT=0, CW_QTM=null, CW_UNIT_FROM='';
 var CW_LAUNCHING=false, CW_SEND_IDS=[], CW_SEND_VERSION='', CW_PENDS=[], CW_REXP='';
@@ -5931,11 +5969,24 @@ function cwSelByH(){
 function cwSelCount(){ return cwSelIds().length; }
 function cwUnitN(u){ return u==='d'?'天':'小时'; }
 function cwRangeLabel(){ return CW_CUSTOM.n+'–'+(CW_CUSTOM.n+5)+' '+cwUnitN(CW_CUSTOM.u); }
-/* 窗口 [N, N+5]，两端含。on=false＝没选范围，谁都算不上。 */
+/* 标签条件：不选＝不限；选了多个＝这些标签下好友的并集（与现网营销任务同一口径）。 */
+function cwTagMatch(c){
+  var t=CW_CUSTOM.tags||[];
+  if(!t.length)return true;
+  var ct=c.tags||[];
+  for(var i=0;i<t.length;i++)if(ct.indexOf(t[i])>=0)return true;
+  return false;
+}
+function cwTagSummary(){
+  var t=CW_CUSTOM.tags||[];
+  if(!t.length)return '不限';
+  return t.slice(0,2).join('、')+(t.length>2?' +'+(t.length-2):'');
+}
+/* 窗口 [N, N+5]，两端含；再按选中的微信标签收窄。on=false＝没选范围，谁都算不上。 */
 function cwWindow(){
   if(!CW_CUSTOM.on)return [];
   var th=CW_CUSTOM.n*(CW_CUSTOM.u==='d'?24:1), span=5*(CW_CUSTOM.u==='d'?24:1);
-  return cwByH(CW_CUST.filter(function(c){ return c.h>=th&&c.h<=th+span; }));
+  return cwByH(CW_CUST.filter(function(c){ return c.h>=th&&c.h<=th+span&&cwTagMatch(c); }));
 }
 function cwByH(list){ return list.slice().sort(function(a,b){ return b.h-a.h }) }
 /* 取人只在点「预览发送」时发起（2026-11-19）：改范围只清掉上一份名单，不动文案、不重解析素材。 */
@@ -5966,7 +6017,10 @@ function cwQueryDone(tok){
   /* 预览发送才取人：取回来先落名单，再进预览；一个人都没有就停在内容页提示改范围。
      等人时用户已经离开内容页（比如去开 AI 帮写）就不再跳转，名单留在那里。 */
   cwApplyWindow();
-  if(!cwSelCount()){ toast('这段时间没有未回复的客户，调大范围再试'); return; }
+  if(!cwSelCount()){
+    toast((CW_CUSTOM.tags||[]).length?'所选标签下没有未回复的客户，调整标签或范围再试':'这段时间没有未回复的客户，调大范围再试');
+    return;
+  }
   if(cur==='cw-content')go('cw-preview');
 }
 /* 清掉范围时连在飞的查询一起作废：别让它回来又把人选上。 */
@@ -6164,11 +6218,11 @@ function awakeFoot(animate){
     btn.setAttribute('onclick','awakeNext()');
   },170);
 }
-/* 工具页进来：从空范围、空内容起步——不预填、不替用户取人。 */
+/* 工具页进来：从空范围、空标签、空内容起步——不预填、不替用户取人。 */
 function cwEnter(){
   cwResetDraft();
   CW_FROM='tools';
-  CW_CUSTOM={n:3,u:'d',on:false};
+  CW_CUSTOM={n:3,u:'d',on:false,tags:[]};
   CW_SEL={}; CW_XED={};
   cwQueryStop();
   go('cw-content');
@@ -7279,7 +7333,8 @@ function cwLaunch(ids){
   var n=ids.length, items=JSON.parse(JSON.stringify(cwSendItems()));
   var people=ids.map(function(id){ var c=cwCust(id); return {n:c?c.n:'客户',st:'ok'} });
   var r={id:'r'+Date.now(),when:cwDay()+'\n'+cwClock(),
-         scope:(CW_FROM==='awake'?'待唤醒客户 · 手选':'未回复 '+cwRangeLabel()),
+         scope:(CW_FROM==='awake'?'待唤醒客户 · 手选':'未回复 '+cwRangeLabel()
+           +((CW_CUSTOM.tags||[]).length?' · '+cwTagSummary():'')),
          n:n,gap:CW_SET.gap,st:'done',ok:n,fail:0,items:items,people:people};
   CW_PENDS.push(r);
   if(CW_FROM==='awake'){ AWAKE_SELING=false; AWAKE_ENTER=false; go('host-awake'); }
@@ -7504,8 +7559,58 @@ function cwScopeHtml(){
         +'<button class="'+(u==='h'?'on':'')+'" onclick="cwRangeUnit(\'h\')">小时</button>'
         +'<button class="'+(u==='d'?'on':'')+'" onclick="cwRangeUnit(\'d\')">天</button>'
       +'</div>'
-    +'</div>';
+    +'</div>'
+    +'<button type="button" class="cw-tagh" onclick="cwTagSheet()">'
+      +'<span class="cw-tagh-lab">微信标签</span>'
+      +'<span class="cw-tagh-val'+((CW_CUSTOM.tags||[]).length?' on':'')+'">'+esc(cwTagSummary())+'</span>'
+      +'<span class="cw-tagh-chev" aria-hidden="true">'+I('chev',18,2.2)+'</span>'
+    +'</button>';
 }
+/* 标签选择浮层：本地草稿（CW_TAGD），「确定」才落到唤醒范围；取消或点遮罩都不改条件。
+   「更新标签」在真机上会切到微信执行脚本重新同步手机标签，原型只回一句演示提示。 */
+function cwTagSheet(){
+  CW_TAGD=(CW_CUSTOM.tags||[]).slice(); CW_TAGQ='';
+  CW_TAGW=openSheet('<div class="cw-tagsh-head">'
+      +'<button type="button" class="cw-tagsh-act" onclick="cwTagClose()">取消</button>'
+      +'<b>选择标签</b>'
+      +'<button type="button" class="cw-tagsh-act right" onclick="cwTagSync()">'+I('sync',16,2.2)+'更新标签</button>'
+    +'</div>'
+    +'<label class="cw-tagsh-search">'+I('search',20,2)
+      +'<input id="cwTagSearch" type="text" autocomplete="off" aria-label="搜索标签" placeholder="搜索标签" oninput="cwTagFilter(this.value)">'
+    +'</label>'
+    +'<div class="cw-taglist" id="cwTagList"></div>'
+    +'<div class="cw-tagft"><button type="button" class="cw-btn block" onclick="cwTagApply()">确定</button></div>',
+    'cw-sheet cw-tagsh');
+  cwTagListRender();
+}
+function cwTagListRender(){
+  var box=$('cwTagList'); if(!box)return;
+  var q=(CW_TAGQ||'').toLowerCase();
+  var list=CW_PHONE_TAGS.filter(function(t){ return !q||t.toLowerCase().indexOf(q)>=0 });
+  if(!list.length){ box.innerHTML='<div class="cw-tagnone">没有匹配的标签</div>'; return; }
+  box.innerHTML=list.map(function(t){
+    var on=CW_TAGD.indexOf(t)>=0;
+    return '<button type="button" class="cw-tagrow" role="checkbox" aria-checked="'+(on?'true':'false')+'"'
+      +' data-tag="'+esc(t)+'" onclick="cwTagToggle(this.getAttribute(\'data-tag\'))">'
+      +'<span class="cw-tagrow-n">'+esc(t)+'</span>'
+      +'<span class="cw-cb'+(on?' on':'')+'" aria-hidden="true">'+(on?I('check',13,3):'')+'</span>'
+    +'</button>';
+  }).join('');
+}
+function cwTagToggle(t){
+  var i=CW_TAGD.indexOf(t);
+  if(i<0)CW_TAGD.push(t); else CW_TAGD.splice(i,1);
+  cwTagListRender();
+}
+function cwTagFilter(v){ CW_TAGQ=v; cwTagListRender(); }
+function cwTagApply(){
+  CW_CUSTOM.tags=CW_PHONE_TAGS.filter(function(t){ return CW_TAGD.indexOf(t)>=0 });
+  closeSheet(CW_TAGW); CW_TAGW=null;
+  cwQueryStop(); CW_SEL={};
+  cwRender();
+}
+function cwTagClose(){ closeSheet(CW_TAGW); CW_TAGW=null; }
+function cwTagSync(){ toast('演示：跳转微信同步手机标签'); }
 function cwA(s){ return esc(s).replace(/"/g,'&quot;') }
 /* 发送间隔是唯一还要调的发送参数，直接摆在内容页上，填一个 5–60 之间的秒数。 */
 function cwGapBlockHtml(){
