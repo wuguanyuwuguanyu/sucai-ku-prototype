@@ -1529,6 +1529,8 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
 .cw-pers .cw-ta.ask{background:#F6F8FD;border-radius:10px;padding:10px 12px;min-height:44px;
   box-shadow:inset 0 0 0 1px #E6EDF9}
 .cw-pers .cw-ta.ask:focus{background:#fff}
+/* 占位语只提示动作，不解释 AI／手写；字号压到问句之下，避免空态层级倒挂 */
+.cw-pers .cw-ta.ask::placeholder{font-size:13.5px;line-height:1.5;font-weight:400;color:#A2B1C8}
 /* 依据在左、动作在右，同一条线收在文案下方 */
 .cw-persmeta{display:flex;align-items:center;gap:10px;margin-left:25px;padding:0 0 0 12px;min-height:32px}
 .cw-persacts{display:flex;align-items:center;gap:2px;margin-left:auto;flex:none}
@@ -1588,7 +1590,7 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
 .cw-persq{display:flex;align-items:center;gap:8px;margin:4px 0 0 25px;padding:0;background:none;
   box-shadow:none;animation:cwPersQIn .16s var(--emph) both}
 @keyframes cwPersQIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
-.cw-persq-t{flex:1;min-width:0;font-size:13px;font-weight:500;color:#5B7194;line-height:1.5}
+.cw-persq-t{flex:1;min-width:0;font-size:13.5px;font-weight:600;color:#466D8F;line-height:1.5}
 .cw-persq-t::before{content:"";display:inline-block;width:5px;height:5px;border-radius:50%;
   background:#7B5BFF;margin-right:7px;vertical-align:2px}
 .cw-persq-ai{flex:none;display:inline-flex;align-items:center;gap:4px;min-height:32px;padding:0 8px;
@@ -6671,7 +6673,7 @@ function cwPersRowHtml(id){
   var excluded=pe.nochat||pe.replied||pe.gone;
   var cls='cw-pers'+(pe.st==='skip'||excluded?' off':'');
   var ta=excluded&&!pe.text?'':'<textarea class="cw-ta cw-persta'+(pe.st==='ask'?' ask':'')+'" rows="1" aria-label="给 '+esc(name)+' 的唤醒文案"'
-    +' placeholder="'+(pe.st==='ask'?'补充后自动写，也可以直接手写':(pe.st==='fail'?'手动写一条':'输入要发送的内容'))+'"'
+    +' placeholder="'+(pe.st==='ask'?'输入要发给客户的话':(pe.st==='fail'?'手动写一条':'输入要发送的内容'))+'"'
     +(excluded?' readonly':' oninput="cwPersInput(this,\''+id+'\')"')+'>'+esc(pe.text||'')+'</textarea>';
   var acts='';
   if(!excluded){
