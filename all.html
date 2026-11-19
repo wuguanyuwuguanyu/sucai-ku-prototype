@@ -1525,6 +1525,10 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
   padding:4px 12px 4px;font-size:15px;line-height:1.65;
   background:transparent;border:0;border-radius:10px;box-shadow:none}
 .cw-pers .cw-ta:focus{background:#F7F9FF;border:0;box-shadow:inset 0 0 0 1px #DCE7F8}
+/* 待补充时空草稿就是输入框：给一层软底，别让它看起来像一句说明文字 */
+.cw-pers .cw-ta.ask{background:#F6F8FD;border-radius:10px;padding:10px 12px;min-height:44px;
+  box-shadow:inset 0 0 0 1px #E6EDF9}
+.cw-pers .cw-ta.ask:focus{background:#fff}
 /* 依据在左、动作在右，同一条线收在文案下方 */
 .cw-persmeta{display:flex;align-items:center;gap:10px;margin-left:25px;padding:0 0 0 12px;min-height:32px}
 .cw-persacts{display:flex;align-items:center;gap:2px;margin-left:auto;flex:none}
@@ -1579,17 +1583,19 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
 .cust-lastmsg .tx{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cust-lastmsg .cw-chev{flex:none;color:#94A8C8;font-size:14px;line-height:1}
 .cust-lastmsg:active{background:#EAF2FF}
-/* 逐人文案：补充信息行内输入（缺实时事实或只有寒暄时出现） */
-.cw-persq{margin:6px 0 0 25px;padding:10px 12px;border-radius:14px;background:#FFF8EC;
-  box-shadow:inset 0 0 0 1px #F5E4C8;animation:cwPersQIn .16s var(--emph) both}
+/* 逐人页：待补充时只留一行 AI 问句与「帮我写」；输入就是下面那条草稿，
+   不再另开补充框，也不分「手写 / AI」两个入口——不点帮写，打出来的就是发送内容。 */
+.cw-persq{display:flex;align-items:center;gap:8px;margin:4px 0 0 25px;padding:0;background:none;
+  box-shadow:none;animation:cwPersQIn .16s var(--emph) both}
 @keyframes cwPersQIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
-.cw-persq-t{font-size:13px;font-weight:600;color:#8A5A12;line-height:1.5}
-.cw-persq-in{display:flex;align-items:center;gap:8px;margin-top:8px}
-.cw-persq-in input{flex:1;min-width:0;height:40px;padding:0 12px;border:0;border-radius:10px;
-  background:#fff;color:#17263F;font:500 14px/1 var(--f);box-shadow:inset 0 0 0 1px #EADFCB}
-.cw-persq-in input:focus{outline:none;box-shadow:inset 0 0 0 1.5px #E0B86A}
-.cw-persq-in .cw-btn{height:40px;padding:0 14px;font-size:13px;box-shadow:none}
-.cw-persq-in .cw-btn:disabled{background:#F0E7D6;color:#A89070}
+.cw-persq-t{flex:1;min-width:0;font-size:13px;font-weight:500;color:#5B7194;line-height:1.5}
+.cw-persq-t::before{content:"";display:inline-block;width:5px;height:5px;border-radius:50%;
+  background:#7B5BFF;margin-right:7px;vertical-align:2px}
+.cw-persq-ai{flex:none;display:inline-flex;align-items:center;gap:4px;min-height:32px;padding:0 8px;
+  border:0;border-radius:8px;background:none;color:#6A4DFF;font:600 12.5px/1 var(--f);
+  position:relative;overflow:hidden}
+.cw-persq-ai svg{flex:none;width:13px;height:13px;color:#7B5BFF}
+.cw-persq-ai:active{background:#F2EEFF}
 .cw-persst.ask{color:#B4741F}
 .cw-persst.replied{color:#C2413A}
 /* 逐人页底部：待补充／不发计数与主操作同一栏 */
@@ -4211,7 +4217,7 @@ body[data-motion="fade"] .panel.anim-in{animation:panelSwapIn .36s var(--emph) .
         <section class="screen" id="cw-persons">
           <div class="cw-glow"></div>
           <div class="appbar-back cw-bar">
-            <button class="iconbtn" onclick="cwPersBackGo()" id="cwPersonsBack" aria-label="返回" title="返回"></button><h3>逐人文案</h3>
+            <button class="iconbtn" onclick="cwPersBackGo()" id="cwPersonsBack" aria-label="返回" title="返回"></button><h3>唤醒确认</h3>
             <div class="cw-acts"><button class="cw-textact" id="cwPersonsSwap" onclick="cwPersChange()">换人</button></div>
           </div>
           <div class="scroll cw-scroll" id="cwPersonsBody"></div>
@@ -5253,7 +5259,7 @@ function syncNav(id,params){
 }
 
 /* ---------- Material ripple（统一按压反馈，替代缩放） ---------- */
-var RIP_SEL='.cw-textact,.btn,.chip,.iconbtn,.cell,.wk-card,.p-card,.pc-btn,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.hv-msg,.hv-stat,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.hva-lockcard,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close,.hw-add,.cust-seg button,.cust-copy,.cust-acct-row,.cw-btn,.cw-ib,.cw-op,.cw-units button,.cw-rec,.cw-kv .op,.cw-nosend,.cw-info,.cw-rpb,.cw-goto,.cw-tutplay,.cw-rcpt,.cw-persact,.cw-perschat,.cwp-tabs button,.cwp-grps button,.cust-lastmsg,.cw-selectrow,.cw-persq-in .cw-btn';
+var RIP_SEL='.cw-textact,.btn,.chip,.iconbtn,.cell,.wk-card,.p-card,.pc-btn,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.hv-msg,.hv-stat,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.hva-lockcard,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close,.hw-add,.cust-seg button,.cust-copy,.cust-acct-row,.cw-btn,.cw-ib,.cw-op,.cw-units button,.cw-rec,.cw-kv .op,.cw-nosend,.cw-info,.cw-rpb,.cw-goto,.cw-tutplay,.cw-rcpt,.cw-persact,.cw-perschat,.cwp-tabs button,.cwp-grps button,.cust-lastmsg,.cw-selectrow,.cw-persq-ai';
 function ripInit(){
   document.addEventListener('pointerdown',function(e){
     var t=e.target.closest ? e.target.closest(RIP_SEL) : null;
@@ -6508,8 +6514,12 @@ function cwPersRetry(id){
 function cwPersSupplement(id){
   var p=CW_PERS; if(!p)return;
   var pe=p.people[id]; if(!pe)return;
-  var el=$('cwQ_'+id), v=el?String(el.value||'').trim():'';
-  if(!v){ toast('先补一句'); if(el)el.focus(); return; }
+  var v=String(pe.text||'').trim();
+  if(!v){
+    toast('先写一句');
+    var ta=document.querySelector('.cw-pers[data-pers="'+id+'"] .cw-persta'); if(ta)ta.focus();
+    return;
+  }
   pe.qval=v; pe.st='writing'; pe.shown=false; pe.editSeq=(pe.editSeq||0)+1;
   cwPersPaintRow(id);cwPersProgressPaint();
   cwPersRunOne(id,window.CW_TESTFAST?0:520);
@@ -6542,22 +6552,26 @@ function cwPersInput(el,id){
     cwGrow(el);return;
   }
   var wasWriting=pe.st==='writing';
+  var keepQ=!!pe.question;
   pe.text=el.value;
-  if(String(el.value||'').trim()){
-    pe.st='ready';pe.manual=true;pe.why='';pe.question='';pe.rewind=null;
-    var row=el.closest('.cw-pers');
-    if(row){
-      var st=row.querySelector('.cw-persst');
-      if(st){st.className='cw-persst ok';st.textContent='已手写'}
-      var q=row.querySelector('.cw-persq');if(q)q.remove();
-      var cc=cwCust(id), nm=cc?cc.n:'客户';
-      var acts=row.querySelector('.cw-persacts');
-      if(acts)acts.innerHTML=cwPersActBtn('cwPersRewrite',id,'重写','重写 '+nm+' 的文案')
-        +cwPersActBtn('cwPersSkip',id,'不发','本次不发 '+nm,'danger');
-    }
-  }else if(pe.st==='ready'&&!pe.question){
-    pe.st=pe.question?'ask':'ready';
+  var has=!!String(el.value||'').trim();
+  if(has){
+    pe.st='ready';pe.manual=true;pe.why='';pe.rewind=null;
+    if(!keepQ)pe.question='';
+  }else if(keepQ){
+    pe.st='ask';pe.manual=false;
   }
+  var row=el.closest('.cw-pers');
+  if(row){
+    var st=row.querySelector('.cw-persst');
+    if(st){
+      if(has){st.className='cw-persst ok';st.textContent='已手写'}
+      else if(keepQ){st.className='cw-persst ask';st.textContent='待补充'}
+      else{st.className='cw-persst';st.textContent=''}
+    }
+    if(has&&!keepQ){ var q=row.querySelector('.cw-persq'); if(q)q.remove(); }
+  }
+  el.classList.toggle('ask',!has&&keepQ);
   if(wasWriting){ pe.editSeq=(pe.editSeq||0)+1; p.done++; cwPersTick(); }
   cwGrow(el);cwPersProgressPaint();
 }
@@ -6641,13 +6655,10 @@ function cwPersBasisHtml(id){
 }
 function cwPersQuestionHtml(id){
   var pe=CW_PERS&&CW_PERS.people[id]; if(!pe||!pe.question)return '';
-  if(pe.st==='skip'||pe.st==='fail'||pe.replied||pe.gone||pe.manual)return '';
-  return '<div class="cw-persq"><div class="cw-persq-t">补充信息：'+esc(pe.question)+'</div>'
-    +'<div class="cw-persq-in">'
-      +'<input id="cwQ_'+id+'" type="text" value="'+esc(pe.qval||'')+'" aria-label="给 '+esc((cwCust(id)||{}).n||'客户')+' 补充一句"'
-        +' placeholder="补充一句事实" onkeydown="if(event.key===\'Enter\')cwPersSupplement(\''+id+'\')">'
-      +'<button class="cw-btn" '+(pe.st==='writing'?'disabled':'onclick="cwPersSupplement(\''+id+'\')"')+'>补充并生成</button>'
-    +'</div></div>';
+  if(pe.st==='skip'||pe.st==='fail'||pe.st==='writing'||pe.replied||pe.gone)return '';
+  return '<div class="cw-persq"><span class="cw-persq-t">'+esc(pe.question)+'</span>'
+    +'<button type="button" class="cw-persq-ai" onclick="cwPersSupplement(\''+id+'\')" aria-label="让 AI 按这句写">'
+    +I('sparkle',13,1.8)+'帮我写</button></div>';
 }
 function cwPersRowHtml(id){
   var p=CW_PERS, pe=p&&p.people[id], c=cwCust(id), name=c?c.n:'客户';
@@ -6659,7 +6670,7 @@ function cwPersRowHtml(id){
   }
   var excluded=pe.nochat||pe.replied||pe.gone;
   var cls='cw-pers'+(pe.st==='skip'||excluded?' off':'');
-  var ta=excluded&&!pe.text?'':'<textarea class="cw-ta cw-persta" rows="1" aria-label="给 '+esc(name)+' 的唤醒文案"'
+  var ta=excluded&&!pe.text?'':'<textarea class="cw-ta cw-persta'+(pe.st==='ask'?' ask':'')+'" rows="1" aria-label="给 '+esc(name)+' 的唤醒文案"'
     +' placeholder="'+(pe.st==='ask'?'补充后自动写，也可以直接手写':(pe.st==='fail'?'手动写一条':'输入要发送的内容'))+'"'
     +(excluded?' readonly':' oninput="cwPersInput(this,\''+id+'\')"')+'>'+esc(pe.text||'')+'</textarea>';
   var acts='';
