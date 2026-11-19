@@ -945,7 +945,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
    白卡 20 圆角＋蓝调柔影、紫→蓝渐变头像、✦ 段头、蓝实色主操作。
    范围、共同消息、预览、记录、详情共用这一族类名；待唤醒客户的就地选取态也复用
    `.cw-cb/.cw-ckb/.cw-foot/.cw-btn`，改这里时那一屏一起看。 */
-#cw-content,#cw-preview,#cw-editor,#cw-persons,#cw-records,#cw-record{
+#cw-content,#cw-select,#cw-editor,#cw-preview,#cw-persons,#cw-records,#cw-record{
   background:linear-gradient(180deg,#F0F5FF 0%,#F7F9FE 100%)}
 .cw-glow{position:absolute;left:0;right:0;top:0;height:260px;pointer-events:none;
   background:radial-gradient(56% 34% at 18% -10%,rgba(150,178,255,.34),transparent 72%),
@@ -1062,15 +1062,6 @@ select.cw-input{-webkit-appearance:none;appearance:none;padding-right:42px;curso
 .cw-sum>b{font-size:16px;font-weight:700;color:#173A6B;margin:0 2px}
 .cw-sum.bad,.cw-sum.bad>b{color:#C2413A}
 /* 底栏顶行：拦截原因在左、教程链接在右，同一行；没有原因时教程自己居中。长原因放不下时教程换行，不裁原因。 */
-.cw-tier{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;padding:0 0 8px}
-.cw-tier .cw-slot{flex:1 1 auto;min-width:0}
-.cw-tier:not(.has-sum) .cw-tutlink{flex:1 1 100%;justify-content:center;margin-left:0}
-.cw-foot.stack .cw-slot .cw-sum{margin-bottom:0}
-.cw-tutlink{display:flex;align-items:center;justify-content:center;gap:6px;
-  padding:0;font-size:12.5px;font-weight:500;color:#7C8CA4;position:relative;overflow:hidden}
-.cw-tier .cw-tutlink{flex:0 0 auto;margin-left:auto}
-.cw-tutlink .ic{width:16px;height:16px;color:#2E6BFF;display:flex}
-.cw-tutlink b{font-weight:600;color:#2E6BFF}
 .cw-btn{flex:none;display:flex;align-items:center;justify-content:center;height:46px;padding:0 22px;
   border-radius:999px;background:#1677FE;color:#fff;font-size:15px;font-weight:600;letter-spacing:.01em;
   position:relative;overflow:hidden;box-shadow:0 12px 22px -16px rgba(22,119,254,.8);font-family:var(--f)}
@@ -1079,7 +1070,7 @@ select.cw-input{-webkit-appearance:none;appearance:none;padding-right:42px;curso
 .cw-btn.ghost{background:#EEF3FF;color:#2E6BFF;box-shadow:none}
 .cw-btn:disabled,.cw-btn[disabled]{background:#E6ECF7;color:#9AA6B8;box-shadow:none;cursor:default}
 #cwContentFoot .cw-btn.block{height:52px;font-size:16px}
-#cwContentFoot,#cwPreviewFoot,#cw-editor .cw-foot{background:#fff;box-shadow:0 -14px 26px -22px rgba(40,70,150,.9)}
+#cwContentFoot,#cwSelectFoot,#cwEditorFoot,#cwPersonsFoot,#cwPreviewFoot{background:#fff;box-shadow:0 -14px 26px -22px rgba(40,70,150,.9)}
 .cw-slot{overflow:hidden}
 .cw-btn.swap{animation:cwLab .16s var(--emph)}
 @keyframes cwLab{from{opacity:.45}to{opacity:1}}
@@ -1107,72 +1098,10 @@ select.cw-input{-webkit-appearance:none;appearance:none;padding-right:42px;curso
 
 /* 固定内容：一条一条排在卡里，序号、正文、删除。
    图片那条不包气泡——微信里图片消息就是图本身，列表照这个口径直接显示缩略图。 */
-.cw-crow{display:flex;align-items:flex-start;gap:10px;padding:10px 0}
-.cw-crow+.cw-crow{border-top:1px solid #EEF2FA}
-.cw-crow .cw-message{margin-top:0}
-.cw-crow .cw-message img{display:block;max-width:160px;width:100%;border-radius:10px}
-.cw-no{flex:none;width:24px;height:24px;border-radius:8px;background:#EEF3FF;color:#2E6BFF;
-  font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:9px}
-.cw-ai-link{display:inline-flex;align-items:center;gap:5px;margin-left:auto;min-height:34px;padding:0 8px;
-  border-radius:10px;background:transparent;color:#6A4DFF;font-size:13px;font-weight:600;
-  position:relative;overflow:hidden}
-.cw-ai-link svg{flex:none;width:14px;height:14px;color:#7B5BFF}
-.cw-ai-link:active{background:#F2EEFF}
-.cw-addrow{display:flex;align-items:center;justify-content:center;gap:5px;width:100%;height:46px;margin-top:4px;
-  border-radius:14px;border:1.4px dashed #C9D8EF;background:#FBFCFE;
-  font-size:13.5px;font-weight:600;color:#2E6BFF;position:relative;overflow:hidden}
-
 /* 预览：一人一张卡。姓名旁写未回复时长（与待唤醒客户的卡同一口径），行尾「不发送」是浅红胶囊。 */
-.cw-aicard{position:relative;overflow:hidden;background:#fff;border-radius:20px;padding:16px;margin:0 0 14px;
-  box-shadow:0 12px 26px -22px rgba(40,70,150,.95)}
-.cw-aichd{display:flex;align-items:center;gap:10px}
-.cw-aichd .cw-av{width:40px;height:40px;font-size:15px}
-.cw-nmwrap{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
-.cw-aichd .nm{font-size:16px;font-weight:600;color:#102953;line-height:1.2;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.cw-aichd .cw-meta{font-size:11.5px;font-weight:500;color:#95A3B8;line-height:1.2}
-.cw-prow{margin-top:12px}
-.cw-prow+.cw-prow{margin-top:0;padding-top:12px;border-top:1px solid #EEF2FA}
-.cw-prow .nm{font-size:15px;font-weight:600;color:#17263F}
-.cw-message{display:block;width:100%;text-align:left;white-space:pre-wrap;overflow-wrap:anywhere;
-  margin-top:10px;padding:12px 14px;background:#F2F7FF;border:0;border-radius:14px;
-  color:#17263F;font-size:15px;line-height:1.7;font-family:var(--f);position:relative}
-.cw-message:active{background:#EAF2FF}
-.cw-evidence{margin-top:6px}
-.cw-evidence summary{min-height:40px;display:flex;align-items:center;gap:6px;
-  color:#7C8CA4;font-size:12.5px;font-weight:500;cursor:pointer;list-style:none}
-.cw-evidence summary::-webkit-details-marker{display:none}
-.cw-evidence summary::after{content:"›";margin-left:auto;font-size:16px;line-height:1;
-  transition:transform .2s var(--emph)}
-.cw-evidence[open] summary::after{transform:rotate(90deg)}
-.cw-evidence p{font-size:12.5px;line-height:1.7;color:#5B6B84;background:#F7F9FE;
-  border-radius:12px;padding:10px 12px;margin:0 0 4px;white-space:pre-wrap}
 .cw-alert{display:flex;align-items:flex-start;gap:8px;margin-top:10px;padding:11px 13px;
   border-radius:12px;background:#FFF3F2;color:#C2413A;font-size:13px;font-weight:500;line-height:1.55}
 .cw-alert .ic{flex:none;width:16px;height:16px;margin-top:1px}
-/* 生成中 → 生成完：一批人是**并发**生成的（Prompt 规格 §1：并发 3–5），所以每张卡各自从骨架
-   走到正文，不是整批一起亮。生成中＝两行微光骨架；回来＝卡身上浮淡入，再扫一道浅蓝光。 */
-.cw-skel{display:flex;flex-direction:column;gap:8px;margin-top:12px}
-.cw-skel i{display:block;height:11px;border-radius:6px;
-  background:linear-gradient(90deg,#EEF3FC 25%,#E2EBFA 45%,#EEF3FC 65%);background-size:220% 100%;
-  animation:cwShimmer 1.2s linear infinite}
-.cw-skel i:first-child{width:92%}
-.cw-skel i:last-child{width:58%}
-@keyframes cwSpin{to{transform:rotate(360deg)}}
-@keyframes cwShimmer{from{background-position:120% 0}to{background-position:-120% 0}}
-.cw-aispin{flex:none;width:15px;height:15px;border-radius:50%;
-  border:2px solid #D8E4FA;border-top-color:#2E6BFF;animation:cwSpin .8s linear infinite}
-.cw-aicard.in{animation:cwCardIn .3s var(--emph) both}
-.cw-aicard.in::after{content:"";position:absolute;inset:0;border-radius:20px;pointer-events:none;
-  background:linear-gradient(100deg,rgba(255,255,255,0) 38%,rgba(206,224,255,.75) 50%,rgba(255,255,255,0) 62%);
-  background-size:250% 100%;animation:cwSweep .8s linear both}
-@keyframes cwCardIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-@keyframes cwSweep{from{background-position:130% 0}to{background-position:-130% 0}}
-/* 换范围后新进窗口的人：卡入场 240ms（错开由内联 delay 给），停在「还没生成话术」，
-   不转圈不扫光——静止才说明它没在跑，等用户点「生成话术」。 */
-.cw-aicard.enter{animation:cwCardIn .24s var(--emph) both}
-.cw-aicard.miss .tx{color:#A9B8CE}
-
 /* 记录：一条一次唤醒。左侧日期块、中间人数与内容方式、右侧状态胶囊。 */
 .cw-rec{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#fff;
   border-radius:18px;padding:13px 14px;margin-bottom:12px;position:relative;overflow:hidden;
@@ -1252,8 +1181,6 @@ select.cw-input{-webkit-appearance:none;appearance:none;padding-right:42px;curso
 
 /* 共同消息编辑、可采用的写作建议与按人差异。 */
 .cw-main-input{margin-top:16px;min-height:176px!important}
-#cw-content .cw-input,#cw-editor .cw-input{background:var(--sc-high);border-radius:4px 4px 0 0;border:0;border-bottom:1px solid var(--outline);color:var(--on-surface)}
-#cw-content .cw-input:focus,#cw-editor .cw-input:focus{border-bottom:2px solid var(--primary)}
 .cw-section-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .cw-section-head .sp{flex:none;width:16px;height:16px;color:#7B5BFF;display:flex}
 .cw-section-head .cw-question{flex:1;font-size:16px}
@@ -1266,7 +1193,6 @@ select.cw-input{-webkit-appearance:none;appearance:none;padding-right:42px;curso
 .cw-full summary,.cw-same-group>summary{min-height:48px;display:flex;align-items:center;cursor:pointer;color:var(--primary)}
 .cw-full summary::after,.cw-same-group>summary::after{content:'⌄';margin-left:auto}
 .cw-full[open]>summary::after,.cw-same-group[open]>summary::after{content:'⌃'}
-#cw-preview .cw-nosend{flex:none}#cw-preview .cw-aicard{margin-top:12px}
 /* 编辑器：内容类型走同一套浅蓝槽分段器，输入区给足高度。 */
 .cw-type{display:flex;gap:2px;padding:4px;border-radius:999px;background:#E8F0FF;margin-bottom:18px}
 .cw-type button{flex:1;height:36px;border-radius:999px;border:0;background:transparent;
@@ -1274,13 +1200,9 @@ select.cw-input{-webkit-appearance:none;appearance:none;padding-right:42px;curso
 .cw-type button.on{background:#fff;color:#1677FE;font-weight:700;
   box-shadow:0 6px 14px -12px rgba(40,70,150,.9)}
 /* 编辑器：一张卡撑满正文区（不悬在顶上留一片白），输入框自己吃满剩余高度，字数贴在右下。 */
-#cw-editor .cw-scroll{display:flex;flex-direction:column}
-#cw-editor .cw-pcard{flex:1;display:flex;flex-direction:column;margin-bottom:0;min-height:0}
-#cw-editor textarea.cw-input{flex:1;min-height:240px}
 .cw-count{margin-top:6px;font-size:11.5px;font-weight:500;color:#95A3B8;text-align:right}
 
 @media (prefers-reduced-motion:reduce){
-  .cw-aispin,.cw-skel i,.cw-aicard.in,.cw-aicard.in::after,.cw-aicard.enter,
   .cw-btn.swap,.cw-sech.tipon .cw-tip,.cw-sech.tipout .cw-tip,.cw-wxpv{animation:none}
 }
 /* 设置与教程浮层：走全站底部弹层（openSheet 的 .sheet／.sheet-body），内容区补内边距；
@@ -1299,7 +1221,7 @@ select.cw-input{-webkit-appearance:none;appearance:none;padding-right:42px;curso
 /* ---------------- 客户唤醒 · 发送内容 / AI 对话 / 选素材（2026-11-18，PRD v1.4） ----------------
    与宿主首页／工具／AI托管同一套视觉：浅紫雾顶、白卡柔影、渐变图标块；一屏一个主操作。
    素材卡与聊天区的语音/微信观感不归这里。具体升级见下面「视觉对齐宿主」那一段。 */
-#cw-compose,#cw-pick,#cw-people{background:var(--surface)}
+#cw-pick,#cw-people{background:var(--surface)}
 #cw-content>.cw-glow,#cw-preview>.cw-glow,#cw-persons>.cw-glow,#cw-people>.cw-glow,#cw-pick>.cw-glow{display:none}
 .cw-rowhd{display:flex;align-items:center;justify-content:flex-start;gap:7px;margin-bottom:6px}
 .cw-rowhd .sp,.cw-section-head .sp{flex:none;width:16px;height:16px;color:#7B5BFF;display:flex}
@@ -1326,10 +1248,6 @@ textarea.cw-ta::placeholder{color:var(--on-surface-variant)}
 .cw-media small{position:relative;font-size:12px}
 .cw-media .ic{position:relative;color:var(--primary)}
 .cw-up{margin-top:6px;font-size:12.5px;color:var(--on-surface-variant)}
-.cw-undostrip{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:12px;padding:6px 6px 6px 16px;
-  border-radius:12px;background:var(--secondary-container);color:var(--on-secondary-container);font-size:13px}
-.cw-awakehd{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px;font-size:14px;color:var(--on-surface-variant)}
-.cw-awakehd b{font-size:16px;color:var(--on-surface)}
 /* 添加内容 / 加参考资料底部抽屉：整幅从屏底上滑，白底、渐变图标块、浅蓝行卡——
    与首页、AI托管同一套（浅紫雾顶·白卡柔影·紫→蓝渐变），不再走 M3 的灰底列表观感 */
 .cws-sheet{background:#fff;animation:cwsSheetUp .32s var(--emph)}
@@ -1355,70 +1273,6 @@ textarea.cw-ta::placeholder{color:var(--on-surface-variant)}
 .cws-t b{font-size:16px;font-weight:600;color:#17263F}
 .cws-t small{font-size:12.5px;line-height:1.5;color:#6C85A8}
 .cws-chev{flex:none;display:flex;color:#B4C2DA}
-
-/* ---- AI 帮写：全屏对话 ---- */
-#cw-compose{display:flex;flex-direction:column}
-.cwc-bar{flex:none;display:flex;align-items:center;gap:8px;min-height:64px;padding:0 8px}
-.cwc-bar h3{font-size:22px;font-weight:400;color:var(--on-surface)}
-.cwc-scroll{flex:1;min-height:0;overflow-y:auto;padding:4px 16px 20px;overscroll-behavior:contain}
-.cwc-foot{flex:none;display:flex;align-items:center;gap:4px;padding:8px 8px 10px;background:var(--surface)}
-.cwc-plus{flex:none;color:var(--on-surface)}
-.cwc-input{flex:1;min-height:48px;padding:12px 18px;border-radius:24px;background:var(--sc-high);
-  color:var(--on-surface);font:400 15px/1.5 var(--f)}
-.cwc-input::placeholder{color:var(--on-surface-variant)}
-.cwc-send{flex:none;width:48px;height:48px;border-radius:50%;background:var(--primary);color:var(--on-primary);
-  display:flex;align-items:center;justify-content:center}
-/* 带进 AI 的内容＝右侧一条用户气泡：文字显示正文，图片／视频显示缩略与名称 */
-.cwc-sent{padding:12px 16px}
-.cwc-sent p+p{margin-top:8px}
-.cwc-sent-m{margin:8px 0 0;border-radius:12px;overflow:hidden;max-width:220px;line-height:0}
-.cwc-sent-m img{display:block;width:100%}
-.cwc-sent-f{display:flex;align-items:center;gap:6px;margin-top:8px;padding:8px 10px;border-radius:10px;
-  background:rgba(255,255,255,.66);font-size:13px;white-space:normal}
-/* 采用这一版：主操作放在气泡下一行，复制／再改改做文字入口 */
-.cwc-actrow{display:flex;align-items:center;gap:2px;margin:10px 0 2px}
-.cwc-use{display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 18px;border-radius:999px;
-  background:var(--primary);color:var(--on-primary);font-size:14px;font-weight:600}
-.cwc-use.ghost,.cwc-use.used{background:#EEF3FF;color:#2E6BFF}
-.cwc-mini{height:40px;padding:0 10px;font-size:13.5px;font-weight:500;color:var(--on-surface-variant)}
-.cwc-empty{margin:120px auto 0;max-width:300px;text-align:center;color:var(--on-surface-variant)}
-.cwc-empty .ic{display:inline-flex;color:var(--primary);margin-bottom:14px}
-.cwc-empty h4{font-size:20px;font-weight:500;color:var(--on-surface);margin-bottom:6px}
-/* 空草稿的五个场景入口 */
-.cwc-purpose{display:flex;flex-direction:column;margin:22px 4px 8px}
-.cwc-popt{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:48px;
-  padding:0 4px;font-size:15px;font-weight:500;color:var(--on-surface);text-align:left}
-.cwc-popt+.cwc-popt{border-top:1px solid var(--outline-variant)}
-.cwc-popt .ch{display:flex;color:var(--on-surface-variant)}
-.cwc-user{margin:16px 0 12px 44px;padding:12px 16px;border-radius:18px 4px 18px 18px;
-  background:var(--secondary-container);color:var(--on-secondary-container);font-size:15px;line-height:1.6;white-space:pre-wrap}
-.cwc-note{margin:14px 0;padding-left:14px;border-left:3px solid var(--primary-container);
-  color:var(--on-surface);font-size:15px;line-height:1.7;white-space:pre-wrap}
-.cwc-cand{margin:14px 0 10px;padding:18px;border-radius:16px;background:var(--sc-low)}
-.cwc-candtext{font-size:16px;line-height:1.8;color:var(--on-surface);white-space:pre-wrap}
-.cwc-cand.stale{opacity:.72}
-.cwc-stale{font-size:12px;font-weight:600;color:var(--amber);margin-bottom:8px}
-.cwc-tag{flex:none;font-size:11px;font-weight:600;padding:3px 8px;border-radius:999px;
-  background:var(--primary-container);color:var(--on-primary-container)}
-.cwc-quick{display:flex;flex-direction:column;align-items:flex-start;margin:2px 0 8px}
-.cwc-more{display:flex;align-items:center;gap:6px;min-height:48px;padding:0;text-align:left;
-  font-size:15px;font-weight:500;color:var(--on-surface-variant)}
-.cwc-more .arw{font-size:14px;line-height:1;color:#9AA9BF}
-.cwc-ref{margin:12px 0;padding:14px;border-radius:14px;background:var(--sc)}
-.cwc-refhd{display:flex;align-items:center;gap:8px}
-.cwc-refhd b{flex:1;min-width:0;font-size:15px;font-weight:600;color:var(--on-surface)}
-.cwc-refmsg{margin:10px 0;font-size:13px;line-height:1.7;color:var(--on-surface-variant)}
-.cwc-refm{display:block;padding:6px 10px;margin-bottom:6px;border-radius:8px;background:var(--sc-lowest);color:var(--on-surface)}
-.cwc-refft{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
-.cwc-refft .st{font-size:12px;color:var(--on-surface-variant)}
-.cwc-refft .st.bad{color:var(--error)}
-.cwc-refft .acts{display:flex;gap:4px}
-.cwc-busy{display:flex;align-items:center;gap:8px;margin:14px 0;font-size:14px;color:var(--on-surface-variant)}
-.cwc-dots{display:inline-flex;gap:4px}
-.cwc-dots i{width:6px;height:6px;border-radius:50%;background:var(--primary);animation:cwcBlink 1s infinite}
-.cwc-dots i:nth-child(2){animation-delay:.15s}.cwc-dots i:nth-child(3){animation-delay:.3s}
-@keyframes cwcBlink{0%,100%{opacity:.25}50%{opacity:1}}
-.cwc-busy .cw-textact{margin-left:auto}
 
 /* ---- 选择素材 ---- */
 .cwp-search{display:flex;align-items:center;gap:10px;height:52px;padding:0 16px;margin:4px 0 10px;
@@ -1491,7 +1345,7 @@ textarea.cw-ta::placeholder{color:var(--on-surface-variant)}
    ✦ 段头、渐变图标块；主操作仍是纯色 M3 胶囊（渐变只给图标与文字，不给按钮填充）。
    动效只做「有动作才发生」的那几处：分段器滑块、条目调序 FLIP、新条目入场、对话新消息上浮、
    参考摘要展开、上传转圈；不铺常驻动画，重绘时不整页重播。 */
-#cw-content,#cw-preview,#cw-editor,#cw-compose,#cw-pick,#cw-persons,#cw-people,#cw-records,#cw-record{
+#cw-content,#cw-select,#cw-editor,#cw-preview,#cw-pick,#cw-persons,#cw-people,#cw-records,#cw-record{
   background:
     radial-gradient(120% 54% at 12% -8%,rgba(150,118,255,.20),transparent 62%),
     radial-gradient(110% 46% at 100% 0%,rgba(92,142,255,.15),transparent 60%),
@@ -1574,7 +1428,7 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
 .cw-del-tx{white-space:nowrap}
 .cw-del-lid{transform-box:fill-box;transform-origin:0% 100%;transition:transform .22s var(--emph)}
 .cw-del-zone.open .cw-del-lid{transform:rotate(-34deg)}
-/* 「添加内容」是发送内容卡里唯一的主操作；AI 帮写收在段头右侧做文字入口 */
+/* 「添加内容」是发送内容卡里唯一的主操作 */
 .cw-btn.cw-add-btn{width:100%;height:50px;min-height:50px;gap:8px;margin-top:14px;font-size:15px;
   background:#E8F0FF;color:#1D5FD1;
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.9),0 10px 22px -24px rgba(40,70,150,.8)}
@@ -1591,14 +1445,12 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
   transition:background .2s var(--emph),border-color .2s var(--emph),box-shadow .2s var(--emph)}
 .cw-gap-in:focus{outline:none;background:#fff;border-color:#8FB3F5;
   box-shadow:0 10px 20px -18px rgba(40,70,150,.7)}
-.cw-undostrip{background:linear-gradient(120deg,#F1EEFF,#E7F0FF);color:#3E56C9;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.8)}
 /* 主操作：纯色胶囊只加强柔影与顶部高光，不换渐变填充 */
 .cw-btn{background:#1677FE;color:#fff;
   box-shadow:0 12px 22px -16px rgba(22,119,254,.8),inset 0 1px 0 rgba(255,255,255,.25);
   transition:background .18s var(--emph),box-shadow .18s var(--emph)}
 .cw-btn:disabled,.cw-btn[disabled]{background:#E6ECF7;color:#9AA6B8;box-shadow:none;opacity:1}
-.cw-foot,#cwContentFoot,#cwPreviewFoot,#cw-editor .cw-foot{background:rgba(255,255,255,.94);
+.cw-foot,#cwContentFoot,#cwSelectFoot,#cwEditorFoot,#cwPersonsFoot,#cwPreviewFoot{background:rgba(255,255,255,.94);
   backdrop-filter:blur(12px);box-shadow:0 -16px 30px -26px rgba(40,70,150,.9)}
 .cw-textact{background:#EEF3FF;color:#2E6BFF;transition:background .18s var(--emph)}
 /* 预览：接收人数卡上那枚人数吃渐变，右缘箭头收进浅蓝圆片 */
@@ -1645,9 +1497,6 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
 .cw-persst.ok{color:#12A16B}
 .cw-persst.busy{color:#617A9E}
 .cw-persst.fail{color:#C2413A}
-.cw-persbasis{font-size:12px;line-height:1.55;color:#7A8CA8;margin:0;
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.cw-persbasis.warn{color:#B4741F}
 /* 依据＝打开最近聊天原样看：小字入口＋只读弹窗（客户左、我右） */
 .cw-perschat{display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:0 6px 0 0;
   border-radius:8px;background:transparent;color:#6B84AA;
@@ -1656,7 +1505,15 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
 .cw-perschat svg{flex:none;color:#7B5BFF}
 .cw-perschat .chev{color:#9AA9BF;font-size:13px;line-height:1}
 .cw-perschat:active{background:#F1F5FF}
+/* 一句聊天原话：两行截断，点开这轮聊天；原文才是要看的，问候与理由不进这一行 */
+.cw-perschat.cw-persquote{width:100%;align-items:flex-start;white-space:normal;min-height:34px;
+  padding:4px 6px 4px 0;text-align:left;line-height:1.55}
+.cw-persquote .who{flex:none;color:#9AA9BF;font-weight:500}
+.cw-persquote .tx{flex:1;min-width:0;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;
+  -webkit-box-orient:vertical;color:#5B7194;font-weight:500}
 .cw-chathead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:6px 4px 14px}
+.cw-chatacts{display:flex;gap:6px;flex:none}
+.cw-chathead .cw-textact{height:34px;min-height:34px;padding:0 12px;font-size:12.5px}
 .cw-chathead b{font-size:18px;font-weight:700;color:#17263F}
 .cw-chatlog{display:flex;flex-direction:column;gap:14px;padding-bottom:8px}
 .cw-clrow{display:flex;align-items:flex-start;gap:9px;max-width:88%}
@@ -1693,113 +1550,63 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
   animation:cwShim 1.2s linear infinite}
 .cw-perssk+.cw-perssk{margin-top:7px}
 @keyframes cwShim{from{background-position:100% 0}to{background-position:-100% 0}}
-.cw-persnote{display:flex;align-items:center;gap:6px;margin-top:12px;padding-top:12px;
-  border-top:1px dashed rgba(210,220,240,.85);font-size:12px;color:#7A8CA8}
-.cw-persnote svg{flex:none;color:#9AA9BF}
-/* 发送内容页只留汇总：一行状态＋「查看全部 N 人」；逐人文案在二级页 */
-.cw-persopen{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;
-  min-height:56px;margin-top:4px;padding:10px 12px 10px 14px;border-radius:14px;background:#F7F9FF;
-  box-shadow:inset 0 0 0 1px rgba(219,229,248,.9);text-align:left;
-  transition:background .18s var(--emph)}
-.cw-persopen:active{background:#EEF3FF}
-.cw-persopen-m{min-width:0;font-size:13px;font-weight:600;color:#41597F}
-.cw-persopen-go{flex:none;display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#2E6BFF}
-.cw-persopen-go .chev{font-size:14px;line-height:1;color:#9AA9BF}
 /* 逐人文案页：整页一张白卡，行间细线由 .cw-pers 自己给；顶部进度行在卡外 */
 #cwPersonsBody{padding:4px 16px 24px}
 #cwPersonsBody>.cw-persprog{padding:10px 4px 12px}
 .cw-personscard{padding:2px 16px 4px}
-.cw-pers.cw-pers-in{animation:cwPersIn .26s var(--emph) both}
+.cw-pers.cw-pers-in{animation:cwPersIn .16s var(--emph) both}
 @keyframes cwPersIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .cw-pcard.cw-mode-in{animation:cwModeIn .22s var(--emph) both}
 @keyframes cwModeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-.cw-scope.nudge{animation:cwScopeNudge .6s var(--emph)}
-@keyframes cwScopeNudge{0%,100%{outline:2px solid transparent;outline-offset:2px}
-  35%{outline:2px solid #8FB3F5;outline-offset:3px}}
-/* 逐人预览：一人一小张；超过 3 人收起，底部说明没写成的人 */
-.cw-pvpeople{display:flex;flex-direction:column}
-.cw-pvperson{padding:12px 0}
-.cw-pvperson:first-child{padding-top:4px}
-.cw-pvperson+.cw-pvperson{border-top:1px dashed rgba(210,220,240,.85)}
-.cw-pvphd{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#17263F;margin-bottom:5px}
-.cw-pvphd .cw-av{width:26px;height:26px;font-size:11px}
-.cw-pvmore{display:flex;align-items:center;justify-content:center;width:100%;height:44px;margin-top:10px;
-  border-radius:12px;background:#F4F7FF;font-size:13px;font-weight:600;color:#2E6BFF}
-.cw-pvskip{margin-top:10px;font-size:12px;color:#9AA6B8;text-align:center}
 .cw-snapp{display:grid;grid-template-columns:64px 1fr;gap:10px}
 .cw-snapn{font-size:12.5px;font-weight:600;color:#41597F;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
-/* ---- AI 帮写：对话页的层次与反馈 ---- */
-#cw-compose{display:flex;flex-direction:column}
-.cwc-bar{position:relative;flex:none;display:flex;align-items:center;gap:8px;min-height:64px;padding:0 8px;
-  background:linear-gradient(180deg,rgba(246,246,255,.94),rgba(246,246,255,0));z-index:2}
-.cwc-bar h3{position:absolute;left:56px;right:56px;top:0;bottom:0;display:flex;align-items:center;
-  justify-content:center;font-size:20px;font-weight:600;color:#102953;letter-spacing:.01em;pointer-events:none}
-.cwc-scroll{padding:6px 16px 24px}
-.cwc-empty{margin-top:110px;max-width:320px}
-.cwc-empty .ic{width:76px;height:76px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;
-  background:radial-gradient(62% 58% at 34% 26%,#FFFFFF 0%,#E7E2FF 42%,#CBD9FF 100%);
-  box-shadow:0 18px 36px -20px rgba(120,100,255,.85),inset 0 0 0 1px rgba(255,255,255,.9);
-  color:#7B5BFF;animation:cwFloat 4.6s ease-in-out infinite}
-@keyframes cwFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-.cwc-empty h4{font-size:21px;font-weight:600;color:#102953}
-.cwc-popt{color:#17263F}
-.cwc-popt+.cwc-popt{border-top-color:#E6EDF9}
-.cwc-popt .ch{color:#9AA9BF}
-.cwc-user{margin-left:48px;border-radius:18px 6px 18px 18px;color:#1B2B4A;
-  background:linear-gradient(135deg,#E9E6FF 0%,#E2EEFF 100%);
-  box-shadow:0 10px 22px -22px rgba(70,80,180,.9)}
-.cwc-note{padding:10px 14px;border-left:3px solid #C6C0FF;border-radius:0 12px 12px 0;
-  background:rgba(255,255,255,.58);color:#2A3656}
-.cwc-cand{background:#fff;border-radius:20px;padding:18px;position:relative;overflow:hidden;
-  box-shadow:0 14px 30px -26px rgba(40,70,150,.95),inset 0 0 0 1px rgba(255,255,255,.75)}
-.cwc-cand::before{content:"";position:absolute;left:18px;right:18px;top:0;height:2px;
-  border-radius:0 0 2px 2px;background:linear-gradient(90deg,#9452FF,#1677FE);opacity:.65}
-.cwc-candtext{font-size:16px;line-height:1.8;color:#17263F}
-.cwc-use{background:#1677FE;color:#fff;
-  box-shadow:0 10px 20px -16px rgba(22,119,254,.85),inset 0 1px 0 rgba(255,255,255,.22)}
-.cwc-use.used{background:#E8F0FF;color:#2E6BFF;box-shadow:none}
-.cwc-mini{color:#617A9E;transition:color .18s var(--emph)}
-.cwc-mini:active{color:#2E6BFF}
-.cwc-tag{background:linear-gradient(120deg,#EEE8FF,#E3EEFF);color:#5A4FCF}
-.cwc-more{color:#617A9E;transition:color .18s var(--emph)}
-.cwc-more:active{color:#2E6BFF}
-.cwc-ref{background:#FBF9FF;border-radius:18px;box-shadow:inset 0 0 0 1px rgba(228,220,255,.9)}
-.cwc-refm{background:#fff;border-radius:10px;box-shadow:inset 0 0 0 1px rgba(232,236,248,.9)}
-.cwc-busy{color:#617A9E}
-.cwc-turn{display:flow-root}
-.cwc-turn-in{animation:cwcTurnIn .34s var(--emph) both}
-@keyframes cwcTurnIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-.cwc-foot{background:rgba(255,255,255,.94);backdrop-filter:blur(12px);
-  box-shadow:0 -16px 30px -26px rgba(40,70,150,.9);
-  padding:10px 10px calc(12px + env(safe-area-inset-bottom))}
-.cwc-input{background:#F2F6FF;box-shadow:inset 0 0 0 1px rgba(224,232,248,.9);
-  transition:background .2s var(--emph),box-shadow .2s var(--emph)}
-.cwc-input:focus{outline:none;background:#fff;box-shadow:inset 0 0 0 1.5px #7FA6F0}
-.cwc-send{background:#1677FE;position:relative;overflow:hidden;
-  box-shadow:0 10px 20px -12px rgba(22,119,254,.75);transition:background .18s var(--emph)}
-.cwc-send:active{background:#0F63DA}
-/* AI 帮写按底部抽屉入场：点「AI 帮写」后整页面板从屏底上滑，顶上留一道遮罩；
-   内容仍是全屏对话，只换入场／退场方式。面板压住状态栏以下的区域，圆角顶＋抓柄与全站浮层同一口径。 */
-.cw-drawer-scrim{position:absolute;inset:0;z-index:50;background:rgba(16,28,52,.42);
-  opacity:0;visibility:hidden;transition:opacity .24s ease,visibility 0s linear .24s}
-.cw-drawer-scrim.on{opacity:1;visibility:visible;animation:cwScrimIn .24s ease forwards;transition:none}
-@keyframes cwScrimIn{from{opacity:0}to{opacity:1}}
-/* 入场那 320ms 里旧屏还挂着 active，屏内的 .cw-scroll（z1）、.cw-foot（z6）、删除区（z45）
-   都比普通屏高；不给抽屉自己抬一层，那些卡片会从抽屉身上压过去。遮罩与抽屉都压到
-   内容屏之上、状态栏（55）与浮层根（80）之下。drawer-top 只在它是当前屏时挂上，
-   让开到 cw-pick 这类"往后的屏"时仍由新屏压住它。 */
-#cw-compose.drawer-top{z-index:51}
-#cw-compose{top:52px;border-radius:28px 28px 0 0;box-shadow:0 -24px 60px -26px rgba(16,34,70,.55)}
-#cw-compose::before{height:0}
-.cwc-grab{position:absolute;left:50%;top:10px;transform:translateX(-50%);width:38px;height:4px;
-  border-radius:2px;background:#CCD7EA;z-index:3}
-@keyframes cwDrawerUp{from{transform:translateY(102%)}to{transform:none}}
-@keyframes cwDrawerDown{to{transform:translateY(102%)}}
-#cw-compose.cw-drawer-in{animation:cwDrawerUp .34s var(--emph)}
-/* 这一条比 .anim-exit 重：退场走滑下，别再叠一层淡出把面板按回原位 */
-#cw-compose.cw-drawer-out{animation:cwDrawerDown .22s cubic-bezier(.34,0,.8,.2) forwards}
+/* ---- 2026-11-19 路径重排：工具页只做查询 → 选人页 → 逐人文案页（直接发送）；
+   「发同一份内容」走独立的发送内容编辑页。下面这几块是这次新长出来的界面件。 ---- */
+/* 顶栏右侧的文字动作（逐人文案的「换人」） */
+.cw-acts .cw-textact{height:36px;min-height:36px;padding:0 14px}
+/* 工具页：两张白卡，一张一个控件；实际区间作为控件的读数直接写在下面 */
+.cw-setcard{padding:18px 18px 16px}
+.cw-setcard .cw-sech{margin-bottom:12px}
+.cw-range-out{display:flex;align-items:center;gap:6px;margin-top:12px;font-size:13px;font-weight:600;color:#2E6BFF}
+.cw-range-out.off{color:#9AA6B8;font-weight:500}
+.cw-range-out b{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}
+.cw-setcard .cw-tagh{margin-top:0;padding-top:0;border-top:0;min-height:48px}
+.cw-setcard .cw-tagh-val{text-align:left}
+.cw-altlink{display:flex;align-items:center;justify-content:center;width:100%;min-height:44px;margin-bottom:4px;
+  border:0;border-radius:12px;background:transparent;color:#2E6BFF;font-family:var(--f);
+  font-size:14px;font-weight:600;position:relative;overflow:hidden}
+.cw-altlink:active{background:#EEF3FF}
+.cw-altlink:disabled{color:#9AA6B8;background:transparent}
+/* 选人页：复用待唤醒客户的卡，整行可点；勾选框在左、内容右移 */
+.cw-selectlist>.cust-card{margin-bottom:10px}
+.cw-selectlist>.cust-card .cust-main{padding-right:2px}
+.cw-selectrow{cursor:pointer}
+.cw-selectrow:active{background:#F7FAFF}
+/* 待唤醒客户行里的「销售最后一句」：可点开最近聊天；卡内按钮不吃整行勾选 */
+.cust-lastmsg{display:flex;align-items:center;gap:8px;width:100%;margin-top:10px;padding:9px 11px;
+  border-radius:12px;background:#F4F8FF;border:0;font-family:var(--f);text-align:left;
+  color:#41597F;font-size:13px;line-height:1.5;position:relative;overflow:hidden}
+.cust-lastmsg .tx{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cust-lastmsg .cw-chev{flex:none;color:#94A8C8;font-size:14px;line-height:1}
+.cust-lastmsg:active{background:#EAF2FF}
+/* 逐人文案：补充信息行内输入（缺实时事实或只有寒暄时出现） */
+.cw-persq{margin:6px 0 0 25px;padding:10px 12px;border-radius:14px;background:#FFF8EC;
+  box-shadow:inset 0 0 0 1px #F5E4C8;animation:cwPersQIn .16s var(--emph) both}
+@keyframes cwPersQIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.cw-persq-t{font-size:13px;font-weight:600;color:#8A5A12;line-height:1.5}
+.cw-persq-in{display:flex;align-items:center;gap:8px;margin-top:8px}
+.cw-persq-in input{flex:1;min-width:0;height:40px;padding:0 12px;border:0;border-radius:10px;
+  background:#fff;color:#17263F;font:500 14px/1 var(--f);box-shadow:inset 0 0 0 1px #EADFCB}
+.cw-persq-in input:focus{outline:none;box-shadow:inset 0 0 0 1.5px #E0B86A}
+.cw-persq-in .cw-btn{height:40px;padding:0 14px;font-size:13px;box-shadow:none}
+.cw-persq-in .cw-btn:disabled{background:#F0E7D6;color:#A89070}
+.cw-persst.ask{color:#B4741F}
+.cw-persst.replied{color:#C2413A}
+/* 逐人页底部：待补充／不发计数与主操作同一栏 */
+#cwPersonsFoot .cw-sum b{font-size:15px}
+#cwPersonsFoot .cw-btn.block{height:52px;font-size:16px}
 
 /* ---- 选择素材：搜索栏与一级 chip 照首页的画法（白底、渐变描边选中） ---- */
 .cwp-search{background:#fff;color:#7C8CA4;
@@ -1824,11 +1631,10 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
 @keyframes cwRowIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
 @media (prefers-reduced-motion:reduce){
-  .cw-it.fresh,.cw-it-gap,.cwp-list.cw-in .cwp-card,.cwc-turn-in,
-  .cwc-empty .ic,.cw-up::before,.cws-sheet,.cws-sheet .cws-row,
-  #cw-compose.cw-drawer-in,#cw-compose.cw-drawer-out{animation:none}
-  .cw-del-zone,.cw-del-lid,body.cw-dragging #cwContentFoot,.cws-row,
-  .cw-drawer-scrim{transition:none}
+  .cw-it.fresh,.cw-it-gap,.cwp-list.cw-in .cwp-card,
+  .cw-pers.cw-pers-in,.cw-persq,
+  .cw-up::before,.cws-sheet,.cws-sheet .cws-row{animation:none}
+  .cw-del-zone,.cw-del-lid,body.cw-dragging #cwContentFoot,.cws-row{transition:none}
   .cw-unit-thumb{transition:none}
 }
 
@@ -4383,13 +4189,11 @@ body[data-motion="fade"] .panel.anim-in{animation:panelSwapIn .36s var(--emph) .
           <div class="scroll cust-scroll" id="custNewfriendBody"></div>
         </section>
 
-        <!-- 客户唤醒（App 工具页）· ADR-0095／docs/prd/客户唤醒-App工具页-PRD.md
-             两个入口：工具页「高效发送」组的「客户唤醒」，与「待唤醒客户」页吸底的「一键唤醒」。
-             **2026-11-17 共同消息流程**（PRD v1.2）：工具页进来先选「未回复超过 N」（取 [N,N+5]，
-             不预填），同一页写话术、定参数、开始；范围规则收在问号气泡里，不报人数。
-             工具页这条路不再有三档（全部／今日／1天／1周）与「自定义 N」弹层——那套留在
-             「待唤醒客户」页，两条路的口径正式分家。
-             准备内容 → 预览消息 → 编辑消息；记录与记录详情沿用原入口。
+        <!-- 客户唤醒（App 工具页）· ADR-0095／ADR-0113／docs/prd/客户唤醒-App工具页-PRD.md
+             两个入口：工具页「高效发送」组的「客户唤醒」，与「待唤醒客户」页吸底的「选择客户」。
+             工具页只定未回复时长与微信标签；「选择客户」按范围取人后进独立选人页，
+             勾好点「按聊天记录帮写」进逐人文案页；「发同一份内容」走统一内容编辑与预览。
+             待唤醒客户入口在原列表勾选，之后同样进逐人文案页。
              **没有发送中页与结果页**：脚本执行会切到微信、逐条发、占住屏幕，App 里画进度没意义；
              点发送回到对应入口；执行结束才落记录，状态为「已完成／已中断」。
              正文一律由 REND['cw-*'] 按数据填（同 cust 四页的口径：版式一份，换数据）。 -->
@@ -4405,35 +4209,37 @@ body[data-motion="fade"] .panel.anim-in{animation:panelSwapIn .36s var(--emph) .
           <div class="cw-foot stack" id="cwContentFoot"></div>
         </section>
 
-        <!-- 逐人文案：按聊天记录逐人写的编辑页。发送内容页只留汇总与「查看全部 N 人」，
-             逐条改／重写／不发／查看最近聊天都在这一页；没有底部主按钮，预览发送仍回发送内容页。 -->
+        <!-- 工具页 · 选择客户：名单来自本次工具页查询，初始未勾选；
+             取人失败在原地重试，空名单给「修改范围」。 -->
+        <section class="screen" id="cw-select">
+          <div class="cw-glow"></div>
+          <div class="appbar-back cw-bar">
+            <button class="iconbtn" onclick="back()" id="cwSelectBack" aria-label="返回" title="返回"></button><h3>选择客户</h3>
+          </div>
+          <div class="scroll cw-scroll" id="cwSelectBody"></div>
+          <div class="cw-foot stack" id="cwSelectFoot"></div>
+        </section>
+
+        <!-- 逐人文案：一人一行，姓名与状态 → 一句聊天原话 → 可编辑草稿 → 行操作；
+             发送间隔在列表上方，底部直接去微信发送。顶栏「换人」回当前入口的勾选列表。 -->
         <section class="screen" id="cw-persons">
           <div class="cw-glow"></div>
           <div class="appbar-back cw-bar">
-            <button class="iconbtn" onclick="back()" id="cwPersonsBack" aria-label="返回" title="返回"></button><h3>逐人文案</h3>
+            <button class="iconbtn" onclick="cwPersBackGo()" id="cwPersonsBack" aria-label="返回" title="返回"></button><h3>逐人文案</h3>
+            <div class="cw-acts"><button class="cw-textact" id="cwPersonsSwap" onclick="cwPersChange()">换人</button></div>
           </div>
           <div class="scroll cw-scroll" id="cwPersonsBody"></div>
+          <div class="cw-foot stack" id="cwPersonsFoot"></div>
         </section>
 
-        <!-- AI 帮写按底部抽屉呈现：遮罩压住下面那屏，面板从屏底上滑 -->
-        <div class="cw-drawer-scrim" id="cwComposeScrim" onclick="cwComposeClose()"></div>
-        <!-- AI 帮写：Android 全屏对话页（PRD §6）。顶部关闭、中间单层滚动、底部固定输入。
-             只产出通用文案与候选：采用才回填主编辑页，关闭不采用，参考资料默认不发送。 -->
-        <section class="screen" id="cw-compose">
-          <div class="cwc-grab" aria-hidden="true"></div>
-          <div class="cwc-bar">
-            <button class="iconbtn" onclick="cwComposeClose()" id="cwComposeClose" aria-label="关闭 AI 对话"></button><h3>AI 帮写</h3>
+        <!-- 发同一份内容：统一内容的编辑页（文字、相册、素材库、排序），预览在 cw-preview。 -->
+        <section class="screen" id="cw-editor">
+          <div class="cw-glow"></div>
+          <div class="appbar-back cw-bar">
+            <button class="iconbtn" onclick="back()" id="cwEditorBack" aria-label="返回" title="返回"></button><h3>发送内容</h3>
           </div>
-          <div class="scroll cwc-scroll" id="cwComposeBody"></div>
-          <div class="cwc-foot">
-            <button class="iconbtn cwc-plus" onclick="cwComposeAdd()" aria-label="添加参考资料">
-              <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-            </button>
-            <input id="cwChatInput" class="cwc-input" type="text" placeholder="说说需求，或添加素材…" aria-label="告诉 AI 怎么写" onkeydown="if(event.key==='Enter')cwChatSubmit()">
-            <button class="cwc-send" onclick="cwChatSubmit()" aria-label="发送要求">
-              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 3 18 9-18 9 4-9zM7 12h14"/></svg>
-            </button>
-          </div>
+          <div class="scroll cw-scroll" id="cwEditorBody"></div>
+          <div class="cw-foot stack" id="cwEditorFoot"></div>
         </section>
 
         <section class="screen" id="cw-preview">
@@ -5101,7 +4907,7 @@ function mePill(){var p=$('mePill');if(p)p.textContent='当前销售 · '+ME.nam
 function mePick(i){
   ME=DEMO_ME[i];closeSheet();mePill();meHeroPaint();
   /* 换账号不串数据（PRD §9）：上一账号的名单、草稿与 AI 对话都不带过来 */
-  if(typeof cwResetDraft==='function'){cwResetDraft();CW_SEL={};CW_XED={};CW_CUSTOM.on=false;CW_CUSTOM.tags=[];cwQueryStop();cwResetRecords();}
+  if(typeof cwResetDraft==='function'){cwResetDraft();CW_SEL={};CW_CUSTOM.on=false;CW_CUSTOM.tags=[];cwQueryStop();cwResetRecords();}
   REND['host-home']&&REND['host-home']();
   REND['library']&&REND['library']();
 }
@@ -5412,8 +5218,9 @@ function reportPage(id,params){
 }
 function go(id,params){
   if(!isPro()&&VIP_ONLY[id]) id='host-ai-up';   /* 非旗舰版：旗舰版的屏一律落到升级提示页 */
-  /* 从「待唤醒客户」的选取态走别处（底栏导航之类）＝放弃这次选人；去唤醒内容页不算，那一步要带着勾回来 */
-  if(cur==='host-awake'&&id!=='host-awake'&&id!=='cw-content'&&AWAKE_SELING){
+  /* 从「待唤醒客户」的选取态走别处（底栏导航之类）＝放弃这次选人；
+     去逐人文案、编辑页与选人页不算，那几步要带着勾回来 */
+  if(cur==='host-awake'&&id!=='host-awake'&&['cw-content','cw-select','cw-persons','cw-editor'].indexOf(id)<0&&AWAKE_SELING){
     AWAKE_SELING=false; AWAKE_ENTER=false;
   }
   closeBallMenu(true); /* 切屏即收：两选一菜单只活在微信屏，别跟着切到别的页；瞬收，不留一段淡出到新屏上 */
@@ -5467,15 +5274,10 @@ function syncNav(id,params){
   for(var i=0;i<ls.length;i++){ls[i].classList.remove('on')}
   var el=document.querySelector('.nav-i[data-vid="'+id+'"]');
   if(el)el.classList.add('on');
-  /* AI 帮写是抽屉：它不在栈顶时遮罩一并收走（采用候选、去选素材、开始发送等）
-     ——遮罩状态跟着当前屏走，别让它在别的屏上再拦一次点击 */
-  var sc=$('cwComposeScrim'), cp=$('cw-compose');
-  if(sc){ if(id==='cw-compose')sc.classList.add('on'); else sc.classList.remove('on') }
-  if(cp){ if(id==='cw-compose')cp.classList.add('drawer-top'); else cp.classList.remove('drawer-top') }
 }
 
 /* ---------- Material ripple（统一按压反馈，替代缩放） ---------- */
-var RIP_SEL='.cw-textact,.cw-message,.btn,.chip,.iconbtn,.cell,.wk-card,.p-card,.pc-btn,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.hv-msg,.hv-stat,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.hva-lockcard,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close,.hw-add,.cust-seg button,.cust-copy,.cust-acct-row,.cw-btn,.cw-ib,.cw-op,.cw-units button,.cw-rec,.cw-kv .op,.cw-addrow,.cw-nosend,.cw-tutlink,.cw-info,.cw-rpb,.cw-goto,.cw-tutplay,.cw-rcpt,.cw-ai-link,.cw-persact,.cw-perschat,.cw-persopen,.cwc-more,.cwc-use,.cwc-mini,.cwc-popt,.cwc-send,.cwp-tabs button,.cwp-grps button';
+var RIP_SEL='.cw-textact,.btn,.chip,.iconbtn,.cell,.wk-card,.p-card,.pc-btn,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.hv-msg,.hv-stat,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.hva-lockcard,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close,.hw-add,.cust-seg button,.cust-copy,.cust-acct-row,.cw-btn,.cw-ib,.cw-op,.cw-units button,.cw-rec,.cw-kv .op,.cw-nosend,.cw-info,.cw-rpb,.cw-goto,.cw-tutplay,.cw-rcpt,.cw-persact,.cw-perschat,.cwp-tabs button,.cwp-grps button,.cust-lastmsg,.cw-selectrow,.cw-persq-in .cw-btn';
 function ripInit(){
   document.addEventListener('pointerdown',function(e){
     var t=e.target.closest ? e.target.closest(RIP_SEL) : null;
@@ -5815,7 +5617,7 @@ var CUST_SEG=0;
 var CUST_PAGES={
   /* i＝与 CW_CUST 同一个客户 id：这一页的选取态直接读写 CW_SEL，
      从「一键唤醒」进到唤醒内容页时，带过去的就是同一批人。 */
-  'host-awake':{t:'待唤醒客户',label:'最后触达',tabs:['今日未回复','1天未回复','1周未回复'],lists:[
+  'host-awake':{t:'待唤醒客户',label:'最后触达',lastmsg:1,tabs:['今日未回复','1天未回复','1周未回复'],lists:[
     [{i:'a6',n:'许志远',m:'今天08:10　未回复·6小时'},
      {i:'a5',n:'宋雨彤',m:'今天08:40　未回复·5小时'},
      {i:'a3',n:'林晓雯',m:'今天09:20　未回复·4小时'},
@@ -5922,6 +5724,7 @@ function custCard(it,p,sel,idx){
     +'<span class="cust-id">微信号：'+wx
       +'<button class="cust-copy" onclick="event.stopPropagation();copyText(\''+wx+'\',\'微信号已复制\')" aria-label="复制微信号" title="复制微信号">'+I('copy',13,2)+'</button></span>'
     +'<span class="cust-meta">'+p.label+'：'+it.m+'</span></span></div>'
+    +((p.lastmsg&&it.i)?cwLastMsgHtml(cwCust(it.i)||{i:it.i,n:it.n}):'')
     +(p.msg?'<div class="cust-msg"><div class="cust-msg-h"><span class="cust-hi">Hi</span>'
       +'<span class="cust-gn">加好友打招呼语</span></div>'
       +'<div class="cust-msg-t">'+p.msg+'</div></div>':'')
@@ -5951,14 +5754,14 @@ REND['host-reach']=function(){custRender('host-reach')};
 REND['host-chat']=function(){custRender('host-chat')};
 REND['host-newfriend']=function(){custRender('host-newfriend')};
 
-/* ---------- 客户唤醒（App 工具页）· ADR-0095 / docs/prd/客户唤醒-App工具页-PRD.md ----------
-   两个入口选人（工具页按范围取人／待唤醒客户原页勾选），之后共用同一条内容流程：
-   准备发送内容 →（可选）AI 对话写作 → 预览 → 去微信发送 → 结束后看记录。
-   内容有两种：统一话术（同一批客户收到同一份，不读聊天）与按聊天记录逐人写
-   （读最近 20 条，锚点是本方最后一条未获回复的消息，只发文字；ADR-0112）。两种草稿各存各的；
-   逐人的发送内容页只留汇总与「查看全部 N 人」，逐条编辑在 cw-persons。
-   主编辑页（cw-content）管最终发送内容；AI 对话（cw-compose）管要求、参考资料与候选。
-   对话里加的素材默认只参考，点「加入发送内容」才进发送列表——两边各存各的，不互相混入。
+/* ---------- 客户唤醒（App 工具页）· ADR-0095／ADR-0113 / docs/prd/客户唤醒-App工具页-PRD.md ----------
+   2026-11-19 路径重排：逐人写扶正为主路径，统一内容退成「发同一份内容」。
+   · 工具页 cw-content：只定未回复时长与微信标签；「选择客户」取人进 cw-select。
+   · cw-select：按本次查询的名单勾选，初始未勾选；勾好「按聊天记录帮写」进 cw-persons。
+   · cw-persons：一人一行（姓名与状态 → 一句聊天原话 → 可编辑草稿 → 行操作），
+     发送间隔在列表上方，底部直接「去微信发送」；缺实时事实时行内补齐再写这一人。只发文字。
+   · 「发同一份内容」→ cw-editor（统一内容：文字／相册／素材库／排序）→ cw-preview。
+   · 待唤醒客户入口在原列表勾选，勾好同样进 cw-persons；两条路都保留本机的唤醒记录。
    素材一律复用 App 素材库的数据与读法（MATS／PS、msgsOf、visMats），不另造一份。 */
 
 var AWAKE_SELING=false, AWAKE_ENTER=false, CW_FROM='tools';
@@ -5967,24 +5770,28 @@ var AWAKE_SELING=false, AWAKE_ENTER=false, CW_FROM='tools';
    所以最后一条必须是本方（f:'m'）；客户此前说什么放在前面当话题上下文。
    chatFail＝演示聊天读取失败，重试后能读到。真实来源是手机脚本逐人导出的聊天尾部。 */
 var CW_CUST=[
+  /* 今日未回复这一档要覆盖交接里的四种情形：
+     a4 发过报价 → 零输入出稿；a2 上次没货 → 零输入出稿；
+     a1 答应查库存 → 缺实时事实，先问一句再补；a6 只有寒暄 → 给轻问候，可补充或跳过。
+     其余人各自承接原聊天，演示「接着本方上一句写」。 */
   {i:'a1',n:'李晓霞',last:'今天 10:00',h:3,tags:['老客户','VIP'],chat:[
-    {f:'c',t:'那件驼色大衣还有 M 码吗？',at:'11月16日 15:20'},
+    {f:'c',t:'那件黑色大衣还有 M 码吗？',at:'11月16日 15:20'},
     {f:'m',t:'我帮你查一下，到了联系你。',at:'11月16日 15:22'}]},
   {i:'a2',n:'张大强',last:'今天 10:00',h:3,tags:['新客户'],chat:[
-    {f:'c',t:'先看看，有优惠再说。',at:'11月16日 14:05'},
-    {f:'m',t:'行，有优惠我告诉你。',at:'11月16日 14:07'}]},
+    {f:'c',t:'上次看的那款黑色外套还有吗？',at:'11月16日 14:05'},
+    {f:'m',t:'那款当时没货，到了我告诉你。',at:'11月16日 14:07'}]},
   {i:'a3',n:'林晓雯',last:'今天 09:20',h:4,tags:['老客户','社群'],chat:[
     {f:'c',t:'上次的面膜用完了，最近还有活动吗？',at:'11月16日 09:20'},
     {f:'m',t:'我帮你看看，有合适的优惠告诉你。',at:'11月16日 09:25'}]},
   {i:'a4',n:'王芳',last:'今天 09:05',h:2,tags:['意向客户'],chat:[
-    {f:'c',t:'周六带孩子过来试一下。',at:'11月16日 09:05'},
-    {f:'m',t:'好，周六见。',at:'11月16日 09:06'}]},
+    {f:'c',t:'那款米色风衣多少钱？',at:'11月16日 09:05'},
+    {f:'m',t:'报价单发你了，有想了解的随时问我。',at:'11月16日 09:06'}]},
   {i:'a5',n:'宋雨彤',last:'今天 08:40',h:5,tags:['VIP','社群'],chat:[
     {f:'c',t:'帮我把上次那个链接再发一下。',at:'11月16日 08:40'},
     {f:'m',t:'发你了，有需要随时找我。',at:'11月16日 08:41'}]},
   {i:'a6',n:'许志远',last:'今天 08:10',h:6,tags:['新客户'],chat:[
-    {f:'c',t:'刚加上，先了解一下。',at:'11月16日 08:10'},
-    {f:'m',t:'好，我先发份目录给你看看。',at:'11月16日 08:12'}]},
+    {f:'c',t:'刚加上，你好。',at:'11月16日 08:10'},
+    {f:'m',t:'你好呀，有空常联系。',at:'11月16日 08:12'}]},
   {i:'b1',n:'陈立',last:'昨天 18:20',h:50,tags:['老客户','已成交'],chat:[
     {f:'c',t:'上个月买的鞋挺舒服的。',at:'11月15日 18:20'},
     {f:'m',t:'穿着合适就好。',at:'11月15日 18:22'}]},
@@ -6038,7 +5845,7 @@ var CW_SET={gap:10}, CW_GAP=[5,60];
    tags＝按手机微信标签收窄，空数组表示不限；有标签时取这些标签下好友的并集。 */
 var CW_CUSTOM={n:3,u:'d',on:false,tags:[]};
 var CW_TAGD=[], CW_TAGQ='', CW_TAGW=null;
-var CW_SEL={}, CW_XED={};
+var CW_SEL={};
 var CW_QBUSY=false, CW_QERR=false, CW_QSIM=false, CW_QMODE='', CW_QBEAT=0, CW_QTM=null, CW_UNIT_FROM='';
 var CW_LAUNCHING=false, CW_SEND_IDS=[], CW_SEND_VERSION='', CW_SEND_UNSENT=0, CW_PENDS=[], CW_REXP='';
 var CW_SH=null;
@@ -6047,31 +5854,13 @@ var CW_SH=null;
    文本逐条可改；图片/视频带上传态（ing / fail），失败项不静默跳过。 */
 var CW_ITEMS=[], CW_ITEM_SEQ=0, CW_MAT=null, CW_FRESH_ID='';
 function cwMarkFresh(id){ CW_FRESH_ID=id; setTimeout(function(){ if(CW_FRESH_ID===id)CW_FRESH_ID='' },600) }
-/* AI 会话：独立保存要求、参考资料、轮次与候选。ver＝当前资料版本，换资料就 +1，
-   旧候选据此标「基于之前素材」，采用前必须按当前资料重新生成。 */
-var CW_CHAT=null, CW_REF_SEQ=0;
-/* 逐人写法（PRD §6.6）：与统一草稿各存各的。on=false 时对象留着——切回同一份内容再回来，
-   名单没变就直接恢复上次的文案，不重新生成。people[id]={st,text,generic,manual,why,gen,prev,shown}。 */
-var CW_PERS=null, CW_PERS_SEQ=0, CW_PERS_TIMERS=[], CW_PVALL=false, CW_MODE_ANIM=false;
-/* 唤醒目的：空草稿时当思路入口，已有内容时当换向开关。
-   g＝这个场景下让用户补的那句背景；问候不需要任何事实，直接写。 */
-var CW_PURPOSES=[
-  {k:'new',n:'有新品到店',g:'这次到的是什么新品？什么时候能试？说一句就行。'},
-  {k:'activity',n:'有活动或优惠',g:'这次是什么活动？说说时间和优惠，比如「本周六满 1000 减 200」。'},
-  {k:'repeat',n:'老客户复购提醒',g:'上次买的是什么？大概什么时候该补货？'},
-  {k:'after',n:'售后或使用回访',g:'想回访哪件事？比如货没收到、用得不顺手，或者想问问体验。'},
-  {k:'greet',n:'没什么事，问候一下',g:''}
-];
-function cwPurp(k){ for(var i=0;i<CW_PURPOSES.length;i++)if(CW_PURPOSES[i].k===k)return CW_PURPOSES[i]; return null }
-function cwInferPurpose(){
-  var s=cwAiSources().map(function(x){return x.c||''}).join('\n');
-  if(/满\s*\d|[\d.]+\s*折|优惠|活动|促销/.test(s))return 'activity';
-  if(/新品|新款|上新|试穿/.test(s))return 'new';
-  if(/售后|退货|换货|维修|没收到/.test(s))return 'after';
-  if(/复购|补货|用完|回购/.test(s))return 'repeat';
-  if(/好久|最近|问候|联系/.test(s))return 'greet';
-  return '';
-}
+/* 逐人文案（PRD §6）：一人一条，独立于统一草稿。CW_PERS 跨页保留——
+   换人回来时，仍在名单里的行保留原草稿，只为新增的人起草。
+   people[id]={st,text,question,qval,basis,generic,manual,why,gen,prev,shown,replied,editSeq}。
+   st：writing 正在写 / ready 可发 / ask 待补充 / fail 没写成 / skip 本次不发。 */
+var CW_PERS=null, CW_PERS_SEQ=0, CW_PERS_TIMERS=[], CW_MODE_ANIM=false;
+/* 工具页查询结果：CW_WIN＝上次取到的人 id，按未回复从长到短。选人页不回查，用这份渲染。 */
+var CW_WIN=[];
 
 /* ---------- 草稿与版本 ---------- */
 function cwItemSeq(){ return 'it'+(++CW_ITEM_SEQ) }
@@ -6080,23 +5869,22 @@ function cwTextBlocks(){ return CW_ITEMS.filter(function(i){return i.t==='text'}
 function cwHasContent(){ return CW_ITEMS.some(function(i){return i.t!=='text'?i.up!=='fail':!!String(i.c||'').trim()}) }
 function cwItemsSig(){ return JSON.stringify(CW_ITEMS.map(function(i){return [i.t,i.c,i.up||'']})) }
 function cwSendItems(){ return CW_ITEMS.filter(function(i){return i.t!=='text'||String(i.c||'').trim()}).map(function(i){return {t:i.t,c:i.c}}) }
-function cwBumpVer(){ if(CW_CHAT)CW_CHAT.ver++ }
-function cwFreshVer(){ return CW_CHAT?CW_CHAT.ver:0 }
-function cwAddTextBlock(v){ var it={id:cwItemSeq(),t:'text',c:v||''}; CW_ITEMS.push(it); cwBumpVer(); return it }
+function cwAddTextBlock(v){ var it={id:cwItemSeq(),t:'text',c:v||''}; CW_ITEMS.push(it); return it }
 function cwEnsureDraft(){ if(!CW_ITEMS.length)cwAddTextBlock('') }
 function cwDropEmptyText(){
   var kept=cwTextBlocks().filter(function(i){return String(i.c||'').trim()});
   CW_ITEMS=CW_ITEMS.filter(function(i){ return i.t!=='text'||kept.indexOf(i)>=0 });
 }
-function cwResetChat(){
-  if(CW_CHAT&&CW_CHAT.timer)clearTimeout(CW_CHAT.timer);
-  CW_CHAT={ver:0,token:0,busy:false,timer:null,turns:[],refs:[],undo:null,lastReq:'',rendered:0,purpose:''};
-  CW_REF_SEQ=0;
-}
-function cwResetDraft(){ CW_ITEMS=[]; CW_ITEM_SEQ=0; CW_MAT=null; cwResetChat(); cwPersReset(); CW_PVALL=false; CW_LAUNCHING=false; }
+/* 「发同一份内容」的统一草稿：换范围、换入口都留着；重新发起一轮才从空白开始。 */
+function cwResetDraft(){ CW_ITEMS=[]; CW_ITEM_SEQ=0; CW_MAT=null; cwPersReset(); CW_LAUNCHING=false; }
 function cwRender(){
   if(!cur||!REND[cur])return;
-  var sc=cur==='cw-content'?$('cwContentBody'):(cur==='cw-persons'?$('cwPersonsBody'):null), y=sc?sc.scrollTop:0;
+  var sc=cur==='cw-content'?$('cwContentBody')
+    :cur==='cw-select'?$('cwSelectBody')
+    :cur==='cw-editor'?$('cwEditorBody')
+    :cur==='cw-persons'?$('cwPersonsBody')
+    :cur==='cw-preview'?$('cwPreviewBody'):null;
+  var y=sc?sc.scrollTop:0;
   REND[cur]({});
   if(sc)sc.scrollTop=y;
 }
@@ -6114,7 +5902,7 @@ function cwSelByH(){
 function cwSelCount(){ return cwSelIds().length; }
 function cwUnitN(u){ return u==='d'?'天':'小时'; }
 function cwRangeLabel(){ return CW_CUSTOM.n+'–'+(CW_CUSTOM.n+5)+' '+cwUnitN(CW_CUSTOM.u); }
-/* 标签条件：不选＝不限；选了多个＝这些标签下好友的并集（与现网营销任务同一口径）。 */
+/* 标签条件：不选＝不限；选了多个＝这些标签下好友的并集。 */
 function cwTagMatch(c){
   var t=CW_CUSTOM.tags||[];
   if(!t.length)return true;
@@ -6127,19 +5915,20 @@ function cwTagSummary(){
   if(!t.length)return '不限';
   return t.slice(0,2).join('、')+(t.length>2?' +'+(t.length-2):'');
 }
-/* 窗口 [N, N+5]，两端含；再按选中的微信标签收窄。on=false＝没选范围，谁都算不上。 */
+/* 窗口 [N, N+5]，两端含；再按选中的微信标签收窄。on=false＝没设时长，谁都算不上。 */
 function cwWindow(){
   if(!CW_CUSTOM.on)return [];
   var th=CW_CUSTOM.n*(CW_CUSTOM.u==='d'?24:1), span=5*(CW_CUSTOM.u==='d'?24:1);
   return cwByH(CW_CUST.filter(function(c){ return c.h>=th&&c.h<=th+span&&cwTagMatch(c); }));
 }
 function cwByH(list){ return list.slice().sort(function(a,b){ return b.h-a.h }) }
-/* 取人只在点「预览发送」时发起（2026-11-19）：改范围只清掉上一份名单，不动文案、不重解析素材。 */
+/* 统一内容点「预览发送」时取人：把整段范围都算进来。逐人路径另存自己的勾选，不互相覆盖。 */
 function cwReseed(){
   CW_SEL={};
-  cwWindow().forEach(function(c){ if(!CW_XED[c.i])CW_SEL[c.i]=true });
+  cwWindow().forEach(function(c){ CW_SEL[c.i]=true });
 }
 function cwQueryDur(){ var n=CW_CUSTOM.n||1; return 460+((CW_CUSTOM.u==='d'?n*13:n*97)%420); }
+/* mode：select 选人页取人 / preview 统一内容进预览 / send 发送前核对 */
 function cwQueryRun(mode){
   clearTimeout(CW_QTM);
   CW_QBEAT++; CW_QBUSY=true; CW_QERR=false; CW_QMODE=mode;
@@ -6151,80 +5940,60 @@ function cwQueryDone(tok){
   if(tok!==CW_QBEAT)return;                 /* 竞态：过期响应丢弃 */
   CW_QTM=null; CW_QBUSY=false;
   if(CW_QSIM){ CW_QSIM=false; CW_QERR=true; cwRender(); return; }
+  if(CW_QMODE==='select'){
+    CW_WIN=cwWindow().map(function(c){return c.i});
+    cwRender(); return;
+  }
   if(CW_QMODE==='send'){
     var eligible=cwWindow().map(function(c){return c.i});
-    var keep=CW_SEND_IDS.filter(function(id){ return eligible.indexOf(id)>=0&&!CW_XED[id] });
+    var keep=CW_SEND_IDS.filter(function(id){ return eligible.indexOf(id)>=0 });
     CW_SEL={}; keep.forEach(function(id){CW_SEL[id]=true});
-    if(!keep.length){ CW_SEND_IDS=[]; cwRender(); toast('接收客户已归零，请重新设置范围'); go('cw-content'); return; }
+    if(!keep.length){ CW_SEND_IDS=[]; cwRender(); toast('接收客户已归零，请修改范围'); return; }
     if(keep.length!==CW_SEND_IDS.length){ cwRender(); toast('接收客户已变为 '+keep.length+' 人，请重新确认'); return; }
     cwSendNow(); return;
   }
-  /* 逐人写法：取到人再开写；一个人都没有就停在内容页提示改范围。 */
-  if(CW_QMODE==='personal'){
-    cwApplyWindow();
-    if(!cwSelCount()){
-      toast((CW_CUSTOM.tags||[]).length?'所选标签下没有未回复的客户，调整标签或范围再试':'这段时间没有未回复的客户，调大范围再试');
-      return;
-    }
-    if(cur==='cw-content'){cwPersBegin();cwPersonsOpen();}
-    return;
-  }
-  /* 预览发送才取人：取回来先落名单，再进预览；一个人都没有就停在内容页提示改范围。
-     等人时用户已经离开内容页（比如去开 AI 帮写）就不再跳转，名单留在那里。 */
-  cwApplyWindow();
+  /* 统一内容：预览才取人，取回来落名单再进预览；一个人都没有就停在编辑页提示改范围。 */
+  cwReseed();
   if(!cwSelCount()){
     toast((CW_CUSTOM.tags||[]).length?'所选标签下没有未回复的客户，调整标签或范围再试':'这段时间没有未回复的客户，调大范围再试');
     return;
   }
-  if(cur==='cw-content')go('cw-preview');
+  if(cur==='cw-editor')go('cw-preview');
 }
-/* 清掉范围时连在飞的查询一起作废：别让它回来又把人选上。 */
 function cwQueryStop(){ clearTimeout(CW_QTM); CW_QTM=null; CW_QBEAT++; CW_QBUSY=false; CW_QERR=false; CW_QMODE=''; }
-function cwQueryRetry(){ if(!CW_QBUSY)cwQueryRun(CW_QMODE==='send'?'send':(CW_QMODE==='personal'?'personal':'preview')); }
-/* 冒烟用：把在飞的查询立即跑完（真机上是接口回来）。 */
+function cwQueryRetry(){ if(!CW_QBUSY)cwQueryRun(CW_QMODE||'select'); }
 function cwQueryFlush(){ if(!CW_QTM)return; clearTimeout(CW_QTM); cwQueryDone(CW_QBEAT); }
-/* 冒烟置 window.CW_TESTFAST＝1 时同样全走瞬时分支，断言才不用等真实计时。 */
 function cwRM(){ return !!window.CW_TESTFAST||!!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches); }
 
-function cwApplyWindow(){cwReseed();cwRender()}
-/* 直接输入：空／非正数＝清掉范围；超界夹到边界；值没变只重绘。
-   范围一变，上一份名单就作废（在飞的取人一起取消），等点「预览发送」再取人。 */
+/* 改时长只作废上一份名单，不自动取人；也不动统一草稿或已写的逐人文案。 */
 function cwRangeInput(v){
   var n=parseInt(v,10), lim=CW_CUSTOM.u==='d'?90:48;
+  cwQueryStop();
   if(!n||n<1){
-    var clear=function(){ cwQueryStop(); CW_CUSTOM.on=false; CW_CUSTOM.n=3; CW_SEL={}; cwRender(); };
-    if(CW_PERS&&CW_PERS.on){ cwPersGuard(clear); return; }
-    if(CW_PERS)cwPersReset();
-    clear(); return;
+    CW_CUSTOM.on=false; CW_CUSTOM.n=3;
+    CW_WIN=[]; CW_SEL={};
+    cwRender(); return;
   }
   n=Math.min(lim,n);
   if(CW_CUSTOM.on&&CW_CUSTOM.n===n){ cwRender(); return; }
-  var apply=function(){ cwQueryStop(); CW_CUSTOM.n=n; CW_CUSTOM.on=true; CW_SEL={}; cwRender(); };
-  if(CW_PERS&&CW_PERS.on){ cwPersGuard(apply); return; }
-  if(CW_PERS)cwPersReset();
-  apply();
+  CW_CUSTOM.n=n; CW_CUSTOM.on=true;
+  CW_WIN=[]; CW_SEL={};
+  cwRender();
 }
 function cwRangeUnit(u){
   if(u===CW_CUSTOM.u)return;
-  var apply=function(){
-    CW_UNIT_FROM=CW_CUSTOM.u;
-    CW_CUSTOM.u=u;
-    if(CW_CUSTOM.on){
-      CW_CUSTOM.n=Math.min(u==='d'?90:48,CW_CUSTOM.n);
-      cwQueryStop(); CW_SEL={};
-      cwRender(); return;
-    }
-    cwRender();
-  };
-  if(CW_PERS&&CW_PERS.on){ cwPersGuard(apply); return; }
-  if(CW_PERS)cwPersReset();
-  apply();
+  CW_UNIT_FROM=CW_CUSTOM.u;
+  CW_CUSTOM.u=u;
+  if(CW_CUSTOM.on)CW_CUSTOM.n=Math.min(u==='d'?90:48,CW_CUSTOM.n);
+  cwQueryStop();
+  CW_WIN=[]; CW_SEL={};
+  cwRender();
 }
 function cwCbHtml(st,sm){
   var cls='cw-cb'+(sm?' sm':'')+(st===2?' on':(st===1?' part':''));
   return '<span class="'+cls+'">'+(st===2?I('check',sm?11:13,3):'')+'</span>';
 }
-/* 「唤醒范围」那枚问号：规则收在气泡里。120ms 淡入，90ms 淡出；
+/* 「未回复时长」问号：规则收在气泡里。120ms 淡入，90ms 淡出；
    点空白处、再点问号、页面一滚都收起，同时只开一个。 */
 function cwTipClose(s){
   if(!s||!s.classList.contains('tipon')||s.classList.contains('tipout'))return;
@@ -6253,12 +6022,149 @@ document.addEventListener('scroll',function(){
   var s=document.querySelector('.cw-sech.tipon'); if(s)cwTipClose(s);
 },true);
 
-/* ---------- 待唤醒客户 · 就地选取态（从吸底「一键唤醒」进入，不换页） ----------
-   点下去不 go() 到另一屏：这一页自己变成选取态。时间轴：
+/* ---------- 工具页：定未回复时长与微信标签，再选人 ---------- */
+function cwRangeCardHtml(){
+  var on=CW_CUSTOM.on, u=CW_CUSTOM.u;
+  return '<div class="cw-pcard cw-setcard">'
+    +'<div class="cw-sech"><b>未回复时长</b>'
+      +'<button class="cw-info" onclick="cwTip(this)" aria-label="区间怎么算" aria-expanded="false">?</button>'
+      +'<div class="cw-tip" role="tooltip">按起始时间取 5 个单位：设 3 天，取的是未回复 3–8 天的客户。</div>'
+    +'</div>'
+    +'<div class="cw-scope-in">'
+      +'<span class="cw-scope-lab">未回复超过</span>'
+      +'<div class="cw-scope-group">'
+        +'<input class="cw-num" type="text" inputmode="numeric" value="'+(on?CW_CUSTOM.n:'')+'" placeholder="—"'
+          +' aria-label="未回复超过多少'+cwUnitN(u)+'" onchange="cwRangeInput(this.value)"'
+          +' onkeydown="if(event.key===\'Enter\')this.blur()">'
+        +'<div class="cw-units" data-u="'+u+'">'
+          +'<i class="cw-unit-thumb" aria-hidden="true"></i>'
+          +'<button class="'+(u==='h'?'on':'')+'" onclick="cwRangeUnit(\'h\')">小时</button>'
+          +'<button class="'+(u==='d'?'on':'')+'" onclick="cwRangeUnit(\'d\')">天</button>'
+        +'</div>'
+      +'</div>'
+    +'</div>'
+    +'<div class="cw-range-out'+(on?'':' off')+'">'+(on?'实际取 <b>'+cwRangeLabel()+'</b>':'还没设置时长')+'</div>'
+  +'</div>';
+}
+function cwTagCardHtml(){
+  return '<div class="cw-pcard cw-setcard">'
+    +'<div class="cw-sech"><b>微信标签</b></div>'
+    +'<button type="button" class="cw-tagh" onclick="cwTagSheet()">'
+      +'<span class="cw-tagh-val'+((CW_CUSTOM.tags||[]).length?' on':'')+'">'+esc(cwTagSummary())+'</span>'
+      +'<span class="cw-tagh-chev" aria-hidden="true">'+I('chev',18,2.2)+'</span>'
+    +'</button>'
+  +'</div>';
+}
+function cwContentFoot(){
+  var on=CW_CUSTOM.on;
+  $('cwContentFoot').innerHTML=
+    '<button class="cw-altlink" '+(on?'onclick="cwOneEnter()"':'disabled')+'>发同一份内容</button>'
+    +'<button class="cw-btn block" '+(on?'onclick="cwSelectOpen()"':'disabled')+'>选择客户</button>';
+}
+REND['cw-content']=function(){
+  $('cwContentBack').innerHTML=I('back',24,2);$('cwRecIc').innerHTML=I('clock',20,2.1);
+  $('cwContentBody').innerHTML=cwRangeCardHtml()+cwTagCardHtml();
+  cwContentFoot();
+  cwUnitAnim();
+};
+function cwUnitAnim(){
+  if(!CW_UNIT_FROM)return;
+  var th=document.querySelector('#cwContentBody .cw-unit-thumb'), from=CW_UNIT_FROM;
+  CW_UNIT_FROM='';
+  if(!th||cwRM())return;
+  var x=function(u){return u==='d'?58:0};
+  th.animate([{transform:'translateX('+x(from)+'px)'},{transform:'translateX('+x(CW_CUSTOM.u)+'px)'}],
+    {duration:280,easing:'cubic-bezier(.2,0,0,1)'});
+}
+/* 工具页进来：空时长、空标签、空内容；不替用户预填或预取。 */
+function cwEnter(){
+  cwResetDraft();
+  CW_FROM='tools';
+  CW_CUSTOM={n:3,u:'d',on:false,tags:[]};
+  CW_SEL={}; CW_WIN=[];
+  cwQueryStop();
+  go('cw-content');
+}
+/* 「发同一份内容」：直接进统一内容编辑页；预览时再按范围取人。 */
+function cwOneEnter(){
+  if(!CW_CUSTOM.on){ cwContentFoot(); return; }
+  CW_FROM='tools';
+  go('cw-editor');
+}
+/* 「选择客户」：按当前范围取人，进独立选人页。初始不带任何勾选。 */
+function cwSelectOpen(){
+  if(!CW_CUSTOM.on){ cwContentFoot(); return; }
+  CW_FROM='tools';
+  CW_SEL={}; CW_WIN=[];
+  go('cw-select');
+  cwQueryRun('select');
+}
+/* 选人页的客户行：与待唤醒客户同一张卡；整行可点，勾选框在左；最后一句可点开聊天。 */
+function cwLastSales(c){
+  var h=(c&&c.chat)||[];
+  for(var i=h.length-1;i>=0;i--)if(h[i].f==='m')return h[i].t||'';
+  return '';
+}
+function cwLastMsgHtml(c){
+  var lm=cwLastSales(c);
+  if(!lm)return '';
+  return '<button type="button" class="cust-lastmsg" onclick="event.stopPropagation();cwPersChatOpen(\''+c.i+'\')"'
+    +' aria-label="查看与 '+esc(c.n)+' 的最近聊天">'
+    +'<span class="tx">“'+esc(lm)+'”</span><span class="cw-chev" aria-hidden="true">›</span></button>';
+}
+function cwSelRowHtml(id){
+  var c=cwCust(id); if(!c)return '';
+  var on=!!CW_SEL[id];
+  return '<div class="cust-card cw-selcard ready cw-selectrow" data-i="'+id+'" onclick="cwSelToggle(\''+id+'\')">'
+    +'<button class="cw-ckb" onclick="event.stopPropagation();cwSelToggle(\''+id+'\')"'
+      +' aria-pressed="'+(on?'true':'false')+'" aria-label="选择 '+esc(c.n)+'">'+cwCbHtml(on?2:0)+'</button>'
+    +'<div class="cust-top"><span class="cust-av">'+esc(c.n.charAt(0))+'</span>'
+      +'<span class="cust-main"><b class="cust-name hv-gn">'+esc(c.n)+'</b>'
+      +'<span class="cust-meta">未回复 · '+cwDur(c.h)+'</span></span></div>'
+    +cwLastMsgHtml(c)
+  +'</div>';
+}
+function cwSelToggle(id){
+  if(CW_QBUSY)return;
+  CW_SEL[id]=!CW_SEL[id];
+  var ck=document.querySelector('#cwSelectBody .cust-card[data-i="'+id+'"] .cw-ckb');
+  if(ck){ ck.innerHTML=cwCbHtml(CW_SEL[id]?2:0); ck.setAttribute('aria-pressed',CW_SEL[id]?'true':'false') }
+  cwSelectFoot();
+}
+function cwSelectFoot(){
+  var f=$('cwSelectFoot'); if(!f)return;
+  if(CW_QBUSY){ f.innerHTML='<button class="cw-btn block" disabled>正在获取客户…</button>'; return; }
+  if(CW_QERR){ f.innerHTML='<button class="cw-btn block" onclick="cwQueryRetry()">重试</button>'; return; }
+  if(!CW_WIN.length){ f.innerHTML='<button class="cw-btn block" onclick="cwRangeBack()">修改范围</button>'; return; }
+  var n=cwSelCount();
+  f.innerHTML='<div class="cw-sum">已选 <b>'+n+'</b> 人</div>'
+    +'<button class="cw-btn block" '+(n?'onclick="cwPersStart()"':'disabled')+'>按聊天记录帮写</button>';
+}
+function cwRangeBack(){ back(); }
+REND['cw-select']=function(){
+  $('cwSelectBack').innerHTML=I('back',24,2);
+  var b=$('cwSelectBody'); if(!b)return;
+  var h='';
+  if(CW_QBUSY){
+    h='<div class="cw-empty-state"><span class="ic" aria-hidden="true">'+I('clock',30,1.8)+'</span><p>正在获取客户…</p></div>';
+  }else if(CW_QERR){
+    h='<div class="cw-empty-state"><span class="ic" aria-hidden="true">'+I('info',30,1.8)+'</span><p>没能获取客户</p>'
+      +'<button class="cw-textact" onclick="cwQueryRetry()">重试</button></div>';
+  }else if(!CW_WIN.length){
+    h='<div class="cw-empty-state"><span class="ic" aria-hidden="true">'+I('userplus',30,1.8)+'</span><p>这段时间没有未回复的客户</p>'
+      +'<button class="cw-textact" onclick="cwRangeBack()">修改范围</button></div>';
+  }else{
+    h='<div class="cw-selectlist">'+CW_WIN.map(cwSelRowHtml).join('')+'</div>';
+  }
+  b.innerHTML=h;
+  cwSelectFoot();
+};
+
+/* ---------- 待唤醒客户 · 就地选取态 ----------
+   点吸底「选择客户」不换页：这一页自己变成选取态，初始不勾任何人。
    · 0ms　只有按压波纹，页面、Tab、滚动位置都不动；
-   · 60ms 起　卡片逐行（每行 +30ms）把左内衬 14→47、勾选框 scale(.7)→1，卡高与字号不动；
-   · 80ms 起　底栏上方「已选 N 人」从 0 高长出来（主按钮位置不动），120ms 处按钮文字淡切；
-   · 退出　勾与内衬一起收回、不逐行错峰，160ms 收完。 */
+   · 60ms 起　卡片逐行（每行 +30ms）把左内衬 14→47、勾选框 scale(.7)→1；
+   · 底栏上方「已选 N 人」长出来，主按钮切到「按聊天记录帮写」。 */
 function awakeSelCount(){
   var n=0,b,k,list;
   for(b=0;b<3;b++){
@@ -6267,12 +6173,10 @@ function awakeSelCount(){
   }
   return n;
 }
-/* 只勾当前这一档的人：点了「唤醒」，唤醒的就是眼前这些。 */
 function cwFromAwake(){
   cwResetDraft();
   AWAKE_SELING=true; AWAKE_ENTER=true; CW_FROM='awake';
   CW_SEL={};
-  (CUST_PAGES['host-awake'].lists[CUST_SEG]||[]).forEach(function(it){ if(it.i)CW_SEL[it.i]=true });
   REND['host-awake']();
 }
 function awakeToggle(i){
@@ -6303,18 +6207,11 @@ function awakeAllSel(){
   REND['host-awake']();
   if(sc)sc.scrollTop=y;
 }
+/* 勾好的人直接进逐人文案页开始写；不再经过准备内容页。 */
 function awakeNext(){
   if(!awakeSelCount()){ toast('先选几个客户'); return; }
-  var next=function(){ CW_XED={}; cwQueryStop(); go('cw-content'); };
-  var ids=cwSelIds().slice().sort().join(',');
-  if(CW_PERS&&CW_PERS.on&&CW_PERS.order.slice().sort().join(',')!==ids){
-    cwPersGuard(next,function(){
-      CW_SEL={}; CW_PERS.order.forEach(function(id){ CW_SEL[id]=true }); REND['host-awake']();
-    });
-    return;
-  }
-  if(CW_PERS&&!CW_PERS.on&&CW_PERS.order.slice().sort().join(',')!==ids)cwPersReset();
-  next();
+  CW_FROM='awake';
+  cwPersStart();
 }
 function awakeBackOrLeave(){ if(!awakeBack())back(); }
 function awakeBack(){
@@ -6332,7 +6229,7 @@ function awakeBack(){
 function awakeFootReset(){
   var f=$('custAwakeFoot');
   f.className='cw-foot'; f.removeAttribute('data-mode');
-  f.innerHTML='<button class="cw-btn block" onclick="cwFromAwake()">一键唤醒</button>';
+  f.innerHTML='<button class="cw-btn block" onclick="cwFromAwake()">选择客户</button>';
 }
 function awakeAfterRender(){
   if(!AWAKE_SELING){ if($('custAwakeFoot').getAttribute('data-mode'))awakeFootReset(); return; }
@@ -6347,8 +6244,6 @@ function awakeAfterRender(){
   }
   awakeFoot(entering);
 }
-/* 底栏形态：已选 N 人＋下一步。
-   从「一键唤醒」变形时（animate）保留按钮本体，人数行长出来、按钮文字淡切，按钮不换位置。 */
 function awakeFoot(animate){
   var f=$('custAwakeFoot'), n=awakeSelCount();
   if(f.getAttribute('data-mode')==='next'){
@@ -6358,16 +6253,16 @@ function awakeFoot(animate){
     if(all)all.textContent=awakeAllOn()?'全不选':'全选';
     return;
   }
-  if(!animate){
+  if(!animate||cwRM()){
     f.className='cw-foot stack'; f.setAttribute('data-mode','next');
     f.innerHTML='<div class="cw-sum cw-fsum cw-selrow">'+awakeSumHtml(n)+'</div>'
-      +'<button class="cw-btn block" onclick="awakeNext()">下一步：准备内容</button>';
+      +'<button class="cw-btn block" onclick="awakeNext()">按聊天记录帮写</button>';
     return;
   }
   var btn=f.querySelector('.cw-btn'), lab;
   f.className='cw-foot stack'; f.setAttribute('data-mode','next');
   btn.removeAttribute('onclick');
-  btn.innerHTML='<span class="cw-flab">一键唤醒</span>';
+  btn.innerHTML='<span class="cw-flab">选择客户</span>';
   lab=btn.querySelector('.cw-flab');
   var sum=document.createElement('div');
   sum.className='cw-sum cw-fsum cw-selrow';
@@ -6381,45 +6276,35 @@ function awakeFoot(animate){
     lab.style.opacity='0';
   }) });
   setTimeout(function(){
-    lab.textContent='下一步：准备内容';
+    lab.textContent='按聊天记录帮写';
     lab.style.transition='opacity .12s';
     lab.style.opacity='1';
     btn.setAttribute('onclick','awakeNext()');
   },170);
 }
-/* 工具页进来：从空范围、空标签、空内容起步——不预填、不替用户取人。 */
-function cwEnter(){
-  cwResetDraft();
-  CW_FROM='tools';
-  CW_CUSTOM={n:3,u:'d',on:false,tags:[]};
-  CW_SEL={}; CW_XED={};
-  cwQueryStop();
-  go('cw-content');
-}
 
-/* ================= 按聊天记录逐人写（PRD §6.6） =================
-   与统一内容各存各的：统一草稿在 CW_ITEMS，逐人文案在 CW_PERS。只发文字，附件留在统一模式里。
-   输入是最近 20 条聊天；待唤醒的前提是客户没回，最后一条必须来自本方，文案接着本方上一句写。
-   没有聊天记录走本地通用问候，读聊天失败标红可重试；最后一条是客户时标「对方刚回过」不生成。
+/* ================= 按聊天记录逐人写（PRD §3、§6） =================
+   一人一条，输入是最近 20 条聊天：锚点是本方最后一条未获回复的消息，文案接着它往下说。
+   缺实时事实（比如答应查库存却没有结果）时先问一句，销售在行内补完再写这一人；
+   只有寒暄时给一条轻问候，也可补充、手写或跳过。没有聊天记录走本地通用问候。
    这里不接真实模型与聊天接口，文案由规则演示，但状态、失败与竞态按真实链路设计。 */
 function cwPersReset(){
   CW_PERS_TIMERS.forEach(function(t){clearTimeout(t)});
-  CW_PERS_TIMERS=[]; CW_PERS=null; CW_PVALL=false;
+  CW_PERS_TIMERS=[]; CW_PERS=null;
 }
-function cwPersActive(){ return !!(CW_PERS&&CW_PERS.on) }
 function cwPersText(id){
   var pe=CW_PERS&&CW_PERS.people[id];
   return pe&&pe.st==='ready'?String(pe.text||'').trim():'';
 }
-/* 写成、有文字、且仍在当前可发送名单里的人。没写成与用户标了「不发」的都不进发送。 */
+/* 写成、有文字、没标不发、也没有刚回过／掉出范围的人，才进发送。 */
 function cwPersSendIds(){
   if(!CW_PERS)return [];
   return CW_PERS.order.filter(function(id){
-    return CW_PERS.people[id]&&CW_PERS.people[id].st==='ready'&&cwPersText(id)&&CW_SEL[id];
+    var pe=CW_PERS.people[id];
+    return pe&&pe.st==='ready'&&!pe.replied&&!pe.gone&&cwPersText(id);
   });
 }
 function cwPersCount(){ return cwPersSendIds().length }
-/* 批写或单人重写还没落地时，先不让人预览发送——否则那一行会被当成没写成而漏掉。 */
 function cwPersBusy(){
   if(!CW_PERS)return false;
   if(CW_PERS.busy)return true;
@@ -6428,60 +6313,37 @@ function cwPersBusy(){
 function cwPersSig(){
   if(!CW_PERS)return '';
   return CW_PERS.order.map(function(id){
-    var pe=CW_PERS.people[id],t=pe&&pe.st==='ready'?String(pe.text||''):'';
-    return id+':'+(pe?pe.st:'')+':'+t;
+    var pe=CW_PERS.people[id];
+    return id+':'+(pe?pe.st:'')+':'+cwPersText(id);
   }).join('|');
 }
-/* 名单没变就恢复上次的逐人文案；变了才重写。 */
-function cwPersSameSet(){
-  if(!CW_PERS)return false;
-  var now=cwSelByH().join(','), old=CW_PERS.order.join(',');
-  return !!now&&now===old;
-}
-function cwScopeNudge(){
-  var card=document.querySelector('#cwContentBody .cw-scope'); if(!card)return;
-  try{card.scrollIntoView({block:'center',behavior:cwRM()?'auto':'smooth'})}catch(e){}
-  if(cwRM())return;
-  card.classList.remove('nudge'); void card.offsetWidth; card.classList.add('nudge');
-  setTimeout(function(){card.classList.remove('nudge')},700);
-}
+/* 进逐人文案页：名单里原有的行保留草稿，只为新增或上次没写完的人起草。 */
 function cwPersStart(){
-  closeSheet(CW_SH); CW_SH=null;
-  if(CW_PERS&&CW_PERS.busy){toast('正在写，稍等一下');return}
-  if(CW_FROM==='tools'&&!CW_CUSTOM.on){toast('先设置未回复范围');cwScopeNudge();return}
-  if(CW_FROM==='tools'&&!cwSelCount()){cwQueryRun('personal');return}  /* 取到人再开写 */
-  if(!cwSelCount()){toast('还没有可写的客户');return}
-  if(CW_PERS&&cwPersSameSet()){CW_PERS.on=true;CW_MODE_ANIM=true;cwRender();cwPersonsOpen();return}
-  cwPersBegin();
-  if(cur==='cw-content')cwPersonsOpen();
-}
-function cwPersBegin(){
   var ids=cwSelByH();
-  if(!ids.length){toast('没有可写的客户');return}
-  cwPersReset();
-  var p={on:true,busy:true,token:++CW_PERS_SEQ,total:ids.length,done:0,order:ids.slice(),people:{}};
+  if(!ids.length){ toast('先选几个客户'); return; }
+  var old=CW_PERS, people={}, need=[];
   ids.forEach(function(id){
-    p.people[id]={st:'writing',text:'',generic:false,manual:false,why:'',gen:0,prev:'',shown:false};
+    var pe=old&&old.people[id];
+    if(pe&&pe.st!=='writing'&&!pe.replied&&!pe.gone){ people[id]=pe; return; }
+    people[id]={st:'writing',text:'',question:'',qval:'',basis:-1,generic:false,manual:false,
+      why:'',gen:0,prev:'',shown:false,replied:false,gone:false,editSeq:0};
+    need.push(id);
   });
-  CW_PERS=p; CW_PVALL=false; CW_MODE_ANIM=true;
-  cwRender();
-  if(window.CW_TESTFAST){cwPersFlush();return}
-  cwPersSchedule();
-}
-function cwPersSchedule(){
-  var p=CW_PERS; if(!p)return;
-  var tok=p.token;
-  p.order.forEach(function(id,ix){
-    CW_PERS_TIMERS.push(setTimeout(function(){ cwPersWriteOne(id,tok) },240+ix*90));
+  var p={on:true,busy:!!need.length,token:++CW_PERS_SEQ,total:need.length,done:0,
+         order:ids.slice(),people:people,needConfirm:false};
+  CW_PERS=p; CW_MODE_ANIM=true;
+  go('cw-persons');
+  if(!need.length){ cwPersProgressPaint(); return; }
+  if(window.CW_TESTFAST){ cwPersFlush(); return; }
+  need.forEach(function(id,ix){
+    CW_PERS_TIMERS.push(setTimeout(function(){ cwPersWriteOne(id,p.token) },240+ix*90));
   });
 }
-/* 原型里的“模型”：只承接聊天里出现过的事；没有聊天记录就不请求模型，走本地通用问候。 */
 function cwPersLast(c,who){
   var h=(c&&c.chat)||[];
   for(var i=h.length-1;i>=0;i--)if(h[i].f===who)return h[i].t||'';
   return '';
 }
-/* 客户最后一条可能只是「好的，谢谢」；话题要往前找最后一条有内容的。 */
 function cwPersAck(t){
   var s=String(t||'').replace(/[\s，,。.!！~～、]/g,'');
   return /^(好的?|好嘞|行|嗯|哦|收到了?|谢谢|多谢|ok|OK|👌|🙏)+$/.test(s);
@@ -6491,60 +6353,101 @@ function cwPersLastC(c){
   for(var i=h.length-1;i>=0;i--){
     if(h[i].f!=='c')continue;
     var t=String(h[i].t||'').trim();
-    if(t&&!cwPersAck(t))return t;
+    if(t&&!cwPersAck(t))return {t:t,ix:i};
   }
-  return cwPersLast(c,'c');
+  for(var j=h.length-1;j>=0;j--)if(h[j].f==='c')return {t:String(h[j].t||''),ix:j};
+  return {t:'',ix:-1};
 }
-/* 原型里的“模型”：输入是聊天尾部，锚点是最后一条本方消息。文案接着本方上一句往下说，
-   不重新回答客户已经问过、本方也已经回过的旧问题；没有结果就只写还在跟进，不编进展。 */
-function cwPersCompose(c,retry){
+function cwPersQuestion(lastC){
+  var s=String(lastC||'');
+  var color=(s.match(/(黑色|白色|米色|驼色|红色|蓝色)/)||[])[1]||'';
+  var size=(s.match(/([A-Za-z]{1,3}\s*码|均码|小码|中码|大码)/)||[])[1]||'';
+  if(size)return (color?color+' ':'')+size.replace(/\s+/g,' ').trim()+'现在有货吗？';
+  if(/名额|活动|群/.test(s))return '活动还有名额吗？';
+  if(/保修|售后|维修/.test(s))return '保修的事有结果了吗？';
+  if(/价格|多少钱|优惠|折扣/.test(s))return '这次能给到的价格是多少？';
+  if(/库存|有货/.test(s))return '这款现在有货吗？';
+  return '上次说的事有结果了吗？';
+}
+/* 原型里的“模型”：接着本方最后一条往下说，只承接聊天里出现过的事实。
+   返回 {text, question, basis, generic} 或 {fail, why}；question 可空。
+   销售补了一句实时事实（opts.supplement）时，只用这条补进来的事写这一人。 */
+function cwPersCompose(c, opts){
+  opts=opts||{};
   if(!c)return {fail:true,why:'客户不在名单里'};
-  if(c.chatFail&&!retry)return {fail:true,why:'没读到最近的聊天记录'};
+  if(c.chatFail&&!opts.retry)return {fail:true,why:'没读到最近的聊天记录'};
   var chat=(c.chat||[]).slice(-20);
   if(!chat.length){
-    var old=(c.tags||[]).some(function(t){return /老客户|已成交|VIP/.test(t)});
-    return {text:old?'好久没联系了，最近还好吗？店里到了些新东西，有空随时找我。'
-                   :'你好，之前加了好友还没怎么聊过。有需要随时找我。',
-            generic:true};
+    /* 没有一对一聊天就不硬编一条：标出原因、退出本轮，销售可手写或换人。 */
+    return {fail:true,why:'没有一对一聊天记录',nochat:true};
   }
   var last=chat[chat.length-1];
   if(last.f!=='m')return {fail:true,why:'对方刚回过，暂不需要唤醒'};
-  var lastMe=String(last.t||''), lastC=cwPersLastC(c), text='';
+  var lastMe=String(last.t||''), lc=cwPersLastC(c), lastC=lc.t, basis=lc.ix;
+  if(opts.supplement){
+    var s=String(opts.supplement).replace(/[。！？!?，,]$/,'');
+    return {text:s+(/有货|到了|可以|能|没问题/.test(s)?'，我帮你留一件？':'，有需要随时找我。'),basis:basis};
+  }
+  if(/报价|报价单/.test(lastMe))return {text:'报价单看了吗？有哪里想了解的随时问我。',basis:basis};
+  if(/没货|暂时没货|缺货/.test(lastMe))return {text:'上次看的那款当时没货，你现在还在找类似的吗？',basis:basis};
+  if(/你好|有空常联系|常联系|很高兴认识/.test(lastMe)&&!/报价|查|发你|优惠|活动/.test(lastMe))
+    return {text:'好久没联系了，最近还好吗？',question:'这次想和客户说什么？',basis:basis};
+  if(/查一下|查查|问一下|确认一下|看看|留意/.test(lastMe)){
+    if(/面膜|优惠|活动/.test(lastC))return {text:'优惠我还在帮你留意，有合适的就告诉你。',basis:basis};
+    return {text:'',question:cwPersQuestion(lastC),basis:basis};
+  }
   if(/发你|发给你|发份|发了/.test(lastMe)){
-    if(/链接/.test(lastC))text='上次发的链接收到了吗？有别的问题随时找我。';
-    else if(/目录|了解/.test(lastC))text='目录看了吗？有想了解的随时问我。';
-    else text='上次发的东西收到了吗？有需要随时找我。';
+    if(/链接/.test(lastC))return {text:'上次发的链接收到了吗？有别的问题随时找我。',basis:basis};
+    if(/目录|了解/.test(lastC))return {text:'目录看了吗？有想了解的随时问我。',basis:basis};
+    return {text:'上次发的东西收到了吗？有需要随时找我。',basis:basis};
   }
-  else if(/查一下|查查|问一下|确认一下|帮你看看|我看看|留意/.test(lastMe)){
-    if(/大衣|M 码|码/.test(lastC))text='大衣的 M 码我还在帮你留意，有消息就告诉你。';
-    else if(/面膜|活动|优惠/.test(lastC))text='面膜的优惠我还在帮你留意，有合适的就告诉你。';
-    else if(/名额|群/.test(lastC))text='活动名额我还在帮你确认，有位置就给你留着。';
-    else if(/保修|售后/.test(lastC))text='保修的事我还在帮你确认，有结果就告诉你。';
-    else text='上次说的事我还在帮你跟进，有消息就告诉你。';
+  if(/周六|见面|过来/.test(lastMe))return {text:'周六过来之前跟我说一声，我帮你把合适的款留出来。',basis:basis};
+  if(/优惠|活动/.test(lastMe))return {text:'最近有合适的款我拍给你看看？',basis:basis};
+  if(/年底|再联系/.test(lastMe))return {text:'快年底了，有合适的款我拍给你看看？',basis:basis};
+  if(/考虑|随时找我/.test(lastMe))return {text:'上次那款你要是还想要，我再帮你看看有没有更合适的方式。',basis:basis};
+  if(/合适就好|到了我告诉你/.test(lastMe))return {text:'最近有合适的款我拍给你看看？',basis:basis};
+  if(/有消息|告诉你/.test(lastMe)){
+    if(/名额|活动|群/.test(lastC))return {text:'活动名额我还在帮你确认，有位置就给你留着。',basis:basis};
+    return {text:'上次说的事我还在帮你跟进，有消息就告诉你。',basis:basis};
   }
-  else if(/周六|见面|过来/.test(lastMe))text='周六过来之前跟我说一声，我帮你把合适的款留出来。';
-  else if(/优惠|活动/.test(lastMe))text='最近有合适的款我拍给你看看？';
-  else if(/年底|再联系/.test(lastMe))text='快年底了，有合适的款我拍给你看看？';
-  else if(/考虑|随时找我/.test(lastMe))text='上次那款你要是还想要，我再帮你看看有没有更合适的方式。';
-  else if(/合适就好|到了我告诉你/.test(lastMe))text='最近有合适的款我拍给你看看？';
-  else if(/有消息|告诉你/.test(lastMe)){
-    if(/名额|活动|群/.test(lastC))text='活动名额我还在帮你确认，有位置就给你留着。';
-    else text='上次说的事我还在帮你跟进，有消息就告诉你。';
+  return {text:'最近有合适的款我拍给你看看？',basis:basis};
+}
+function cwPersApply(id,r){
+  var p=CW_PERS; if(!p)return;
+  var pe=p.people[id]; if(!pe)return;
+  if(r.fail){
+    pe.st='fail'; pe.why=r.why; pe.question=''; pe.text='';
+    pe.nochat=!!r.nochat;
+  }else{
+    pe.text=r.text||'';
+    pe.question=r.question||'';
+    pe.basis=(r.basis==null?-1:r.basis);
+    pe.generic=!!r.generic;
+    pe.manual=false;
+    pe.nochat=false;
+    pe.st=(pe.question&&!String(pe.text).trim())?'ask':'ready';
+    pe.why='';
   }
-  else text='最近有合适的款我拍给你看看？';
-  return {text:text};
+  pe.shown=false;
+}
+function cwPersTick(){
+  var p=CW_PERS; if(!p)return;
+  if(p.done>=p.total)p.busy=false;
+  if(!p.busy&&!p.order.some(function(id){return p.people[id]&&p.people[id].st==='writing'}))p.needConfirm=false;
 }
 function cwPersWriteOne(id,tok,silent){
   var p=CW_PERS; if(!p||p.token!==tok)return;
   var pe=p.people[id]; if(!pe||pe.st!=='writing')return;
-  var r=cwPersCompose(cwCust(id),pe.gen>0);
-  if(r.fail){pe.st='fail';pe.why=r.why}
-  else{pe.st='ready';pe.text=r.text;pe.generic=!!r.generic;pe.manual=false}
+  var seq=pe.editSeq;
+  var r=cwPersCompose(cwCust(id),{retry:pe.gen>0,supplement:pe.qval});
+  if(CW_PERS!==p||p.token!==tok)return;
+  pe=p.people[id];
+  if(!pe||pe.editSeq!==seq)return;    /* 手改过这一行：迟到的结果不覆盖当前内容 */
+  cwPersApply(id,r);
   p.done++;
-  if(p.done>=p.total)p.busy=false;
-  if(!silent){cwPersPaintRow(id);cwPersProgressPaint();cwContentFoot()}
+  cwPersTick();
+  if(!silent){cwPersPaintRow(id);cwPersProgressPaint();}
 }
-/* 测试与冒烟用：把在飞的生成立即跑完。 */
 function cwPersFlush(){
   var p=CW_PERS; if(!p)return;
   CW_PERS_TIMERS.forEach(function(t){clearTimeout(t)});CW_PERS_TIMERS=[];
@@ -6558,80 +6461,105 @@ function cwPersFlush(){
   p.busy=false;
   cwRender();
 }
-/* 单人重写、重试、不发、恢复：只换这一行，不重绘整张卡，别把用户正在改的其它行和滚动位置冲掉。 */
-function cwPersRewrite(id){
+function cwPersRunOne(id,delay){
   var p=CW_PERS; if(!p)return;
-  var pe=p.people[id]; if(!pe||pe.st==='writing')return;
-  var old={text:pe.text,generic:pe.generic,manual:pe.manual};
-  pe.st='writing';pe.gen=(pe.gen||0)+1;pe.text='';pe.shown=false;
-  cwPersPaintRow(id);cwPersProgressPaint();cwContentFoot();
+  var seq=p.people[id]&&p.people[id].editSeq;
   var tok=p.token;
   var run=function(){
     var p2=CW_PERS; if(!p2||p2.token!==tok)return;
+    var pe=p2.people[id]; if(!pe||pe.st!=='writing'||pe.editSeq!==seq)return;
+    var r=cwPersCompose(cwCust(id),{retry:pe.gen>0,supplement:pe.qval});
+    var p3=CW_PERS; if(!p3||p3.token!==tok)return;
+    var pe3=p3.people[id]; if(!pe3||pe3.editSeq!==seq)return;
+    cwPersApply(id,r);
+    cwPersTick();
+    cwPersPaintRow(id);cwPersProgressPaint();
+  };
+  if(window.CW_TESTFAST){run();return}
+  CW_PERS_TIMERS.push(setTimeout(run,delay||520));
+}
+function cwPersRewrite(id){
+  var p=CW_PERS; if(!p)return;
+  var pe=p.people[id]; if(!pe||pe.st==='writing')return;
+  var old={text:pe.text,question:pe.question,qval:pe.qval,basis:pe.basis,generic:pe.generic,manual:pe.manual,st:pe.st};
+  pe.rewind=old;
+  pe.st='writing';pe.gen=(pe.gen||0)+1;pe.text='';pe.question='';pe.shown=false;pe.editSeq=(pe.editSeq||0)+1;
+  cwPersPaintRow(id);cwPersProgressPaint();
+  var tok=p.token;
+  CW_PERS_TIMERS.push(setTimeout(function(){
+    var p2=CW_PERS; if(!p2||p2.token!==tok)return;
     var pe2=p2.people[id]; if(!pe2||pe2.st!=='writing')return;
-    var r=cwPersCompose(cwCust(id),true);
-    if(r.fail){pe2.st='fail';pe2.why=r.why}
-    else{pe2.st='ready';pe2.text=r.text;pe2.generic=!!r.generic;pe2.manual=false;pe2.shown=false}
-    cwPersPaintRow(id);cwPersProgressPaint();cwContentFoot();
+    var r=cwPersCompose(cwCust(id),{retry:true,supplement:pe2.qval});
+    var p3=CW_PERS; if(!p3||p3.token!==tok)return;
+    pe2=p3.people[id]; if(!pe2||pe2.st!=='writing')return;
+    cwPersApply(id,r);
+    pe2.rewind=null;
+    cwPersPaintRow(id);cwPersProgressPaint();
     if(!r.fail){
       var c=cwCust(id);
       toast('已重写 '+(c?c.n:'这句'),'撤销',function(){
         var pe3=CW_PERS&&CW_PERS.people[id]; if(!pe3)return;
-        pe3.st='ready';pe3.text=old.text;pe3.generic=old.generic;pe3.manual=old.manual;pe3.shown=false;
-        cwPersPaintRow(id);cwPersProgressPaint();cwContentFoot();
+        pe3.st=old.st;pe3.text=old.text;pe3.question=old.question;pe3.qval=old.qval;
+        pe3.basis=old.basis;pe3.generic=old.generic;pe3.manual=old.manual;pe3.shown=false;
+        cwPersPaintRow(id);cwPersProgressPaint();
       },5000);
     }
-  };
-  if(window.CW_TESTFAST){run();return}
-  CW_PERS_TIMERS.push(setTimeout(run,520));
+  },window.CW_TESTFAST?0:520));
 }
 function cwPersRetry(id){
   var p=CW_PERS; if(!p)return;
   var pe=p.people[id]; if(!pe||pe.st!=='fail')return;
-  pe.gen=(pe.gen||0)+1;pe.st='writing';pe.why='';pe.shown=false;
-  cwPersPaintRow(id);cwPersProgressPaint();cwContentFoot();
-  var tok=p.token;
-  var run=function(){
-    var p2=CW_PERS; if(!p2||p2.token!==tok)return;
-    var pe2=p2.people[id]; if(!pe2||pe2.st!=='writing')return;
-    var r=cwPersCompose(cwCust(id),true);
-    if(r.fail){pe2.st='fail';pe2.why=r.why}
-    else{pe2.st='ready';pe2.text=r.text;pe2.generic=!!r.generic;pe2.manual=false;pe2.shown=false}
-    cwPersPaintRow(id);cwPersProgressPaint();cwContentFoot();
-  };
-  if(window.CW_TESTFAST){run();return}
-  CW_PERS_TIMERS.push(setTimeout(run,520));
+  pe.gen=(pe.gen||0)+1;pe.st='writing';pe.why='';pe.shown=false;pe.editSeq=(pe.editSeq||0)+1;
+  cwPersPaintRow(id);cwPersProgressPaint();
+  cwPersRunOne(id,window.CW_TESTFAST?0:520);
+}
+/* 行内补充：只更新这一人。补充的这句话当作本轮已确认的事实，不扩散给其他人。 */
+function cwPersSupplement(id){
+  var p=CW_PERS; if(!p)return;
+  var pe=p.people[id]; if(!pe)return;
+  var el=$('cwQ_'+id), v=el?String(el.value||'').trim():'';
+  if(!v){ toast('先补一句'); if(el)el.focus(); return; }
+  pe.qval=v; pe.st='writing'; pe.shown=false; pe.editSeq=(pe.editSeq||0)+1;
+  cwPersPaintRow(id);cwPersProgressPaint();
+  cwPersRunOne(id,window.CW_TESTFAST?0:520);
 }
 function cwPersSkip(id){
   var pe=CW_PERS&&CW_PERS.people[id];
   if(!pe||pe.st==='writing'||pe.st==='skip')return;
   pe.prev=pe.st;pe.st='skip';
-  cwPersPaintRow(id);cwPersProgressPaint();cwContentFoot();
+  pe.replied=false;pe.gone=false;pe.rewind=null;
+  cwPersPaintRow(id);cwPersProgressPaint();
+  var c=cwCust(id);
+  toast('本次不发 '+(c?c.n:'这个人'),'撤销',function(){cwPersRestore(id)},5000);
 }
 function cwPersRestore(id){
   var pe=CW_PERS&&CW_PERS.people[id];
   if(!pe||pe.st!=='skip')return;
   pe.st=pe.prev||((pe.text&&pe.text.trim())?'ready':'fail');
-  cwPersPaintRow(id);cwPersProgressPaint();cwContentFoot();
+  cwPersPaintRow(id);cwPersProgressPaint();
 }
 function cwPersInput(el,id){
   var p=CW_PERS; if(!p)return;
   var pe=p.people[id]; if(!pe)return;
+  var wasWriting=pe.st==='writing';
   pe.text=el.value;
-  if(pe.st==='fail'&&String(el.value||'').trim()){
-    pe.st='ready';pe.manual=true;pe.why='';
+  if(String(el.value||'').trim()){
+    pe.st='ready';pe.manual=true;pe.why='';pe.question='';pe.nochat=false;pe.rewind=null;
     var row=el.closest('.cw-pers');
     if(row){
       var st=row.querySelector('.cw-persst');
-      if(!st){st=document.createElement('span');var hd=row.querySelector('.cw-pershd');if(hd)hd.appendChild(st)}
-      st.className='cw-persst ok';st.textContent='已手写';
+      if(st){st.className='cw-persst ok';st.textContent='已手写'}
+      var q=row.querySelector('.cw-persq');if(q)q.remove();
       var cc=cwCust(id), nm=cc?cc.n:'客户';
       var acts=row.querySelector('.cw-persacts');
       if(acts)acts.innerHTML=cwPersActBtn('cwPersRewrite',id,'重写','重写 '+nm+' 的文案')
         +cwPersActBtn('cwPersSkip',id,'不发','本次不发 '+nm,'danger');
     }
+  }else if(pe.st==='ready'&&!pe.question){
+    pe.st=pe.question?'ask':'ready';
   }
-  cwGrow(el);cwPersSummaryPaint();cwContentFoot();
+  if(wasWriting){ pe.editSeq=(pe.editSeq||0)+1; p.done++; cwPersTick(); }
+  cwGrow(el);cwPersProgressPaint();
 }
 function cwPersStop(){
   var p=CW_PERS; if(!p)return;
@@ -6639,27 +6567,33 @@ function cwPersStop(){
   p.token++;
   p.order.forEach(function(id){
     var pe=p.people[id];
-    if(pe&&pe.st==='writing'){pe.st='fail';pe.why='已停止，没有写完';pe.shown=false;cwPersPaintRow(id)}
+    if(!pe||pe.st!=='writing')return;
+    if(pe.rewind){
+      /* 单人重写被停止：把重写前的完整草稿放回来，别让已完成的一行变空 */
+      pe.st=pe.rewind.st;pe.text=pe.rewind.text;pe.question=pe.rewind.question;pe.qval=pe.rewind.qval;
+      pe.basis=pe.rewind.basis;pe.generic=pe.rewind.generic;pe.manual=pe.rewind.manual;pe.rewind=null;
+    }else{
+      pe.st='fail';pe.why='已停止，没有写完';pe.replied=false;
+    }
+    pe.shown=false;
+    cwPersPaintRow(id);
   });
-  p.busy=false;
-  cwPersProgressPaint();cwContentFoot();
+  p.busy=false; p.needConfirm=false;
+  cwPersProgressPaint();
 }
-function cwPersOff(){
-  if(!CW_PERS)return;
-  CW_PERS.on=false;CW_MODE_ANIM=true;
-  cwRender();
+/* 顶栏返回：工具入口回范围页；待唤醒入口回列表（不带选取态）。草稿都留在内存里。 */
+function cwPersBackGo(){
+  if(CW_FROM==='awake'){ AWAKE_SELING=false; AWAKE_ENTER=false; go('host-awake'); return; }
+  go('cw-content');
 }
-/* 名单与逐人文案对不上时先问一句；取消则恢复原范围／留在勾选页，不丢用户改过的文案。 */
-function cwPersGuard(onYes,onNo){
-  if(!CW_PERS||!CW_PERS.on){onYes();return}
-  var d=openDlg('<h3>已选客户有变化</h3><p>按聊天记录写的 '+CW_PERS.order.length+' 条文案会清空。</p>'
-    +'<div class="cw-shbtns"><button class="cw-textact" data-cancel>取消</button><button class="cw-btn" data-ok>继续</button></div>');
-  d.querySelector('[data-cancel]').onclick=function(){d.remove();if(onNo)onNo();cwRender()};
-  d.querySelector('[data-ok]').onclick=function(){d.remove();cwPersReset();cwRender();onYes()};
+/* 换人：回当前入口的勾选列表。留在名单里的行保留草稿，只为新人起草。 */
+function cwPersChange(){
+  if(CW_FROM==='awake'){ AWAKE_SELING=true; AWAKE_ENTER=true; go('host-awake'); return; }
+  if(!CW_WIN.length)CW_WIN=cwWindow().map(function(c){return c.i});
+  go('cw-select');
 }
 
 /* ---------- 逐人列表的渲染 ---------- */
-/* 「依据」不再是内联一句客户旧话，而是打开最近聊天原样看：客户在左、我在右，最多 20 条。 */
 function cwPersChatOpen(id){
   var c=cwCust(id);
   if(!c||!c.chat||!c.chat.length)return;
@@ -6671,61 +6605,81 @@ function cwPersChatOpen(id){
       +'<div class="cw-clbub">'+esc(m.t||'')+'</div></div></div>';
   }).join('');
   openSheet('<div class="cw-chathead"><b>与'+esc(c.n||'客户')+'的最近聊天</b>'
-    +'<button type="button" class="cw-textact" onclick="closeSheets()">关闭</button></div>'
+    +'<span class="cw-chatacts"><button type="button" class="cw-textact" onclick="cwChatDemo(\''+esc(c.n||'客户')+'\')">进入对话</button>'
+    +'<button type="button" class="cw-textact" onclick="closeSheets()">关闭</button></span></div>'
     +'<div class="cw-chatlog">'+rows+'</div>','cw-sheet cws-sheet');
 }
-/* 行内动作做成字：重写／不发／恢复／重试；可访问名带上客户名，说清对谁做什么。 */
 function cwPersActBtn(act,id,text,label,cls){
   return '<button type="button" class="cw-persact'+(cls?' '+cls:'')+'"'
     +' onclick="'+act+'(\''+id+'\')" aria-label="'+esc(label)+'" title="'+esc(label)+'">'
     +esc(text)+'</button>';
+}
+function cwPersStatus(id){
+  var pe=CW_PERS&&CW_PERS.people[id]; if(!pe)return '';
+  if(pe.replied)return '<span class="cw-persst replied">刚回过，本次不发</span>';
+  if(pe.gone)return '<span class="cw-persst fail">已不在范围内</span>';
+  if(pe.st==='writing')return '<span class="cw-persst busy">正在写…</span>';
+  if(pe.st==='ask')return '<span class="cw-persst ask">待补充</span>';
+  if(pe.st==='skip')return '<span class="cw-persst">本次不发</span>';
+  if(pe.st==='fail')return '<span class="cw-persst fail">'+esc(pe.nochat?'没有一对一聊天记录':(pe.why==='已停止，没有写完'?'已停止':(pe.why||'没写成')))+'</span>';
+  if(pe.manual)return '<span class="cw-persst ok">已手写</span>';
+  if(pe.generic)return '<span class="cw-persst">通用问候</span>';
+  return '';
+}
+function cwPersBasisHtml(id){
+  var pe=CW_PERS&&CW_PERS.people[id], c=cwCust(id);
+  if(!pe||pe.st==='fail')return '';
+  if(!c||!c.chat||!c.chat.length)return '';
+  var m=c.chat[pe.basis];
+  if(!m)return '';
+  return '<button type="button" class="cw-perschat cw-persquote" onclick="cwPersChatOpen(\''+id+'\')"'
+    +' aria-label="查看与 '+esc(c.n)+' 的最近聊天" title="查看聊天记录">'
+    +'<span class="who">'+(m.f==='m'?'我':'客户')+'</span>'
+    +'<span class="tx">“'+esc(m.t||'')+'”</span><span class="chev" aria-hidden="true">›</span></button>';
+}
+function cwPersQuestionHtml(id){
+  var pe=CW_PERS&&CW_PERS.people[id]; if(!pe||!pe.question)return '';
+  if(pe.st==='skip'||pe.st==='fail'||pe.replied||pe.gone||pe.manual)return '';
+  return '<div class="cw-persq"><div class="cw-persq-t">补充信息：'+esc(pe.question)+'</div>'
+    +'<div class="cw-persq-in">'
+      +'<input id="cwQ_'+id+'" type="text" value="'+esc(pe.qval||'')+'" aria-label="给 '+esc((cwCust(id)||{}).n||'客户')+' 补充一句"'
+        +' placeholder="补充一句事实" onkeydown="if(event.key===\'Enter\')cwPersSupplement(\''+id+'\')">'
+      +'<button class="cw-btn" '+(pe.st==='writing'?'disabled':'onclick="cwPersSupplement(\''+id+'\')"')+'>补充并生成</button>'
+    +'</div></div>';
 }
 function cwPersRowHtml(id){
   var p=CW_PERS, pe=p&&p.people[id], c=cwCust(id), name=c?c.n:'客户';
   if(!pe)return '';
   if(pe.st==='writing'){
     return '<div class="cw-pers" data-pers="'+id+'">'
-      +'<div class="cw-pershd"><span class="cw-av">'+esc(name.charAt(0))+'</span><b>'+esc(name)+'</b>'
-      +'<span class="cw-persst busy">正在写…</span></div>'
+      +'<div class="cw-pershd"><span class="cw-av">'+esc(name.charAt(0))+'</span><b>'+esc(name)+'</b>'+cwPersStatus(id)+'</div>'
+      +cwPersBasisHtml(id)
       +'<div class="cw-perssk"></div><div class="cw-perssk" style="width:72%"></div></div>';
   }
-  var cls='cw-pers'+(pe.st==='skip'?' off':'');
-  var stHtml='';
-  if(pe.st==='fail')stHtml='<span class="cw-persst fail">'+(pe.why==='已停止，没有写完'?'已停止':(pe.why||'没读到最近的聊天记录'))+'</span>';
-  else if(pe.st==='skip')stHtml='<span class="cw-persst">不发</span>';
-  else if(pe.manual)stHtml='<span class="cw-persst ok">已手写</span>';
-  var basis='';
-  if(pe.st!=='fail'){
-    if(pe.generic)basis='<div class="cw-persbasis warn">没有聊天记录，用了通用问候</div>';
-    else{
-      var cn=c&&c.chat?Math.min(c.chat.length,20):0;
-      basis='<button type="button" class="cw-perschat" onclick="cwPersChatOpen(\''+id+'\')"'
-        +' aria-label="查看与'+esc(name)+'的最近聊天" title="查看聊天记录">'
-        +I('chat2',13,2)+'<span>最近聊天 '+cn+' 条</span><span class="chev" aria-hidden="true">›</span></button>';
-    }
-  }
+  var cls='cw-pers'+(pe.st==='skip'?' off':'')+(pe.replied?' off':'')+(pe.gone?' off':'');
   var ta='<textarea class="cw-ta cw-persta" rows="1" aria-label="给 '+esc(name)+' 的唤醒文案"'
-    +' placeholder="'+(pe.st==='fail'?'手动写一条':'输入要发送的内容')+'"'
+    +' placeholder="'+(pe.st==='ask'?'补充后自动写，也可以直接手写':(pe.st==='fail'?'手动写一条':'输入要发送的内容'))+'"'
     +' oninput="cwPersInput(this,\''+id+'\')">'+esc(pe.text||'')+'</textarea>';
-  var acts=pe.st==='fail'
-    ?cwPersActBtn('cwPersRetry',id,'重试','重试读取 '+name+' 的聊天')
-    :cwPersActBtn('cwPersRewrite',id,'重写','重写 '+name+' 的文案');
-  acts+=pe.st==='skip'
-    ?cwPersActBtn('cwPersRestore',id,'恢复','恢复发送 '+name,'ok')
-    :cwPersActBtn('cwPersSkip',id,'不发','本次不发 '+name,'danger');
+  var acts='';
+  if(!pe.replied&&!pe.gone){
+    acts=pe.st==='fail'
+      ?(pe.nochat?'':cwPersActBtn('cwPersRetry',id,'重试','重试写 '+name+' 的文案'))
+      :cwPersActBtn('cwPersRewrite',id,'重写','重写 '+name+' 的文案');
+    acts+=pe.st==='skip'
+      ?cwPersActBtn('cwPersRestore',id,'恢复','恢复发送 '+name,'ok')
+      :cwPersActBtn('cwPersSkip',id,'不发','本次不发 '+name,'danger');
+  }
   return '<div class="'+cls+'" data-pers="'+id+'">'
-    +'<div class="cw-pershd"><span class="cw-av">'+esc(name.charAt(0))+'</span><b>'+esc(name)+'</b>'+stHtml+'</div>'
-    +ta+'<div class="cw-persmeta">'+basis+'<div class="cw-persacts">'+acts+'</div></div></div>';
-}
-/* 当前在哪一页就更新哪一页的逐人行：发送内容页没有行，只更新汇总。 */
-function cwPersPageHost(){
-  if(cur==='cw-persons')return $('cwPersonsBody');
-  if(cur==='cw-content')return $('cwContentBody');
-  return null;
+    +'<div class="cw-pershd"><span class="cw-av">'+esc(name.charAt(0))+'</span><b>'+esc(name)+'</b>'+cwPersStatus(id)+'</div>'
+    +cwPersBasisHtml(id)
+    +cwPersQuestionHtml(id)
+    +ta
+    +'<div class="cw-persmeta"><div class="cw-persacts">'+acts+'</div></div></div>';
 }
 function cwPersPaintRow(id){
   if(!CW_PERS)return;
-  var host=cwPersPageHost(), old=host?host.querySelector('.cw-pers[data-pers="'+id+'"]'):null;
+  var host=cur==='cw-persons'?$('cwPersonsBody'):null;
+  var old=host?host.querySelector('.cw-pers[data-pers="'+id+'"]'):null;
   if(old){
     var tmp=document.createElement('div');tmp.innerHTML=cwPersRowHtml(id);
     var row=tmp.firstElementChild;if(row){
@@ -6735,89 +6689,126 @@ function cwPersPaintRow(id){
       if(pe&&pe.st==='ready'&&!pe.shown&&!cwRM()){pe.shown=true;row.classList.add('cw-pers-in')}
     }
   }
-  cwPersSummaryPaint();
 }
-/* 发送内容页那行回显：正在写 x/y；写完是「x 人写成，y 人没写成，z 人不发」。 */
 function cwPersSummary(){
   var p=CW_PERS;if(!p)return '';
-  if(p.busy)return '正在写 '+p.done+'/'+p.total;
-  var r=0,f=0,s=0,w=0;
+  var ask=0,skip=0,fail=0,rep=0,gone=0;
   p.order.forEach(function(id){
     var pe=p.people[id];if(!pe)return;
-    if(pe.st==='ready'&&String(pe.text||'').trim())r++;
-    else if(pe.st==='skip')s++;
-    else if(pe.st==='writing')w++;
-    else f++;
+    if(pe.replied)rep++;
+    else if(pe.gone)gone++;
+    else if(pe.st==='ask')ask++;
+    else if(pe.st==='skip')skip++;
+    else if(pe.st==='fail')fail++;
   });
   var a=[];
-  if(w)a.push('正在写 '+w+' 人');
-  if(r)a.push(r+' 人写成');
-  if(f)a.push(f+' 人没写成');
-  if(s)a.push(s+' 人不发');
-  return a.length?a.join('，'):'还没有写成的人';
-}
-function cwPersSummaryPaint(){
-  var el=document.querySelector('#cwContentBody [data-pers-sum]');
-  if(el)el.textContent=cwPersSummary();
+  if(ask)a.push(ask+' 人待补充');
+  if(skip)a.push(skip+' 人本次不发');
+  if(fail)a.push(fail+' 人没写成');
+  if(rep)a.push(rep+' 人刚回过');
+  if(gone)a.push(gone+' 人已不在范围');
+  return a.join(' · ');
 }
 function cwPersProgressPaint(){
   if(!CW_PERS)return;
   var prog=cur==='cw-persons'?document.querySelector('#cwPersonsBody .cw-persprog'):null;
   if(prog){
-    if(CW_PERS.busy){
+    if(cwPersBusy()){
       var cnt=prog.querySelector('[data-cnt]');
-      if(cnt)cnt.textContent='正在写 '+CW_PERS.done+'/'+CW_PERS.total;
+      if(cnt)cnt.textContent=CW_PERS.busy?('正在写 '+CW_PERS.done+'/'+CW_PERS.total):'正在重写';
     }else prog.remove();
   }
-  cwPersSummaryPaint();
+  cwPersFoot();
 }
-function cwPersAnimate(){
-  if(!cwPersActive()||cwRM())return;
-  [].forEach.call(document.querySelectorAll('#cwContentBody .cw-pers[data-pers], #cwPersonsBody .cw-pers[data-pers]'),function(row){
-    var id=row.getAttribute('data-pers'),pe=CW_PERS&&CW_PERS.people[id];
-    if(pe&&pe.st==='ready'&&!pe.shown){pe.shown=true;row.classList.add('cw-pers-in')}
+function cwPersFoot(){
+  var f=$('cwPersonsFoot'); if(!f||!CW_PERS)return;
+  var p=CW_PERS, n=cwPersSendIds().length, sum=cwPersSummary();
+  if(p.needConfirm)sum='接收客户有变化，请再确认一次'+(sum?' · '+sum:'');
+  var h=sum?'<div class="cw-sum'+(p.needConfirm?' bad':'')+'" role="status">'+esc(sum)+'</div>':'';
+  if(cwPersBusy())h+='<button class="cw-btn block" disabled>正在写…</button>';
+  else if(!n)h+='<button class="cw-btn block" onclick="cwPersChange()">返回选人</button>';
+  else h+='<button class="cw-btn block" onclick="cwPersSend()">去微信发送 · '+n+' 人</button>';
+  f.innerHTML=h;
+}
+/* 发送前复核：只从当前名单里剔除已回复或掉出范围的人，不补加新人。
+   有变化就停在当前页、标出对应行、更新人数，等销售再点一次确认。 */
+function cwPersRecheck(){
+  var p=CW_PERS; if(!p)return false;
+  var changed=false;
+  if(CW_FROM==='tools'){
+    var win=cwWindow().map(function(c){return c.i});
+    p.order.forEach(function(id){
+      var pe=p.people[id]; if(!pe||pe.gone||pe.replied)return;
+      if(win.indexOf(id)<0){ pe.gone=true; changed=true; }
+    });
+  }
+  p.order.forEach(function(id){
+    var pe=p.people[id]; if(!pe||pe.gone||pe.replied)return;
+    var c=cwCust(id);
+    var h=c&&c.chat;
+    if(h&&h.length&&h[h.length-1].f==='c'){ pe.replied=true; changed=true; }
   });
+  return changed;
 }
-/* 发送内容页只留汇总与「查看全部 N 人」；逐条文案与编辑动作都在二级页。 */
-function cwPersBlockHtml(){
-  var p=CW_PERS,n=p.order.length;
-  var h='<div class="cw-pcard cw-perscard'+(CW_MODE_ANIM?' cw-mode-in':'')+'">'
-    +'<div class="cw-rowhd"><span class="sp" aria-hidden="true">'+I('sparkle',16,1.8)+'</span><b>发送内容</b>'
-    +'<button class="cw-textact cw-perslink" onclick="cwPersOff()">改回同一份</button></div>'
-    +'<button type="button" class="cw-persopen" onclick="cwPersonsOpen()" aria-label="查看全部 '+n+' 人的逐人文案">'
-    +'<span class="cw-persopen-m" data-pers-sum>'+esc(cwPersSummary())+'</span>'
-    +'<span class="cw-persopen-go">查看全部 '+n+' 人<span class="chev" aria-hidden="true">›</span></span>'
-    +'</button>'
-    +'<div class="cw-persnote">'+I('info',14,2)+'只发文字，图片和视频不随这次发送</div>'
-    +'</div>';
-  return h;
+function cwPersSend(){
+  var p=CW_PERS;
+  if(!p){ return; }
+  if(cwPersBusy()){ toast('正在写，先等写完或点停止生成'); return; }
+  if(!p.order.length){ cwPersChange(); return; }
+  var changed=cwPersRecheck();
+  if(changed){
+    p.needConfirm=true;
+    cwRender(); cwPersProgressPaint();
+    toast('接收客户有变化，请再确认一次');
+    return;
+  }
+  var ids=cwPersSendIds();
+  if(!ids.length){ p.needConfirm=false; cwPersProgressPaint(); toast('还没有可发送的人'); return; }
+  cwPersLaunch(ids);
 }
-function cwPersonsOpen(){
-  if(!CW_PERS||!CW_PERS.on||cur==='cw-persons')return;
-  go('cw-persons');
+function cwPersLaunch(ids){
+  if(CW_LAUNCHING)return; CW_LAUNCHING=true;
+  var p=CW_PERS;
+  stack=stack.filter(function(p2){return ['cw-content','cw-select','cw-persons','cw-editor','cw-preview','cw-people','cw-pick','cw-records','cw-record'].indexOf(p2.id)<0});
+  var people=ids.map(function(id){
+    var c=cwCust(id), o={n:c?c.n:'客户',st:'ok'};
+    o.text=cwPersText(id);
+    return o;
+  });
+  var r={id:'r'+Date.now(),when:cwDay()+'\n'+cwClock(),
+         scope:(CW_FROM==='awake'?'待唤醒客户 · 手选'
+           :'未回复 '+cwRangeLabel()+((CW_CUSTOM.tags||[]).length?' · '+cwTagSummary():'')),
+         n:ids.length,gap:CW_SET.gap,st:'done',ok:ids.length,fail:0,items:[],people:people,
+         personal:true,unsent:Math.max(0,p.order.length-ids.length)};
+  CW_PENDS.push(r);
+  if(CW_FROM==='awake'){ AWAKE_SELING=false; AWAKE_ENTER=false; go('host-awake'); }
+  else go('host-tools');
+  toast('已开始唤醒，完成后在记录里查看');
+  if(!cwRM())setTimeout(function(){ cwLaunchDone(r) },8000);
 }
 REND['cw-persons']=function(){
   $('cwPersonsBack').innerHTML=I('back',24,2);
+  $('cwPersonsSwap').textContent='换人';
   var body=$('cwPersonsBody');if(!body)return;
-  if(!CW_PERS||!CW_PERS.on){ body.innerHTML=''; return; }
+  if(!CW_PERS||!CW_PERS.on){ body.innerHTML=''; cwPersFoot(); return; }
   var p=CW_PERS,h='';
   if(cwPersBusy())h+='<div class="cw-persprog" role="status" aria-live="polite"><span class="spin" aria-hidden="true"></span>'
     +'<span data-cnt>'+(p.busy?'正在写 '+p.done+'/'+p.total:'正在重写')+'</span>'
-    +(p.busy?'<button class="cw-textact" onclick="cwPersStop()">停止</button>':'')+'</div>';
+    +'<button class="cw-textact" onclick="cwPersStop()">停止生成</button></div>';
+  h+=cwGapBlockHtml();
   h+='<div class="cw-pcard cw-personscard"><div class="cw-perslist">'+p.order.map(cwPersRowHtml).join('')+'</div></div>';
   body.innerHTML=h;
-  cwGrowAll();cwPersAnimate();
+  cwGrowAll();
+  if(!cwRM()){
+    [].forEach.call(body.querySelectorAll('.cw-pers[data-pers]'),function(row){
+      var id=row.getAttribute('data-pers'),pe=CW_PERS.people[id];
+      if(pe&&pe.st==='ready'&&!pe.shown){pe.shown=true;row.classList.add('cw-pers-in')}
+    });
+  }
+  cwPersFoot();
 };
 
-/* AI 帮写先二选一：统一话术进对话页；逐人写法不进对话，按名单直接写。 */
-function cwAiSheet(){
-  CW_SH=openSheet('<div class="cw-sh">AI 帮写</div>'
-    +cwSheetRow('sparkle','写一版通用话术','所有人收到同一条','cwAiCommon()')
-    +cwSheetRow('message','按聊天记录给每人写','每人一条 · 只发文字','cwPersStart()'),'cw-sheet cws-sheet');
-}
-function cwAiCommon(){ closeSheet(CW_SH);CW_SH=null;setTimeout(cwComposeOpen,180); }
-
-/* ================= 发送内容（主编辑页） ================= */
+/* ================= 发同一份内容（统一内容编辑页） ================= */
 function cwMediaHtml(it){
   var h='<div class="cw-media'+(it.t==='video'?' video':'')+'" onclick="cwMediaView(\''+it.id+'\')">';
   if(it.t==='image')h+='<img src="'+(it.src||CW_IMG_SRC)+'" alt="'+esc(it.c)+'">';
@@ -6858,12 +6849,12 @@ function cwGrow(el){
   el.style.height=Math.max(48,el.scrollHeight)+'px';
 }
 function cwGrowAll(){
-  [].forEach.call(document.querySelectorAll('#cwContentBody textarea.cw-ta, #cwPersonsBody textarea.cw-ta'),cwGrow);
+  [].forEach.call(document.querySelectorAll('#cwEditorBody textarea.cw-ta, #cwPersonsBody textarea.cw-ta'),cwGrow);
 }
 function cwItemInput(el,id){
   var it=cwItemById(id);
-  if(it){ it.c=el.value; cwBumpVer(); }
-  cwGrow(el); cwContentFoot();
+  if(it)it.c=el.value;
+  cwGrow(el); cwEditorFoot();
 }
 /* ---------- 发送内容 · 长按拖拽排序／删除 ----------
    长按条目 320ms → 原条目挪进 #cw-content 绝对定位到手指下、放大 1.03，原位插入一块虚线占位；开始移动后底部升起删除区；
@@ -6887,7 +6878,7 @@ function cwDelZone(show){
       z.setAttribute('role','status'); z.setAttribute('aria-live','polite');
       z.innerHTML='<span class="cw-del-ic" aria-hidden="true">'+cwTrashSvg()+'</span>'
         +'<span class="cw-del-tx">移动到此处删除</span>';
-      ($('cw-content')||document.body).appendChild(z);
+      ($('cw-editor')||document.body).appendChild(z);
     }
     void z.offsetWidth;
     z.classList.add('on');
@@ -6918,7 +6909,7 @@ function cwDragDelete(d){
   var finish=function(){
     if(CW_DRAG!==d)return;
     if(gap&&gap.parentNode)gap.parentNode.removeChild(gap);
-    if(it&&it.parentNode&&it.parentNode.id==='cw-content')it.parentNode.removeChild(it);
+    if(it&&it.parentNode&&it.parentNode.id==='cw-editor')it.parentNode.removeChild(it);
     document.body.classList.remove('cw-dragging');
     CW_DRAG=null;
     cwDelZone(false);
@@ -6939,7 +6930,7 @@ function cwDragArm(e){
   if(e.isPrimary===false||e.button>0)return;
   var t=e.target;
   if(!t||!t.closest)return;
-  var it=t.closest('#cwContentBody .cw-it');
+  var it=t.closest('#cwEditorBody .cw-it');
   if(!it||it.classList.contains('cw-it-gap')||t.closest('button'))return;
   var d={el:it,id:it.getAttribute('data-item'),x:e.clientX,y:e.clientY,lastX:e.clientX,lastY:e.clientY,
     pid:e.pointerId,timer:null,active:false,dropping:false,overDel:false,zoneShown:false};
@@ -6949,7 +6940,7 @@ function cwDragArm(e){
 function cwDragBegin(d){
   if(!d||CW_DRAG!==d||d.active)return;
   if(!d.el.isConnected){cwDragClear(d);return}
-  var it=d.el, host=$('cw-content'), hr=host.getBoundingClientRect();
+  var it=d.el, host=$('cw-editor'), hr=host.getBoundingClientRect();
   var r=it.getBoundingClientRect();
   var k=hr.width&&host.offsetWidth?hr.width/host.offsetWidth:1;
   if(!k)k=1;
@@ -7033,7 +7024,7 @@ function cwDragUpdate(){
 }
 function cwDragLoop(){
   var d=CW_DRAG; if(!d||!d.active||d.dropping)return;
-  var sc=$('cwContentBody');
+  var sc=$('cwEditorBody');
   if(sc){
     var r=sc.getBoundingClientRect(), y=d.lastY, sp=0;
     if(y<r.top+64)sp=-Math.min(12,Math.ceil((r.top+64-y)/4));
@@ -7090,7 +7081,7 @@ function cwDragEnd(e){
   d.dx=d.lastX-d.x; d.dy=d.lastY-d.y;
   var cancelled=!e||e.type==='pointercancel';
   if(d.overDel&&!cancelled){ cwDragDelete(d); return; }
-  var it=d.el, gap=d.gap, list=d.list, fin=null, host=$('cw-content');
+  var it=d.el, gap=d.gap, list=d.list, fin=null, host=$('cw-editor');
   if(gap&&gap.parentNode&&list&&host){
     var lr=list.getBoundingClientRect(), hr=host.getBoundingClientRect(), k=d.k||1;
     /* 换成 #cw-content 的布局坐标：列表视觉位置÷scale ＋ 占位在列表里的位置 */
@@ -7114,17 +7105,16 @@ function cwDragEnd(e){
     if(target!=null&&target>=0&&ix>=0&&target!==ix){
       var moved=CW_ITEMS.splice(ix,1)[0];
       CW_ITEMS.splice(target,0,moved);
-      cwBumpVer();
     }
     if(gap&&gap.parentNode)gap.parentNode.removeChild(gap);
-    if(it.parentNode&&it.parentNode.id==='cw-content')it.parentNode.removeChild(it);
+    if(it.parentNode&&it.parentNode.id==='cw-editor')it.parentNode.removeChild(it);
     it.classList.remove('dragging','over-del');
     it.style.position=''; it.style.left=''; it.style.top=''; it.style.width=''; it.style.transform='';
     document.body.classList.remove('cw-dragging');
     cwDelZone(false);
     CW_DRAG=null;
-    var sc=$('cwContentBody'), y=sc?sc.scrollTop:0;
-    REND['cw-content']();
+    var sc=$('cwEditorBody'), y=sc?sc.scrollTop:0;
+    REND['cw-editor']();
     if(sc)sc.scrollTop=y;
   };
   if(cwRM()||!fin){finish();return}
@@ -7135,7 +7125,7 @@ function cwDragEnd(e){
   anim.finished.then(finish,finish);
 }
 document.addEventListener('pointerdown',function(e){
-  if(e.target&&e.target.closest&&e.target.closest('#cwContentBody .cw-it'))cwDragArm(e);
+  if(e.target&&e.target.closest&&e.target.closest('#cwEditorBody .cw-it'))cwDragArm(e);
 },true);
 document.addEventListener('pointermove',function(e){
   if(CW_DRAG&&e.pointerId===CW_DRAG.pid)cwDragMove(e);
@@ -7168,7 +7158,7 @@ function cwItemRemove(id){
   for(i=0;i<CW_ITEMS.length;i++)if(CW_ITEMS[i].id===id)ix=i;
   if(ix<0)return;
   var it=CW_ITEMS.splice(ix,1)[0];
-  cwBumpVer(); REND['cw-content']();
+  REND['cw-editor']();
   toast('已删除这条内容','撤销',function(){
     if(cwItemById(it.id))return;
     CW_ITEMS.splice(Math.min(ix,CW_ITEMS.length),0,it);
@@ -7176,13 +7166,13 @@ function cwItemRemove(id){
     if(CW_ITEMS.length>1)CW_ITEMS=CW_ITEMS.filter(function(x){
       return x===it||x.t!=='text'||String(x.c||'').trim();
     });
-    cwBumpVer(); cwRender();
+    cwRender();
   });
 }
 function cwTextAdd(){
   closeSheet(CW_SH); CW_SH=null;
-  var it=cwAddTextBlock(''); cwMarkFresh(it.id); REND['cw-content']();
-  var ta=document.querySelectorAll('#cwContentBody textarea.cw-ta');
+  var it=cwAddTextBlock(''); cwMarkFresh(it.id); REND['cw-editor']();
+  var ta=document.querySelectorAll('#cwEditorBody textarea.cw-ta');
   if(ta.length)ta[ta.length-1].focus();
 }
 function cwSheetRow(icon,title,sub,act){
@@ -7201,7 +7191,7 @@ function cwAddSheet(){
 function cwAlbumAdd(kind){
   closeSheet(CW_SH); CW_SH=null;
   var it={id:cwItemSeq(),t:kind==='video'?'video':'image',c:kind==='video'?'门店实拍.mp4':'门店实拍.jpg',src:kind==='video'?'':CW_IMG_SRC,up:'ing'};
-  CW_ITEMS.push(it); cwMarkFresh(it.id); cwBumpVer(); REND['cw-content']();
+  CW_ITEMS.push(it); cwMarkFresh(it.id); REND['cw-editor']();
   if(window.CW_TESTFAST){
     if(window.CW_UPLOAD_FAIL){ it.up='fail'; it.why='上传中断，请重试' } else it.up='';
     cwRender(); return;
@@ -7209,464 +7199,44 @@ function cwAlbumAdd(kind){
   setTimeout(function(){
     if(window.CW_UPLOAD_FAIL){ it.up='fail'; it.why='上传中断，请重试' }
     else it.up='';
-    cwBumpVer(); cwRender();
+    cwRender();
   },window.CW_TESTFAST?0:700);
 }
 function cwRetryUpload(id){
   var it=cwItemById(id); if(!it)return;
-  it.up='ing'; it.why=''; REND['cw-content']();
-  if(window.CW_TESTFAST){ it.up=''; cwBumpVer(); cwRender(); return; }
-  setTimeout(function(){ it.up=''; cwBumpVer(); cwRender() },600);
-}
-/* 撤销回填：回填后文字没再改过就直接还原；改过则先确认，恢复会覆盖当前文字。 */
-function cwUndoHtml(){
-  var u=CW_CHAT&&CW_CHAT.undo; if(!u)return '';
-  return '<div class="cw-undostrip"><span>已回填 AI 文案</span><button class="cw-textact" onclick="cwUndoApply()">撤销</button></div>';
-}
-function cwRestoreItems(items){
-  CW_ITEMS=items;
-  if(CW_CHAT){
-    CW_CHAT.undo=null;
-    CW_CHAT.turns.forEach(function(t){ if(t.cand)t.cand.used=false });
-  }
-  cwBumpVer(); cwRender(); toast('已恢复回填前的内容');
-}
-function cwUndoApply(){
-  var u=CW_CHAT&&CW_CHAT.undo; if(!u){toast('没有可撤销的回填');return}
-  if(cwItemsSig()!==u.sig){
-    var d=openDlg('<h3>恢复回填前的内容？</h3><p>当前文字已经改过，恢复会用回填前的内容覆盖这些文字。</p>'
-      +'<div class="cw-shbtns"><button class="cw-textact" data-cancel>取消</button><button class="cw-btn" data-ok>恢复</button></div>');
-    d.querySelector('[data-cancel]').onclick=function(){d.remove()};
-    d.querySelector('[data-ok]').onclick=function(){d.remove();cwRestoreItems(u.items)};
-    return;
-  }
-  cwRestoreItems(u.items);
+  it.up='ing'; it.why=''; REND['cw-editor']();
+  if(window.CW_TESTFAST){ it.up=''; cwRender(); return; }
+  setTimeout(function(){ it.up=''; cwRender() },600);
 }
 function cwContentBlockHtml(){
-  if(cwPersActive())return cwPersBlockHtml();
   return '<div class="cw-pcard'+(CW_MODE_ANIM?' cw-mode-in':'')+'">'
-    +'<div class="cw-rowhd"><span class="sp" aria-hidden="true">'+I('sparkle',16,1.8)+'</span><b>发送内容</b>'
-      +'<button class="cw-ai-link" onclick="cwAiSheet()">'+I('sparkle',13,1.8)+'AI 帮写</button></div>'
+    +'<div class="cw-rowhd"><span class="sp" aria-hidden="true">'+I('sparkle',16,1.8)+'</span><b>发送内容</b></div>'
     +'<div class="cw-items">'+cwItemsHtml()+'</div>'
     +'<button class="cw-btn block cw-add-btn" onclick="cwAddSheet()">'+I('plus',18,2.2)+'添加内容</button>'
     +'</div>';
 }
-REND['cw-content']=function(){
+/* 统一内容编辑页：只放发送内容与发送间隔；预览时才按范围取人。 */
+function cwEditorFoot(){
+  var f=$('cwEditorFoot'); if(!f)return;
+  var err=cwContentErr();
+  f.innerHTML=(err?'<div class="cw-sum" role="status">'+esc(err)+'</div>':'')
+    +'<button class="cw-btn block" '+(err?'disabled':'onclick="cwPreviewGo()"')+'>预览发送</button>';
+}
+REND['cw-editor']=function(){
   /* 别把正在拖的节点连同占位一起重画掉：真有外部重绘时先把拖拽收干净 */
   if(CW_DRAG)cwDragClear(CW_DRAG);
-  $('cwContentBack').innerHTML=I('back',24,2);$('cwRecIc').innerHTML=I('clock',20,2.1);
+  $('cwEditorBack').innerHTML=I('back',24,2);
   cwEnsureDraft();
-  var h='';
-  if(CW_FROM==='tools')h+='<div class="cw-pcard cw-scope">'+cwScopeHtml()+'</div>';
-  else h+='<div class="cw-awakehd"><span>已选 <b>'+cwSelCount()+'</b> 人</span><button class="cw-textact" onclick="cwEditPeople()">修改</button></div>';
-  h+=cwContentBlockHtml()+cwGapBlockHtml()+(cwPersActive()?'':cwUndoHtml());
-  $('cwContentBody').className='scroll cw-scroll';$('cwContentBody').innerHTML=h;
-  cwGrowAll();cwPersAnimate();cwUnitAnim();cwContentFoot();
+  $('cwEditorBody').className='scroll cw-scroll';
+  $('cwEditorBody').innerHTML=cwContentBlockHtml()+cwGapBlockHtml();
+  cwGrowAll();cwEditorFoot();
   CW_MODE_ANIM=false;
 };
-/* 换单位后整张范围卡会重绘，新元素自己不会从上一位滑过来：拿 Web Animations 补一段 旧→新 的位移 */
-function cwUnitAnim(){
-  if(!CW_UNIT_FROM)return;
-  var th=document.querySelector('#cwContentBody .cw-unit-thumb'), from=CW_UNIT_FROM;
-  CW_UNIT_FROM='';
-  if(!th||cwRM())return;
-  var x=function(u){return u==='d'?58:0};
-  th.animate([{transform:'translateX('+x(from)+'px)'},{transform:'translateX('+x(CW_CUSTOM.u)+'px)'}],
-    {duration:280,easing:'cubic-bezier(.2,0,0,1)'});
-}
-
-/* ================= AI 帮写（全屏对话） ================= */
 function cwSupported(t){ return t==='text'||t==='image'||t==='video' }
-function cwRefById(id){ var a=CW_CHAT.refs; for(var i=0;i<a.length;i++)if(a[i].id===id)return a[i]; return null }
-function cwComposeOpen(){
-  if(!CW_CHAT)cwResetChat();
-  var s=$('cw-compose');
-  if(s)s.classList.remove('cw-drawer-out');
-  go('cw-compose');
-  if(s&&!cwRM()){ /* 抽屉入场：撤掉全站那层淡入，换成整幅上滑 */
-    s.classList.remove('anim-push');
-    s.classList.add('cw-drawer-in');
-    setTimeout(function(){s.classList.remove('cw-drawer-in')},360);
-  }
-  if(!CW_CHAT.turns.length&&cwHasContent()){
-    if(!CW_CHAT.purpose)CW_CHAT.purpose=cwInferPurpose();
-    cwChatAsk('',{auto:true,op:'auto'});
-  }
-}
-/* 关闭 AI 帮写：先让抽屉滑下去，再真正退栈；滑动期间动画规则压过 back() 的淡出，不会先跳回原位。 */
-function cwComposeClose(){
-  var s=$('cw-compose');
-  if(!s||!s.classList.contains('active')){back();return}
-  if(s.classList.contains('cw-drawer-out'))return;
-  s.classList.add('cw-drawer-out');
-  setTimeout(function(){back()},230);
-  setTimeout(function(){s.classList.remove('cw-drawer-out')},620);
-}
-/* 来源事实：主编辑页的内容 ＋ 对话里已读取的参考资料。读取失败的不参与成稿。 */
-function cwAiSources(){
-  var a=[];
-  CW_ITEMS.forEach(function(i){
-    if(i.t==='text'&&String(i.c||'').trim())a.push({src:'draft',c:i.c});
-    else if(i.t!=='text'&&i.up!=='fail')a.push({src:'draft',c:'',kind:i.t});
-  });
-  CW_CHAT.refs.forEach(function(r){
-    if(r.read==='fail')return;
-    if(r.txt)a.push({src:'ref',title:r.title,c:r.txt,kind:r.t});
-  });
-  return a;
-}
-function cwAiFactTime(s){
-  var m=String(s).match(/(?:(?:本|这)?周[一二三四五六日天]|今天|明天|后天|\d{1,2}月\d{1,2}日)[^，。；\n]{0,8}?\d{1,2}[:：]\d{2}\s*[–—\-~～至到]\s*\d{1,2}[:：]\d{2}/);
-  return m?m[0].replace(/\s+/g,''):'';
-}
-function cwAiFactPrice(s){
-  var m=String(s).match(/(?:满\s*\d[\d,]*\s*减\s*\d[\d,]*|\d+(?:\.\d+)?\s*折|\d[\d,]*\s*元)/);
-  return m?m[0]:'';
-}
-function cwAiFactTopic(s){
-  var k=['试穿','新品','上新','发布会','体验','满减','折扣','优惠'];
-  for(var i=0;i<k.length;i++)if(s.indexOf(k[i])>=0)return k[i];
-  return '';
-}
-/* 两份资料写了不同的活动日期：先问清这次以哪份为准，不自行挑一份。 */
-function cwAiRefDates(){
-  var seen=[],out=[];
-  CW_CHAT.refs.forEach(function(r){
-    if(r.read==='fail'||!r.txt)return;
-    var m=String(r.txt).match(/(\d{1,2})月(\d{1,2})日/g)||[];
-    m.forEach(function(d){ var n=d.replace(/^0?(\d+)/,'$1'); if(seen.indexOf(n)<0){seen.push(n);out.push(d)} });
-  });
-  return out;
-}
-function cwAiPrevText(){
-  for(var i=CW_CHAT.turns.length-1;i>=0;i--){var t=CW_CHAT.turns[i];if(t.kind==='draft')return t.cand.text}
-  return '';
-}
-function cwAiTone(text,op){
-  if(op==='short'){
-    return text
-      .replace(/，?你有兴趣来看看吗？$/,'，有兴趣可以来看看。')
-      .replace(/，?有空可以来看看。$/,'，有空来看看。')
-      .replace(/，?有兴趣的话可以过来看看。$/,'，有兴趣可以来。')
-      .replace(/，?需要的话我把详情发你。$/,'，需要的话我发你。');
-  }
-  if(op==='natural'){
-    return text.replace(/^本周六/,'这周六').replace(/^本周日/,'这周日')
-      .replace(/店里有/,'店里').replace(/，你有兴趣来看看吗？$/,'，有兴趣的话过来看看？');
-  }
-  return text
-    .replace(/^(.+?)，店里有(.+?)活动，你有兴趣来看看吗？$/,'$2就在$1，有兴趣的话来店里看看？')
-    .replace(/^(.+?)，店里有(.+?)活动，有空可以来看看。$/,'$2就在$1，有空来店里看看。');
-}
-/* 按选定场景写：同一批事实，五种不同的开头与落点。
-   问候不需要事实；其余四种缺关键事实时只问一句。 */
-function cwPurposeReply(q,joined,all){
-  var time=cwAiFactTime(q)||cwAiFactTime(joined);
-  var price=cwAiFactPrice(q)||cwAiFactPrice(joined);
-  var topic=cwAiFactTopic(q)||cwAiFactTopic(joined);
-  var own=all.filter(function(x){return x.src==='draft'&&x.c})[0];
-  var base=own?String(own.c||'').trim():'';
-  var baseCore=base.replace(/[。！？!?，,]$/,'');
-  var core=String(q||baseCore||topic||'').replace(/[。！？!?，,]$/,'');
-  var notes=[];
-  CW_CHAT.refs.forEach(function(r){
-    if(r.read==='fail')notes.push('「'+r.title+'」没能读取，先用其他资料写。');
-    else if(r.read==='partial')notes.push('「'+r.title+'」只读取到字幕，画面还没解析，这版只用了读到的内容。');
-  });
-  var draft=function(text){ return {kind:'draft',text:notes.join(''),cand:{text:text,ver:cwFreshVer()}} };
-  var say=function(s){ s=String(s).replace(/[。！？!?，,]$/,''); return s+(/[吗呢吧]$/.test(s)?'？':'。') };
-  switch(CW_CHAT.purpose){
-    case 'activity':
-      if(!time&&!price&&!topic)return {kind:'question',text:'这次是什么活动？说一句时间和优惠，我照着写。'};
-      return draft(say((time?time+'，':'')+'店里有'+(topic?topic+'活动':'活动')+(price?'，'+price:'')+'，有兴趣来看看吗'));
-    case 'new':
-      if(!core)return {kind:'question',text:'到的是什么新品？什么时候能试？'};
-      return draft(say((time&&core!==baseCore?time+'，':'')+core+'，感兴趣的话来看看'));
-    case 'repeat':
-      if(!core)return {kind:'question',text:'上次买的是什么？大概什么时候该补货？'};
-      core=core.replace(/^上次买的(?:是)?/,'');
-      return draft('上次买的'+core+'应该快用完了吧？需要的话我帮您留一份。');
-    case 'after':
-      return draft((core?(/^上次/.test(core)?core:'上次的'+core):'上次的事')+'处理得还顺吗？有问题随时找我。');
-    case 'greet':
-      return draft('好久没联系了，最近还好吗？有空随时找我。');
-  }
-  return null;
-}
-/* 规则版「写作」：先看资料能确认的事实，再决定出一版还是追问一次。
-   这是原型演示，不接真实模型；文案只由素材文字、用户要求与已确认的事实拼成。 */
-function cwAiReply(req,op){
-  var q=String(req||'').trim(), all=cwAiSources(), joined=all.map(function(x){return x.c||''}).join('\n');
-  var prev=cwAiPrevText();
-  if(op==='short'||op==='natural'||op==='rewrite'){
-    if(!prev)return {kind:'question',text:'先说说这次想和客户聊什么，我再按这个要求改。'};
-    return {kind:'draft',text:'',cand:{text:cwAiTone(prev,op),ver:cwFreshVer()}};
-  }
-  if(CW_CHAT.purpose){
-    var chatFacts=CW_CHAT.turns.filter(function(t){return t.role==='user'&&t.text}).map(function(t){return t.text}).join('\n');
-    var pr=cwPurposeReply(op==='purpose'?'':q,joined+'\n'+chatFacts,all);
-    if(pr)return pr;
-  }
-  if(/^[\d\s.,!?，。！？、；;：:…—\-]+$/.test(q)||(q&&q.length<2))
-    return {kind:'question',text:'想和客户说什么？可以告诉我活动内容，或者加一张海报，我照着写。'};
-  var time=cwAiFactTime(q)||cwAiFactTime(joined);
-  var price=cwAiFactPrice(q)||cwAiFactPrice(joined);
-  var topic=cwAiFactTopic(q)||cwAiFactTopic(joined);
-  var dates=cwAiRefDates();
-  if(dates.length>1)return {kind:'question',text:'两份素材的活动日期不同（'+dates.join(' / ')+'），这次以哪份为准？'};
-  if(/优惠|折扣/.test(q)&&!price&&!/\d/.test(q))
-    return {kind:'question',text:'这次优惠具体是什么？比如折扣、满减或赠品，说清楚我再写。'};
-  if(/活动|试穿|上新|新品|发布会/.test(q)&&!time&&!topic&&!joined)
-    return {kind:'question',text:'具体是什么活动？把时间和内容告诉我，或者发一张活动海报就可以。'};
-  var notes=[];
-  CW_CHAT.refs.forEach(function(r){
-    if(r.read==='fail')notes.push('「'+r.title+'」没能读取，先用其他资料写。');
-    else if(r.read==='partial')notes.push('「'+r.title+'」只读取到字幕，画面还没解析，这版只用了读到的内容。');
-  });
-  var text='';
-  if(time&&topic)text=time+'，店里有'+topic+'活动，你有兴趣来看看吗？';
-  else if(time)text=time+'，店里有点新东西，感兴趣的话可以来看看。';
-  else if(price&&topic)text=topic+'这次有优惠：'+price+'，需要的话我把详情发你。';
-  else if(/联系|唤醒|问候|好久/.test(q)&&!topic&&!price)text='好久没联系了，最近还好吗？有空随时找我。';
-  else{
-    var own=all.filter(function(x){return x.src==='draft'&&x.c})[0];
-    var base=(own&&own.c)||(q.length>=8?q:'');
-    if(base){
-      text=String(base).trim().replace(/[。！？!?]$/,'');
-      if(time&&text.indexOf(time)<0)text=time+'，'+text;
-      if(!/[。！？!?]$/.test(text))text+=(/吗|呢|吧/.test(text)?'？':'。');
-      if(time&&!/[？?]$/.test(text)&&topic)text+='有兴趣可以来看看。';
-    }
-  }
-  if(!text){
-    if(all.some(function(x){return x.kind==='image'||x.kind==='video'}))
-      return {kind:'question',text:'想用这张素材联系客户的话，告诉我这次想说什么（比如新品到店、邀请到店看看）。'};
-    return {kind:'question',text:'这次想和客户说什么？可以说需求，也可以加素材。'};
-  }
-  return {kind:'draft',text:notes.join(''),cand:{text:text,ver:cwFreshVer()}};
-}
-function cwChatAsk(req,opts){
-  if(!CW_CHAT)cwResetChat();
-  var o=opts||{}, text=String(req||'').trim();
-  if(CW_CHAT.busy)return;
-  if(!o.auto&&!text)return;
-  if(!o.auto)CW_CHAT.turns.push({role:'user',text:text});
-  if(o.purpose)CW_CHAT.purpose=o.purpose;
-  CW_CHAT.busy=true; CW_CHAT.lastReq=o.op||'';
-  var tok=++CW_CHAT.token;
-  var out=cwAiReply(text,o.op||'');
-  var run=function(){
-    if(tok!==CW_CHAT.token)return;
-    CW_CHAT.timer=null; CW_CHAT.busy=false;
-    if(window.CW_CHAT_FAIL){window.CW_CHAT_FAIL=false;CW_CHAT.turns.push({role:'ai',kind:'note',text:'这次没能生成，原稿和你的要求都还在。可以重试一次。'});cwComposeRender();return}
-    if(out.kind==='question')CW_CHAT.turns.push({role:'ai',kind:'question',text:out.text});
-    else CW_CHAT.turns.push({role:'ai',kind:'draft',text:out.text||'',cand:out.cand});
-    cwComposeRender();
-  };
-  cwComposeRender();
-  if(cwRM())run(); else CW_CHAT.timer=setTimeout(run,o.auto?520:700);
-}
-function cwChatSubmit(){
-  var el=$('cwChatInput'); if(!el)return;
-  var v=el.value.trim();
-  if(CW_CHAT.busy){toast('正在写，稍等一下');return}
-  if(!v){toast('先说一句想怎么和客户说');return}
-  el.value=''; cwChatAsk(v);
-}
-function cwChatStop(){
-  if(!CW_CHAT||!CW_CHAT.busy)return;
-  clearTimeout(CW_CHAT.timer); CW_CHAT.timer=null; CW_CHAT.token++; CW_CHAT.busy=false;
-  CW_CHAT.turns.push({role:'ai',kind:'note',text:'已停止。原稿和你的要求都还在。'});
-  cwComposeRender();
-}
-function cwComposeAdd(){
-  CW_SH=openSheet('<div class="cw-sh">加参考资料</div>'
-    +cwSheetRow('photos','从相册选择','图片或视频，只作为写作参考','cwComposeAlbum()')
-    +cwSheetRow('folder','从素材库选择','只作为参考，不会自动发送','cwPickOpen(\'chat\')'),'cw-sheet cws-sheet');
-}
-function cwComposeAlbum(){
-  closeSheet(CW_SH); CW_SH=null;
-  var ref={id:'ref'+(++CW_REF_SEQ),pid:'album',title:'相册图片',t:'image',msgs:[{t:'image',c:'现场照片.jpg'}],txt:'',read:'full',joined:false};
-  CW_CHAT.refs.push(ref); CW_CHAT.turns.push({role:'ai',kind:'ref',ref:ref.id});
-  cwBumpVer(); cwComposeRender();
-}
-function cwAddRef(p,msgs){
-  var txt=msgs.filter(function(m){return m.t==='text'}).map(function(m){return m.c}).join('\n');
-  var media=msgs.filter(function(m){return m.t!=='text'})[0];
-  var read='full';
-  if(msgs.some(function(m){return m.t==='file'||m.t==='voice'}))read='fail';
-  else if(media&&media.t==='video')read=/发布会/.test(p.title)?'fail':'partial';
-  var ref={id:'ref'+(++CW_REF_SEQ),pid:p.id,title:p.title,t:media?media.t:'text',
-    msgs:msgs.map(function(m){return {t:m.t,c:m.c}}),txt:txt,read:read,joined:false};
-  CW_CHAT.refs.push(ref); CW_CHAT.turns.push({role:'ai',kind:'ref',ref:ref.id});
-  cwBumpVer();
-}
-function cwRemoveRef(id){
-  var r=cwRefById(id); if(!r)return;
-  var ix=CW_CHAT.refs.indexOf(r); CW_CHAT.refs.splice(ix,1);
-  /* 留着一轮记录不删：渲染时找不到 ref 就自动不画，撤销把 ref 放回去卡片能原位回来 */
-  cwBumpVer(); cwComposeRender();
-  toast('已移除参考素材','撤销',function(){
-    if(cwRefById(id))return;
-    CW_CHAT.refs.splice(ix,0,r); cwBumpVer(); cwComposeRender();
-  });
-}
-/* 「加入发送内容」是明确的用户动作：只复制这条参考里支持的消息，只加一次。
-   关闭 AI 不会撤销它；未采用的文案也不会因此进入草稿。 */
-function cwJoinRef(id){
-  var r=cwRefById(id); if(!r||r.joined)return;
-  var msgs=r.msgs.filter(function(m){return cwSupported(m.t)});
-  if(!msgs.length){toast('这条参考里没有可发送的内容');return}
-  msgs.forEach(function(m){ CW_ITEMS.push({id:cwItemSeq(),t:m.t,c:m.c,from:r.title}) });
-  if(CW_ITEMS.length)cwMarkFresh(CW_ITEMS[CW_ITEMS.length-1].id);
-  cwDropEmptyText(); r.joined=true; cwBumpVer(); cwComposeRender();
-  toast('已加入发送内容');
-}
-/* 采用某一轮：找那一轮自己的候选，不认「最新那一版」。
-   采用会改草稿文字，但不算换资料——不 bump ver，否则其余几轮会一起变「基于之前素材」，正好挡住往回选。 */
-function cwUseCand(ix){
-  var t=CW_CHAT&&CW_CHAT.turns[ix], c=t&&t.cand;
-  if(!c||CW_CHAT.busy)return;
-  if(c.ver!==CW_CHAT.ver){toast('资料已变化，先按当前资料重新生成');return}
-  var before=JSON.parse(JSON.stringify(CW_ITEMS));
-  var texts=cwTextBlocks(), anchor=texts[0];
-  if(anchor){
-    anchor.c=c.text;
-    CW_ITEMS=CW_ITEMS.filter(function(i){ return i.t!=='text'||i===anchor });
-  }else{
-    CW_ITEMS.unshift({id:cwItemSeq(),t:'text',c:c.text});
-  }
-  CW_CHAT.undo={items:before,sig:cwItemsSig()};
-  CW_CHAT.turns.forEach(function(x){ if(x.cand)x.cand.used=false });
-  c.used=true;
-  stack=stack.filter(function(p){return p.id!=='cw-compose'});
-  go('cw-content');
-  toast('已使用这版','撤销',cwUndoApply);
-}
-/* 点气泡上的「复制」：取这一轮候选的正文，不碰草稿 */
-function cwCopyCand(ix){
-  var t=CW_CHAT&&CW_CHAT.turns[ix], c=t&&t.cand; if(!c)return;
-  var done=function(){ toast('已复制') }, fail=function(){ toast('复制失败，可长按文字手动复制') };
-  try{
-    if(navigator.clipboard&&navigator.clipboard.writeText){
-      navigator.clipboard.writeText(c.text).then(done,fail); return;
-    }
-  }catch(e){}
-  var ta=document.createElement('textarea'); ta.value=c.text; ta.style.position='fixed'; ta.style.opacity='0';
-  document.body.appendChild(ta); ta.select();
-  try{ document.execCommand('copy')?done():fail() }catch(e){ fail() }
-  ta.remove();
-}
-/* 「再改改」把光标送回输入框，让用户接着提要求；不发请求 */
-function cwFocusInput(){
-  var el=$('cwChatInput'); if(!el)return;
-  el.focus(); el.setSelectionRange(el.value.length,el.value.length);
-}
-/* 带进 AI 帮写的内容：按用户刚发的一条消息摆在右侧。
-   文字直接显示正文，图片／视频给缩略或文件名——不再另做「本次内容 · N 项」的可折叠摘要。 */
-function cwRefSummaryHtml(){
-  var items=CW_ITEMS.filter(function(i){return i.t==='text'?String(i.c||'').trim():i.up!=='fail'});
-  if(!items.length)return '';
-  var h='<div class="cwc-user cwc-sent">';
-  items.forEach(function(i){
-    if(i.t==='text')h+='<p>'+esc(i.c)+'</p>';
-    else if(i.t==='image')h+='<figure class="cwc-sent-m"><img src="'+(i.src||CW_IMG_SRC)+'" alt="'+esc(i.c||'图片')+'"></figure>';
-    else{
-      var ic=i.t==='video'?'play':(i.t==='voice'?'wave':(i.t==='image'?'image':'file'));
-      h+='<div class="cwc-sent-f">'+I(ic,16,2)+'<span>'+esc(i.c||cwTypeN(i.t))+'</span></div>';
-    }
-  });
-  return h+'</div>';
-}
-function cwRefCardHtml(r){
-  var st=r.read==='fail'?'未读取，可补文字说明':r.read==='partial'?'已读取字幕，画面未解析':'已读取画面与文字';
-  var h='<div class="cwc-ref" data-ref="'+r.id+'"><div class="cwc-refhd"><b>'+esc(r.title)+'</b><span class="cwc-tag">参考素材</span></div>'
-    +'<div class="cwc-refmsg">'+r.msgs.map(function(m){return '<span class="cwc-refm">'+(m.t==='text'?esc(m.c):'［'+cwTypeN(m.t)+'］'+esc(m.c))+'</span>'}).join('')+'</div>'
-    +'<div class="cwc-refft"><span class="st'+(r.read==='fail'?' bad':'')+'">'+st+'</span>'
-    +'<span class="acts"><button class="cw-textact" '+(r.joined?'disabled':'onclick="cwJoinRef(\''+r.id+'\')"')+'>'+(r.joined?'已加入发送内容':'加入发送内容')+'</button>'
-    +'<button class="cw-textact" onclick="cwRemoveRef(\''+r.id+'\')">移除</button></span></div></div>';
-  return h;
-}
-/* 一轮生成结果：气泡只放正文，采用／复制放在下一行；
-   每一轮都带自己的采用入口，往上翻到哪一版都能用，已采用的标「已使用」。 */
-function cwTurnHtml(t,latest,ix){
-  if(t.kind==='ref'){var r=cwRefById(t.ref);return r?cwRefCardHtml(r):''}
-  if(t.role==='user')return '<div class="cwc-user">'+esc(t.text)+'</div>';
-  if(t.kind==='draft'){
-    var stale=t.cand.ver!==CW_CHAT.ver, used=!!t.cand.used;
-    var h='';
-    if(t.text)h+='<div class="cwc-note">'+esc(t.text)+'</div>';
-    h+='<div class="cwc-cand'+(stale?' stale':'')+'">'
-      +(stale?'<div class="cwc-stale">基于之前素材</div>':'')
-      +'<div class="cwc-candtext">'+esc(t.cand.text)+'</div>'
-      +'</div>';
-    h+='<div class="cwc-actrow">';
-    if(used){
-      h+='<span class="cwc-use used">'+I('check',15,2.2)+'已使用</span>';
-    }else if(stale){
-      h+='<button class="cwc-use ghost" '+(CW_CHAT.busy?'disabled':'onclick="cwChatAsk(\'\',{op:\'auto\'})"')+'>按当前资料重新生成</button>';
-    }else{
-      h+='<button class="cwc-use" '+(CW_CHAT.busy?'disabled':'onclick="cwUseCand('+ix+')"')+'>用这版</button>';
-    }
-    h+='<button class="cwc-mini" onclick="cwCopyCand('+ix+')">复制</button>';
-    if(latest&&!stale&&!used&&!CW_CHAT.busy)h+='<button class="cwc-mini" onclick="cwFocusInput()">再改改</button>';
-    h+='</div>';
-    if(latest&&!stale&&!CW_CHAT.busy)h+='<div class="cwc-quick">'
-      +'<button class="cwc-more" onclick="cwChatAsk(\'更简短\',{op:\'short\'})">更简短<span class="arw" aria-hidden="true">↗</span></button>'
-      +'<button class="cwc-more" onclick="cwChatAsk(\'更自然\',{op:\'natural\'})">更自然<span class="arw" aria-hidden="true">↗</span></button>'
-      +'<button class="cwc-more" onclick="cwChatAsk(\'换一种写法\',{op:\'rewrite\'})">换一种写法<span class="arw" aria-hidden="true">↗</span></button></div>';
-    return h;
-  }
-  return '<div class="cwc-note">'+esc(t.text)+'</div>';
-}
-/* 空草稿：五个场景当入口；选完把该场景要补的背景写成一句引导，等用户补完再生成。
-   问候不需要背景，直接出稿。 */
-function cwPurposePick(k){
-  if(CW_CHAT.busy)return;
-  var p=cwPurp(k); if(!p)return;
-  CW_CHAT.purpose=k;
-  if(k==='greet'){ cwChatAsk('',{auto:true,op:'purpose'}); return; }
-  CW_CHAT.turns.push({role:'ai',kind:'guide',text:p.g});
-  cwComposeRender(); cwFocusInput();
-}
-function cwComposeHtml(){
-  var h=cwRefSummaryHtml(),last=-1,i;
-  for(i=CW_CHAT.turns.length-1;i>=0;i--)if(CW_CHAT.turns[i].kind==='draft'){last=i;break}
-  if(!CW_CHAT.turns.length&&!CW_CHAT.busy){
-    h+='<div class="cwc-empty"><span class="ic" aria-hidden="true">'+I('sparkle',34,1.6)+'</span>'
-      +'<h4>这次想和客户说什么？</h4></div>'
-      +'<div class="cwc-purpose">'+CW_PURPOSES.map(function(p){
-        return '<button class="cwc-popt" onclick="cwPurposePick(\''+p.k+'\')"><span>'+p.n+'</span>'
-          +'<span class="ch" aria-hidden="true">'+I('chev',16,2.2)+'</span></button>';
-      }).join('')+'</div>';
-  }
-  CW_CHAT.turns.forEach(function(t,ix){
-    var th=cwTurnHtml(t,ix===last,ix);
-    if(th)h+='<div class="cwc-turn">'+th+'</div>';
-  });
-  if(CW_CHAT.busy)h+='<div class="cwc-busy" role="status"><span class="cwc-dots"><i></i><i></i><i></i></span>正在写<button class="cw-textact" onclick="cwChatStop()">停止</button></div>';
-  return h;
-}
-function cwComposeRender(){
-  if(!CW_CHAT)return;
-  var b=$('cwComposeBody'); if(!b)return;
-  /* 只有真多了新一轮才让最新那条上浮；展开摘要、切候选这类重绘不重播 */
-  var grew=CW_CHAT.turns.length>(CW_CHAT.rendered||0);
-  b.innerHTML=cwComposeHtml();
-  if(grew&&!cwRM()){
-    var turns=b.querySelectorAll('.cwc-turn');
-    if(turns.length)turns[turns.length-1].classList.add('cwc-turn-in');
-  }
-  CW_CHAT.rendered=CW_CHAT.turns.length;
-  b.scrollTop=b.scrollHeight;
-}
-REND['cw-compose']=function(){ $('cwComposeClose').innerHTML=I('x',24,2); cwComposeRender() };
-
 /* ================= 素材选择（复用素材库数据与读法） ================= */
-var CW_PICK={origin:'content',tab:'全部',grp:'全部',q:'',exp:'',enter:false};
-function cwPickOpen(origin){
-  closeSheet();
-  CW_PICK.origin=origin; CW_PICK.tab='全部'; CW_PICK.grp='全部'; CW_PICK.q=''; CW_PICK.exp='';
+var CW_PICK={tab:'全部',grp:'全部',q:'',exp:'',enter:false};
+function cwPickOpen(){
+  closeSheet(); CW_PICK.tab='全部'; CW_PICK.grp='全部'; CW_PICK.q=''; CW_PICK.exp='';
   CW_PICK.enter=true;
   setTimeout(function(){
     CW_PICK.enter=false;
@@ -7728,18 +7298,15 @@ function cwMatAlive(){
 function cwMatHas(pid){ return !!(CW_MAT&&CW_MAT.pid===pid&&cwMatAlive()) }
 function cwPickRowHtml(p){
   var open=CW_PICK.exp===p.id;
-  var blocked=CW_PICK.origin!=='chat'&&!cwPickOk(p);
-  var has=CW_PICK.origin==='chat'
-    ?!!(CW_CHAT&&CW_CHAT.refs.some(function(r){return r.pid===p.id}))
-    :cwMatHas(p.id);
+  var blocked=!cwPickOk(p);
+  var has=cwMatHas(p.id);
   var mixed=(CW_PICK.tab==='全部'||CW_PICK.tab==='最近使用')&&CW_PICK.grp==='全部';
   var kws=matKeywords(p.ref);
   var line=kws.length?kws.map(function(k){return '#'+esc(k)}).join(' ')
     :(hasText(p.ref)?'':'无文字内容，附件可直接发送');
   var bad=blocked?'<span class="lc-tag bad">含'+cwPickUnTypes(p)+'</span>':'';
   var aria=has?'已添加，再点可重新添加'
-    :(blocked?'含'+cwPickUnTypes(p)+'，不能用于唤醒'
-    :(CW_PICK.origin==='chat'?'作为参考':'添加到发送内容'));
+    :(blocked?'含'+cwPickUnTypes(p)+'，不能用于唤醒':'添加到发送内容');
   return '<div class="cwp-card">'
     +(mixed?srcTagHtml(p.src):'')
     +'<div class="cwp-row'+(open?' on':'')+'" data-p="'+esc(p.id)+'" aria-expanded="'+(open?'true':'false')+'" onclick="cwPickToggle(\''+p.id+'\')">'
@@ -7779,10 +7346,6 @@ function cwPickTab(t){ CW_PICK.tab=t; CW_PICK.grp='全部'; CW_PICK.exp=''; REND
 function cwPickGrp(g){ CW_PICK.grp=g; CW_PICK.exp=''; cwPickRefresh() }
 function cwPickAdd(id,force){
   var p=cwPickById(id); if(!p)return;
-  if(CW_PICK.origin==='chat'){
-    if(CW_CHAT.refs.some(function(r){return r.pid===p.id})){toast('这条素材已经在参考资料里');return}
-    cwAddRef(p,p.msgs.slice()); toast('已加入参考资料'); cwPickRefresh(); return;
-  }
   if(!cwPickOk(p)){toast('含'+cwPickUnTypes(p)+'的素材不能用于唤醒');return}
   if(cwMatHas(p.id)&&!force){
     toast('这条素材已在发送内容里','重新添加',function(){cwPickAdd(id,true)});
@@ -7799,7 +7362,7 @@ function cwPickAdd(id,force){
   at=(at<0||at>CW_ITEMS.length)?CW_ITEMS.length:at;
   CW_ITEMS.splice.apply(CW_ITEMS,[at,0].concat(nw));
   CW_MAT={pid:p.id,title:p.title,ids:nw.map(function(it){return it.id})};
-  cwDropEmptyText(); cwBumpVer();
+  cwDropEmptyText();
   if(nw.length)cwMarkFresh(nw[nw.length-1].id);
   toast(oldIds.length?'已替换发送内容里的素材':'已添加到发送内容');
   cwPickRefresh();
@@ -7827,89 +7390,56 @@ function cwPreviewItemsHtml(){
     return '<div class="cw-pvrow">'+no+(it.t==='image'?'<img class="cw-pvimg" src="'+(it.src||CW_IMG_SRC)+'" alt="'+esc(it.c)+'">':cwMediaHtml(it))+'</div>';
   }).join('');
 }
-/* 内容页与预览页共用的内容检查；内容页不查名单——名单是点「预览发送」才取的。 */
+/* 统一内容检查；编辑页不查名单——名单是点「预览发送」才取的。 */
 function cwContentErr(){
-  if(cwPersActive())return cwPersCount()?'':'还没有写成的人';
   if(CW_ITEMS.some(function(i){return i.up==='ing'}))return '附件还在上传';
   if(CW_ITEMS.some(function(i){return i.up==='fail'}))return '有附件上传失败，请重试或移除';
   if(!cwHasContent())return '还没有要发送的内容';
   return '';
 }
-function cwContentBlocked(){
-  if(CW_FROM==='tools'&&CW_QBUSY)return '正在获取客户…';
-  if(CW_FROM==='tools'&&!CW_CUSTOM.on)return '先设置未回复范围';
-  if(cwPersActive()&&cwPersBusy())return '正在写…';
-  return cwContentErr();
-}
 function cwPreviewBlocked(){
   if(CW_FROM==='tools'&&CW_QBUSY)return '正在获取客户…';
   if(CW_FROM==='tools'&&CW_QERR)return '没能取到客户，请重试';
-  if(CW_FROM==='tools'&&!CW_CUSTOM.on)return '先设置未回复范围';
-  if(cwPersActive()&&cwPersBusy())return '正在写…';
-  if(cwPersActive())return cwPersCount()?'':'还没有写成的人';
+  if(CW_FROM==='tools'&&!CW_CUSTOM.on)return '先设置未回复时长';
   if(!cwSelCount())return '还没有可发送的客户';
   return cwContentErr();
 }
-function cwSendCount(){ return cwPersActive()?cwPersCount():cwSelCount() }
-function cwContentFoot(){
-  var err=cwContentBlocked();
-  var note=err||(CW_FROM==='tools'&&CW_QERR?'没能取到客户，请重试':'');
-  var sum=note?'<div class="cw-sum">'+esc(note)+(CW_QERR&&!CW_QBUSY?' · <button class="cw-textact" onclick="cwQueryRetry()">重试</button>':'')+'</div>':'';
-  cwFootSet(sum,'预览发送',err?'':'cwPreviewGo()');
-}
-/* 「预览发送」：工具入口先按范围取人，拿到名单才进预览；手选入口名单已经在手，直接进。 */
+function cwSendCount(){ return cwSelCount() }
+/* 「预览发送」：预览时才按范围取人；取到人再进预览。 */
 function cwPreviewGo(){
   if(CW_QBUSY)return;
-  if(CW_FROM!=='tools'){ go('cw-preview'); return; }
-  if(!CW_CUSTOM.on){ cwContentFoot(); toast('先设置未回复范围'); return; }
+  if(!CW_CUSTOM.on){ cwEditorFoot(); toast('先设置未回复时长'); return; }
   var bad=cwContentErr();
-  if(bad){ cwContentFoot(); toast(bad); return; }
+  if(bad){ cwEditorFoot(); toast(bad); return; }
   cwQueryRun('preview');
 }
 function cwPreviewFoot(){
-  var err=cwPreviewBlocked(),retry=(CW_QERR?' · <button class="cw-textact" onclick="cwQueryRetry()">重试</button>':'');
+  var err=cwPreviewBlocked(), n=cwSelCount();
+  var retry=(CW_QERR?' · <button class="cw-textact" onclick="cwQueryRetry()">重试</button>':'');
+  var zero=!n&&!CW_QBUSY&&!CW_QERR;
   $('cwPreviewFoot').innerHTML=(err?'<div class="cw-sum" role="status">'+esc(err)+retry+'</div>':'')
-    +'<button class="cw-btn block" '+(err?'disabled':'onclick="cwStart()"')+'>去微信发送 · '+cwSendCount()+' 人</button>';
+    +'<button class="cw-btn block" '+(err&&!zero?'disabled':'onclick="'+(zero?'cwEditPeople()':'cwStart()')+'"')+'>'
+    +(zero?'修改范围':'去微信发送 · '+n+' 人')+'</button>';
 }
-/* 逐人预览：一人一条。前 3 人展开，其余收起；没写成／标了不发的在底部说明，不混进接收名单。 */
-function cwPersPreviewHtml(){
-  var ids=cwPersSendIds(), show=3, open=CW_PVALL, list=open?ids:ids.slice(0,show);
-  var h='<div class="cw-pvpeople">'+list.map(function(id){
-    var c=cwCust(id);
-    return '<div class="cw-pvperson"><div class="cw-pvphd"><span class="cw-av">'+esc(c?c.n.charAt(0):'客')+'</span>'
-      +esc(c?c.n:'客户')+'</div><p class="cw-pvtext">'+esc(cwPersText(id))+'</p></div>';
-  }).join('')+'</div>';
-  if(ids.length>show)h+='<button class="cw-pvmore" onclick="cwPersExpand()">'+(open?'收起':'展开其余 '+(ids.length-show)+' 人')+'</button>';
-  var rest=cwSelCount()-ids.length;
-  if(rest>0)h+='<div class="cw-pvskip">'+rest+' 人没写成，本次不发</div>';
-  return h;
-}
-function cwPersExpand(){ CW_PVALL=!CW_PVALL; REND['cw-preview'](); }
 REND['cw-preview']=function(){
   $('cwPreviewBack').innerHTML=I('back',24,2);
   var h='<button class="cw-pcard cw-rcpt" onclick="go(\'cw-people\')"><span>接收客户 <b>'+cwSendCount()+'</b> 人</span><span class="cw-chev" aria-hidden="true">›</span></button>';
   h+='<div class="cw-pcard"><div class="cw-section-head"><span class="sp" aria-hidden="true">'+I('sparkle',16,1.8)+'</span><b class="cw-rowhd-b">发送内容</b><button class="cw-textact" onclick="back()">修改内容</button></div>'
-    +'<div class="cw-pvpane">'+(cwPersActive()?cwPersPreviewHtml():cwPreviewItemsHtml())+'</div></div>';
+    +'<div class="cw-pvpane">'+cwPreviewItemsHtml()+'</div></div>';
   $('cwPreviewBody').innerHTML=h;cwPreviewFoot();
 };
 REND['cw-people']=function(){
   $('cwPeopleBack').innerHTML=I('back',24,2);
-  var ids=cwPersActive()?cwPersSendIds():cwSelByH();
-  var rest=cwPersActive()?Math.max(0,cwSelCount()-ids.length):0;
+  var ids=cwSelByH();
   var h='<div class="cw-people"><div class="cw-peoplect"><span>共 '+ids.length+' 人</span>'
     +'<button class="cw-textact" onclick="cwEditPeople()">修改</button></div>';
   h+=ids.map(function(id){ var c=cwCust(id); if(!c)return '';
     return '<div class="cw-rp"><span class="cw-av">'+esc(c.n.charAt(0))+'</span><span class="cw-rpm"><b>'+esc(c.n)+'</b><span class="cw-rps2">未回复 · '+cwDur(c.h)+'</span></span></div>';
   }).join('');
-  if(rest>0)h+='<div class="cw-peoplect" style="margin-top:8px">'+rest+' 人没写成，本次不发</div>';
   $('cwPeopleBody').innerHTML=h+'</div>';
 };
-/* 改人回各自入口：工具页回范围（内容页），手选入口回原勾选列表。 */
+/* 统一内容改人：回工具页改范围；改完再点一次「预览发送」重新取人。 */
 function cwEditPeople(){
-  if(CW_FROM==='awake'){
-    stack=stack.filter(function(p){return ['cw-content','cw-preview','cw-people'].indexOf(p.id)<0});
-    AWAKE_SELING=true; AWAKE_ENTER=true; go('host-awake'); return;
-  }
   stack=stack.filter(function(p){return ['cw-people','cw-preview'].indexOf(p.id)<0});
   if(cur!=='cw-content')go('cw-content'); else toast('改范围就在上面');
 }
@@ -7923,17 +7453,13 @@ function cwDay(){
   var d=new Date();
   return (d.getMonth()+1)+'月'+d.getDate()+'日';
 }
-function cwSendVersion(){
-  var sig=cwPersActive()?('P'+cwPersSig()):cwItemsSig();
-  var ids=cwPersActive()?cwPersSendIds():cwSelIds();
-  return JSON.stringify([sig,ids.slice().sort()]);
-}
+function cwSendVersion(){ return JSON.stringify([cwItemsSig(),cwSelIds().slice().sort()]) }
 function cwStart(){
   if(CW_QBUSY||CW_LAUNCHING)return;
   var bad=cwPreviewBlocked(); if(bad){cwPreviewFoot();toast(bad);return}
-  var ids=cwPersActive()?cwPersSendIds():cwSelIds();
+  var ids=cwSelIds();
+  if(!ids.length){ cwEditPeople(); return; }
   CW_SEND_IDS=ids.slice(); CW_SEND_VERSION=cwSendVersion();
-  CW_SEND_UNSENT=cwPersActive()?Math.max(0,cwSelCount()-ids.length):0;
   if(CW_FROM==='tools'){cwQueryRun('send');return}
   cwSendNow();
 }
@@ -7942,28 +7468,25 @@ function cwStart(){
 function cwSendNow(){
   if(cur!=='cw-preview'){return}
   if(cwSendVersion()!==CW_SEND_VERSION){cwRender();toast('内容已修改，请重新确认');return}
-  var ids=cwPersActive()?cwPersSendIds():cwSelIds();
+  var ids=cwSelIds();
   if(ids.length!==CW_SEND_IDS.length){cwRender();toast('接收客户已变化，请重新确认');return}
   cwLaunch(ids);
 }
 function cwLaunch(ids){
   if(CW_LAUNCHING)return;CW_LAUNCHING=true;
-  stack=stack.filter(function(p){return ['cw-content','cw-preview','cw-people','cw-compose','cw-pick'].indexOf(p.id)<0});
-  var personal=cwPersActive(), n=ids.length;
-  var items=personal?[]:JSON.parse(JSON.stringify(cwSendItems()));
+  stack=stack.filter(function(p){return ['cw-content','cw-editor','cw-preview','cw-people','cw-pick','cw-records','cw-record'].indexOf(p.id)<0});
+  var n=ids.length;
+  var items=JSON.parse(JSON.stringify(cwSendItems()));
   var people=ids.map(function(id){
-    var c=cwCust(id), o={n:c?c.n:'客户',st:'ok'};
-    if(personal)o.text=cwPersText(id);
-    return o;
+    var c=cwCust(id);
+    return {n:c?c.n:'客户',st:'ok'};
   });
   var r={id:'r'+Date.now(),when:cwDay()+'\n'+cwClock(),
-         scope:(CW_FROM==='awake'?'待唤醒客户 · 手选':'未回复 '+cwRangeLabel()
-           +((CW_CUSTOM.tags||[]).length?' · '+cwTagSummary():'')),
+         scope:'未回复 '+cwRangeLabel()+((CW_CUSTOM.tags||[]).length?' · '+cwTagSummary():''),
          n:n,gap:CW_SET.gap,st:'done',ok:n,fail:0,items:items,people:people,
-         personal:personal,unsent:personal?CW_SEND_UNSENT:0};
+         personal:false,unsent:0};
   CW_PENDS.push(r);
-  if(CW_FROM==='awake'){ AWAKE_SELING=false; AWAKE_ENTER=false; go('host-awake'); }
-  else go('host-tools');
+  go('host-tools');
   toast('已开始唤醒，完成后在记录里查看');
   if(!cwRM())setTimeout(function(){ cwLaunchDone(r) },8000);
 }
@@ -8119,87 +7642,6 @@ REND['cw-record']=function(p){
   $('cwRecordBody').innerHTML=h;
 };
 
-/* ================= 设置与教程 ================= */
-function cwConfirm(title,detail,action){
-  var d=openDlg('<h3>'+esc(title)+'</h3><p>'+esc(detail)+'</p><div class="cw-shbtns"><button class="cw-textact" data-cancel>取消</button><button class="cw-btn" data-ok>继续</button></div>');
-  d.querySelector('[data-cancel]').onclick=function(){d.remove()};d.querySelector('[data-ok]').onclick=function(){d.remove();action()};
-}
-function cwFootSet(sum,label,act){
-  var f=$('cwContentFoot'); if(!f)return;
-  if(!f.getAttribute('data-ready')){
-    f.innerHTML='<div class="cw-tier">'
-      +'<div class="cw-slot"></div>'
-      +'<button class="cw-tutlink" type="button" onclick="cwTutSheet()">'
-      +'<span class="ic" aria-hidden="true">'+I('play',14,2.2)+'</span>'
-      +'<span>不会用？</span><b>点击查看视频教程</b></button>'
-      +'</div><button class="cw-btn block" type="button"></button>';
-    f.setAttribute('data-ready','1');
-  }
-  var slot=f.querySelector('.cw-slot'), b=f.querySelector('.cw-btn'), tier=f.querySelector('.cw-tier');
-  if(tier)tier.classList.toggle('has-sum',!!sum);
-  var had=slot.childNodes.length>0;
-  if(sum){
-    if(slot.innerHTML!==sum)slot.innerHTML=sum;
-    if(!had)cwSlotOpen(slot);
-  }else if(had){ cwSlotClose(slot) }
-  if(b.textContent!==label){
-    b.textContent=label;
-    if(!cwRM()){ b.classList.remove('swap'); void b.offsetWidth; b.classList.add('swap'); }
-  }
-  if(act){ b.disabled=false; b.setAttribute('onclick',act); }
-  else{ b.disabled=true; b.removeAttribute('onclick'); }
-}
-function cwSlotOpen(slot){
-  if(cwRM())return;
-  var seq=slot._seq=(slot._seq||0)+1;
-  slot.style.overflow='hidden'; slot.style.height='0'; slot.style.opacity='0';
-  requestAnimationFrame(function(){
-    if(slot._seq!==seq)return;
-    slot.style.transition='height .14s var(--emph),opacity .14s var(--emph)';
-    slot.style.height=slot.scrollHeight+'px'; slot.style.opacity='1';
-  });
-  setTimeout(function(){ if(slot._seq===seq)slot.removeAttribute('style'); },170);
-}
-function cwSlotClose(slot){
-  slot._seq=(slot._seq||0)+1;
-  if(cwRM()){ slot.innerHTML=''; return; }
-  var seq=slot._seq, keep=slot.innerHTML;
-  slot.style.overflow='hidden'; slot.style.height=slot.offsetHeight+'px';
-  requestAnimationFrame(function(){
-    if(slot._seq!==seq)return;
-    slot.style.transition='height .14s var(--emph),opacity .14s var(--emph)';
-    slot.style.height='0'; slot.style.opacity='0';
-  });
-  setTimeout(function(){ if(slot._seq!==seq)return; if(slot.innerHTML===keep)slot.innerHTML=''; slot.removeAttribute('style'); },160);
-}
-/* 「唤醒范围」：工具页那条路只有这一个控件。没设值时输入框留白（—），不预填、不报数；
-   规则（最多取到起始时间 + 5）收在标题旁那枚问号的气泡里。 */
-function cwScopeHtml(){
-  var on=CW_CUSTOM.on, u=CW_CUSTOM.u;
-  return '<div class="cw-sech"><span class="sp" aria-hidden="true">'+I('sparkle',18,1.8)+'</span><b>唤醒范围</b>'
-      +'<button class="cw-info" onclick="cwTip(this)" aria-label="范围怎么算" aria-expanded="false">?</button>'
-      +'<div class="cw-tip" role="tooltip">一次唤醒的人不宜过多，范围最多到起始时间 + 5：'
-        +'设 1 小时，就是未回复 1–6 小时的客户。</div>'
-    +'</div>'
-    +'<div class="cw-scope-in">'
-      +'<span class="cw-scope-lab">未回复超过</span>'
-      +'<div class="cw-scope-group">'
-      +'<input class="cw-num" type="text" inputmode="numeric" value="'+(on?CW_CUSTOM.n:'')+'" placeholder="—"'
-        +' aria-label="未回复超过多少'+cwUnitN(u)+'" onchange="cwRangeInput(this.value)"'
-        +' onkeydown="if(event.key===\'Enter\')this.blur()">'
-      +'<div class="cw-units" data-u="'+u+'">'
-        +'<i class="cw-unit-thumb" aria-hidden="true"></i>'
-        +'<button class="'+(u==='h'?'on':'')+'" onclick="cwRangeUnit(\'h\')">小时</button>'
-        +'<button class="'+(u==='d'?'on':'')+'" onclick="cwRangeUnit(\'d\')">天</button>'
-      +'</div>'
-      +'</div>'
-    +'</div>'
-    +'<button type="button" class="cw-tagh" onclick="cwTagSheet()">'
-      +'<span class="cw-tagh-lab">微信标签</span>'
-      +'<span class="cw-tagh-val'+((CW_CUSTOM.tags||[]).length?' on':'')+'">'+esc(cwTagSummary())+'</span>'
-      +'<span class="cw-tagh-chev" aria-hidden="true">'+I('chev',18,2.2)+'</span>'
-    +'</button>';
-}
 /* 标签选择浮层：本地草稿（CW_TAGD），「确定」才落到唤醒范围；取消或点遮罩都不改条件。
    「更新标签」在真机上会切到微信执行脚本重新同步手机标签，原型只回一句演示提示。 */
 function cwTagSheet(){
@@ -8240,7 +7682,7 @@ function cwTagFilter(v){ CW_TAGQ=v; cwTagListRender(); }
 function cwTagApply(){
   var tags=CW_PHONE_TAGS.filter(function(t){ return CW_TAGD.indexOf(t)>=0 });
   closeSheet(CW_TAGW); CW_TAGW=null;
-  var apply=function(){ CW_CUSTOM.tags=tags; cwQueryStop(); CW_SEL={}; cwRender(); };
+  var apply=function(){ CW_CUSTOM.tags=tags; cwQueryStop(); CW_SEL={}; CW_WIN=[]; cwRender(); };
   if(CW_PERS&&CW_PERS.on){ cwPersGuard(apply); return; }
   if(CW_PERS)cwPersReset();
   apply();
@@ -8266,15 +7708,6 @@ function cwGapInput(v){
   if(n)CW_SET.gap=Math.max(CW_GAP[0],Math.min(CW_GAP[1],n));
   var el=$('cwGapInput'); if(el)el.value=CW_SET.gap;
 }
-/* 视频教程：底栏主操作上方那行「不会用？点击查看视频教程」打开一块演示播放器。原型不带视频、
-   不走网络，点播放只落一句演示提示（与「进入对话」同一口径）。 */
-function cwTutSheet(){
-  CW_SH=openSheet('<div class="cw-sh">客户唤醒怎么用 · 约 1 分钟</div>'
-    +'<div class="cw-tutvid"><button class="cw-tutplay" onclick="cwTutPlay()" aria-label="播放教程">'
-      +I('play',24,2)+'</button></div>','cw-sheet');
-}
-function cwTutPlay(){ toast('演示：播放客户唤醒教程视频'); }
-
 /* ---------- 宿主 App 工具页（底部 Tab「工具」）· 2026-10-16 起照**线上旗舰版**那一版重排 ---------- */
 /* 这一屏原先照 Figma 节点 267:5486 复刻（六组 32 枚：客户管理／消息触达／社群经营／群聊运营／AI赋能／企微工具），
    **2026-10-16 整个换掉**：产品给了线上旗舰版工具页的两张截图，分组名与顺序、每条工具的名字一律照它，
