@@ -1626,7 +1626,8 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
 .cw-kv.stat.bad{background:linear-gradient(150deg,#FFF3F2,#FFEDEC)}
 .cw-kv.stat b{font-size:22px}
 
-/* ---- 按聊天记录逐人写（2026-11-19）：一人一行，依据在上、文案在下，异常不静默跳过 ---- */
+/* ---- 按聊天记录逐人写（2026-11-19）：一人一条，头像＋名字在上、文案直排在下，
+   依据与动作收在文案下方同一条线上；异常不静默跳过 ---- */
 .cw-persbadge{flex:none;margin-left:auto;font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:999px;
   background:linear-gradient(120deg,#EEE8FF,#E3EEFF);color:#5A4FCF}
 .cw-rowhd .cw-perslink{margin-left:0;height:32px;min-height:32px;padding:0 10px;font-size:12.5px}
@@ -1635,26 +1636,28 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
   border:2px solid #D8E4FA;border-top-color:#2E6BFF;animation:cwSpin .8s linear infinite}
 .cw-persprog .cw-textact{margin-left:auto;height:30px;min-height:30px;padding:0 10px;font-size:12px}
 .cw-perslist{display:flex;flex-direction:column}
-.cw-pers{position:relative;padding:14px 0;border-top:1px solid #EEF2FA}
-.cw-pers:first-child{border-top:0;padding-top:6px}
-.cw-pershd{display:flex;align-items:center;gap:9px;margin-bottom:7px}
-.cw-pershd .cw-av{width:32px;height:32px;font-size:12px}
+/* 一人一条：细线分隔；文案贴着名字左缘直排，不再套气泡底，文案才是要看的东西 */
+.cw-pers{position:relative;padding:12px 0 6px;border-bottom:1px solid #EEF2FA}
+.cw-pers:first-child{padding-top:2px}
+.cw-pers:last-child{border-bottom:0;padding-bottom:0}
+.cw-pershd{display:flex;align-items:center;gap:9px;margin-bottom:1px}
+.cw-pershd .cw-av{width:28px;height:28px;font-size:11px}
 .cw-pershd b{font-size:14.5px;font-weight:600;color:#17263F;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.cw-persst{margin-left:auto;flex:none;font-size:11.5px;font-weight:600;color:#7A8CA8}
+.cw-persst{flex:none;font-size:11.5px;font-weight:600;color:#7A8CA8}
 .cw-persst.ok{color:#12A16B}
 .cw-persst.busy{color:#617A9E}
 .cw-persst.fail{color:#C2413A}
-.cw-persbasis{font-size:12px;line-height:1.55;color:#7A8CA8;margin:0 0 8px 41px;
+.cw-persbasis{font-size:12px;line-height:1.55;color:#7A8CA8;margin:0;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .cw-persbasis.warn{color:#B4741F}
-/* 依据＝打开最近聊天原样看：一行入口＋只读弹窗（客户左、我右） */
-.cw-perschat{display:flex;align-items:center;gap:7px;width:calc(100% - 41px);margin:0 0 8px 41px;
-  min-height:32px;padding:0 10px;border-radius:10px;background:#F7F9FF;color:#4C6FA8;
-  font-size:12px;font-weight:600;text-align:left;
+/* 依据＝打开最近聊天原样看：小字入口＋只读弹窗（客户左、我右） */
+.cw-perschat{display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:0 6px 0 0;
+  border-radius:8px;background:transparent;color:#6B84AA;
+  font-size:12px;font-weight:600;text-align:left;white-space:nowrap;
   transition:background .18s var(--emph)}
 .cw-perschat svg{flex:none;color:#7B5BFF}
-.cw-perschat .chev{margin-left:auto;color:#9AA9BF;font-size:14px;line-height:1}
-.cw-perschat:active{background:#EEF3FF}
+.cw-perschat .chev{color:#9AA9BF;font-size:13px;line-height:1}
+.cw-perschat:active{background:#F1F5FF}
 .cw-chathead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:6px 4px 14px}
 .cw-chathead b{font-size:18px;font-weight:700;color:#17263F}
 .cw-chatlog{display:flex;flex-direction:column;gap:14px;padding-bottom:8px}
@@ -1668,20 +1671,26 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
 .cw-clbub{display:inline-block;padding:10px 13px;border-radius:14px 14px 14px 4px;background:#F4F7FF;
   color:#17263F;font-size:14.5px;line-height:1.6;white-space:pre-wrap;word-break:break-word;text-align:left}
 .cw-clrow.m .cw-clbub{border-radius:14px 14px 4px 14px;background:#E8F0FF;color:#123B73}
-.cw-pers .cw-ta{min-height:44px;padding:11px 14px;font-size:15px}
-.cw-persacts{display:flex;align-items:center;gap:8px;margin:8px 0 0 41px}
-.cw-persact{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;
-  border-radius:12px;background:#F4F7FF;color:#4C6FA8;
-  transition:background .18s var(--emph),color .18s var(--emph),transform .14s var(--emph)}
-.cw-persact svg{display:block}
-.cw-persact:active{background:#E7EFFC;transform:scale(.94)}
-.cw-persact.danger{background:#FFF5F4;color:#C2413A}
-.cw-persact.danger:active{background:#FDE8E6}
-.cw-persact.ok{background:#EFFAF5;color:#12A16B}
-.cw-persact.ok:active{background:#E2F6EC}
+/* 文案＝白卡上的正文：左边留出头像那一列（28＋9），常态无框，聚焦才浮出浅蓝底 */
+.cw-pers .cw-ta{margin-left:25px;width:calc(100% - 25px);min-height:36px;
+  padding:4px 12px 4px;font-size:15px;line-height:1.65;
+  background:transparent;border:0;border-radius:10px;box-shadow:none}
+.cw-pers .cw-ta:focus{background:#F7F9FF;border:0;box-shadow:inset 0 0 0 1px #DCE7F8}
+/* 依据在左、动作在右，同一条线收在文案下方 */
+.cw-persmeta{display:flex;align-items:center;gap:10px;margin-left:25px;padding:0 0 0 12px;min-height:32px}
+.cw-persacts{display:flex;align-items:center;gap:2px;margin-left:auto;flex:none}
+.cw-persact{display:inline-flex;align-items:center;justify-content:center;height:32px;padding:0 8px;
+  border-radius:8px;background:transparent;color:#4C6FA8;
+  font-family:var(--f);font-size:12.5px;font-weight:600;
+  transition:background .18s var(--emph),color .18s var(--emph)}
+.cw-persact:active{background:#EEF3FF}
+.cw-persact.danger{color:#C2413A}
+.cw-persact.danger:active{background:#FFF0EE}
+.cw-persact.ok{color:#12A16B}
+.cw-persact.ok:active{background:#E9F8F0}
 .cw-pers.off .cw-ta{opacity:.45;pointer-events:none}
 .cw-pers.off .cw-persst{color:#9AA6B8}
-.cw-perssk{height:11px;margin:9px 0 0 41px;border-radius:6px;
+.cw-perssk{height:11px;margin:9px 0 0 37px;border-radius:6px;
   background:linear-gradient(90deg,#F1F5FF,#E7EFFC,#F1F5FF);background-size:200% 100%;
   animation:cwShim 1.2s linear infinite}
 .cw-perssk+.cw-perssk{margin-top:7px}
@@ -6595,8 +6604,8 @@ function cwPersInput(el,id){
       st.className='cw-persst ok';st.textContent='已手写';
       var cc=cwCust(id), nm=cc?cc.n:'客户';
       var acts=row.querySelector('.cw-persacts');
-      if(acts)acts.innerHTML=cwPersActBtn('cwPersRewrite',id,'refresh','重写 '+nm+' 的文案')
-        +cwPersActBtn('cwPersSkip',id,'x','本次不发 '+nm,'danger');
+      if(acts)acts.innerHTML=cwPersActBtn('cwPersRewrite',id,'重写','重写 '+nm+' 的文案')
+        +cwPersActBtn('cwPersSkip',id,'不发','本次不发 '+nm,'danger');
     }
   }
   cwGrow(el);cwContentFoot();
@@ -6642,11 +6651,11 @@ function cwPersChatOpen(id){
     +'<button type="button" class="cw-textact" onclick="closeSheets()">关闭</button></div>'
     +'<div class="cw-chatlog">'+rows+'</div>','cw-sheet cws-sheet');
 }
-/* 行内动作只出图标：转圈＝重写／重试，叉＝不发，勾＝恢复。文字收进 title 与可访问名。 */
-function cwPersActBtn(act,id,icon,label,cls){
+/* 行内动作做成字：重写／不发／恢复／重试；可访问名带上客户名，说清对谁做什么。 */
+function cwPersActBtn(act,id,text,label,cls){
   return '<button type="button" class="cw-persact'+(cls?' '+cls:'')+'"'
     +' onclick="'+act+'(\''+id+'\')" aria-label="'+esc(label)+'" title="'+esc(label)+'">'
-    +I(icon,16,2.2)+'</button>';
+    +esc(text)+'</button>';
 }
 function cwPersRowHtml(id){
   var p=CW_PERS, pe=p&&p.people[id], c=cwCust(id), name=c?c.n:'客户';
@@ -6669,21 +6678,21 @@ function cwPersRowHtml(id){
       var cn=c&&c.chat?Math.min(c.chat.length,20):0;
       basis='<button type="button" class="cw-perschat" onclick="cwPersChatOpen(\''+id+'\')"'
         +' aria-label="查看与'+esc(name)+'的最近聊天" title="查看聊天记录">'
-        +I('chat2',14,2)+'<span>最近聊天 · '+cn+' 条</span><span class="chev" aria-hidden="true">›</span></button>';
+        +I('chat2',13,2)+'<span>最近聊天 '+cn+' 条</span><span class="chev" aria-hidden="true">›</span></button>';
     }
   }
   var ta='<textarea class="cw-ta cw-persta" rows="1" aria-label="给 '+esc(name)+' 的唤醒文案"'
     +' placeholder="'+(pe.st==='fail'?'手动写一条':'输入要发送的内容')+'"'
     +' oninput="cwPersInput(this,\''+id+'\')">'+esc(pe.text||'')+'</textarea>';
   var acts=pe.st==='fail'
-    ?cwPersActBtn('cwPersRetry',id,'refresh','重试读取 '+name+' 的聊天')
-    :cwPersActBtn('cwPersRewrite',id,'refresh','重写 '+name+' 的文案');
+    ?cwPersActBtn('cwPersRetry',id,'重试','重试读取 '+name+' 的聊天')
+    :cwPersActBtn('cwPersRewrite',id,'重写','重写 '+name+' 的文案');
   acts+=pe.st==='skip'
-    ?cwPersActBtn('cwPersRestore',id,'check','恢复发送 '+name,'ok')
-    :cwPersActBtn('cwPersSkip',id,'x','本次不发 '+name,'danger');
+    ?cwPersActBtn('cwPersRestore',id,'恢复','恢复发送 '+name,'ok')
+    :cwPersActBtn('cwPersSkip',id,'不发','本次不发 '+name,'danger');
   return '<div class="'+cls+'" data-pers="'+id+'">'
     +'<div class="cw-pershd"><span class="cw-av">'+esc(name.charAt(0))+'</span><b>'+esc(name)+'</b>'+stHtml+'</div>'
-    +basis+ta+'<div class="cw-persacts">'+acts+'</div></div>';
+    +ta+'<div class="cw-persmeta">'+basis+'<div class="cw-persacts">'+acts+'</div></div></div>';
 }
 function cwPersPaintRow(id){
   if(cur!=='cw-content'||!CW_PERS)return;
