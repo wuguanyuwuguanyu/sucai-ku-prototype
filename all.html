@@ -945,7 +945,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
    白卡 20 圆角＋蓝调柔影、紫→蓝渐变头像、✦ 段头、蓝实色主操作。
    范围、共同消息、预览、记录、详情共用这一族类名；待唤醒客户的就地选取态也复用
    `.cw-cb/.cw-ckb/.cw-foot/.cw-btn`，改这里时那一屏一起看。 */
-#cw-content,#cw-select,#cw-editor,#cw-preview,#cw-persons,#cw-records,#cw-record{
+#cw-content,#cw-select,#cw-preview,#cw-persons,#cw-records,#cw-record{
   background:linear-gradient(180deg,#F0F5FF 0%,#F7F9FE 100%)}
 .cw-glow{position:absolute;left:0;right:0;top:0;height:260px;pointer-events:none;
   background:radial-gradient(56% 34% at 18% -10%,rgba(150,178,255,.34),transparent 72%),
@@ -1070,7 +1070,7 @@ select.cw-input{-webkit-appearance:none;appearance:none;padding-right:42px;curso
 .cw-btn.ghost{background:#EEF3FF;color:#2E6BFF;box-shadow:none}
 .cw-btn:disabled,.cw-btn[disabled]{background:#E6ECF7;color:#9AA6B8;box-shadow:none;cursor:default}
 #cwContentFoot .cw-btn.block{height:52px;font-size:16px}
-#cwContentFoot,#cwSelectFoot,#cwEditorFoot,#cwPersonsFoot,#cwPreviewFoot{background:#fff;box-shadow:0 -14px 26px -22px rgba(40,70,150,.9)}
+#cwContentFoot,#cwSelectFoot,#cwPersonsFoot,#cwPreviewFoot{background:#fff;box-shadow:0 -14px 26px -22px rgba(40,70,150,.9)}
 .cw-slot{overflow:hidden}
 .cw-btn.swap{animation:cwLab .16s var(--emph)}
 @keyframes cwLab{from{opacity:.45}to{opacity:1}}
@@ -1345,7 +1345,7 @@ textarea.cw-ta::placeholder{color:var(--on-surface-variant)}
    ✦ 段头、渐变图标块；主操作仍是纯色 M3 胶囊（渐变只给图标与文字，不给按钮填充）。
    动效只做「有动作才发生」的那几处：分段器滑块、条目调序 FLIP、新条目入场、对话新消息上浮、
    参考摘要展开、上传转圈；不铺常驻动画，重绘时不整页重播。 */
-#cw-content,#cw-select,#cw-editor,#cw-preview,#cw-pick,#cw-persons,#cw-people,#cw-records,#cw-record{
+#cw-content,#cw-select,#cw-preview,#cw-pick,#cw-persons,#cw-people,#cw-records,#cw-record{
   background:
     radial-gradient(120% 54% at 12% -8%,rgba(150,118,255,.20),transparent 62%),
     radial-gradient(110% 46% at 100% 0%,rgba(92,142,255,.15),transparent 60%),
@@ -1450,7 +1450,7 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
   box-shadow:0 12px 22px -16px rgba(22,119,254,.8),inset 0 1px 0 rgba(255,255,255,.25);
   transition:background .18s var(--emph),box-shadow .18s var(--emph)}
 .cw-btn:disabled,.cw-btn[disabled]{background:#E6ECF7;color:#9AA6B8;box-shadow:none;opacity:1}
-.cw-foot,#cwContentFoot,#cwSelectFoot,#cwEditorFoot,#cwPersonsFoot,#cwPreviewFoot{background:rgba(255,255,255,.94);
+.cw-foot,#cwContentFoot,#cwSelectFoot,#cwPersonsFoot,#cwPreviewFoot{background:rgba(255,255,255,.94);
   backdrop-filter:blur(12px);box-shadow:0 -16px 30px -26px rgba(40,70,150,.9)}
 .cw-textact{background:#EEF3FF;color:#2E6BFF;transition:background .18s var(--emph)}
 /* 预览：接收人数卡上那枚人数吃渐变，右缘箭头收进浅蓝圆片 */
@@ -1574,11 +1574,8 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
 .cw-range-out b{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}
 .cw-setcard .cw-tagh{margin-top:0;padding-top:0;border-top:0;min-height:48px}
 .cw-setcard .cw-tagh-val{text-align:left}
-.cw-altlink{display:flex;align-items:center;justify-content:center;width:100%;min-height:44px;margin-bottom:4px;
-  border:0;border-radius:12px;background:transparent;color:#2E6BFF;font-family:var(--f);
-  font-size:14px;font-weight:600;position:relative;overflow:hidden}
-.cw-altlink:active{background:#EEF3FF}
-.cw-altlink:disabled{color:#9AA6B8;background:transparent}
+.cw-rowhd .cw-ai-action{margin-left:auto;min-height:48px}
+.cw-rowhd .cw-ai-action:disabled{opacity:.38}
 /* 选人页：复用待唤醒客户的卡，整行可点；勾选框在左、内容右移 */
 .cw-selectlist>.cust-card{margin-bottom:10px}
 .cw-selectlist>.cust-card .cust-main{padding-right:2px}
@@ -4191,8 +4188,7 @@ body[data-motion="fade"] .panel.anim-in{animation:panelSwapIn .36s var(--emph) .
 
         <!-- 客户唤醒（App 工具页）· ADR-0095／ADR-0113／docs/prd/客户唤醒-App工具页-PRD.md
              两个入口：工具页「高效发送」组的「客户唤醒」，与「待唤醒客户」页吸底的「选择客户」。
-             工具页只定未回复时长与微信标签；「选择客户」按范围取人后进独立选人页，
-             勾好点「按聊天记录帮写」进逐人文案页；「发同一份内容」走统一内容编辑与预览。
+             工具页同屏定范围与准备内容。「AI 帮写」直接按范围逐人写；已准备的统一内容直接预览。
              待唤醒客户入口在原列表勾选，之后同样进逐人文案页。
              **没有发送中页与结果页**：脚本执行会切到微信、逐条发、占住屏幕，App 里画进度没意义；
              点发送回到对应入口；执行结束才落记录，状态为「已完成／已中断」。
@@ -4209,8 +4205,7 @@ body[data-motion="fade"] .panel.anim-in{animation:panelSwapIn .36s var(--emph) .
           <div class="cw-foot stack" id="cwContentFoot"></div>
         </section>
 
-        <!-- 工具页 · 选择客户：名单来自本次工具页查询，初始未勾选；
-             取人失败在原地重试，空名单给「修改范围」。 -->
+        <!-- 逐人文案里的「换人」打开本次查询的候选客户列表。 -->
         <section class="screen" id="cw-select">
           <div class="cw-glow"></div>
           <div class="appbar-back cw-bar">
@@ -4230,16 +4225,6 @@ body[data-motion="fade"] .panel.anim-in{animation:panelSwapIn .36s var(--emph) .
           </div>
           <div class="scroll cw-scroll" id="cwPersonsBody"></div>
           <div class="cw-foot stack" id="cwPersonsFoot"></div>
-        </section>
-
-        <!-- 发同一份内容：统一内容的编辑页（文字、相册、素材库、排序），预览在 cw-preview。 -->
-        <section class="screen" id="cw-editor">
-          <div class="cw-glow"></div>
-          <div class="appbar-back cw-bar">
-            <button class="iconbtn" onclick="back()" id="cwEditorBack" aria-label="返回" title="返回"></button><h3>发送内容</h3>
-          </div>
-          <div class="scroll cw-scroll" id="cwEditorBody"></div>
-          <div class="cw-foot stack" id="cwEditorFoot"></div>
         </section>
 
         <section class="screen" id="cw-preview">
@@ -5220,7 +5205,7 @@ function go(id,params){
   if(!isPro()&&VIP_ONLY[id]) id='host-ai-up';   /* 非旗舰版：旗舰版的屏一律落到升级提示页 */
   /* 从「待唤醒客户」的选取态走别处（底栏导航之类）＝放弃这次选人；
      去逐人文案、编辑页与选人页不算，那几步要带着勾回来 */
-  if(cur==='host-awake'&&id!=='host-awake'&&['cw-content','cw-select','cw-persons','cw-editor'].indexOf(id)<0&&AWAKE_SELING){
+  if(cur==='host-awake'&&id!=='host-awake'&&['cw-content','cw-select','cw-persons'].indexOf(id)<0&&AWAKE_SELING){
     AWAKE_SELING=false; AWAKE_ENTER=false;
   }
   closeBallMenu(true); /* 切屏即收：两选一菜单只活在微信屏，别跟着切到别的页；瞬收，不留一段淡出到新屏上 */
@@ -5762,11 +5747,11 @@ REND['host-newfriend']=function(){custRender('host-newfriend')};
 
 /* ---------- 客户唤醒（App 工具页）· ADR-0095／ADR-0113 / docs/prd/客户唤醒-App工具页-PRD.md ----------
    2026-11-19 路径重排：逐人写扶正为主路径，统一内容退成「发同一份内容」。
-   · 工具页 cw-content：只定未回复时长与微信标签；「选择客户」取人进 cw-select。
-   · cw-select：按本次查询的名单勾选，初始未勾选；勾好「按聊天记录帮写」进 cw-persons。
+   · 工具页 cw-content：同屏定范围、编辑统一内容；「AI 帮写」按范围取人并直接进 cw-persons。
+   · cw-select：逐人文案点「换人」时复核并调整已选客户。
    · cw-persons：一人一行（姓名与状态 → 一句聊天原话 → 可编辑草稿 → 行操作），
      发送间隔在列表上方，底部直接「去微信发送」；缺实时事实时行内补齐再写这一人。只发文字。
-   · 「发同一份内容」→ cw-editor（统一内容：文字／相册／素材库／排序）→ cw-preview。
+   · 工具页编辑的文字或素材走「预览发送」到 cw-preview。
    · 待唤醒客户入口在原列表勾选，勾好同样进 cw-persons；两条路都保留本机的唤醒记录。
    素材一律复用 App 素材库的数据与读法（MATS／PS、msgsOf、visMats），不另造一份。 */
 
@@ -5894,7 +5879,6 @@ function cwRender(){
   if(!cur||!REND[cur])return;
   var sc=cur==='cw-content'?$('cwContentBody')
     :cur==='cw-select'?$('cwSelectBody')
-    :cur==='cw-editor'?$('cwEditorBody')
     :cur==='cw-persons'?$('cwPersonsBody')
     :cur==='cw-preview'?$('cwPreviewBody'):null;
   var y=sc?sc.scrollTop:0;
@@ -5940,13 +5924,13 @@ function cwWindow(){
 }
 function cwByH(list){ return list.slice().sort(function(a,b){ return b.h-a.h }) }
 function cwEligibleWindow(){ return cwWindow().filter(function(c){return cwLatestSide(c)==='m'}); }
-/* 统一内容点「预览发送」时取人：把整段范围都算进来。逐人路径另存自己的勾选，不互相覆盖。 */
+/* 工具页首次逐人起草或预览统一内容时，按当前范围取符合发送条件的客户。 */
 function cwReseed(){
   CW_SEL={};
   cwEligibleWindow().forEach(function(c){ CW_SEL[c.i]=true; });
 }
 function cwQueryDur(){ var n=CW_CUSTOM.n||1; return 460+((CW_CUSTOM.u==='d'?n*13:n*97)%420); }
-/* mode：select 选人页取人 / preview 统一内容进预览 / send 发送前核对 */
+/* mode：personal 逐人起草 / select 换人列表 / preview 统一内容 / send 发送前核对 */
 function cwQueryRun(mode){
   clearTimeout(CW_QTM);
   if(mode==='preview')CW_SEND_NOTICE='';
@@ -5964,6 +5948,7 @@ function cwQueryDone(tok){
     cwRender(); return;
   }
   if(CW_QMODE==='send'){
+    if(cur!=='cw-preview')return;
     var eligible=cwEligibleWindow().map(function(c){return c.i});
     var keep=CW_SEND_IDS.filter(function(id){ return eligible.indexOf(id)>=0 });
     CW_SEL={}; keep.forEach(function(id){CW_SEL[id]=true});
@@ -5974,13 +5959,18 @@ function cwQueryDone(tok){
     }
     cwSendNow(); return;
   }
-  /* 统一内容：预览才取人，取回来落名单再进预览；一个人都没有就停在编辑页提示改范围。 */
+  if(cur!=='cw-content')return;
   cwReseed();
   if(!cwSelCount()){
+    cwRender();
     toast((CW_CUSTOM.tags||[]).length?'所选标签下没有未回复的客户，调整标签或范围再试':'这段时间没有未回复的客户，调大范围再试');
     return;
   }
-  if(cur==='cw-editor')go('cw-preview');
+  if(CW_QMODE==='personal'){
+    CW_WIN=cwWindow().map(function(c){return c.i});
+    cwPersStart();return;
+  }
+  go('cw-preview');
 }
 function cwQueryStop(){ clearTimeout(CW_QTM); CW_QTM=null; CW_QBEAT++; CW_QBUSY=false; CW_QERR=false; CW_QMODE=''; }
 function cwQueryRetry(){ if(!CW_QBUSY)cwQueryRun(CW_QMODE||'select'); }
@@ -6077,18 +6067,6 @@ function cwTagCardHtml(){
     +'</button>'
   +'</div>';
 }
-function cwContentFoot(){
-  var on=CW_CUSTOM.on;
-  $('cwContentFoot').innerHTML=
-    '<button class="cw-altlink" '+(on?'onclick="cwOneEnter()"':'disabled')+'>发同一份内容</button>'
-    +'<button class="cw-btn block" '+(on?'onclick="cwSelectOpen()"':'disabled')+'>选择客户</button>';
-}
-REND['cw-content']=function(){
-  $('cwContentBack').innerHTML=I('back',24,2);$('cwRecIc').innerHTML=I('clock',20,2.1);
-  $('cwContentBody').innerHTML=cwRangeCardHtml()+cwTagCardHtml();
-  cwContentFoot();
-  cwUnitAnim();
-};
 function cwUnitAnim(){
   if(!CW_UNIT_FROM)return;
   var th=document.querySelector('#cwContentBody .cw-unit-thumb'), from=CW_UNIT_FROM;
@@ -6107,19 +6085,20 @@ function cwEnter(){
   cwQueryStop();
   go('cw-content');
 }
-/* 「发同一份内容」：直接进统一内容编辑页；预览时再按范围取人。 */
-function cwOneEnter(){
-  if(!CW_CUSTOM.on){ cwContentFoot(); return; }
-  CW_FROM='tools';
-  go('cw-editor');
+/* 直接逐人帮写。回到同一范围时沿用这一轮的勾选和文案。 */
+function cwToolPersStart(){
+  if(cur!=='cw-content'||!CW_CUSTOM.on||CW_QBUSY)return;
+  if(CW_PERS&&CW_WIN.length){
+    cwRestorePersSelection();
+    cwPersStart();return;
+  }
+  cwQueryRun('personal');
 }
-/* 「选择客户」：按当前范围取人，进独立选人页。初始不带任何勾选。 */
+/* 从逐人文案调整已选客户。 */
 function cwSelectOpen(){
-  if(!CW_CUSTOM.on){ cwContentFoot(); return; }
-  CW_FROM='tools';
-  CW_SEL={}; CW_WIN=[];
+  if(!CW_CUSTOM.on)return;
   go('cw-select');
-  cwQueryRun('select');
+  if(!CW_WIN.length)cwQueryRun('select');
 }
 /* 选人页的客户行：与待唤醒客户同一张卡；整行可点，勾选框在左；最后一句可点开聊天。 */
 function cwLastSales(c){
@@ -6162,7 +6141,7 @@ function cwSelectFoot(){
   f.innerHTML='<div class="cw-sum">已选 <b>'+n+'</b> 人</div>'
     +'<button class="cw-btn block" '+(n?'onclick="cwPersStart()"':'disabled')+'>按聊天记录帮写</button>';
 }
-function cwRangeBack(){ back(); }
+function cwRangeBack(){ cwEditPeople(); }
 REND['cw-select']=function(){
   $('cwSelectBack').innerHTML=I('back',24,2);
   var b=$('cwSelectBody'); if(!b)return;
@@ -6354,7 +6333,9 @@ function cwPersStart(){
   var p={on:true,busy:!!need.length,token:++CW_PERS_SEQ,total:need.length,done:0,
          order:ids.slice(),people:people,needConfirm:false};
   CW_PERS=p; CW_MODE_ANIM=true;
-  go('cw-persons');
+  var parent=stack[stack.length-2];
+  if(cur==='cw-select'&&parent&&parent.id==='cw-persons')back();
+  else go('cw-persons');
   if(!need.length){ cwPersProgressPaint(); return; }
   if(window.CW_TESTFAST){ cwPersFlush(); return; }
   need.forEach(function(id,ix){
@@ -6615,13 +6596,17 @@ function cwPersStop(){
 /* 顶栏返回：工具入口回范围页；待唤醒入口回列表（不带选取态）。草稿都留在内存里。 */
 function cwPersBackGo(){
   if(CW_FROM==='awake'){ AWAKE_SELING=false; AWAKE_ENTER=false; go('host-awake'); return; }
-  go('cw-content');
+  cwEditPeople();
 }
 /* 换人：回当前入口的勾选列表。留在名单里的行保留草稿，只为新人起草。 */
 function cwPersChange(){
   if(CW_FROM==='awake'){ AWAKE_SELING=true; AWAKE_ENTER=true; go('host-awake'); return; }
-  if(!CW_WIN.length)CW_WIN=cwWindow().map(function(c){return c.i});
-  go('cw-select');
+  cwRestorePersSelection();
+  cwSelectOpen();
+}
+function cwRestorePersSelection(){
+  if(!CW_PERS)return;
+  CW_SEL={}; CW_PERS.order.forEach(function(id){CW_SEL[id]=true});
 }
 
 /* ---------- 逐人列表的渲染 ---------- */
@@ -6755,6 +6740,8 @@ function cwPersProgressPaint(){
 function cwPersFoot(){
   var f=$('cwPersonsFoot'); if(!f||!CW_PERS)return;
   var p=CW_PERS, n=cwPersSendIds().length, sum=cwPersSummary();
+  if(CW_FROM==='tools'&&CW_ITEMS.some(function(it){return it.t!=='text'}))
+    sum=(sum?sum+' · ':'')+'逐人发送只发文字';
   if(p.needConfirm)sum='接收客户有变化，请再确认一次'+(sum?' · '+sum:'');
   var h=sum?'<div class="cw-sum'+(p.needConfirm?' bad':'')+'" role="status">'+esc(sum)+'</div>':'';
   if(cwPersBusy())h+='<button class="cw-btn block" disabled>正在写…</button>';
@@ -6801,7 +6788,7 @@ function cwPersSend(){
 function cwPersLaunch(ids){
   if(CW_LAUNCHING)return; CW_LAUNCHING=true;
   var p=CW_PERS;
-  stack=stack.filter(function(p2){return ['cw-content','cw-select','cw-persons','cw-editor','cw-preview','cw-people','cw-pick','cw-records','cw-record'].indexOf(p2.id)<0});
+  stack=stack.filter(function(p2){return ['cw-content','cw-select','cw-persons','cw-preview','cw-people','cw-pick','cw-records','cw-record'].indexOf(p2.id)<0});
   var people=ids.map(function(id){
     var c=cwCust(id), o={n:c?c.n:'客户',st:'ok'};
     o.text=cwPersText(id);
@@ -6880,12 +6867,12 @@ function cwGrow(el){
   el.style.height=Math.max(48,el.scrollHeight)+'px';
 }
 function cwGrowAll(){
-  [].forEach.call(document.querySelectorAll('#cwEditorBody textarea.cw-ta, #cwPersonsBody textarea.cw-ta'),cwGrow);
+  [].forEach.call(document.querySelectorAll('#cwContentBody textarea.cw-ta, #cwPersonsBody textarea.cw-ta'),cwGrow);
 }
 function cwItemInput(el,id){
   var it=cwItemById(id);
   if(it)it.c=el.value;
-  cwGrow(el); cwEditorFoot();
+  cwGrow(el); cwContentFoot();
 }
 /* ---------- 发送内容 · 长按拖拽排序／删除 ----------
    长按条目 320ms → 原条目挪进 #cw-content 绝对定位到手指下、放大 1.03，原位插入一块虚线占位；开始移动后底部升起删除区；
@@ -6909,7 +6896,7 @@ function cwDelZone(show){
       z.setAttribute('role','status'); z.setAttribute('aria-live','polite');
       z.innerHTML='<span class="cw-del-ic" aria-hidden="true">'+cwTrashSvg()+'</span>'
         +'<span class="cw-del-tx">移动到此处删除</span>';
-      ($('cw-editor')||document.body).appendChild(z);
+      ($('cw-content')||document.body).appendChild(z);
     }
     void z.offsetWidth;
     z.classList.add('on');
@@ -6940,7 +6927,7 @@ function cwDragDelete(d){
   var finish=function(){
     if(CW_DRAG!==d)return;
     if(gap&&gap.parentNode)gap.parentNode.removeChild(gap);
-    if(it&&it.parentNode&&it.parentNode.id==='cw-editor')it.parentNode.removeChild(it);
+    if(it&&it.parentNode&&it.parentNode.id==='cw-content')it.parentNode.removeChild(it);
     document.body.classList.remove('cw-dragging');
     CW_DRAG=null;
     cwDelZone(false);
@@ -6961,7 +6948,7 @@ function cwDragArm(e){
   if(e.isPrimary===false||e.button>0)return;
   var t=e.target;
   if(!t||!t.closest)return;
-  var it=t.closest('#cwEditorBody .cw-it');
+  var it=t.closest('#cwContentBody .cw-it');
   if(!it||it.classList.contains('cw-it-gap')||t.closest('button'))return;
   var d={el:it,id:it.getAttribute('data-item'),x:e.clientX,y:e.clientY,lastX:e.clientX,lastY:e.clientY,
     pid:e.pointerId,timer:null,active:false,dropping:false,overDel:false,zoneShown:false};
@@ -6971,7 +6958,7 @@ function cwDragArm(e){
 function cwDragBegin(d){
   if(!d||CW_DRAG!==d||d.active)return;
   if(!d.el.isConnected){cwDragClear(d);return}
-  var it=d.el, host=$('cw-editor'), hr=host.getBoundingClientRect();
+  var it=d.el, host=$('cw-content'), hr=host.getBoundingClientRect();
   var r=it.getBoundingClientRect();
   var k=hr.width&&host.offsetWidth?hr.width/host.offsetWidth:1;
   if(!k)k=1;
@@ -7055,7 +7042,7 @@ function cwDragUpdate(){
 }
 function cwDragLoop(){
   var d=CW_DRAG; if(!d||!d.active||d.dropping)return;
-  var sc=$('cwEditorBody');
+  var sc=$('cwContentBody');
   if(sc){
     var r=sc.getBoundingClientRect(), y=d.lastY, sp=0;
     if(y<r.top+64)sp=-Math.min(12,Math.ceil((r.top+64-y)/4));
@@ -7112,7 +7099,7 @@ function cwDragEnd(e){
   d.dx=d.lastX-d.x; d.dy=d.lastY-d.y;
   var cancelled=!e||e.type==='pointercancel';
   if(d.overDel&&!cancelled){ cwDragDelete(d); return; }
-  var it=d.el, gap=d.gap, list=d.list, fin=null, host=$('cw-editor');
+  var it=d.el, gap=d.gap, list=d.list, fin=null, host=$('cw-content');
   if(gap&&gap.parentNode&&list&&host){
     var lr=list.getBoundingClientRect(), hr=host.getBoundingClientRect(), k=d.k||1;
     /* 换成 #cw-content 的布局坐标：列表视觉位置÷scale ＋ 占位在列表里的位置 */
@@ -7138,14 +7125,14 @@ function cwDragEnd(e){
       CW_ITEMS.splice(target,0,moved);
     }
     if(gap&&gap.parentNode)gap.parentNode.removeChild(gap);
-    if(it.parentNode&&it.parentNode.id==='cw-editor')it.parentNode.removeChild(it);
+    if(it.parentNode&&it.parentNode.id==='cw-content')it.parentNode.removeChild(it);
     it.classList.remove('dragging','over-del');
     it.style.position=''; it.style.left=''; it.style.top=''; it.style.width=''; it.style.transform='';
     document.body.classList.remove('cw-dragging');
     cwDelZone(false);
     CW_DRAG=null;
-    var sc=$('cwEditorBody'), y=sc?sc.scrollTop:0;
-    REND['cw-editor']();
+    var sc=$('cwContentBody'), y=sc?sc.scrollTop:0;
+    REND['cw-content']();
     if(sc)sc.scrollTop=y;
   };
   if(cwRM()||!fin){finish();return}
@@ -7156,7 +7143,7 @@ function cwDragEnd(e){
   anim.finished.then(finish,finish);
 }
 document.addEventListener('pointerdown',function(e){
-  if(e.target&&e.target.closest&&e.target.closest('#cwEditorBody .cw-it'))cwDragArm(e);
+  if(e.target&&e.target.closest&&e.target.closest('#cwContentBody .cw-it'))cwDragArm(e);
 },true);
 document.addEventListener('pointermove',function(e){
   if(CW_DRAG&&e.pointerId===CW_DRAG.pid)cwDragMove(e);
@@ -7189,7 +7176,7 @@ function cwItemRemove(id){
   for(i=0;i<CW_ITEMS.length;i++)if(CW_ITEMS[i].id===id)ix=i;
   if(ix<0)return;
   var it=CW_ITEMS.splice(ix,1)[0];
-  REND['cw-editor']();
+  REND['cw-content']();
   toast('已删除这条内容','撤销',function(){
     if(cwItemById(it.id))return;
     CW_ITEMS.splice(Math.min(ix,CW_ITEMS.length),0,it);
@@ -7202,8 +7189,8 @@ function cwItemRemove(id){
 }
 function cwTextAdd(){
   closeSheet(CW_SH); CW_SH=null;
-  var it=cwAddTextBlock(''); cwMarkFresh(it.id); REND['cw-editor']();
-  var ta=document.querySelectorAll('#cwEditorBody textarea.cw-ta');
+  var it=cwAddTextBlock(''); cwMarkFresh(it.id); REND['cw-content']();
+  var ta=document.querySelectorAll('#cwContentBody textarea.cw-ta');
   if(ta.length)ta[ta.length-1].focus();
 }
 function cwSheetRow(icon,title,sub,act){
@@ -7222,7 +7209,7 @@ function cwAddSheet(){
 function cwAlbumAdd(kind){
   closeSheet(CW_SH); CW_SH=null;
   var it={id:cwItemSeq(),t:kind==='video'?'video':'image',c:kind==='video'?'门店实拍.mp4':'门店实拍.jpg',src:kind==='video'?'':CW_IMG_SRC,up:'ing'};
-  CW_ITEMS.push(it); cwMarkFresh(it.id); REND['cw-editor']();
+  CW_ITEMS.push(it); cwMarkFresh(it.id); REND['cw-content']();
   if(window.CW_TESTFAST){
     if(window.CW_UPLOAD_FAIL){ it.up='fail'; it.why='上传中断，请重试' } else it.up='';
     cwRender(); return;
@@ -7235,32 +7222,34 @@ function cwAlbumAdd(kind){
 }
 function cwRetryUpload(id){
   var it=cwItemById(id); if(!it)return;
-  it.up='ing'; it.why=''; REND['cw-editor']();
+  it.up='ing'; it.why=''; REND['cw-content']();
   if(window.CW_TESTFAST){ it.up=''; cwRender(); return; }
   setTimeout(function(){ it.up=''; cwRender() },600);
 }
 function cwContentBlockHtml(){
   return '<div class="cw-pcard'+(CW_MODE_ANIM?' cw-mode-in':'')+'">'
-    +'<div class="cw-rowhd"><span class="sp" aria-hidden="true">'+I('sparkle',16,1.8)+'</span><b>发送内容</b></div>'
+    +'<div class="cw-rowhd"><span class="sp" aria-hidden="true">'+I('sparkle',16,1.8)+'</span><b>发送内容</b>'
+    +'<button class="cw-textact cw-ai-action" '+(CW_CUSTOM.on&&!CW_QBUSY?'onclick="cwToolPersStart()"':'disabled')+'>AI 帮写</button></div>'
     +'<div class="cw-items">'+cwItemsHtml()+'</div>'
     +'<button class="cw-btn block cw-add-btn" onclick="cwAddSheet()">'+I('plus',18,2.2)+'添加内容</button>'
     +'</div>';
 }
-/* 统一内容编辑页：只放发送内容与发送间隔；预览时才按范围取人。 */
-function cwEditorFoot(){
-  var f=$('cwEditorFoot'); if(!f)return;
+/* 工具页同屏编辑统一内容，预览时才按范围取人。 */
+function cwContentFoot(){
+  var f=$('cwContentFoot'); if(!f)return;
   var err=cwContentErr();
-  f.innerHTML=(err?'<div class="cw-sum" role="status">'+esc(err)+'</div>':'')
-    +'<button class="cw-btn block" '+(err?'disabled':'onclick="cwPreviewGo()"')+'>预览发送</button>';
+  var notice=CW_QBUSY?'正在获取客户…':(CW_QERR?'没能获取客户':(CW_CUSTOM.on?err:''));
+  f.innerHTML=(notice?'<div class="cw-sum" role="status">'+esc(notice)
+    +(CW_QERR?' · <button class="cw-textact" onclick="cwQueryRetry()">重试</button>':'')+'</div>':'')
+    +'<button class="cw-btn block" '+(err||!CW_CUSTOM.on||CW_QBUSY?'disabled':'onclick="cwPreviewGo()"')+'>预览发送</button>';
 }
-REND['cw-editor']=function(){
+REND['cw-content']=function(){
   /* 别把正在拖的节点连同占位一起重画掉：真有外部重绘时先把拖拽收干净 */
   if(CW_DRAG)cwDragClear(CW_DRAG);
-  $('cwEditorBack').innerHTML=I('back',24,2);
+  $('cwContentBack').innerHTML=I('back',24,2);$('cwRecIc').innerHTML=I('clock',20,2.1);
   cwEnsureDraft();
-  $('cwEditorBody').className='scroll cw-scroll';
-  $('cwEditorBody').innerHTML=cwContentBlockHtml()+cwGapBlockHtml();
-  cwGrowAll();cwEditorFoot();
+  $('cwContentBody').innerHTML=cwRangeCardHtml()+cwTagCardHtml()+cwContentBlockHtml()+cwGapBlockHtml();
+  cwGrowAll();cwContentFoot();cwUnitAnim();
   CW_MODE_ANIM=false;
 };
 function cwSupported(t){ return t==='text'||t==='image'||t==='video' }
@@ -7439,9 +7428,9 @@ function cwSendCount(){ return cwSelCount() }
 /* 「预览发送」：预览时才按范围取人；取到人再进预览。 */
 function cwPreviewGo(){
   if(CW_QBUSY)return;
-  if(!CW_CUSTOM.on){ cwEditorFoot(); toast('先设置未回复时长'); return; }
+  if(!CW_CUSTOM.on){ cwContentFoot(); toast('先设置未回复时长'); return; }
   var bad=cwContentErr();
-  if(bad){ cwEditorFoot(); toast(bad); return; }
+  if(bad){ cwContentFoot(); toast(bad); return; }
   cwQueryRun('preview');
 }
 function cwPreviewFoot(){
@@ -7472,8 +7461,12 @@ REND['cw-people']=function(){
 };
 /* 统一内容改人：回工具页改范围；改完再点一次「预览发送」重新取人。 */
 function cwEditPeople(){
-  stack=stack.filter(function(p){return ['cw-people','cw-preview'].indexOf(p.id)<0});
-  if(cur!=='cw-content')go('cw-content'); else toast('改范围就在上面');
+  if(cur==='cw-content')return;
+  cwQueryStop();
+  var scope=stack.map(function(p){return p.id}).lastIndexOf('cw-content');
+  if(scope<0){ go('cw-content'); return; }
+  stack.length=scope+2;
+  back();
 }
 
 /* ================= 发送与记录 ================= */
@@ -7506,7 +7499,7 @@ function cwSendNow(){
 }
 function cwLaunch(ids){
   if(CW_LAUNCHING)return;CW_LAUNCHING=true;
-  stack=stack.filter(function(p){return ['cw-content','cw-editor','cw-preview','cw-people','cw-pick','cw-records','cw-record'].indexOf(p.id)<0});
+  stack=stack.filter(function(p){return ['cw-content','cw-preview','cw-people','cw-pick','cw-records','cw-record'].indexOf(p.id)<0});
   var n=ids.length;
   var items=JSON.parse(JSON.stringify(cwSendItems()));
   var people=ids.map(function(id){
@@ -13693,7 +13686,9 @@ document.addEventListener('scroll',function(e){
 (function(){
   var b=null;
   try{ b=parent.__APP_BOOT__ }catch(e){}
-  if(b&&b.page&&$(b.page)) go(b.page,b.params||{});
+  var page=b&&b.page;
+  if(page==='cw-editor')page='cw-content';
+  if(page&&$(page)) go(page,b.params||{});
   else go('host-home');
 })();
 setTimeout(sbScan,120);
