@@ -1017,13 +1017,14 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .cw-tagsh-search input{flex:1;min-width:0;border:0;background:none;outline:none;
   font:500 15px/1 var(--f);color:#102953}
 .cw-tagsh-search input::placeholder{color:#A9B8D0}
-.cw-taglist{margin:0 16px 8px;background:#fff;border-radius:16px;overflow:hidden}
-.cw-tagrow{display:flex;align-items:center;gap:12px;width:100%;min-height:54px;padding:0 16px;border:0;
-  border-top:1px solid #EEF2FA;background:#fff;font-family:var(--f);text-align:left;position:relative;overflow:hidden}
-.cw-tagrow:first-child{border-top:0}
-.cw-tagrow-n{flex:1;min-width:0;font-size:15px;font-weight:500;color:#102953;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.cw-tagnone{padding:26px 16px;text-align:center;font-size:13px;color:#8CA0BF}
+.cw-tagcloud{display:flex;flex-wrap:wrap;align-content:flex-start;gap:8px;margin:2px 16px 10px}
+.cw-tagchip{display:inline-flex;align-items:center;gap:5px;min-height:38px;padding:0 14px;
+  border:1px solid #DCE6F6;border-radius:12px;background:#fff;color:#27436E;
+  font:500 14px/1 var(--f);position:relative;overflow:hidden}
+.cw-tagchip .cw-tagck{display:none;width:14px;height:14px;flex:none;color:#1677FE}
+.cw-tagchip.on{background:#E8F0FF;border-color:#B9D2FA;color:#1268E8;font-weight:600}
+.cw-tagchip.on .cw-tagck{display:block}
+.cw-tagnone{margin:0 16px;padding:30px 16px;text-align:center;font-size:13px;color:#8CA0BF}
 .cw-tagft{position:sticky;bottom:0;z-index:3;background:var(--sc-low);
   padding:12px 16px calc(16px + env(safe-area-inset-bottom))}
 .cw-tagft .cw-btn{height:52px;font-size:16px}
@@ -1509,25 +1510,12 @@ textarea.cw-ta::placeholder{color:var(--on-surface-variant)}
   -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
 .cw-rowhd>b,.cw-rowhd-b{font-size:16.5px;font-weight:700}
 .cw-h{font-size:16px;font-weight:700;color:#102953}
-/* 唤醒范围：一张浅蓝→浅紫的渐变卡，右上压一团白光；数字框与分段器都吃白玻璃底 */
-.cw-pcard.cw-scope{overflow:hidden;
-  background:
-    radial-gradient(90% 130% at 92% 4%,rgba(255,255,255,.95),rgba(255,255,255,0) 58%),
-    radial-gradient(80% 120% at 0% 100%,rgba(198,188,255,.38),rgba(198,188,255,0) 62%),
-    linear-gradient(112deg,#EFF5FF 0%,#E9EFFE 46%,#F1ECFF 100%);
-  box-shadow:0 16px 32px -26px rgba(60,70,160,.9),inset 0 0 0 1px rgba(255,255,255,.85)}
-.cw-pcard.cw-scope::after{content:"";position:absolute;right:-30px;top:-42px;width:132px;height:132px;
-  border-radius:50%;pointer-events:none;z-index:0;
-  background:radial-gradient(circle at 36% 30%,rgba(255,255,255,.95),rgba(255,255,255,0) 68%)}
-.cw-pcard.cw-scope>*{position:relative;z-index:1}
-/* 问号气泡要压过下面那行输入与分段器（同为 z-index:1 的兄弟，后画的会盖住它） */
-.cw-pcard.cw-scope .cw-sech{z-index:3}
-.cw-num{background:rgba(255,255,255,.92);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.95),0 8px 18px -16px rgba(40,70,150,.75)}
-.cw-num:focus{background:#fff;box-shadow:inset 0 0 0 1.5px #7FA6F0,0 10px 20px -16px rgba(40,70,150,.8)}
+/* 唤醒范围：与发送内容、发送间隔同一张白卡，不再单独做渐变底。
+   数字框与小时／天合成一个左对齐的整体，读起来是一句话。 */
+.cw-scope-group{display:flex;align-items:center;gap:8px}
+.cw-scope-group .cw-units{margin-left:0}
 /* 分段器：白色滑块在浅槽里滑过去，不再靠每个按钮自己换底 */
-.cw-units{position:relative;padding:4px;gap:0;background:rgba(255,255,255,.62);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.9)}
+.cw-units{position:relative;padding:4px;gap:0;background:#E8F0FF;box-shadow:none}
 .cw-unit-thumb{position:absolute;left:4px;top:4px;bottom:4px;width:58px;border-radius:999px;
   background:#fff;box-shadow:0 6px 14px -10px rgba(40,70,150,.8);
   transition:transform .28s var(--emph)}
@@ -7551,6 +7539,7 @@ function cwScopeHtml(){
     +'</div>'
     +'<div class="cw-scope-in">'
       +'<span class="cw-scope-lab">未回复超过</span>'
+      +'<div class="cw-scope-group">'
       +'<input class="cw-num" type="text" inputmode="numeric" value="'+(on?CW_CUSTOM.n:'')+'" placeholder="—"'
         +' aria-label="未回复超过多少'+cwUnitN(u)+'" onchange="cwRangeInput(this.value)"'
         +' onkeydown="if(event.key===\'Enter\')this.blur()">'
@@ -7558,6 +7547,7 @@ function cwScopeHtml(){
         +'<i class="cw-unit-thumb" aria-hidden="true"></i>'
         +'<button class="'+(u==='h'?'on':'')+'" onclick="cwRangeUnit(\'h\')">小时</button>'
         +'<button class="'+(u==='d'?'on':'')+'" onclick="cwRangeUnit(\'d\')">天</button>'
+      +'</div>'
       +'</div>'
     +'</div>'
     +'<button type="button" class="cw-tagh" onclick="cwTagSheet()">'
@@ -7578,7 +7568,7 @@ function cwTagSheet(){
     +'<label class="cw-tagsh-search">'+I('search',20,2)
       +'<input id="cwTagSearch" type="text" autocomplete="off" aria-label="搜索标签" placeholder="搜索标签" oninput="cwTagFilter(this.value)">'
     +'</label>'
-    +'<div class="cw-taglist" id="cwTagList"></div>'
+    +'<div class="cw-tagcloud" id="cwTagList"></div>'
     +'<div class="cw-tagft"><button type="button" class="cw-btn block" onclick="cwTagApply()">确定</button></div>',
     'cw-sheet cw-tagsh');
   cwTagListRender();
@@ -7590,10 +7580,10 @@ function cwTagListRender(){
   if(!list.length){ box.innerHTML='<div class="cw-tagnone">没有匹配的标签</div>'; return; }
   box.innerHTML=list.map(function(t){
     var on=CW_TAGD.indexOf(t)>=0;
-    return '<button type="button" class="cw-tagrow" role="checkbox" aria-checked="'+(on?'true':'false')+'"'
+    return '<button type="button" class="cw-tagchip'+(on?' on':'')+'" role="checkbox" aria-checked="'+(on?'true':'false')+'"'
       +' data-tag="'+esc(t)+'" onclick="cwTagToggle(this.getAttribute(\'data-tag\'))">'
-      +'<span class="cw-tagrow-n">'+esc(t)+'</span>'
-      +'<span class="cw-cb'+(on?' on':'')+'" aria-hidden="true">'+(on?I('check',13,3):'')+'</span>'
+      +'<span class="cw-tagck" aria-hidden="true">'+(on?I('check',14,2.8):'')+'</span>'
+      +'<span>'+esc(t)+'</span>'
     +'</button>';
   }).join('');
 }
