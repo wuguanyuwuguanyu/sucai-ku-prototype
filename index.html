@@ -3932,6 +3932,19 @@ body[data-motion="fade"] .panel.anim-in{animation:panelSwapIn .36s var(--emph) .
 .wk-card .lc-tag{flex:none;font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px;letter-spacing:.02em}
 .wk-card .lc-tag.new{background:#E6FFF0;color:#17D861}
 .wk-card .lc-tag.upd{background:#E3EFFF;color:#1677FF}
+
+/* ---- 选素材：选择位挪到左侧（三种样式临时对照，定稿后删剩一种） ---- */
+.cwp-uibar{display:flex;align-items:center;gap:8px;margin:2px 0 10px;padding:0 2px}
+.cwp-uibar b{font:600 12px/1 var(--f);color:#466DAD}
+.cwp-uibar button{height:28px;min-width:34px;padding:0 10px;border-radius:999px;border:1px solid #D8E4FA;background:#fff;color:#2E6BFF;font:600 12px/1 var(--f);cursor:pointer}
+.cwp-uibar button.on{background:#2E6BFF;border-color:#2E6BFF;color:#fff}
+.cwp-row{position:relative}
+.cwp-row>.cwp-add{margin-right:6px}
+.cwp-add.txt{width:auto;min-width:58px;height:32px;padding:0 10px;border-radius:999px;font:600 12px/1 var(--f)}
+.cwp-radio{flex:none;width:20px;height:20px;margin:0 10px 0 2px;border-radius:50%;border:1.8px solid #C7D6EE;display:flex;align-items:center;justify-content:center;background:#fff}
+.cwp-radio.on{border-color:#2E6BFF}
+.cwp-radio i{width:10px;height:10px;border-radius:50%;background:#2E6BFF}
+.cwp-arr[role="button"]{padding:12px;margin:-12px}
 </style>
 </head>
 <body>
@@ -7197,7 +7210,9 @@ REND['cw-content']=function(){
 };
 function cwSupported(t){ return t==='text'||t==='image'||t==='video' }
 /* ================= 素材选择（复用素材库数据与读法） ================= */
+var CW_PICK_UI='a';
 var CW_PICK={tab:'全部',grp:'全部',q:'',exp:'',enter:false};
+function cwPickUi(k){ CW_PICK_UI=k; REND['cw-pick'](); }
 function cwPickOpen(){
   closeSheet(); CW_PICK.tab='全部'; CW_PICK.grp='全部'; CW_PICK.q=''; CW_PICK.exp='';
   CW_PICK.enter=true;
@@ -7268,18 +7283,24 @@ function cwPickRowHtml(p){
   var line=kws.length?kws.map(function(k){return '#'+esc(k)}).join(' ')
     :(hasText(p.ref)?'':'无文字内容，附件可直接发送');
   var bad=blocked?'<span class="lc-tag bad">含'+cwPickUnTypes(p)+'</span>':'';
-  var aria=has?'已添加，再点可重新添加'
-    :(blocked?'含'+cwPickUnTypes(p)+'，不能用于唤醒':'添加到发送内容');
+  var aria=has?'已添加，点一下换成这条':(blocked?'含'+cwPickUnTypes(p)+'，不能用于唤醒':'添加这条素材并返回');
+  var ui=CW_PICK_UI||'a', sel='';
+  if(ui==='b'){
+    sel='<button class="cwp-add txt'+(has?' done':'')+'" '+(blocked?'disabled aria-disabled="true"':'onclick="event.stopPropagation();cwPickAdd(\''+p.id+'\')"')+' aria-label="'+esc(aria)+'">'+(has?'已添加':'添加')+'</button>';
+  }else if(ui==='c'){
+    sel='<span class="cwp-radio'+(has?' on':'')+'" aria-hidden="true">'+(has?'<i></i>':'')+'</span>';
+  }else{
+    sel='<button class="cwp-add'+(has?' done':'')+'" '+(blocked?'disabled aria-disabled="true"':'onclick="event.stopPropagation();cwPickAdd(\''+p.id+'\')"')+' aria-label="'+esc(aria)+'">'+(has?I('check',16,2.4):I('plus',17,2.4))+'</button>';
+  }
+  var rowAct=ui==='c'?'onclick="cwPickAdd(\''+p.id+'\')"':'onclick="cwPickToggle(\''+p.id+'\')"';
   return '<div class="cwp-card">'
     +(mixed?srcTagHtml(p.src):'')
-    +'<div class="cwp-row'+(open?' on':'')+'" data-p="'+esc(p.id)+'" aria-expanded="'+(open?'true':'false')+'" onclick="cwPickToggle(\''+p.id+'\')">'
+    +'<div class="cwp-row'+(open?' on':'')+'" data-p="'+esc(p.id)+'" aria-expanded="'+(open?'true':'false')+'" '+rowAct+'>'
+      +sel
       +'<span class="cwp-spk">'+hvSpk(17)+'</span>'
       +'<div class="cwp-b"><div class="lc-h"><h5>'+esc(p.title)+'</h5>'+bad+chgTagHtml(p.ref)+'</div>'
       +(line?'<p>'+line+'</p>':'')+'</div>'
-      +'<button class="cwp-add'+(has?' done':'')+'" '
-        +(blocked?'disabled aria-disabled="true"':'onclick="event.stopPropagation();cwPickAdd(\''+p.id+'\')"')
-        +' aria-label="'+esc(aria)+'">'+(has?I('check',16,2.4):I('plus',17,2.4))+'</button>'
-      +'<span class="cwp-arr">'+I('chev',17,2.2)+'</span>'
+      +'<span class="cwp-arr" '+(ui==='c'?'role="button" aria-label="预览这条素材" onclick="event.stopPropagation();cwPickToggle(\''+p.id+'\')"':'')+'>'+I('chev',17,2.2)+'</span>'
     +'</div>'
     +(open?'<div class="cwp-open on">'+wxSendSim(p.ref)+'</div>':'')
   +'</div>';
@@ -7310,10 +7331,7 @@ function cwPickGrp(g){ CW_PICK.grp=g; CW_PICK.exp=''; cwPickRefresh() }
 function cwPickAdd(id,force){
   var p=cwPickById(id); if(!p)return;
   if(!cwPickOk(p)){toast('含'+cwPickUnTypes(p)+'的素材不能用于唤醒');return}
-  if(cwMatHas(p.id)&&!force){
-    toast('这条素材已在发送内容里','重新添加',function(){cwPickAdd(id,true)});
-    return;
-  }
+  if(cwMatHas(p.id)&&!force){ toast('这条素材已在发送内容里'); back(); return; }
   var at=-1, oldIds=[];
   if(CW_MAT){
     CW_ITEMS.forEach(function(it,ix){
@@ -7328,12 +7346,15 @@ function cwPickAdd(id,force){
   cwDropEmptyText();
   if(nw.length)cwMarkFresh(nw[nw.length-1].id);
   toast(oldIds.length?'已替换发送内容里的素材':'已添加到发送内容');
-  cwPickRefresh();
+  back();
 }
 REND['cw-pick']=function(){
   $('cwPickBack').innerHTML=I('back',24,2);
   var tabs=['全部','企业','部门','个人','朋友圈','最近使用'];
-  var h='<div class="cwp-search">'+I('search',20,2)
+  var h='<div class="cwp-uibar" role="group" aria-label="选素材样式"><b>样式</b>'
+    +['a','b','c'].map(function(k){return '<button type="button" class="'+((CW_PICK_UI||'a')===k?'on':'')+'" onclick="cwPickUi(\''+k+'\')">'+k.toUpperCase()+'</button>'}).join('')
+    +'</div>';
+  h+='<div class="cwp-search">'+I('search',20,2)
     +'<input id="cwPickQ" type="search" placeholder="搜索素材" value="'+esc(CW_PICK.q)+'" oninput="cwPickSearch(this.value)"></div>'
     +'<div class="cwp-tabs">'+tabs.map(function(t){return '<button class="'+(CW_PICK.tab===t?'on':'')+'" onclick="cwPickTab(\''+t+'\')">'+t+'</button>'}).join('')+'</div>';
   var grps=cwPickGrps();
@@ -7341,7 +7362,7 @@ REND['cw-pick']=function(){
     +grps.map(function(g){return '<button class="'+(CW_PICK.grp===g?'on':'')+'" onclick="cwPickGrp(\''+g+'\')">'+esc(g)+'</button>'}).join('')+'</div>';
   h+='<div class="cwp-list'+(CW_PICK.enter?' cw-in':'')+'" id="cwPickList">'+cwPickListHtml()+'</div>';
   $('cwPickBody').innerHTML=h;
-};
+};;
 
 /* ================= 发送预览 ================= */
 function cwPreviewItemsHtml(){
@@ -17604,6 +17625,19 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
   .cw-del-zone,.cw-del-lid,body.cw-dragging #cwContentFoot,.cws-row{transition:none}
   .cw-unit-thumb{transition:none}
 }
+
+/* ---- 选素材：选择位挪到左侧（三种样式临时对照，定稿后删剩一种） ---- */
+.cwp-uibar{display:flex;align-items:center;gap:8px;margin:2px 0 10px;padding:0 2px}
+.cwp-uibar b{font:600 12px/1 var(--f);color:#466DAD}
+.cwp-uibar button{height:28px;min-width:34px;padding:0 10px;border-radius:999px;border:1px solid #D8E4FA;background:#fff;color:#2E6BFF;font:600 12px/1 var(--f);cursor:pointer}
+.cwp-uibar button.on{background:#2E6BFF;border-color:#2E6BFF;color:#fff}
+.cwp-row{position:relative}
+.cwp-row>.cwp-add{margin-right:6px}
+.cwp-add.txt{width:auto;min-width:58px;height:32px;padding:0 10px;border-radius:999px;font:600 12px/1 var(--f)}
+.cwp-radio{flex:none;width:20px;height:20px;margin:0 10px 0 2px;border-radius:50%;border:1.8px solid #C7D6EE;display:flex;align-items:center;justify-content:center;background:#fff}
+.cwp-radio.on{border-color:#2E6BFF}
+.cwp-radio i{width:10px;height:10px;border-radius:50%;background:#2E6BFF}
+.cwp-arr[role="button"]{padding:12px;margin:-12px}
 </style>
 </head>
 <body>
@@ -26414,6 +26448,7 @@ if(typeof CW_UNIT_FROM==='undefined')var CW_UNIT_FROM='';
 
 var CW_ITEMS=[], CW_ITEM_SEQ=0, CW_MAT=null, CW_FRESH_ID='';
 
+var CW_PICK_UI='a';
 var CW_PICK={tab:'全部',grp:'全部',q:'',exp:'',enter:false};
 
 var CW_DRAG=null, CW_DRAG_CLICK=0, CW_DEL_TM=null;
@@ -26931,6 +26966,7 @@ function cwAlbumAdd(kind){
   },window.CW_TESTFAST?0:700);
 }
 
+function cwPickUi(k){ CW_PICK_UI=k; REND['cw-pick'](); }
 function cwPickOpen(){
   closeSheet(); CW_PICK.tab='全部'; CW_PICK.grp='全部'; CW_PICK.q=''; CW_PICK.exp='';
   CW_PICK.enter=true;
@@ -27012,18 +27048,24 @@ function cwPickRowHtml(p){
   var line=kws.length?kws.map(function(k){return '#'+esc(k)}).join(' ')
     :(hasText(p.ref)?'':'无文字内容，附件可直接发送');
   var bad=blocked?'<span class="lc-tag bad">含'+cwPickUnTypes(p)+'</span>':'';
-  var aria=has?'已添加，再点可重新添加'
-    :(blocked?'含'+cwPickUnTypes(p)+'，不能用于唤醒':'添加到发送内容');
+  var aria=has?'已添加，点一下换成这条':(blocked?'含'+cwPickUnTypes(p)+'，不能用于唤醒':'添加这条素材并返回');
+  var ui=CW_PICK_UI||'a', sel='';
+  if(ui==='b'){
+    sel='<button class="cwp-add txt'+(has?' done':'')+'" '+(blocked?'disabled aria-disabled="true"':'onclick="event.stopPropagation();cwPickAdd(\''+p.id+'\')"')+' aria-label="'+esc(aria)+'">'+(has?'已添加':'添加')+'</button>';
+  }else if(ui==='c'){
+    sel='<span class="cwp-radio'+(has?' on':'')+'" aria-hidden="true">'+(has?'<i></i>':'')+'</span>';
+  }else{
+    sel='<button class="cwp-add'+(has?' done':'')+'" '+(blocked?'disabled aria-disabled="true"':'onclick="event.stopPropagation();cwPickAdd(\''+p.id+'\')"')+' aria-label="'+esc(aria)+'">'+(has?I('check',16,2.4):I('plus',17,2.4))+'</button>';
+  }
+  var rowAct=ui==='c'?'onclick="cwPickAdd(\''+p.id+'\')"':'onclick="cwPickToggle(\''+p.id+'\')"';
   return '<div class="cwp-card">'
     +(mixed?srcTagHtml(p.src):'')
-    +'<div class="cwp-row'+(open?' on':'')+'" data-p="'+esc(p.id)+'" aria-expanded="'+(open?'true':'false')+'" onclick="cwPickToggle(\''+p.id+'\')">'
+    +'<div class="cwp-row'+(open?' on':'')+'" data-p="'+esc(p.id)+'" aria-expanded="'+(open?'true':'false')+'" '+rowAct+'>'
+      +sel
       +'<span class="cwp-spk">'+hvSpk(17)+'</span>'
       +'<div class="cwp-b"><div class="lc-h"><h5>'+esc(p.title)+'</h5>'+bad+chgTagHtml(p.ref)+'</div>'
       +(line?'<p>'+line+'</p>':'')+'</div>'
-      +'<button class="cwp-add'+(has?' done':'')+'" '
-        +(blocked?'disabled aria-disabled="true"':'onclick="event.stopPropagation();cwPickAdd(\''+p.id+'\')"')
-        +' aria-label="'+esc(aria)+'">'+(has?I('check',16,2.4):I('plus',17,2.4))+'</button>'
-      +'<span class="cwp-arr">'+I('chev',17,2.2)+'</span>'
+      +'<span class="cwp-arr" '+(ui==='c'?'role="button" aria-label="预览这条素材" onclick="event.stopPropagation();cwPickToggle(\''+p.id+'\')"':'')+'>'+I('chev',17,2.2)+'</span>'
     +'</div>'
     +(open?'<div class="cwp-open on">'+wxSendSim(p.ref)+'</div>':'')
   +'</div>';
@@ -27061,10 +27103,7 @@ function cwPickGrp(g){ CW_PICK.grp=g; CW_PICK.exp=''; cwPickRefresh() }
 function cwPickAdd(id,force){
   var p=cwPickById(id); if(!p)return;
   if(!cwPickOk(p)){toast('含'+cwPickUnTypes(p)+'的素材不能用于唤醒');return}
-  if(cwMatHas(p.id)&&!force){
-    toast('这条素材已在发送内容里','重新添加',function(){cwPickAdd(id,true)});
-    return;
-  }
+  if(cwMatHas(p.id)&&!force){ toast('这条素材已在发送内容里'); back(); return; }
   var at=-1, oldIds=[];
   if(CW_MAT){
     CW_ITEMS.forEach(function(it,ix){
@@ -27079,7 +27118,7 @@ function cwPickAdd(id,force){
   cwDropEmptyText();
   if(nw.length)cwMarkFresh(nw[nw.length-1].id);
   toast(oldIds.length?'已替换发送内容里的素材':'已添加到发送内容');
-  cwPickRefresh();
+  back();
 }
 
 function cwPreviewItemsHtml(){
@@ -27127,7 +27166,10 @@ window.addEventListener('blur',function(){ if(CW_DRAG)cwDragEnd(null) });
 REND['cw-pick']=function(){
   $('cwPickBack').innerHTML=I('back',24,2);
   var tabs=['全部','企业','部门','个人','朋友圈','最近使用'];
-  var h='<div class="cwp-search">'+I('search',20,2)
+  var h='<div class="cwp-uibar" role="group" aria-label="选素材样式"><b>样式</b>'
+    +['a','b','c'].map(function(k){return '<button type="button" class="'+((CW_PICK_UI||'a')===k?'on':'')+'" onclick="cwPickUi(\''+k+'\')">'+k.toUpperCase()+'</button>'}).join('')
+    +'</div>';
+  h+='<div class="cwp-search">'+I('search',20,2)
     +'<input id="cwPickQ" type="search" placeholder="搜索素材" value="'+esc(CW_PICK.q)+'" oninput="cwPickSearch(this.value)"></div>'
     +'<div class="cwp-tabs">'+tabs.map(function(t){return '<button class="'+(CW_PICK.tab===t?'on':'')+'" onclick="cwPickTab(\''+t+'\')">'+t+'</button>'}).join('')+'</div>';
   var grps=cwPickGrps();
@@ -27135,7 +27177,7 @@ REND['cw-pick']=function(){
     +grps.map(function(g){return '<button class="'+(CW_PICK.grp===g?'on':'')+'" onclick="cwPickGrp(\''+g+'\')">'+esc(g)+'</button>'}).join('')+'</div>';
   h+='<div class="cwp-list'+(CW_PICK.enter?' cw-in':'')+'" id="cwPickList">'+cwPickListHtml()+'</div>';
   $('cwPickBody').innerHTML=h;
-}
+};
 
 
 /* ---- 适配：老方案的外壳里叫 cwScopeHtml（自带 .cw-pcard 外框），这里只取卡片内脏 ---- */
@@ -31142,6 +31184,19 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
   .cw-del-zone,.cw-del-lid,body.cw-dragging #cwContentFoot,.cws-row{transition:none}
   .cw-unit-thumb{transition:none}
 }
+
+/* ---- 选素材：选择位挪到左侧（三种样式临时对照，定稿后删剩一种） ---- */
+.cwp-uibar{display:flex;align-items:center;gap:8px;margin:2px 0 10px;padding:0 2px}
+.cwp-uibar b{font:600 12px/1 var(--f);color:#466DAD}
+.cwp-uibar button{height:28px;min-width:34px;padding:0 10px;border-radius:999px;border:1px solid #D8E4FA;background:#fff;color:#2E6BFF;font:600 12px/1 var(--f);cursor:pointer}
+.cwp-uibar button.on{background:#2E6BFF;border-color:#2E6BFF;color:#fff}
+.cwp-row{position:relative}
+.cwp-row>.cwp-add{margin-right:6px}
+.cwp-add.txt{width:auto;min-width:58px;height:32px;padding:0 10px;border-radius:999px;font:600 12px/1 var(--f)}
+.cwp-radio{flex:none;width:20px;height:20px;margin:0 10px 0 2px;border-radius:50%;border:1.8px solid #C7D6EE;display:flex;align-items:center;justify-content:center;background:#fff}
+.cwp-radio.on{border-color:#2E6BFF}
+.cwp-radio i{width:10px;height:10px;border-radius:50%;background:#2E6BFF}
+.cwp-arr[role="button"]{padding:12px;margin:-12px}
 </style>
 </head>
 <body>
@@ -39800,6 +39855,7 @@ if(typeof CW_UNIT_FROM==='undefined')var CW_UNIT_FROM='';
 
 var CW_ITEMS=[], CW_ITEM_SEQ=0, CW_MAT=null, CW_FRESH_ID='';
 
+var CW_PICK_UI='a';
 var CW_PICK={tab:'全部',grp:'全部',q:'',exp:'',enter:false};
 
 var CW_DRAG=null, CW_DRAG_CLICK=0, CW_DEL_TM=null;
@@ -40317,6 +40373,7 @@ function cwAlbumAdd(kind){
   },window.CW_TESTFAST?0:700);
 }
 
+function cwPickUi(k){ CW_PICK_UI=k; REND['cw-pick'](); }
 function cwPickOpen(){
   closeSheet(); CW_PICK.tab='全部'; CW_PICK.grp='全部'; CW_PICK.q=''; CW_PICK.exp='';
   CW_PICK.enter=true;
@@ -40398,18 +40455,24 @@ function cwPickRowHtml(p){
   var line=kws.length?kws.map(function(k){return '#'+esc(k)}).join(' ')
     :(hasText(p.ref)?'':'无文字内容，附件可直接发送');
   var bad=blocked?'<span class="lc-tag bad">含'+cwPickUnTypes(p)+'</span>':'';
-  var aria=has?'已添加，再点可重新添加'
-    :(blocked?'含'+cwPickUnTypes(p)+'，不能用于唤醒':'添加到发送内容');
+  var aria=has?'已添加，点一下换成这条':(blocked?'含'+cwPickUnTypes(p)+'，不能用于唤醒':'添加这条素材并返回');
+  var ui=CW_PICK_UI||'a', sel='';
+  if(ui==='b'){
+    sel='<button class="cwp-add txt'+(has?' done':'')+'" '+(blocked?'disabled aria-disabled="true"':'onclick="event.stopPropagation();cwPickAdd(\''+p.id+'\')"')+' aria-label="'+esc(aria)+'">'+(has?'已添加':'添加')+'</button>';
+  }else if(ui==='c'){
+    sel='<span class="cwp-radio'+(has?' on':'')+'" aria-hidden="true">'+(has?'<i></i>':'')+'</span>';
+  }else{
+    sel='<button class="cwp-add'+(has?' done':'')+'" '+(blocked?'disabled aria-disabled="true"':'onclick="event.stopPropagation();cwPickAdd(\''+p.id+'\')"')+' aria-label="'+esc(aria)+'">'+(has?I('check',16,2.4):I('plus',17,2.4))+'</button>';
+  }
+  var rowAct=ui==='c'?'onclick="cwPickAdd(\''+p.id+'\')"':'onclick="cwPickToggle(\''+p.id+'\')"';
   return '<div class="cwp-card">'
     +(mixed?srcTagHtml(p.src):'')
-    +'<div class="cwp-row'+(open?' on':'')+'" data-p="'+esc(p.id)+'" aria-expanded="'+(open?'true':'false')+'" onclick="cwPickToggle(\''+p.id+'\')">'
+    +'<div class="cwp-row'+(open?' on':'')+'" data-p="'+esc(p.id)+'" aria-expanded="'+(open?'true':'false')+'" '+rowAct+'>'
+      +sel
       +'<span class="cwp-spk">'+hvSpk(17)+'</span>'
       +'<div class="cwp-b"><div class="lc-h"><h5>'+esc(p.title)+'</h5>'+bad+chgTagHtml(p.ref)+'</div>'
       +(line?'<p>'+line+'</p>':'')+'</div>'
-      +'<button class="cwp-add'+(has?' done':'')+'" '
-        +(blocked?'disabled aria-disabled="true"':'onclick="event.stopPropagation();cwPickAdd(\''+p.id+'\')"')
-        +' aria-label="'+esc(aria)+'">'+(has?I('check',16,2.4):I('plus',17,2.4))+'</button>'
-      +'<span class="cwp-arr">'+I('chev',17,2.2)+'</span>'
+      +'<span class="cwp-arr" '+(ui==='c'?'role="button" aria-label="预览这条素材" onclick="event.stopPropagation();cwPickToggle(\''+p.id+'\')"':'')+'>'+I('chev',17,2.2)+'</span>'
     +'</div>'
     +(open?'<div class="cwp-open on">'+wxSendSim(p.ref)+'</div>':'')
   +'</div>';
@@ -40447,10 +40510,7 @@ function cwPickGrp(g){ CW_PICK.grp=g; CW_PICK.exp=''; cwPickRefresh() }
 function cwPickAdd(id,force){
   var p=cwPickById(id); if(!p)return;
   if(!cwPickOk(p)){toast('含'+cwPickUnTypes(p)+'的素材不能用于唤醒');return}
-  if(cwMatHas(p.id)&&!force){
-    toast('这条素材已在发送内容里','重新添加',function(){cwPickAdd(id,true)});
-    return;
-  }
+  if(cwMatHas(p.id)&&!force){ toast('这条素材已在发送内容里'); back(); return; }
   var at=-1, oldIds=[];
   if(CW_MAT){
     CW_ITEMS.forEach(function(it,ix){
@@ -40465,7 +40525,7 @@ function cwPickAdd(id,force){
   cwDropEmptyText();
   if(nw.length)cwMarkFresh(nw[nw.length-1].id);
   toast(oldIds.length?'已替换发送内容里的素材':'已添加到发送内容');
-  cwPickRefresh();
+  back();
 }
 
 function cwPreviewItemsHtml(){
@@ -40513,7 +40573,10 @@ window.addEventListener('blur',function(){ if(CW_DRAG)cwDragEnd(null) });
 REND['cw-pick']=function(){
   $('cwPickBack').innerHTML=I('back',24,2);
   var tabs=['全部','企业','部门','个人','朋友圈','最近使用'];
-  var h='<div class="cwp-search">'+I('search',20,2)
+  var h='<div class="cwp-uibar" role="group" aria-label="选素材样式"><b>样式</b>'
+    +['a','b','c'].map(function(k){return '<button type="button" class="'+((CW_PICK_UI||'a')===k?'on':'')+'" onclick="cwPickUi(\''+k+'\')">'+k.toUpperCase()+'</button>'}).join('')
+    +'</div>';
+  h+='<div class="cwp-search">'+I('search',20,2)
     +'<input id="cwPickQ" type="search" placeholder="搜索素材" value="'+esc(CW_PICK.q)+'" oninput="cwPickSearch(this.value)"></div>'
     +'<div class="cwp-tabs">'+tabs.map(function(t){return '<button class="'+(CW_PICK.tab===t?'on':'')+'" onclick="cwPickTab(\''+t+'\')">'+t+'</button>'}).join('')+'</div>';
   var grps=cwPickGrps();
@@ -40521,7 +40584,7 @@ REND['cw-pick']=function(){
     +grps.map(function(g){return '<button class="'+(CW_PICK.grp===g?'on':'')+'" onclick="cwPickGrp(\''+g+'\')">'+esc(g)+'</button>'}).join('')+'</div>';
   h+='<div class="cwp-list'+(CW_PICK.enter?' cw-in':'')+'" id="cwPickList">'+cwPickListHtml()+'</div>';
   $('cwPickBody').innerHTML=h;
-}
+};
 
 
 /* ---- 适配：老方案的外壳里叫 cwScopeHtml（自带 .cw-pcard 外框），这里只取卡片内脏 ---- */
