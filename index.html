@@ -1626,6 +1626,61 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
 .cw-kv.stat.bad{background:linear-gradient(150deg,#FFF3F2,#FFEDEC)}
 .cw-kv.stat b{font-size:22px}
 
+/* ---- 按聊天记录逐人写（2026-11-19）：一人一行，依据在上、文案在下，异常不静默跳过 ---- */
+.cw-persbadge{flex:none;margin-left:auto;font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:999px;
+  background:linear-gradient(120deg,#EEE8FF,#E3EEFF);color:#5A4FCF}
+.cw-rowhd .cw-perslink{margin-left:0;height:32px;min-height:32px;padding:0 10px;font-size:12.5px}
+.cw-persprog{display:flex;align-items:center;gap:10px;padding:10px 2px 4px;font-size:12.5px;font-weight:600;color:#617A9E}
+.cw-persprog .spin{flex:none;width:16px;height:16px;border-radius:50%;
+  border:2px solid #D8E4FA;border-top-color:#2E6BFF;animation:cwSpin .8s linear infinite}
+.cw-persprog .cw-textact{margin-left:auto;height:30px;min-height:30px;padding:0 10px;font-size:12px}
+.cw-perslist{display:flex;flex-direction:column}
+.cw-pers{position:relative;padding:14px 0;border-top:1px solid #EEF2FA}
+.cw-pers:first-child{border-top:0;padding-top:6px}
+.cw-pershd{display:flex;align-items:center;gap:9px;margin-bottom:7px}
+.cw-pershd .cw-av{width:32px;height:32px;font-size:12px}
+.cw-pershd b{font-size:14.5px;font-weight:600;color:#17263F;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cw-persst{margin-left:auto;flex:none;font-size:11.5px;font-weight:600;color:#7A8CA8}
+.cw-persst.ok{color:#12A16B}
+.cw-persst.busy{color:#617A9E}
+.cw-persst.fail{color:#C2413A}
+.cw-persbasis{font-size:12px;line-height:1.55;color:#7A8CA8;margin:0 0 8px 41px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cw-persbasis.warn{color:#B4741F}
+.cw-pers .cw-ta{min-height:44px;padding:11px 14px;font-size:15px}
+.cw-persacts{display:flex;align-items:center;gap:6px;margin:7px 0 0 41px}
+.cw-persacts .cw-textact{height:32px;min-height:32px;padding:0 12px;font-size:12.5px;background:#F4F7FF;color:#4C6FA8}
+.cw-pers.off .cw-ta{opacity:.45;pointer-events:none}
+.cw-pers.off .cw-persst{color:#9AA6B8}
+.cw-perssk{height:11px;margin:9px 0 0 41px;border-radius:6px;
+  background:linear-gradient(90deg,#F1F5FF,#E7EFFC,#F1F5FF);background-size:200% 100%;
+  animation:cwShim 1.2s linear infinite}
+.cw-perssk+.cw-perssk{margin-top:7px}
+@keyframes cwShim{from{background-position:100% 0}to{background-position:-100% 0}}
+.cw-persnote{display:flex;align-items:center;gap:6px;margin-top:12px;padding-top:12px;
+  border-top:1px dashed rgba(210,220,240,.85);font-size:12px;color:#7A8CA8}
+.cw-persnote svg{flex:none;color:#9AA9BF}
+.cw-pers.cw-pers-in{animation:cwPersIn .26s var(--emph) both}
+@keyframes cwPersIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.cw-pcard.cw-mode-in{animation:cwModeIn .22s var(--emph) both}
+@keyframes cwModeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.cw-scope.nudge{animation:cwScopeNudge .6s var(--emph)}
+@keyframes cwScopeNudge{0%,100%{outline:2px solid transparent;outline-offset:2px}
+  35%{outline:2px solid #8FB3F5;outline-offset:3px}}
+/* 逐人预览：一人一小张；超过 3 人收起，底部说明没写成的人 */
+.cw-pvpeople{display:flex;flex-direction:column}
+.cw-pvperson{padding:12px 0}
+.cw-pvperson:first-child{padding-top:4px}
+.cw-pvperson+.cw-pvperson{border-top:1px dashed rgba(210,220,240,.85)}
+.cw-pvphd{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#17263F;margin-bottom:5px}
+.cw-pvphd .cw-av{width:26px;height:26px;font-size:11px}
+.cw-pvmore{display:flex;align-items:center;justify-content:center;width:100%;height:44px;margin-top:10px;
+  border-radius:12px;background:#F4F7FF;font-size:13px;font-weight:600;color:#2E6BFF}
+.cw-pvskip{margin-top:10px;font-size:12px;color:#9AA6B8;text-align:center}
+.cw-snapp{display:grid;grid-template-columns:64px 1fr;gap:10px}
+.cw-snapn{font-size:12.5px;font-weight:600;color:#41597F;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
 /* ---- AI 帮写：对话页的层次与反馈 ---- */
 #cw-compose{display:flex;flex-direction:column}
 .cwc-bar{position:relative;flex:none;display:flex;align-items:center;gap:8px;min-height:64px;padding:0 8px;
@@ -5847,20 +5902,22 @@ REND['host-newfriend']=function(){custRender('host-newfriend')};
 
 var AWAKE_SELING=false, AWAKE_ENTER=false, CW_FROM='tools';
 /* tags＝这台手机微信里给好友打的标签；演示数据，用来验证「按标签取人」的并集口径。 */
+/* say＝该客户最近一次有内容的消息（逐人写法唯一的话题来源）；chatFail＝演示聊天读取失败，
+   retry 后能读到。这两项是演示数据，真实来源是手机脚本逐人导出的一对一聊天尾部。 */
 var CW_CUST=[
-  {i:'a1',n:'李晓霞',last:'今天 10:00',h:3,tags:['老客户','VIP']},
-  {i:'a2',n:'张大强',last:'今天 10:00',h:3,tags:['新客户']},
-  {i:'a3',n:'林晓雯',last:'今天 09:20',h:4,tags:['老客户','社群']},
-  {i:'a4',n:'王芳',last:'今天 09:05',h:2,tags:['意向客户']},
-  {i:'a5',n:'宋雨彤',last:'今天 08:40',h:5,tags:['VIP','社群']},
-  {i:'a6',n:'许志远',last:'今天 08:10',h:6,tags:['新客户']},
-  {i:'b1',n:'陈立',last:'昨天 18:20',h:50,tags:['老客户','已成交']},
-  {i:'b2',n:'周敏',last:'昨天 11:05',h:79,tags:['意向客户']},
-  {i:'b3',n:'刘洋',last:'前天 15:30',h:120,tags:['社群']},
-  {i:'b4',n:'赵一鸣',last:'昨天 16:20',h:52,tags:['老客户','已成交']},
-  {i:'c1',n:'郑凯',last:'9月27日 10:10',h:180,tags:['老客户']},
-  {i:'c2',n:'吴静',last:'9月27日 09:30',h:240,tags:['待跟进']},
-  /* 下面三条要把 N 调到 30 天以上才进窗口：没有 14 天以上的快捷档 */
+  {i:'a1',n:'李晓霞',last:'今天 10:00',h:3,tags:['老客户','VIP'],say:'那件驼色大衣还有 M 码吗？'},
+  {i:'a2',n:'张大强',last:'今天 10:00',h:3,tags:['新客户'],say:'先看看，有优惠再说。'},
+  {i:'a3',n:'林晓雯',last:'今天 09:20',h:4,tags:['老客户','社群'],say:'上次的面膜用完了，最近还有活动吗？'},
+  {i:'a4',n:'王芳',last:'今天 09:05',h:2,tags:['意向客户'],say:'周六带孩子过来试一下。'},
+  {i:'a5',n:'宋雨彤',last:'今天 08:40',h:5,tags:['VIP','社群'],say:'帮我把上次那个链接再发一下。'},
+  {i:'a6',n:'许志远',last:'今天 08:10',h:6,tags:['新客户'],say:'刚加上，先了解一下。'},
+  {i:'b1',n:'陈立',last:'昨天 18:20',h:50,tags:['老客户','已成交'],say:'上个月买的鞋挺舒服的。'},
+  {i:'b2',n:'周敏',last:'昨天 11:05',h:79,tags:['意向客户'],say:'这个价格有点高，我再考虑一下。'},
+  {i:'b3',n:'刘洋',last:'前天 15:30',h:120,tags:['社群'],say:'群里那个活动还有名额吗？'},
+  {i:'b4',n:'赵一鸣',last:'昨天 16:20',h:52,tags:['老客户','已成交'],say:'有新货记得告诉我。'},
+  {i:'c1',n:'郑凯',last:'9月27日 10:10',h:180,tags:['老客户'],say:'最近没空，年底再说。',chatFail:true},
+  {i:'c2',n:'吴静',last:'9月27日 09:30',h:240,tags:['待跟进'],say:'想问一下保修的事。'},
+  /* 下面三条要把 N 调到 30 天以上才进窗口：没有 14 天以上的快捷档；同时演示「没有聊天记录」的兜底 */
   {i:'d1',n:'孙浩',last:'10月12日 09:20',h:31*24,tags:['新客户']},
   {i:'d2',n:'何丽',last:'10月10日 16:40',h:33*24,tags:['VIP']},
   {i:'d3',n:'马晓东',last:'9月2日 11:00',h:71*24,tags:['意向客户']}
@@ -5895,7 +5952,7 @@ var CW_CUSTOM={n:3,u:'d',on:false,tags:[]};
 var CW_TAGD=[], CW_TAGQ='', CW_TAGW=null;
 var CW_SEL={}, CW_XED={};
 var CW_QBUSY=false, CW_QERR=false, CW_QSIM=false, CW_QMODE='', CW_QBEAT=0, CW_QTM=null, CW_UNIT_FROM='';
-var CW_LAUNCHING=false, CW_SEND_IDS=[], CW_SEND_VERSION='', CW_PENDS=[], CW_REXP='';
+var CW_LAUNCHING=false, CW_SEND_IDS=[], CW_SEND_VERSION='', CW_SEND_UNSENT=0, CW_PENDS=[], CW_REXP='';
 var CW_SH=null;
 
 /* 发送草稿：有序条目（文本 / 图片 / 视频），顺序就是发送顺序。
@@ -5905,6 +5962,9 @@ function cwMarkFresh(id){ CW_FRESH_ID=id; setTimeout(function(){ if(CW_FRESH_ID=
 /* AI 会话：独立保存要求、参考资料、轮次与候选。ver＝当前资料版本，换资料就 +1，
    旧候选据此标「基于之前素材」，采用前必须按当前资料重新生成。 */
 var CW_CHAT=null, CW_REF_SEQ=0;
+/* 逐人写法（PRD §6.6）：与统一草稿各存各的。on=false 时对象留着——切回同一份内容再回来，
+   名单没变就直接恢复上次的文案，不重新生成。people[id]={st,text,basis,generic,manual,why,gen,prev,shown}。 */
+var CW_PERS=null, CW_PERS_SEQ=0, CW_PERS_TIMERS=[], CW_PVALL=false, CW_MODE_ANIM=false;
 /* 唤醒目的：空草稿时当思路入口，已有内容时当换向开关。
    g＝这个场景下让用户补的那句背景；问候不需要任何事实，直接写。 */
 var CW_PURPOSES=[
@@ -5945,8 +6005,13 @@ function cwResetChat(){
   CW_CHAT={ver:0,token:0,busy:false,timer:null,turns:[],refs:[],undo:null,lastReq:'',rendered:0,purpose:''};
   CW_REF_SEQ=0;
 }
-function cwResetDraft(){ CW_ITEMS=[]; CW_ITEM_SEQ=0; CW_MAT=null; cwResetChat(); CW_LAUNCHING=false; }
-function cwRender(){ if(cur&&REND[cur])REND[cur]({}); }
+function cwResetDraft(){ CW_ITEMS=[]; CW_ITEM_SEQ=0; CW_MAT=null; cwResetChat(); cwPersReset(); CW_PVALL=false; CW_LAUNCHING=false; }
+function cwRender(){
+  if(!cur||!REND[cur])return;
+  var sc=cur==='cw-content'?$('cwContentBody'):null, y=sc?sc.scrollTop:0;
+  REND[cur]({});
+  if(sc)sc.scrollTop=y;
+}
 
 /* ---------- 记录里的范围与人数 ---------- */
 function cwDur(h){ return h<24?(h+'小时'):(Math.floor(h/24)+'天'); }
@@ -6006,6 +6071,16 @@ function cwQueryDone(tok){
     if(keep.length!==CW_SEND_IDS.length){ cwRender(); toast('接收客户已变为 '+keep.length+' 人，请重新确认'); return; }
     cwSendNow(); return;
   }
+  /* 逐人写法：取到人再开写；一个人都没有就停在内容页提示改范围。 */
+  if(CW_QMODE==='personal'){
+    cwApplyWindow();
+    if(!cwSelCount()){
+      toast((CW_CUSTOM.tags||[]).length?'所选标签下没有未回复的客户，调整标签或范围再试':'这段时间没有未回复的客户，调大范围再试');
+      return;
+    }
+    if(cur==='cw-content')cwPersBegin();
+    return;
+  }
   /* 预览发送才取人：取回来先落名单，再进预览；一个人都没有就停在内容页提示改范围。
      等人时用户已经离开内容页（比如去开 AI 帮写）就不再跳转，名单留在那里。 */
   cwApplyWindow();
@@ -6017,7 +6092,7 @@ function cwQueryDone(tok){
 }
 /* 清掉范围时连在飞的查询一起作废：别让它回来又把人选上。 */
 function cwQueryStop(){ clearTimeout(CW_QTM); CW_QTM=null; CW_QBEAT++; CW_QBUSY=false; CW_QERR=false; CW_QMODE=''; }
-function cwQueryRetry(){ if(!CW_QBUSY)cwQueryRun(CW_QMODE==='send'?'send':'preview'); }
+function cwQueryRetry(){ if(!CW_QBUSY)cwQueryRun(CW_QMODE==='send'?'send':(CW_QMODE==='personal'?'personal':'preview')); }
 /* 冒烟用：把在飞的查询立即跑完（真机上是接口回来）。 */
 function cwQueryFlush(){ if(!CW_QTM)return; clearTimeout(CW_QTM); cwQueryDone(CW_QBEAT); }
 /* 冒烟置 window.CW_TESTFAST＝1 时同样全走瞬时分支，断言才不用等真实计时。 */
@@ -6029,27 +6104,33 @@ function cwApplyWindow(){cwReseed();cwRender()}
 function cwRangeInput(v){
   var n=parseInt(v,10), lim=CW_CUSTOM.u==='d'?90:48;
   if(!n||n<1){
-    cwQueryStop();
-    CW_CUSTOM.on=false; CW_CUSTOM.n=3; CW_SEL={};
-    cwRender(); return;
+    var clear=function(){ cwQueryStop(); CW_CUSTOM.on=false; CW_CUSTOM.n=3; CW_SEL={}; cwRender(); };
+    if(CW_PERS&&CW_PERS.on){ cwPersGuard(clear); return; }
+    if(CW_PERS)cwPersReset();
+    clear(); return;
   }
   n=Math.min(lim,n);
-  var same=CW_CUSTOM.on&&CW_CUSTOM.n===n;
-  CW_CUSTOM.n=n; CW_CUSTOM.on=true;
-  if(same){ cwRender(); return; }
-  cwQueryStop(); CW_SEL={};
-  cwRender();
+  if(CW_CUSTOM.on&&CW_CUSTOM.n===n){ cwRender(); return; }
+  var apply=function(){ cwQueryStop(); CW_CUSTOM.n=n; CW_CUSTOM.on=true; CW_SEL={}; cwRender(); };
+  if(CW_PERS&&CW_PERS.on){ cwPersGuard(apply); return; }
+  if(CW_PERS)cwPersReset();
+  apply();
 }
 function cwRangeUnit(u){
   if(u===CW_CUSTOM.u)return;
-  CW_UNIT_FROM=CW_CUSTOM.u;
-  CW_CUSTOM.u=u;
-  if(CW_CUSTOM.on){
-    CW_CUSTOM.n=Math.min(u==='d'?90:48,CW_CUSTOM.n);
-    cwQueryStop(); CW_SEL={};
-    cwRender(); return;
-  }
-  cwRender();
+  var apply=function(){
+    CW_UNIT_FROM=CW_CUSTOM.u;
+    CW_CUSTOM.u=u;
+    if(CW_CUSTOM.on){
+      CW_CUSTOM.n=Math.min(u==='d'?90:48,CW_CUSTOM.n);
+      cwQueryStop(); CW_SEL={};
+      cwRender(); return;
+    }
+    cwRender();
+  };
+  if(CW_PERS&&CW_PERS.on){ cwPersGuard(apply); return; }
+  if(CW_PERS)cwPersReset();
+  apply();
 }
 function cwCbHtml(st,sm){
   var cls='cw-cb'+(sm?' sm':'')+(st===2?' on':(st===1?' part':''));
@@ -6136,8 +6217,16 @@ function awakeAllSel(){
 }
 function awakeNext(){
   if(!awakeSelCount()){ toast('先选几个客户'); return; }
-  CW_XED={}; cwQueryStop();
-  go('cw-content');
+  var next=function(){ CW_XED={}; cwQueryStop(); go('cw-content'); };
+  var ids=cwSelIds().slice().sort().join(',');
+  if(CW_PERS&&CW_PERS.on&&CW_PERS.order.slice().sort().join(',')!==ids){
+    cwPersGuard(next,function(){
+      CW_SEL={}; CW_PERS.order.forEach(function(id){ CW_SEL[id]=true }); REND['host-awake']();
+    });
+    return;
+  }
+  if(CW_PERS&&!CW_PERS.on&&CW_PERS.order.slice().sort().join(',')!==ids)cwPersReset();
+  next();
 }
 function awakeBackOrLeave(){ if(!awakeBack())back(); }
 function awakeBack(){
@@ -6219,6 +6308,315 @@ function cwEnter(){
   cwQueryStop();
   go('cw-content');
 }
+
+/* ================= 按聊天记录逐人写（PRD §6.6） =================
+   与统一内容各存各的：统一草稿在 CW_ITEMS，逐人文案在 CW_PERS。只发文字，附件留在统一模式里。
+   依据只有客户最近一条有内容的聊天原句；没有聊天记录走本地通用问候，读聊天失败标红可重试。
+   这里不接真实模型与聊天接口，文案由规则演示，但状态、失败与竞态按真实链路设计。 */
+function cwPersReset(){
+  CW_PERS_TIMERS.forEach(function(t){clearTimeout(t)});
+  CW_PERS_TIMERS=[]; CW_PERS=null; CW_PVALL=false;
+}
+function cwPersActive(){ return !!(CW_PERS&&CW_PERS.on) }
+function cwPersText(id){
+  var pe=CW_PERS&&CW_PERS.people[id];
+  return pe&&pe.st==='ready'?String(pe.text||'').trim():'';
+}
+/* 写成、有文字、且仍在当前可发送名单里的人。没写成与用户标了「不发」的都不进发送。 */
+function cwPersSendIds(){
+  if(!CW_PERS)return [];
+  return CW_PERS.order.filter(function(id){
+    return CW_PERS.people[id]&&CW_PERS.people[id].st==='ready'&&cwPersText(id)&&CW_SEL[id];
+  });
+}
+function cwPersCount(){ return cwPersSendIds().length }
+/* 批写或单人重写还没落地时，先不让人预览发送——否则那一行会被当成没写成而漏掉。 */
+function cwPersBusy(){
+  if(!CW_PERS)return false;
+  if(CW_PERS.busy)return true;
+  return CW_PERS.order.some(function(id){ return CW_PERS.people[id]&&CW_PERS.people[id].st==='writing' });
+}
+function cwPersSig(){
+  if(!CW_PERS)return '';
+  return CW_PERS.order.map(function(id){
+    var pe=CW_PERS.people[id],t=pe&&pe.st==='ready'?String(pe.text||''):'';
+    return id+':'+(pe?pe.st:'')+':'+t;
+  }).join('|');
+}
+/* 名单没变就恢复上次的逐人文案；变了才重写。 */
+function cwPersSameSet(){
+  if(!CW_PERS)return false;
+  var now=cwSelByH().join(','), old=CW_PERS.order.join(',');
+  return !!now&&now===old;
+}
+function cwScopeNudge(){
+  var card=document.querySelector('#cwContentBody .cw-scope'); if(!card)return;
+  try{card.scrollIntoView({block:'center',behavior:cwRM()?'auto':'smooth'})}catch(e){}
+  if(cwRM())return;
+  card.classList.remove('nudge'); void card.offsetWidth; card.classList.add('nudge');
+  setTimeout(function(){card.classList.remove('nudge')},700);
+}
+function cwPersStart(){
+  closeSheet(CW_SH); CW_SH=null;
+  if(CW_PERS&&CW_PERS.busy){toast('正在写，稍等一下');return}
+  if(CW_FROM==='tools'&&!CW_CUSTOM.on){toast('先设置未回复范围');cwScopeNudge();return}
+  if(CW_FROM==='tools'&&!cwSelCount()){cwQueryRun('personal');return}  /* 取到人再开写 */
+  if(!cwSelCount()){toast('还没有可写的客户');return}
+  if(CW_PERS&&cwPersSameSet()){CW_PERS.on=true;CW_MODE_ANIM=true;cwRender();return}
+  cwPersBegin();
+}
+function cwPersBegin(){
+  var ids=cwSelByH();
+  if(!ids.length){toast('没有可写的客户');return}
+  cwPersReset();
+  var p={on:true,busy:true,token:++CW_PERS_SEQ,total:ids.length,done:0,order:ids.slice(),people:{}};
+  ids.forEach(function(id){
+    p.people[id]={st:'writing',text:'',basis:'',generic:false,manual:false,why:'',gen:0,prev:'',shown:false};
+  });
+  CW_PERS=p; CW_PVALL=false; CW_MODE_ANIM=true;
+  cwRender();
+  if(window.CW_TESTFAST){cwPersFlush();return}
+  cwPersSchedule();
+}
+function cwPersSchedule(){
+  var p=CW_PERS; if(!p)return;
+  var tok=p.token;
+  p.order.forEach(function(id,ix){
+    CW_PERS_TIMERS.push(setTimeout(function(){ cwPersWriteOne(id,tok) },240+ix*90));
+  });
+}
+/* 原型里的“模型”：只承接聊天里出现过的事；没有聊天记录就不请求模型，走本地通用问候。 */
+function cwPersCompose(c,retry){
+  if(!c)return {fail:true,why:'客户不在名单里'};
+  if(c.chatFail&&!retry)return {fail:true,why:'没读到最近的聊天记录'};
+  var say=String(c.say||'').trim();
+  if(!say){
+    var old=(c.tags||[]).some(function(t){return /老客户|已成交|VIP/.test(t)});
+    return {text:old?'好久没联系了，最近还好吗？店里到了些新东西，有空随时找我。'
+                   :'你好，之前加了好友还没怎么聊过。有需要随时找我。',
+            basis:'没有聊天记录，用了通用问候',generic:true};
+  }
+  var text='';
+  if(/大衣|M 码|码/.test(say))text='上次你问的那件驼色大衣，这周到了新色，M 码也补上了。要不要我拍两张细节图给你看看？';
+  else if(/面膜/.test(say))text='上次那盒面膜用得差不多了吧？这周有满减，我帮你留一盒？';
+  else if(/带孩子|周六|试/.test(say))text='这周六 14:00–18:00 门店有试穿，你上次说想带孩子过来，我帮你留个位置？';
+  else if(/名额|群/.test(say))text='你问的那个活动还有名额，我帮你留一个？';
+  else if(/链接/.test(say))text='上次那个链接我重新发你，这周下单还能叠加满减。';
+  else if(/鞋|舒服/.test(say))text='上次那双鞋穿着合适就好。这周到了一批秋冬款，有适合你的我拍给你？';
+  else if(/价格|考虑/.test(say))text='上次你看的那款这周有活动价，比之前划算。要不要我再帮你算一下？';
+  else if(/新货/.test(say))text='这周到新货了，有几款挺适合你。要不要我拍给你看看？';
+  else if(/保修|售后/.test(say))text='你上次问的保修我确认过了，按购买时间算还在保。有需要维修的随时找我。';
+  else if(/年底|没空/.test(say))text='上次你说年底再看，这不快到年底了，店里到了一批新款，有空来看看？';
+  else if(/了解一下|刚加/.test(say))text='上次聊到你想先了解一下。这周有新品到店，我把目录发你看看？';
+  else if(/优惠/.test(say))text='上次你说有优惠再说。这周刚好有活动，我帮你留意着，有合适的拍给你？';
+  else text='好久没联系了，最近还好吗？有空随时找我聊聊。';
+  return {text:text,basis:'客户上次说「'+say+'」'};
+}
+function cwPersWriteOne(id,tok,silent){
+  var p=CW_PERS; if(!p||p.token!==tok)return;
+  var pe=p.people[id]; if(!pe||pe.st!=='writing')return;
+  var r=cwPersCompose(cwCust(id),pe.gen>0);
+  if(r.fail){pe.st='fail';pe.why=r.why}
+  else{pe.st='ready';pe.text=r.text;pe.basis=r.basis;pe.generic=!!r.generic;pe.manual=false}
+  p.done++;
+  if(p.done>=p.total)p.busy=false;
+  if(!silent){cwPersPaintRow(id);cwPersProgressPaint();cwContentFoot()}
+}
+/* 测试与冒烟用：把在飞的生成立即跑完。 */
+function cwPersFlush(){
+  var p=CW_PERS; if(!p)return;
+  CW_PERS_TIMERS.forEach(function(t){clearTimeout(t)});CW_PERS_TIMERS=[];
+  var guard=0,id;
+  while(guard++<500){
+    id=null;
+    for(var i=0;i<p.order.length;i++){ if(p.people[p.order[i]].st==='writing'){id=p.order[i];break} }
+    if(!id)break;
+    cwPersWriteOne(id,p.token,true);
+  }
+  p.busy=false;
+  cwRender();
+}
+/* 单人重写、重试、不发、恢复：只换这一行，不重绘整张卡，别把用户正在改的其它行和滚动位置冲掉。 */
+function cwPersRewrite(id){
+  var p=CW_PERS; if(!p)return;
+  var pe=p.people[id]; if(!pe||pe.st==='writing')return;
+  var old={text:pe.text,basis:pe.basis,generic:pe.generic,manual:pe.manual};
+  pe.st='writing';pe.gen=(pe.gen||0)+1;pe.text='';pe.basis='';pe.shown=false;
+  cwPersPaintRow(id);cwContentFoot();
+  var tok=p.token;
+  var run=function(){
+    var p2=CW_PERS; if(!p2||p2.token!==tok)return;
+    var pe2=p2.people[id]; if(!pe2||pe2.st!=='writing')return;
+    var r=cwPersCompose(cwCust(id),true);
+    if(r.fail){pe2.st='fail';pe2.why=r.why}
+    else{pe2.st='ready';pe2.text=r.text;pe2.basis=r.basis;pe2.generic=!!r.generic;pe2.manual=false;pe2.shown=false}
+    cwPersPaintRow(id);cwContentFoot();
+    if(!r.fail){
+      var c=cwCust(id);
+      toast('已重写 '+(c?c.n:'这句'),'撤销',function(){
+        var pe3=CW_PERS&&CW_PERS.people[id]; if(!pe3)return;
+        pe3.st='ready';pe3.text=old.text;pe3.basis=old.basis;pe3.generic=old.generic;pe3.manual=old.manual;pe3.shown=false;
+        cwPersPaintRow(id);cwContentFoot();
+      },5000);
+    }
+  };
+  if(window.CW_TESTFAST){run();return}
+  CW_PERS_TIMERS.push(setTimeout(run,520));
+}
+function cwPersRetry(id){
+  var p=CW_PERS; if(!p)return;
+  var pe=p.people[id]; if(!pe||pe.st!=='fail')return;
+  pe.gen=(pe.gen||0)+1;pe.st='writing';pe.why='';pe.shown=false;
+  cwPersPaintRow(id);cwContentFoot();
+  var tok=p.token;
+  var run=function(){
+    var p2=CW_PERS; if(!p2||p2.token!==tok)return;
+    var pe2=p2.people[id]; if(!pe2||pe2.st!=='writing')return;
+    var r=cwPersCompose(cwCust(id),true);
+    if(r.fail){pe2.st='fail';pe2.why=r.why}
+    else{pe2.st='ready';pe2.text=r.text;pe2.basis=r.basis;pe2.generic=!!r.generic;pe2.manual=false;pe2.shown=false}
+    cwPersPaintRow(id);cwContentFoot();
+  };
+  if(window.CW_TESTFAST){run();return}
+  CW_PERS_TIMERS.push(setTimeout(run,520));
+}
+function cwPersSkip(id){
+  var pe=CW_PERS&&CW_PERS.people[id];
+  if(!pe||pe.st==='writing'||pe.st==='skip')return;
+  pe.prev=pe.st;pe.st='skip';
+  cwPersPaintRow(id);cwContentFoot();
+}
+function cwPersRestore(id){
+  var pe=CW_PERS&&CW_PERS.people[id];
+  if(!pe||pe.st!=='skip')return;
+  pe.st=pe.prev||((pe.text&&pe.text.trim())?'ready':'fail');
+  cwPersPaintRow(id);cwContentFoot();
+}
+function cwPersInput(el,id){
+  var p=CW_PERS; if(!p)return;
+  var pe=p.people[id]; if(!pe)return;
+  pe.text=el.value;
+  if(pe.st==='fail'&&String(el.value||'').trim()){
+    pe.st='ready';pe.manual=true;pe.why='';
+    var row=el.closest('.cw-pers');
+    if(row){
+      var st=row.querySelector('.cw-persst');
+      if(!st){st=document.createElement('span');var hd=row.querySelector('.cw-pershd');if(hd)hd.appendChild(st)}
+      st.className='cw-persst ok';st.textContent='已手写';
+      var acts=row.querySelector('.cw-persacts');
+      if(acts)acts.innerHTML='<button class="cw-textact" onclick="cwPersRewrite(\''+id+'\')">重写</button>'
+        +'<button class="cw-textact" onclick="cwPersSkip(\''+id+'\')">不发</button>';
+    }
+  }
+  cwGrow(el);cwContentFoot();
+}
+function cwPersStop(){
+  var p=CW_PERS; if(!p)return;
+  CW_PERS_TIMERS.forEach(function(t){clearTimeout(t)});CW_PERS_TIMERS=[];
+  p.token++;
+  p.order.forEach(function(id){
+    var pe=p.people[id];
+    if(pe&&pe.st==='writing'){pe.st='fail';pe.why='已停止，没有写完';pe.shown=false;cwPersPaintRow(id)}
+  });
+  p.busy=false;
+  cwPersProgressPaint();cwContentFoot();
+}
+function cwPersOff(){
+  if(!CW_PERS)return;
+  CW_PERS.on=false;CW_MODE_ANIM=true;
+  cwRender();
+}
+/* 名单与逐人文案对不上时先问一句；取消则恢复原范围／留在勾选页，不丢用户改过的文案。 */
+function cwPersGuard(onYes,onNo){
+  if(!CW_PERS||!CW_PERS.on){onYes();return}
+  var d=openDlg('<h3>已选客户有变化</h3><p>按聊天记录写的 '+CW_PERS.order.length+' 条文案会清空。</p>'
+    +'<div class="cw-shbtns"><button class="cw-textact" data-cancel>取消</button><button class="cw-btn" data-ok>继续</button></div>');
+  d.querySelector('[data-cancel]').onclick=function(){d.remove();if(onNo)onNo();cwRender()};
+  d.querySelector('[data-ok]').onclick=function(){d.remove();cwPersReset();cwRender();onYes()};
+}
+
+/* ---------- 逐人列表的渲染 ---------- */
+function cwPersBasis(pe){
+  var b=pe.manual?'手动填写':(pe.basis||'');
+  if(b.length>44)b=b.slice(0,44)+'…';
+  return b;
+}
+function cwPersRowHtml(id){
+  var p=CW_PERS, pe=p&&p.people[id], c=cwCust(id), name=c?c.n:'客户';
+  if(!pe)return '';
+  if(pe.st==='writing'){
+    return '<div class="cw-pers" data-pers="'+id+'">'
+      +'<div class="cw-pershd"><span class="cw-av">'+esc(name.charAt(0))+'</span><b>'+esc(name)+'</b>'
+      +'<span class="cw-persst busy">正在写…</span></div>'
+      +'<div class="cw-perssk"></div><div class="cw-perssk" style="width:72%"></div></div>';
+  }
+  var cls='cw-pers'+(pe.st==='skip'?' off':'');
+  var stHtml='';
+  if(pe.st==='fail')stHtml='<span class="cw-persst fail">'+(pe.why==='已停止，没有写完'?'已停止':(pe.why||'没读到最近的聊天记录'))+'</span>';
+  else if(pe.st==='skip')stHtml='<span class="cw-persst">不发</span>';
+  else if(pe.manual)stHtml='<span class="cw-persst ok">已手写</span>';
+  var basis=pe.st==='fail'?'':'<div class="cw-persbasis'+(pe.generic?' warn':'')+'">'+esc(cwPersBasis(pe))+'</div>';
+  var ta='<textarea class="cw-ta cw-persta" rows="1" aria-label="给 '+esc(name)+' 的唤醒文案"'
+    +' placeholder="'+(pe.st==='fail'?'手动写一条':'输入要发送的内容')+'"'
+    +' oninput="cwPersInput(this,\''+id+'\')">'+esc(pe.text||'')+'</textarea>';
+  var acts=pe.st==='fail'
+    ?'<button class="cw-textact" onclick="cwPersRetry(\''+id+'\')">重试</button>'
+    :'<button class="cw-textact" onclick="cwPersRewrite(\''+id+'\')">重写</button>';
+  acts+=pe.st==='skip'
+    ?'<button class="cw-textact" onclick="cwPersRestore(\''+id+'\')">恢复</button>'
+    :'<button class="cw-textact" onclick="cwPersSkip(\''+id+'\')">不发</button>';
+  return '<div class="'+cls+'" data-pers="'+id+'">'
+    +'<div class="cw-pershd"><span class="cw-av">'+esc(name.charAt(0))+'</span><b>'+esc(name)+'</b>'+stHtml+'</div>'
+    +basis+ta+'<div class="cw-persacts">'+acts+'</div></div>';
+}
+function cwPersPaintRow(id){
+  if(cur!=='cw-content'||!CW_PERS)return;
+  var old=document.querySelector('#cwContentBody .cw-pers[data-pers="'+id+'"]');
+  if(!old)return;
+  var tmp=document.createElement('div');tmp.innerHTML=cwPersRowHtml(id);
+  var row=tmp.firstElementChild;if(!row)return;
+  old.parentNode.replaceChild(row,old);
+  var ta=row.querySelector('textarea.cw-ta');if(ta)cwGrow(ta);
+  var pe=CW_PERS.people[id];
+  if(pe&&pe.st==='ready'&&!pe.shown&&!cwRM()){pe.shown=true;row.classList.add('cw-pers-in')}
+}
+function cwPersProgressPaint(){
+  if(cur!=='cw-content'||!CW_PERS)return;
+  var prog=document.querySelector('#cwContentBody .cw-persprog');if(!prog)return;
+  if(CW_PERS.busy){
+    var cnt=prog.querySelector('[data-cnt]');
+    if(cnt)cnt.textContent='正在写 '+CW_PERS.done+'/'+CW_PERS.total;
+  }else prog.remove();
+}
+function cwPersAnimate(){
+  if(!cwPersActive()||cwRM())return;
+  [].forEach.call(document.querySelectorAll('#cwContentBody .cw-pers[data-pers]'),function(row){
+    var id=row.getAttribute('data-pers'),pe=CW_PERS&&CW_PERS.people[id];
+    if(pe&&pe.st==='ready'&&!pe.shown){pe.shown=true;row.classList.add('cw-pers-in')}
+  });
+}
+function cwPersBlockHtml(){
+  var p=CW_PERS,n=p.order.length;
+  var h='<div class="cw-pcard cw-perscard'+(CW_MODE_ANIM?' cw-mode-in':'')+'">'
+    +'<div class="cw-rowhd"><span class="sp" aria-hidden="true">'+I('sparkle',16,1.8)+'</span><b>发送内容</b>'
+    +'<span class="cw-persbadge">个性化 · '+n+' 条</span>'
+    +'<button class="cw-textact cw-perslink" onclick="cwPersOff()">改回同一份</button></div>';
+  if(p.busy)h+='<div class="cw-persprog" role="status" aria-live="polite"><span class="spin" aria-hidden="true"></span>'
+    +'<span data-cnt>正在写 '+p.done+'/'+p.total+'</span>'
+    +'<button class="cw-textact" onclick="cwPersStop()">停止</button></div>';
+  h+='<div class="cw-perslist">'+p.order.map(cwPersRowHtml).join('')+'</div>'
+    +'<div class="cw-persnote">'+I('info',14,2)+'只发文字，图片和视频不随这次发送</div>'
+    +'</div>';
+  return h;
+}
+
+/* AI 帮写先二选一：统一话术进对话页；逐人写法不进对话，按名单直接写。 */
+function cwAiSheet(){
+  CW_SH=openSheet('<div class="cw-sh">AI 帮写</div>'
+    +cwSheetRow('sparkle','写一版通用话术','所有人收到同一条','cwAiCommon()')
+    +cwSheetRow('message','按聊天记录给每人写','每人一条 · 只发文字','cwPersStart()'),'cw-sheet cws-sheet');
+}
+function cwAiCommon(){ closeSheet(CW_SH);CW_SH=null;setTimeout(cwComposeOpen,180); }
 
 /* ================= 发送内容（主编辑页） ================= */
 function cwMediaHtml(it){
@@ -6646,9 +7044,10 @@ function cwUndoApply(){
   cwRestoreItems(u.items);
 }
 function cwContentBlockHtml(){
-  return '<div class="cw-pcard">'
+  if(cwPersActive())return cwPersBlockHtml();
+  return '<div class="cw-pcard'+(CW_MODE_ANIM?' cw-mode-in':'')+'">'
     +'<div class="cw-rowhd"><span class="sp" aria-hidden="true">'+I('sparkle',16,1.8)+'</span><b>发送内容</b>'
-      +'<button class="cw-ai-link" onclick="cwComposeOpen()">'+I('sparkle',13,1.8)+'AI 帮写</button></div>'
+      +'<button class="cw-ai-link" onclick="cwAiSheet()">'+I('sparkle',13,1.8)+'AI 帮写</button></div>'
     +'<div class="cw-items">'+cwItemsHtml()+'</div>'
     +'<button class="cw-btn block cw-add-btn" onclick="cwAddSheet()">'+I('plus',18,2.2)+'添加内容</button>'
     +'</div>';
@@ -6661,8 +7060,10 @@ REND['cw-content']=function(){
   var h='';
   if(CW_FROM==='tools')h+='<div class="cw-pcard cw-scope">'+cwScopeHtml()+'</div>';
   else h+='<div class="cw-awakehd"><span>已选 <b>'+cwSelCount()+'</b> 人</span><button class="cw-textact" onclick="cwEditPeople()">修改</button></div>';
-  h+=cwContentBlockHtml()+cwGapBlockHtml()+cwUndoHtml();
-  $('cwContentBody').className='scroll cw-scroll';$('cwContentBody').innerHTML=h;cwGrowAll();cwUnitAnim();cwContentFoot();
+  h+=cwContentBlockHtml()+cwGapBlockHtml()+(cwPersActive()?'':cwUndoHtml());
+  $('cwContentBody').className='scroll cw-scroll';$('cwContentBody').innerHTML=h;
+  cwGrowAll();cwPersAnimate();cwUnitAnim();cwContentFoot();
+  CW_MODE_ANIM=false;
 };
 /* 换单位后整张范围卡会重绘，新元素自己不会从上一位滑过来：拿 Web Animations 补一段 旧→新 的位移 */
 function cwUnitAnim(){
@@ -7229,6 +7630,7 @@ function cwPreviewItemsHtml(){
 }
 /* 内容页与预览页共用的内容检查；内容页不查名单——名单是点「预览发送」才取的。 */
 function cwContentErr(){
+  if(cwPersActive())return cwPersCount()?'':'还没有写成的人';
   if(CW_ITEMS.some(function(i){return i.up==='ing'}))return '附件还在上传';
   if(CW_ITEMS.some(function(i){return i.up==='fail'}))return '有附件上传失败，请重试或移除';
   if(!cwHasContent())return '还没有要发送的内容';
@@ -7237,15 +7639,19 @@ function cwContentErr(){
 function cwContentBlocked(){
   if(CW_FROM==='tools'&&CW_QBUSY)return '正在获取客户…';
   if(CW_FROM==='tools'&&!CW_CUSTOM.on)return '先设置未回复范围';
+  if(cwPersActive()&&cwPersBusy())return '正在写…';
   return cwContentErr();
 }
 function cwPreviewBlocked(){
   if(CW_FROM==='tools'&&CW_QBUSY)return '正在获取客户…';
   if(CW_FROM==='tools'&&CW_QERR)return '没能取到客户，请重试';
   if(CW_FROM==='tools'&&!CW_CUSTOM.on)return '先设置未回复范围';
+  if(cwPersActive()&&cwPersBusy())return '正在写…';
+  if(cwPersActive())return cwPersCount()?'':'还没有写成的人';
   if(!cwSelCount())return '还没有可发送的客户';
   return cwContentErr();
 }
+function cwSendCount(){ return cwPersActive()?cwPersCount():cwSelCount() }
 function cwContentFoot(){
   var err=cwContentBlocked();
   var note=err||(CW_FROM==='tools'&&CW_QERR?'没能取到客户，请重试':'');
@@ -7264,23 +7670,39 @@ function cwPreviewGo(){
 function cwPreviewFoot(){
   var err=cwPreviewBlocked(),retry=(CW_QERR?' · <button class="cw-textact" onclick="cwQueryRetry()">重试</button>':'');
   $('cwPreviewFoot').innerHTML=(err?'<div class="cw-sum" role="status">'+esc(err)+retry+'</div>':'')
-    +'<button class="cw-btn block" '+(err?'disabled':'onclick="cwStart()"')+'>去微信发送 · '+cwSelCount()+' 人</button>';
+    +'<button class="cw-btn block" '+(err?'disabled':'onclick="cwStart()"')+'>去微信发送 · '+cwSendCount()+' 人</button>';
 }
+/* 逐人预览：一人一条。前 3 人展开，其余收起；没写成／标了不发的在底部说明，不混进接收名单。 */
+function cwPersPreviewHtml(){
+  var ids=cwPersSendIds(), show=3, open=CW_PVALL, list=open?ids:ids.slice(0,show);
+  var h='<div class="cw-pvpeople">'+list.map(function(id){
+    var c=cwCust(id);
+    return '<div class="cw-pvperson"><div class="cw-pvphd"><span class="cw-av">'+esc(c?c.n.charAt(0):'客')+'</span>'
+      +esc(c?c.n:'客户')+'</div><p class="cw-pvtext">'+esc(cwPersText(id))+'</p></div>';
+  }).join('')+'</div>';
+  if(ids.length>show)h+='<button class="cw-pvmore" onclick="cwPersExpand()">'+(open?'收起':'展开其余 '+(ids.length-show)+' 人')+'</button>';
+  var rest=cwSelCount()-ids.length;
+  if(rest>0)h+='<div class="cw-pvskip">'+rest+' 人没写成，本次不发</div>';
+  return h;
+}
+function cwPersExpand(){ CW_PVALL=!CW_PVALL; REND['cw-preview'](); }
 REND['cw-preview']=function(){
   $('cwPreviewBack').innerHTML=I('back',24,2);
-  var h='<button class="cw-pcard cw-rcpt" onclick="go(\'cw-people\')"><span>接收客户 <b>'+cwSelCount()+'</b> 人</span><span class="cw-chev" aria-hidden="true">›</span></button>';
+  var h='<button class="cw-pcard cw-rcpt" onclick="go(\'cw-people\')"><span>接收客户 <b>'+cwSendCount()+'</b> 人</span><span class="cw-chev" aria-hidden="true">›</span></button>';
   h+='<div class="cw-pcard"><div class="cw-section-head"><span class="sp" aria-hidden="true">'+I('sparkle',16,1.8)+'</span><b class="cw-rowhd-b">发送内容</b><button class="cw-textact" onclick="back()">修改内容</button></div>'
-    +'<div class="cw-pvpane">'+cwPreviewItemsHtml()+'</div></div>';
+    +'<div class="cw-pvpane">'+(cwPersActive()?cwPersPreviewHtml():cwPreviewItemsHtml())+'</div></div>';
   $('cwPreviewBody').innerHTML=h;cwPreviewFoot();
 };
 REND['cw-people']=function(){
   $('cwPeopleBack').innerHTML=I('back',24,2);
-  var ids=cwSelByH();
+  var ids=cwPersActive()?cwPersSendIds():cwSelByH();
+  var rest=cwPersActive()?Math.max(0,cwSelCount()-ids.length):0;
   var h='<div class="cw-people"><div class="cw-peoplect"><span>共 '+ids.length+' 人</span>'
     +'<button class="cw-textact" onclick="cwEditPeople()">修改</button></div>';
   h+=ids.map(function(id){ var c=cwCust(id); if(!c)return '';
     return '<div class="cw-rp"><span class="cw-av">'+esc(c.n.charAt(0))+'</span><span class="cw-rpm"><b>'+esc(c.n)+'</b><span class="cw-rps2">未回复 · '+cwDur(c.h)+'</span></span></div>';
   }).join('');
+  if(rest>0)h+='<div class="cw-peoplect" style="margin-top:8px">'+rest+' 人没写成，本次不发</div>';
   $('cwPeopleBody').innerHTML=h+'</div>';
 };
 /* 改人回各自入口：工具页回范围（内容页），手选入口回原勾选列表。 */
@@ -7302,11 +7724,17 @@ function cwDay(){
   var d=new Date();
   return (d.getMonth()+1)+'月'+d.getDate()+'日';
 }
-function cwSendVersion(){ return JSON.stringify([cwItemsSig(),cwSelIds().slice().sort()]) }
+function cwSendVersion(){
+  var sig=cwPersActive()?('P'+cwPersSig()):cwItemsSig();
+  var ids=cwPersActive()?cwPersSendIds():cwSelIds();
+  return JSON.stringify([sig,ids.slice().sort()]);
+}
 function cwStart(){
   if(CW_QBUSY||CW_LAUNCHING)return;
   var bad=cwPreviewBlocked(); if(bad){cwPreviewFoot();toast(bad);return}
-  CW_SEND_IDS=cwSelIds().slice(); CW_SEND_VERSION=cwSendVersion();
+  var ids=cwPersActive()?cwPersSendIds():cwSelIds();
+  CW_SEND_IDS=ids.slice(); CW_SEND_VERSION=cwSendVersion();
+  CW_SEND_UNSENT=cwPersActive()?Math.max(0,cwSelCount()-ids.length):0;
   if(CW_FROM==='tools'){cwQueryRun('send');return}
   cwSendNow();
 }
@@ -7314,20 +7742,26 @@ function cwStart(){
    名单变了就停在预览重新确认；退出、改稿或切账号后旧请求不能启动发送。 */
 function cwSendNow(){
   if(cur!=='cw-preview'){return}
-  if(JSON.stringify([cwItemsSig(),CW_SEND_IDS.slice().sort()])!==CW_SEND_VERSION){cwRender();toast('内容已修改，请重新确认');return}
-  var ids=cwSelIds();
+  if(cwSendVersion()!==CW_SEND_VERSION){cwRender();toast('内容已修改，请重新确认');return}
+  var ids=cwPersActive()?cwPersSendIds():cwSelIds();
   if(ids.length!==CW_SEND_IDS.length){cwRender();toast('接收客户已变化，请重新确认');return}
   cwLaunch(ids);
 }
 function cwLaunch(ids){
   if(CW_LAUNCHING)return;CW_LAUNCHING=true;
   stack=stack.filter(function(p){return ['cw-content','cw-preview','cw-people','cw-compose','cw-pick'].indexOf(p.id)<0});
-  var n=ids.length, items=JSON.parse(JSON.stringify(cwSendItems()));
-  var people=ids.map(function(id){ var c=cwCust(id); return {n:c?c.n:'客户',st:'ok'} });
+  var personal=cwPersActive(), n=ids.length;
+  var items=personal?[]:JSON.parse(JSON.stringify(cwSendItems()));
+  var people=ids.map(function(id){
+    var c=cwCust(id), o={n:c?c.n:'客户',st:'ok'};
+    if(personal)o.text=cwPersText(id);
+    return o;
+  });
   var r={id:'r'+Date.now(),when:cwDay()+'\n'+cwClock(),
          scope:(CW_FROM==='awake'?'待唤醒客户 · 手选':'未回复 '+cwRangeLabel()
            +((CW_CUSTOM.tags||[]).length?' · '+cwTagSummary():'')),
-         n:n,gap:CW_SET.gap,st:'done',ok:n,fail:0,items:items,people:people};
+         n:n,gap:CW_SET.gap,st:'done',ok:n,fail:0,items:items,people:people,
+         personal:personal,unsent:personal?CW_SEND_UNSENT:0};
   CW_PENDS.push(r);
   if(CW_FROM==='awake'){ AWAKE_SELING=false; AWAKE_ENTER=false; go('host-awake'); }
   else go('host-tools');
@@ -7343,7 +7777,7 @@ function cwLaunchDone(r){
   r.ok=r.n-fn; r.fail=fn; r.st=fn?'cut':'done'; r.end=cwDay()+' '+cwClock();
   r.people.forEach(function(p,i){
     if(i>=fn)return;
-    if(i===1&&r.items.length>1){ p.st='part'; p.upto=1; p.why='第 2 条消息未发出'; }
+    if(!r.personal&&i===1&&r.items.length>1){ p.st='part'; p.upto=1; p.why='第 2 条消息未发出'; }
     else{ p.st='fail'; p.why='对方已把你删除'; }
   });
   CW_RECS.unshift(r);
@@ -7392,7 +7826,7 @@ REND['cw-records']=function(){
   if(!CW_RECS.length)h='<div class="cw-empty-state"><span class="ic" aria-hidden="true">'+I('clock',32,1.8)+'</span><p>还没有唤醒过。</p></div>';
   CW_RECS.forEach(function(r){
     var n=(r.items||[]).length;
-    var sub='同一份内容 '+(n||1)+' 项 · 成功 '+r.ok+(r.fail?' / 失败 '+r.fail:'');
+    var sub=(r.personal?'个性化 · '+r.n+' 份':'同一份内容 '+(n||1)+' 项')+' · 成功 '+r.ok+(r.fail?' / 失败 '+r.fail:'');
     h+='<button class="cw-rec" onclick="go(\'cw-record\',{id:\''+r.id+'\'})">'
       +'<span class="cw-when">'+String(r.when).replace('\n','<br>')+'</span>'
       +'<span class="cw-recm"><b>唤醒 '+r.n+' 人</b><span>'+sub+'</span></span>'
@@ -7444,8 +7878,9 @@ function cwRecRows(r){
       +'</div>';
     if(p.st==='part')h+='<div class="cw-why" style="padding:0 0 6px 46px">'+esc(p.why||'部分消息未发出')+'</div>';
     if(open){
+      var msgs=r.personal?[{t:'text',c:p.text||''}]:(p.st==='part'?(r.items||[]).slice(0,p.upto||1):r.items);
       h+='<div class="cw-pv cw-wxpv">'
-        +'<div class="cw-wxmsg"><div class="cw-wxbubs">'+cwRecBubs(p.st==='part'?(r.items||[]).slice(0,p.upto||1):r.items)+'</div>'+cwWxMe()+'</div>'
+        +'<div class="cw-wxmsg"><div class="cw-wxbubs">'+cwRecBubs(msgs)+'</div>'+cwWxMe()+'</div>'
         +'<div class="cw-wxst"><span class="cw-wxck" aria-hidden="true">✓</span>'+(p.st==='part'?'已发送 '+(p.upto||1)+' 条':'已发送')+'</div>'
         +'</div>';
     }
@@ -7468,10 +7903,16 @@ REND['cw-record']=function(p){
       +'<div class="cw-kv"><span>开始时间</span><b>'+String(r.when).replace('\n',' ')+'</b></div>'
       +'<div class="cw-kv"><span>完成时间</span><b>'+esc(r.end||'—')+'</b></div>'
       +(r.scope?'<div class="cw-kv"><span>范围</span><b>'+esc(r.scope)+'</b></div>':'')
-      +'<div class="cw-kv"><span>发送内容</span><b>同一份 · '+(r.items||[]).length+' 项'+(r.gap?' · 间隔 '+r.gap+' 秒':'')+'</b></div>'
+      +'<div class="cw-kv"><span>发送内容</span><b>'+(r.personal?'个性化 · '+r.n+' 份':'同一份 · '+(r.items||[]).length+' 项')
+        +(r.gap?' · 间隔 '+r.gap+' 秒':'')+'</b></div>'
+      +(r.personal&&r.unsent?'<div class="cw-kv"><span>未发送</span><b>'+r.unsent+' 人</b></div>':'')
     +'</div></div>';
   h+='<div class="cw-card"><div class="cw-h"><span class="sp" aria-hidden="true">'+I('doc',16,1.8)+'</span>内容快照</div><div class="cw-snap">'
-    +(r.items||[]).map(function(m){return '<div class="cw-snapi"><span class="cw-itno">'+(m.t==='text'?'文':cwTypeN(m.t).slice(0,1))+'</span><span>'+esc(m.c)+'</span></div>'}).join('')
+    +(r.personal
+      ?(r.people||[]).filter(function(p){return p.st!=='fail'}).map(function(p){
+        return '<div class="cw-snapi cw-snapp"><span class="cw-snapn">'+esc(p.n)+'</span><span>'+esc(p.text||'')+'</span></div>';
+      }).join('')
+      :(r.items||[]).map(function(m){return '<div class="cw-snapi"><span class="cw-itno">'+(m.t==='text'?'文':cwTypeN(m.t).slice(0,1))+'</span><span>'+esc(m.c)+'</span></div>'}).join(''))
     +'</div></div>';
   h+=cwRecRows(r);
   h+='<div class="cw-note"><span class="ic" aria-hidden="true">'+I('info',16,2)+'</span>'
@@ -7598,10 +8039,12 @@ function cwTagToggle(t){
 }
 function cwTagFilter(v){ CW_TAGQ=v; cwTagListRender(); }
 function cwTagApply(){
-  CW_CUSTOM.tags=CW_PHONE_TAGS.filter(function(t){ return CW_TAGD.indexOf(t)>=0 });
+  var tags=CW_PHONE_TAGS.filter(function(t){ return CW_TAGD.indexOf(t)>=0 });
   closeSheet(CW_TAGW); CW_TAGW=null;
-  cwQueryStop(); CW_SEL={};
-  cwRender();
+  var apply=function(){ CW_CUSTOM.tags=tags; cwQueryStop(); CW_SEL={}; cwRender(); };
+  if(CW_PERS&&CW_PERS.on){ cwPersGuard(apply); return; }
+  if(CW_PERS)cwPersReset();
+  apply();
 }
 function cwTagClose(){ closeSheet(CW_TAGW); CW_TAGW=null; }
 function cwTagSync(){ toast('演示：跳转微信同步手机标签'); }
