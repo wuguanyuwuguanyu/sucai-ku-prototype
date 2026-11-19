@@ -1648,8 +1648,16 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .cw-persbasis.warn{color:#B4741F}
 .cw-pers .cw-ta{min-height:44px;padding:11px 14px;font-size:15px}
-.cw-persacts{display:flex;align-items:center;gap:6px;margin:7px 0 0 41px}
-.cw-persacts .cw-textact{height:32px;min-height:32px;padding:0 12px;font-size:12.5px;background:#F4F7FF;color:#4C6FA8}
+.cw-persacts{display:flex;align-items:center;gap:8px;margin:8px 0 0 41px}
+.cw-persact{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;
+  border-radius:12px;background:#F4F7FF;color:#4C6FA8;
+  transition:background .18s var(--emph),color .18s var(--emph),transform .14s var(--emph)}
+.cw-persact svg{display:block}
+.cw-persact:active{background:#E7EFFC;transform:scale(.94)}
+.cw-persact.danger{background:#FFF5F4;color:#C2413A}
+.cw-persact.danger:active{background:#FDE8E6}
+.cw-persact.ok{background:#EFFAF5;color:#12A16B}
+.cw-persact.ok:active{background:#E2F6EC}
 .cw-pers.off .cw-ta{opacity:.45;pointer-events:none}
 .cw-pers.off .cw-persst{color:#9AA6B8}
 .cw-perssk{height:11px;margin:9px 0 0 41px;border-radius:6px;
@@ -5416,7 +5424,7 @@ function syncNav(id,params){
 }
 
 /* ---------- Material ripple（统一按压反馈，替代缩放） ---------- */
-var RIP_SEL='.cw-textact,.cw-message,.btn,.chip,.iconbtn,.cell,.wk-card,.p-card,.pc-btn,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.hv-msg,.hv-stat,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.hva-lockcard,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close,.hw-add,.cust-seg button,.cust-copy,.cust-acct-row,.cw-btn,.cw-ib,.cw-op,.cw-units button,.cw-rec,.cw-kv .op,.cw-addrow,.cw-nosend,.cw-tutlink,.cw-info,.cw-rpb,.cw-goto,.cw-tutplay,.cw-rcpt,.cw-ai-link,.cwc-more,.cwc-use,.cwc-mini,.cwc-popt,.cwc-send,.cwp-tabs button,.cwp-grps button';
+var RIP_SEL='.cw-textact,.cw-message,.btn,.chip,.iconbtn,.cell,.wk-card,.p-card,.pc-btn,.rp-btn,.dk,.tab,.lib-tab,.gri,.more-link,.switch,.gpill,.wx-send,.col-card,.pchip,.cmp-row,.pflt,.pk-field,.pk-a,.ps-mic,.ps-play,.ps-rt,.bm-row,.hp-tip-card,.ra-swap,.ra-hit-row,.hv-row,.hv-tool,.hv-chip,.hv-tab button,.hv-go,.hv-more,.hv-more-row,.hv-banner,.hv-msg,.hv-stat,.ht-item,.ht-chip,.tk-card,.tk-btn,.tk-seg button,.tk-can,.tk-d,.tk-all,.tk-more,.hm-item,.hm-edit,.hva-qkcir,.hva-crow-b,.hva-cfg,.hva-agent,.hva-cell,.hva-srow,.hva-actrow,.hva-radio,.hva-actin,.hva-plat,.hva-sx,.hva-setlink,.hva-scope-x,.hva-scope-add,.hva-host-sw,.hva-lockcard,.acct-av,.fw-opt,.fw-link,.fw-ed,.fw-lim .ed,.lib-flt,.ai-close,.hw-add,.cust-seg button,.cust-copy,.cust-acct-row,.cw-btn,.cw-ib,.cw-op,.cw-units button,.cw-rec,.cw-kv .op,.cw-addrow,.cw-nosend,.cw-tutlink,.cw-info,.cw-rpb,.cw-goto,.cw-tutplay,.cw-rcpt,.cw-ai-link,.cw-persact,.cwc-more,.cwc-use,.cwc-mini,.cwc-popt,.cwc-send,.cwp-tabs button,.cwp-grps button';
 function ripInit(){
   document.addEventListener('pointerdown',function(e){
     var t=e.target.closest ? e.target.closest(RIP_SEL) : null;
@@ -6503,9 +6511,10 @@ function cwPersInput(el,id){
       var st=row.querySelector('.cw-persst');
       if(!st){st=document.createElement('span');var hd=row.querySelector('.cw-pershd');if(hd)hd.appendChild(st)}
       st.className='cw-persst ok';st.textContent='已手写';
+      var cc=cwCust(id), nm=cc?cc.n:'客户';
       var acts=row.querySelector('.cw-persacts');
-      if(acts)acts.innerHTML='<button class="cw-textact" onclick="cwPersRewrite(\''+id+'\')">重写</button>'
-        +'<button class="cw-textact" onclick="cwPersSkip(\''+id+'\')">不发</button>';
+      if(acts)acts.innerHTML=cwPersActBtn('cwPersRewrite',id,'refresh','重写 '+nm+' 的文案')
+        +cwPersActBtn('cwPersSkip',id,'x','本次不发 '+nm,'danger');
     }
   }
   cwGrow(el);cwContentFoot();
@@ -6541,6 +6550,12 @@ function cwPersBasis(pe){
   if(b.length>44)b=b.slice(0,44)+'…';
   return b;
 }
+/* 行内动作只出图标：转圈＝重写／重试，叉＝不发，勾＝恢复。文字收进 title 与可访问名。 */
+function cwPersActBtn(act,id,icon,label,cls){
+  return '<button type="button" class="cw-persact'+(cls?' '+cls:'')+'"'
+    +' onclick="'+act+'(\''+id+'\')" aria-label="'+esc(label)+'" title="'+esc(label)+'">'
+    +I(icon,16,2.2)+'</button>';
+}
 function cwPersRowHtml(id){
   var p=CW_PERS, pe=p&&p.people[id], c=cwCust(id), name=c?c.n:'客户';
   if(!pe)return '';
@@ -6560,11 +6575,11 @@ function cwPersRowHtml(id){
     +' placeholder="'+(pe.st==='fail'?'手动写一条':'输入要发送的内容')+'"'
     +' oninput="cwPersInput(this,\''+id+'\')">'+esc(pe.text||'')+'</textarea>';
   var acts=pe.st==='fail'
-    ?'<button class="cw-textact" onclick="cwPersRetry(\''+id+'\')">重试</button>'
-    :'<button class="cw-textact" onclick="cwPersRewrite(\''+id+'\')">重写</button>';
+    ?cwPersActBtn('cwPersRetry',id,'refresh','重试读取 '+name+' 的聊天')
+    :cwPersActBtn('cwPersRewrite',id,'refresh','重写 '+name+' 的文案');
   acts+=pe.st==='skip'
-    ?'<button class="cw-textact" onclick="cwPersRestore(\''+id+'\')">恢复</button>'
-    :'<button class="cw-textact" onclick="cwPersSkip(\''+id+'\')">不发</button>';
+    ?cwPersActBtn('cwPersRestore',id,'check','恢复发送 '+name,'ok')
+    :cwPersActBtn('cwPersSkip',id,'x','本次不发 '+name,'danger');
   return '<div class="'+cls+'" data-pers="'+id+'">'
     +'<div class="cw-pershd"><span class="cw-av">'+esc(name.charAt(0))+'</span><b>'+esc(name)+'</b>'+stHtml+'</div>'
     +basis+ta+'<div class="cw-persacts">'+acts+'</div></div>';
