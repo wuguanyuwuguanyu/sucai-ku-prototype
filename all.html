@@ -1003,29 +1003,30 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cw-tagh-val.on{color:#102953}
 .cw-tagh-chev{flex:none;width:18px;height:18px;color:#94A8C8;display:flex}
-/* 标签浮层：标题与「确定」常驻，中间列表跟着 .sheet-body 这根唯一滚轴走。 */
+/* 标签浮层：纯白底，标题与「确定」常驻，中间标签云跟着 .sheet-body 这根唯一滚轴走。 */
+.cw-tagsh{background:#fff}
 .cw-tagsh .sheet-body{padding:0}
 .cw-tagsh-head{position:sticky;top:0;z-index:3;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
-  background:var(--sc-low);padding:4px 8px 6px 10px}
+  background:#fff;padding:4px 8px 6px 10px}
 .cw-tagsh-head b{font-size:17px;font-weight:700;color:#102953;text-align:center;letter-spacing:.01em}
 .cw-tagsh-act{justify-self:start;min-height:44px;padding:0 10px;border:0;border-radius:999px;background:none;
   font-family:var(--f);font-size:14px;font-weight:600;color:#2E6BFF;position:relative;overflow:hidden}
 .cw-tagsh-act.right{justify-self:end;display:inline-flex;align-items:center;gap:5px}
 .cw-tagsh-act .ic,.cw-tagsh-act svg{flex:none}
 .cw-tagsh-search{display:flex;align-items:center;gap:9px;margin:4px 16px 12px;padding:0 16px;height:48px;
-  border-radius:999px;background:#fff;color:#94A8C8;box-shadow:inset 0 0 0 1px #E6EDF9}
+  border-radius:999px;background:#F3F7FE;color:#94A8C8}
 .cw-tagsh-search input{flex:1;min-width:0;border:0;background:none;outline:none;
   font:500 15px/1 var(--f);color:#102953}
 .cw-tagsh-search input::placeholder{color:#A9B8D0}
 .cw-tagcloud{display:flex;flex-wrap:wrap;align-content:flex-start;gap:8px;margin:2px 16px 10px}
-.cw-tagchip{display:inline-flex;align-items:center;gap:5px;min-height:38px;padding:0 14px;
-  border:1px solid #DCE6F6;border-radius:12px;background:#fff;color:#27436E;
+.cw-tagchip{display:inline-flex;align-items:center;gap:5px;min-height:40px;padding:0 16px;
+  border:1px solid transparent;border-radius:999px;background:#F3F7FE;color:#27436E;
   font:500 14px/1 var(--f);position:relative;overflow:hidden}
-.cw-tagchip .cw-tagck{display:none;width:14px;height:14px;flex:none;color:#1677FE}
-.cw-tagchip.on{background:#E8F0FF;border-color:#B9D2FA;color:#1268E8;font-weight:600}
+.cw-tagchip .cw-tagck{display:none;width:14px;height:14px;flex:none;color:#1268E8}
+.cw-tagchip.on{background:#DDE9FF;border-color:#C7DBFB;color:#1268E8;font-weight:600}
 .cw-tagchip.on .cw-tagck{display:block}
 .cw-tagnone{margin:0 16px;padding:30px 16px;text-align:center;font-size:13px;color:#8CA0BF}
-.cw-tagft{position:sticky;bottom:0;z-index:3;background:var(--sc-low);
+.cw-tagft{position:sticky;bottom:0;z-index:3;background:#fff;
   padding:12px 16px calc(16px + env(safe-area-inset-bottom))}
 .cw-tagft .cw-btn{height:52px;font-size:16px}
 
@@ -1501,9 +1502,9 @@ textarea.cw-ta::placeholder{color:var(--on-surface-variant)}
 .cw-bar{min-height:64px}
 #cw-content .cw-ib{width:40px;height:40px;background:#fff;color:#2E6BFF;
   box-shadow:0 10px 20px -16px rgba(40,70,150,.95),inset 0 0 0 1px rgba(255,255,255,.7)}
-/* 白卡：粗圆角＋白边＋蓝调柔影 */
-.cw-pcard{background:#fff;border-radius:22px;padding:18px;
-  box-shadow:0 14px 30px -26px rgba(40,70,150,.95),inset 0 0 0 1px rgba(255,255,255,.7)}
+/* 白卡：20 圆角＋1px 冷调描边＋蓝调柔影；唤醒范围、发送内容、发送间隔同一张 */
+.cw-pcard{background:#fff;border-radius:20px;padding:18px;
+  box-shadow:0 10px 28px -24px rgba(40,70,150,.7),inset 0 0 0 1px #EAF1FC}
 /* 段头吃渐变深蓝字；带图标的段头保持实色（渐变会把 SVG 的 currentColor 一起吃掉） */
 .cw-sech>b,.cw-rowhd>b,.cw-rowhd-b{
   background-image:linear-gradient(96deg,#0F2A58,#2A62B4);
@@ -1511,9 +1512,12 @@ textarea.cw-ta::placeholder{color:var(--on-surface-variant)}
 .cw-rowhd>b,.cw-rowhd-b{font-size:16.5px;font-weight:700}
 .cw-h{font-size:16px;font-weight:700;color:#102953}
 /* 唤醒范围：与发送内容、发送间隔同一张白卡，不再单独做渐变底。
-   数字框与小时／天合成一个左对齐的整体，读起来是一句话。 */
-.cw-scope-group{display:flex;align-items:center;gap:8px}
-.cw-scope-group .cw-units{margin-left:0}
+   数字框与小时／天包进同一枚浅蓝胶囊，读起来是一句话。 */
+.cw-scope-group{display:flex;align-items:center;gap:8px;background:#F2F7FF;border-radius:18px;padding:4px}
+.cw-scope-group .cw-num{height:40px;border-radius:14px;background:#fff}
+.cw-scope-group .cw-num:focus{background:#fff}
+.cw-scope-group .cw-units{margin-left:0;background:transparent;box-shadow:none}
+.cw-scope-group .cw-units button{height:36px}
 /* 分段器：白色滑块在浅槽里滑过去，不再靠每个按钮自己换底 */
 .cw-units{position:relative;padding:4px;gap:0;background:#E8F0FF;box-shadow:none}
 .cw-unit-thumb{position:absolute;left:4px;top:4px;bottom:4px;width:58px;border-radius:999px;
