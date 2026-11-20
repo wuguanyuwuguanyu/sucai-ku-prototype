@@ -8238,7 +8238,8 @@ var HVA_TYPES=[
 ];
 /* g＝主页回显把 9 类后台任务归成的 4 组（见 HVA_GRPS）。只给非 own 的那 9 类标：
    own 那三项在主页按「我挂的能力」讲，不走进「后台派来的任务」那一行。
-   组名是**动作**不是类型名：主页要让员工看懂「手机会干嘛」，不是把设置页的 9 个长名字再抄一遍。 */
+   组名只是**内部归并键**：主页卡片写的是**任务类型名**（取该组里第一条在范围内的类型，
+   产品 2026-11-20 定），不是这个键。 */
 var HVA_GRPS=['发朋友圈','加好友','群发消息','唤醒客户'];
 /* 托管范围的**候选全集**＝上面 12 类里去掉 own 那三类，9 类。
    派生、不另抄一份名字：抄一份就是两份事实，加一类后台任务时总有一处忘了跟上。 */
@@ -8554,13 +8555,13 @@ function hvaGearHex(){
 /* ---------------- AI托管主页 · 「托管会做什么」回显（2026-10-27 定稿：动作卡片） ----------------
    员工要的不是「设置里填了什么」，是「托管开启后，手机会替我做哪些事」。所以正文是**一串平铺的
    动作卡**：每张只有图标与名字，**不分「后台派来的任务」与「我挂的能力」**——那两族的名字仍各自来自
-   HVA_GRPS（9 类后台任务归成的 4 组）与 HVA_MINE（我挂的能力），只是并成一串、不再分行。
-   精确的类型名单仍在设置页的托管范围卡里，不在主页再抄一份。
+   HVA_TYPES（9 类后台任务按 HVA_GRPS 归并、取组内第一条在范围内的类型名）与 HVA_MINE（我挂的能力），
+   只是并成一串、不再分行。精确的类型名单仍在设置页的托管范围卡里，不在主页再抄一份。
    三种摆法（B 问号浮层／C 卡可折／D 日志卡头入口）共用这份卡片与空态，
    差别只在 hvaDoingTopHtml 的摆放与入口。 */
 var HVA_DOING_GRP_META={
-  /* 4 组后台任务的卡片脸。组名是**动作**不是类型名（见 HVA_GRPS）；图标与配色照工具页那一套，
-     同一条能力在两屏长得一样，人不用重新认。 */
+  /* 4 组后台任务的卡片脸。键是内部组名（见 HVA_GRPS），不是卡上标题——标题取类型名；
+     图标与配色照工具页那一套，同一条能力在两屏长得一样，人不用重新认。 */
   '发朋友圈':{ic:'photos',pal:'creature'},
   '加好友':  {ic:'userplus',pal:'hand'},
   '群发消息':{ic:'megaphone',pal:'bubble'},
@@ -8591,13 +8592,14 @@ function hvaDoingNoTypes(){ return HVA_DOING_EMPTY_DEMO||HVA_SCOPE.length===0; }
 function hvaDoingNoCaps(){ return HVA_DOING_EMPTY_DEMO||HVA_MINE.length===0; }
 function hvaDoingEmpty(){ return hvaDoingNoPlats()&&hvaDoingNoTypes()&&hvaDoingNoCaps(); }
 /* 9 类后台任务按 4 组归并；某组里只要有一类还在范围里，这一组就还能发生。
-   组名与顺序取自 HVA_GRPS，类型归属取自 HVA_TYPES 的 g——不在主页另抄一份类型名。 */
+   组键与顺序取自 HVA_GRPS，类型归属取自 HVA_TYPES 的 g。**卡上写的是类型名**：取该组里第一条
+   在范围内的类型（如「微信群发好友任务」），组键只用来定位图标——名字仍然只有一个来源（HVA_TYPES）。 */
 function hvaDoingGroups(){
   var o=[],i,j,a;
   if(hvaDoingNoTypes())return o;
   for(i=0;i<HVA_GRPS.length;i++){
     a=HVA_TYPES.filter(function(t){return !t.own&&t.g===HVA_GRPS[i]});
-    for(j=0;j<a.length;j++)if(HVA_SCOPE.indexOf(a[j].n)>=0){o.push(HVA_GRPS[i]);break}
+    for(j=0;j<a.length;j++)if(HVA_SCOPE.indexOf(a[j].n)>=0){o.push({n:a[j].n,g:HVA_GRPS[i]});break}
   }
   return o;
 }
@@ -8609,8 +8611,8 @@ function hvaDoingItems(){
   var o=[],g=hvaDoingGroups(),c=hvaDoingCaps(),i,m;
   if(!hvaDoingNoPlats())o.push({n:'自动回复消息',ic:HVA_DOING_REPLY_META.ic,pal:HVA_DOING_REPLY_META.pal});
   for(i=0;i<g.length;i++){
-    m=HVA_DOING_GRP_META[g[i]];
-    o.push({n:g[i],ic:m?m.ic:'sparkle',pal:m?m.pal:'creature'});
+    m=HVA_DOING_GRP_META[g[i].g];
+    o.push({n:g[i].n,ic:m?m.ic:'sparkle',pal:m?m.pal:'creature'});
   }
   for(i=0;i<c.length;i++){
     m=hvaDoingToolMeta(c[i]);
@@ -21061,7 +21063,8 @@ var HVA_TYPES=[
 ];
 /* g＝主页回显把 9 类后台任务归成的 4 组（见 HVA_GRPS）。只给非 own 的那 9 类标：
    own 那三项在主页按「我挂的能力」讲，不走进「后台派来的任务」那一行。
-   组名是**动作**不是类型名：主页要让员工看懂「手机会干嘛」，不是把设置页的 9 个长名字再抄一遍。 */
+   组名只是**内部归并键**：主页卡片写的是**任务类型名**（取该组里第一条在范围内的类型，
+   产品 2026-11-20 定），不是这个键。 */
 var HVA_GRPS=['发朋友圈','加好友','群发消息','唤醒客户'];
 /* 托管范围的**候选全集**＝上面 12 类里去掉 own 那三类，9 类。
    派生、不另抄一份名字：抄一份就是两份事实，加一类后台任务时总有一处忘了跟上。 */
@@ -21377,13 +21380,13 @@ function hvaGearHex(){
 /* ---------------- AI托管主页 · 「托管会做什么」回显（2026-10-27 定稿：动作卡片） ----------------
    员工要的不是「设置里填了什么」，是「托管开启后，手机会替我做哪些事」。所以正文是**一串平铺的
    动作卡**：每张只有图标与名字，**不分「后台派来的任务」与「我挂的能力」**——那两族的名字仍各自来自
-   HVA_GRPS（9 类后台任务归成的 4 组）与 HVA_MINE（我挂的能力），只是并成一串、不再分行。
-   精确的类型名单仍在设置页的托管范围卡里，不在主页再抄一份。
+   HVA_TYPES（9 类后台任务按 HVA_GRPS 归并、取组内第一条在范围内的类型名）与 HVA_MINE（我挂的能力），
+   只是并成一串、不再分行。精确的类型名单仍在设置页的托管范围卡里，不在主页再抄一份。
    三种摆法（B 问号浮层／C 卡可折／D 日志卡头入口）共用这份卡片与空态，
    差别只在 hvaDoingTopHtml 的摆放与入口。 */
 var HVA_DOING_GRP_META={
-  /* 4 组后台任务的卡片脸。组名是**动作**不是类型名（见 HVA_GRPS）；图标与配色照工具页那一套，
-     同一条能力在两屏长得一样，人不用重新认。 */
+  /* 4 组后台任务的卡片脸。键是内部组名（见 HVA_GRPS），不是卡上标题——标题取类型名；
+     图标与配色照工具页那一套，同一条能力在两屏长得一样，人不用重新认。 */
   '发朋友圈':{ic:'photos',pal:'creature'},
   '加好友':  {ic:'userplus',pal:'hand'},
   '群发消息':{ic:'megaphone',pal:'bubble'},
@@ -21414,13 +21417,14 @@ function hvaDoingNoTypes(){ return HVA_DOING_EMPTY_DEMO||HVA_SCOPE.length===0; }
 function hvaDoingNoCaps(){ return HVA_DOING_EMPTY_DEMO||HVA_MINE.length===0; }
 function hvaDoingEmpty(){ return hvaDoingNoPlats()&&hvaDoingNoTypes()&&hvaDoingNoCaps(); }
 /* 9 类后台任务按 4 组归并；某组里只要有一类还在范围里，这一组就还能发生。
-   组名与顺序取自 HVA_GRPS，类型归属取自 HVA_TYPES 的 g——不在主页另抄一份类型名。 */
+   组键与顺序取自 HVA_GRPS，类型归属取自 HVA_TYPES 的 g。**卡上写的是类型名**：取该组里第一条
+   在范围内的类型（如「微信群发好友任务」），组键只用来定位图标——名字仍然只有一个来源（HVA_TYPES）。 */
 function hvaDoingGroups(){
   var o=[],i,j,a;
   if(hvaDoingNoTypes())return o;
   for(i=0;i<HVA_GRPS.length;i++){
     a=HVA_TYPES.filter(function(t){return !t.own&&t.g===HVA_GRPS[i]});
-    for(j=0;j<a.length;j++)if(HVA_SCOPE.indexOf(a[j].n)>=0){o.push(HVA_GRPS[i]);break}
+    for(j=0;j<a.length;j++)if(HVA_SCOPE.indexOf(a[j].n)>=0){o.push({n:a[j].n,g:HVA_GRPS[i]});break}
   }
   return o;
 }
@@ -21432,8 +21436,8 @@ function hvaDoingItems(){
   var o=[],g=hvaDoingGroups(),c=hvaDoingCaps(),i,m;
   if(!hvaDoingNoPlats())o.push({n:'自动回复消息',ic:HVA_DOING_REPLY_META.ic,pal:HVA_DOING_REPLY_META.pal});
   for(i=0;i<g.length;i++){
-    m=HVA_DOING_GRP_META[g[i]];
-    o.push({n:g[i],ic:m?m.ic:'sparkle',pal:m?m.pal:'creature'});
+    m=HVA_DOING_GRP_META[g[i].g];
+    o.push({n:g[i].n,ic:m?m.ic:'sparkle',pal:m?m.pal:'creature'});
   }
   for(i=0;i<c.length;i++){
     m=hvaDoingToolMeta(c[i]);
@@ -34402,7 +34406,8 @@ var HVA_TYPES=[
 ];
 /* g＝主页回显把 9 类后台任务归成的 4 组（见 HVA_GRPS）。只给非 own 的那 9 类标：
    own 那三项在主页按「我挂的能力」讲，不走进「后台派来的任务」那一行。
-   组名是**动作**不是类型名：主页要让员工看懂「手机会干嘛」，不是把设置页的 9 个长名字再抄一遍。 */
+   组名只是**内部归并键**：主页卡片写的是**任务类型名**（取该组里第一条在范围内的类型，
+   产品 2026-11-20 定），不是这个键。 */
 var HVA_GRPS=['发朋友圈','加好友','群发消息','唤醒客户'];
 /* 托管范围的**候选全集**＝上面 12 类里去掉 own 那三类，9 类。
    派生、不另抄一份名字：抄一份就是两份事实，加一类后台任务时总有一处忘了跟上。 */
@@ -34718,13 +34723,13 @@ function hvaGearHex(){
 /* ---------------- AI托管主页 · 「托管会做什么」回显（2026-10-27 定稿：动作卡片） ----------------
    员工要的不是「设置里填了什么」，是「托管开启后，手机会替我做哪些事」。所以正文是**一串平铺的
    动作卡**：每张只有图标与名字，**不分「后台派来的任务」与「我挂的能力」**——那两族的名字仍各自来自
-   HVA_GRPS（9 类后台任务归成的 4 组）与 HVA_MINE（我挂的能力），只是并成一串、不再分行。
-   精确的类型名单仍在设置页的托管范围卡里，不在主页再抄一份。
+   HVA_TYPES（9 类后台任务按 HVA_GRPS 归并、取组内第一条在范围内的类型名）与 HVA_MINE（我挂的能力），
+   只是并成一串、不再分行。精确的类型名单仍在设置页的托管范围卡里，不在主页再抄一份。
    三种摆法（B 问号浮层／C 卡可折／D 日志卡头入口）共用这份卡片与空态，
    差别只在 hvaDoingTopHtml 的摆放与入口。 */
 var HVA_DOING_GRP_META={
-  /* 4 组后台任务的卡片脸。组名是**动作**不是类型名（见 HVA_GRPS）；图标与配色照工具页那一套，
-     同一条能力在两屏长得一样，人不用重新认。 */
+  /* 4 组后台任务的卡片脸。键是内部组名（见 HVA_GRPS），不是卡上标题——标题取类型名；
+     图标与配色照工具页那一套，同一条能力在两屏长得一样，人不用重新认。 */
   '发朋友圈':{ic:'photos',pal:'creature'},
   '加好友':  {ic:'userplus',pal:'hand'},
   '群发消息':{ic:'megaphone',pal:'bubble'},
@@ -34755,13 +34760,14 @@ function hvaDoingNoTypes(){ return HVA_DOING_EMPTY_DEMO||HVA_SCOPE.length===0; }
 function hvaDoingNoCaps(){ return HVA_DOING_EMPTY_DEMO||HVA_MINE.length===0; }
 function hvaDoingEmpty(){ return hvaDoingNoPlats()&&hvaDoingNoTypes()&&hvaDoingNoCaps(); }
 /* 9 类后台任务按 4 组归并；某组里只要有一类还在范围里，这一组就还能发生。
-   组名与顺序取自 HVA_GRPS，类型归属取自 HVA_TYPES 的 g——不在主页另抄一份类型名。 */
+   组键与顺序取自 HVA_GRPS，类型归属取自 HVA_TYPES 的 g。**卡上写的是类型名**：取该组里第一条
+   在范围内的类型（如「微信群发好友任务」），组键只用来定位图标——名字仍然只有一个来源（HVA_TYPES）。 */
 function hvaDoingGroups(){
   var o=[],i,j,a;
   if(hvaDoingNoTypes())return o;
   for(i=0;i<HVA_GRPS.length;i++){
     a=HVA_TYPES.filter(function(t){return !t.own&&t.g===HVA_GRPS[i]});
-    for(j=0;j<a.length;j++)if(HVA_SCOPE.indexOf(a[j].n)>=0){o.push(HVA_GRPS[i]);break}
+    for(j=0;j<a.length;j++)if(HVA_SCOPE.indexOf(a[j].n)>=0){o.push({n:a[j].n,g:HVA_GRPS[i]});break}
   }
   return o;
 }
@@ -34773,8 +34779,8 @@ function hvaDoingItems(){
   var o=[],g=hvaDoingGroups(),c=hvaDoingCaps(),i,m;
   if(!hvaDoingNoPlats())o.push({n:'自动回复消息',ic:HVA_DOING_REPLY_META.ic,pal:HVA_DOING_REPLY_META.pal});
   for(i=0;i<g.length;i++){
-    m=HVA_DOING_GRP_META[g[i]];
-    o.push({n:g[i],ic:m?m.ic:'sparkle',pal:m?m.pal:'creature'});
+    m=HVA_DOING_GRP_META[g[i].g];
+    o.push({n:g[i].n,ic:m?m.ic:'sparkle',pal:m?m.pal:'creature'});
   }
   for(i=0;i<c.length;i++){
     m=hvaDoingToolMeta(c[i]);
