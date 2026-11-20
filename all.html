@@ -2112,7 +2112,6 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
   display:flex;align-items:center;justify-content:center;color:#fff}
 .hva-doing-nm{min-width:0;font-size:13px;font-weight:600;line-height:1.3;color:#25395B;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hva-doing-note{margin-top:10px;font-size:12.5px;line-height:1.6;color:#9A6A1E}
 /* 方案 C 收起后的一行：标题＋一串动作预览＋下折箭头；空态也收得起来，但整行保持琥珀。 */
 .hva-doing-strip{display:flex;align-items:center;gap:7px;width:100%;margin:0 0 10px;padding:11px 14px;
   border:0;border-radius:14px;background:rgba(255,255,255,.92);cursor:pointer;text-align:left;font:inherit;
@@ -8627,7 +8626,7 @@ function hvaDoingPreview(){
 }
 function hvaDoingCardsHtml(){
   var its=hvaDoingItems(),i,t,pa,h;
-  if(hvaDoingEmpty())return '<div class="hva-doing-note">托管范围、回复平台和能力都还没配，先挑几项交给手机。</div>';
+  if(hvaDoingEmpty())return '';
   h='<div class="hva-doing-grid">';
   for(i=0;i<its.length;i++){
     t=its[i];pa=HT_PAL[t.pal]||HT_PAL.creature;
@@ -15241,7 +15240,6 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
   display:flex;align-items:center;justify-content:center;color:#fff}
 .hva-doing-nm{min-width:0;font-size:13px;font-weight:600;line-height:1.3;color:#25395B;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hva-doing-note{margin-top:10px;font-size:12.5px;line-height:1.6;color:#9A6A1E}
 /* 方案 C 收起后的一行：标题＋一串动作预览＋下折箭头；空态也收得起来，但整行保持琥珀。 */
 .hva-doing-strip{display:flex;align-items:center;gap:7px;width:100%;margin:0 0 10px;padding:11px 14px;
   border:0;border-radius:14px;background:rgba(255,255,255,.92);cursor:pointer;text-align:left;font:inherit;
@@ -21451,7 +21449,7 @@ function hvaDoingPreview(){
 }
 function hvaDoingCardsHtml(){
   var its=hvaDoingItems(),i,t,pa,h;
-  if(hvaDoingEmpty())return '<div class="hva-doing-note">托管范围、回复平台和能力都还没配，先挑几项交给手机。</div>';
+  if(hvaDoingEmpty())return '';
   h='<div class="hva-doing-grid">';
   for(i=0;i<its.length;i++){
     t=its[i];pa=HT_PAL[t.pal]||HT_PAL.creature;
@@ -28756,7 +28754,6 @@ select.cw-input{-webkit-appearance:none;appearance:none;padding-right:42px;curso
   display:flex;align-items:center;justify-content:center;color:#fff}
 .hva-doing-nm{min-width:0;font-size:13px;font-weight:600;line-height:1.3;color:#25395B;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hva-doing-note{margin-top:10px;font-size:12.5px;line-height:1.6;color:#9A6A1E}
 /* 方案 C 收起后的一行：标题＋一串动作预览＋下折箭头；空态也收得起来，但整行保持琥珀。 */
 .hva-doing-strip{display:flex;align-items:center;gap:7px;width:100%;margin:0 0 10px;padding:11px 14px;
   border:0;border-radius:14px;background:rgba(255,255,255,.92);cursor:pointer;text-align:left;font:inherit;
@@ -34793,7 +34790,7 @@ function hvaDoingPreview(){
 }
 function hvaDoingCardsHtml(){
   var its=hvaDoingItems(),i,t,pa,h;
-  if(hvaDoingEmpty())return '<div class="hva-doing-note">托管范围、回复平台和能力都还没配，先挑几项交给手机。</div>';
+  if(hvaDoingEmpty())return '';
   h='<div class="hva-doing-grid">';
   for(i=0;i<its.length;i++){
     t=its[i];pa=HT_PAL[t.pal]||HT_PAL.creature;
