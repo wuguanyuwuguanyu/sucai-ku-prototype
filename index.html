@@ -2096,12 +2096,16 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
 .hva-doing-ttl svg{flex:none;margin-top:2px}
 .hva-doing.empty .hva-doing-ttl svg{color:#D98B1C}
 .hva-doing-tools{display:flex;align-items:center;gap:6px;flex:none;padding-top:1px}
-.hva-doing-set,.hva-doing-fold{display:flex;align-items:center;gap:1px;border:0;background:none;
+.hva-doing-set{display:flex;align-items:center;gap:1px;border:0;background:none;
   padding:2px 3px;font:inherit;font-size:12.5px;font-weight:600;color:#2E6BFF;cursor:pointer;border-radius:8px}
-.hva-doing-set:active,.hva-doing-fold:active{background:rgba(46,107,255,.08)}
+.hva-doing-set:active{background:rgba(46,107,255,.08)}
 .hva-doing-set i{font-style:normal;font-size:14px;line-height:1;margin-top:-1px}
-.hva-doing-fold{width:24px;height:24px;justify-content:center;padding:0;color:#7C8DA8}
-.hva-doing-fold svg{transform:rotate(-90deg)}
+/* 标题行收折：整条标题（含箭头）是一个按钮；负外边距把热区撑到 ~32px 高，文字位置不动。 */
+.hva-doing-tg{margin:-6px 0;padding:6px 0 5px;border:0;background:none;font:inherit;
+  text-align:left;cursor:pointer;border-radius:8px;-webkit-tap-highlight-color:transparent}
+.hva-doing-tg:active{background:rgba(46,107,255,.06)}
+.hva-doing-tg .tg-chev{flex:none;display:flex;margin-left:1px;color:#8FA0BC}
+.hva-doing-tg .tg-chev svg{margin-top:0;transform:rotate(-90deg)}
 .hva-doing.empty .hva-doing-set{color:#B8791C}
 /* 动作卡：两列、白卡、图标＋名字。图标块与工具页 .ht-sq 同一套配色（HT_PAL），
    同一条能力在工具页与这里长得一样，人不用重新认。 */
@@ -8640,13 +8644,18 @@ function hvaDoingTitle(){
   return HVA_ON?'托管中，手机会做这些':'开启托管后，手机会做这些';
 }
 function hvaDoingCardHtml(){
-  var empty=hvaDoingEmpty();
+  var empty=hvaDoingEmpty(),tg=HVA_DOING_MODE==='b'&&!empty;
+  var face=(empty?I('alert',14,2):hvaLogSpk(13))+'<b>'+hvaDoingTitle()+'</b>';
+  /* 收折挂在**标题行**上（方案 B）：标题连同前面那枚图标整条可点，箭头只是提示，
+     不再在「调整范围」旁边放一枚 24px 的小按钮——两个操作贴在一起，点收折容易落到范围上。 */
   return '<div class="hva-doing'+(empty?' empty':'')+'">'
     +'<div class="hva-doing-hd">'
-      +'<div class="hva-doing-ttl">'+(empty?I('alert',14,2):hvaLogSpk(13))+'<b>'+hvaDoingTitle()+'</b></div>'
+      +(tg
+        ?'<button class="hva-doing-ttl hva-doing-tg" onclick="hvaDoingBOpen(false)" aria-expanded="true" title="收起" aria-label="收起「托管会做什么」">'
+          +face+'<span class="tg-chev">'+I('chev',14,2.4)+'</span></button>'
+        :'<div class="hva-doing-ttl">'+face+'</div>')
       +'<div class="hva-doing-tools">'
         +'<button class="hva-doing-set" onclick="hvaDoingGoSet()">'+(empty?'去设置':'调整范围')+'<i>›</i></button>'
-        +((HVA_DOING_MODE==='b'&&!empty)?'<button class="hva-doing-fold" onclick="hvaDoingBOpen(false)" title="收起" aria-label="收起">'+I('chev',14,2.4)+'</button>':'')
       +'</div>'
     +'</div>'
     +hvaDoingCardsHtml()
@@ -15225,12 +15234,16 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .hva-doing-ttl svg{flex:none;margin-top:2px}
 .hva-doing.empty .hva-doing-ttl svg{color:#D98B1C}
 .hva-doing-tools{display:flex;align-items:center;gap:6px;flex:none;padding-top:1px}
-.hva-doing-set,.hva-doing-fold{display:flex;align-items:center;gap:1px;border:0;background:none;
+.hva-doing-set{display:flex;align-items:center;gap:1px;border:0;background:none;
   padding:2px 3px;font:inherit;font-size:12.5px;font-weight:600;color:#2E6BFF;cursor:pointer;border-radius:8px}
-.hva-doing-set:active,.hva-doing-fold:active{background:rgba(46,107,255,.08)}
+.hva-doing-set:active{background:rgba(46,107,255,.08)}
 .hva-doing-set i{font-style:normal;font-size:14px;line-height:1;margin-top:-1px}
-.hva-doing-fold{width:24px;height:24px;justify-content:center;padding:0;color:#7C8DA8}
-.hva-doing-fold svg{transform:rotate(-90deg)}
+/* 标题行收折：整条标题（含箭头）是一个按钮；负外边距把热区撑到 ~32px 高，文字位置不动。 */
+.hva-doing-tg{margin:-6px 0;padding:6px 0 5px;border:0;background:none;font:inherit;
+  text-align:left;cursor:pointer;border-radius:8px;-webkit-tap-highlight-color:transparent}
+.hva-doing-tg:active{background:rgba(46,107,255,.06)}
+.hva-doing-tg .tg-chev{flex:none;display:flex;margin-left:1px;color:#8FA0BC}
+.hva-doing-tg .tg-chev svg{margin-top:0;transform:rotate(-90deg)}
 .hva-doing.empty .hva-doing-set{color:#B8791C}
 /* 动作卡：两列、白卡、图标＋名字。图标块与工具页 .ht-sq 同一套配色（HT_PAL），
    同一条能力在工具页与这里长得一样，人不用重新认。 */
@@ -21464,13 +21477,18 @@ function hvaDoingTitle(){
   return HVA_ON?'托管中，手机会做这些':'开启托管后，手机会做这些';
 }
 function hvaDoingCardHtml(){
-  var empty=hvaDoingEmpty();
+  var empty=hvaDoingEmpty(),tg=HVA_DOING_MODE==='b'&&!empty;
+  var face=(empty?I('alert',14,2):hvaLogSpk(13))+'<b>'+hvaDoingTitle()+'</b>';
+  /* 收折挂在**标题行**上（方案 B）：标题连同前面那枚图标整条可点，箭头只是提示，
+     不再在「调整范围」旁边放一枚 24px 的小按钮——两个操作贴在一起，点收折容易落到范围上。 */
   return '<div class="hva-doing'+(empty?' empty':'')+'">'
     +'<div class="hva-doing-hd">'
-      +'<div class="hva-doing-ttl">'+(empty?I('alert',14,2):hvaLogSpk(13))+'<b>'+hvaDoingTitle()+'</b></div>'
+      +(tg
+        ?'<button class="hva-doing-ttl hva-doing-tg" onclick="hvaDoingBOpen(false)" aria-expanded="true" title="收起" aria-label="收起「托管会做什么」">'
+          +face+'<span class="tg-chev">'+I('chev',14,2.4)+'</span></button>'
+        :'<div class="hva-doing-ttl">'+face+'</div>')
       +'<div class="hva-doing-tools">'
         +'<button class="hva-doing-set" onclick="hvaDoingGoSet()">'+(empty?'去设置':'调整范围')+'<i>›</i></button>'
-        +((HVA_DOING_MODE==='b'&&!empty)?'<button class="hva-doing-fold" onclick="hvaDoingBOpen(false)" title="收起" aria-label="收起">'+I('chev',14,2.4)+'</button>':'')
       +'</div>'
     +'</div>'
     +hvaDoingCardsHtml()
@@ -28740,12 +28758,16 @@ select.cw-input{-webkit-appearance:none;appearance:none;padding-right:42px;curso
 .hva-doing-ttl svg{flex:none;margin-top:2px}
 .hva-doing.empty .hva-doing-ttl svg{color:#D98B1C}
 .hva-doing-tools{display:flex;align-items:center;gap:6px;flex:none;padding-top:1px}
-.hva-doing-set,.hva-doing-fold{display:flex;align-items:center;gap:1px;border:0;background:none;
+.hva-doing-set{display:flex;align-items:center;gap:1px;border:0;background:none;
   padding:2px 3px;font:inherit;font-size:12.5px;font-weight:600;color:#2E6BFF;cursor:pointer;border-radius:8px}
-.hva-doing-set:active,.hva-doing-fold:active{background:rgba(46,107,255,.08)}
+.hva-doing-set:active{background:rgba(46,107,255,.08)}
 .hva-doing-set i{font-style:normal;font-size:14px;line-height:1;margin-top:-1px}
-.hva-doing-fold{width:24px;height:24px;justify-content:center;padding:0;color:#7C8DA8}
-.hva-doing-fold svg{transform:rotate(-90deg)}
+/* 标题行收折：整条标题（含箭头）是一个按钮；负外边距把热区撑到 ~32px 高，文字位置不动。 */
+.hva-doing-tg{margin:-6px 0;padding:6px 0 5px;border:0;background:none;font:inherit;
+  text-align:left;cursor:pointer;border-radius:8px;-webkit-tap-highlight-color:transparent}
+.hva-doing-tg:active{background:rgba(46,107,255,.06)}
+.hva-doing-tg .tg-chev{flex:none;display:flex;margin-left:1px;color:#8FA0BC}
+.hva-doing-tg .tg-chev svg{margin-top:0;transform:rotate(-90deg)}
 .hva-doing.empty .hva-doing-set{color:#B8791C}
 /* 动作卡：两列、白卡、图标＋名字。图标块与工具页 .ht-sq 同一套配色（HT_PAL），
    同一条能力在工具页与这里长得一样，人不用重新认。 */
@@ -34806,13 +34828,18 @@ function hvaDoingTitle(){
   return HVA_ON?'托管中，手机会做这些':'开启托管后，手机会做这些';
 }
 function hvaDoingCardHtml(){
-  var empty=hvaDoingEmpty();
+  var empty=hvaDoingEmpty(),tg=HVA_DOING_MODE==='b'&&!empty;
+  var face=(empty?I('alert',14,2):hvaLogSpk(13))+'<b>'+hvaDoingTitle()+'</b>';
+  /* 收折挂在**标题行**上（方案 B）：标题连同前面那枚图标整条可点，箭头只是提示，
+     不再在「调整范围」旁边放一枚 24px 的小按钮——两个操作贴在一起，点收折容易落到范围上。 */
   return '<div class="hva-doing'+(empty?' empty':'')+'">'
     +'<div class="hva-doing-hd">'
-      +'<div class="hva-doing-ttl">'+(empty?I('alert',14,2):hvaLogSpk(13))+'<b>'+hvaDoingTitle()+'</b></div>'
+      +(tg
+        ?'<button class="hva-doing-ttl hva-doing-tg" onclick="hvaDoingBOpen(false)" aria-expanded="true" title="收起" aria-label="收起「托管会做什么」">'
+          +face+'<span class="tg-chev">'+I('chev',14,2.4)+'</span></button>'
+        :'<div class="hva-doing-ttl">'+face+'</div>')
       +'<div class="hva-doing-tools">'
         +'<button class="hva-doing-set" onclick="hvaDoingGoSet()">'+(empty?'去设置':'调整范围')+'<i>›</i></button>'
-        +((HVA_DOING_MODE==='b'&&!empty)?'<button class="hva-doing-fold" onclick="hvaDoingBOpen(false)" title="收起" aria-label="收起">'+I('chev',14,2.4)+'</button>':'')
       +'</div>'
     +'</div>'
     +hvaDoingCardsHtml()
