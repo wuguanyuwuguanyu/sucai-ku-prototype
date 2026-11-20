@@ -1412,6 +1412,33 @@ textarea.cw-ta::placeholder{color:var(--on-surface-variant)}
   color:#4C6FA8;transition:color .2s var(--emph)}
 .cw-units button.on{background:transparent;box-shadow:none;color:#1677FE}
 /* 发送内容：软底输入块＋白卡聚焦；序号用浅蓝紫渐变块 */
+/* 发送内容 · 好友备注标记（ADR-0116）：文字块换成能承载行内胶囊的编辑区，
+   插入位在框内底边；预览里的胶囊不代入人名，点按说明按人替换。 */
+.cw-edbox{background:#F5F8FF;border:1px solid #E3EAF8;border-radius:16px;
+  box-shadow:0 8px 18px -20px rgba(40,70,150,.6);
+  transition:background .2s var(--emph),border-color .2s var(--emph),box-shadow .2s var(--emph)}
+.cw-edbox:focus-within{background:#fff;border-color:#8FB3F5;
+  box-shadow:0 12px 24px -22px rgba(40,70,150,.8)}
+.cw-ed{min-height:48px;padding:13px 16px 2px;font:400 16px/1.65 var(--f);color:var(--on-surface);
+  white-space:pre-wrap;word-break:break-word;outline:none;caret-color:#2E6BFF}
+.cw-ed:empty::before{content:attr(data-ph);color:#9AA6BC;pointer-events:none}
+.cw-var{display:inline-block;margin:0 1px;padding:1px 8px;border-radius:8px;
+  background:var(--secondary-container);color:var(--on-secondary-container);
+  font-size:15px;font-weight:500;line-height:1.5;white-space:nowrap}
+.cw-ed-foot{display:flex;align-items:center;padding:0 12px 10px}
+.cw-var-btn{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 11px;
+  border:1px solid var(--outline-variant);border-radius:8px;background:#fff;
+  font:500 12px/1 var(--f);color:#46464F;position:relative;overflow:hidden}
+.cw-var-btn svg{flex:none;color:#3E56C9}
+.cw-pvtext .cw-var{display:inline-block;position:relative;margin:0 1px;padding:0 7px;border-radius:7px;
+  background:var(--secondary-container);color:var(--on-secondary-container);
+  font-size:14px;font-weight:500;line-height:1.55}
+.cw-var.pv{cursor:pointer}
+.cw-vartip{display:none;position:absolute;left:0;top:calc(100% + 8px);z-index:20;
+  padding:8px 10px;border-radius:10px;background:#17263F;color:#fff;
+  font-size:12px;font-weight:500;font-style:normal;line-height:1.5;white-space:nowrap;
+  box-shadow:0 14px 26px -14px rgba(20,40,80,.6)}
+.cw-var.pv.tipon .cw-vartip{display:block}
 textarea.cw-ta{background:#F5F8FF;border:1px solid #E3EAF8;border-radius:16px;padding:14px 16px;
   box-shadow:0 8px 18px -20px rgba(40,70,150,.6);
   transition:background .2s var(--emph),border-color .2s var(--emph),box-shadow .2s var(--emph)}
@@ -5817,7 +5844,7 @@ var CW_CUST=[
   {i:'b4',n:'赵一鸣',last:'昨天 16:20',h:52,tags:['老客户','已成交'],chat:[
     {f:'c',t:'有新货记得告诉我。',at:'11月15日 16:20'},
     {f:'m',t:'好，到了我告诉你。',at:'11月15日 16:22'}]},
-  {i:'c1',n:'郑凯',last:'9月27日 10:10',h:180,tags:['老客户'],chatFail:true,chat:[
+  {i:'c1',n:'郑凯',remark:'',last:'9月27日 10:10',h:180,tags:['老客户'],chatFail:true,chat:[
     {f:'c',t:'最近没空，年底再说。',at:'9月27日 10:10'},
     {f:'m',t:'好，年底再联系你。',at:'9月27日 10:12'}]},
   {i:'c2',n:'吴静',last:'9月27日 09:30',h:240,tags:['待跟进'],chat:[
@@ -5858,7 +5885,7 @@ var CW_CUSTOM={n:3,u:'d',on:false,tags:[]};
 var CW_TAGD=[], CW_TAGQ='', CW_TAGW=null;
 var CW_SEL={};
 var CW_QBUSY=false, CW_QERR=false, CW_QSIM=false, CW_QMODE='', CW_QBEAT=0, CW_QTM=null, CW_UNIT_FROM='';
-var CW_LAUNCHING=false, CW_SEND_IDS=[], CW_SEND_VERSION='', CW_SEND_NOTICE='', CW_SEND_UNSENT=0, CW_PENDS=[], CW_REXP='';
+var CW_LAUNCHING=false, CW_SEND_IDS=[], CW_SEND_VERSION='', CW_SEND_NOTICE='', CW_SEND_UNSENT=0, CW_SEND_SKIP=0, CW_PENDS=[], CW_REXP='';
 var CW_SH=null;
 
 /* 发送草稿：有序条目（文本 / 图片 / 视频），顺序就是发送顺序。
@@ -5881,6 +5908,163 @@ function cwHasContent(){ return CW_ITEMS.some(function(i){return i.t!=='text'?i.
 function cwItemsSig(){ return JSON.stringify(CW_ITEMS.map(function(i){return [i.t,i.c,i.up||'']})) }
 function cwSendItems(){ return CW_ITEMS.filter(function(i){return i.t!=='text'||String(i.c||'').trim()}).map(function(i){return {t:i.t,c:i.c}}) }
 function cwAddTextBlock(v){ var it={id:cwItemSeq(),t:'text',c:v||''}; CW_ITEMS.push(it); return it }
+
+/* ---------- 好友备注：发送内容里的行内标记（ADR-0116） ----------
+   只有 chip 插进去的胶囊算标记：it.c 里用 U+FFFC 记位。手打「{好友备注}」、
+   素材带来的文字、编辑器外贴进来的文本都是普通文字，发送前原样保留。
+   发送时按收件人的微信备注解析：备注为空就不加；标记在句首连后面一个标点、
+   在句尾连前面一个标点一起收掉，在句中只去掉标记。 */
+var CW_VAR='\uFFFC', CW_CARET={};
+function cwVarPill(pv){
+  return '<span class="cw-var'+(pv?' pv':'')+'" contenteditable="false" data-cwvar="remark" role="img"'
+    +' aria-label="好友备注"'+(pv?' onclick="this.classList.toggle(\'tipon\')"':'')+'>好友备注'
+    +(pv?'<i class="cw-vartip" role="tooltip">发送时换成每位客户的备注</i>':'')+'</span>';
+}
+function cwTextHtml(s,pv){
+  var a=String(s==null?'':s).split(CW_VAR),h=esc(a[0]),i;
+  for(i=1;i<a.length;i++)h+=cwVarPill(pv)+esc(a[i]);
+  return h;
+}
+function cwCustRemark(id){
+  var c=cwCust(id); if(!c)return '';
+  return c.remark===undefined?String(c.n||''):String(c.remark||'');
+}
+function cwResolveText(s,remark){
+  var a=String(s==null?'':s).split(CW_VAR);
+  if(a.length<2)return String(s==null?'':s);
+  var out=a[0],i,next;
+  for(i=1;i<a.length;i++){
+    next=a[i];
+    if(remark){ out+=remark+next; continue }
+    if(!out.trim()&&next&&/[，、,]/.test(next.charAt(0)))next=next.slice(1);
+    else if(!next.trim()&&out&&/[，、,]/.test(out.charAt(out.length-1)))out=out.slice(0,-1);
+    out+=next;
+  }
+  return out;
+}
+function cwResolveItems(items,remark){
+  return (items||[]).map(function(m){
+    return m.t==='text'?{t:'text',c:cwResolveText(m.c,remark)}:m;
+  }).filter(function(m){ return m.t!=='text'||String(m.c||'').trim() });
+}
+function cwIsSendable(id){ return cwResolveItems(cwSendItems(),cwCustRemark(id)).length>0 }
+function cwSendableIds(ids){ return (ids||[]).filter(cwIsSendable) }
+function cwEdRead(n){
+  var out='',k,ch;
+  for(k=0;k<n.childNodes.length;k++){
+    ch=n.childNodes[k];
+    if(ch.nodeType===3){ out+=ch.nodeValue.replace(/\u00A0/g,' '); continue }
+    if(ch.nodeType!==1)continue;
+    if(ch.classList&&ch.classList.contains('cw-var')){ out+=CW_VAR; continue }
+    if(ch.tagName==='BR'){ out+='\n'; continue }
+    if(ch.classList&&ch.classList.contains('cw-vartip'))continue;
+    out+=cwEdRead(ch);
+    if((ch.tagName==='DIV'||ch.tagName==='P')&&out&&out.charAt(out.length-1)!=='\n')out+='\n';
+  }
+  return out;
+}
+function cwEdInput(host){
+  var it=cwItemById(host.getAttribute('data-id')); if(!it)return;
+  var v=cwEdRead(host);
+  if(!v&&host.innerHTML)host.innerHTML='';
+  it.c=v;
+  cwContentFoot();
+}
+function cwEdKey(e){
+  if(e.key!=='Enter')return;
+  e.preventDefault();
+  document.execCommand('insertLineBreak');
+}
+function cwPasteHtml(n){
+  var out='',k,ch;
+  for(k=0;k<n.childNodes.length;k++){
+    ch=n.childNodes[k];
+    if(ch.nodeType===3){ out+=esc(ch.nodeValue.replace(/\u00A0/g,' ')); continue }
+    if(ch.nodeType!==1)continue;
+    if(ch.classList&&ch.classList.contains('cw-var')){ out+=cwVarPill(); continue }
+    if(ch.tagName==='BR'){ out+='<br>'; continue }
+    out+=cwPasteHtml(ch);
+    if(ch.tagName==='DIV'||ch.tagName==='P')out+='<br>';
+  }
+  return out;
+}
+function cwEdPaste(e){
+  var dt=e.clipboardData; if(!dt)return;
+  e.preventDefault();
+  var html=dt.getData('text/html')||'';
+  if(html.indexOf('data-cwvar')>=0){
+    var box=document.createElement('div'); box.innerHTML=html;
+    document.execCommand('insertHTML',false,cwPasteHtml(box));
+  }else{
+    var text=dt.getData('text/plain')||'';
+    if(text)document.execCommand('insertText',false,text);
+  }
+}
+function cwEdOffset(host){
+  var sel=window.getSelection();
+  if(!sel||!sel.rangeCount)return null;
+  var r=sel.getRangeAt(0);
+  if(!host.contains(r.startContainer))return null;
+  var pre=r.cloneRange();
+  pre.selectNodeContents(host);
+  pre.setEnd(r.startContainer,r.startOffset);
+  return cwEdRead(pre.cloneContents()).length;
+}
+function cwEdSetCaret(host,off){
+  var sel=window.getSelection(); if(!sel)return;
+  var r=document.createRange(),left=off==null?0:off,done=false;
+  (function walk(n){
+    for(var k=0;k<n.childNodes.length&&!done;k++){
+      var ch=n.childNodes[k];
+      if(ch.nodeType===3){
+        if(left<=ch.nodeValue.length){ r.setStart(ch,left); done=true; return }
+        left-=ch.nodeValue.length; continue;
+      }
+      if(ch.nodeType!==1)continue;
+      if(ch.classList&&ch.classList.contains('cw-var')){
+        if(left<=0){ r.setStartBefore(ch); done=true; return }
+        left-=1; continue;
+      }
+      if(ch.tagName==='BR'){
+        if(left<=0){ r.setStartBefore(ch); done=true; return }
+        left-=1; continue;
+      }
+      walk(ch);
+    }
+  })(host);
+  if(done)r.collapse(true); else { r.selectNodeContents(host); r.collapse(false) }
+  sel.removeAllRanges(); sel.addRange(r);
+}
+function cwEdBlur(host){
+  var off=cwEdOffset(host);
+  if(off!=null)CW_CARET[host.getAttribute('data-id')]=off;
+}
+function cwVarInsert(id){
+  var it=cwItemById(id); if(!it||it.t!=='text')return;
+  var host=document.querySelector('#cwContentBody .cw-ed[data-id="'+id+'"]');
+  if(!host)return;
+  var sel=window.getSelection();
+  if(!sel||!sel.rangeCount||!host.contains(sel.anchorNode)){
+    host.focus();
+    cwEdSetCaret(host,CW_CARET[id]==null?cwEdRead(host).length:CW_CARET[id]);
+    sel=window.getSelection();
+  }
+  var r=sel.getRangeAt(0);
+  var pill=document.createElement('span');
+  pill.className='cw-var'; pill.setAttribute('contenteditable','false');
+  pill.setAttribute('data-cwvar','remark'); pill.setAttribute('role','img'); pill.setAttribute('aria-label','好友备注');
+  pill.textContent='好友备注';
+  r.deleteContents(); r.insertNode(pill);
+  r.setStartAfter(pill); r.collapse(true);
+  sel.removeAllRanges(); sel.addRange(r);
+  cwEdInput(host);
+}
+document.addEventListener('selectionchange',function(){
+  var host=document.activeElement;
+  if(!host||!host.classList||!host.classList.contains('cw-ed'))return;
+  var off=cwEdOffset(host);
+  if(off!=null)CW_CARET[host.getAttribute('data-id')]=off;
+});
 function cwEnsureDraft(){ if(!CW_ITEMS.length)cwAddTextBlock('') }
 function cwDropEmptyText(){
   var kept=cwTextBlocks().filter(function(i){return String(i.c||'').trim()});
@@ -6805,9 +6989,15 @@ function cwItemsHtml(){
     if(multi)h+='<span class="cw-itno" aria-hidden="true">'+(ix+1)+'</span>';
     h+='<div class="cw-itmain">';
     if(it.t==='text'){
-      h+='<textarea class="cw-ta" rows="1" placeholder="输入要发送的内容" aria-label="第 '+(ix+1)+' 段发送内容"'
-        +(ix===0&&CW_ITEMS.length===1?'':' data-no="'+(ix+1)+'"')
-        +' oninput="cwItemInput(this,\''+it.id+'\')">'+esc(it.c)+'</textarea>';
+      h+='<div class="cw-edbox">'
+        +'<div class="cw-ed" contenteditable="true" role="textbox" aria-multiline="true"'
+        +' data-id="'+it.id+'" data-ph="输入要发送的内容" aria-label="第 '+(ix+1)+' 段发送内容"'
+        +' oninput="cwEdInput(this)" onkeydown="cwEdKey(event)" onpaste="cwEdPaste(event)"'
+        +' onblur="cwEdBlur(this)">'+cwTextHtml(it.c)+'</div>'
+        +'<div class="cw-ed-foot"><button type="button" class="cw-var-btn" data-var-btn="'+it.id+'"'
+        +' onpointerdown="event.preventDefault()" onclick="cwVarInsert(\''+it.id+'\')"'
+        +' aria-label="插入好友备注">'+I('plus',12,2.4)+'好友备注</button></div>'
+        +'</div>';
     }else h+=cwMediaHtml(it);
     h+='</div></div>';
     return h;
@@ -6821,11 +7011,7 @@ function cwGrow(el){
 function cwGrowAll(){
   [].forEach.call(document.querySelectorAll('#cwContentBody textarea.cw-ta, #cwPersonsBody textarea.cw-ta'),cwGrow);
 }
-function cwItemInput(el,id){
-  var it=cwItemById(id);
-  if(it)it.c=el.value;
-  cwGrow(el); cwContentFoot();
-}
+/* 文字块已换成富文本编辑区，输入走 cwEdInput（见上）；这里不再有 textarea 入口。 */
 /* ---------- 发送内容 · 长按拖拽排序／删除 ----------
    长按条目 320ms → 原条目挪进 #cw-content 绝对定位到手指下、放大 1.03，原位插入一块虚线占位；开始移动后底部升起删除区；
    拖过其它条目的中点时把占位挪过去，其它条目用 FLIP 让位；松手先把条目动画落到占位，再提交顺序。
@@ -7095,7 +7281,8 @@ function cwDragEnd(e){
   anim.finished.then(finish,finish);
 }
 document.addEventListener('pointerdown',function(e){
-  if(e.target&&e.target.closest&&e.target.closest('#cwContentBody .cw-it'))cwDragArm(e);
+  if(e.target&&e.target.closest&&e.target.closest('#cwContentBody .cw-it')
+     &&!e.target.closest('.cw-var-btn')&&!e.target.closest('.cw-var'))cwDragArm(e);
 },true);
 document.addEventListener('pointermove',function(e){
   if(CW_DRAG&&e.pointerId===CW_DRAG.pid)cwDragMove(e);
@@ -7353,7 +7540,7 @@ function cwPreviewItemsHtml(){
   var multi=list.length>1;
   return list.map(function(it,ix){
     var no=multi?'<span class="cw-itno" aria-hidden="true">'+(ix+1)+'</span>':'';
-    if(it.t==='text')return '<div class="cw-pvrow">'+no+'<p class="cw-pvtext">'+esc(it.c)+'</p></div>';
+    if(it.t==='text')return '<div class="cw-pvrow">'+no+'<p class="cw-pvtext">'+cwTextHtml(it.c,true)+'</p></div>';
     return '<div class="cw-pvrow">'+no+(it.t==='image'?'<img class="cw-pvimg" src="'+(it.src||CW_IMG_SRC)+'" alt="'+esc(it.c)+'">':cwMediaHtml(it))+'</div>';
   }).join('');
 }
@@ -7371,7 +7558,7 @@ function cwPreviewBlocked(){
   if(!cwSelCount())return '还没有可发送的客户';
   return cwContentErr();
 }
-function cwSendCount(){ return cwSelCount() }
+function cwSendCount(){ return cwSendableIds(cwSelIds()).length }
 /* 「预览发送」：预览时才按范围取人；取到人再进预览。 */
 function cwPreviewGo(){
   if(CW_QBUSY)return;
@@ -7381,7 +7568,7 @@ function cwPreviewGo(){
   cwQueryRun('preview');
 }
 function cwPreviewFoot(){
-  var err=cwPreviewBlocked(), n=cwSelCount();
+  var err=cwPreviewBlocked(), n=cwSendCount();
   var retry=(CW_QERR?' · <button class="cw-textact" onclick="cwQueryRetry()">重试</button>':'');
   var zero=!n&&!CW_QBUSY&&!CW_QERR;
   var notice=CW_QBUSY||CW_QERR?err:(CW_SEND_NOTICE||err);
@@ -7398,7 +7585,7 @@ REND['cw-preview']=function(){
 };
 REND['cw-people']=function(){
   $('cwPeopleBack').innerHTML=I('back',24,2);
-  var ids=cwSelByH();
+  var ids=cwSelByH().filter(cwIsSendable);
   var h='<div class="cw-people"><div class="cw-peoplect"><span>共 '+ids.length+' 人</span>'
     +'<button class="cw-textact" onclick="cwEditPeople()">修改</button></div>';
   h+=ids.map(function(id){ var c=cwCust(id); if(!c)return '';
@@ -7425,13 +7612,13 @@ function cwDay(){
   var d=new Date();
   return (d.getMonth()+1)+'月'+d.getDate()+'日';
 }
-function cwSendVersion(){ return JSON.stringify([cwItemsSig(),cwSelIds().slice().sort()]) }
+function cwSendVersion(){ return JSON.stringify([cwItemsSig(),cwSendableIds(cwSelIds()).slice().sort()]) }
 function cwStart(){
   if(CW_QBUSY||CW_LAUNCHING)return;
   var bad=cwPreviewBlocked(); if(bad){cwPreviewFoot();toast(bad);return}
-  var ids=cwSelIds();
+  var ids=cwSendableIds(cwSelIds());
   if(!ids.length){ cwEditPeople(); return; }
-  CW_SEND_IDS=ids.slice(); CW_SEND_VERSION=cwSendVersion();
+  CW_SEND_IDS=ids.slice(); CW_SEND_SKIP=Math.max(0,cwSelCount()-ids.length); CW_SEND_VERSION=cwSendVersion();
   if(CW_FROM==='tools'){cwQueryRun('send');return}
   cwSendNow();
 }
@@ -7440,7 +7627,7 @@ function cwStart(){
 function cwSendNow(){
   if(cur!=='cw-preview'){return}
   if(cwSendVersion()!==CW_SEND_VERSION){cwRender();toast('内容已修改，请重新确认');return}
-  var ids=cwSelIds();
+  var ids=cwSendableIds(cwSelIds());
   if(ids.length!==CW_SEND_IDS.length){cwRender();toast('接收客户已变化，请重新确认');return}
   cwLaunch(ids);
 }
@@ -7451,12 +7638,13 @@ function cwLaunch(ids){
   var items=JSON.parse(JSON.stringify(cwSendItems()));
   var people=ids.map(function(id){
     var c=cwCust(id);
-    return {n:c?c.n:'客户',st:'ok'};
+    return {n:c?c.n:'客户',st:'ok',msgs:cwResolveItems(items,cwCustRemark(id))};
   });
+  var skipped=CW_SEND_SKIP;
   var r={id:'r'+Date.now(),when:cwDay()+'\n'+cwClock(),
          scope:'未回复 '+cwRangeLabel()+((CW_CUSTOM.tags||[]).length?' · '+cwTagSummary():''),
          n:n,gap:CW_SET.gap,st:'done',ok:n,fail:0,items:items,people:people,
-         personal:false,unsent:0};
+         personal:false,unsent:0,skipped:skipped};
   cwQueueLaunch(r);
   go('host-tools');
   toast('已开始唤醒，完成后在记录里查看');
@@ -7556,7 +7744,7 @@ function cwRecBubs(msgs){
   return (msgs||[]).map(function(m){
     return m.t==='image'
       ? '<span class="cw-wxbub img">[图片] '+esc(m.c)+'</span>'
-      : (m.t==='video'?'<span class="cw-wxbub img">[视频] '+esc(m.c)+'</span>':'<span class="cw-wxbub">'+esc(m.c)+'</span>');
+      : (m.t==='video'?'<span class="cw-wxbub img">[视频] '+esc(m.c)+'</span>':'<span class="cw-wxbub">'+cwTextHtml(m.c)+'</span>');
   }).join('');
 }
 function cwPSt(p){
@@ -7582,7 +7770,8 @@ function cwRecRows(r){
       +'</div>';
     if(p.st==='part')h+='<div class="cw-why" style="padding:0 0 6px 46px">'+esc(p.why||'部分消息未发出')+'</div>';
     if(open){
-      var msgs=r.personal?[{t:'text',c:p.text||''}]:(p.st==='part'?(r.items||[]).slice(0,p.upto||1):r.items);
+      var all=r.personal?[{t:'text',c:p.text||''}]:(p.msgs||r.items);
+      var msgs=p.st==='part'?(all||[]).slice(0,p.upto||1):all;
       h+='<div class="cw-pv cw-wxpv">'
         +'<div class="cw-wxmsg"><div class="cw-wxbubs">'+cwRecBubs(msgs)+'</div>'+cwWxMe()+'</div>'
         +'<div class="cw-wxst"><span class="cw-wxck" aria-hidden="true">✓</span>'+(p.st==='part'?'已发送 '+(p.upto||1)+' 条':'已发送')+'</div>'
@@ -7610,13 +7799,14 @@ REND['cw-record']=function(p){
       +'<div class="cw-kv"><span>发送内容</span><b>'+(r.personal?'个性化 · '+r.n+' 份':'同一份 · '+(r.items||[]).length+' 项')
         +(r.gap?' · 间隔 '+r.gap+' 秒':'')+'</b></div>'
       +(r.personal&&r.unsent?'<div class="cw-kv"><span>未发送</span><b>'+r.unsent+' 人</b></div>':'')
+      +(!r.personal&&r.skipped?'<div class="cw-kv"><span>内容为空未发送</span><b>'+r.skipped+' 人</b></div>':'')
     +'</div></div>';
   h+='<div class="cw-card"><div class="cw-h"><span class="sp" aria-hidden="true">'+I('doc',16,1.8)+'</span>内容快照</div><div class="cw-snap">'
     +(r.personal
       ?(r.people||[]).filter(function(p){return p.st!=='fail'}).map(function(p){
         return '<div class="cw-snapi cw-snapp"><span class="cw-snapn">'+esc(p.n)+'</span><span>'+esc(p.text||'')+'</span></div>';
       }).join('')
-      :(r.items||[]).map(function(m){return '<div class="cw-snapi"><span class="cw-itno">'+(m.t==='text'?'文':cwTypeN(m.t).slice(0,1))+'</span><span>'+esc(m.c)+'</span></div>'}).join(''))
+      :(r.items||[]).map(function(m){return '<div class="cw-snapi"><span class="cw-itno">'+(m.t==='text'?'文':cwTypeN(m.t).slice(0,1))+'</span><span>'+(m.t==='text'?cwTextHtml(m.c):esc(m.c))+'</span></div>'}).join(''))
     +'</div></div>';
   h+=cwRecRows(r);
   h+='<div class="cw-note"><span class="ic" aria-hidden="true">'+I('info',16,2)+'</span>'
@@ -17460,6 +17650,33 @@ textarea.cw-ta::placeholder{color:var(--on-surface-variant)}
 .cw-units button.on{background:transparent;box-shadow:none;color:#1677FE}
 
 /* 发送内容：软底输入块＋白卡聚焦；序号用浅蓝紫渐变块 */
+/* 发送内容 · 好友备注标记（ADR-0116）：文字块换成能承载行内胶囊的编辑区，
+   插入位在框内底边；预览里的胶囊不代入人名，点按说明按人替换。 */
+.cw-edbox{background:#F5F8FF;border:1px solid #E3EAF8;border-radius:16px;
+  box-shadow:0 8px 18px -20px rgba(40,70,150,.6);
+  transition:background .2s var(--emph),border-color .2s var(--emph),box-shadow .2s var(--emph)}
+.cw-edbox:focus-within{background:#fff;border-color:#8FB3F5;
+  box-shadow:0 12px 24px -22px rgba(40,70,150,.8)}
+.cw-ed{min-height:48px;padding:13px 16px 2px;font:400 16px/1.65 var(--f);color:var(--on-surface);
+  white-space:pre-wrap;word-break:break-word;outline:none;caret-color:#2E6BFF}
+.cw-ed:empty::before{content:attr(data-ph);color:#9AA6BC;pointer-events:none}
+.cw-var{display:inline-block;margin:0 1px;padding:1px 8px;border-radius:8px;
+  background:var(--secondary-container);color:var(--on-secondary-container);
+  font-size:15px;font-weight:500;line-height:1.5;white-space:nowrap}
+.cw-ed-foot{display:flex;align-items:center;padding:0 12px 10px}
+.cw-var-btn{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 11px;
+  border:1px solid var(--outline-variant);border-radius:8px;background:#fff;
+  font:500 12px/1 var(--f);color:#46464F;position:relative;overflow:hidden}
+.cw-var-btn svg{flex:none;color:#3E56C9}
+.cw-pvtext .cw-var{display:inline-block;position:relative;margin:0 1px;padding:0 7px;border-radius:7px;
+  background:var(--secondary-container);color:var(--on-secondary-container);
+  font-size:14px;font-weight:500;line-height:1.55}
+.cw-var.pv{cursor:pointer}
+.cw-vartip{display:none;position:absolute;left:0;top:calc(100% + 8px);z-index:20;
+  padding:8px 10px;border-radius:10px;background:#17263F;color:#fff;
+  font-size:12px;font-weight:500;font-style:normal;line-height:1.5;white-space:nowrap;
+  box-shadow:0 14px 26px -14px rgba(20,40,80,.6)}
+.cw-var.pv.tipon .cw-vartip{display:block}
 textarea.cw-ta{background:#F5F8FF;border:1px solid #E3EAF8;border-radius:16px;padding:14px 16px;
   box-shadow:0 8px 18px -20px rgba(40,70,150,.6);
   transition:background .2s var(--emph),border-color .2s var(--emph),box-shadow .2s var(--emph)}
@@ -19457,7 +19674,7 @@ var CW_CUST=[
   {i:'b4',n:'赵一鸣',last:'昨天 16:20',h:52,tags:['老客户','已成交'],chat:[
     {f:'c',t:'有新货记得告诉我。',at:'11月15日 16:20'},
     {f:'m',t:'好，到了我告诉你。',at:'11月15日 16:22'}]},
-  {i:'c1',n:'郑凯',last:'9月27日 10:10',h:180,tags:['老客户'],chatFail:true,chat:[
+  {i:'c1',n:'郑凯',remark:'',last:'9月27日 10:10',h:180,tags:['老客户'],chatFail:true,chat:[
     {f:'c',t:'最近没空，年底再说。',at:'9月27日 10:10'},
     {f:'m',t:'好，年底再联系你。',at:'9月27日 10:12'}]},
   {i:'c2',n:'吴静',last:'9月27日 09:30',h:240,tags:['待跟进'],chat:[
@@ -20289,7 +20506,8 @@ function cwLaunch(ids){
   var fixedMsgs=CW_STRAT==='fixed'?cwSendItems():null;
   var people=ids.map(function(id){
     var c=cwCust(id);
-    return {n:c?c.n:'客户',st:'ok',msgs:fixedMsgs||[{t:'text',c:CW_AI[id]||''}]};
+    return {n:c?c.n:'客户',st:'ok',
+      msgs:fixedMsgs?cwResolveItems(fixedMsgs,cwCustRemark(id)):[{t:'text',c:CW_AI[id]||''}]};
   });
   /* 记录在开始时先攒着，这一轮结束后才落进唤醒记录（见 cwLaunchDone），
      台账上没有「执行中」这种状态。 */
@@ -20374,7 +20592,7 @@ function cwRecBubs(msgs){
   return (msgs||[]).map(function(m){
     return m.t==='image'
       ? '<span class="cw-wxbub img">[图片] '+esc(m.c)+'</span>'
-      : '<span class="cw-wxbub">'+esc(m.c)+'</span>';
+      : '<span class="cw-wxbub">'+cwTextHtml(m.c)+'</span>';
   }).join('');
 }
 function cwRecRows(r){
@@ -26587,6 +26805,163 @@ function cwSendItems(){ return CW_ITEMS.filter(function(i){return i.t!=='text'||
 
 function cwAddTextBlock(v){ var it={id:cwItemSeq(),t:'text',c:v||''}; CW_ITEMS.push(it); return it }
 
+/* ---------- 好友备注：发送内容里的行内标记（ADR-0116） ----------
+   只有 chip 插进去的胶囊算标记：it.c 里用 U+FFFC 记位。手打「{好友备注}」、
+   素材带来的文字、编辑器外贴进来的文本都是普通文字，发送前原样保留。
+   发送时按收件人的微信备注解析：备注为空就不加；标记在句首连后面一个标点、
+   在句尾连前面一个标点一起收掉，在句中只去掉标记。 */
+var CW_VAR='\uFFFC', CW_CARET={};
+function cwVarPill(pv){
+  return '<span class="cw-var'+(pv?' pv':'')+'" contenteditable="false" data-cwvar="remark" role="img"'
+    +' aria-label="好友备注"'+(pv?' onclick="this.classList.toggle(\'tipon\')"':'')+'>好友备注'
+    +(pv?'<i class="cw-vartip" role="tooltip">发送时换成每位客户的备注</i>':'')+'</span>';
+}
+function cwTextHtml(s,pv){
+  var a=String(s==null?'':s).split(CW_VAR),h=esc(a[0]),i;
+  for(i=1;i<a.length;i++)h+=cwVarPill(pv)+esc(a[i]);
+  return h;
+}
+function cwCustRemark(id){
+  var c=cwCust(id); if(!c)return '';
+  return c.remark===undefined?String(c.n||''):String(c.remark||'');
+}
+function cwResolveText(s,remark){
+  var a=String(s==null?'':s).split(CW_VAR);
+  if(a.length<2)return String(s==null?'':s);
+  var out=a[0],i,next;
+  for(i=1;i<a.length;i++){
+    next=a[i];
+    if(remark){ out+=remark+next; continue }
+    if(!out.trim()&&next&&/[，、,]/.test(next.charAt(0)))next=next.slice(1);
+    else if(!next.trim()&&out&&/[，、,]/.test(out.charAt(out.length-1)))out=out.slice(0,-1);
+    out+=next;
+  }
+  return out;
+}
+function cwResolveItems(items,remark){
+  return (items||[]).map(function(m){
+    return m.t==='text'?{t:'text',c:cwResolveText(m.c,remark)}:m;
+  }).filter(function(m){ return m.t!=='text'||String(m.c||'').trim() });
+}
+function cwIsSendable(id){ return cwResolveItems(cwSendItems(),cwCustRemark(id)).length>0 }
+function cwSendableIds(ids){ return (ids||[]).filter(cwIsSendable) }
+function cwEdRead(n){
+  var out='',k,ch;
+  for(k=0;k<n.childNodes.length;k++){
+    ch=n.childNodes[k];
+    if(ch.nodeType===3){ out+=ch.nodeValue.replace(/\u00A0/g,' '); continue }
+    if(ch.nodeType!==1)continue;
+    if(ch.classList&&ch.classList.contains('cw-var')){ out+=CW_VAR; continue }
+    if(ch.tagName==='BR'){ out+='\n'; continue }
+    if(ch.classList&&ch.classList.contains('cw-vartip'))continue;
+    out+=cwEdRead(ch);
+    if((ch.tagName==='DIV'||ch.tagName==='P')&&out&&out.charAt(out.length-1)!=='\n')out+='\n';
+  }
+  return out;
+}
+function cwEdInput(host){
+  var it=cwItemById(host.getAttribute('data-id')); if(!it)return;
+  var v=cwEdRead(host);
+  if(!v&&host.innerHTML)host.innerHTML='';
+  it.c=v;
+  cwContentFoot();
+}
+function cwEdKey(e){
+  if(e.key!=='Enter')return;
+  e.preventDefault();
+  document.execCommand('insertLineBreak');
+}
+function cwPasteHtml(n){
+  var out='',k,ch;
+  for(k=0;k<n.childNodes.length;k++){
+    ch=n.childNodes[k];
+    if(ch.nodeType===3){ out+=esc(ch.nodeValue.replace(/\u00A0/g,' ')); continue }
+    if(ch.nodeType!==1)continue;
+    if(ch.classList&&ch.classList.contains('cw-var')){ out+=cwVarPill(); continue }
+    if(ch.tagName==='BR'){ out+='<br>'; continue }
+    out+=cwPasteHtml(ch);
+    if(ch.tagName==='DIV'||ch.tagName==='P')out+='<br>';
+  }
+  return out;
+}
+function cwEdPaste(e){
+  var dt=e.clipboardData; if(!dt)return;
+  e.preventDefault();
+  var html=dt.getData('text/html')||'';
+  if(html.indexOf('data-cwvar')>=0){
+    var box=document.createElement('div'); box.innerHTML=html;
+    document.execCommand('insertHTML',false,cwPasteHtml(box));
+  }else{
+    var text=dt.getData('text/plain')||'';
+    if(text)document.execCommand('insertText',false,text);
+  }
+}
+function cwEdOffset(host){
+  var sel=window.getSelection();
+  if(!sel||!sel.rangeCount)return null;
+  var r=sel.getRangeAt(0);
+  if(!host.contains(r.startContainer))return null;
+  var pre=r.cloneRange();
+  pre.selectNodeContents(host);
+  pre.setEnd(r.startContainer,r.startOffset);
+  return cwEdRead(pre.cloneContents()).length;
+}
+function cwEdSetCaret(host,off){
+  var sel=window.getSelection(); if(!sel)return;
+  var r=document.createRange(),left=off==null?0:off,done=false;
+  (function walk(n){
+    for(var k=0;k<n.childNodes.length&&!done;k++){
+      var ch=n.childNodes[k];
+      if(ch.nodeType===3){
+        if(left<=ch.nodeValue.length){ r.setStart(ch,left); done=true; return }
+        left-=ch.nodeValue.length; continue;
+      }
+      if(ch.nodeType!==1)continue;
+      if(ch.classList&&ch.classList.contains('cw-var')){
+        if(left<=0){ r.setStartBefore(ch); done=true; return }
+        left-=1; continue;
+      }
+      if(ch.tagName==='BR'){
+        if(left<=0){ r.setStartBefore(ch); done=true; return }
+        left-=1; continue;
+      }
+      walk(ch);
+    }
+  })(host);
+  if(done)r.collapse(true); else { r.selectNodeContents(host); r.collapse(false) }
+  sel.removeAllRanges(); sel.addRange(r);
+}
+function cwEdBlur(host){
+  var off=cwEdOffset(host);
+  if(off!=null)CW_CARET[host.getAttribute('data-id')]=off;
+}
+function cwVarInsert(id){
+  var it=cwItemById(id); if(!it||it.t!=='text')return;
+  var host=document.querySelector('#cwContentBody .cw-ed[data-id="'+id+'"]');
+  if(!host)return;
+  var sel=window.getSelection();
+  if(!sel||!sel.rangeCount||!host.contains(sel.anchorNode)){
+    host.focus();
+    cwEdSetCaret(host,CW_CARET[id]==null?cwEdRead(host).length:CW_CARET[id]);
+    sel=window.getSelection();
+  }
+  var r=sel.getRangeAt(0);
+  var pill=document.createElement('span');
+  pill.className='cw-var'; pill.setAttribute('contenteditable','false');
+  pill.setAttribute('data-cwvar','remark'); pill.setAttribute('role','img'); pill.setAttribute('aria-label','好友备注');
+  pill.textContent='好友备注';
+  r.deleteContents(); r.insertNode(pill);
+  r.setStartAfter(pill); r.collapse(true);
+  sel.removeAllRanges(); sel.addRange(r);
+  cwEdInput(host);
+}
+document.addEventListener('selectionchange',function(){
+  var host=document.activeElement;
+  if(!host||!host.classList||!host.classList.contains('cw-ed'))return;
+  var off=cwEdOffset(host);
+  if(off!=null)CW_CARET[host.getAttribute('data-id')]=off;
+});
+
 function cwEnsureDraft(){ if(!CW_ITEMS.length)cwAddTextBlock('') }
 
 function cwDropEmptyText(){
@@ -26625,9 +27000,15 @@ function cwItemsHtml(){
     if(multi)h+='<span class="cw-itno" aria-hidden="true">'+(ix+1)+'</span>';
     h+='<div class="cw-itmain">';
     if(it.t==='text'){
-      h+='<textarea class="cw-ta" rows="1" placeholder="输入要发送的内容" aria-label="第 '+(ix+1)+' 段发送内容"'
-        +(ix===0&&CW_ITEMS.length===1?'':' data-no="'+(ix+1)+'"')
-        +' oninput="cwItemInput(this,\''+it.id+'\')">'+esc(it.c)+'</textarea>';
+      h+='<div class="cw-edbox">'
+        +'<div class="cw-ed" contenteditable="true" role="textbox" aria-multiline="true"'
+        +' data-id="'+it.id+'" data-ph="输入要发送的内容" aria-label="第 '+(ix+1)+' 段发送内容"'
+        +' oninput="cwEdInput(this)" onkeydown="cwEdKey(event)" onpaste="cwEdPaste(event)"'
+        +' onblur="cwEdBlur(this)">'+cwTextHtml(it.c)+'</div>'
+        +'<div class="cw-ed-foot"><button type="button" class="cw-var-btn" data-var-btn="'+it.id+'"'
+        +' onpointerdown="event.preventDefault()" onclick="cwVarInsert(\''+it.id+'\')"'
+        +' aria-label="插入好友备注">'+I('plus',12,2.4)+'好友备注</button></div>'
+        +'</div>';
     }else h+=cwMediaHtml(it);
     h+='</div></div>';
     return h;
@@ -26644,11 +27025,7 @@ function cwGrowAll(){
   [].forEach.call(document.querySelectorAll('#cwContentBody textarea.cw-ta, #cwPersonsBody textarea.cw-ta'),cwGrow);
 }
 
-function cwItemInput(el,id){
-  var it=cwItemById(id);
-  if(it)it.c=el.value;
-  cwGrow(el); cwContentFoot();
-}
+/* 文字块已换成富文本编辑区，输入走 cwEdInput（见上）；这里不再有 textarea 入口。 */
 
 function cwTrashSvg(){
   return '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor"'
@@ -27134,7 +27511,7 @@ function cwPreviewItemsHtml(){
   var multi=list.length>1;
   return list.map(function(it,ix){
     var no=multi?'<span class="cw-itno" aria-hidden="true">'+(ix+1)+'</span>':'';
-    if(it.t==='text')return '<div class="cw-pvrow">'+no+'<p class="cw-pvtext">'+esc(it.c)+'</p></div>';
+    if(it.t==='text')return '<div class="cw-pvrow">'+no+'<p class="cw-pvtext">'+cwTextHtml(it.c,true)+'</p></div>';
     return '<div class="cw-pvrow">'+no+(it.t==='image'?'<img class="cw-pvimg" src="'+(it.src||CW_IMG_SRC)+'" alt="'+esc(it.c)+'">':cwMediaHtml(it))+'</div>';
   }).join('');
 }
@@ -27142,7 +27519,8 @@ function cwPreviewItemsHtml(){
 function cwSupported(t){ return t==='text'||t==='image'||t==='video' }
 
 document.addEventListener('pointerdown',function(e){
-  if(e.target&&e.target.closest&&e.target.closest('#cwContentBody .cw-it'))cwDragArm(e);
+  if(e.target&&e.target.closest&&e.target.closest('#cwContentBody .cw-it')
+     &&!e.target.closest('.cw-var-btn')&&!e.target.closest('.cw-var'))cwDragArm(e);
 },true);
 document.addEventListener('pointermove',function(e){
   if(CW_DRAG&&e.pointerId===CW_DRAG.pid)cwDragMove(e);
@@ -31022,6 +31400,33 @@ textarea.cw-ta::placeholder{color:var(--on-surface-variant)}
 .cw-units button.on{background:transparent;box-shadow:none;color:#1677FE}
 
 /* 发送内容：软底输入块＋白卡聚焦；序号用浅蓝紫渐变块 */
+/* 发送内容 · 好友备注标记（ADR-0116）：文字块换成能承载行内胶囊的编辑区，
+   插入位在框内底边；预览里的胶囊不代入人名，点按说明按人替换。 */
+.cw-edbox{background:#F5F8FF;border:1px solid #E3EAF8;border-radius:16px;
+  box-shadow:0 8px 18px -20px rgba(40,70,150,.6);
+  transition:background .2s var(--emph),border-color .2s var(--emph),box-shadow .2s var(--emph)}
+.cw-edbox:focus-within{background:#fff;border-color:#8FB3F5;
+  box-shadow:0 12px 24px -22px rgba(40,70,150,.8)}
+.cw-ed{min-height:48px;padding:13px 16px 2px;font:400 16px/1.65 var(--f);color:var(--on-surface);
+  white-space:pre-wrap;word-break:break-word;outline:none;caret-color:#2E6BFF}
+.cw-ed:empty::before{content:attr(data-ph);color:#9AA6BC;pointer-events:none}
+.cw-var{display:inline-block;margin:0 1px;padding:1px 8px;border-radius:8px;
+  background:var(--secondary-container);color:var(--on-secondary-container);
+  font-size:15px;font-weight:500;line-height:1.5;white-space:nowrap}
+.cw-ed-foot{display:flex;align-items:center;padding:0 12px 10px}
+.cw-var-btn{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 11px;
+  border:1px solid var(--outline-variant);border-radius:8px;background:#fff;
+  font:500 12px/1 var(--f);color:#46464F;position:relative;overflow:hidden}
+.cw-var-btn svg{flex:none;color:#3E56C9}
+.cw-pvtext .cw-var{display:inline-block;position:relative;margin:0 1px;padding:0 7px;border-radius:7px;
+  background:var(--secondary-container);color:var(--on-secondary-container);
+  font-size:14px;font-weight:500;line-height:1.55}
+.cw-var.pv{cursor:pointer}
+.cw-vartip{display:none;position:absolute;left:0;top:calc(100% + 8px);z-index:20;
+  padding:8px 10px;border-radius:10px;background:#17263F;color:#fff;
+  font-size:12px;font-weight:500;font-style:normal;line-height:1.5;white-space:nowrap;
+  box-shadow:0 14px 26px -14px rgba(20,40,80,.6)}
+.cw-var.pv.tipon .cw-vartip{display:block}
 textarea.cw-ta{background:#F5F8FF;border:1px solid #E3EAF8;border-radius:16px;padding:14px 16px;
   box-shadow:0 8px 18px -20px rgba(40,70,150,.6);
   transition:background .2s var(--emph),border-color .2s var(--emph),box-shadow .2s var(--emph)}
@@ -33036,7 +33441,7 @@ var CW_CUST=[
   {i:'b4',n:'赵一鸣',last:'昨天 16:20',h:52,tags:['老客户','已成交'],chat:[
     {f:'c',t:'有新货记得告诉我。',at:'11月15日 16:20'},
     {f:'m',t:'好，到了我告诉你。',at:'11月15日 16:22'}]},
-  {i:'c1',n:'郑凯',last:'9月27日 10:10',h:180,tags:['老客户'],chatFail:true,chat:[
+  {i:'c1',n:'郑凯',remark:'',last:'9月27日 10:10',h:180,tags:['老客户'],chatFail:true,chat:[
     {f:'c',t:'最近没空，年底再说。',at:'9月27日 10:10'},
     {f:'m',t:'好，年底再联系你。',at:'9月27日 10:12'}]},
   {i:'c2',n:'吴静',last:'9月27日 09:30',h:240,tags:['待跟进'],chat:[
@@ -33735,7 +34140,8 @@ function cwLaunch(ids){
   var fixedMsgs=CW_STRAT==='fixed'?cwSendItems():null;
   var people=ids.map(function(id){
     var c=cwCust(id);
-    return {n:c?c.n:'客户',st:'ok',msgs:fixedMsgs||[{t:'text',c:CW_AI[id]||''}]};
+    return {n:c?c.n:'客户',st:'ok',
+      msgs:fixedMsgs?cwResolveItems(fixedMsgs,cwCustRemark(id)):[{t:'text',c:CW_AI[id]||''}]};
   });
   /* 记录在开始时先攒着，这一轮结束后才落进唤醒记录（见 cwLaunchDone），
      台账上没有「执行中」这种状态。 */
@@ -33820,7 +34226,7 @@ function cwRecBubs(msgs){
   return (msgs||[]).map(function(m){
     return m.t==='image'
       ? '<span class="cw-wxbub img">[图片] '+esc(m.c)+'</span>'
-      : '<span class="cw-wxbub">'+esc(m.c)+'</span>';
+      : '<span class="cw-wxbub">'+cwTextHtml(m.c)+'</span>';
   }).join('');
 }
 function cwRecRows(r){
@@ -39997,6 +40403,163 @@ function cwSendItems(){ return CW_ITEMS.filter(function(i){return i.t!=='text'||
 
 function cwAddTextBlock(v){ var it={id:cwItemSeq(),t:'text',c:v||''}; CW_ITEMS.push(it); return it }
 
+/* ---------- 好友备注：发送内容里的行内标记（ADR-0116） ----------
+   只有 chip 插进去的胶囊算标记：it.c 里用 U+FFFC 记位。手打「{好友备注}」、
+   素材带来的文字、编辑器外贴进来的文本都是普通文字，发送前原样保留。
+   发送时按收件人的微信备注解析：备注为空就不加；标记在句首连后面一个标点、
+   在句尾连前面一个标点一起收掉，在句中只去掉标记。 */
+var CW_VAR='\uFFFC', CW_CARET={};
+function cwVarPill(pv){
+  return '<span class="cw-var'+(pv?' pv':'')+'" contenteditable="false" data-cwvar="remark" role="img"'
+    +' aria-label="好友备注"'+(pv?' onclick="this.classList.toggle(\'tipon\')"':'')+'>好友备注'
+    +(pv?'<i class="cw-vartip" role="tooltip">发送时换成每位客户的备注</i>':'')+'</span>';
+}
+function cwTextHtml(s,pv){
+  var a=String(s==null?'':s).split(CW_VAR),h=esc(a[0]),i;
+  for(i=1;i<a.length;i++)h+=cwVarPill(pv)+esc(a[i]);
+  return h;
+}
+function cwCustRemark(id){
+  var c=cwCust(id); if(!c)return '';
+  return c.remark===undefined?String(c.n||''):String(c.remark||'');
+}
+function cwResolveText(s,remark){
+  var a=String(s==null?'':s).split(CW_VAR);
+  if(a.length<2)return String(s==null?'':s);
+  var out=a[0],i,next;
+  for(i=1;i<a.length;i++){
+    next=a[i];
+    if(remark){ out+=remark+next; continue }
+    if(!out.trim()&&next&&/[，、,]/.test(next.charAt(0)))next=next.slice(1);
+    else if(!next.trim()&&out&&/[，、,]/.test(out.charAt(out.length-1)))out=out.slice(0,-1);
+    out+=next;
+  }
+  return out;
+}
+function cwResolveItems(items,remark){
+  return (items||[]).map(function(m){
+    return m.t==='text'?{t:'text',c:cwResolveText(m.c,remark)}:m;
+  }).filter(function(m){ return m.t!=='text'||String(m.c||'').trim() });
+}
+function cwIsSendable(id){ return cwResolveItems(cwSendItems(),cwCustRemark(id)).length>0 }
+function cwSendableIds(ids){ return (ids||[]).filter(cwIsSendable) }
+function cwEdRead(n){
+  var out='',k,ch;
+  for(k=0;k<n.childNodes.length;k++){
+    ch=n.childNodes[k];
+    if(ch.nodeType===3){ out+=ch.nodeValue.replace(/\u00A0/g,' '); continue }
+    if(ch.nodeType!==1)continue;
+    if(ch.classList&&ch.classList.contains('cw-var')){ out+=CW_VAR; continue }
+    if(ch.tagName==='BR'){ out+='\n'; continue }
+    if(ch.classList&&ch.classList.contains('cw-vartip'))continue;
+    out+=cwEdRead(ch);
+    if((ch.tagName==='DIV'||ch.tagName==='P')&&out&&out.charAt(out.length-1)!=='\n')out+='\n';
+  }
+  return out;
+}
+function cwEdInput(host){
+  var it=cwItemById(host.getAttribute('data-id')); if(!it)return;
+  var v=cwEdRead(host);
+  if(!v&&host.innerHTML)host.innerHTML='';
+  it.c=v;
+  cwContentFoot();
+}
+function cwEdKey(e){
+  if(e.key!=='Enter')return;
+  e.preventDefault();
+  document.execCommand('insertLineBreak');
+}
+function cwPasteHtml(n){
+  var out='',k,ch;
+  for(k=0;k<n.childNodes.length;k++){
+    ch=n.childNodes[k];
+    if(ch.nodeType===3){ out+=esc(ch.nodeValue.replace(/\u00A0/g,' ')); continue }
+    if(ch.nodeType!==1)continue;
+    if(ch.classList&&ch.classList.contains('cw-var')){ out+=cwVarPill(); continue }
+    if(ch.tagName==='BR'){ out+='<br>'; continue }
+    out+=cwPasteHtml(ch);
+    if(ch.tagName==='DIV'||ch.tagName==='P')out+='<br>';
+  }
+  return out;
+}
+function cwEdPaste(e){
+  var dt=e.clipboardData; if(!dt)return;
+  e.preventDefault();
+  var html=dt.getData('text/html')||'';
+  if(html.indexOf('data-cwvar')>=0){
+    var box=document.createElement('div'); box.innerHTML=html;
+    document.execCommand('insertHTML',false,cwPasteHtml(box));
+  }else{
+    var text=dt.getData('text/plain')||'';
+    if(text)document.execCommand('insertText',false,text);
+  }
+}
+function cwEdOffset(host){
+  var sel=window.getSelection();
+  if(!sel||!sel.rangeCount)return null;
+  var r=sel.getRangeAt(0);
+  if(!host.contains(r.startContainer))return null;
+  var pre=r.cloneRange();
+  pre.selectNodeContents(host);
+  pre.setEnd(r.startContainer,r.startOffset);
+  return cwEdRead(pre.cloneContents()).length;
+}
+function cwEdSetCaret(host,off){
+  var sel=window.getSelection(); if(!sel)return;
+  var r=document.createRange(),left=off==null?0:off,done=false;
+  (function walk(n){
+    for(var k=0;k<n.childNodes.length&&!done;k++){
+      var ch=n.childNodes[k];
+      if(ch.nodeType===3){
+        if(left<=ch.nodeValue.length){ r.setStart(ch,left); done=true; return }
+        left-=ch.nodeValue.length; continue;
+      }
+      if(ch.nodeType!==1)continue;
+      if(ch.classList&&ch.classList.contains('cw-var')){
+        if(left<=0){ r.setStartBefore(ch); done=true; return }
+        left-=1; continue;
+      }
+      if(ch.tagName==='BR'){
+        if(left<=0){ r.setStartBefore(ch); done=true; return }
+        left-=1; continue;
+      }
+      walk(ch);
+    }
+  })(host);
+  if(done)r.collapse(true); else { r.selectNodeContents(host); r.collapse(false) }
+  sel.removeAllRanges(); sel.addRange(r);
+}
+function cwEdBlur(host){
+  var off=cwEdOffset(host);
+  if(off!=null)CW_CARET[host.getAttribute('data-id')]=off;
+}
+function cwVarInsert(id){
+  var it=cwItemById(id); if(!it||it.t!=='text')return;
+  var host=document.querySelector('#cwContentBody .cw-ed[data-id="'+id+'"]');
+  if(!host)return;
+  var sel=window.getSelection();
+  if(!sel||!sel.rangeCount||!host.contains(sel.anchorNode)){
+    host.focus();
+    cwEdSetCaret(host,CW_CARET[id]==null?cwEdRead(host).length:CW_CARET[id]);
+    sel=window.getSelection();
+  }
+  var r=sel.getRangeAt(0);
+  var pill=document.createElement('span');
+  pill.className='cw-var'; pill.setAttribute('contenteditable','false');
+  pill.setAttribute('data-cwvar','remark'); pill.setAttribute('role','img'); pill.setAttribute('aria-label','好友备注');
+  pill.textContent='好友备注';
+  r.deleteContents(); r.insertNode(pill);
+  r.setStartAfter(pill); r.collapse(true);
+  sel.removeAllRanges(); sel.addRange(r);
+  cwEdInput(host);
+}
+document.addEventListener('selectionchange',function(){
+  var host=document.activeElement;
+  if(!host||!host.classList||!host.classList.contains('cw-ed'))return;
+  var off=cwEdOffset(host);
+  if(off!=null)CW_CARET[host.getAttribute('data-id')]=off;
+});
+
 function cwEnsureDraft(){ if(!CW_ITEMS.length)cwAddTextBlock('') }
 
 function cwDropEmptyText(){
@@ -40035,9 +40598,15 @@ function cwItemsHtml(){
     if(multi)h+='<span class="cw-itno" aria-hidden="true">'+(ix+1)+'</span>';
     h+='<div class="cw-itmain">';
     if(it.t==='text'){
-      h+='<textarea class="cw-ta" rows="1" placeholder="输入要发送的内容" aria-label="第 '+(ix+1)+' 段发送内容"'
-        +(ix===0&&CW_ITEMS.length===1?'':' data-no="'+(ix+1)+'"')
-        +' oninput="cwItemInput(this,\''+it.id+'\')">'+esc(it.c)+'</textarea>';
+      h+='<div class="cw-edbox">'
+        +'<div class="cw-ed" contenteditable="true" role="textbox" aria-multiline="true"'
+        +' data-id="'+it.id+'" data-ph="输入要发送的内容" aria-label="第 '+(ix+1)+' 段发送内容"'
+        +' oninput="cwEdInput(this)" onkeydown="cwEdKey(event)" onpaste="cwEdPaste(event)"'
+        +' onblur="cwEdBlur(this)">'+cwTextHtml(it.c)+'</div>'
+        +'<div class="cw-ed-foot"><button type="button" class="cw-var-btn" data-var-btn="'+it.id+'"'
+        +' onpointerdown="event.preventDefault()" onclick="cwVarInsert(\''+it.id+'\')"'
+        +' aria-label="插入好友备注">'+I('plus',12,2.4)+'好友备注</button></div>'
+        +'</div>';
     }else h+=cwMediaHtml(it);
     h+='</div></div>';
     return h;
@@ -40054,11 +40623,7 @@ function cwGrowAll(){
   [].forEach.call(document.querySelectorAll('#cwContentBody textarea.cw-ta, #cwPersonsBody textarea.cw-ta'),cwGrow);
 }
 
-function cwItemInput(el,id){
-  var it=cwItemById(id);
-  if(it)it.c=el.value;
-  cwGrow(el); cwContentFoot();
-}
+/* 文字块已换成富文本编辑区，输入走 cwEdInput（见上）；这里不再有 textarea 入口。 */
 
 function cwTrashSvg(){
   return '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor"'
@@ -40544,7 +41109,7 @@ function cwPreviewItemsHtml(){
   var multi=list.length>1;
   return list.map(function(it,ix){
     var no=multi?'<span class="cw-itno" aria-hidden="true">'+(ix+1)+'</span>':'';
-    if(it.t==='text')return '<div class="cw-pvrow">'+no+'<p class="cw-pvtext">'+esc(it.c)+'</p></div>';
+    if(it.t==='text')return '<div class="cw-pvrow">'+no+'<p class="cw-pvtext">'+cwTextHtml(it.c,true)+'</p></div>';
     return '<div class="cw-pvrow">'+no+(it.t==='image'?'<img class="cw-pvimg" src="'+(it.src||CW_IMG_SRC)+'" alt="'+esc(it.c)+'">':cwMediaHtml(it))+'</div>';
   }).join('');
 }
@@ -40552,7 +41117,8 @@ function cwPreviewItemsHtml(){
 function cwSupported(t){ return t==='text'||t==='image'||t==='video' }
 
 document.addEventListener('pointerdown',function(e){
-  if(e.target&&e.target.closest&&e.target.closest('#cwContentBody .cw-it'))cwDragArm(e);
+  if(e.target&&e.target.closest&&e.target.closest('#cwContentBody .cw-it')
+     &&!e.target.closest('.cw-var-btn')&&!e.target.closest('.cw-var'))cwDragArm(e);
 },true);
 document.addEventListener('pointermove',function(e){
   if(CW_DRAG&&e.pointerId===CW_DRAG.pid)cwDragMove(e);
