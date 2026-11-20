@@ -2081,7 +2081,7 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
    说明文字）。**不再分「后台派来的任务」与「我挂的能力」**——员工只关心手机会做哪几件事，
    不关心这件事是谁派的；名字仍是那两个来源（HVA_GRPS 的四组后台类型、HVA_MINE 已挂的能力），
    只是并成一串。精确的 9 类名单仍在设置页的托管范围卡里，主页不再抄一份。
-   三种摆法（A 问号浮层／B 卡可折／C 日志卡头入口）共用这份卡片与空态，
+   三种摆法（A 问号浮层／B 卡可折／C 日志卡头入口）共用这份卡片；空态卡只在 B／C 出现（A 不摆卡），
    差别只在主页的摆放与入口（见 hvaDoingTopHtml）。
    ★ 空态**别用 .hva-attn**：冒烟钉着「关着时不再挂琥珀提醒卡」那条；这里用 .hva-doing.empty。 */
 .hva-doing{margin:0 0 10px;border-radius:18.7px;padding:13px 16px 12px;
@@ -2112,7 +2112,7 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
   display:flex;align-items:center;justify-content:center;color:#fff}
 .hva-doing-nm{min-width:0;font-size:13px;font-weight:600;line-height:1.3;color:#25395B;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-/* 方案 B 收起后的一行：标题＋一串动作预览＋下折箭头；空态也收得起来，但整行保持琥珀。 */
+/* 方案 B 收起后的一行：标题＋一串动作预览＋下折箭头。空态不走这一行（改摆静态琥珀卡）。 */
 .hva-doing-strip{display:flex;align-items:center;gap:7px;width:100%;margin:0 0 10px;padding:11px 14px;
   border:0;border-radius:14px;background:rgba(255,255,255,.92);cursor:pointer;text-align:left;font:inherit;
   box-shadow:0 8px 18px -20px rgba(40,70,150,.9),inset 0 0 0 1px rgba(208,222,255,.7)}
@@ -2121,22 +2121,16 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
   font-size:12.5px;color:#7C8DA8}
 .hva-doing-strip .chev{flex:none;display:flex;color:#8FA0BC}
 .hva-doing-strip .chev svg{transform:rotate(90deg)}
-.hva-doing-strip.empty{background:linear-gradient(90deg,#FFF9ED,#FFFDF8);
-  box-shadow:0 8px 18px -20px rgba(150,100,20,.5),inset 0 0 0 1px rgba(235,178,80,.5)}
-.hva-doing-strip.empty .hva-doing-strip-t{color:#8A5A12}
-.hva-doing-strip.empty .hva-doing-strip-v{color:#B08337}
-.hva-doing-strip.empty .chev{color:#C08A2E}
 .hva-doing-adot{flex:none;width:7px;height:7px;border-radius:50%;background:#E8A63C;
   box-shadow:0 0 0 2px rgba(232,166,60,.16)}
-/* 方案 C：工作日志卡头右侧那枚入口。.hva-lhd 吃渐变字（-webkit-text-fill-color:transparent），
-   按钮必须自己把填充色说回来，否则字是透明的。做成浅蓝胶囊：17.6px 的渐变标题旁边，
-   一颗裸字太轻、读着像标题的尾巴；胶囊把它摆成独立控件，高度压在 .hva-lhd 的 19.8px 以内。 */
-.hva-doing-loglink{display:flex;align-items:center;gap:2px;margin-left:auto;padding:1px 8px 1px 10px;border:0;
-  border-radius:999px;background:rgba(46,107,255,.09);
-  font:inherit;font-size:12.5px;line-height:17.8px;font-weight:600;color:#2E6BFF;
-  -webkit-text-fill-color:#2E6BFF;cursor:pointer}
+/* 方案 C：工作日志卡头右侧那枚文字入口。.hva-lhd 吃渐变字（-webkit-text-fill-color:transparent），
+   按钮必须自己把填充色说回来，否则字是透明的。
+   对齐：卡头标题 17.6px／行高 19.8px，这枚 13px 入口挂 align-self:flex-end、行高收成 1，
+   文字底沿才落在标题底沿那条线上；跟着父级垂直居中会吊在标题上半截。 */
+.hva-doing-loglink{display:flex;align-items:center;gap:1px;margin-left:auto;padding:0 0 1px 6px;border:0;
+  align-self:flex-end;background:none;font:inherit;font-size:13px;line-height:1;font-weight:600;
+  color:#2E6BFF;-webkit-text-fill-color:#2E6BFF;cursor:pointer}
 .hva-doing-loglink svg{flex:none}
-.hva-doing-loglink.alert{color:#B8791C;-webkit-text-fill-color:#B8791C;background:rgba(232,166,60,.16)}
 /* 方案 A 头卡右上那枚「?」（只在这一套里出现；默认那套仍只有一枚齿轮）。
    ★ 冒烟按 .hva-quick .hva-qk 枚数认「右上只有一枚齿轮」，所以它只在 HVA_DOING_MODE==='b' 时生成。 */
 .hva-quick.has-help .hva-qk{top:15.5px;width:34.1px;height:34.1px;border-radius:50%;
@@ -8559,7 +8553,7 @@ function hvaGearHex(){
    动作卡**：每张只有图标与名字，**不分「后台派来的任务」与「我挂的能力」**——那两族的名字仍各自来自
    HVA_TYPES（9 类后台任务按 HVA_GRPS 归并、取组内第一条在范围内的类型名）与 HVA_MINE（我挂的能力），
    只是并成一串、不再分行。精确的类型名单仍在设置页的托管范围卡里，不在主页再抄一份。
-   三种摆法（A 问号浮层／B 卡可折／C 日志卡头入口）共用这份卡片与空态，
+   三种摆法（A 问号浮层／B 卡可折／C 日志卡头入口）共用这份卡片；空态卡只在 B／C 出现（A 不摆卡），
    差别只在 hvaDoingTopHtml 的摆放与入口。 */
 var HVA_DOING_GRP_META={
   /* 4 组后台任务的卡片脸。键是内部组名（见 HVA_GRPS），不是卡上标题——标题取类型名；
@@ -8652,26 +8646,29 @@ function hvaDoingCardHtml(){
       +'<div class="hva-doing-ttl">'+(empty?I('alert',14,2):hvaLogSpk(13))+'<b>'+hvaDoingTitle()+'</b></div>'
       +'<div class="hva-doing-tools">'
         +'<button class="hva-doing-set" onclick="hvaDoingGoSet()">'+(empty?'去设置':'调整范围')+'<i>›</i></button>'
-        +((HVA_DOING_MODE==='b')?'<button class="hva-doing-fold" onclick="hvaDoingBOpen(false)" title="收起" aria-label="收起">'+I('chev',14,2.4)+'</button>':'')
+        +((HVA_DOING_MODE==='b'&&!empty)?'<button class="hva-doing-fold" onclick="hvaDoingBOpen(false)" title="收起" aria-label="收起">'+I('chev',14,2.4)+'</button>':'')
       +'</div>'
     +'</div>'
     +hvaDoingCardsHtml()
   +'</div>';
 }
-function hvaDoingStripHtml(empty){
-  return '<button class="hva-doing-strip'+(empty?' empty':'')+'" onclick="hvaDoingBOpen(true)">'
-    +(empty?'<i class="hva-doing-adot"></i>':'')
-    +'<span class="hva-doing-strip-t">'+(empty?'托管还不会做事':'托管会做什么')+'</span>'
-    +'<span class="hva-doing-strip-v">'+(empty?'点开看看要设置什么':esc(hvaDoingPreview()))+'</span>'
+function hvaDoingStripHtml(){
+  return '<button class="hva-doing-strip" onclick="hvaDoingBOpen(true)">'
+    +'<span class="hva-doing-strip-t">托管会做什么</span>'
+    +'<span class="hva-doing-strip-v">'+esc(hvaDoingPreview())+'</span>'
     +'<span class="chev">'+I('chev',14,2.4)+'</span></button>';
 }
-/* 三种摆法：A/C 正常时不占主页，只留头卡/日志卡头那枚入口；空态必须把提醒摆出来，
-   不能藏在低频入口后面——空着的时候员工需要看见「要去设置」。B 是主页那张卡，可折。 */
+/* 三种摆法：A 只在头卡留一枚「?」，主页不摆卡；C 只在日志卡头留一枚入口，主页也不摆卡；
+   B 是主页那张可折卡（收起后是一行 strip）。
+   空态是例外：B／C 都改成一张**静态**琥珀卡——不折、不收，B 不摆折叠按钮，C 同时收起日志入口
+   （卡就在上方，同一件事不必两个入口）。A 不摆卡，提醒只留在「?」那枚琥珀点上。 */
 function hvaDoingTopHtml(){
   var empty=hvaDoingEmpty(),open;
-  if(HVA_DOING_MODE==='a'||HVA_DOING_MODE==='c')return empty?hvaDoingCardHtml():'';
+  if(HVA_DOING_MODE==='a')return '';
+  if(empty)return hvaDoingCardHtml();
+  if(HVA_DOING_MODE==='c')return '';
   open=HVA_DOING_B_OPEN===null?true:HVA_DOING_B_OPEN;
-  return open?hvaDoingCardHtml():hvaDoingStripHtml(empty);
+  return open?hvaDoingCardHtml():hvaDoingStripHtml();
 }
 /* 对比开关的两个入口（只在设置页出现；定稿后连同那张卡一起删）。 */
 function hvaDoingMode(v){
@@ -8801,7 +8798,7 @@ function hvaInScope(ty){ return HVA_SCOPE.indexOf(ty)>=0; }
 function hvaLogHtml(){
   var h='',i,j,k,m;
   h='<div class="hva-logcard"><div class="hva-lhd">工作日志'+hvaLogSpk(15)
-    +(HVA_DOING_MODE==='c'?'<button class="hva-doing-loglink'+(hvaDoingEmpty()?' alert':'')+'" onclick="hvaDoingSheet(true)">托管会做什么'+I('chev',13,2.4)+'</button>':'')
+    +(HVA_DOING_MODE==='c'&&!hvaDoingEmpty()?'<button class="hva-doing-loglink" onclick="hvaDoingSheet(true)">托管会做什么'+I('chev',13,2.4)+'</button>':'')
     +'</div>';
   for(i=0;i<HVA_LOG.length;i++){
     var d=HVA_LOG[i];
@@ -15213,7 +15210,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
    说明文字）。**不再分「后台派来的任务」与「我挂的能力」**——员工只关心手机会做哪几件事，
    不关心这件事是谁派的；名字仍是那两个来源（HVA_GRPS 的四组后台类型、HVA_MINE 已挂的能力），
    只是并成一串。精确的 9 类名单仍在设置页的托管范围卡里，主页不再抄一份。
-   三种摆法（A 问号浮层／B 卡可折／C 日志卡头入口）共用这份卡片与空态，
+   三种摆法（A 问号浮层／B 卡可折／C 日志卡头入口）共用这份卡片；空态卡只在 B／C 出现（A 不摆卡），
    差别只在主页的摆放与入口（见 hvaDoingTopHtml）。
    ★ 空态**别用 .hva-attn**：冒烟钉着「关着时不再挂琥珀提醒卡」那条；这里用 .hva-doing.empty。 */
 .hva-doing{margin:0 0 10px;border-radius:18.7px;padding:13px 16px 12px;
@@ -15244,7 +15241,7 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
   display:flex;align-items:center;justify-content:center;color:#fff}
 .hva-doing-nm{min-width:0;font-size:13px;font-weight:600;line-height:1.3;color:#25395B;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-/* 方案 B 收起后的一行：标题＋一串动作预览＋下折箭头；空态也收得起来，但整行保持琥珀。 */
+/* 方案 B 收起后的一行：标题＋一串动作预览＋下折箭头。空态不走这一行（改摆静态琥珀卡）。 */
 .hva-doing-strip{display:flex;align-items:center;gap:7px;width:100%;margin:0 0 10px;padding:11px 14px;
   border:0;border-radius:14px;background:rgba(255,255,255,.92);cursor:pointer;text-align:left;font:inherit;
   box-shadow:0 8px 18px -20px rgba(40,70,150,.9),inset 0 0 0 1px rgba(208,222,255,.7)}
@@ -15253,22 +15250,16 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
   font-size:12.5px;color:#7C8DA8}
 .hva-doing-strip .chev{flex:none;display:flex;color:#8FA0BC}
 .hva-doing-strip .chev svg{transform:rotate(90deg)}
-.hva-doing-strip.empty{background:linear-gradient(90deg,#FFF9ED,#FFFDF8);
-  box-shadow:0 8px 18px -20px rgba(150,100,20,.5),inset 0 0 0 1px rgba(235,178,80,.5)}
-.hva-doing-strip.empty .hva-doing-strip-t{color:#8A5A12}
-.hva-doing-strip.empty .hva-doing-strip-v{color:#B08337}
-.hva-doing-strip.empty .chev{color:#C08A2E}
 .hva-doing-adot{flex:none;width:7px;height:7px;border-radius:50%;background:#E8A63C;
   box-shadow:0 0 0 2px rgba(232,166,60,.16)}
-/* 方案 C：工作日志卡头右侧那枚入口。.hva-lhd 吃渐变字（-webkit-text-fill-color:transparent），
-   按钮必须自己把填充色说回来，否则字是透明的。做成浅蓝胶囊：17.6px 的渐变标题旁边，
-   一颗裸字太轻、读着像标题的尾巴；胶囊把它摆成独立控件，高度压在 .hva-lhd 的 19.8px 以内。 */
-.hva-doing-loglink{display:flex;align-items:center;gap:2px;margin-left:auto;padding:1px 8px 1px 10px;border:0;
-  border-radius:999px;background:rgba(46,107,255,.09);
-  font:inherit;font-size:12.5px;line-height:17.8px;font-weight:600;color:#2E6BFF;
-  -webkit-text-fill-color:#2E6BFF;cursor:pointer}
+/* 方案 C：工作日志卡头右侧那枚文字入口。.hva-lhd 吃渐变字（-webkit-text-fill-color:transparent），
+   按钮必须自己把填充色说回来，否则字是透明的。
+   对齐：卡头标题 17.6px／行高 19.8px，这枚 13px 入口挂 align-self:flex-end、行高收成 1，
+   文字底沿才落在标题底沿那条线上；跟着父级垂直居中会吊在标题上半截。 */
+.hva-doing-loglink{display:flex;align-items:center;gap:1px;margin-left:auto;padding:0 0 1px 6px;border:0;
+  align-self:flex-end;background:none;font:inherit;font-size:13px;line-height:1;font-weight:600;
+  color:#2E6BFF;-webkit-text-fill-color:#2E6BFF;cursor:pointer}
 .hva-doing-loglink svg{flex:none}
-.hva-doing-loglink.alert{color:#B8791C;-webkit-text-fill-color:#B8791C;background:rgba(232,166,60,.16)}
 /* 方案 A 头卡右上那枚「?」（只在这一套里出现；默认那套仍只有一枚齿轮）。
    ★ 冒烟按 .hva-quick .hva-qk 枚数认「右上只有一枚齿轮」，所以它只在 HVA_DOING_MODE==='b' 时生成。 */
 .hva-quick.has-help .hva-qk{top:15.5px;width:34.1px;height:34.1px;border-radius:50%;
@@ -21386,7 +21377,7 @@ function hvaGearHex(){
    动作卡**：每张只有图标与名字，**不分「后台派来的任务」与「我挂的能力」**——那两族的名字仍各自来自
    HVA_TYPES（9 类后台任务按 HVA_GRPS 归并、取组内第一条在范围内的类型名）与 HVA_MINE（我挂的能力），
    只是并成一串、不再分行。精确的类型名单仍在设置页的托管范围卡里，不在主页再抄一份。
-   三种摆法（A 问号浮层／B 卡可折／C 日志卡头入口）共用这份卡片与空态，
+   三种摆法（A 问号浮层／B 卡可折／C 日志卡头入口）共用这份卡片；空态卡只在 B／C 出现（A 不摆卡），
    差别只在 hvaDoingTopHtml 的摆放与入口。 */
 var HVA_DOING_GRP_META={
   /* 4 组后台任务的卡片脸。键是内部组名（见 HVA_GRPS），不是卡上标题——标题取类型名；
@@ -21479,26 +21470,29 @@ function hvaDoingCardHtml(){
       +'<div class="hva-doing-ttl">'+(empty?I('alert',14,2):hvaLogSpk(13))+'<b>'+hvaDoingTitle()+'</b></div>'
       +'<div class="hva-doing-tools">'
         +'<button class="hva-doing-set" onclick="hvaDoingGoSet()">'+(empty?'去设置':'调整范围')+'<i>›</i></button>'
-        +((HVA_DOING_MODE==='b')?'<button class="hva-doing-fold" onclick="hvaDoingBOpen(false)" title="收起" aria-label="收起">'+I('chev',14,2.4)+'</button>':'')
+        +((HVA_DOING_MODE==='b'&&!empty)?'<button class="hva-doing-fold" onclick="hvaDoingBOpen(false)" title="收起" aria-label="收起">'+I('chev',14,2.4)+'</button>':'')
       +'</div>'
     +'</div>'
     +hvaDoingCardsHtml()
   +'</div>';
 }
-function hvaDoingStripHtml(empty){
-  return '<button class="hva-doing-strip'+(empty?' empty':'')+'" onclick="hvaDoingBOpen(true)">'
-    +(empty?'<i class="hva-doing-adot"></i>':'')
-    +'<span class="hva-doing-strip-t">'+(empty?'托管还不会做事':'托管会做什么')+'</span>'
-    +'<span class="hva-doing-strip-v">'+(empty?'点开看看要设置什么':esc(hvaDoingPreview()))+'</span>'
+function hvaDoingStripHtml(){
+  return '<button class="hva-doing-strip" onclick="hvaDoingBOpen(true)">'
+    +'<span class="hva-doing-strip-t">托管会做什么</span>'
+    +'<span class="hva-doing-strip-v">'+esc(hvaDoingPreview())+'</span>'
     +'<span class="chev">'+I('chev',14,2.4)+'</span></button>';
 }
-/* 三种摆法：A/C 正常时不占主页，只留头卡/日志卡头那枚入口；空态必须把提醒摆出来，
-   不能藏在低频入口后面——空着的时候员工需要看见「要去设置」。B 是主页那张卡，可折。 */
+/* 三种摆法：A 只在头卡留一枚「?」，主页不摆卡；C 只在日志卡头留一枚入口，主页也不摆卡；
+   B 是主页那张可折卡（收起后是一行 strip）。
+   空态是例外：B／C 都改成一张**静态**琥珀卡——不折、不收，B 不摆折叠按钮，C 同时收起日志入口
+   （卡就在上方，同一件事不必两个入口）。A 不摆卡，提醒只留在「?」那枚琥珀点上。 */
 function hvaDoingTopHtml(){
   var empty=hvaDoingEmpty(),open;
-  if(HVA_DOING_MODE==='a'||HVA_DOING_MODE==='c')return empty?hvaDoingCardHtml():'';
+  if(HVA_DOING_MODE==='a')return '';
+  if(empty)return hvaDoingCardHtml();
+  if(HVA_DOING_MODE==='c')return '';
   open=HVA_DOING_B_OPEN===null?true:HVA_DOING_B_OPEN;
-  return open?hvaDoingCardHtml():hvaDoingStripHtml(empty);
+  return open?hvaDoingCardHtml():hvaDoingStripHtml();
 }
 /* 对比开关的两个入口（只在设置页出现；定稿后连同那张卡一起删）。 */
 function hvaDoingMode(v){
@@ -21628,7 +21622,7 @@ function hvaInScope(ty){ return HVA_SCOPE.indexOf(ty)>=0; }
 function hvaLogHtml(){
   var h='',i,j,k,m;
   h='<div class="hva-logcard"><div class="hva-lhd">工作日志'+hvaLogSpk(15)
-    +(HVA_DOING_MODE==='c'?'<button class="hva-doing-loglink'+(hvaDoingEmpty()?' alert':'')+'" onclick="hvaDoingSheet(true)">托管会做什么'+I('chev',13,2.4)+'</button>':'')
+    +(HVA_DOING_MODE==='c'&&!hvaDoingEmpty()?'<button class="hva-doing-loglink" onclick="hvaDoingSheet(true)">托管会做什么'+I('chev',13,2.4)+'</button>':'')
     +'</div>';
   for(i=0;i<HVA_LOG.length;i++){
     var d=HVA_LOG[i];
@@ -28731,7 +28725,7 @@ select.cw-input{-webkit-appearance:none;appearance:none;padding-right:42px;curso
    说明文字）。**不再分「后台派来的任务」与「我挂的能力」**——员工只关心手机会做哪几件事，
    不关心这件事是谁派的；名字仍是那两个来源（HVA_GRPS 的四组后台类型、HVA_MINE 已挂的能力），
    只是并成一串。精确的 9 类名单仍在设置页的托管范围卡里，主页不再抄一份。
-   三种摆法（A 问号浮层／B 卡可折／C 日志卡头入口）共用这份卡片与空态，
+   三种摆法（A 问号浮层／B 卡可折／C 日志卡头入口）共用这份卡片；空态卡只在 B／C 出现（A 不摆卡），
    差别只在主页的摆放与入口（见 hvaDoingTopHtml）。
    ★ 空态**别用 .hva-attn**：冒烟钉着「关着时不再挂琥珀提醒卡」那条；这里用 .hva-doing.empty。 */
 .hva-doing{margin:0 0 10px;border-radius:18.7px;padding:13px 16px 12px;
@@ -28762,7 +28756,7 @@ select.cw-input{-webkit-appearance:none;appearance:none;padding-right:42px;curso
   display:flex;align-items:center;justify-content:center;color:#fff}
 .hva-doing-nm{min-width:0;font-size:13px;font-weight:600;line-height:1.3;color:#25395B;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-/* 方案 B 收起后的一行：标题＋一串动作预览＋下折箭头；空态也收得起来，但整行保持琥珀。 */
+/* 方案 B 收起后的一行：标题＋一串动作预览＋下折箭头。空态不走这一行（改摆静态琥珀卡）。 */
 .hva-doing-strip{display:flex;align-items:center;gap:7px;width:100%;margin:0 0 10px;padding:11px 14px;
   border:0;border-radius:14px;background:rgba(255,255,255,.92);cursor:pointer;text-align:left;font:inherit;
   box-shadow:0 8px 18px -20px rgba(40,70,150,.9),inset 0 0 0 1px rgba(208,222,255,.7)}
@@ -28771,22 +28765,16 @@ select.cw-input{-webkit-appearance:none;appearance:none;padding-right:42px;curso
   font-size:12.5px;color:#7C8DA8}
 .hva-doing-strip .chev{flex:none;display:flex;color:#8FA0BC}
 .hva-doing-strip .chev svg{transform:rotate(90deg)}
-.hva-doing-strip.empty{background:linear-gradient(90deg,#FFF9ED,#FFFDF8);
-  box-shadow:0 8px 18px -20px rgba(150,100,20,.5),inset 0 0 0 1px rgba(235,178,80,.5)}
-.hva-doing-strip.empty .hva-doing-strip-t{color:#8A5A12}
-.hva-doing-strip.empty .hva-doing-strip-v{color:#B08337}
-.hva-doing-strip.empty .chev{color:#C08A2E}
 .hva-doing-adot{flex:none;width:7px;height:7px;border-radius:50%;background:#E8A63C;
   box-shadow:0 0 0 2px rgba(232,166,60,.16)}
-/* 方案 C：工作日志卡头右侧那枚入口。.hva-lhd 吃渐变字（-webkit-text-fill-color:transparent），
-   按钮必须自己把填充色说回来，否则字是透明的。做成浅蓝胶囊：17.6px 的渐变标题旁边，
-   一颗裸字太轻、读着像标题的尾巴；胶囊把它摆成独立控件，高度压在 .hva-lhd 的 19.8px 以内。 */
-.hva-doing-loglink{display:flex;align-items:center;gap:2px;margin-left:auto;padding:1px 8px 1px 10px;border:0;
-  border-radius:999px;background:rgba(46,107,255,.09);
-  font:inherit;font-size:12.5px;line-height:17.8px;font-weight:600;color:#2E6BFF;
-  -webkit-text-fill-color:#2E6BFF;cursor:pointer}
+/* 方案 C：工作日志卡头右侧那枚文字入口。.hva-lhd 吃渐变字（-webkit-text-fill-color:transparent），
+   按钮必须自己把填充色说回来，否则字是透明的。
+   对齐：卡头标题 17.6px／行高 19.8px，这枚 13px 入口挂 align-self:flex-end、行高收成 1，
+   文字底沿才落在标题底沿那条线上；跟着父级垂直居中会吊在标题上半截。 */
+.hva-doing-loglink{display:flex;align-items:center;gap:1px;margin-left:auto;padding:0 0 1px 6px;border:0;
+  align-self:flex-end;background:none;font:inherit;font-size:13px;line-height:1;font-weight:600;
+  color:#2E6BFF;-webkit-text-fill-color:#2E6BFF;cursor:pointer}
 .hva-doing-loglink svg{flex:none}
-.hva-doing-loglink.alert{color:#B8791C;-webkit-text-fill-color:#B8791C;background:rgba(232,166,60,.16)}
 /* 方案 A 头卡右上那枚「?」（只在这一套里出现；默认那套仍只有一枚齿轮）。
    ★ 冒烟按 .hva-quick .hva-qk 枚数认「右上只有一枚齿轮」，所以它只在 HVA_DOING_MODE==='b' 时生成。 */
 .hva-quick.has-help .hva-qk{top:15.5px;width:34.1px;height:34.1px;border-radius:50%;
@@ -34731,7 +34719,7 @@ function hvaGearHex(){
    动作卡**：每张只有图标与名字，**不分「后台派来的任务」与「我挂的能力」**——那两族的名字仍各自来自
    HVA_TYPES（9 类后台任务按 HVA_GRPS 归并、取组内第一条在范围内的类型名）与 HVA_MINE（我挂的能力），
    只是并成一串、不再分行。精确的类型名单仍在设置页的托管范围卡里，不在主页再抄一份。
-   三种摆法（A 问号浮层／B 卡可折／C 日志卡头入口）共用这份卡片与空态，
+   三种摆法（A 问号浮层／B 卡可折／C 日志卡头入口）共用这份卡片；空态卡只在 B／C 出现（A 不摆卡），
    差别只在 hvaDoingTopHtml 的摆放与入口。 */
 var HVA_DOING_GRP_META={
   /* 4 组后台任务的卡片脸。键是内部组名（见 HVA_GRPS），不是卡上标题——标题取类型名；
@@ -34824,26 +34812,29 @@ function hvaDoingCardHtml(){
       +'<div class="hva-doing-ttl">'+(empty?I('alert',14,2):hvaLogSpk(13))+'<b>'+hvaDoingTitle()+'</b></div>'
       +'<div class="hva-doing-tools">'
         +'<button class="hva-doing-set" onclick="hvaDoingGoSet()">'+(empty?'去设置':'调整范围')+'<i>›</i></button>'
-        +((HVA_DOING_MODE==='b')?'<button class="hva-doing-fold" onclick="hvaDoingBOpen(false)" title="收起" aria-label="收起">'+I('chev',14,2.4)+'</button>':'')
+        +((HVA_DOING_MODE==='b'&&!empty)?'<button class="hva-doing-fold" onclick="hvaDoingBOpen(false)" title="收起" aria-label="收起">'+I('chev',14,2.4)+'</button>':'')
       +'</div>'
     +'</div>'
     +hvaDoingCardsHtml()
   +'</div>';
 }
-function hvaDoingStripHtml(empty){
-  return '<button class="hva-doing-strip'+(empty?' empty':'')+'" onclick="hvaDoingBOpen(true)">'
-    +(empty?'<i class="hva-doing-adot"></i>':'')
-    +'<span class="hva-doing-strip-t">'+(empty?'托管还不会做事':'托管会做什么')+'</span>'
-    +'<span class="hva-doing-strip-v">'+(empty?'点开看看要设置什么':esc(hvaDoingPreview()))+'</span>'
+function hvaDoingStripHtml(){
+  return '<button class="hva-doing-strip" onclick="hvaDoingBOpen(true)">'
+    +'<span class="hva-doing-strip-t">托管会做什么</span>'
+    +'<span class="hva-doing-strip-v">'+esc(hvaDoingPreview())+'</span>'
     +'<span class="chev">'+I('chev',14,2.4)+'</span></button>';
 }
-/* 三种摆法：A/C 正常时不占主页，只留头卡/日志卡头那枚入口；空态必须把提醒摆出来，
-   不能藏在低频入口后面——空着的时候员工需要看见「要去设置」。B 是主页那张卡，可折。 */
+/* 三种摆法：A 只在头卡留一枚「?」，主页不摆卡；C 只在日志卡头留一枚入口，主页也不摆卡；
+   B 是主页那张可折卡（收起后是一行 strip）。
+   空态是例外：B／C 都改成一张**静态**琥珀卡——不折、不收，B 不摆折叠按钮，C 同时收起日志入口
+   （卡就在上方，同一件事不必两个入口）。A 不摆卡，提醒只留在「?」那枚琥珀点上。 */
 function hvaDoingTopHtml(){
   var empty=hvaDoingEmpty(),open;
-  if(HVA_DOING_MODE==='a'||HVA_DOING_MODE==='c')return empty?hvaDoingCardHtml():'';
+  if(HVA_DOING_MODE==='a')return '';
+  if(empty)return hvaDoingCardHtml();
+  if(HVA_DOING_MODE==='c')return '';
   open=HVA_DOING_B_OPEN===null?true:HVA_DOING_B_OPEN;
-  return open?hvaDoingCardHtml():hvaDoingStripHtml(empty);
+  return open?hvaDoingCardHtml():hvaDoingStripHtml();
 }
 /* 对比开关的两个入口（只在设置页出现；定稿后连同那张卡一起删）。 */
 function hvaDoingMode(v){
@@ -34973,7 +34964,7 @@ function hvaInScope(ty){ return HVA_SCOPE.indexOf(ty)>=0; }
 function hvaLogHtml(){
   var h='',i,j,k,m;
   h='<div class="hva-logcard"><div class="hva-lhd">工作日志'+hvaLogSpk(15)
-    +(HVA_DOING_MODE==='c'?'<button class="hva-doing-loglink'+(hvaDoingEmpty()?' alert':'')+'" onclick="hvaDoingSheet(true)">托管会做什么'+I('chev',13,2.4)+'</button>':'')
+    +(HVA_DOING_MODE==='c'&&!hvaDoingEmpty()?'<button class="hva-doing-loglink" onclick="hvaDoingSheet(true)">托管会做什么'+I('chev',13,2.4)+'</button>':'')
     +'</div>';
   for(i=0;i<HVA_LOG.length;i++){
     var d=HVA_LOG[i];
