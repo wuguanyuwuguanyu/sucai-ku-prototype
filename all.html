@@ -2104,8 +2104,9 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
 .hva-doing-tg{margin:-6px 0;padding:6px 0 5px;border:0;background:none;font:inherit;
   text-align:left;cursor:pointer;border-radius:8px;-webkit-tap-highlight-color:transparent}
 .hva-doing-tg:active{background:rgba(46,107,255,.06)}
-.hva-doing-tg .tg-chev{flex:none;display:flex;margin-left:1px;color:#8FA0BC}
-.hva-doing-tg .tg-chev svg{margin-top:0;transform:rotate(-90deg)}
+.hva-doing-tg .tg-chev{flex:none;display:flex;margin-left:auto;color:#8FA0BC}
+.hva-doing-tg .tg-chev svg{margin-top:0;transform:rotate(-90deg);transition:transform .28s cubic-bezier(.2,0,0,1)}
+.hva-doing.closed .hva-doing-tg .tg-chev svg{transform:rotate(90deg)}
 .hva-doing.empty .hva-doing-set{color:#B8791C}
 /* 动作卡：两列、白卡、图标＋名字。图标块与工具页 .ht-sq 同一套配色（HT_PAL），
    同一条能力在工具页与这里长得一样，人不用重新认。 */
@@ -2116,15 +2117,21 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
   display:flex;align-items:center;justify-content:center;color:#fff}
 .hva-doing-nm{min-width:0;font-size:13px;font-weight:600;line-height:1.3;color:#25395B;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-/* 方案 B 收起后的一行：标题＋一串动作预览＋下折箭头。空态不走这一行（改摆静态琥珀卡）。 */
-.hva-doing-strip{display:flex;align-items:center;gap:7px;width:100%;margin:0 0 10px;padding:11px 14px;
-  border:0;border-radius:14px;background:rgba(255,255,255,.92);cursor:pointer;text-align:left;font:inherit;
-  box-shadow:0 8px 18px -20px rgba(40,70,150,.9),inset 0 0 0 1px rgba(208,222,255,.7)}
-.hva-doing-strip-t{flex:none;font-size:13.5px;font-weight:700;color:#29456F;white-space:nowrap}
-.hva-doing-strip-v{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-  font-size:12.5px;color:#7C8DA8}
-.hva-doing-strip .chev{flex:none;display:flex;color:#8FA0BC}
-.hva-doing-strip .chev svg{transform:rotate(90deg)}
+/* 方案 B 收起：同一张卡，正文收成 0 高，卡头露出「· 第一件 等 N 项」预览。
+   正文用 grid-template-rows 收合（1fr → 0fr），未知高度也能平滑过渡。 */
+.hva-doing-pv{flex:0 1 auto;min-width:0;margin-left:5px;font-size:12.5px;font-weight:400;color:#7C8DA8;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:0;
+  transition:opacity .2s cubic-bezier(.2,0,0,1)}
+.hva-doing.closed .hva-doing-pv{opacity:1}
+.hva-doing-body{display:grid;grid-template-rows:1fr;
+  transition:grid-template-rows .28s cubic-bezier(.2,0,0,1),opacity .2s cubic-bezier(.2,0,0,1)}
+.hva-doing-bodyin{min-height:0;overflow:hidden}
+.hva-doing.closed .hva-doing-body{grid-template-rows:0fr;opacity:0}
+.hva-doing-foot{display:flex;justify-content:flex-end;margin-top:10px}
+/* 系统开了「减少动态效果」时不做高度/旋转过渡，展开态直接显形。 */
+@media (prefers-reduced-motion:reduce){
+  .hva-doing-body,.hva-doing-pv,.hva-doing-tg .tg-chev svg{transition:none}
+}
 .hva-doing-adot{flex:none;width:7px;height:7px;border-radius:50%;background:#E8A63C;
   box-shadow:0 0 0 2px rgba(232,166,60,.16)}
 /* 方案 C：工作日志卡头右侧那枚文字入口。.hva-lhd 吃渐变字（-webkit-text-fill-color:transparent），
@@ -8641,43 +8648,41 @@ function hvaDoingCardsHtml(){
 }
 function hvaDoingTitle(){
   if(hvaDoingEmpty())return '托管还不会执行任务';
-  return HVA_ON?'托管中，手机会做这些':'开启托管后，手机会做这些';
+  return '托管清单';
 }
 function hvaDoingCardHtml(){
-  var empty=hvaDoingEmpty(),tg=HVA_DOING_MODE==='b'&&!empty;
+  var empty=hvaDoingEmpty(),tg=HVA_DOING_MODE==='b'&&!empty,open=HVA_DOING_B_OPEN!==false;
   var face=(empty?I('alert',14,2):hvaLogSpk(13))+'<b>'+hvaDoingTitle()+'</b>';
-  /* 收折挂在**标题行**上（方案 B）：标题连同前面那枚图标整条可点，箭头只是提示，
-     不再在「调整范围」旁边放一枚 24px 的小按钮——两个操作贴在一起，点收折容易落到范围上。 */
-  return '<div class="hva-doing'+(empty?' empty':'')+'">'
-    +'<div class="hva-doing-hd">'
-      +(tg
-        ?'<button class="hva-doing-ttl hva-doing-tg" onclick="hvaDoingBOpen(false)" aria-expanded="true" title="收起" aria-label="收起「托管会做什么」">'
-          +face+'<span class="tg-chev">'+I('chev',14,2.4)+'</span></button>'
-        :'<div class="hva-doing-ttl">'+face+'</div>')
+  /* 收折挂在**标题行**上（方案 B）：标题连同前面那枚图标整条可点，箭头只是提示。
+     收起与展开是**同一张卡**：正文（网格＋底部「调整范围」）收成 0 高，卡头露出
+     「· 第一件 等 N 项」预览；收起态卡头只剩标题与箭头，不再有第二个操作。 */
+  var hd=tg
+    ?'<button class="hva-doing-ttl hva-doing-tg" onclick="hvaDoingBToggle()" aria-expanded="'+(open?'true':'false')+'" title="'+(open?'收起':'展开')+'" aria-label="'+(open?'收起':'展开')+'托管清单">'
+      +face+'<span class="hva-doing-pv" aria-hidden="true">· '+esc(hvaDoingPreview())+'</span>'
+      +'<span class="tg-chev">'+I('chev',14,2.4)+'</span></button>'
+    :'<div class="hva-doing-ttl">'+face+'</div>';
+  var body=tg
+    ?'<div class="hva-doing-body"><div class="hva-doing-bodyin">'+hvaDoingCardsHtml()
+      +'<div class="hva-doing-foot"><button class="hva-doing-set" onclick="hvaDoingGoSet()">调整范围<i>›</i></button></div>'
+    +'</div></div>'
+    :hvaDoingCardsHtml();
+  return '<div class="hva-doing'+(empty?' empty':'')+((tg&&!open)?' closed':'')+'">'
+    +'<div class="hva-doing-hd">'+hd
       +'<div class="hva-doing-tools">'
-        +'<button class="hva-doing-set" onclick="hvaDoingGoSet()">'+(empty?'去设置':'调整范围')+'<i>›</i></button>'
+        +(empty?'<button class="hva-doing-set" onclick="hvaDoingGoSet()">去设置<i>›</i></button>':'')
       +'</div>'
     +'</div>'
-    +hvaDoingCardsHtml()
+    +body
   +'</div>';
 }
-function hvaDoingStripHtml(){
-  return '<button class="hva-doing-strip" onclick="hvaDoingBOpen(true)">'
-    +'<span class="hva-doing-strip-t">托管会做什么</span>'
-    +'<span class="hva-doing-strip-v">'+esc(hvaDoingPreview())+'</span>'
-    +'<span class="chev">'+I('chev',14,2.4)+'</span></button>';
-}
-/* 三种摆法：A 只在头卡留一枚「?」，主页不摆卡；C 只在日志卡头留一枚入口，主页也不摆卡；
-   B 是主页那张可折卡（收起后是一行 strip）。
-   空态是例外：B／C 都改成一张**静态**琥珀卡——不折、不收，B 不摆折叠按钮，C 同时收起日志入口
+/* 三种摆法：A 只在头卡留一枚「?」，主页不摆卡；C 只在日志卡头留一枚入口，正常态也不摆卡；
+   B 是主页那张卡，展开／收起都由卡头本身切换（同一张卡，收起只把正文收成 0 高）。
+   空态是例外：B／C 都摆一张**静态**琥珀卡——不折、不收，C 同时收起日志入口
    （卡就在上方，同一件事不必两个入口）。A 不摆卡，提醒只留在「?」那枚琥珀点上。 */
 function hvaDoingTopHtml(){
-  var empty=hvaDoingEmpty(),open;
   if(HVA_DOING_MODE==='a')return '';
-  if(empty)return hvaDoingCardHtml();
-  if(HVA_DOING_MODE==='c')return '';
-  open=HVA_DOING_B_OPEN===null?true:HVA_DOING_B_OPEN;
-  return open?hvaDoingCardHtml():hvaDoingStripHtml();
+  if(HVA_DOING_MODE==='c'&&!hvaDoingEmpty())return '';
+  return hvaDoingCardHtml();
 }
 /* 对比开关的两个入口（只在设置页出现；定稿后连同那张卡一起删）。 */
 function hvaDoingMode(v){
@@ -8691,7 +8696,19 @@ function hvaDoingDemo(v){
   REND['host-ai']();REND['host-ai-set']();
   toast(v?'主页正在演示空范围（不改设置里的真实范围）':'主页已回到真实范围');
 }
-function hvaDoingBOpen(open){ HVA_DOING_B_OPEN=!!open;REND['host-ai'](); }
+/* 收起／展开只动这张卡本身：正文用 grid-template-rows 从 1fr 收到 0fr（0.28s，M3 emphasized），
+   卡头预览与箭头同步转；**不重绘整屏**——重绘会打断过渡。 */
+function hvaDoingBOpen(open){
+  HVA_DOING_B_OPEN=!!open;
+  var c=document.querySelector('#hvaPane .hva-doing');
+  if(!c){REND['host-ai']();return;}
+  c.classList.toggle('closed',!open);
+  var b=c.querySelector('.hva-doing-tg');
+  if(b){b.setAttribute('aria-expanded',open?'true':'false');
+    b.setAttribute('aria-label',(open?'收起':'展开')+'托管清单');
+    b.setAttribute('title',open?'收起':'展开');}
+}
+function hvaDoingBToggle(){ hvaDoingBOpen(HVA_DOING_B_OPEN===false); }
 /* 「调整范围」的落点：切到设置页，滚到范围卡并闪一下。转场 320ms，等它走完再滚。 */
 function hvaDoingGoSet(){
   hvaDoingSheet(false);
@@ -15242,8 +15259,9 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
 .hva-doing-tg{margin:-6px 0;padding:6px 0 5px;border:0;background:none;font:inherit;
   text-align:left;cursor:pointer;border-radius:8px;-webkit-tap-highlight-color:transparent}
 .hva-doing-tg:active{background:rgba(46,107,255,.06)}
-.hva-doing-tg .tg-chev{flex:none;display:flex;margin-left:1px;color:#8FA0BC}
-.hva-doing-tg .tg-chev svg{margin-top:0;transform:rotate(-90deg)}
+.hva-doing-tg .tg-chev{flex:none;display:flex;margin-left:auto;color:#8FA0BC}
+.hva-doing-tg .tg-chev svg{margin-top:0;transform:rotate(-90deg);transition:transform .28s cubic-bezier(.2,0,0,1)}
+.hva-doing.closed .hva-doing-tg .tg-chev svg{transform:rotate(90deg)}
 .hva-doing.empty .hva-doing-set{color:#B8791C}
 /* 动作卡：两列、白卡、图标＋名字。图标块与工具页 .ht-sq 同一套配色（HT_PAL），
    同一条能力在工具页与这里长得一样，人不用重新认。 */
@@ -15254,15 +15272,21 @@ body.side-open #sidebar{display:block;position:fixed;left:14px;top:70px;bottom:1
   display:flex;align-items:center;justify-content:center;color:#fff}
 .hva-doing-nm{min-width:0;font-size:13px;font-weight:600;line-height:1.3;color:#25395B;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-/* 方案 B 收起后的一行：标题＋一串动作预览＋下折箭头。空态不走这一行（改摆静态琥珀卡）。 */
-.hva-doing-strip{display:flex;align-items:center;gap:7px;width:100%;margin:0 0 10px;padding:11px 14px;
-  border:0;border-radius:14px;background:rgba(255,255,255,.92);cursor:pointer;text-align:left;font:inherit;
-  box-shadow:0 8px 18px -20px rgba(40,70,150,.9),inset 0 0 0 1px rgba(208,222,255,.7)}
-.hva-doing-strip-t{flex:none;font-size:13.5px;font-weight:700;color:#29456F;white-space:nowrap}
-.hva-doing-strip-v{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-  font-size:12.5px;color:#7C8DA8}
-.hva-doing-strip .chev{flex:none;display:flex;color:#8FA0BC}
-.hva-doing-strip .chev svg{transform:rotate(90deg)}
+/* 方案 B 收起：同一张卡，正文收成 0 高，卡头露出「· 第一件 等 N 项」预览。
+   正文用 grid-template-rows 收合（1fr → 0fr），未知高度也能平滑过渡。 */
+.hva-doing-pv{flex:0 1 auto;min-width:0;margin-left:5px;font-size:12.5px;font-weight:400;color:#7C8DA8;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:0;
+  transition:opacity .2s cubic-bezier(.2,0,0,1)}
+.hva-doing.closed .hva-doing-pv{opacity:1}
+.hva-doing-body{display:grid;grid-template-rows:1fr;
+  transition:grid-template-rows .28s cubic-bezier(.2,0,0,1),opacity .2s cubic-bezier(.2,0,0,1)}
+.hva-doing-bodyin{min-height:0;overflow:hidden}
+.hva-doing.closed .hva-doing-body{grid-template-rows:0fr;opacity:0}
+.hva-doing-foot{display:flex;justify-content:flex-end;margin-top:10px}
+/* 系统开了「减少动态效果」时不做高度/旋转过渡，展开态直接显形。 */
+@media (prefers-reduced-motion:reduce){
+  .hva-doing-body,.hva-doing-pv,.hva-doing-tg .tg-chev svg{transition:none}
+}
 .hva-doing-adot{flex:none;width:7px;height:7px;border-radius:50%;background:#E8A63C;
   box-shadow:0 0 0 2px rgba(232,166,60,.16)}
 /* 方案 C：工作日志卡头右侧那枚文字入口。.hva-lhd 吃渐变字（-webkit-text-fill-color:transparent），
@@ -21474,43 +21498,41 @@ function hvaDoingCardsHtml(){
 }
 function hvaDoingTitle(){
   if(hvaDoingEmpty())return '托管还不会执行任务';
-  return HVA_ON?'托管中，手机会做这些':'开启托管后，手机会做这些';
+  return '托管清单';
 }
 function hvaDoingCardHtml(){
-  var empty=hvaDoingEmpty(),tg=HVA_DOING_MODE==='b'&&!empty;
+  var empty=hvaDoingEmpty(),tg=HVA_DOING_MODE==='b'&&!empty,open=HVA_DOING_B_OPEN!==false;
   var face=(empty?I('alert',14,2):hvaLogSpk(13))+'<b>'+hvaDoingTitle()+'</b>';
-  /* 收折挂在**标题行**上（方案 B）：标题连同前面那枚图标整条可点，箭头只是提示，
-     不再在「调整范围」旁边放一枚 24px 的小按钮——两个操作贴在一起，点收折容易落到范围上。 */
-  return '<div class="hva-doing'+(empty?' empty':'')+'">'
-    +'<div class="hva-doing-hd">'
-      +(tg
-        ?'<button class="hva-doing-ttl hva-doing-tg" onclick="hvaDoingBOpen(false)" aria-expanded="true" title="收起" aria-label="收起「托管会做什么」">'
-          +face+'<span class="tg-chev">'+I('chev',14,2.4)+'</span></button>'
-        :'<div class="hva-doing-ttl">'+face+'</div>')
+  /* 收折挂在**标题行**上（方案 B）：标题连同前面那枚图标整条可点，箭头只是提示。
+     收起与展开是**同一张卡**：正文（网格＋底部「调整范围」）收成 0 高，卡头露出
+     「· 第一件 等 N 项」预览；收起态卡头只剩标题与箭头，不再有第二个操作。 */
+  var hd=tg
+    ?'<button class="hva-doing-ttl hva-doing-tg" onclick="hvaDoingBToggle()" aria-expanded="'+(open?'true':'false')+'" title="'+(open?'收起':'展开')+'" aria-label="'+(open?'收起':'展开')+'托管清单">'
+      +face+'<span class="hva-doing-pv" aria-hidden="true">· '+esc(hvaDoingPreview())+'</span>'
+      +'<span class="tg-chev">'+I('chev',14,2.4)+'</span></button>'
+    :'<div class="hva-doing-ttl">'+face+'</div>';
+  var body=tg
+    ?'<div class="hva-doing-body"><div class="hva-doing-bodyin">'+hvaDoingCardsHtml()
+      +'<div class="hva-doing-foot"><button class="hva-doing-set" onclick="hvaDoingGoSet()">调整范围<i>›</i></button></div>'
+    +'</div></div>'
+    :hvaDoingCardsHtml();
+  return '<div class="hva-doing'+(empty?' empty':'')+((tg&&!open)?' closed':'')+'">'
+    +'<div class="hva-doing-hd">'+hd
       +'<div class="hva-doing-tools">'
-        +'<button class="hva-doing-set" onclick="hvaDoingGoSet()">'+(empty?'去设置':'调整范围')+'<i>›</i></button>'
+        +(empty?'<button class="hva-doing-set" onclick="hvaDoingGoSet()">去设置<i>›</i></button>':'')
       +'</div>'
     +'</div>'
-    +hvaDoingCardsHtml()
+    +body
   +'</div>';
 }
-function hvaDoingStripHtml(){
-  return '<button class="hva-doing-strip" onclick="hvaDoingBOpen(true)">'
-    +'<span class="hva-doing-strip-t">托管会做什么</span>'
-    +'<span class="hva-doing-strip-v">'+esc(hvaDoingPreview())+'</span>'
-    +'<span class="chev">'+I('chev',14,2.4)+'</span></button>';
-}
-/* 三种摆法：A 只在头卡留一枚「?」，主页不摆卡；C 只在日志卡头留一枚入口，主页也不摆卡；
-   B 是主页那张可折卡（收起后是一行 strip）。
-   空态是例外：B／C 都改成一张**静态**琥珀卡——不折、不收，B 不摆折叠按钮，C 同时收起日志入口
+/* 三种摆法：A 只在头卡留一枚「?」，主页不摆卡；C 只在日志卡头留一枚入口，正常态也不摆卡；
+   B 是主页那张卡，展开／收起都由卡头本身切换（同一张卡，收起只把正文收成 0 高）。
+   空态是例外：B／C 都摆一张**静态**琥珀卡——不折、不收，C 同时收起日志入口
    （卡就在上方，同一件事不必两个入口）。A 不摆卡，提醒只留在「?」那枚琥珀点上。 */
 function hvaDoingTopHtml(){
-  var empty=hvaDoingEmpty(),open;
   if(HVA_DOING_MODE==='a')return '';
-  if(empty)return hvaDoingCardHtml();
-  if(HVA_DOING_MODE==='c')return '';
-  open=HVA_DOING_B_OPEN===null?true:HVA_DOING_B_OPEN;
-  return open?hvaDoingCardHtml():hvaDoingStripHtml();
+  if(HVA_DOING_MODE==='c'&&!hvaDoingEmpty())return '';
+  return hvaDoingCardHtml();
 }
 /* 对比开关的两个入口（只在设置页出现；定稿后连同那张卡一起删）。 */
 function hvaDoingMode(v){
@@ -21524,7 +21546,19 @@ function hvaDoingDemo(v){
   REND['host-ai']();REND['host-ai-set']();
   toast(v?'主页正在演示空范围（不改设置里的真实范围）':'主页已回到真实范围');
 }
-function hvaDoingBOpen(open){ HVA_DOING_B_OPEN=!!open;REND['host-ai'](); }
+/* 收起／展开只动这张卡本身：正文用 grid-template-rows 从 1fr 收到 0fr（0.28s，M3 emphasized），
+   卡头预览与箭头同步转；**不重绘整屏**——重绘会打断过渡。 */
+function hvaDoingBOpen(open){
+  HVA_DOING_B_OPEN=!!open;
+  var c=document.querySelector('#hvaPane .hva-doing');
+  if(!c){REND['host-ai']();return;}
+  c.classList.toggle('closed',!open);
+  var b=c.querySelector('.hva-doing-tg');
+  if(b){b.setAttribute('aria-expanded',open?'true':'false');
+    b.setAttribute('aria-label',(open?'收起':'展开')+'托管清单');
+    b.setAttribute('title',open?'收起':'展开');}
+}
+function hvaDoingBToggle(){ hvaDoingBOpen(HVA_DOING_B_OPEN===false); }
 /* 「调整范围」的落点：切到设置页，滚到范围卡并闪一下。转场 320ms，等它走完再滚。 */
 function hvaDoingGoSet(){
   hvaDoingSheet(false);
@@ -28766,8 +28800,9 @@ select.cw-input{-webkit-appearance:none;appearance:none;padding-right:42px;curso
 .hva-doing-tg{margin:-6px 0;padding:6px 0 5px;border:0;background:none;font:inherit;
   text-align:left;cursor:pointer;border-radius:8px;-webkit-tap-highlight-color:transparent}
 .hva-doing-tg:active{background:rgba(46,107,255,.06)}
-.hva-doing-tg .tg-chev{flex:none;display:flex;margin-left:1px;color:#8FA0BC}
-.hva-doing-tg .tg-chev svg{margin-top:0;transform:rotate(-90deg)}
+.hva-doing-tg .tg-chev{flex:none;display:flex;margin-left:auto;color:#8FA0BC}
+.hva-doing-tg .tg-chev svg{margin-top:0;transform:rotate(-90deg);transition:transform .28s cubic-bezier(.2,0,0,1)}
+.hva-doing.closed .hva-doing-tg .tg-chev svg{transform:rotate(90deg)}
 .hva-doing.empty .hva-doing-set{color:#B8791C}
 /* 动作卡：两列、白卡、图标＋名字。图标块与工具页 .ht-sq 同一套配色（HT_PAL），
    同一条能力在工具页与这里长得一样，人不用重新认。 */
@@ -28778,15 +28813,21 @@ select.cw-input{-webkit-appearance:none;appearance:none;padding-right:42px;curso
   display:flex;align-items:center;justify-content:center;color:#fff}
 .hva-doing-nm{min-width:0;font-size:13px;font-weight:600;line-height:1.3;color:#25395B;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-/* 方案 B 收起后的一行：标题＋一串动作预览＋下折箭头。空态不走这一行（改摆静态琥珀卡）。 */
-.hva-doing-strip{display:flex;align-items:center;gap:7px;width:100%;margin:0 0 10px;padding:11px 14px;
-  border:0;border-radius:14px;background:rgba(255,255,255,.92);cursor:pointer;text-align:left;font:inherit;
-  box-shadow:0 8px 18px -20px rgba(40,70,150,.9),inset 0 0 0 1px rgba(208,222,255,.7)}
-.hva-doing-strip-t{flex:none;font-size:13.5px;font-weight:700;color:#29456F;white-space:nowrap}
-.hva-doing-strip-v{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-  font-size:12.5px;color:#7C8DA8}
-.hva-doing-strip .chev{flex:none;display:flex;color:#8FA0BC}
-.hva-doing-strip .chev svg{transform:rotate(90deg)}
+/* 方案 B 收起：同一张卡，正文收成 0 高，卡头露出「· 第一件 等 N 项」预览。
+   正文用 grid-template-rows 收合（1fr → 0fr），未知高度也能平滑过渡。 */
+.hva-doing-pv{flex:0 1 auto;min-width:0;margin-left:5px;font-size:12.5px;font-weight:400;color:#7C8DA8;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:0;
+  transition:opacity .2s cubic-bezier(.2,0,0,1)}
+.hva-doing.closed .hva-doing-pv{opacity:1}
+.hva-doing-body{display:grid;grid-template-rows:1fr;
+  transition:grid-template-rows .28s cubic-bezier(.2,0,0,1),opacity .2s cubic-bezier(.2,0,0,1)}
+.hva-doing-bodyin{min-height:0;overflow:hidden}
+.hva-doing.closed .hva-doing-body{grid-template-rows:0fr;opacity:0}
+.hva-doing-foot{display:flex;justify-content:flex-end;margin-top:10px}
+/* 系统开了「减少动态效果」时不做高度/旋转过渡，展开态直接显形。 */
+@media (prefers-reduced-motion:reduce){
+  .hva-doing-body,.hva-doing-pv,.hva-doing-tg .tg-chev svg{transition:none}
+}
 .hva-doing-adot{flex:none;width:7px;height:7px;border-radius:50%;background:#E8A63C;
   box-shadow:0 0 0 2px rgba(232,166,60,.16)}
 /* 方案 C：工作日志卡头右侧那枚文字入口。.hva-lhd 吃渐变字（-webkit-text-fill-color:transparent），
@@ -34825,43 +34866,41 @@ function hvaDoingCardsHtml(){
 }
 function hvaDoingTitle(){
   if(hvaDoingEmpty())return '托管还不会执行任务';
-  return HVA_ON?'托管中，手机会做这些':'开启托管后，手机会做这些';
+  return '托管清单';
 }
 function hvaDoingCardHtml(){
-  var empty=hvaDoingEmpty(),tg=HVA_DOING_MODE==='b'&&!empty;
+  var empty=hvaDoingEmpty(),tg=HVA_DOING_MODE==='b'&&!empty,open=HVA_DOING_B_OPEN!==false;
   var face=(empty?I('alert',14,2):hvaLogSpk(13))+'<b>'+hvaDoingTitle()+'</b>';
-  /* 收折挂在**标题行**上（方案 B）：标题连同前面那枚图标整条可点，箭头只是提示，
-     不再在「调整范围」旁边放一枚 24px 的小按钮——两个操作贴在一起，点收折容易落到范围上。 */
-  return '<div class="hva-doing'+(empty?' empty':'')+'">'
-    +'<div class="hva-doing-hd">'
-      +(tg
-        ?'<button class="hva-doing-ttl hva-doing-tg" onclick="hvaDoingBOpen(false)" aria-expanded="true" title="收起" aria-label="收起「托管会做什么」">'
-          +face+'<span class="tg-chev">'+I('chev',14,2.4)+'</span></button>'
-        :'<div class="hva-doing-ttl">'+face+'</div>')
+  /* 收折挂在**标题行**上（方案 B）：标题连同前面那枚图标整条可点，箭头只是提示。
+     收起与展开是**同一张卡**：正文（网格＋底部「调整范围」）收成 0 高，卡头露出
+     「· 第一件 等 N 项」预览；收起态卡头只剩标题与箭头，不再有第二个操作。 */
+  var hd=tg
+    ?'<button class="hva-doing-ttl hva-doing-tg" onclick="hvaDoingBToggle()" aria-expanded="'+(open?'true':'false')+'" title="'+(open?'收起':'展开')+'" aria-label="'+(open?'收起':'展开')+'托管清单">'
+      +face+'<span class="hva-doing-pv" aria-hidden="true">· '+esc(hvaDoingPreview())+'</span>'
+      +'<span class="tg-chev">'+I('chev',14,2.4)+'</span></button>'
+    :'<div class="hva-doing-ttl">'+face+'</div>';
+  var body=tg
+    ?'<div class="hva-doing-body"><div class="hva-doing-bodyin">'+hvaDoingCardsHtml()
+      +'<div class="hva-doing-foot"><button class="hva-doing-set" onclick="hvaDoingGoSet()">调整范围<i>›</i></button></div>'
+    +'</div></div>'
+    :hvaDoingCardsHtml();
+  return '<div class="hva-doing'+(empty?' empty':'')+((tg&&!open)?' closed':'')+'">'
+    +'<div class="hva-doing-hd">'+hd
       +'<div class="hva-doing-tools">'
-        +'<button class="hva-doing-set" onclick="hvaDoingGoSet()">'+(empty?'去设置':'调整范围')+'<i>›</i></button>'
+        +(empty?'<button class="hva-doing-set" onclick="hvaDoingGoSet()">去设置<i>›</i></button>':'')
       +'</div>'
     +'</div>'
-    +hvaDoingCardsHtml()
+    +body
   +'</div>';
 }
-function hvaDoingStripHtml(){
-  return '<button class="hva-doing-strip" onclick="hvaDoingBOpen(true)">'
-    +'<span class="hva-doing-strip-t">托管会做什么</span>'
-    +'<span class="hva-doing-strip-v">'+esc(hvaDoingPreview())+'</span>'
-    +'<span class="chev">'+I('chev',14,2.4)+'</span></button>';
-}
-/* 三种摆法：A 只在头卡留一枚「?」，主页不摆卡；C 只在日志卡头留一枚入口，主页也不摆卡；
-   B 是主页那张可折卡（收起后是一行 strip）。
-   空态是例外：B／C 都改成一张**静态**琥珀卡——不折、不收，B 不摆折叠按钮，C 同时收起日志入口
+/* 三种摆法：A 只在头卡留一枚「?」，主页不摆卡；C 只在日志卡头留一枚入口，正常态也不摆卡；
+   B 是主页那张卡，展开／收起都由卡头本身切换（同一张卡，收起只把正文收成 0 高）。
+   空态是例外：B／C 都摆一张**静态**琥珀卡——不折、不收，C 同时收起日志入口
    （卡就在上方，同一件事不必两个入口）。A 不摆卡，提醒只留在「?」那枚琥珀点上。 */
 function hvaDoingTopHtml(){
-  var empty=hvaDoingEmpty(),open;
   if(HVA_DOING_MODE==='a')return '';
-  if(empty)return hvaDoingCardHtml();
-  if(HVA_DOING_MODE==='c')return '';
-  open=HVA_DOING_B_OPEN===null?true:HVA_DOING_B_OPEN;
-  return open?hvaDoingCardHtml():hvaDoingStripHtml();
+  if(HVA_DOING_MODE==='c'&&!hvaDoingEmpty())return '';
+  return hvaDoingCardHtml();
 }
 /* 对比开关的两个入口（只在设置页出现；定稿后连同那张卡一起删）。 */
 function hvaDoingMode(v){
@@ -34875,7 +34914,19 @@ function hvaDoingDemo(v){
   REND['host-ai']();REND['host-ai-set']();
   toast(v?'主页正在演示空范围（不改设置里的真实范围）':'主页已回到真实范围');
 }
-function hvaDoingBOpen(open){ HVA_DOING_B_OPEN=!!open;REND['host-ai'](); }
+/* 收起／展开只动这张卡本身：正文用 grid-template-rows 从 1fr 收到 0fr（0.28s，M3 emphasized），
+   卡头预览与箭头同步转；**不重绘整屏**——重绘会打断过渡。 */
+function hvaDoingBOpen(open){
+  HVA_DOING_B_OPEN=!!open;
+  var c=document.querySelector('#hvaPane .hva-doing');
+  if(!c){REND['host-ai']();return;}
+  c.classList.toggle('closed',!open);
+  var b=c.querySelector('.hva-doing-tg');
+  if(b){b.setAttribute('aria-expanded',open?'true':'false');
+    b.setAttribute('aria-label',(open?'收起':'展开')+'托管清单');
+    b.setAttribute('title',open?'收起':'展开');}
+}
+function hvaDoingBToggle(){ hvaDoingBOpen(HVA_DOING_B_OPEN===false); }
 /* 「调整范围」的落点：切到设置页，滚到范围卡并闪一下。转场 320ms，等它走完再滚。 */
 function hvaDoingGoSet(){
   hvaDoingSheet(false);
