@@ -17745,7 +17745,7 @@ render();
 
     <!-- 任务列表 · 第 4 行左格 · 明细。
          与二级页「任务列表」同一份行，按**下发日从新到旧**露前 5 条（卡头不再挂排序口径）；
-         点行进该类型的详情页（视频号发布任务没有详情页，那一行不给箭头也不可点），
+         点行进该类型的详情页（七类任务都有详情页；没有落点的类型不给箭头也不可点），
          右下角「查看全部」进二级页看全量。三条筛选轴只留在二级页（PRD §2.5／§2.5c）。 -->
     <div class="rea-bd-card rea-bd-card--w7" id="rea-bd-peek">
       <div class="rea-bd-ch"><h6>任务列表<span class="rea-bd-help" tabindex="0" role="img" aria-label="数据来源与统计口径" data-tip="来源：与看板同一批任务台账。口径：按下发日从新到旧露出前 5 条，进度按人次计；完整逐条清单、创建时间与筛选在二级页「任务列表」。">?</span></h6></div>
@@ -19271,6 +19271,229 @@ render();
 </div>
 </script>
 
+<script type="text/plain" id="srcXhsNote"><div style="height: 100%"><div class="h-full overflow-auto"><div class="h-full"><div class="rea-xn-page" data-xn-list>
+  <div class="rea-xn-head">
+    <h1>笔记发布</h1>
+    <div class="rea-xn-headact">
+      <button type="button" class="rea-xn-btn rea-xn-btn--primary" data-xn-new>新建任务</button>
+    </div>
+  </div>
+  <div class="rea-xn-filters">
+    <div class="rea-xn-field"><span class="rea-xn-flabel">任务名称</span><input class="rea-xn-input" data-xn-f="name" placeholder="请输入任务名称"></div>
+    <div class="rea-xn-field"><span class="rea-xn-flabel">视频文案</span><input class="rea-xn-input" data-xn-f="copy" placeholder="请输入视频文案"></div>
+    <div class="rea-xn-field"><span class="rea-xn-flabel">发布时间</span><span class="rea-xn-range"><input type="date" class="rea-xn-input rea-xn-date" data-xn-f="p1"><span class="rea-xn-tilde">~</span><input type="date" class="rea-xn-input rea-xn-date" data-xn-f="p2"></span></div>
+    <div class="rea-xn-field"><span class="rea-xn-flabel">任务状态</span><select class="rea-xn-select" data-xn-f="state"><option value="">全部状态</option><option>执行中</option><option>执行完毕</option><option>已过期</option></select></div>
+    <div class="rea-xn-field"><span class="rea-xn-flabel">创建时间</span><span class="rea-xn-range"><input type="date" class="rea-xn-input rea-xn-date" data-xn-f="c1"><span class="rea-xn-tilde">~</span><input type="date" class="rea-xn-input rea-xn-date" data-xn-f="c2"></span></div>
+    <div class="rea-xn-field rea-xn-fbtns">
+      <button type="button" class="rea-xn-btn" data-xn-query>查询</button>
+      <button type="button" class="rea-xn-btn rea-xn-btn--text" data-xn-reset>重置</button>
+    </div>
+  </div>
+  <table class="rea-xn-table">
+    <thead><tr>
+      <th class="rea-xn-th-name">任务名称</th>
+      <th>发布类型</th>
+      <th>视频文案</th>
+      <th>视频话题</th>
+      <th>执行人员</th>
+      <th class="rea-xn-th-time">发布时间</th>
+      <th>状态</th>
+      <th class="rea-xn-th-time">创建时间</th>
+      <th>创建人</th>
+      <th>操作</th>
+    </tr></thead>
+    <tbody data-xn-rows></tbody>
+  </table>
+  <div class="rea-xn-pager" data-xn-pager></div>
+</div></div></div></div>
+</script>
+
+<script type="text/plain" id="srcXhsNoteNew"><div style="height: 100%"><div class="h-full overflow-auto"><div class="h-full"><div class="rea-xn-page" data-xn-newpage>
+  <div class="rea-xn-crumb"><a data-xn-back>笔记发布</a><span>/</span><span>新建任务</span></div>
+  <div class="rea-xn-head"><h1>新建任务</h1></div>
+  <div class="rea-xn-form">
+    <section class="rea-xn-sec">
+      <h2>基本信息</h2>
+      <div class="rea-xn-row">
+        <span class="rea-xn-label rea-xn-req">执行人员</span>
+        <div class="rea-xn-ctl">
+          <div class="rea-xn-picker">
+            <button type="button" class="rea-xn-input rea-xn-picker-btn" data-xn-orgbtn>
+              <span class="rea-xn-picktags" data-xn-orgtags></span>
+              <span class="rea-xn-ph" data-xn-orgph>请选择组织架构</span>
+              <span class="rea-xn-caret">▾</span>
+            </button>
+            <div class="rea-xn-drop" data-xn-orgdrop hidden>
+              <input class="rea-xn-input rea-xn-dropsearch" data-xn-orgsearch placeholder="搜索部门或成员">
+              <div data-xn-orglist></div>
+            </div>
+          </div>
+          <p class="rea-xn-err" data-xn-err="org" hidden>请选择执行人员</p>
+        </div>
+      </div>
+      <div class="rea-xn-row">
+        <span class="rea-xn-label rea-xn-req">发布应用</span>
+        <div class="rea-xn-ctl"><span class="rea-xn-radios"><label class="rea-xn-radio is-on"><input type="radio" name="xnApp" checked>微小助</label></span></div>
+      </div>
+      <div class="rea-xn-row">
+        <label class="rea-xn-label rea-xn-req" for="xnName">任务名称</label>
+        <div class="rea-xn-ctl">
+          <div class="rea-xn-inputwrap"><input id="xnName" class="rea-xn-input" data-xn-name maxlength="21" placeholder="请输入任务名称"><span class="rea-xn-count" data-xn-namecount>0 / 21</span></div>
+          <p class="rea-xn-err" data-xn-err="name" hidden>请输入任务名称</p>
+        </div>
+      </div>
+    </section>
+    <section class="rea-xn-sec">
+      <h2>发布内容</h2>
+      <div class="rea-xn-row">
+        <span class="rea-xn-label rea-xn-req">素材来源</span>
+        <div class="rea-xn-ctl"><div class="rea-xn-seg" data-xn-source><button type="button" class="is-on" data-v="临时创建">临时创建</button><button type="button" data-v="AI生成">AI生成</button></div></div>
+      </div>
+      <div class="rea-xn-row" data-xn-aigenrow hidden>
+        <label class="rea-xn-label" for="xnAi">生成要求</label>
+        <div class="rea-xn-ctl">
+          <textarea id="xnAi" class="rea-xn-textarea" data-xn-aigen placeholder="描述想发布的内容，例如产品、活动、目标人群"></textarea>
+          <div class="rea-xn-inline"><button type="button" class="rea-xn-btn" data-xn-gen>生成</button></div>
+          <p class="rea-xn-err" data-xn-err="aigen" hidden>请填写生成要求</p>
+        </div>
+      </div>
+      <div class="rea-xn-row">
+        <span class="rea-xn-label rea-xn-req">发布类型</span>
+        <div class="rea-xn-ctl"><div class="rea-xn-radios" data-xn-type>
+          <label class="rea-xn-radio is-on"><input type="radio" name="xnType" value="发图文" checked>发图文</label>
+          <label class="rea-xn-radio"><input type="radio" name="xnType" value="发视频">发视频</label>
+          <label class="rea-xn-radio"><input type="radio" name="xnType" value="发文案配图">发文案配图</label>
+        </div></div>
+      </div>
+      <div class="rea-xn-row" data-xn-g="img">
+        <span class="rea-xn-label rea-xn-req">选择图片<span class="rea-xn-help" data-tip="最多上传 18 张；支持 png、jpg、jpeg，单张不超过 20MB；首图即封面，可拖动调整顺序。">?</span></span>
+        <div class="rea-xn-ctl">
+          <div class="rea-xn-upload" data-xn-imgs></div>
+          <input type="file" accept="image/png,image/jpeg,image/jpg" multiple hidden data-xn-imginput>
+          <p class="rea-xn-err" data-xn-err="img" hidden>请至少上传一张图片</p>
+        </div>
+      </div>
+      <div class="rea-xn-row" data-xn-g="video" hidden>
+        <span class="rea-xn-label rea-xn-req">选择视频来源</span>
+        <div class="rea-xn-ctl"><span class="rea-xn-radios"><label class="rea-xn-radio is-on"><input type="radio" name="xnVsrc" checked>手动上传</label></span></div>
+      </div>
+      <div class="rea-xn-row" data-xn-g="video" hidden>
+        <span class="rea-xn-label rea-xn-req">上传视频</span>
+        <div class="rea-xn-ctl">
+          <div class="rea-xn-filewrap"><button type="button" class="rea-xn-btn" data-xn-vbtn>上传视频文件</button><span class="rea-xn-filechip" data-xn-vfile hidden></span></div>
+          <input type="file" accept="video/*" hidden data-xn-vinput>
+          <p class="rea-xn-err" data-xn-err="video" hidden>请上传视频文件</p>
+        </div>
+      </div>
+      <div class="rea-xn-row" data-xn-g="note">
+        <label class="rea-xn-label" for="xnCopy">视频文案</label>
+        <div class="rea-xn-ctl"><textarea id="xnCopy" class="rea-xn-textarea" data-xn-copy maxlength="1000" placeholder="请输入视频文案"></textarea><div class="rea-xn-countline"><span class="rea-xn-count" data-xn-copycount>0 / 1000</span></div></div>
+      </div>
+      <div class="rea-xn-row" data-xn-g="note">
+        <label class="rea-xn-label" for="xnTitle">视频标题</label>
+        <div class="rea-xn-ctl"><div class="rea-xn-inputwrap"><input id="xnTitle" class="rea-xn-input" data-xn-title maxlength="20" placeholder="请输入视频标题"><span class="rea-xn-count" data-xn-titlecount>0 / 20</span></div></div>
+      </div>
+      <div class="rea-xn-row" data-xn-g="note">
+        <label class="rea-xn-label" for="xnTopic">视频话题<span class="rea-xn-help" data-tip="多个话题使用 # 分割，话题中请勿包含其他标点符号，例如：#话题1#话题2。">?</span></label>
+        <div class="rea-xn-ctl"><input id="xnTopic" class="rea-xn-input" data-xn-topic placeholder="请输入视频话题"></div>
+      </div>
+      <div class="rea-xn-row" data-xn-g="copy" hidden>
+        <label class="rea-xn-label" for="xnCopytext">文案内容<span class="rea-xn-help" data-tip="若为空，则使用标题作为图片文案内容。">?</span></label>
+        <div class="rea-xn-ctl"><input id="xnCopytext" class="rea-xn-input" data-xn-copytext placeholder="请输入文案内容"></div>
+      </div>
+      <div class="rea-xn-row" data-xn-g="copy" hidden>
+        <label class="rea-xn-label" for="xnNoteTitle">笔记标题</label>
+        <div class="rea-xn-ctl"><div class="rea-xn-inputwrap"><input id="xnNoteTitle" class="rea-xn-input" data-xn-notetitle maxlength="20" placeholder="请输入笔记标题"><span class="rea-xn-count" data-xn-notetitlecount>0 / 20</span></div></div>
+      </div>
+      <div class="rea-xn-row" data-xn-g="copy" hidden>
+        <label class="rea-xn-label" for="xnBody">正文内容</label>
+        <div class="rea-xn-ctl"><textarea id="xnBody" class="rea-xn-textarea" data-xn-body maxlength="1000" placeholder="请输入正文内容"></textarea><div class="rea-xn-countline"><span class="rea-xn-count" data-xn-bodycount>0 / 1000</span></div></div>
+      </div>
+      <div class="rea-xn-row" data-xn-g="copy" hidden>
+        <label class="rea-xn-label" for="xnTopic2">话题<span class="rea-xn-help" data-tip="多个话题使用 # 分割，话题中请勿包含其他标点符号，例如：#话题1#话题2。">?</span></label>
+        <div class="rea-xn-ctl"><input id="xnTopic2" class="rea-xn-input" data-xn-topic2 placeholder="请输入话题"></div>
+      </div>
+    </section>
+    <section class="rea-xn-sec">
+      <h2>任务设置</h2>
+      <div class="rea-xn-row">
+        <span class="rea-xn-label rea-xn-req">任务类型</span>
+        <div class="rea-xn-ctl"><div class="rea-xn-radios" data-xn-tasktype>
+          <label class="rea-xn-radio is-on"><input type="radio" name="xnTaskType" checked>单次任务</label>
+          <label class="rea-xn-radio"><input type="radio" name="xnTaskType">周循环</label>
+          <label class="rea-xn-radio"><input type="radio" name="xnTaskType">月循环</label>
+          <label class="rea-xn-radio"><input type="radio" name="xnTaskType">自定义循环</label>
+        </div></div>
+      </div>
+      <div class="rea-xn-row">
+        <span class="rea-xn-label">全局弹窗<span class="rea-xn-help" data-tip="开启后，任务提醒会在手机的所有页面中弹出；关闭则只在小红书中弹出任务提醒。">?</span></span>
+        <div class="rea-xn-ctl rea-xn-ctl--mid"><button type="button" class="rea-xn-switch" role="switch" aria-checked="false" data-xn-switch><i></i></button></div>
+      </div>
+      <div class="rea-xn-row">
+        <span class="rea-xn-label rea-xn-req">通知时间<span class="rea-xn-help" data-tip="到达通知时间会向执行人员推送提醒。">?</span></span>
+        <div class="rea-xn-ctl">
+          <div class="rea-xn-dt"><input type="date" class="rea-xn-input" data-xn-notify-date><input type="time" class="rea-xn-input" data-xn-notify-time></div>
+          <p class="rea-xn-err" data-xn-err="notify" hidden>请选择通知时间</p>
+        </div>
+      </div>
+      <div class="rea-xn-row">
+        <span class="rea-xn-label rea-xn-req">截止时间</span>
+        <div class="rea-xn-ctl">
+          <div class="rea-xn-dt"><input type="date" class="rea-xn-input" data-xn-end-date><input type="time" class="rea-xn-input" data-xn-end-time></div>
+          <p class="rea-xn-err" data-xn-err="end" hidden>请选择截止时间</p>
+        </div>
+      </div>
+    </section>
+    <div class="rea-xn-formfoot">
+      <button type="button" class="rea-xn-btn rea-xn-btn--primary" data-xn-save>保存</button>
+      <button type="button" class="rea-xn-btn" data-xn-cancel>取消</button>
+    </div>
+  </div>
+</div></div></div></div>
+</script>
+
+<script type="text/plain" id="srcXhsNoteDetail"><div style="height: 100%"><div class="h-full overflow-auto"><div class="h-full"><div class="rea-xn-page" data-xn-detail>
+  <div class="rea-xn-crumb"><a data-xn-back>笔记发布</a><span>/</span><span>任务详情</span></div>
+  <div class="rea-xn-head"><h1>任务详情</h1></div>
+  <section class="rea-xn-sec">
+    <h2>任务信息</h2>
+    <div class="rea-xn-info">
+      <div class="rea-xn-info-item"><span>任务名称</span><b data-xn-i="name">—</b></div>
+      <div class="rea-xn-info-item"><span>任务类型</span><b data-xn-i="kind">笔记发布</b></div>
+      <div class="rea-xn-info-item"><span>发布类型</span><b data-xn-i="type">—</b></div>
+      <div class="rea-xn-info-item"><span>发布渠道</span><b><span class="rea-xn-tag">小红书</span></b></div>
+      <div class="rea-xn-info-item"><span>执行人员</span><b data-xn-i="who">—</b></div>
+      <div class="rea-xn-info-item"><span>任务状态</span><b data-xn-i="state">—</b></div>
+      <div class="rea-xn-info-item"><span>有效期</span><b data-xn-i="valid">—</b></div>
+      <div class="rea-xn-info-item"><span>创建时间</span><b data-xn-i="created">—</b></div>
+    </div>
+  </section>
+  <section class="rea-xn-sec rea-xn-sec--last">
+    <div class="rea-xn-sechead"><h2>员工完成情况</h2><button type="button" class="rea-xn-btn" data-xn-export>导出</button></div>
+    <div class="rea-xn-filters rea-xn-filters--d">
+      <div class="rea-xn-field"><span class="rea-xn-flabel">执行时间</span><span class="rea-xn-range"><input type="date" class="rea-xn-input rea-xn-date" data-xn-df="d1"><span class="rea-xn-tilde">~</span><input type="date" class="rea-xn-input rea-xn-date" data-xn-df="d2"></span></div>
+      <div class="rea-xn-field"><span class="rea-xn-flabel">任务状态</span><select class="rea-xn-select" data-xn-df="state"><option value="">全部状态</option><option>已执行</option><option>待执行</option><option>未执行</option></select></div>
+      <div class="rea-xn-field"><span class="rea-xn-flabel">关键词</span><input class="rea-xn-input" data-xn-df="kw" placeholder="请输入关键词"></div>
+      <div class="rea-xn-field"><button type="button" class="rea-xn-btn" data-xn-dquery>查询</button><button type="button" class="rea-xn-btn rea-xn-btn--text" data-xn-dreset>重置</button></div>
+    </div>
+    <table class="rea-xn-table">
+      <thead><tr>
+        <th>用户名</th>
+        <th>用户手机号</th>
+        <th>文案话题</th>
+        <th>发布视频</th>
+        <th>小红书智能发布信息</th>
+        <th>所属部门</th>
+        <th>任务状态</th>
+        <th class="rea-xn-th-time">执行时间</th>
+      </tr></thead>
+      <tbody data-xn-drows></tbody>
+    </table>
+    <div class="rea-xn-pager" data-xn-dpager></div>
+  </section>
+</div></div></div></div>
+</script>
+
 <script type="text/plain" id="srcXhsSnapshot"><div class="h-full overflow-auto"><div class="h-full"><div class="_boxadd_28xtg_149">
   <h4 style="padding-left: 10px; font-weight: normal;">
     <nav class="ant-breadcrumb css-vgijab"><ol>
@@ -19461,6 +19684,200 @@ render();
 </div>
 </script>
 
+<!-- 载体③·抖音营销「抖音运营」三页（2026-11-23）：与「发短视频」同一套壳（组、菜单、正文区
+     都由 reaDyRest 从「新小红书运营」克隆），正文各自一整块。列表页的演示行、筛选与删除；
+     新建页的拓客条件表单；详情页的任务信息、员工完成情况与两张弹窗。 -->
+<script type="text/plain" id="srcDyOpList"><div class="rea-dy-head"><h1>抖音运营</h1></div>
+<form class="rea-dy-filter" data-dyop-filter>
+  <div class="rea-dy-f"><label for="dyOpFName">任务名称</label><input id="dyOpFName" placeholder="请输入任务名称" autocomplete="off"></div>
+  <div class="rea-dy-f"><label for="dyOpFInd">拓客行业</label><input id="dyOpFInd" placeholder="请输入拓客行业" autocomplete="off"></div>
+  <div class="rea-dy-f"><label>创建时间</label><span class="rea-dy-range"><input type="date" aria-label="创建时间起" data-dyop-fd0><b>→</b><input type="date" aria-label="创建时间止" data-dyop-fd1></span></div>
+  <div class="rea-dy-f"><label>拓客数量</label><span class="rea-dy-range"><input class="rea-dy-mini" placeholder="最小" inputmode="numeric" aria-label="拓客数量最小值" data-dyop-fmin><b>~</b><input class="rea-dy-mini" placeholder="最大" inputmode="numeric" aria-label="拓客数量最大值" data-dyop-fmax></span></div>
+  <div class="rea-dy-f"><label for="dyOpFState">任务状态</label><select id="dyOpFState"><option value="">请选择状态</option><option>进行中</option><option>执行完毕</option><option>已过期</option></select></div>
+  <div class="rea-dy-facts"><button type="submit" class="rea-dy-btn rea-dy-soft">查询</button><button type="button" class="rea-dy-btn" data-dyop-reset>重置</button></div>
+</form>
+<div class="rea-dy-bar"><button type="button" class="rea-dy-btn rea-dy-primary" data-dyop-new>新建任务</button></div>
+<div class="rea-dy-tablewrap"><table class="rea-dy-table">
+  <thead><tr><th>任务名称</th><th>拓客行业</th><th>任务有效期</th><th>执行人员</th><th>创建时间</th><th>创建人</th><th>任务状态</th><th class="rea-dy-ops">操作</th></tr></thead>
+  <tbody data-dyop-rows>
+    <tr data-name="抖音运营任务20261029" data-industry="花" data-state="执行完毕" data-count="5" data-period="2026-10-29 11:02~2026-11-05 11:02" data-exec="18569299465" data-created="2026-10-29 11:02" data-creator="18569299465"><td class="rea-dy-name">抖音运营任务20261029</td><td>花</td><td>2026-10-29 11:02~2026-11-05 11:02</td><td>18569299465</td><td>2026-10-29 11:02</td><td>18569299465</td><td><span class="rea-dy-st ok"><i></i>执行完毕</span></td><td class="rea-dy-ops"><a href="#" data-dyop-detail>详情</a><a href="#" class="rea-dy-danger" data-dyop-del>删除</a></td></tr>
+    <tr data-name="抖音运营任务20261027" data-industry="花" data-state="执行完毕" data-count="5" data-period="2026-10-27 15:43~2026-11-03 15:43" data-exec="18569299465" data-created="2026-10-27 15:44" data-creator="18569299465"><td class="rea-dy-name">抖音运营任务20261027</td><td>花</td><td>2026-10-27 15:43~2026-11-03 15:43</td><td>18569299465</td><td>2026-10-27 15:44</td><td>18569299465</td><td><span class="rea-dy-st ok"><i></i>执行完毕</span></td><td class="rea-dy-ops"><a href="#" data-dyop-detail>详情</a><a href="#" class="rea-dy-danger" data-dyop-del>删除</a></td></tr>
+    <tr data-name="抖音运营任务20260921" data-industry="猫" data-state="已过期" data-count="5" data-period="2026-09-21 16:30~2026-09-28 16:30" data-exec="18569299465" data-created="2026-09-21 16:30" data-creator="18569299465"><td class="rea-dy-name">抖音运营任务20260921</td><td>猫</td><td>2026-09-21 16:30~2026-09-28 16:30</td><td>18569299465</td><td>2026-09-21 16:30</td><td>18569299465</td><td><span class="rea-dy-st bad"><i></i>已过期</span></td><td class="rea-dy-ops"><a href="#" data-dyop-detail>详情</a><a href="#" class="rea-dy-danger" data-dyop-del>删除</a></td></tr>
+    <tr data-name="抖音运营任务20260819" data-industry="核心品类词" data-state="已过期" data-count="0" data-period="2026-08-19 10:32~2026-08-26 10:32" data-exec="-" data-created="2026-08-19 10:33" data-creator="18569299465"><td class="rea-dy-name">抖音运营任务20260819</td><td>核心品类词…</td><td>2026-08-19 10:32~2026-08-26 10:32</td><td>-</td><td>2026-08-19 10:33</td><td>18569299465</td><td><span class="rea-dy-st bad"><i></i>已过期</span></td><td class="rea-dy-ops"><a href="#" data-dyop-detail>详情</a><a href="#" class="rea-dy-danger" data-dyop-del>删除</a></td></tr>
+    <tr data-name="抖音运营任务20260608" data-industry="车" data-state="已过期" data-count="3" data-period="2026-06-08 11:05~2026-06-15 11:05" data-exec="雅楠002" data-created="2026-06-08 11:05" data-creator="18569299465"><td class="rea-dy-name">抖音运营任务20260608</td><td>车</td><td>2026-06-08 11:05~2026-06-15 11:05</td><td>雅楠002</td><td>2026-06-08 11:05</td><td>18569299465</td><td><span class="rea-dy-st bad"><i></i>已过期</span></td><td class="rea-dy-ops"><a href="#" data-dyop-detail>详情</a><a href="#" class="rea-dy-danger" data-dyop-del>删除</a></td></tr>
+    <tr data-name="抖音运营任务20260528" data-industry="12 13" data-state="已过期" data-count="7" data-period="2026-05-28 17:20~2026-06-04 17:20" data-exec="韩涛,18569299465" data-created="2026-05-28 17:21" data-creator="18569299465"><td class="rea-dy-name">抖音运营任务20260528</td><td>12 13…</td><td>2026-05-28 17:20~2026-06-04 17:20</td><td>韩涛,18569299465</td><td>2026-05-28 17:21</td><td>18569299465</td><td><span class="rea-dy-st bad"><i></i>已过期</span></td><td class="rea-dy-ops"><a href="#" data-dyop-detail>详情</a><a href="#" class="rea-dy-danger" data-dyop-del>删除</a></td></tr>
+    <tr data-name="抖音运营任务20260528" data-industry="阿维塔怎么选" data-state="已过期" data-count="8" data-period="2026-05-28 14:58~2026-06-04 14:58" data-exec="测试二级一部/温测试 共8人" data-created="2026-05-28 14:59" data-creator="18569299465"><td class="rea-dy-name">抖音运营任务20260528</td><td>阿维塔怎么…</td><td>2026-05-28 14:58~2026-06-04 14:58</td><td>测试二级一部/温测试… 共8人</td><td>2026-05-28 14:59</td><td>18569299465</td><td><span class="rea-dy-st bad"><i></i>已过期</span></td><td class="rea-dy-ops"><a href="#" data-dyop-detail>详情</a><a href="#" class="rea-dy-danger" data-dyop-del>删除</a></td></tr>
+    <tr data-name="抖音运营任务20260528" data-industry="大众购车方案" data-state="已过期" data-count="4" data-period="2026-05-28 14:57~2026-06-04 14:57" data-exec="韩涛/雅楠002/18569299465 共4人" data-created="2026-05-28 14:58" data-creator="18569299465"><td class="rea-dy-name">抖音运营任务20260528</td><td>大众购车方…</td><td>2026-05-28 14:57~2026-06-04 14:57</td><td>韩涛/雅楠002/18569299465 共4人</td><td>2026-05-28 14:58</td><td>18569299465</td><td><span class="rea-dy-st bad"><i></i>已过期</span></td><td class="rea-dy-ops"><a href="#" data-dyop-detail>详情</a><a href="#" class="rea-dy-danger" data-dyop-del>删除</a></td></tr>
+    <tr data-name="抖音运营任务20260528" data-industry="大众汽车怎么保养" data-state="已过期" data-count="2" data-period="2026-05-28 13:27~2026-06-04 13:27" data-exec="张伯阳" data-created="2026-05-28 13:28" data-creator="18569299465"><td class="rea-dy-name">抖音运营任务20260528</td><td>大众汽车怎…</td><td>2026-05-28 13:27~2026-06-04 13:27</td><td>张伯阳</td><td>2026-05-28 13:28</td><td>18569299465</td><td><span class="rea-dy-st bad"><i></i>已过期</span></td><td class="rea-dy-ops"><a href="#" data-dyop-detail>详情</a><a href="#" class="rea-dy-danger" data-dyop-del>删除</a></td></tr>
+    <tr data-name="抖音运营任务20260528" data-industry="12 13" data-state="已过期" data-count="5" data-period="2026-05-28 11:48~2026-06-04 11:48" data-exec="18569299465" data-created="2026-05-28 11:48" data-creator="18569299465"><td class="rea-dy-name">抖音运营任务20260528</td><td>12 13…</td><td>2026-05-28 11:48~2026-06-04 11:48</td><td>18569299465</td><td>2026-05-28 11:48</td><td>18569299465</td><td><span class="rea-dy-st bad"><i></i>已过期</span></td><td class="rea-dy-ops"><a href="#" data-dyop-detail>详情</a><a href="#" class="rea-dy-danger" data-dyop-del>删除</a></td></tr>
+  </tbody>
+</table></div>
+<div class="rea-dy-pager"><span class="rea-dy-total" data-dyop-total>共 10 条记录</span><span class="rea-dy-pages"><button type="button" class="on">1</button></span><span class="rea-dy-size">10 条/页</span></div>
+</script>
+
+<script type="text/plain" id="srcDyOpNew"><div class="rea-dy-head rea-dy-head--sub"><div class="rea-dy-crumb"><a href="#" data-dyop-back>抖音运营</a><span>/</span><span>新建任务</span></div><h1>新建任务</h1></div>
+<form class="rea-dy-form" data-dyop-form novalidate>
+
+<section class="rea-dy-opgroup">
+  <h2>任务信息</h2>
+  <div class="rea-dy-row"><label class="rea-dy-lb" for="dyOpName"><i>*</i>任务名称</label><div class="rea-dy-ctl"><input id="dyOpName" maxlength="15" autocomplete="off" placeholder="请输入任务名称"><span class="rea-dy-count" data-dyop-count-for="dyOpName">0/15</span><p class="rea-dy-err" data-dyop-err="name" hidden>请填写任务名称</p></div></div>
+  <div class="rea-dy-row"><span class="rea-dy-lb"><i>*</i>拓客行业策略</span><div class="rea-dy-ctl"><div class="rea-dy-opts" data-dyop-strategy><button type="button" class="rea-dy-opt on" data-v="词条">词条</button><button type="button" class="rea-dy-opt" data-v="话题">话题</button></div></div></div>
+  <div class="rea-dy-row"><span class="rea-dy-lb"><i>*</i>方式</span><div class="rea-dy-ctl"><div class="rea-dy-opts" data-dyop-method><button type="button" class="rea-dy-opt on" data-v="手动输入">手动输入</button><button type="button" class="rea-dy-opt" data-v="导入">导入</button><button type="button" class="rea-dy-opt" data-v="AI">AI</button></div></div></div>
+  <div class="rea-dy-row"><span class="rea-dy-lb"><i>*</i>拓客行业<span class="rea-dy-info" tabindex="0" role="img" aria-label="拓客行业填写口径">i<span class="rea-dy-tip">关键词多个的话换行处理，每个关键词最长 8 个字。</span></span></span><div class="rea-dy-ctl">
+    <div data-dyop-panel="word"><textarea id="dyOpWords" placeholder="请输入拓客行业，多个关键词用换行分隔" data-dyop-words></textarea><div data-dyop-ai-wrap hidden><button type="button" class="rea-dy-btn rea-dy-soft" data-dyop-ai>AI 生成关键词</button></div></div>
+    <div data-dyop-panel="topic" hidden>
+      <div class="rea-dy-topic-box">
+        <div class="rea-dy-topic-row"><label for="dyOpTTitle">标题</label><div class="rea-dy-topic-ctl"><input id="dyOpTTitle" maxlength="30" placeholder="请输入标题"><span class="rea-dy-count" data-dyop-count-for="dyOpTTitle">0/30</span></div></div>
+        <div class="rea-dy-topic-row"><label for="dyOpTBrand">企业/品牌</label><div class="rea-dy-topic-ctl"><input id="dyOpTBrand" maxlength="30" placeholder="请输入企业或品牌"></div></div>
+        <div class="rea-dy-topic-row"><label for="dyOpTRival">竞品名称</label><div class="rea-dy-topic-ctl"><input id="dyOpTRival" maxlength="30" placeholder="请输入竞品名称"></div></div>
+        <div class="rea-dy-topic-row"><label for="dyOpTDesc"><i>*</i>内容描述</label><div class="rea-dy-topic-ctl"><textarea id="dyOpTDesc" maxlength="500" placeholder="请输入内容描述"></textarea></div></div>
+        <div class="rea-dy-topic-row"><span><i>*</i>拓客场景</span><div class="rea-dy-topic-ctl"><div class="rea-dy-opts" data-dyop-scene><button type="button" class="rea-dy-opt" data-v="竞品截流">竞品截流</button><button type="button" class="rea-dy-opt" data-v="需求挖掘">需求挖掘</button><button type="button" class="rea-dy-opt" data-v="达人合作">达人合作</button><button type="button" class="rea-dy-opt" data-v="区域拓客">区域拓客</button></div></div></div>
+      </div>
+    </div>
+    <div data-dyop-panel="import" hidden>
+      <ol class="rea-dy-steps"><li><b>1</b><a href="#" class="rea-dy-link" data-dyop-tpl>下载模版</a></li><li><b>2</b><button type="button" class="rea-dy-btn" data-dyop-import>导入</button><span class="rea-dy-file" data-dyop-file hidden></span></li></ol>
+    </div>
+    <p class="rea-dy-err" data-dyop-err="words" hidden>请填写拓客行业</p>
+  </div></div>
+  <div class="rea-dy-row"><span class="rea-dy-lb"><i>*</i>发布时间</span><div class="rea-dy-ctl"><div class="rea-dy-opts" data-dyop-publish><button type="button" class="rea-dy-opt" data-v="7日内">7日内</button><button type="button" class="rea-dy-opt" data-v="15日内">15日内</button><button type="button" class="rea-dy-opt on" data-v="30日内">30日内</button><button type="button" class="rea-dy-opt" data-v="90日内">90日内</button><button type="button" class="rea-dy-opt" data-v="不限">不限</button></div></div></div>
+</section>
+
+<section class="rea-dy-opgroup">
+  <h2>找谁</h2>
+  <div class="rea-dy-row"><label class="rea-dy-lb" for="dyOpFilterWords"><i>*</i>筛选词<span class="rea-dy-info" tabindex="0" role="img" aria-label="筛选词口径">i<span class="rea-dy-tip">只获取评论区包含关键词的用户进行评论区回复或发送私信。</span></span></label><div class="rea-dy-ctl"><textarea id="dyOpFilterWords" placeholder="关键词多个的话换行处理，每行一个关键词不超过 5 个字"></textarea><p class="rea-dy-err" data-dyop-err="fwords" hidden>请填写筛选词</p></div></div>
+  <div class="rea-dy-row"><span class="rea-dy-lb">发布评论时间<span class="rea-dy-info" tabindex="0" role="img" aria-label="发布评论时间口径">i<span class="rea-dy-tip">此处指的是视频下的评论用户的评论时间。</span></span></span><div class="rea-dy-ctl"><div class="rea-dy-opts" data-dyop-comment><button type="button" class="rea-dy-opt" data-v="7日内">7日内</button><button type="button" class="rea-dy-opt" data-v="15日内">15日内</button><button type="button" class="rea-dy-opt on" data-v="30日内">30日内</button><button type="button" class="rea-dy-opt" data-v="90日内">90日内</button><button type="button" class="rea-dy-opt" data-v="不限">不限</button></div></div></div>
+  <div class="rea-dy-row"><span class="rea-dy-lb">拓客所属地</span><div class="rea-dy-ctl"><div class="rea-dy-ms" data-dyop-ms="area"><button type="button" class="rea-dy-ms-btn" aria-haspopup="listbox"><span class="ph">请选择拓客所属地</span></button><div class="panel" hidden><label class="op"><input type="checkbox" value="北京">北京</label><label class="op"><input type="checkbox" value="上海">上海</label><label class="op"><input type="checkbox" value="广东">广东</label><label class="op"><input type="checkbox" value="浙江">浙江</label><label class="op"><input type="checkbox" value="江苏">江苏</label><label class="op"><input type="checkbox" value="四川">四川</label></div></div></div></div>
+  <div class="rea-dy-row"><span class="rea-dy-lb">客户年龄段</span><div class="rea-dy-ctl"><button type="button" class="rea-dy-switch" role="switch" aria-checked="false" aria-label="客户年龄段" data-dyop-age><i></i></button><span class="rea-dy-inline" data-dyop-age-range hidden>从<input class="rea-dy-num" inputmode="numeric" value="18" aria-label="最小年龄" data-dyop-age-min>岁 至<input class="rea-dy-num" inputmode="numeric" value="60" aria-label="最大年龄" data-dyop-age-max>岁</span></div></div>
+  <div class="rea-dy-row"><span class="rea-dy-lb">客户性别</span><div class="rea-dy-ctl"><div class="rea-dy-opts" data-dyop-sex><button type="button" class="rea-dy-opt on" data-v="不限">不限</button><button type="button" class="rea-dy-opt" data-v="男">男</button><button type="button" class="rea-dy-opt" data-v="女">女</button></div></div></div>
+  <div class="rea-dy-row"><span class="rea-dy-lb">客户粉丝数量</span><div class="rea-dy-ctl"><div class="rea-dy-opts" data-dyop-fans><button type="button" class="rea-dy-opt on" data-v="不限">不限</button><button type="button" class="rea-dy-opt" data-v="大于100人">大于100人</button><button type="button" class="rea-dy-opt" data-v="大于500人">大于500人</button><button type="button" class="rea-dy-opt" data-v="大于1000人">大于1000人</button><button type="button" class="rea-dy-opt" data-v="大于10000人">大于10000人</button><button type="button" class="rea-dy-opt" data-v="大于100000人">大于100000人</button></div></div></div>
+</section>
+
+<section class="rea-dy-opgroup">
+  <h2>执行设置</h2>
+  <div class="rea-dy-row"><span class="rea-dy-lb"><i>*</i>单次执行上限</span><div class="rea-dy-ctl"><div class="rea-dy-opts" data-dyop-limit><button type="button" class="rea-dy-opt on" data-v="500">500</button><button type="button" class="rea-dy-opt" data-v="1000">1000</button><button type="button" class="rea-dy-opt" data-v="2000">2000</button><button type="button" class="rea-dy-opt" data-v="3000">3000</button><button type="button" class="rea-dy-opt" data-v="自定义">自定义</button></div><input class="rea-dy-mini" inputmode="numeric" placeholder="请输入上限" aria-label="自定义单次执行上限" data-dyop-limit-custom hidden></div></div>
+  <div class="rea-dy-row"><span class="rea-dy-lb">执行频率</span><div class="rea-dy-ctl"><span class="rea-dy-inline">每刷一个视频，任务执行<input class="rea-dy-num" inputmode="numeric" value="1" aria-label="最少间隔分钟" data-dyop-freq-min>至<input class="rea-dy-num" inputmode="numeric" value="10" aria-label="最多间隔分钟" data-dyop-freq-max>分钟</span></div></div>
+  <div class="rea-dy-row"><span class="rea-dy-lb"><i>*</i>发送消息</span><div class="rea-dy-ctl"><div class="rea-dy-opts" data-dyop-send><button type="button" class="rea-dy-opt on" data-v="私信消息">私信消息</button><button type="button" class="rea-dy-opt" data-v="回复评论">回复评论</button></div></div></div>
+  <div class="rea-dy-row"><span class="rea-dy-lb"><i>*</i>消息生成类型</span><div class="rea-dy-ctl"><div class="rea-dy-opts" data-dyop-msgtype><button type="button" class="rea-dy-opt on" data-v="固定话术">固定话术</button><button type="button" class="rea-dy-opt" data-v="AI生成">AI生成</button><button type="button" class="rea-dy-opt" data-v="AI仿写">AI仿写</button></div></div></div>
+  <div class="rea-dy-row" data-dyop-panel-msg="固定话术"><label class="rea-dy-lb" for="dyOpFixed">固定话术</label><div class="rea-dy-ctl"><textarea id="dyOpFixed" maxlength="500" placeholder="请输入固定话术内容"></textarea><span class="rea-dy-count" data-dyop-count-for="dyOpFixed">0/500</span></div></div>
+  <div class="rea-dy-row" data-dyop-panel-msg="AI仿写" hidden><label class="rea-dy-lb" for="dyOpCopy"><i>*</i>参考文案</label><div class="rea-dy-ctl"><textarea id="dyOpCopy" maxlength="300" placeholder="请输入参考文案，用于仿写"></textarea><span class="rea-dy-count" data-dyop-count-for="dyOpCopy">0/300</span><p class="rea-dy-err" data-dyop-err="copy" hidden>请填写参考文案</p></div></div>
+  <div class="rea-dy-row"><label class="rea-dy-lb" for="dyOpIdentity"><i>*</i>沟通身份</label><div class="rea-dy-ctl"><select id="dyOpIdentity"><option value="">请选择沟通身份</option><option>官方账号</option><option>门店顾问</option><option>员工个人号</option></select><p class="rea-dy-err" data-dyop-err="identity" hidden>请选择沟通身份</p></div></div>
+  <div class="rea-dy-row"><label class="rea-dy-lb" for="dyOpStyle"><i>*</i>沟通风格</label><div class="rea-dy-ctl"><select id="dyOpStyle"><option value="">请选择沟通风格</option><option>专业严谨</option><option>亲切自然</option><option>幽默活泼</option></select><p class="rea-dy-err" data-dyop-err="style" hidden>请选择沟通风格</p></div></div>
+</section>
+
+<section class="rea-dy-opgroup">
+  <h2>执行安排</h2>
+  <div class="rea-dy-row"><span class="rea-dy-lb"><i>*</i>执行人员</span><div class="rea-dy-ctl"><div class="rea-dy-ms" data-dyop-ms="org"><button type="button" class="rea-dy-ms-btn" aria-haspopup="listbox"><span class="ph">请选择组织架构</span></button><div class="panel" hidden><div class="grp">测试环境雅楠公司</div><label class="op"><input type="checkbox" value="18569299465">18569299465</label><label class="op"><input type="checkbox" value="雅楠002">雅楠002</label><div class="grp">销售部</div><label class="op"><input type="checkbox" value="韩涛">韩涛</label><label class="op"><input type="checkbox" value="张伯阳">张伯阳</label><div class="grp">客户成功部</div><label class="op"><input type="checkbox" value="罗鹏">罗鹏</label></div></div><p class="rea-dy-err" data-dyop-err="org" hidden>请选择执行人员</p></div></div>
+  <div class="rea-dy-row"><span class="rea-dy-lb"><i>*</i>任务类型</span><div class="rea-dy-ctl"><div class="rea-dy-opts" data-dyop-cycle><button type="button" class="rea-dy-opt on" data-v="单次任务">单次任务</button><button type="button" class="rea-dy-opt" data-v="简循环">简循环</button><button type="button" class="rea-dy-opt" data-v="月循环">月循环</button><button type="button" class="rea-dy-opt" data-v="自定义循环">自定义循环</button></div></div></div>
+  <div class="rea-dy-row"><span class="rea-dy-lb"><i>*</i>通知时间</span><div class="rea-dy-ctl"><span class="rea-dy-dt"><input type="date" data-dyop-notify-date aria-label="通知日期"><input type="time" data-dyop-notify-time aria-label="通知时间"></span><p class="rea-dy-err" data-dyop-err="notify" hidden>请选择通知时间</p></div></div>
+  <div class="rea-dy-row"><span class="rea-dy-lb"><i>*</i>截止时间</span><div class="rea-dy-ctl"><span class="rea-dy-dt"><input type="date" data-dyop-end-date aria-label="截止日期"><input type="time" data-dyop-end-time aria-label="截止时间"></span><p class="rea-dy-err" data-dyop-err="end" hidden>请选择截止时间</p></div></div>
+  <div class="rea-dy-row"><span class="rea-dy-lb">全局弹窗<span class="rea-dy-info" tabindex="0" role="img" aria-label="全局弹窗口径">i<span class="rea-dy-tip">开启后，将在手机的所有页面中弹出任务提醒；关闭则只在抖音中弹出任务提醒。</span></span></span><div class="rea-dy-ctl"><button type="button" class="rea-dy-switch" role="switch" aria-checked="false" aria-label="全局弹窗" data-dyop-global><i></i></button></div></div>
+</section>
+
+<div class="rea-dy-actions"><button type="submit" class="rea-dy-btn rea-dy-primary">保存</button><button type="button" class="rea-dy-btn" data-dyop-cancel>取消</button></div>
+</form>
+</script>
+
+<script type="text/plain" id="srcDyOpDetail"><div class="rea-dy-head rea-dy-head--sub"><div class="rea-dy-crumb"><a href="#" data-dyop-back>抖音运营</a><span>/</span><span>任务详情</span></div><h1>任务详情</h1></div>
+<section class="rea-dy-sec">
+  <div class="rea-dy-sec-h"><h2>任务信息</h2></div>
+  <dl class="rea-dy-info">
+    <div><dt>任务名称</dt><dd data-dyop-f="name">抖音运营任务20261029</dd></div>
+    <div><dt>任务类型</dt><dd>抖音运营</dd></div>
+    <div><dt>执行人员</dt><dd data-dyop-f="exec">18569299465</dd></div>
+    <div><dt>任务状态</dt><dd data-dyop-f="state">任务执行完毕</dd></div>
+    <div><dt>有效期</dt><dd data-dyop-f="period">2026-10-29 11:02~2026-11-05 11:02</dd></div>
+    <div><dt>创建时间</dt><dd data-dyop-f="created">2026-10-29 11:02</dd></div>
+  </dl>
+</section>
+<section class="rea-dy-sec">
+  <div class="rea-dy-sec-h"><h2>员工完成情况</h2><button type="button" class="rea-dy-btn" data-dyop-export>导出数据</button></div>
+  <form class="rea-dy-filter rea-dy-filter--sm" data-dyop-dfilter>
+    <div class="rea-dy-f"><label>执行时间</label><span class="rea-dy-range"><input type="date" aria-label="开始日期"><b>→</b><input type="date" aria-label="结束日期"></span></div>
+    <div class="rea-dy-f"><label for="dyOpDState">状态</label><select id="dyOpDState"><option value="">选择状态</option><option>已执行</option><option>未执行</option></select></div>
+    <div class="rea-dy-f"><label for="dyOpDKey">关键词</label><input id="dyOpDKey" placeholder="请输入关键词"></div>
+    <div class="rea-dy-facts"><button type="submit" class="rea-dy-btn rea-dy-soft">查询</button></div>
+  </form>
+  <div class="rea-dy-tablewrap"><table class="rea-dy-table">
+    <thead><tr><th>用户名</th><th>用户手机号</th><th>所属部门</th><th>拓客数量</th><th>任务状态</th><th>执行时间</th><th>命中筛选词详情</th></tr></thead>
+    <tbody><tr><td>18569299465</td><td>18569299465</td><td>测试环境雅楠公司</td><td><a href="#" data-dyop-users>5</a></td><td>已执行</td><td>2026-10-29 11:15</td><td><a href="#" data-dyop-hits>查看</a></td></tr></tbody>
+  </table></div>
+  <div class="rea-dy-pager"><span class="rea-dy-total">共 1 条记录</span><span class="rea-dy-pages"><button type="button" class="on">1</button></span><span class="rea-dy-size">10 条/页</span></div>
+</section>
+<div class="rea-dy-modal" data-dyop-users-modal hidden role="dialog" aria-modal="true" aria-label="拓客详情">
+  <div class="rea-dy-modal-box rea-dy-modal-box--lg">
+    <div class="rea-dy-modal-h"><h3>拓客详情</h3><button type="button" class="rea-dy-x" data-dyop-close aria-label="关闭">×</button></div>
+    <div class="rea-dy-modal-b">
+      <div class="rea-dy-modal-tools"><button type="button" class="rea-dy-btn rea-dy-soft" data-dyop-export-users>导出</button></div>
+      <table class="rea-dy-table">
+        <thead><tr><th>抖音昵称</th><th>抖音号</th><th>发送类型</th><th>发送内容</th><th>命中词</th></tr></thead>
+        <tbody>
+          <tr><td>希哲</td><td>aduo57471</td><td>回复</td><td class="rea-dy-send">您好呀～冬青喜湿润通风，别暴晒，土微湿就好呀😊 有问题随时私信我们哦～</td><td>-</td></tr>
+          <tr><td>静待花开</td><td>1647629517</td><td>回复</td><td class="rea-dy-send">感谢您的贴心提醒呀😊 北方养藤确实得用心，您可以看看我们这集鲜切花整理，有居家加湿小技巧，有问题随时私信我们哦～</td><td>-</td></tr>
+          <tr><td>樱桃🍒✨</td><td>82515382646</td><td>回复</td><td class="rea-dy-send">您好～相关购买渠道您可以通过私信联系我们获取哦，有任何问题随时沟通😊</td><td>-</td></tr>
+          <tr><td>花小颜</td><td>890105199</td><td>回复</td><td class="rea-dy-send">哇，田园风插花肯定超治愈呀～要是有相关北京居家插花的疑问，随时私信我交流哦😊</td><td>-</td></tr>
+          <tr><td>宝</td><td>dyobvt5neqk8</td><td>回复</td><td class="rea-dy-send">亲，深圳收到落花可以先做醒花处理哦～有鲜花相关问题欢迎私信交流呀😊</td><td>-</td></tr>
+        </tbody>
+      </table>
+      <div class="rea-dy-pager"><span class="rea-dy-total">共 5 条记录</span><span class="rea-dy-pages"><button type="button" class="on">1</button></span><span class="rea-dy-size">10 条/页</span></div>
+    </div>
+  </div>
+</div>
+<div class="rea-dy-modal" data-dyop-hits-modal hidden role="dialog" aria-modal="true" aria-label="命中筛选词详情">
+  <div class="rea-dy-modal-box rea-dy-modal-box--md">
+    <div class="rea-dy-modal-h"><h3>命中筛选词详情</h3><button type="button" class="rea-dy-x" data-dyop-close aria-label="关闭">×</button></div>
+    <div class="rea-dy-modal-b">
+      <div class="rea-dy-filter rea-dy-filter--sm"><div class="rea-dy-f"><label for="dyOpHitKey">筛选词</label><input id="dyOpHitKey" placeholder="请输入筛选词"></div></div>
+      <table class="rea-dy-table">
+        <thead><tr><th>筛选词</th><th>单次执行上限</th><th>命中次数</th><th>命中率</th></tr></thead>
+        <tbody><tr><td colspan="4"><div class="rea-dy-empty"><span class="ic"></span>暂无数据</div></td></tr></tbody>
+      </table>
+    </div>
+    <div class="rea-dy-modal-f"><button type="button" class="rea-dy-btn" data-dyop-close>取消</button></div>
+  </div>
+</div>
+</script>
+
+<!-- 载体③·微信营销任务「视频号发布任务 · 详情」（2026-11-23）：现网这一页不在 37 页快照里
+     （只抓到模块页与新建页），按现网截图的字段与列表补成这一块。壳由 reaSynthPages() 克隆
+     「视频号发布任务」模块页（侧栏组与选中项都跟着来），正文由 reaWxVideoDetailJs 整段换上；
+     版式沿用快照的 AntD 类与 REA_WX_DETAIL_CSS，与其余六张微信营销详情页一致。 -->
+<script type="text/plain" id="srcWxVideoDetail"><div style="height: 100%;"><div class="h-full overflow-auto"><div class="h-full"><div class="_boxadd_1go3x_43"><h4 style="padding-left: 10px; font-weight: normal;"><nav class="ant-breadcrumb css-vgijab"><ol><li class="ant-breadcrumb-item"><span class="ant-breadcrumb-link">微信营销任务</span></li><li class="ant-breadcrumb-separator" aria-hidden="true">/</li><li class="ant-breadcrumb-item"><a class="ant-breadcrumb-link" href="#" data-rea="视频号发布任务">视频号发布任务</a></li><li class="ant-breadcrumb-separator" aria-hidden="true">/</li><li class="ant-breadcrumb-item"><span class="ant-breadcrumb-link">任务详情</span></li></ol></nav></h4><div class="_box_1go3x_1"><div class="_condel_1go3x_51">
+<div class="_task_information_1go3x_71"><div class="_task_information_header_1go3x_80">任务信息<button type="button" class="rea-wxd-snap" data-wx-snap>查看任务配置快照</button></div>
+<div class="rea-wxd-info">
+  <div class="rea-wxd-ring">
+    <div class="rea-wxd-ring-hd"><span class="rea-wxd-ring-t">执行进度</span><span>共 10 人</span></div>
+    <div class="rea-wxd-ring-bd">
+      <div class="rea-wxd-donut" role="img" aria-label="执行进度：10 人中 8 人已执行，2 人未执行">
+        <svg viewBox="0 0 120 120"><circle class="track" cx="60" cy="60" r="50"></circle><circle class="done" cx="60" cy="60" r="50" stroke-dasharray="251.33 62.83"></circle><circle class="open" cx="60" cy="60" r="50" stroke-dasharray="62.83 251.33" transform="rotate(288 60 60)"></circle></svg>
+        <div class="rea-wxd-donut-c"><b>8/10</b><span>已执行</span></div>
+      </div>
+      <div class="rea-wxd-ring-lg"><div><i class="done"></i>已执行<b>8 人</b></div><div><i class="open"></i>未执行<b>2 人</b></div></div>
+    </div>
+  </div>
+  <div class="rea-wxd-groups"><div class="rea-wxd-groups">
+    <section class="rea-wxd-group"><h4 class="rea-wxd-gt"><svg class="rea-wx-secic" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 7.8h.01"/></svg><span>基础信息</span></h4><div class="rea-wxd-kv">
+      <p><span>任务名称</span><span>视频号发布任务20261118</span></p>
+      <p><span>任务状态</span><span><span class="rea-wxd-badge live"><i></i>进行中</span></span></p>
+    </div></section>
+    <section class="rea-wxd-group"><h4 class="rea-wxd-gt"><svg class="rea-wx-secic" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/><path d="m9 15 2 2 4-4"/></svg><span>任务安排</span></h4><div class="rea-wxd-kv">
+      <p><span>任务有效期</span><span>2026/11/18 10:00~2026/11/25 10:00</span></p>
+      <p><span>执行人员</span><span>张伯阳 等 10 人</span></p>
+    </div></section>
+    <section class="rea-wxd-group"><h4 class="rea-wxd-gt"><svg class="rea-wx-secic" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="6" width="13" height="12" rx="2"/><path d="m15.5 10.3 6-3.4v10.2l-6-3.4"/></svg><span>视频内容</span></h4><div class="rea-wxd-kv">
+      <p><span>视频文案</span><span>秋季新品开箱，30 秒竖版，门店实拍</span></p>
+      <p><span>视频话题</span><span>#秋季新品 #开箱</span></p>
+    </div></section>
+  </div></div>
+</div></div>
+<div class="_task_information_1go3x_71"><div class="ant-tabs ant-tabs-top css-vgijab"><div role="tablist" aria-orientation="horizontal" class="ant-tabs-nav"><div class="ant-tabs-nav-wrap"><div class="ant-tabs-nav-list" style="transform: translate(0px, 0px);"><div data-node-key="1" class="ant-tabs-tab ant-tabs-tab-active"><div role="tab" aria-selected="true" id="rea-wxv-tab" class="ant-tabs-tab-btn" tabindex="0">员工完成情况</div></div><div class="ant-tabs-ink-bar ant-tabs-ink-bar-animated" style="width: 84px; left: 42px; transform: translateX(-50%);"></div></div></div></div><div class="ant-tabs-content-holder"><div class="ant-tabs-content ant-tabs-content-top"><div role="tabpanel" tabindex="0" aria-hidden="false" class="ant-tabs-tabpane ant-tabs-tabpane-active" aria-labelledby="rea-wxv-tab">
+<div class="_detaiHeader_1go3x_120"><div><div class="ant-picker ant-picker-range ant-picker-outlined css-vgijab" style="width: 260px;"><div class="ant-picker-input"><input aria-invalid="false" autocomplete="off" size="18" placeholder="开始日期" date-range="start" value=""></div><div class="ant-picker-range-separator"><span aria-label="to" class="ant-picker-separator"><span role="img" aria-label="swap-right" class="anticon anticon-swap-right"><svg viewBox="0 0 1024 1024" focusable="false" data-icon="swap-right" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M873.1 596.2l-164-208A32 32 0 00684 376h-64.8c-6.7 0-10.4 7.7-6.3 13l144.3 183H152c-4.4 0-8 3.6-8 8v60c0 4.4 3.6 8 8 8h695.9c26.8 0 41.7-30.8 25.2-51.8z"></path></svg></span></span></div><div class="ant-picker-input"><input aria-invalid="false" autocomplete="off" size="18" placeholder="结束日期" date-range="end" value=""></div><div class="ant-picker-active-bar" style="position: absolute; width: 0px;"></div><span class="ant-picker-suffix"><span role="img" aria-label="calendar" class="anticon anticon-calendar"><svg viewBox="64 64 896 896" focusable="false" data-icon="calendar" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M880 184H712v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H384v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H144c-17.7 0-32 14.3-32 32v664c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V216c0-17.7-14.3-32-32-32zm-40 656H184V460h656v380zM184 392V256h128v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h256v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h128v136H184z"></path></svg></span></span></div><div class="ant-select ant-select-outlined css-vgijab ant-select-single ant-select-show-arrow" style="width: 140px; margin-left: 8px;"><div class="ant-select-selector"><span class="ant-select-selection-wrap"><span class="ant-select-selection-search"><input type="search" autocomplete="off" class="ant-select-selection-search-input" role="combobox" aria-expanded="false" aria-haspopup="listbox" aria-owns="rc_select_3_list" aria-autocomplete="list" aria-controls="rc_select_3_list" readonly="" unselectable="on" value="" id="rc_select_3" style="opacity: 0;"></span><span class="ant-select-selection-item" title="选择状态">选择状态</span></span></div><span class="ant-select-arrow" unselectable="on" aria-hidden="true" style="user-select: none;"><span role="img" aria-label="down" class="anticon anticon-down ant-select-suffix"><svg viewBox="64 64 896 896" focusable="false" data-icon="down" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"></path></svg></span></span></div><span class="ant-input-group-wrapper ant-input-group-wrapper-outlined css-vgijab ant-input-search" style="width: 200px; margin-left: 8px;"><span class="ant-input-wrapper ant-input-group css-vgijab"><input placeholder="请输入关键词" aria-describedby=":r47:" type="search" class="ant-input css-vgijab ant-input-outlined" value=""><span class="ant-input-group-addon"><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-input-search-button"><span class="ant-btn-icon"><span role="img" aria-label="search" class="anticon anticon-search"><svg viewBox="64 64 896 896" focusable="false" data-icon="search" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M909.6 854.5L649.9 594.8C690.2 542.7 712 479 712 412c0-80.2-31.3-155.4-87.9-212.1-56.6-56.7-132-87.9-212.1-87.9s-155.5 31.3-212.1 87.9C143.2 256.5 112 331.8 112 412c0 80.1 31.3 155.5 87.9 212.1C256.5 680.8 331.8 712 412 712c67 0 130.6-21.8 182.7-62l259.7 259.6a8.2 8.2 0 0011.6 0l43.6-43.5a8.2 8.2 0 000-11.6zM570.4 570.4C528 612.7 471.8 636 412 636s-116-23.3-158.4-65.6C211.3 528 188 471.8 188 412s23.3-116.1 65.6-158.4C296 211.3 352.2 188 412 188s116.1 23.2 158.4 65.6S636 352.2 636 412s-23.3 116.1-65.6 158.4z"></path></svg></span></span></button></span></span></span><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" style="float: right;"><span role="img" aria-label="download" class="anticon anticon-download"><svg viewBox="64 64 896 896" focusable="false" data-icon="download" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M505.7 661a8 8 0 0012.6 0l112-141.7c4.1-5.2.4-12.9-6.3-12.9h-74.1V168c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8v338.3H400c-6.7 0-10.4 7.7-6.3 12.9l112 141.8zM878 626h-60c-4.4 0-8 3.6-8 8v154H214V634c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8v198c0 17.7 14.3 32 32 32h684c17.7 0 32-14.3 32-32V634c0-4.4-3.6-8-8-8z"></path></svg></span><span>导出</span></button></div></div>
+<div><div class="ant-spin-nested-loading css-vgijab"><div class="ant-spin-container"><div class="ant-table ant-table-middle css-vgijab"><div class="ant-table-container"><div class="ant-table-content"><table style="table-layout: fixed; width: 100%;"><colgroup><col style="width: 15%;"><col style="width: 15%;"><col style="width: 22%;"><col style="width: 10%;"><col style="width: 13%;"><col style="width: 10%;"><col style="width: 15%;"></colgroup><thead class="ant-table-thead"><tr><th class="ant-table-cell ant-table-cell-ellipsis" scope="col">用户名</th><th class="ant-table-cell" scope="col">用户手机号</th><th class="ant-table-cell" scope="col">文案话题</th><th class="ant-table-cell" scope="col">发布视频</th><th class="ant-table-cell" scope="col">所属部门</th><th class="ant-table-cell" scope="col">任务状态</th><th class="ant-table-cell" scope="col">执行时间</th></tr></thead><tbody class="ant-table-tbody"><tr class="ant-table-row ant-table-row-level-0" data-row-key="1"><td class="ant-table-cell ant-table-cell-ellipsis" title="张伯阳">张伯阳</td><td class="ant-table-cell">17612256497</td><td class="ant-table-cell">秋季新品开箱 · #秋季新品</td><td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-wxv-video="张伯阳" style="padding: 0px;"><span>查看</span></button></td><td class="ant-table-cell">测试二级三部</td><td class="ant-table-cell"><span class="rea-wxd-tb done"><i></i>已执行</span></td><td class="ant-table-cell">2026/11/19 10:22</td></tr><tr class="ant-table-row ant-table-row-level-0" data-row-key="2"><td class="ant-table-cell ant-table-cell-ellipsis" title="李佳">李佳</td><td class="ant-table-cell">13800138001</td><td class="ant-table-cell">门店探店 vlog · #探店</td><td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-wxv-video="李佳" style="padding: 0px;"><span>查看</span></button></td><td class="ant-table-cell">销售一部</td><td class="ant-table-cell"><span class="rea-wxd-tb done"><i></i>已执行</span></td><td class="ant-table-cell">2026/11/19 11:05</td></tr><tr class="ant-table-row ant-table-row-level-0" data-row-key="3"><td class="ant-table-cell ant-table-cell-ellipsis" title="王敏">王敏</td><td class="ant-table-cell">13800138002</td><td class="ant-table-cell">客户案例访谈 · #客户案例</td><td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-wxv-video="王敏" style="padding: 0px;"><span>查看</span></button></td><td class="ant-table-cell">销售一部</td><td class="ant-table-cell"><span class="rea-wxd-tb done"><i></i>已执行</span></td><td class="ant-table-cell">2026/11/20 09:30</td></tr><tr class="ant-table-row ant-table-row-level-0" data-row-key="4"><td class="ant-table-cell ant-table-cell-ellipsis" title="陈昊">陈昊</td><td class="ant-table-cell">13800138003</td><td class="ant-table-cell">新品到店实拍 · #新品到店</td><td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-wxv-video="陈昊" style="padding: 0px;"><span>查看</span></button></td><td class="ant-table-cell">销售二部</td><td class="ant-table-cell"><span class="rea-wxd-tb done"><i></i>已执行</span></td><td class="ant-table-cell">2026/11/20 14:12</td></tr><tr class="ant-table-row ant-table-row-level-0" data-row-key="5"><td class="ant-table-cell ant-table-cell-ellipsis" title="赵雪">赵雪</td><td class="ant-table-cell">13800138004</td><td class="ant-table-cell">售后小课堂 · #售后</td><td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-wxv-video="赵雪" style="padding: 0px;"><span>查看</span></button></td><td class="ant-table-cell">售后部</td><td class="ant-table-cell"><span class="rea-wxd-tb done"><i></i>已执行</span></td><td class="ant-table-cell">2026/11/20 16:40</td></tr><tr class="ant-table-row ant-table-row-level-0" data-row-key="6"><td class="ant-table-cell ant-table-cell-ellipsis" title="周雨桐">周雨桐</td><td class="ant-table-cell">13800138006</td><td class="ant-table-cell">会员日活动 · #会员日</td><td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-wxv-video="周雨桐" style="padding: 0px;"><span>查看</span></button></td><td class="ant-table-cell">销售一部</td><td class="ant-table-cell"><span class="rea-wxd-tb done"><i></i>已执行</span></td><td class="ant-table-cell">2026/11/21 09:05</td></tr><tr class="ant-table-row ant-table-row-level-0" data-row-key="7"><td class="ant-table-cell ant-table-cell-ellipsis" title="孙磊">孙磊</td><td class="ant-table-cell">13800138007</td><td class="ant-table-cell">秋季穿搭指南 · #穿搭</td><td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-wxv-video="孙磊" style="padding: 0px;"><span>查看</span></button></td><td class="ant-table-cell">销售二部</td><td class="ant-table-cell"><span class="rea-wxd-tb done"><i></i>已执行</span></td><td class="ant-table-cell">2026/11/21 10:18</td></tr><tr class="ant-table-row ant-table-row-level-0" data-row-key="8"><td class="ant-table-cell ant-table-cell-ellipsis" title="吴倩">吴倩</td><td class="ant-table-cell">13800138008</td><td class="ant-table-cell">门店环境一览 · #门店</td><td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-wxv-video="吴倩" style="padding: 0px;"><span>查看</span></button></td><td class="ant-table-cell">售后部</td><td class="ant-table-cell"><span class="rea-wxd-tb done"><i></i>已执行</span></td><td class="ant-table-cell">2026/11/22 11:32</td></tr><tr class="ant-table-row ant-table-row-level-0" data-row-key="9"><td class="ant-table-cell ant-table-cell-ellipsis" title="郑凯">郑凯</td><td class="ant-table-cell">13800138009</td><td class="ant-table-cell">-</td><td class="ant-table-cell">-</td><td class="ant-table-cell">产品</td><td class="ant-table-cell"><span class="rea-wxd-tb open"><i></i>未执行</span></td><td class="ant-table-cell">-</td></tr><tr class="ant-table-row ant-table-row-level-0" data-row-key="10"><td class="ant-table-cell ant-table-cell-ellipsis" title="林悦">林悦</td><td class="ant-table-cell">13800138010</td><td class="ant-table-cell">-</td><td class="ant-table-cell">-</td><td class="ant-table-cell">销售二部</td><td class="ant-table-cell"><span class="rea-wxd-tb open"><i></i>未执行</span></td><td class="ant-table-cell">-</td></tr></tbody></table></div></div></div></div></div></div>
+<ul class="ant-pagination ant-pagination-end ant-pagination-mini ant-table-pagination css-vgijab"><li class="ant-pagination-total-text">共 10 条记录</li><li title="上一页" class="ant-pagination-prev ant-pagination-disabled" aria-disabled="true"><button class="ant-pagination-item-link" type="button" tabindex="-1" disabled=""><span role="img" aria-label="left" class="anticon anticon-left"><svg viewBox="64 64 896 896" focusable="false" data-icon="left" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M724 218.3V141c0-6.7-7.7-10.4-12.9-6.3L260.3 486.8a31.86 31.86 0 000 50.3l450.8 352.1c5.3 4.1 12.9.4 12.9-6.3v-77.3c0-4.9-2.3-9.6-6.1-12.6l-360-281 360-281.1c3.8-3 6.1-7.7 6.1-12.6z"></path></svg></span></button></li><li title="1" class="ant-pagination-item ant-pagination-item-1 ant-pagination-item-active" tabindex="0"><a rel="nofollow">1</a></li><li title="下一页" class="ant-pagination-next ant-pagination-disabled" aria-disabled="true"><button class="ant-pagination-item-link" type="button" tabindex="-1" disabled=""><span role="img" aria-label="right" class="anticon anticon-right"><svg viewBox="64 64 896 896" focusable="false" data-icon="right" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"></path></svg></span></button></li><li class="ant-pagination-options"><div class="ant-select ant-select-sm ant-select-outlined ant-pagination-options-size-changer css-vgijab ant-select-single ant-select-show-arrow ant-select-show-search" aria-label="页码"><div class="ant-select-selector"><span class="ant-select-selection-wrap"><span class="ant-select-selection-search"><input type="search" autocomplete="off" class="ant-select-selection-search-input" role="combobox" aria-expanded="false" aria-haspopup="listbox" aria-owns="rc_select_4_list" aria-autocomplete="list" aria-controls="rc_select_4_list" aria-label="页码" value="" id="rc_select_4"></span><span class="ant-select-selection-item" title="10 条/页">10 条/页</span></span></div><span class="ant-select-arrow" unselectable="on" aria-hidden="true" style="user-select: none;"><span role="img" aria-label="down" class="anticon anticon-down ant-select-suffix"><svg viewBox="64 64 896 896" focusable="false" data-icon="down" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"></path></svg></span></span></div></li></ul>
+</div></div></div></div></div>
+</div></div>
+</div></div></div></div>
+</script>
+
 <script>
 (function(){
   /* 载体文本还原：拆字写法，避免本 script 块被字面终止符提前截断；
@@ -19644,6 +20061,13 @@ render();
      由 reaSynthPages() 克隆详情页外壳合成，正文来自载体块 srcXhsSnapshot。
      只读，回答「这次执行为什么这么发」（PRD §4.10）。 */
   var REA_XHS_SNAPSHOT = '新小红书运营 · 任务配置快照';
+  /* 小红书营销 · 笔记发布（2026-11-23）：现网这一组只抓到「新小红书运营」一页，
+     笔记发布没有源目录、没有快照正文。三页都由 reaSynthPages() 克隆「新小红书运营」系的壳
+     （侧栏分组自然就是小红书营销），正文来自 srcXhsNote／srcXhsNoteNew／srcXhsNoteDetail，
+     样式共用 REA_XN_CSS；任务数据是会话内共用的一份演示集（见 reaXnSeed）。不计入 37 页。 */
+  var REA_XN_PAGE = '笔记发布';
+  var REA_XN_NEW = '笔记发布 · 新建';
+  var REA_XN_DETAIL = '笔记发布 · 详情';
   /* 抖音营销 · 发短视频（2026-11-23）：这一组在 37 页快照里一个都没抓（侧栏只有菜单项，
      点不了）。三页按产品给的现网截图补成运行时合成页——壳（顶栏、一级栏、正文区）从
      「新小红书运营」克隆，二级组换成抖音营销，正文来自 srcDyList／srcDyNew／srcDyDetail。
@@ -19652,6 +20076,20 @@ render();
   var REA_DY_NEW = REA_DY_PAGE + ' · 新建';
   var REA_DY_DETAIL = REA_DY_PAGE + ' · 详情';
   var REA_DY_SRC = '新小红书运营';   // 克隆壳用的快照页
+  /* 抖音营销 · 抖音运营（2026-11-23）：与「发短视频」同一组，同样不在 37 页快照里，
+     壳与组照样从「新小红书运营」克隆（reaDyRest 按当前页点亮对应二级项），正文来自
+     srcDyOpList／srcDyOpNew／srcDyOpDetail。会话内保存的任务经 postMessage 带回列表页。 */
+  var REA_DY_OP_PAGE = '抖音运营';
+  var REA_DY_OP_NEW = REA_DY_OP_PAGE + ' · 新建';
+  var REA_DY_OP_DETAIL = REA_DY_OP_PAGE + ' · 详情';
+  var reaDyOpSaved = [];   // 本次会话新建并保存的抖音运营任务（列表页补行用，不落盘）
+  var reaDyOpRow = null;   // 列表点「详情」带过来的那一条任务
+  /* 微信营销任务 · 视频号发布任务 · 详情（2026-11-23）：快照里只抓到模块页与新建页，
+     详情没有源目录、不在 37 页内。壳由 reaSynthPages() 克隆「视频号发布任务」模块页
+     （侧栏组与选中项都跟着来），正文来自载体块 srcWxVideoDetail；版式沿用快照的 AntD 类
+     与 REA_WX_DETAIL_CSS，与其余六张微信营销详情页同一套。 */
+  var REA_WX_VIDEO = '视频号发布任务';
+  var REA_WX_VIDEO_DETAIL = REA_WX_VIDEO + ' · 详情';
   /* 「详细数据」子页：现网路由 board/wxz/task 不在 37 页快照里，
      由 reaSynthPages() 在运行时克隆看板页外壳合成，正文来自下面那个载体块。 */
   var REA_DETAIL_TASK = '微小助看板 · 执行人明细';
@@ -19684,6 +20122,7 @@ render();
   REA_NEEDS_DATA[REA_METRIC_PAGE] = REA_BOARD_PAGE;
   REA_NEEDS_DATA[REA_DETAIL_TASK] = REA_BOARD_PAGE;
   REA_NEEDS_DATA[REA_PERSON_PAGE] = REA_BOARD_PAGE;
+  REA_NEEDS_DATA[REA_DY_OP_DETAIL] = REA_DY_OP_PAGE;
 
   /* 侧栏「数据看板」一组改叫「看板」（2026-10-26 与产品经理对齐）；2026-11-09 删去「悬浮窗看板」
      （见下面 REA_HIDDEN），2026-11-10 删去「App 工具看板」，组内只剩
@@ -21709,7 +22148,7 @@ function taskScope(rs,metric,range){
     '   同一天下发的按台账次序（id 升序），免得每次重画抖序。 */',
     'var PEEK_N=5;',
     '/* 六类有「· 详情」页，视频号发布任务没有；与二级页那张 HAS 表同一份取舍。 */',
-    'var HAS_DETAIL={"发圈":1,"群发好友":1,"群发群组":1,"批量加好友":1,"关联好友":1,"客户唤醒":1};',
+    'var HAS_DETAIL={"发圈":1,"群发好友":1,"群发群组":1,"批量加好友":1,"关联好友":1,"客户唤醒":1,"视频号发布任务":1};',
     'function peekRows(w){',
     '  var rs=winRows(w),out=[],i,r;',
     '  for(i=0;i<rs.length;i++){',
@@ -23936,6 +24375,555 @@ for(i=0;i<rows.length;i++){
     'v.innerHTML=H;',
     '})();'
    ].join('\n');
+  }
+
+  /* 笔记发布三页的演示任务集（会话内共用一份）。
+     现网小红书营销那组只抓到「新小红书运营」，笔记发布没有源目录、没有快照正文，
+     列表数据只能自带——名称与数值照现网截图，够把「列表 → 详情」「新建 → 保存 → 回列表」走通。
+     新建页保存、列表页删除都改这一份（见 message 监听），刷新即回原样。 */
+  function reaXnSeed(){
+   return [
+    {id:'xn-01',name:'笔记发布任务20261102',type:'发图文',copy:'',topic:'',who:'测试人员33',start:'2026-11-02 11:19',end:'2026-11-09 11:14',state:'执行完毕',created:'2026-11-02 11:14',creator:'18569299465'},
+    {id:'xn-02',name:'笔记发布任务20260905',type:'发视频',copy:'123123',topic:'',who:'wxz测试111',start:'2026-09-05 10:21',end:'2026-09-05 13:21',state:'已过期',created:'2026-09-05 10:21',creator:'18569299465'},
+    {id:'xn-03',name:'笔记发布任务20260905',type:'发图文',copy:'',topic:'',who:'wxz测试111',start:'2026-09-05 09:14',end:'2026-09-12 09:14',state:'执行完毕',created:'2026-09-05 09:15',creator:'18569299465'},
+    {id:'xn-04',name:'笔记发布任务20260811',type:'发视频',copy:'',topic:'',who:'18569299465',start:'2026-08-11 14:01',end:'2026-08-18 14:01',state:'已过期',created:'2026-08-11 14:01',creator:'18569299465'},
+    {id:'xn-05',name:'日循环',type:'发文案配图',copy:'',topic:'',who:'雅楠002',start:'2026-08-12 09:10',end:'2026-08-12 15:00',state:'已过期',created:'2026-08-05 15:01',creator:'18569299465'},
+    {id:'xn-06',name:'笔记发布任务20260805',type:'发图文',copy:'文案',topic:'#话题',who:'雅楠002',start:'2026-08-05 15:00',end:'2026-08-12 15:00',state:'已过期',created:'2026-08-05 15:00',creator:'18569299465'},
+    {id:'xn-07',name:'笔记发布任务20260805',type:'发视频',copy:'视频文案',topic:'#视频话题',who:'雅楠002,18569299465',start:'2026-08-05 14:56',end:'2026-08-12 14:56',state:'已过期',created:'2026-08-05 14:59',creator:'18569299465'},
+    {id:'xn-08',name:'笔记发布任务20260803',type:'发图文',copy:'这个是视频文案。啊啊...',topic:'#这个是话题',who:'张伯阳',start:'2026-08-03 16:05',end:'2026-08-10 16:05',state:'已过期',created:'2026-08-03 16:06',creator:'18569299465'},
+    {id:'xn-09',name:'笔记发布任务20260803',type:'发视频',copy:'123',topic:'',who:'张伯阳',start:'2026-08-03 15:46',end:'2026-08-10 15:46',state:'执行完毕',created:'2026-08-03 15:46',creator:'18569299465'},
+    {id:'xn-10',name:'笔记发布任务20260803',type:'发图文',copy:'视频文案',topic:'#话题一',who:'张伯阳',start:'2026-08-03 15:43',end:'2026-08-10 15:43',state:'已过期',created:'2026-08-03 15:43',creator:'18569299465'},
+    {id:'xn-11',name:'笔记发布任务20260718',type:'发图文',copy:'',topic:'',who:'雅楠002',start:'2026-07-18 10:00',end:'2026-07-25 10:00',state:'执行中',created:'2026-07-18 09:52',creator:'18569299465'},
+    {id:'xn-12',name:'笔记发布任务20260710',type:'发文案配图',copy:'',topic:'',who:'测试人员33',start:'2026-07-10 09:00',end:'2026-07-17 09:00',state:'执行完毕',created:'2026-07-10 08:55',creator:'18569299465'}
+   ];
+  }
+
+  /* 「笔记发布」列表页（合成页）：正文整段换成 srcXhsNote，脚本再接筛选、分页与三枚操作。
+     列表页是这一组的第一页，侧栏一级项「小红书营销」按数据推导就落在它身上。 */
+  function reaXhsNoteListJs(){
+   return '(function(){'
+    + 'var LIST=' + reaJson(REA_XN_PAGE) + ',NEW=' + reaJson(REA_XN_NEW) + ',DET=' + reaJson(REA_XN_DETAIL) + ';'
+    + 'var H=' + reaJson(reaCoverHtml('srcXhsNote')) + ';'
+    + 'var v=document.getElementById("subapp-viewport");if(!v)return;v.innerHTML=H;'
+    + String.raw`
+var TASKS=(window.__REA_XN_TASKS||[]).slice();
+var SIZE=10,PAGE=1,VIEW=TASKS.slice(),TOAST=null,TOASTT=0;
+var TB=document.querySelector('[data-xn-rows]'),PG=document.querySelector('[data-xn-pager]');
+function el(tag,cls,txt){var n=document.createElement(tag);if(cls)n.className=cls;if(txt!=null)n.textContent=txt;return n}
+function F(k){return document.querySelector('[data-xn-f="'+k+'"]')}
+function runOf(s){return s==='执行完毕'?'is-done':(s==='已过期'?'is-expired':'is-running')}
+function toast(msg){
+  if(!TOAST){TOAST=el('div','rea-xn-toast');TOAST.appendChild(el('i','tic','✓'));TOAST.appendChild(el('span'));document.body.appendChild(TOAST)}
+  TOAST.querySelector('span').textContent=msg;TOAST.classList.add('is-on');
+  clearTimeout(TOASTT);TOASTT=setTimeout(function(){TOAST.classList.remove('is-on')},1800);
+}
+function pager(){
+  PG.innerHTML='';
+  var total=VIEW.length,pages=Math.max(1,Math.ceil(total/SIZE)),i;
+  if(PAGE>pages)PAGE=pages;
+  PG.appendChild(el('span','rea-xn-total','共 '+total+' 条记录'));
+  var pv=el('button','rea-xn-page-btn','‹');pv.type='button';pv.setAttribute('data-xn-page',String(PAGE-1));if(PAGE<=1)pv.disabled=true;PG.appendChild(pv);
+  for(i=1;i<=pages;i++){var b=el('button','rea-xn-page-btn'+(i===PAGE?' is-on':''),String(i));b.type='button';b.setAttribute('data-xn-page',String(i));PG.appendChild(b)}
+  var nx=el('button','rea-xn-page-btn','›');nx.type='button';nx.setAttribute('data-xn-page',String(PAGE+1));if(PAGE>=pages)nx.disabled=true;PG.appendChild(nx);
+  PG.appendChild(el('span','rea-xn-psize','10 条/页'));
+}
+function render(){
+  TB.innerHTML='';
+  var from=(PAGE-1)*SIZE,rows=VIEW.slice(from,from+SIZE),i;
+  if(!rows.length){var tr0=el('tr'),td0=el('td','rea-xn-emptycell','暂无符合条件的任务');td0.colSpan=10;tr0.appendChild(td0);TB.appendChild(tr0)}
+  for(i=0;i<rows.length;i++){(function(r){
+    var tr=el('tr'),td;
+    td=el('td','rea-xn-cell-name');td.textContent=r.name;tr.appendChild(td);
+    td=el('td','rea-xn-cell-type');td.textContent=r.type||'—';tr.appendChild(td);
+    td=el('td','rea-xn-muted');td.textContent=r.copy||'—';tr.appendChild(td);
+    td=el('td','rea-xn-muted');td.textContent=r.topic||'—';tr.appendChild(td);
+    td=el('td','rea-xn-cell-people');td.textContent=r.who||'—';tr.appendChild(td);
+    td=el('td','rea-xn-cell-time');td.textContent=r.start+' ~ '+r.end;tr.appendChild(td);
+    td=el('td');var sp=el('span','rea-xn-status');sp.appendChild(el('i','rea-xn-dot '+runOf(r.state)));
+    sp.appendChild(document.createTextNode(r.state));td.appendChild(sp);tr.appendChild(td);
+    td=el('td','rea-xn-cell-time');td.textContent=r.created;tr.appendChild(td);
+    td=el('td','rea-xn-muted');td.textContent=r.creator;tr.appendChild(td);
+    td=el('td','rea-xn-cell-ops');
+    var d=el('button','rea-xn-btn rea-xn-btn--text','详情');d.type='button';d.setAttribute('data-xn-detail',r.id);td.appendChild(d);
+    var x=el('button','rea-xn-btn rea-xn-btn--text rea-xn-btn--danger','删除');x.type='button';x.setAttribute('data-xn-del',r.id);td.appendChild(x);
+    tr.appendChild(td);TB.appendChild(tr);
+  })(rows[i])}
+  pager();
+}
+function apply(){
+  var n=(F('name').value||'').trim(),c=(F('copy').value||'').trim(),st=F('state').value,
+      p1=F('p1').value,p2=F('p2').value,c1=F('c1').value,c2=F('c2').value;
+  VIEW=TASKS.filter(function(t){
+    if(n&&String(t.name||'').indexOf(n)<0)return false;
+    if(c&&String(t.copy||'').indexOf(c)<0)return false;
+    if(st&&t.state!==st)return false;
+    var pd=String(t.start||'').slice(0,10),cd=String(t.created||'').slice(0,10);
+    if(p1&&pd<p1)return false;
+    if(p2&&pd>p2)return false;
+    if(c1&&cd<c1)return false;
+    if(c2&&cd>c2)return false;
+    return true;
+  });
+  PAGE=1;render();
+}
+function findTask(id){for(var i=0;i<TASKS.length;i++)if(TASKS[i].id===id)return TASKS[i];return null}
+function confirmDel(t){
+  var mask=el('div','rea-xn-mask'),box=el('div','rea-xn-modal');
+  mask.appendChild(box);
+  box.appendChild(el('h3',null,'删除任务'));
+  box.appendChild(el('p',null,'删除后不可恢复，确定删除「'+t.name+'」吗？'));
+  var foot=el('div','rea-xn-modalfoot');
+  var no=el('button','rea-xn-btn','取消');no.type='button';
+  var ok=el('button','rea-xn-btn rea-xn-btn--danger-solid','删除');ok.type='button';
+  foot.appendChild(no);foot.appendChild(ok);box.appendChild(foot);document.body.appendChild(mask);
+  function close(){if(mask.parentNode)mask.parentNode.removeChild(mask);document.removeEventListener('keydown',esc)}
+  function esc(e){if(e.key==='Escape')close()}
+  no.onclick=close;
+  mask.onclick=function(e){if(e.target===mask)close()};
+  document.addEventListener('keydown',esc);
+  ok.onclick=function(){
+    close();
+    TASKS=TASKS.filter(function(x){return x.id!==t.id});
+    VIEW=VIEW.filter(function(x){return x.id!==t.id});
+    parent.postMessage({reaXnDrop:t.id},'*');
+    render();toast('已删除');
+  };
+}
+document.addEventListener('click',function(e){
+  var n=e.target&&e.target.closest?e.target.closest('[data-xn-detail],[data-xn-del],[data-xn-page],[data-xn-new],[data-xn-query],[data-xn-reset]'):null;
+  if(!n)return;
+  if(n.hasAttribute('data-xn-new')){parent.postMessage({reaPage:NEW},'*');return}
+  if(n.hasAttribute('data-xn-query')){apply();return}
+  if(n.hasAttribute('data-xn-reset')){
+    var keys=['name','copy','p1','p2','c1','c2'],i;
+    for(i=0;i<keys.length;i++)F(keys[i]).value='';
+    F('state').value='';apply();return;
+  }
+  var pg=n.getAttribute('data-xn-page');
+  if(pg!=null){var p=Number(pg);if(p>=1&&p<=Math.max(1,Math.ceil(VIEW.length/SIZE))){PAGE=p;render()}return}
+  var id=n.getAttribute('data-xn-detail');
+  if(id){var t=findTask(id);if(t)parent.postMessage({reaPage:DET,reaXnTask:t},'*');return}
+  var did=n.getAttribute('data-xn-del');
+  if(did){var t2=findTask(did);if(t2)confirmDel(t2)}
+});
+/* 克隆来的静态右列还点着「新小红书运营」，把选中态挪到本页 */
+(function(){
+  var rows=document.querySelectorAll('.ykSideTwoColSecondaryList .ykMenuItemRow'),i;
+  for(i=0;i<rows.length;i++){
+    var spn=rows[i].querySelector('.ykMenuText'),t=spn?(spn.getAttribute('title')||spn.textContent||'').trim():'';
+    if(t==='笔记发布'){rows[i].classList.add('ykActive');rows[i].setAttribute('aria-current','page')}
+    else if(rows[i].classList.contains('ykActive')){rows[i].classList.remove('ykActive');rows[i].removeAttribute('aria-current')}
+  }
+})();
+render();
+})();`;
+  }
+
+  /* 「笔记发布 · 新建」与「笔记发布 · 详情」（合成页）：正文各换一块，交互在页内接。
+     新建页：发布类型切换（图文／视频／文案配图的字段组）、素材来源（临时创建／AI 生成）、
+     执行人员多选、图片本地上传与拖动排序、必填校验；保存后把任务交给外壳并回列表。
+     详情页：任务信息回显 ＋ 员工完成情况（筛选、导出占位、两枚「查看」的预览浮层）。 */
+  function reaXhsNoteNewJs(){
+   return '(function(){'
+    + 'var H=' + reaJson(reaCoverHtml('srcXhsNoteNew')) + ';'
+    + 'var v=document.getElementById("subapp-viewport");if(!v)return;v.innerHTML=H;'
+    + 'var LIST=' + reaJson(REA_XN_PAGE) + ',DET=' + reaJson(REA_XN_DETAIL) + ';'
+    + String.raw`
+var $=function(s){return document.querySelector(s)};
+function $$(s){return Array.prototype.slice.call(document.querySelectorAll(s))}
+function el(tag,cls,txt){var n=document.createElement(tag);if(cls)n.className=cls;if(txt!=null)n.textContent=txt;return n}
+var TOAST=null,TOASTT=0;
+function toast(msg){
+  if(!TOAST){TOAST=el('div','rea-xn-toast');TOAST.appendChild(el('i','tic','✓'));TOAST.appendChild(el('span'));document.body.appendChild(TOAST)}
+  TOAST.querySelector('span').textContent=msg;TOAST.classList.add('is-on');
+  clearTimeout(TOASTT);TOASTT=setTimeout(function(){TOAST.classList.remove('is-on')},1800);
+}
+function err(k,msg){var p=$('[data-xn-err="'+k+'"]');if(p){p.textContent=msg;p.hidden=false}}
+function noerr(k){var p=$('[data-xn-err="'+k+'"]');if(p)p.hidden=true}
+function clearErrs(){$$('.rea-xn-err').forEach(function(p){p.hidden=true})}
+function pad(n){return (n<10?'0':'')+n}
+function ymd(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
+function hm(d){return pad(d.getHours())+':'+pad(d.getMinutes())}
+var TYPE='发图文',SOURCE='临时创建',PEOPLE=[],IMGS=[],VIDEO=null,POPUP=false,DRAG=null;
+var ORG=[{n:'测试二级一部',p:['测试人员33','张伯阳']},{n:'测试二级二部',p:['雅楠002','wxz测试111']}];
+/* 字数：maxlength 已经卡住上限，这里只显示读数 */
+function bindCount(input,out){
+  if(!input||!out)return;
+  function upd(){out.textContent=(input.value||'').length+' / '+input.getAttribute('maxlength')}
+  input.addEventListener('input',upd);upd();
+}
+bindCount($('[data-xn-name]'),$('[data-xn-namecount]'));
+bindCount($('[data-xn-copy]'),$('[data-xn-copycount]'));
+bindCount($('[data-xn-title]'),$('[data-xn-titlecount]'));
+bindCount($('[data-xn-notetitle]'),$('[data-xn-notetitlecount]'));
+bindCount($('[data-xn-body]'),$('[data-xn-bodycount]'));
+/* 单选组：选中态画在 label 上，视觉自己控 */
+function bindRadios(sel){
+  $$(sel+' .rea-xn-radio input').forEach(function(r){
+    r.addEventListener('change',function(){
+      $$(sel+' .rea-xn-radio').forEach(function(l){l.classList.remove('is-on')});
+      var l=r.closest('.rea-xn-radio');if(l)l.classList.add('is-on');
+    });
+  });
+}
+bindRadios('[data-xn-type]');bindRadios('[data-xn-tasktype]');
+function applyType(){
+  $$('[data-xn-g]').forEach(function(row){
+    var k=row.getAttribute('data-xn-g'),show=true;
+    if(k==='img')show=TYPE==='发图文';
+    else if(k==='video')show=TYPE==='发视频';
+    else if(k==='note')show=TYPE!=='发文案配图';
+    else if(k==='copy')show=TYPE==='发文案配图';
+    row.hidden=!show;
+  });
+  if(TYPE!=='发图文')noerr('img');
+  if(TYPE!=='发视频')noerr('video');
+}
+$$('[data-xn-type] input').forEach(function(r){
+  r.addEventListener('change',function(){TYPE=r.value;applyType()});
+});
+/* 素材来源：临时创建／AI 生成 */
+$$('[data-xn-source] button').forEach(function(b){
+  b.addEventListener('click',function(){
+    SOURCE=b.getAttribute('data-v');
+    $$('[data-xn-source] button').forEach(function(x){x.classList.toggle('is-on',x===b)});
+    $('[data-xn-aigenrow]').hidden=SOURCE!=='AI生成';
+    noerr('aigen');
+  });
+});
+var SW=$('[data-xn-switch]');
+SW.addEventListener('click',function(){
+  POPUP=!POPUP;SW.setAttribute('aria-checked',POPUP?'true':'false');
+});
+/* 执行人员：部门树（演示两组）＋ 多选，选中项落在按钮里当标签 */
+function deptPeople(n){for(var i=0;i<ORG.length;i++)if(ORG[i].n===n)return ORG[i].p;return []}
+function drawPeople(){
+  var box=$('[data-xn-orgtags]');box.innerHTML='';
+  PEOPLE.forEach(function(nm){
+    var t=el('span','rea-xn-ptag');t.appendChild(document.createTextNode(nm));
+    var x=el('span','rea-xn-ptagx','×');x.setAttribute('role','button');x.setAttribute('tabindex','0');
+    x.setAttribute('data-xn-rmperson',nm);t.appendChild(x);box.appendChild(t);
+  });
+  $('[data-xn-orgph]').hidden=PEOPLE.length>0;
+  $$('[data-xn-person]').forEach(function(cb){cb.checked=PEOPLE.indexOf(cb.getAttribute('data-xn-person'))>=0});
+  $$('[data-xn-dept]').forEach(function(cb){
+    var ps=deptPeople(cb.getAttribute('data-xn-dept'));
+    cb.checked=ps.length>0&&ps.every(function(n){return PEOPLE.indexOf(n)>=0});
+  });
+}
+function drawDrop(filter){
+  var box=$('[data-xn-orglist]');box.innerHTML='';
+  var q=(filter||'').trim();
+  ORG.forEach(function(d){
+    var hitDept=!q||d.n.indexOf(q)>=0;
+    if(!hitDept&&!d.p.some(function(n){return n.indexOf(q)>=0}))return;
+    var head=el('label','rea-xn-opt rea-xn-opt--head');
+    var cb=document.createElement('input');cb.type='checkbox';cb.setAttribute('data-xn-dept',d.n);head.appendChild(cb);
+    head.appendChild(el('b',null,d.n));box.appendChild(head);
+    d.p.forEach(function(n){
+      if(q&&!hitDept&&n.indexOf(q)<0)return;
+      var lb=el('label','rea-xn-opt rea-xn-opt--leaf');
+      var c=document.createElement('input');c.type='checkbox';c.setAttribute('data-xn-person',n);lb.appendChild(c);
+      lb.appendChild(document.createTextNode(n));box.appendChild(lb);
+    });
+  });
+  drawPeople();
+}
+var DROP=$('[data-xn-orgdrop]');
+$('[data-xn-orgbtn]').addEventListener('click',function(e){
+  if(e.target&&e.target.getAttribute&&e.target.getAttribute('data-xn-rmperson')!=null)return;
+  DROP.hidden=!DROP.hidden;
+  if(!DROP.hidden){$('[data-xn-orgsearch]').value='';drawDrop('');$('[data-xn-orgsearch]').focus()}
+});
+$('[data-xn-orgsearch]').addEventListener('input',function(){drawDrop(this.value)});
+document.addEventListener('change',function(e){
+  var t=e.target;
+  if(t&&t.getAttribute&&t.getAttribute('data-xn-person')!=null){
+    var nm=t.getAttribute('data-xn-person'),i=PEOPLE.indexOf(nm);
+    if(t.checked&&i<0)PEOPLE.push(nm);
+    if(!t.checked&&i>=0)PEOPLE.splice(i,1);
+    drawPeople();noerr('org');return;
+  }
+  if(t&&t.getAttribute&&t.getAttribute('data-xn-dept')!=null){
+    var ps=deptPeople(t.getAttribute('data-xn-dept'));
+    if(t.checked)ps.forEach(function(n){if(PEOPLE.indexOf(n)<0)PEOPLE.push(n)});
+    else PEOPLE=PEOPLE.filter(function(n){return ps.indexOf(n)<0});
+    drawPeople();noerr('org');
+  }
+});
+document.addEventListener('click',function(e){
+  var x=e.target&&e.target.closest?e.target.closest('[data-xn-rmperson]'):null;
+  if(x){
+    e.preventDefault();e.stopPropagation();
+    var nm=x.getAttribute('data-xn-rmperson');
+    PEOPLE=PEOPLE.filter(function(n){return n!==nm});
+    drawPeople();return;
+  }
+  if(!DROP.hidden&&!(e.target.closest&&e.target.closest('.rea-xn-picker')))DROP.hidden=true;
+});
+/* 图片：本地上传（FileReader 出缩略图）、拖动排序、首图封面 */
+function drawImgs(){
+  var box=$('[data-xn-imgs]');box.innerHTML='';
+  IMGS.forEach(function(it,i){
+    var th=el('div','rea-xn-thumb');th.draggable=true;th.setAttribute('data-i',String(i));
+    var img=document.createElement('img');img.src=it.src;img.alt='';th.appendChild(img);
+    if(i===0)th.appendChild(el('span','rea-xn-cover','封面'));
+    var rm=el('span','rea-xn-thumbrm','×');rm.setAttribute('data-xn-rmimg',String(i));th.appendChild(rm);
+    box.appendChild(th);
+  });
+  if(IMGS.length<18){
+    var add=el('button','rea-xn-add');add.type='button';add.setAttribute('data-xn-addimg','');
+    add.appendChild(el('b',null,'+'));add.appendChild(el('span',null,'上传图片'));box.appendChild(add);
+  }
+}
+$('[data-xn-imginput]').addEventListener('change',function(){
+  var fs=Array.prototype.slice.call(this.files||[]);this.value='';
+  var room=18-IMGS.length;
+  if(fs.length>room){toast('最多上传 18 张图片');fs=fs.slice(0,room)}
+  fs.forEach(function(f){
+    if(f.size>20*1024*1024){toast('「'+f.name+'」超过 20MB，已跳过');return}
+    var rd=new FileReader();
+    rd.onload=function(){IMGS.push({src:rd.result,name:f.name});drawImgs();noerr('img')};
+    rd.readAsDataURL(f);
+  });
+});
+var UPL=$('[data-xn-imgs]');
+UPL.addEventListener('click',function(e){
+  var a=e.target.closest?e.target.closest('[data-xn-addimg]'):null;
+  if(a){$('[data-xn-imginput]').click();return}
+  var r=e.target.closest?e.target.closest('[data-xn-rmimg]'):null;
+  if(r){var i=+r.getAttribute('data-xn-rmimg');IMGS.splice(i,1);drawImgs()}
+});
+UPL.addEventListener('dragstart',function(e){
+  var t=e.target.closest?e.target.closest('.rea-xn-thumb'):null;if(!t)return;
+  DRAG=+t.getAttribute('data-i');
+  if(e.dataTransfer){e.dataTransfer.effectAllowed='move';try{e.dataTransfer.setData('text/plain','')}catch(x){}}
+});
+UPL.addEventListener('dragover',function(e){
+  var t=e.target.closest?e.target.closest('.rea-xn-thumb'):null;
+  if(t&&DRAG!=null){e.preventDefault();if(e.dataTransfer)e.dataTransfer.dropEffect='move'}
+});
+UPL.addEventListener('drop',function(e){
+  var t=e.target.closest?e.target.closest('.rea-xn-thumb'):null;
+  if(!t||DRAG==null)return;
+  e.preventDefault();
+  var to=+t.getAttribute('data-i');
+  if(to!==DRAG){var it=IMGS.splice(DRAG,1)[0];IMGS.splice(to,0,it)}
+  DRAG=null;drawImgs();
+});
+UPL.addEventListener('dragend',function(){DRAG=null});
+/* 视频：一枚文件即可，chip 上显示文件名与大小 */
+$('[data-xn-vbtn]').addEventListener('click',function(){$('[data-xn-vinput]').click()});
+$('[data-xn-vinput]').addEventListener('change',function(){
+  var f=this.files&&this.files[0];if(!f)return;
+  VIDEO={name:f.name,size:f.size};
+  var chip=$('[data-xn-vfile]');chip.hidden=false;
+  chip.textContent=f.name+' · '+(f.size/1024/1024).toFixed(1)+'MB';
+  noerr('video');
+});
+/* AI 生成：按「生成要求」填一套演示文案，选图文/视频填视频文案那组，文案配图填笔记那组 */
+var AI_BODY='开学季把宿舍收拾成喜欢的样子，从一张好床垫开始。软硬双面、可拆洗，睡了一周腰不酸了，室友都来问链接。需要的宝子评论区扣 1～';
+$('[data-xn-gen]').addEventListener('click',function(){
+  var req=($('[data-xn-aigen]').value||'').trim();
+  if(!req){err('aigen','请填写生成要求');return}
+  noerr('aigen');
+  var title=req.length>20?req.slice(0,20):req;
+  if(TYPE==='发文案配图'){
+    $('[data-xn-copytext]').value='开学季宿舍好物，一张床垫解决睡眠';
+    $('[data-xn-notetitle]').value=title;
+    $('[data-xn-body]').value=AI_BODY;
+    $('[data-xn-topic2]').value='#开学季 #宿舍好物';
+  }else{
+    $('[data-xn-copy]').value=AI_BODY;
+    $('[data-xn-title]').value=title;
+    $('[data-xn-topic]').value='#开学季 #宿舍好物';
+  }
+  ['[data-xn-copy]','[data-xn-title]','[data-xn-notetitle]','[data-xn-body]'].forEach(function(s){
+    var n=$(s);if(n)n.dispatchEvent(new Event('input',{bubbles:true}));
+  });
+  toast('已生成，可继续修改');
+});
+/* 默认通知时间＝一小时后，截止时间＝七天后 */
+(function(){
+  var now=new Date(),n1=new Date(now.getTime()+3600*1000),d2=new Date(now.getTime()+7*86400*1000);
+  $('[data-xn-notify-date]').value=ymd(n1);$('[data-xn-notify-time]').value=hm(n1);
+  $('[data-xn-end-date]').value=ymd(d2);$('[data-xn-end-time]').value=hm(d2);
+})();
+function stamp(){var d=new Date();return ymd(d)+' '+hm(d)}
+$('[data-xn-save]').addEventListener('click',function(){
+  clearErrs();
+  var bad=[],name=($('[data-xn-name]').value||'').trim();
+  if(!PEOPLE.length){err('org','请选择执行人员');bad.push('org')}
+  if(!name){err('name','请输入任务名称');bad.push('name')}
+  if(TYPE==='发图文'&&!IMGS.length){err('img','请至少上传一张图片');bad.push('img')}
+  if(TYPE==='发视频'&&!VIDEO){err('video','请上传视频文件');bad.push('video')}
+  var nd=$('[data-xn-notify-date]').value,nt=$('[data-xn-notify-time]').value,
+      ed=$('[data-xn-end-date]').value,et=$('[data-xn-end-time]').value;
+  if(!nd||!nt){err('notify','请选择通知时间');bad.push('notify')}
+  if(!ed||!et){err('end','请选择截止时间');bad.push('end')}
+  else if(nd&&nt&&((ed+' '+et)<=(nd+' '+nt))){err('end','截止时间需晚于通知时间');bad.push('end')}
+  if(bad.length){
+    var p=$('[data-xn-err="'+bad[0]+'"]');
+    if(p&&p.scrollIntoView)p.scrollIntoView({block:'center'});
+    toast('请先补全必填项');return;
+  }
+  var copy=TYPE==='发文案配图'?$('[data-xn-copytext]').value:$('[data-xn-copy]').value;
+  var topic=TYPE==='发文案配图'?$('[data-xn-topic2]').value:$('[data-xn-topic]').value;
+  var task={id:'xn-'+Date.now(),name:name,type:TYPE,copy:copy||'',topic:topic||'',
+    who:PEOPLE.join(','),start:nd+' '+nt,end:ed+' '+et,state:'执行中',created:stamp(),creator:'18569299465'};
+  var btn=this;btn.disabled=true;btn.textContent='保存中…';
+  toast('任务已保存');
+  setTimeout(function(){parent.postMessage({reaPage:LIST,reaXnSave:task},'*')},700);
+});
+function back(){parent.postMessage({reaPage:LIST},'*')}
+$('[data-xn-back]').addEventListener('click',function(e){e.preventDefault();back()});
+$('[data-xn-cancel]').addEventListener('click',back);
+/* 克隆来的静态右列还点着「新小红书运营」，把选中态挪到本页 */
+(function(){
+  var rows=document.querySelectorAll('.ykSideTwoColSecondaryList .ykMenuItemRow'),i;
+  for(i=0;i<rows.length;i++){
+    var sp=rows[i].querySelector('.ykMenuText'),t=sp?(sp.getAttribute('title')||sp.textContent||'').trim():'';
+    if(t==='笔记发布'){rows[i].classList.add('ykActive');rows[i].setAttribute('aria-current','page')}
+    else if(rows[i].classList.contains('ykActive')){rows[i].classList.remove('ykActive');rows[i].removeAttribute('aria-current')}
+  }
+})();
+applyType();drawImgs();
+})();`;
+  }
+
+  function reaXhsNoteDetailJs(){
+   return '(function(){'
+    + 'var H=' + reaJson(reaCoverHtml('srcXhsNoteDetail')) + ';'
+    + 'var v=document.getElementById("subapp-viewport");if(!v)return;v.innerHTML=H;'
+    + 'var LIST=' + reaJson(REA_XN_PAGE) + ';'
+    + String.raw`
+var $=function(s){return document.querySelector(s)};
+function el(tag,cls,txt){var n=document.createElement(tag);if(cls)n.className=cls;if(txt!=null)n.textContent=txt;return n}
+var TOAST=null,TOASTT=0;
+function toast(msg){
+  if(!TOAST){TOAST=el('div','rea-xn-toast');TOAST.appendChild(el('i','tic','✓'));TOAST.appendChild(el('span'));document.body.appendChild(TOAST)}
+  TOAST.querySelector('span').textContent=msg;TOAST.classList.add('is-on');
+  clearTimeout(TOASTT);TOASTT=setTimeout(function(){TOAST.classList.remove('is-on')},1800);
+}
+var TASKS=window.__REA_XN_TASKS||[],T=window.__REA_XN_TASK||TASKS[0]||null;
+function val(v){return (v==null||v==='')?'—':String(v)}
+if(T){
+  var slots={name:T.name,type:T.type,who:T.who,state:T.state,created:T.created,
+    valid:val(T.start)+' ~ '+val(T.end)};
+  for(var k in slots){var n=$('[data-xn-i="'+k+'"]');if(n)n.textContent=val(slots[k])}
+}
+var PHONES=['18833335555','18800001234','13300006789'],DEPTS=['测试二级二部','销售一部','内容运营组'];
+var NOTE={title:'学生党天津游实测避坑指南✨',
+ body:'宝子们作为踩过坑的过来人，把天津游的实测测评全整理好了，全是学生党最在意的省钱痛点！🚇交通实测：天津地铁支付宝领乘车码，景点基本都能到，别打车，从站口到五大道打车要价 30 纯纯宰学生，公交 2 块直达超划算。🍜美食测评：别去景区门口的网红店，西北角的锅巴菜老居民区店 8 块一碗，比景点里 25 的味道正 10 倍，熟梨糕 5 块钱 6 个超满足。🏞️景点实测：大部分景点学生票半价！天津之眼提前 3 天抢学生票，五大道骑共享单车逛比坐 80 的观光车爽太多，瓷房子在外边拍照就够，进去 30 门票完全不值。全程 3 天人均 500 就能玩爽，完全适配学生党生活费预算，照着走绝对不踩雷！',
+ tags:'#学生党天津旅游 #天津旅游攻略 #学生党穷游 #天津美食实测 #天津景点避坑'};
+function peopleOf(t){return String((t&&t.who)||'').split(/[,，]/).map(function(s){return s.replace(/\s+/g,'')}).filter(Boolean)}
+var ROWS=(function(){
+  var out=[],ps=peopleOf(T);
+  ps.forEach(function(n,i){
+    var st=(T&&T.state)==='执行完毕'?'已执行':((T&&T.state)==='执行中'?'待执行':'未执行');
+    var copy=[T&&T.copy,T&&T.topic].filter(Boolean).join('  ');
+    out.push({name:n,phone:PHONES[i%PHONES.length],dept:DEPTS[i%DEPTS.length],state:st,
+      at:st==='未执行'?'—':(T.start||'—'),note:st!=='未执行',
+      video:st!=='未执行'&&T.type==='发视频',copy:copy||'—'});
+  });
+  return out;
+})();
+var VIEW=ROWS.slice();
+function F(k){return document.querySelector('[data-xn-df="'+k+'"]')}
+function render(){
+  var TB=$('[data-xn-drows]');TB.innerHTML='';
+  if(!VIEW.length){var tr0=el('tr'),td0=el('td','rea-xn-emptycell','暂无执行记录');td0.colSpan=8;tr0.appendChild(td0);TB.appendChild(tr0)}
+  VIEW.forEach(function(r){
+    var tr=el('tr'),td;
+    td=el('td');td.textContent=r.name;tr.appendChild(td);
+    td=el('td','rea-xn-muted');td.textContent=r.phone;tr.appendChild(td);
+    td=el('td','rea-xn-muted');td.textContent=r.copy;tr.appendChild(td);
+    td=el('td');
+    if(r.video){var vb=el('button','rea-xn-link','查看');vb.type='button';vb.setAttribute('data-xn-video','');td.appendChild(vb)}
+    else td.textContent='—';
+    tr.appendChild(td);
+    td=el('td');
+    if(r.note){var nb=el('button','rea-xn-link','查看');nb.type='button';nb.setAttribute('data-xn-note','');td.appendChild(nb)}
+    else td.textContent='—';
+    tr.appendChild(td);
+    td=el('td');td.textContent=r.dept;tr.appendChild(td);
+    td=el('td');td.textContent=r.state;tr.appendChild(td);
+    td=el('td','rea-xn-cell-time');td.textContent=r.at;tr.appendChild(td);
+    TB.appendChild(tr);
+  });
+  var PG=$('[data-xn-dpager]');PG.innerHTML='';
+  PG.appendChild(el('span','rea-xn-total','共 '+VIEW.length+' 条记录'));
+  var b=el('button','rea-xn-page-btn is-on','1');b.type='button';PG.appendChild(b);
+  PG.appendChild(el('span','rea-xn-psize','10 条/页'));
+}
+function apply(){
+  var d1=F('d1').value,d2=F('d2').value,st=F('state').value,kw=(F('kw').value||'').trim();
+  VIEW=ROWS.filter(function(r){
+    var d=String(r.at||'');if(d==='—')d='';
+    if(d){
+      if(d1&&d<d1)return false;
+      if(d2&&d>d2)return false;
+    }
+    if(st&&r.state!==st)return false;
+    if(kw&&(r.name+r.phone+r.dept).indexOf(kw)<0)return false;
+    return true;
+  });
+  render();
+}
+/* 「发布视频」「小红书智能发布信息」两枚查看：就地弹一张浮层，点外面或 Esc 收起 */
+var POP=null;
+function popEl(){
+  if(!POP){POP=el('div','rea-xn-pop');POP.hidden=true;document.body.appendChild(POP)}
+  return POP;
+}
+function closePop(){if(POP)POP.hidden=true}
+function openPop(anchor,html,w){
+  var p=popEl();p.innerHTML=html;p.hidden=false;p.style.width=w+'px';
+  var r=anchor.getBoundingClientRect(),top=r.bottom+8,left=r.left-40,h=p.offsetHeight;
+  if(top+h+16>window.innerHeight)top=Math.max(8,r.top-8-h);
+  if(top<8)top=8;
+  left=Math.max(8,Math.min(left,window.innerWidth-w-16));
+  p.style.top=top+'px';p.style.left=left+'px';
+}
+document.addEventListener('click',function(e){
+  var t=e.target;
+  var nb=t&&t.closest?t.closest('[data-xn-note]'):null;
+  var vb=t&&t.closest?t.closest('[data-xn-video]'):null;
+  if(nb){
+    openPop(nb,'<h3>'+NOTE.title+'</h3><p>'+NOTE.body+'</p><div class="rea-xn-poptags">'+NOTE.tags+'</div>',420);
+    return;
+  }
+  if(vb){
+    openPop(vb,'<div class="rea-xn-video"><span class="rea-xn-play"></span></div><h3>发布视频</h3><p class="rea-xn-popmeta">demo-video.mp4 · 00:32</p>',340);
+    return;
+  }
+  if(POP&&!POP.hidden&&!(t&&t.closest&&t.closest('.rea-xn-pop')))closePop();
+});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closePop()});
+document.addEventListener('click',function(e){
+  var t=e.target;
+  if(t.closest&&t.closest('[data-xn-dquery]')){apply();return}
+  if(t.closest&&t.closest('[data-xn-dreset]')){
+    var ks=['d1','d2','kw'],i;
+    for(i=0;i<ks.length;i++)F(ks[i]).value='';
+    F('state').value='';apply();return;
+  }
+  if(t.closest&&t.closest('[data-xn-export]')){toast('已生成导出文件');return}
+  if(t.closest&&t.closest('[data-xn-back]')){
+    e.preventDefault();parent.postMessage({reaPage:LIST},'*');
+  }
+});
+/* 克隆来的静态右列还点着「新小红书运营」，把选中态挪到本页 */
+(function(){
+  var rows=document.querySelectorAll('.ykSideTwoColSecondaryList .ykMenuItemRow'),i;
+  for(i=0;i<rows.length;i++){
+    var sp=rows[i].querySelector('.ykMenuText'),t=sp?(sp.getAttribute('title')||sp.textContent||'').trim():'';
+    if(t==='笔记发布'){rows[i].classList.add('ykActive');rows[i].setAttribute('aria-current','page')}
+    else if(rows[i].classList.contains('ykActive')){rows[i].classList.remove('ykActive');rows[i].removeAttribute('aria-current')}
+  }
+})();
+render();
+})();`;
   }
 
   /* 「群发好友 · 详情」的覆盖：员工完成情况表里「群发好友数」是枚链接按钮，点开是「群发好友列表」弹窗。
@@ -27799,6 +28787,75 @@ dl.rea-dy-info{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12
 .rea-dy-toast.on{opacity:1}
 `;
 
+  /* 抖音营销 · 抖音运营三页（2026-11-23）的补充样式：只在 REA_DY_CSS 之上加这一页要用的件——
+     表单分组、选项组、多选下拉、话题录入、弹窗里的表格与空态。取值仍只用 ADR-0082 token 表。 */
+  var REA_DY_OP_CSS = `
+.rea-dy-opgroup{padding:4px 0 10px}
+.rea-dy-opgroup+.rea-dy-opgroup{border-top:1px solid #E5E8EF;margin-top:8px;padding-top:18px}
+.rea-dy-opgroup>h2{margin:6px 0 4px;font-size:16px;line-height:24px;font-weight:600}
+.rea-dy-opts{display:flex;flex-wrap:wrap;gap:8px}
+.rea-dy-opt{height:32px;padding:0 14px;border:1px solid #E5E8EF;border-radius:8px;background:#fff;
+  color:#1F2329;font:inherit;font-size:13px;cursor:pointer;
+  transition:border-color .15s,color .15s,background .15s}
+.rea-dy-opt:hover{border-color:#1677FF;color:#1677FF}
+.rea-dy-opt.on{border-color:#1677FF;background:#E6F4FF;color:#1677FF;font-weight:500}
+.rea-dy-st.wait i{background:#FAAD14}
+.rea-dy-mini{width:120px!important}
+.rea-dy-range input.rea-dy-mini{width:72px}
+.rea-dy-inline{display:inline-flex;align-items:center;gap:8px;color:#646A73;font-size:13px;white-space:nowrap}
+.rea-dy-num{width:64px;height:32px;padding:0 8px;border:1px solid #E5E8EF;border-radius:8px;
+  background:#fff;color:#1F2329;font:inherit;font-size:13px;text-align:center;outline:none}
+.rea-dy-ctl input.rea-dy-num{flex:none;width:64px}
+.rea-dy-lb .rea-dy-info{margin-left:4px;vertical-align:-2px}
+.rea-dy-num:focus{border-color:#1677FF;box-shadow:0 0 0 3px rgba(22,119,255,.12)}
+.rea-dy-topic-box{display:flex;flex-direction:column;gap:10px;width:100%;max-width:640px}
+.rea-dy-topic-row{display:flex;align-items:flex-start;gap:12px}
+.rea-dy-topic-row>label,.rea-dy-topic-row>span{flex:none;width:88px;padding-top:9px;color:#646A73;
+  font-size:13px;line-height:20px;text-align:right}
+.rea-dy-topic-row i{color:#FF4D4F;font-style:normal;margin-right:4px}
+.rea-dy-topic-ctl{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.rea-dy-topic-ctl>input,.rea-dy-topic-ctl>textarea{width:100%;box-sizing:border-box}
+.rea-dy-topic-ctl textarea{min-height:88px;padding:10px 12px;border:1px solid #E5E8EF;border-radius:8px;
+  background:#fff;color:#1F2329;font:inherit;font-size:14px;line-height:1.6;outline:none;resize:vertical}
+.rea-dy-topic-ctl input{height:36px;padding:0 12px;border:1px solid #E5E8EF;border-radius:8px;
+  background:#fff;color:#1F2329;font:inherit;font-size:14px;outline:none}
+.rea-dy-topic-ctl input:focus,.rea-dy-topic-ctl textarea:focus{border-color:#1677FF;
+  box-shadow:0 0 0 3px rgba(22,119,255,.12)}
+.rea-dy-op-panel[hidden],.rea-dy-op-panel-tools[hidden]{display:none}
+.rea-dy-ctl>[data-dyop-panel]{width:100%;max-width:640px}
+.rea-dy-ms{position:relative;width:100%;max-width:640px}
+.rea-dy-ms-btn{width:100%;min-height:36px;padding:4px 12px;border:1px solid #E5E8EF;border-radius:8px;
+  background:#fff;color:#1F2329;font:inherit;font-size:14px;text-align:left;cursor:pointer;
+  display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.rea-dy-ms-btn:hover{border-color:#1677FF}
+.rea-dy-ms-btn .ph{color:#B7BCC4}
+.rea-dy-ms-btn .chip{display:inline-flex;align-items:center;height:24px;padding:0 8px;border-radius:6px;
+  background:#E6F4FF;color:#1677FF;font-size:12px}
+.rea-dy-ms .panel{position:absolute;left:0;top:40px;z-index:30;width:100%;max-height:260px;overflow:auto;
+  padding:6px;background:#fff;border:1px solid #E5E8EF;border-radius:8px;
+  box-shadow:0 6px 16px rgba(0,0,0,.08)}
+.rea-dy-ms .panel[hidden]{display:none}
+.rea-dy-ms .grp{padding:8px 8px 4px;color:#8F959E;font-size:12px}
+.rea-dy-ms .op{display:flex;align-items:center;gap:10px;padding:8px;border-radius:6px;
+  color:#1F2329;font-size:13px;cursor:pointer}
+.rea-dy-ms .op:hover{background:#F7F8FA}
+.rea-dy-ms .op input{width:15px;height:15px;margin:0;accent-color:#1677FF}
+.rea-dy-modal-box--lg{width:760px}
+.rea-dy-modal-box--md{width:620px}
+.rea-dy-modal-b{padding:16px 20px 20px;max-height:70vh;overflow:auto}
+.rea-dy-modal-f{display:flex;justify-content:flex-end;gap:12px;padding:12px 20px;border-top:1px solid #E5E8EF}
+.rea-dy-modal-tools{display:flex;justify-content:flex-end;margin-bottom:12px}
+.rea-dy-modal .rea-dy-table{font-size:13px}
+.rea-dy-modal .rea-dy-table th{white-space:nowrap}
+.rea-dy-modal .rea-dy-table td{white-space:normal;vertical-align:top}
+.rea-dy-send{max-width:280px;color:#646A73;line-height:1.6}
+.rea-dy-empty{display:flex;flex-direction:column;align-items:center;gap:10px;padding:36px 0;
+  color:#8F959E;font-size:13px}
+.rea-dy-empty .ic{position:relative;width:48px;height:38px;border:2px solid #E5E8EF;border-radius:6px}
+.rea-dy-empty .ic:after{content:"";position:absolute;left:9px;right:9px;top:11px;
+  border-top:2px solid #E5E8EF}
+`;
+
   /* 覆盖页「新小红书运营 · 新建」专用样式（2026-10-22 六卡片重做）。
      只写**重排与新增件**，不重定义快照的观感：卡片用快照自带的 ant-card 那套（连 css-vgijab 一起挂上，
      否则 `:where(.css-vgijab).ant-card-bordered` 这类复合选择器一条都不匹配），
@@ -28836,7 +29893,8 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
     message:'<svg class="rea-wx-secic" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
     userPlus:'<svg class="rea-wx-secic" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>',
     sliders:'<svg class="rea-wx-secic" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/><circle cx="9" cy="7" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="8" cy="17" r="2"/></svg>',
-    bell:'<svg class="rea-wx-secic" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>'
+    bell:'<svg class="rea-wx-secic" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>',
+    video:'<svg class="rea-wx-secic" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="6" width="13" height="12" rx="2"/><path d="m15.5 10.3 6-3.4v10.2l-6-3.4"/></svg>'
   };
   var REA_WX_SEC_ICON = {
     '基础信息':REA_WX_SEC_SVG.base,
@@ -28848,6 +29906,7 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
     '添加设置':REA_WX_SEC_SVG.sliders,
     '唤醒对象':REA_WX_SEC_SVG.bell,
     '唤醒内容':REA_WX_SEC_SVG.message,
+    '视频内容':REA_WX_SEC_SVG.video,
     '更多设置':REA_WX_SEC_SVG.sliders
   };
   var REA_WXS = {
@@ -29032,6 +30091,40 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
         ]}
       ],
       preview:{kind:'chat',from:'雅楠002',text:'您好，好久没联系了，最近店里到了新品，给您留了一份资料，方便的话回我一下～'}
+    },
+    /* 视频号发布任务（2026-11-23）：字段照「视频号发布任务 · 新建」快照里的表单，
+       新建页是扁平表单、没有分组，这里按详情页首屏的三组回放。
+       任务发布渠道是详情页才有的系统字段，与创建时间一起收在基础信息。 */
+    '视频号发布任务 · 任务配置快照': {
+      list:'视频号发布任务', detail:'视频号发布任务 · 详情',
+      base:[
+        {label:'任务类型',value:'视频号发布'},
+        {label:'任务状态',value:'进行中'},
+        {label:'有效期',value:'2026/11/18 10:00 ~ 2026/11/25 10:00'},
+        {label:'任务发布渠道',value:'视频号'},
+        {label:'创建时间',value:'2026-11-18 09:41'}
+      ],
+      sections:[
+        {title:'任务安排',rows:[
+          {label:'任务名称',value:'视频号发布任务20261118'},
+          {label:'执行人员',value:'张伯阳 等 10 人'},
+          {label:'发布应用',value:'微小助'},
+          {label:'循环方式',value:'单次任务'},
+          {label:'通知时间',value:'2026-11-18 10:00'},
+          {label:'截止时间',value:'2026-11-25 10:00'},
+          {label:'全局弹窗',value:'关闭'}
+        ]},
+        {title:'视频内容',rows:[
+          {label:'素材来源',value:'临时创建'},
+          {label:'发布类型',value:'发视频'},
+          {label:'选择视频来源',value:'手动上传'},
+          {label:'上传视频',value:'秋季新品开箱.mp4'},
+          {label:'视频文案',value:'秋季新品开箱，30 秒竖版，门店实拍'},
+          {label:'视频标题',value:'秋季新品开箱'},
+          {label:'视频话题',value:'#秋季新品 #开箱'},
+          {label:'是否转发朋友圈',value:'否'}
+        ]}
+      ]
     }
   };
   function wxsEsc(s){
@@ -29203,6 +30296,60 @@ for(i=0;i<vs.length;i++)vs[i].addEventListener('click',function(e){e.preventDefa
     '.rea-wxs-msg{display:flex;gap:8px}',
     '.rea-wxs-ava{display:flex;align-items:center;justify-content:center;width:36px;height:36px;flex:none;border-radius:4px;background:#2e448f;color:#fff;font-size:13px}',
     '.rea-wxs-bubble{max-width:300px;padding:10px 12px;border:1px solid #ededed;border-radius:4px;background:#fff;font-size:14px;line-height:22px;color:#181818;white-space:pre-wrap;word-break:break-word}'
+  ].join('\n');
+
+  /* 视频号发布任务 · 详情（2026-11-23）：快照里没有这一页的正文（只抓到模块页与新建页），
+     正文整段取自载体块 srcWxVideoDetail。壳由 reaSynthPages() 克隆「视频号发布任务」
+     模块页，所以侧栏组与选中项都是现成的那一套；这里只负责换正文与接两处交互——
+     员工表「发布视频」的「查看」开预览弹窗（Esc／遮罩／× 关闭），
+     面包屑回落地由 REA_FX 认 data-rea 接管，配置快照抽屉由 reaWxSnapshotDrawerJs 挂。 */
+  function reaWxVideoDetailJs(){
+    return '(function(){'
+      + 'var H=' + reaJson(reaCoverHtml('srcWxVideoDetail')) + ';'
+      + 'var v=document.getElementById("subapp-viewport");if(!v)return;v.innerHTML=H;'
+      + String.raw`
+function $(s,r){return (r||document).querySelector(s)}
+var MODAL=null;
+function closeVideo(){
+  if(MODAL&&MODAL.parentNode)MODAL.parentNode.removeChild(MODAL);
+  MODAL=null;document.removeEventListener('keydown',onKey);
+}
+function onKey(e){if(e.key==='Escape'||e.keyCode===27)closeVideo()}
+function openVideo(name,time){
+  closeVideo();
+  var w=document.createElement('div');
+  w.className='ant-modal-root css-vgijab';w.setAttribute('data-wxv-modal','1');
+  w.innerHTML='<div class="ant-modal-mask"></div><div class="ant-modal-wrap ant-modal-centered">'
+    +'<div class="ant-modal css-vgijab rea-wxv-modal" role="dialog" aria-modal="true" aria-label="发布视频" style="width:520px">'
+    +'<div class="ant-modal-content"><button type="button" class="ant-modal-close" aria-label="关闭"><span class="ant-modal-close-x">×</span></button>'
+    +'<div class="ant-modal-header"><div class="ant-modal-title">发布视频</div></div>'
+    +'<div class="ant-modal-body"><div class="rea-wxv-video"><span class="rea-wxv-play" aria-hidden="true"></span><em>秋季新品开箱.mp4</em></div>'
+    +'<p class="rea-wxv-meta">'+name+' · '+time+'</p></div>'
+    +'<div class="ant-modal-footer"><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined"><span>关 闭</span></button></div>'
+    +'</div></div></div>';
+  document.body.appendChild(w);MODAL=w;
+  $('.ant-modal-close',w).addEventListener('click',closeVideo);
+  $('.ant-modal-footer button',w).addEventListener('click',closeVideo);
+  $('.ant-modal-wrap',w).addEventListener('click',function(e){if(e.target===this)closeVideo()});
+  document.addEventListener('keydown',onKey);
+}
+var vs=document.querySelectorAll('[data-wxv-video]'),i;
+for(i=0;i<vs.length;i++)vs[i].addEventListener('click',function(e){
+  e.preventDefault();
+  var tr=this.closest?this.closest('tr'):null;
+  var tds=tr?tr.children:null;
+  openVideo(this.getAttribute('data-wxv-video'),tds&&tds.length?tds[tds.length-1].textContent:'');
+});
+})();`;
+  }
+  /* 视频号发布任务 · 详情（2026-11-23）：员工完成情况的「发布视频」点「查看」开预览。
+     视频本体是演示件（深底＋播放圆钮＋文件名），弹窗骨架仍用 AntD 的 modal 类。 */
+  var REA_WXV_CSS = [
+    '.rea-wxv-video{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;height:260px;border-radius:8px;background:#1F2329;color:#C9CED6;overflow:hidden}',
+    '.rea-wxv-play{position:relative;width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.16)}',
+    '.rea-wxv-play::after{content:"";position:absolute;left:22px;top:17px;border-style:solid;border-width:11px 0 11px 18px;border-color:transparent transparent transparent #fff}',
+    '.rea-wxv-video em{position:relative;font-style:normal;font-size:13px;color:#C9CED6}',
+    '.rea-wxv-meta{margin:12px 0 0;font-size:13px;line-height:20px;color:#646A73;text-align:center}'
   ].join('\n');
 
   /* ============================================================
@@ -34751,9 +35898,21 @@ if(PAGE==="detail"){
     '新小红书运营 · 新建': { css: REA_XHS_CSS, js: reaXhsJs },
     '新小红书运营 · 详情': { js: reaXhsDetailJs },
     '新小红书运营 · 任务配置快照': { js: reaXhsSnapshotJs },
+    /* 笔记发布三页（2026-11-23）：合成页没有正文缝，覆盖脚本整段换 #subapp-viewport，
+       样式共用 REA_XN_CSS；列表页的演示集与新建页保存的任务经 reaDataJs / postMessage 共用一份。 */
+    [REA_XN_PAGE]: { css: REA_XN_CSS, js: reaXhsNoteListJs },
+    [REA_XN_NEW]: { css: REA_XN_CSS, js: reaXhsNoteNewJs },
+    [REA_XN_DETAIL]: { css: REA_XN_CSS, js: reaXhsNoteDetailJs },
+    /* 抖音营销 · 发短视频三页（2026-11-23）：运行时合成页，正文已随 rest 拼好，
+       这里只登记样式与交互；没有 html 载体，reaSplice 原样放过。 */
     [REA_DY_PAGE]: { css: REA_DY_CSS, js: function(){ return reaDyJs('list'); } },
     [REA_DY_NEW]: { css: REA_DY_CSS, js: function(){ return reaDyJs('new'); } },
     [REA_DY_DETAIL]: { css: REA_DY_CSS, js: function(){ return reaDyJs('detail'); } },
+    /* 抖音营销 · 抖音运营三页（2026-11-23）：同上，运行时合成页；正文来自
+       srcDyOpList／srcDyOpNew／srcDyOpDetail，样式在 REA_DY_CSS 之上补 REA_DY_OP_CSS。 */
+    [REA_DY_OP_PAGE]: { css: REA_DY_CSS + REA_DY_OP_CSS, js: function(){ return reaDyOpJs('list'); } },
+    [REA_DY_OP_NEW]: { css: REA_DY_CSS + REA_DY_OP_CSS, js: function(){ return reaDyOpJs('new'); } },
+    [REA_DY_OP_DETAIL]: { css: REA_DY_CSS + REA_DY_OP_CSS, js: function(){ return reaDyOpJs('detail'); } },
     /* 三张内容型任务的列表（2026-11-13）：「群发内容」固定一枚「查看」，点开预览发送内容；
        群发群组原本没有这一列，补在「群发内容数量」前面。 */
     '发圈': { css: REA_FQ_DETAIL_CSS + REA_WX_SNAP_CSS, js: function(){ return reaWxListJs('发圈'); } },
@@ -34780,6 +35939,9 @@ if(PAGE==="detail"){
        六页都带 reaWxSnapshotDrawerJs：快照从右侧抽屉展开，不再另起一页。 */
     '关联好友 · 详情': { css: REA_WX_DETAIL_CSS + REA_WX_SNAP_CSS, js: function(){ return reaRelLayoutJs() + reaWxDetailJs('关联好友 · 详情') + reaWxSnapshotDrawerJs('关联好友 · 详情'); } },
     '客户唤醒 · 详情': { css: REA_WX_DETAIL_CSS + REA_WX_SNAP_CSS, js: function(){ return reaWxDetailContentJs('客户唤醒 · 详情') + reaWxDetailJs('客户唤醒 · 详情') + reaWxSnapshotDrawerJs('客户唤醒 · 详情') + reaWakeJs(); } },
+    /* 视频号发布任务 · 详情（2026-11-23）：快照里没有这一页的正文，由 reaWxVideoDetailJs
+       把载体 srcWxVideoDetail 整段换进克隆来的模块页壳；版式与上面六页同一套 */
+    [REA_WX_VIDEO_DETAIL]: { css: REA_WX_DETAIL_CSS + REA_WX_SNAP_CSS + REA_WXV_CSS, js: function(){ return reaWxVideoDetailJs() + reaWxSnapshotDrawerJs(REA_WX_VIDEO_DETAIL); } },
     /* 客户唤醒 · 新建（2026-11-11）：单位下拉、执行人员、添加回复内容弹窗（固定内容／AI 两套）
        ＋ 唤醒内容行的增删改；正文与设计语言都还是快照，只补交互 */
     '客户唤醒 · 新建': { css: REA_HX_CSS, js: reaHxJs }
@@ -34811,15 +35973,16 @@ if(PAGE==="detail"){
     return 0;
   }
 
-  /* 抖音营销 · 发短视频的页壳：37 页快照里没有这一组（侧栏只有菜单项，点不了），
+  /* 抖音营销 · 发短视频／抖音运营的页壳：37 页快照里没有这一组（侧栏只有菜单项，点不了），
      从「新小红书运营」克隆——顶栏、一级栏、正文区结构原样，只换三处：
        ① 二级组名 小红书营销 → 抖音营销；
-       ② 二级列表换成抖音营销组的五项（只有「发短视频」是原型里真有的一页，
-          其余四项在 reaNavJs 里落 .rea-off，与现网「点不了」一致）；
-       ③ 一级栏选中态从小红书营销挪到第一枚抖音营销上。
-     正文整段换掉 <main> 里的内容，保留 main 开标签与页面末尾的帮助浮层。 */
-  function reaDyRest(base, body){
-    var r = base;
+       ② 二级列表换成抖音营销组的五项（「发短视频」「抖音运营」是原型里真有的页，
+          其余三项在 reaNavJs 里落 .rea-off，与现网「点不了」一致）；
+       ③ 一级栏选中态从小红书营销挪到第一枚抖音营销上，二级点亮当前这一页。
+     正文整段换掉 <main> 里的内容，保留 main 开标签与页面末尾的帮助浮层。
+     active：当前页对应的二级项（默认「发短视频」）。 */
+  function reaDyRest(base, body, active){
+    var r = base, act = active || REA_DY_PAGE;
     r = r.replace('<div class="ykSideTwoColSecondaryHeader">小红书营销</div>',
                   '<div class="ykSideTwoColSecondaryHeader">抖音营销</div>');
     var ulOpen = '<ul class="ykSideList ykSideTwoColSecondaryList">';
@@ -34827,7 +35990,7 @@ if(PAGE==="detail"){
     if (lis >= 0 && lie > lis){
       var items = ['发短视频', '抖音运营', '抖音数据', '社媒互动', '养号'], h = '';
       for (var i = 0; i < items.length; i++){
-        var on = i === 0;
+        var on = items[i] === act;
         h += '<li class="ykMenuItemLi" data-level="2"><div class="' + (on ? 'ykMenuItemRow ykActive' : 'ykMenuItemRow') + '"'
           + (on ? ' aria-current="page"' : '') + '><span class="ykMenuText" title="' + items[i] + '">'
           + items[i] + '</span></div></li>';
@@ -34853,7 +36016,7 @@ if(PAGE==="detail"){
     if (ms >= 0 && me > ms){
       var open = r.slice(ms, r.indexOf('>', ms) + 1);
       r = r.slice(0, ms) + open
-        + '<div id="subapp-viewport" class="subapp" style="height:100%;overflow:auto;background:#fff">'
+        + '<div id="subapp-viewport" class="subapp" style="height:calc(100vh - var(--yk-header-height, 46px));overflow:auto;background:#fff">'
         + '<div class="rea-dy-page">' + body + '</div></div>'
         + r.slice(me);
     } else {
@@ -34920,8 +36083,20 @@ if(PAGE==="detail"){
     } else {
       reaWarn('「任务配置快照」页合成失败：快照里找不到「' + REA_XHS_DETAIL + '」页');
     }
-    /* 抖音营销 · 发短视频三页：快照里没有这一组，壳从「新小红书运营」克隆，
-       正文分别来自 srcDyList／srcDyNew／srcDyDetail（见 reaDyRest）。 */
+    /* 笔记发布三页：小红书营销那组只抓到「新小红书运营」，这组三条路都没有源目录。
+       壳分别克隆列表／新建／详情三页（顶栏、一级栏与小红书营销二级组都跟着来），
+       正文由各自的覆盖脚本整段换掉。 */
+    var xnList = find(REA_XHS_PAGE), xnNew = find('新小红书运营 · 新建'), xnDet = find(REA_XHS_DETAIL);
+    if (xnList && xnNew && xnDet){
+      P.pages.push({ name: REA_XN_PAGE, rest: xnList.rest, contentStart: xnList.contentStart, contentEnd: xnList.contentEnd });
+      P.pages.push({ name: REA_XN_NEW, rest: xnNew.rest, contentStart: xnNew.contentStart, contentEnd: xnNew.contentEnd });
+      P.pages.push({ name: REA_XN_DETAIL, rest: xnDet.rest, contentStart: xnDet.contentStart, contentEnd: xnDet.contentEnd });
+    } else {
+      reaWarn('「笔记发布」页合成失败：快照里找不到「新小红书运营」的列表／新建／详情页');
+    }
+    /* 抖音营销 · 发短视频／抖音运营三页：快照里没有这一组，壳从「新小红书运营」克隆，
+       正文分别来自 srcDyList／srcDyNew／srcDyDetail 与 srcDyOpList／srcDyOpNew／srcDyOpDetail
+       （见 reaDyRest）。二级项按当前页点亮——子页也亮它所属的模块页。 */
     var dy = find(REA_DY_SRC);
     if (dy){
       var dyBodies = {};
@@ -34929,10 +36104,26 @@ if(PAGE==="detail"){
       dyBodies[REA_DY_NEW] = docOf('srcDyNew');
       dyBodies[REA_DY_DETAIL] = docOf('srcDyDetail');
       [REA_DY_PAGE, REA_DY_NEW, REA_DY_DETAIL].forEach(function(n){
-        P.pages.push({ name: n, rest: reaDyRest(dy.rest, dyBodies[n]) });
+        P.pages.push({ name: n, rest: reaDyRest(dy.rest, dyBodies[n], REA_DY_PAGE) });
+      });
+      var dyOpBodies = {};
+      dyOpBodies[REA_DY_OP_PAGE] = docOf('srcDyOpList');
+      dyOpBodies[REA_DY_OP_NEW] = docOf('srcDyOpNew');
+      dyOpBodies[REA_DY_OP_DETAIL] = docOf('srcDyOpDetail');
+      [REA_DY_OP_PAGE, REA_DY_OP_NEW, REA_DY_OP_DETAIL].forEach(function(n){
+        P.pages.push({ name: n, rest: reaDyRest(dy.rest, dyOpBodies[n], REA_DY_OP_PAGE) });
       });
     } else {
-      reaWarn('「发短视频」页合成失败：快照里找不到「' + REA_DY_SRC + '」页');
+      reaWarn('抖音营销三页合成失败：快照里找不到「' + REA_DY_SRC + '」页');
+    }
+    /* 视频号发布任务 · 详情（2026-11-23）：快照里只有模块页与新建页，详情没有源目录。
+       壳克隆模块页——侧栏的微信营销任务组与「视频号发布任务」选中态都是现成的；
+       正文由覆盖脚本 reaWxVideoDetailJs 整段换成载体 srcWxVideoDetail。 */
+    var vd = find(REA_WX_VIDEO);
+    if (vd){
+      P.pages.push({ name: REA_WX_VIDEO_DETAIL, rest: vd.rest, contentStart: vd.contentStart, contentEnd: vd.contentEnd });
+    } else {
+      reaWarn('「视频号发布任务 · 详情」页合成失败：快照里找不到「' + REA_WX_VIDEO + '」页');
     }
     /* 微信营销任务的配置快照不再单独成页（2026-11-16）：改从详情页右侧抽屉展开，
        不再克隆详情页的壳，也不进页序。 */
@@ -34957,6 +36148,13 @@ if(PAGE==="detail"){
     if (name === REA_MAT_LIST && reaMatLibState){
       return 'window.__REA_ML_STATE=' + reaJson(reaMatLibState) + ';';
     }
+    /* 抖音运营：列表页补上本次会话保存的任务；详情页取点进来的那一条。 */
+    if (name === REA_DY_OP_PAGE){
+      return 'window.__REA_DY_OP_SAVED=' + reaJson(reaDyOpSaved) + ';';
+    }
+    if (name === REA_DY_OP_DETAIL){
+      return 'window.__REA_DY_OP_ROW=' + reaJson(reaDyOpRow) + ';';
+    }
     /* AI托管看板与托管工作日志：窗口跟着来回走；从看板的哪一行点进来，
        日志就把那一行预选上（员工或类型），返回时带着同一个窗口回看板。 */
     if (name === REA_HOST_PAGE || name === REA_HOST_LOG){
@@ -34964,6 +36162,12 @@ if(PAGE==="detail"){
         + 'window.__REA_HOST=' + reaJson(reaHostPreset || null) + ';';
     }
     if (name === REA_BOARD_PAGE && reaRows) return 'window.__REA_WIN=' + reaJson(reaWinSel) + ';window.__REA_RANGE=' + reaJson(reaWinRange) + ';';
+    /* 笔记发布：任务集跟着页走——列表页渲染整份，详情页取点进来的那条（没有就退第一条）。 */
+    if (name === REA_XN_PAGE || name === REA_XN_DETAIL){
+      var xnj = 'window.__REA_XN_TASKS=' + reaJson(reaXnTasks) + ';';
+      if (name === REA_XN_DETAIL) xnj += 'window.__REA_XN_TASK=' + reaJson(reaXnTask || reaXnTasks[0] || null) + ';';
+      return xnj;
+    }
     if (name !== REA_DETAIL_TASK && name !== REA_TASKS_PAGE && name !== REA_METRIC_PAGE && name !== REA_PERSON_PAGE) return '';
     var js = 'window.__REA_ROWS=' + reaJson(reaRows || []) + ';'
       + 'window.__REA_WIN=' + reaJson(reaWinSel || 'w7') + ';'
@@ -35523,6 +36727,8 @@ if(PAGE==="detail"){
   var reaSideOpen = false;  // 左侧菜单是否展开成双列（默认折叠：只留一级栏，二级走悬停浮层；同样得存在外壳上）
   var reaMenuGroups = {};   // 一级菜单名 → { title, items:[{t: 显示名, p: 页名|null}] }，见 reaMenuIndex()
   var reaSynthDone = false; // 合成子页（执行人明细／任务配置快照）跑过没有
+  var reaXnTasks = reaXnSeed(); // 笔记发布的任务集（会话内共用：新建保存加一条、列表删除摘一条；不落盘）
+  var reaXnTask = null;         // 列表点「详情」带过来的那条任务（详情页用）
 
   /* 从某页的 rest 里读出它侧栏当前的二级分类名（读不到就返回空串） */
   function reaCatOf(rest){
@@ -36030,6 +37236,16 @@ document.addEventListener('click',function(event){
       reaSortKeySel = d.reaSortKey; reaSortDirSel = d.reaSortDir == 1 ? 1 : -1;
       return;
     }
+    /* 笔记发布：列表页删除 → 从会话任务集里摘掉（不换页）；点「详情」进来的那条先收下。 */
+    if (d.reaXnDrop){
+      reaXnTasks = reaXnTasks.filter(function(t){ return t.id !== d.reaXnDrop; });
+      return;
+    }
+    if (d.reaXnTask) reaXnTask = d.reaXnTask;
+    /* 抖音运营 · 新建保存 → 落进会话任务集，列表页排在第一条（不落盘，刷新回原样）；
+       列表点「详情」→ 先收下那一条，详情页用它回显。 */
+    if (d.reaDyOpSave) reaDyOpSaved.unshift(d.reaDyOpSave);
+    if (d.reaDyOpRow) reaDyOpRow = d.reaDyOpRow;
     if (!d.reaPage && !d.reaSave) return;
     var P = window.__REAL_ADMIN__;
     /* 看板点的「详细数据」：先把行与窗口收下，子页 reaDoc 时会灌进 window（见 reaDataJs） */
@@ -36079,6 +37295,8 @@ document.addEventListener('click',function(event){
       reaFlash = '素材「' + d.reaSave.title + '」已保存并发布';
       name = REA_MAT_LIST;
     }
+    /* 笔记发布 · 新建保存 → 落进会话任务集，列表页排在第一条（不落盘，刷新回原样） */
+    if (d.reaXnSave) reaXnTasks.unshift(d.reaXnSave);
     for (var i = 0; i < P.pages.length; i++){
       if (P.pages[i].name === name){ reaRender(i); return; }
     }
