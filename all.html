@@ -17745,7 +17745,7 @@ render();
 
     <!-- 任务列表 · 第 4 行左格 · 明细。
          与二级页「任务列表」同一份行，按**下发日从新到旧**露前 5 条（卡头不再挂排序口径）；
-         点行进该类型的详情页（视频号发布任务没有详情页，那一行不给箭头也不可点），
+         点行进该类型的详情页（七类任务都有详情页；没有落点的类型不给箭头也不可点），
          右下角「查看全部」进二级页看全量。三条筛选轴只留在二级页（PRD §2.5／§2.5c）。 -->
     <div class="rea-bd-card rea-bd-card--w7" id="rea-bd-peek">
       <div class="rea-bd-ch"><h6>任务列表<span class="rea-bd-help" tabindex="0" role="img" aria-label="数据来源与统计口径" data-tip="来源：与看板同一批任务台账。口径：按下发日从新到旧露出前 5 条，进度按人次计；完整逐条清单、创建时间与筛选在二级页「任务列表」。">?</span></h6></div>
@@ -19461,6 +19461,47 @@ render();
 </div>
 </script>
 
+<!-- 载体③·微信营销任务「视频号发布任务 · 详情」（2026-11-23）：现网这一页不在 37 页快照里
+     （只抓到模块页与新建页），按现网截图的字段与列表补成这一块。壳由 reaSynthPages() 克隆
+     「视频号发布任务」模块页（侧栏组与选中项都跟着来），正文由 reaWxVideoDetailJs 整段换上；
+     版式沿用快照的 AntD 类与 REA_WX_DETAIL_CSS，与其余六张微信营销详情页一致。 -->
+<script type="text/plain" id="srcWxVideoDetail"><div style="height: 100%;"><div class="h-full overflow-auto"><div class="h-full"><div class="_boxadd_1go3x_43"><h4 style="padding-left: 10px; font-weight: normal;"><nav class="ant-breadcrumb css-vgijab"><ol><li class="ant-breadcrumb-item"><span class="ant-breadcrumb-link">微信营销任务</span></li><li class="ant-breadcrumb-separator" aria-hidden="true">/</li><li class="ant-breadcrumb-item"><a class="ant-breadcrumb-link" href="#" data-rea="视频号发布任务">视频号发布任务</a></li><li class="ant-breadcrumb-separator" aria-hidden="true">/</li><li class="ant-breadcrumb-item"><span class="ant-breadcrumb-link">任务详情</span></li></ol></nav></h4><div class="_box_1go3x_1"><div class="_condel_1go3x_51">
+<div class="_task_information_1go3x_71"><div class="_task_information_header_1go3x_80">任务信息<button type="button" class="rea-wxd-snap" data-wx-snap>查看任务配置快照</button></div>
+<div class="rea-wxd-info">
+  <div class="rea-wxd-ring">
+    <div class="rea-wxd-ring-hd"><span class="rea-wxd-ring-t">执行进度</span><span>共 10 人</span></div>
+    <div class="rea-wxd-ring-bd">
+      <div class="rea-wxd-donut" role="img" aria-label="执行进度：10 人中 8 人已执行，2 人未执行">
+        <svg viewBox="0 0 120 120"><circle class="track" cx="60" cy="60" r="50"></circle><circle class="done" cx="60" cy="60" r="50" stroke-dasharray="251.33 62.83"></circle><circle class="open" cx="60" cy="60" r="50" stroke-dasharray="62.83 251.33" transform="rotate(288 60 60)"></circle></svg>
+        <div class="rea-wxd-donut-c"><b>8/10</b><span>已执行</span></div>
+      </div>
+      <div class="rea-wxd-ring-lg"><div><i class="done"></i>已执行<b>8 人</b></div><div><i class="open"></i>未执行<b>2 人</b></div></div>
+    </div>
+  </div>
+  <div class="rea-wxd-groups"><div class="rea-wxd-groups">
+    <section class="rea-wxd-group"><h4 class="rea-wxd-gt"><svg class="rea-wx-secic" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 7.8h.01"/></svg><span>基础信息</span></h4><div class="rea-wxd-kv">
+      <p><span>任务名称</span><span>视频号发布任务20261118</span></p>
+      <p><span>任务状态</span><span><span class="rea-wxd-badge live"><i></i>进行中</span></span></p>
+    </div></section>
+    <section class="rea-wxd-group"><h4 class="rea-wxd-gt"><svg class="rea-wx-secic" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/><path d="m9 15 2 2 4-4"/></svg><span>任务安排</span></h4><div class="rea-wxd-kv">
+      <p><span>任务有效期</span><span>2026/11/18 10:00~2026/11/25 10:00</span></p>
+      <p><span>执行人员</span><span>张伯阳 等 10 人</span></p>
+    </div></section>
+    <section class="rea-wxd-group"><h4 class="rea-wxd-gt"><svg class="rea-wx-secic" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="6" width="13" height="12" rx="2"/><path d="m15.5 10.3 6-3.4v10.2l-6-3.4"/></svg><span>视频内容</span></h4><div class="rea-wxd-kv">
+      <p><span>视频文案</span><span>秋季新品开箱，30 秒竖版，门店实拍</span></p>
+      <p><span>视频话题</span><span>#秋季新品 #开箱</span></p>
+    </div></section>
+  </div></div>
+</div></div>
+<div class="_task_information_1go3x_71"><div class="ant-tabs ant-tabs-top css-vgijab"><div role="tablist" aria-orientation="horizontal" class="ant-tabs-nav"><div class="ant-tabs-nav-wrap"><div class="ant-tabs-nav-list" style="transform: translate(0px, 0px);"><div data-node-key="1" class="ant-tabs-tab ant-tabs-tab-active"><div role="tab" aria-selected="true" id="rea-wxv-tab" class="ant-tabs-tab-btn" tabindex="0">员工完成情况</div></div><div class="ant-tabs-ink-bar ant-tabs-ink-bar-animated" style="width: 84px; left: 42px; transform: translateX(-50%);"></div></div></div></div><div class="ant-tabs-content-holder"><div class="ant-tabs-content ant-tabs-content-top"><div role="tabpanel" tabindex="0" aria-hidden="false" class="ant-tabs-tabpane ant-tabs-tabpane-active" aria-labelledby="rea-wxv-tab">
+<div class="_detaiHeader_1go3x_120"><div><div class="ant-picker ant-picker-range ant-picker-outlined css-vgijab" style="width: 260px;"><div class="ant-picker-input"><input aria-invalid="false" autocomplete="off" size="18" placeholder="开始日期" date-range="start" value=""></div><div class="ant-picker-range-separator"><span aria-label="to" class="ant-picker-separator"><span role="img" aria-label="swap-right" class="anticon anticon-swap-right"><svg viewBox="0 0 1024 1024" focusable="false" data-icon="swap-right" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M873.1 596.2l-164-208A32 32 0 00684 376h-64.8c-6.7 0-10.4 7.7-6.3 13l144.3 183H152c-4.4 0-8 3.6-8 8v60c0 4.4 3.6 8 8 8h695.9c26.8 0 41.7-30.8 25.2-51.8z"></path></svg></span></span></div><div class="ant-picker-input"><input aria-invalid="false" autocomplete="off" size="18" placeholder="结束日期" date-range="end" value=""></div><div class="ant-picker-active-bar" style="position: absolute; width: 0px;"></div><span class="ant-picker-suffix"><span role="img" aria-label="calendar" class="anticon anticon-calendar"><svg viewBox="64 64 896 896" focusable="false" data-icon="calendar" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M880 184H712v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H384v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H144c-17.7 0-32 14.3-32 32v664c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V216c0-17.7-14.3-32-32-32zm-40 656H184V460h656v380zM184 392V256h128v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h256v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h128v136H184z"></path></svg></span></span></div><div class="ant-select ant-select-outlined css-vgijab ant-select-single ant-select-show-arrow" style="width: 140px; margin-left: 8px;"><div class="ant-select-selector"><span class="ant-select-selection-wrap"><span class="ant-select-selection-search"><input type="search" autocomplete="off" class="ant-select-selection-search-input" role="combobox" aria-expanded="false" aria-haspopup="listbox" aria-owns="rc_select_3_list" aria-autocomplete="list" aria-controls="rc_select_3_list" readonly="" unselectable="on" value="" id="rc_select_3" style="opacity: 0;"></span><span class="ant-select-selection-item" title="选择状态">选择状态</span></span></div><span class="ant-select-arrow" unselectable="on" aria-hidden="true" style="user-select: none;"><span role="img" aria-label="down" class="anticon anticon-down ant-select-suffix"><svg viewBox="64 64 896 896" focusable="false" data-icon="down" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"></path></svg></span></span></div><span class="ant-input-group-wrapper ant-input-group-wrapper-outlined css-vgijab ant-input-search" style="width: 200px; margin-left: 8px;"><span class="ant-input-wrapper ant-input-group css-vgijab"><input placeholder="请输入关键词" aria-describedby=":r47:" type="search" class="ant-input css-vgijab ant-input-outlined" value=""><span class="ant-input-group-addon"><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-input-search-button"><span class="ant-btn-icon"><span role="img" aria-label="search" class="anticon anticon-search"><svg viewBox="64 64 896 896" focusable="false" data-icon="search" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M909.6 854.5L649.9 594.8C690.2 542.7 712 479 712 412c0-80.2-31.3-155.4-87.9-212.1-56.6-56.7-132-87.9-212.1-87.9s-155.5 31.3-212.1 87.9C143.2 256.5 112 331.8 112 412c0 80.1 31.3 155.5 87.9 212.1C256.5 680.8 331.8 712 412 712c67 0 130.6-21.8 182.7-62l259.7 259.6a8.2 8.2 0 0011.6 0l43.6-43.5a8.2 8.2 0 000-11.6zM570.4 570.4C528 612.7 471.8 636 412 636s-116-23.3-158.4-65.6C211.3 528 188 471.8 188 412s23.3-116.1 65.6-158.4C296 211.3 352.2 188 412 188s116.1 23.2 158.4 65.6S636 352.2 636 412s-23.3 116.1-65.6 158.4z"></path></svg></span></span></button></span></span></span><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" style="float: right;"><span role="img" aria-label="download" class="anticon anticon-download"><svg viewBox="64 64 896 896" focusable="false" data-icon="download" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M505.7 661a8 8 0 0012.6 0l112-141.7c4.1-5.2.4-12.9-6.3-12.9h-74.1V168c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8v338.3H400c-6.7 0-10.4 7.7-6.3 12.9l112 141.8zM878 626h-60c-4.4 0-8 3.6-8 8v154H214V634c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8v198c0 17.7 14.3 32 32 32h684c17.7 0 32-14.3 32-32V634c0-4.4-3.6-8-8-8z"></path></svg></span><span>导出</span></button></div></div>
+<div><div class="ant-spin-nested-loading css-vgijab"><div class="ant-spin-container"><div class="ant-table ant-table-middle css-vgijab"><div class="ant-table-container"><div class="ant-table-content"><table style="table-layout: fixed; width: 100%;"><colgroup><col style="width: 15%;"><col style="width: 15%;"><col style="width: 22%;"><col style="width: 10%;"><col style="width: 13%;"><col style="width: 10%;"><col style="width: 15%;"></colgroup><thead class="ant-table-thead"><tr><th class="ant-table-cell ant-table-cell-ellipsis" scope="col">用户名</th><th class="ant-table-cell" scope="col">用户手机号</th><th class="ant-table-cell" scope="col">文案话题</th><th class="ant-table-cell" scope="col">发布视频</th><th class="ant-table-cell" scope="col">所属部门</th><th class="ant-table-cell" scope="col">任务状态</th><th class="ant-table-cell" scope="col">执行时间</th></tr></thead><tbody class="ant-table-tbody"><tr class="ant-table-row ant-table-row-level-0" data-row-key="1"><td class="ant-table-cell ant-table-cell-ellipsis" title="张伯阳">张伯阳</td><td class="ant-table-cell">17612256497</td><td class="ant-table-cell">秋季新品开箱 · #秋季新品</td><td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-wxv-video="张伯阳" style="padding: 0px;"><span>查看</span></button></td><td class="ant-table-cell">测试二级三部</td><td class="ant-table-cell"><span class="rea-wxd-tb done"><i></i>已执行</span></td><td class="ant-table-cell">2026/11/19 10:22</td></tr><tr class="ant-table-row ant-table-row-level-0" data-row-key="2"><td class="ant-table-cell ant-table-cell-ellipsis" title="李佳">李佳</td><td class="ant-table-cell">13800138001</td><td class="ant-table-cell">门店探店 vlog · #探店</td><td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-wxv-video="李佳" style="padding: 0px;"><span>查看</span></button></td><td class="ant-table-cell">销售一部</td><td class="ant-table-cell"><span class="rea-wxd-tb done"><i></i>已执行</span></td><td class="ant-table-cell">2026/11/19 11:05</td></tr><tr class="ant-table-row ant-table-row-level-0" data-row-key="3"><td class="ant-table-cell ant-table-cell-ellipsis" title="王敏">王敏</td><td class="ant-table-cell">13800138002</td><td class="ant-table-cell">客户案例访谈 · #客户案例</td><td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-wxv-video="王敏" style="padding: 0px;"><span>查看</span></button></td><td class="ant-table-cell">销售一部</td><td class="ant-table-cell"><span class="rea-wxd-tb done"><i></i>已执行</span></td><td class="ant-table-cell">2026/11/20 09:30</td></tr><tr class="ant-table-row ant-table-row-level-0" data-row-key="4"><td class="ant-table-cell ant-table-cell-ellipsis" title="陈昊">陈昊</td><td class="ant-table-cell">13800138003</td><td class="ant-table-cell">新品到店实拍 · #新品到店</td><td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-wxv-video="陈昊" style="padding: 0px;"><span>查看</span></button></td><td class="ant-table-cell">销售二部</td><td class="ant-table-cell"><span class="rea-wxd-tb done"><i></i>已执行</span></td><td class="ant-table-cell">2026/11/20 14:12</td></tr><tr class="ant-table-row ant-table-row-level-0" data-row-key="5"><td class="ant-table-cell ant-table-cell-ellipsis" title="赵雪">赵雪</td><td class="ant-table-cell">13800138004</td><td class="ant-table-cell">售后小课堂 · #售后</td><td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-wxv-video="赵雪" style="padding: 0px;"><span>查看</span></button></td><td class="ant-table-cell">售后部</td><td class="ant-table-cell"><span class="rea-wxd-tb done"><i></i>已执行</span></td><td class="ant-table-cell">2026/11/20 16:40</td></tr><tr class="ant-table-row ant-table-row-level-0" data-row-key="6"><td class="ant-table-cell ant-table-cell-ellipsis" title="周雨桐">周雨桐</td><td class="ant-table-cell">13800138006</td><td class="ant-table-cell">会员日活动 · #会员日</td><td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-wxv-video="周雨桐" style="padding: 0px;"><span>查看</span></button></td><td class="ant-table-cell">销售一部</td><td class="ant-table-cell"><span class="rea-wxd-tb done"><i></i>已执行</span></td><td class="ant-table-cell">2026/11/21 09:05</td></tr><tr class="ant-table-row ant-table-row-level-0" data-row-key="7"><td class="ant-table-cell ant-table-cell-ellipsis" title="孙磊">孙磊</td><td class="ant-table-cell">13800138007</td><td class="ant-table-cell">秋季穿搭指南 · #穿搭</td><td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-wxv-video="孙磊" style="padding: 0px;"><span>查看</span></button></td><td class="ant-table-cell">销售二部</td><td class="ant-table-cell"><span class="rea-wxd-tb done"><i></i>已执行</span></td><td class="ant-table-cell">2026/11/21 10:18</td></tr><tr class="ant-table-row ant-table-row-level-0" data-row-key="8"><td class="ant-table-cell ant-table-cell-ellipsis" title="吴倩">吴倩</td><td class="ant-table-cell">13800138008</td><td class="ant-table-cell">门店环境一览 · #门店</td><td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-wxv-video="吴倩" style="padding: 0px;"><span>查看</span></button></td><td class="ant-table-cell">售后部</td><td class="ant-table-cell"><span class="rea-wxd-tb done"><i></i>已执行</span></td><td class="ant-table-cell">2026/11/22 11:32</td></tr><tr class="ant-table-row ant-table-row-level-0" data-row-key="9"><td class="ant-table-cell ant-table-cell-ellipsis" title="郑凯">郑凯</td><td class="ant-table-cell">13800138009</td><td class="ant-table-cell">-</td><td class="ant-table-cell">-</td><td class="ant-table-cell">产品</td><td class="ant-table-cell"><span class="rea-wxd-tb open"><i></i>未执行</span></td><td class="ant-table-cell">-</td></tr><tr class="ant-table-row ant-table-row-level-0" data-row-key="10"><td class="ant-table-cell ant-table-cell-ellipsis" title="林悦">林悦</td><td class="ant-table-cell">13800138010</td><td class="ant-table-cell">-</td><td class="ant-table-cell">-</td><td class="ant-table-cell">销售二部</td><td class="ant-table-cell"><span class="rea-wxd-tb open"><i></i>未执行</span></td><td class="ant-table-cell">-</td></tr></tbody></table></div></div></div></div></div></div>
+<ul class="ant-pagination ant-pagination-end ant-pagination-mini ant-table-pagination css-vgijab"><li class="ant-pagination-total-text">共 10 条记录</li><li title="上一页" class="ant-pagination-prev ant-pagination-disabled" aria-disabled="true"><button class="ant-pagination-item-link" type="button" tabindex="-1" disabled=""><span role="img" aria-label="left" class="anticon anticon-left"><svg viewBox="64 64 896 896" focusable="false" data-icon="left" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M724 218.3V141c0-6.7-7.7-10.4-12.9-6.3L260.3 486.8a31.86 31.86 0 000 50.3l450.8 352.1c5.3 4.1 12.9.4 12.9-6.3v-77.3c0-4.9-2.3-9.6-6.1-12.6l-360-281 360-281.1c3.8-3 6.1-7.7 6.1-12.6z"></path></svg></span></button></li><li title="1" class="ant-pagination-item ant-pagination-item-1 ant-pagination-item-active" tabindex="0"><a rel="nofollow">1</a></li><li title="下一页" class="ant-pagination-next ant-pagination-disabled" aria-disabled="true"><button class="ant-pagination-item-link" type="button" tabindex="-1" disabled=""><span role="img" aria-label="right" class="anticon anticon-right"><svg viewBox="64 64 896 896" focusable="false" data-icon="right" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"></path></svg></span></button></li><li class="ant-pagination-options"><div class="ant-select ant-select-sm ant-select-outlined ant-pagination-options-size-changer css-vgijab ant-select-single ant-select-show-arrow ant-select-show-search" aria-label="页码"><div class="ant-select-selector"><span class="ant-select-selection-wrap"><span class="ant-select-selection-search"><input type="search" autocomplete="off" class="ant-select-selection-search-input" role="combobox" aria-expanded="false" aria-haspopup="listbox" aria-owns="rc_select_4_list" aria-autocomplete="list" aria-controls="rc_select_4_list" aria-label="页码" value="" id="rc_select_4"></span><span class="ant-select-selection-item" title="10 条/页">10 条/页</span></span></div><span class="ant-select-arrow" unselectable="on" aria-hidden="true" style="user-select: none;"><span role="img" aria-label="down" class="anticon anticon-down ant-select-suffix"><svg viewBox="64 64 896 896" focusable="false" data-icon="down" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"></path></svg></span></span></div></li></ul>
+</div></div></div></div></div>
+</div></div>
+</div></div></div></div>
+</script>
+
 <script>
 (function(){
   /* 载体文本还原：拆字写法，避免本 script 块被字面终止符提前截断；
@@ -19651,6 +19692,12 @@ render();
   var REA_DY_PAGE = '发短视频';
   var REA_DY_NEW = REA_DY_PAGE + ' · 新建';
   var REA_DY_DETAIL = REA_DY_PAGE + ' · 详情';
+  /* 微信营销任务 · 视频号发布任务 · 详情（2026-11-23）：快照里只抓到模块页与新建页，
+     详情没有源目录、不在 37 页内。壳由 reaSynthPages() 克隆「视频号发布任务」模块页
+     （侧栏组与选中项都跟着来），正文来自载体块 srcWxVideoDetail；版式沿用快照的 AntD 类
+     与 REA_WX_DETAIL_CSS，与其余六张微信营销详情页同一套。 */
+  var REA_WX_VIDEO = '视频号发布任务';
+  var REA_WX_VIDEO_DETAIL = REA_WX_VIDEO + ' · 详情';
   var REA_DY_SRC = '新小红书运营';   // 克隆壳用的快照页
   /* 「详细数据」子页：现网路由 board/wxz/task 不在 37 页快照里，
      由 reaSynthPages() 在运行时克隆看板页外壳合成，正文来自下面那个载体块。 */
@@ -21709,7 +21756,7 @@ function taskScope(rs,metric,range){
     '   同一天下发的按台账次序（id 升序），免得每次重画抖序。 */',
     'var PEEK_N=5;',
     '/* 六类有「· 详情」页，视频号发布任务没有；与二级页那张 HAS 表同一份取舍。 */',
-    'var HAS_DETAIL={"发圈":1,"群发好友":1,"群发群组":1,"批量加好友":1,"关联好友":1,"客户唤醒":1};',
+    'var HAS_DETAIL={"发圈":1,"群发好友":1,"群发群组":1,"批量加好友":1,"关联好友":1,"客户唤醒":1,"视频号发布任务":1};',
     'function peekRows(w){',
     '  var rs=winRows(w),out=[],i,r;',
     '  for(i=0;i<rs.length;i++){',
@@ -28837,6 +28884,7 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
     userPlus:'<svg class="rea-wx-secic" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>',
     sliders:'<svg class="rea-wx-secic" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/><circle cx="9" cy="7" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="8" cy="17" r="2"/></svg>',
     bell:'<svg class="rea-wx-secic" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>'
+,    video:'<svg class="rea-wx-secic" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="6" width="13" height="12" rx="2"/><path d="m15.5 10.3 6-3.4v10.2l-6-3.4"/></svg>'
   };
   var REA_WX_SEC_ICON = {
     '基础信息':REA_WX_SEC_SVG.base,
@@ -28848,6 +28896,7 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
     '添加设置':REA_WX_SEC_SVG.sliders,
     '唤醒对象':REA_WX_SEC_SVG.bell,
     '唤醒内容':REA_WX_SEC_SVG.message,
+    '视频内容':REA_WX_SEC_SVG.video,
     '更多设置':REA_WX_SEC_SVG.sliders
   };
   var REA_WXS = {
@@ -29032,6 +29081,40 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
         ]}
       ],
       preview:{kind:'chat',from:'雅楠002',text:'您好，好久没联系了，最近店里到了新品，给您留了一份资料，方便的话回我一下～'}
+    },
+    /* 视频号发布任务（2026-11-23）：字段照「视频号发布任务 · 新建」快照里的表单，
+       新建页是扁平表单、没有分组，这里按详情页首屏的三组回放。
+       任务发布渠道是详情页才有的系统字段，与创建时间一起收在基础信息。 */
+    '视频号发布任务 · 任务配置快照': {
+      list:'视频号发布任务', detail:'视频号发布任务 · 详情',
+      base:[
+        {label:'任务类型',value:'视频号发布'},
+        {label:'任务状态',value:'进行中'},
+        {label:'有效期',value:'2026/11/18 10:00 ~ 2026/11/25 10:00'},
+        {label:'任务发布渠道',value:'视频号'},
+        {label:'创建时间',value:'2026-11-18 09:41'}
+      ],
+      sections:[
+        {title:'任务安排',rows:[
+          {label:'任务名称',value:'视频号发布任务20261118'},
+          {label:'执行人员',value:'张伯阳 等 10 人'},
+          {label:'发布应用',value:'微小助'},
+          {label:'循环方式',value:'单次任务'},
+          {label:'通知时间',value:'2026-11-18 10:00'},
+          {label:'截止时间',value:'2026-11-25 10:00'},
+          {label:'全局弹窗',value:'关闭'}
+        ]},
+        {title:'视频内容',rows:[
+          {label:'素材来源',value:'临时创建'},
+          {label:'发布类型',value:'发视频'},
+          {label:'选择视频来源',value:'手动上传'},
+          {label:'上传视频',value:'秋季新品开箱.mp4'},
+          {label:'视频文案',value:'秋季新品开箱，30 秒竖版，门店实拍'},
+          {label:'视频标题',value:'秋季新品开箱'},
+          {label:'视频话题',value:'#秋季新品 #开箱'},
+          {label:'是否转发朋友圈',value:'否'}
+        ]}
+      ]
     }
   };
   function wxsEsc(s){
@@ -29203,6 +29286,60 @@ for(i=0;i<vs.length;i++)vs[i].addEventListener('click',function(e){e.preventDefa
     '.rea-wxs-msg{display:flex;gap:8px}',
     '.rea-wxs-ava{display:flex;align-items:center;justify-content:center;width:36px;height:36px;flex:none;border-radius:4px;background:#2e448f;color:#fff;font-size:13px}',
     '.rea-wxs-bubble{max-width:300px;padding:10px 12px;border:1px solid #ededed;border-radius:4px;background:#fff;font-size:14px;line-height:22px;color:#181818;white-space:pre-wrap;word-break:break-word}'
+  ].join('\n');
+
+  /* 视频号发布任务 · 详情（2026-11-23）：快照里没有这一页的正文（只抓到模块页与新建页），
+     正文整段取自载体块 srcWxVideoDetail。壳由 reaSynthPages() 克隆「视频号发布任务」
+     模块页，所以侧栏组与选中项都是现成的那一套；这里只负责换正文与接两处交互——
+     员工表「发布视频」的「查看」开预览弹窗（Esc／遮罩／× 关闭），
+     面包屑回落地由 REA_FX 认 data-rea 接管，配置快照抽屉由 reaWxSnapshotDrawerJs 挂。 */
+  function reaWxVideoDetailJs(){
+    return '(function(){'
+      + 'var H=' + reaJson(reaCoverHtml('srcWxVideoDetail')) + ';'
+      + 'var v=document.getElementById("subapp-viewport");if(!v)return;v.innerHTML=H;'
+      + String.raw`
+function $(s,r){return (r||document).querySelector(s)}
+var MODAL=null;
+function closeVideo(){
+  if(MODAL&&MODAL.parentNode)MODAL.parentNode.removeChild(MODAL);
+  MODAL=null;document.removeEventListener('keydown',onKey);
+}
+function onKey(e){if(e.key==='Escape'||e.keyCode===27)closeVideo()}
+function openVideo(name,time){
+  closeVideo();
+  var w=document.createElement('div');
+  w.className='ant-modal-root css-vgijab';w.setAttribute('data-wxv-modal','1');
+  w.innerHTML='<div class="ant-modal-mask"></div><div class="ant-modal-wrap ant-modal-centered">'
+    +'<div class="ant-modal css-vgijab rea-wxv-modal" role="dialog" aria-modal="true" aria-label="发布视频" style="width:520px">'
+    +'<div class="ant-modal-content"><button type="button" class="ant-modal-close" aria-label="关闭"><span class="ant-modal-close-x">×</span></button>'
+    +'<div class="ant-modal-header"><div class="ant-modal-title">发布视频</div></div>'
+    +'<div class="ant-modal-body"><div class="rea-wxv-video"><span class="rea-wxv-play" aria-hidden="true"></span><em>秋季新品开箱.mp4</em></div>'
+    +'<p class="rea-wxv-meta">'+name+' · '+time+'</p></div>'
+    +'<div class="ant-modal-footer"><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined"><span>关 闭</span></button></div>'
+    +'</div></div></div>';
+  document.body.appendChild(w);MODAL=w;
+  $('.ant-modal-close',w).addEventListener('click',closeVideo);
+  $('.ant-modal-footer button',w).addEventListener('click',closeVideo);
+  $('.ant-modal-wrap',w).addEventListener('click',function(e){if(e.target===this)closeVideo()});
+  document.addEventListener('keydown',onKey);
+}
+var vs=document.querySelectorAll('[data-wxv-video]'),i;
+for(i=0;i<vs.length;i++)vs[i].addEventListener('click',function(e){
+  e.preventDefault();
+  var tr=this.closest?this.closest('tr'):null;
+  var tds=tr?tr.children:null;
+  openVideo(this.getAttribute('data-wxv-video'),tds&&tds.length?tds[tds.length-1].textContent:'');
+});
+})();`;
+  }
+  /* 视频号发布任务 · 详情（2026-11-23）：员工完成情况的「发布视频」点「查看」开预览。
+     视频本体是演示件（深底＋播放圆钮＋文件名），弹窗骨架仍用 AntD 的 modal 类。 */
+  var REA_WXV_CSS = [
+    '.rea-wxv-video{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;height:260px;border-radius:8px;background:#1F2329;color:#C9CED6;overflow:hidden}',
+    '.rea-wxv-play{position:relative;width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.16)}',
+    '.rea-wxv-play::after{content:"";position:absolute;left:22px;top:17px;border-style:solid;border-width:11px 0 11px 18px;border-color:transparent transparent transparent #fff}',
+    '.rea-wxv-video em{position:relative;font-style:normal;font-size:13px;color:#C9CED6}',
+    '.rea-wxv-meta{margin:12px 0 0;font-size:13px;line-height:20px;color:#646A73;text-align:center}'
   ].join('\n');
 
   /* ============================================================
@@ -34780,6 +34917,9 @@ if(PAGE==="detail"){
        六页都带 reaWxSnapshotDrawerJs：快照从右侧抽屉展开，不再另起一页。 */
     '关联好友 · 详情': { css: REA_WX_DETAIL_CSS + REA_WX_SNAP_CSS, js: function(){ return reaRelLayoutJs() + reaWxDetailJs('关联好友 · 详情') + reaWxSnapshotDrawerJs('关联好友 · 详情'); } },
     '客户唤醒 · 详情': { css: REA_WX_DETAIL_CSS + REA_WX_SNAP_CSS, js: function(){ return reaWxDetailContentJs('客户唤醒 · 详情') + reaWxDetailJs('客户唤醒 · 详情') + reaWxSnapshotDrawerJs('客户唤醒 · 详情') + reaWakeJs(); } },
+    /* 视频号发布任务 · 详情（2026-11-23）：快照里没有这一页的正文，由 reaWxVideoDetailJs
+       把载体 srcWxVideoDetail 整段换进克隆来的模块页壳；版式与上面六页同一套 */
+    [REA_WX_VIDEO_DETAIL]: { css: REA_WX_DETAIL_CSS + REA_WX_SNAP_CSS + REA_WXV_CSS, js: function(){ return reaWxVideoDetailJs() + reaWxSnapshotDrawerJs(REA_WX_VIDEO_DETAIL); } },
     /* 客户唤醒 · 新建（2026-11-11）：单位下拉、执行人员、添加回复内容弹窗（固定内容／AI 两套）
        ＋ 唤醒内容行的增删改；正文与设计语言都还是快照，只补交互 */
     '客户唤醒 · 新建': { css: REA_HX_CSS, js: reaHxJs }
@@ -34933,6 +35073,15 @@ if(PAGE==="detail"){
       });
     } else {
       reaWarn('「发短视频」页合成失败：快照里找不到「' + REA_DY_SRC + '」页');
+    }
+    /* 视频号发布任务 · 详情（2026-11-23）：快照里只有模块页与新建页，详情没有源目录。
+       壳克隆模块页——侧栏的微信营销任务组与「视频号发布任务」选中态都是现成的；
+       正文由覆盖脚本 reaWxVideoDetailJs 整段换成载体 srcWxVideoDetail。 */
+    var vd = find(REA_WX_VIDEO);
+    if (vd){
+      P.pages.push({ name: REA_WX_VIDEO_DETAIL, rest: vd.rest, contentStart: vd.contentStart, contentEnd: vd.contentEnd });
+    } else {
+      reaWarn('「视频号发布任务 · 详情」页合成失败：快照里找不到「' + REA_WX_VIDEO + '」页');
     }
     /* 微信营销任务的配置快照不再单独成页（2026-11-16）：改从详情页右侧抽屉展开，
        不再克隆详情页的壳，也不进页序。 */
