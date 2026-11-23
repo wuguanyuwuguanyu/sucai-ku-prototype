@@ -35337,7 +35337,7 @@ bar.style.display='none';
   /* 默认值与快照那一页逐项对齐；设置页保存后才覆盖。 */
   var REA_OPF_DEF = {
     aiPoints: { v: 200, unlimited: false },
-    addDaily: 100, dmDaily: 5, addBatch: 35, searchBatch: 65, addGap: [1, 2],
+    addDaily: 100, dmDailyDy: 5, dmDailyXhs: 5, addBatch: 35, searchBatch: 65, addGap: [1, 2],
     greetDaily: 180,
     msgDaily: 5000, msgHourly: 700, msgGap: [3, 6], objGap: [10, 20],
     relHourly: 50, relGap: [10, 30]
@@ -35362,7 +35362,8 @@ bar.style.display='none';
     return {
       aiPoints: { v: reaOpfInt(ai.v, d.aiPoints.v), unlimited: !!ai.unlimited },
       addDaily: reaOpfInt(s.addDaily, d.addDaily),
-      dmDaily: reaOpfInt(s.dmDaily, d.dmDaily),
+      dmDailyDy: reaOpfInt(s.dmDailyDy, d.dmDailyDy),
+      dmDailyXhs: reaOpfInt(s.dmDailyXhs, d.dmDailyXhs),
       addBatch: reaOpfInt(s.addBatch, d.addBatch),
       searchBatch: reaOpfInt(s.searchBatch, d.searchBatch),
       addGap: reaOpfTwo(s.addGap, d.addGap),
@@ -35394,8 +35395,8 @@ function labelOf(r){
   for(var n=r.firstChild;n&&n.nodeType===3;n=n.nextSibling)s+=n.textContent;
   return s.replace(/\s+/g,'');
 }
-function rowOf(prefix){
-  var rs=page.querySelectorAll('.ant-card-body > div');
+function rowOf(prefix,root){
+  var rs=(root||page).querySelectorAll('.ant-card-body > div');
   for(var i=0;i<rs.length;i++){
     if(labelOf(rs[i]).indexOf(prefix)===0&&rs[i].querySelector('.ant-input-number-input'))return rs[i];
   }
@@ -35404,8 +35405,8 @@ function rowOf(prefix){
 function num(inp){var n=parseInt(inp.value,10);return isNaN(n)?inp.__opf.min:n}
 
 var F={};
-function bind(key,prefix,specs){
-  var r=rowOf(prefix);if(!r)return;
+function bind(key,prefix,specs,root){
+  var r=rowOf(prefix,root);if(!r)return;
   var ins=Array.prototype.slice.call(r.querySelectorAll('.ant-input-number-input'));
   F[key]={key:key,row:r,ins:ins};
   ins.forEach(function(inp,i){
@@ -35483,20 +35484,6 @@ function prepare(inp){
 /* 快照里的上下限：aria 上有就照用，缺的补一个宽松默认（间隔类不封顶）。 */
 bind('aiPoints','每人每日使用点数不得超过',[{min:0,max:99999}]);
 bind('addDaily','主动发起请求',[{min:0,max:200}]);
-/* 每日主动私信上限：克隆「主动发起请求」那一行，标签与单位改掉，0–20、默认 5。
-   这是账号级设置，抖音运营／小红书运营的任务不再各配一份。 */
-var dmRow=F.addDaily?F.addDaily.row.cloneNode(true):null;
-if(dmRow){
-  for(var dn=dmRow.firstChild;dn;dn=dn.nextSibling){
-    if(dn.nodeType===3&&dn.textContent.replace(/\s+/g,'')){dn.textContent='每个微信号每日主动私信上限';break}
-  }
-  var addon=dmRow.querySelector('.ant-input-number-group-addon');
-  if(addon)addon.textContent='条';
-  var dmInp=dmRow.querySelector('.ant-input-number-input');
-  if(dmInp){dmInp.value='5';dmInp.setAttribute('aria-valuemin','0');dmInp.setAttribute('aria-valuemax','20');dmInp.setAttribute('aria-valuenow','5')}
-  F.addDaily.row.parentNode.insertBefore(dmRow,F.addDaily.row.nextSibling);
-  bind('dmDaily','每个微信号每日主动私信上限',[{min:0,max:20}]);
-}
 bind('addBatch','每个微信号添加批次数量',[{min:0,max:100}]);
 bind('searchBatch','每个微信号搜索批次数量',[{min:0,max:70}]);
 bind('addGap','每批次间隔时间',[{min:1,max:18},{min:1,max:18}]);
@@ -35507,6 +35494,40 @@ bind('msgGap','多条消息时',[{min:3,max:3600},{min:4,max:3600}]);
 bind('objGap','多个对象间隔时间',[{min:3,max:3600},{min:4,max:3600}]);
 bind('relHourly','每小时操作关联账号上限',[{min:1,max:50}]);
 bind('relGap','每个账号间隔时间',[{min:3,max:3600},{min:4,max:60}]);
+
+/* 抖音运营／小红书运营各一块设置：克隆「主动加好友」卡片，只留第一行改成
+   「每个微信号每日主动私信上限」，0–20、默认 5。两块与微信加好友无关，单独成卡。 */
+(function(){
+  var cards=page.querySelectorAll('.ant-card'),base=null,last=cards[cards.length-1];
+  for(var i=0;i<cards.length;i++){
+    var h=cards[i].querySelector('.ant-card-head-title');
+    if(h&&h.textContent.indexOf('主动加好友')>=0){base=cards[i];break}
+  }
+  if(!base||!last)return;
+  function makeCard(title,key){
+    var card=base.cloneNode(true);
+    var ht=card.querySelector('.ant-card-head-title');if(ht)ht.textContent=title;
+    var body=card.querySelector('.ant-card-body');
+    if(body){
+      var rows=Array.prototype.slice.call(body.children);
+      for(var r=1;r<rows.length;r++)body.removeChild(rows[r]);
+      var row=body.children[0];
+      if(row){
+        for(var n=row.firstChild;n;n=n.nextSibling){
+          if(n.nodeType===3&&n.textContent.replace(/\s+/g,'')){n.textContent='每个微信号每日主动私信上限';break}
+        }
+        var addon=row.querySelector('.ant-input-number-group-addon');if(addon)addon.textContent='条';
+        var inp=row.querySelector('.ant-input-number-input');
+        if(inp){inp.value='5';inp.setAttribute('aria-valuemin','0');inp.setAttribute('aria-valuemax','20');inp.setAttribute('aria-valuenow','5')}
+      }
+    }
+    last.parentNode.insertBefore(card,last.nextSibling);
+    last=card;
+    bind(key,'每个微信号每日主动私信上限',[{min:0,max:20}],card);
+  }
+  makeCard('抖音运营','dmDailyDy');
+  makeCard('小红书运营','dmDailyXhs');
+})();
 
 /* 群发：每小时上限不能高于每日总数。提示挂在那一行下面，靠右对齐。 */
 var errEl=document.createElement('div');
@@ -35542,7 +35563,8 @@ function pair(K){return [num(F[K].ins[0]),num(F[K].ins[1])]}
 function snapshot(){
   return {
     aiPoints:{v:one('aiPoints'),unlimited:!!(cb&&cb.checked)},
-    addDaily:one('addDaily'),dmDaily:one('dmDaily'),addBatch:one('addBatch'),searchBatch:one('searchBatch'),
+    addDaily:one('addDaily'),dmDailyDy:one('dmDailyDy'),dmDailyXhs:one('dmDailyXhs'),
+    addBatch:one('addBatch'),searchBatch:one('searchBatch'),
     addGap:pair('addGap'),greetDaily:one('greetDaily'),
     msgDaily:one('msgDaily'),msgHourly:one('msgHourly'),
     msgGap:pair('msgGap'),objGap:pair('objGap'),
@@ -35562,7 +35584,7 @@ function apply(saved){
       F[K].ins[i].value=v[i];F[K].ins[i].setAttribute('aria-valuenow',v[i]);
     }
   }
-  setOne('addDaily',saved.addDaily);setOne('dmDaily',saved.dmDaily);
+  setOne('addDaily',saved.addDaily);setOne('dmDailyDy',saved.dmDailyDy);setOne('dmDailyXhs',saved.dmDailyXhs);
   setOne('addBatch',saved.addBatch);setOne('searchBatch',saved.searchBatch);setPair('addGap',saved.addGap);
   setOne('greetDaily',saved.greetDaily);
   setOne('msgDaily',saved.msgDaily);setOne('msgHourly',saved.msgHourly);
