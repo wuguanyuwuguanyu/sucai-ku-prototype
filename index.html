@@ -35496,7 +35496,7 @@ bind('relHourly','每小时操作关联账号上限',[{min:1,max:50}]);
 bind('relGap','每个账号间隔时间',[{min:3,max:3600},{min:4,max:60}]);
 
 /* 抖音运营／小红书运营各一块设置：克隆「主动加好友」卡片，只留第一行改成
-   「每个微信号每日主动私信上限」，0–20、默认 5。两块与微信加好友无关，单独成卡。 */
+   「每个抖音号／小红书号每日主动私信上限」，0–20、默认 5。两块与微信加好友无关，单独成卡。 */
 (function(){
   var cards=page.querySelectorAll('.ant-card'),base=null,last=cards[cards.length-1];
   for(var i=0;i<cards.length;i++){
@@ -35504,7 +35504,7 @@ bind('relGap','每个账号间隔时间',[{min:3,max:3600},{min:4,max:60}]);
     if(h&&h.textContent.indexOf('主动加好友')>=0){base=cards[i];break}
   }
   if(!base||!last)return;
-  function makeCard(title,key){
+  function makeCard(title,key,label){
     var card=base.cloneNode(true);
     var ht=card.querySelector('.ant-card-head-title');if(ht)ht.textContent=title;
     var body=card.querySelector('.ant-card-body');
@@ -35514,7 +35514,7 @@ bind('relGap','每个账号间隔时间',[{min:3,max:3600},{min:4,max:60}]);
       var row=body.children[0];
       if(row){
         for(var n=row.firstChild;n;n=n.nextSibling){
-          if(n.nodeType===3&&n.textContent.replace(/\s+/g,'')){n.textContent='每个微信号每日主动私信上限';break}
+          if(n.nodeType===3&&n.textContent.replace(/\s+/g,'')){n.textContent=label;break}
         }
         var addon=row.querySelector('.ant-input-number-group-addon');if(addon)addon.textContent='条';
         var inp=row.querySelector('.ant-input-number-input');
@@ -35523,10 +35523,10 @@ bind('relGap','每个账号间隔时间',[{min:3,max:3600},{min:4,max:60}]);
     }
     last.parentNode.insertBefore(card,last.nextSibling);
     last=card;
-    bind(key,'每个微信号每日主动私信上限',[{min:0,max:20}],card);
+    bind(key,label,[{min:0,max:20}],card);
   }
-  makeCard('抖音运营','dmDailyDy');
-  makeCard('小红书运营','dmDailyXhs');
+  makeCard('抖音运营','dmDailyDy','每个抖音号每日主动私信上限');
+  makeCard('小红书运营','dmDailyXhs','每个小红书号每日主动私信上限');
 })();
 
 /* 群发：每小时上限不能高于每日总数。提示挂在那一行下面，靠右对齐。 */
