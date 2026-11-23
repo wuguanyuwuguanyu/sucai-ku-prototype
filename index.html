@@ -1319,7 +1319,6 @@ textarea.cw-ta::placeholder{color:var(--on-surface-variant)}
 .cwp-add{flex:none;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;
   background:#EEF3FF;color:#2E6BFF;line-height:0;transition:background .16s var(--emph),color .16s var(--emph)}
 .cwp-add:active{background:#E1EBFF}
-.cwp-add.done{background:linear-gradient(140deg,#1677FE,#6A5BFF);color:#fff}
 .cwp-add[disabled]{background:#F3F6FC;color:#C3CFE2}
 .cwp-open{display:none;border-top:1px solid #EDF1F9;background:#fff;padding:12px 14px 14px}
 .cwp-open.on{display:block}
@@ -5870,7 +5869,7 @@ var CW_SH=null;
 
 /* 发送草稿：有序条目（文本 / 图片 / 视频），顺序就是发送顺序。
    文本逐条可改；图片/视频带上传态（ing / fail），失败项不静默跳过。 */
-var CW_ITEMS=[], CW_ITEM_SEQ=0, CW_MAT=null, CW_FRESH_ID='';
+var CW_ITEMS=[], CW_ITEM_SEQ=0, CW_FRESH_ID='';
 function cwMarkFresh(id){ CW_FRESH_ID=id; setTimeout(function(){ if(CW_FRESH_ID===id)CW_FRESH_ID='' },600) }
 /* 逐人文案（PRD §6）：一人一条，独立于统一草稿。CW_PERS 跨页保留——
    改范围重新帮写时，仍在名单里的行保留原草稿，只为新增的人起草。
@@ -5885,6 +5884,11 @@ function cwItemSeq(){ return 'it'+(++CW_ITEM_SEQ) }
 function cwItemById(id){ for(var i=0;i<CW_ITEMS.length;i++)if(CW_ITEMS[i].id===id)return CW_ITEMS[i]; return null }
 function cwTextBlocks(){ return CW_ITEMS.filter(function(i){return i.t==='text'}) }
 function cwHasContent(){ return CW_ITEMS.some(function(i){return i.t!=='text'?i.up!=='fail':!!String(i.c||'').trim()}) }
+/* 发送内容的消息条数上限：文字块、附件和素材带来的消息合计不超过 10 条。
+   素材不记来源，同一条素材可以重复加入。 */
+var CW_MAX_MSG=10;
+function cwMsgCount(){ return CW_ITEMS.filter(function(i){ return i.t!=='text'||String(i.c||'').trim() }).length }
+function cwMsgRoom(){ return Math.max(0,CW_MAX_MSG-cwMsgCount()) }
 function cwItemsSig(){ return JSON.stringify(CW_ITEMS.map(function(i){return [i.t,i.c,i.up||'']})) }
 function cwSendItems(){ return CW_ITEMS.filter(function(i){return i.t!=='text'||String(i.c||'').trim()}).map(function(i){return {t:i.t,c:i.c}}) }
 function cwAddTextBlock(v){ var it={id:cwItemSeq(),t:'text',c:v||''}; CW_ITEMS.push(it); return it }
@@ -6051,7 +6055,7 @@ function cwDropEmptyText(){
   CW_ITEMS=CW_ITEMS.filter(function(i){ return i.t!=='text'||kept.indexOf(i)>=0 });
 }
 /* 「发同一份内容」的统一草稿：换范围、换入口都留着；重新发起一轮才从空白开始。 */
-function cwResetDraft(){ CW_ITEMS=[]; CW_ITEM_SEQ=0; CW_MAT=null; cwPersReset(); CW_LAUNCHING=false; CW_SEND_NOTICE=''; }
+function cwResetDraft(){ CW_ITEMS=[]; CW_ITEM_SEQ=0; cwPersReset(); CW_LAUNCHING=false; CW_SEND_NOTICE=''; }
 function cwAccountKey(){ return DEMO_ME.indexOf(ME)+':'+CUST_ACCT; }
 function cwAccountChanged(){
   cwResetDraft(); cwQueryStop();
@@ -7308,6 +7312,7 @@ function cwItemRemove(id){
 }
 function cwTextAdd(){
   closeSheet(CW_SH); CW_SH=null;
+  if(cwMsgCount()>=CW_MAX_MSG){ toast('发送内容最多 '+CW_MAX_MSG+' 条消息'); return }
   var it=cwAddTextBlock(''); cwMarkFresh(it.id); REND['cw-content']();
   var ta=document.querySelectorAll('#cwContentBody textarea.cw-ta');
   if(ta.length)ta[ta.length-1].focus();
@@ -7327,6 +7332,7 @@ function cwAddSheet(){
    失败项不静默跳过：发送被拦住，用户可以重试或移除。 */
 function cwAlbumAdd(kind){
   closeSheet(CW_SH); CW_SH=null;
+  if(cwMsgCount()>=CW_MAX_MSG){ toast('发送内容最多 '+CW_MAX_MSG+' 条消息'); return }
   var it={id:cwItemSeq(),t:kind==='video'?'video':'image',c:kind==='video'?'门店实拍.mp4':'门店实拍.jpg',src:kind==='video'?'':CW_IMG_SRC,up:'ing'};
   CW_ITEMS.push(it); cwMarkFresh(it.id); REND['cw-content']();
   if(window.CW_TESTFAST){
@@ -7430,25 +7436,21 @@ function cwPickUnTypes(p){
   return cwPickUnsupported(p).map(function(m){return cwTypeN(m.t)})
     .filter(function(v,i,a){return a.indexOf(v)===i}).join('、');
 }
-/* 发送内容最多一条素材：换一条＝整条替换，手输文字不动。素材仍是复制，之后改素材不影响本轮草稿 */
-function cwMatAlive(){
-  return !!(CW_MAT&&CW_MAT.ids.some(function(id){return !!cwItemById(id)}));
-}
-function cwMatHas(pid){ return !!(CW_MAT&&CW_MAT.pid===pid&&cwMatAlive()) }
+/* 素材不记来源：同一条可以重复加入，发送内容里只认消息。
+   文字块、附件和素材消息合计最多 10 条，整条素材放不下时不能加入。 */
 function cwPickRowHtml(p){
   var open=CW_PICK.exp===p.id;
   var blocked=!cwPickOk(p);
-  var has=cwMatHas(p.id);
   var mixed=(CW_PICK.tab==='全部'||CW_PICK.tab==='最近使用')&&CW_PICK.grp==='全部';
   var kws=matKeywords(p.ref);
   var line=kws.length?kws.map(function(k){return '#'+esc(k)}).join(' ')
     :(hasText(p.ref)?'':'无文字内容，附件可直接发送');
   var bad=blocked?'<span class="lc-tag bad">含'+cwPickUnTypes(p)+'</span>':'';
-  var aria=has?'已添加，点一下换成这条':(blocked?'含'+cwPickUnTypes(p)+'，不能用于唤醒':'添加这条素材并返回');
+  var aria=blocked?'含'+cwPickUnTypes(p)+'，不能用于唤醒':(p.msgs.length>cwMsgRoom()?'发送内容最多 '+CW_MAX_MSG+' 条消息':'添加这条素材并返回');
   return '<div class="cwp-card">'
     +(mixed?srcTagHtml(p.src):'')
     +'<div class="cwp-row'+(open?' on':'')+'" data-p="'+esc(p.id)+'" aria-expanded="'+(open?'true':'false')+'" onclick="cwPickToggle(\''+p.id+'\')">'
-      +'<button class="cwp-add'+(has?' done':'')+'" '+(blocked?'disabled aria-disabled="true"':'onclick="event.stopPropagation();cwPickAdd(\''+p.id+'\')"')+' aria-label="'+esc(aria)+'">'+(has?I('check',16,2.4):I('plus',17,2.4))+'</button>'
+      +'<button class="cwp-add" '+(blocked?'disabled aria-disabled="true"':'onclick="event.stopPropagation();cwPickAdd(\''+p.id+'\')"')+' aria-label="'+esc(aria)+'">'+I('plus',17,2.4)+'</button>'
       +'<span class="cwp-spk">'+hvSpk(17)+'</span>'
       +'<div class="cwp-b"><div class="lc-h"><h5>'+esc(p.title)+'</h5>'+bad+chgTagHtml(p.ref)+'</div>'
       +(line?'<p>'+line+'</p>':'')+'</div>'
@@ -7480,24 +7482,15 @@ function cwPickToggle(id){
 function cwPickSearch(v){ CW_PICK.q=v||''; cwPickRefresh() }
 function cwPickTab(t){ CW_PICK.tab=t; CW_PICK.grp='全部'; CW_PICK.exp=''; REND['cw-pick']() }
 function cwPickGrp(g){ CW_PICK.grp=g; CW_PICK.exp=''; cwPickRefresh() }
-function cwPickAdd(id,force){
+function cwPickAdd(id){
   var p=cwPickById(id); if(!p)return;
   if(!cwPickOk(p)){toast('含'+cwPickUnTypes(p)+'的素材不能用于唤醒');return}
-  if(cwMatHas(p.id)&&!force){ toast('这条素材已在发送内容里'); back(); return; }
-  var at=-1, oldIds=[];
-  if(CW_MAT){
-    CW_ITEMS.forEach(function(it,ix){
-      if(CW_MAT.ids.indexOf(it.id)>=0){ if(at<0)at=ix; oldIds.push(it.id); }
-    });
-  }
-  CW_ITEMS=CW_ITEMS.filter(function(it){return oldIds.indexOf(it.id)<0});
-  var nw=p.msgs.map(function(m){return {id:cwItemSeq(),t:m.t,c:m.c,from:p.title}});
-  at=(at<0||at>CW_ITEMS.length)?CW_ITEMS.length:at;
-  CW_ITEMS.splice.apply(CW_ITEMS,[at,0].concat(nw));
-  CW_MAT={pid:p.id,title:p.title,ids:nw.map(function(it){return it.id})};
+  if(p.msgs.length>cwMsgRoom()){toast('发送内容最多 '+CW_MAX_MSG+' 条消息，先删掉几条再添加');return}
+  var nw=p.msgs.map(function(m){return {id:cwItemSeq(),t:m.t,c:m.c}});
+  CW_ITEMS=CW_ITEMS.concat(nw);
   cwDropEmptyText();
   if(nw.length)cwMarkFresh(nw[nw.length-1].id);
-  toast(oldIds.length?'已替换发送内容里的素材':'已添加到发送内容');
+  toast('已添加 '+nw.length+' 条消息');
   back();
 }
 REND['cw-pick']=function(){
@@ -7526,6 +7519,7 @@ function cwPreviewItemsHtml(){
 }
 /* 统一内容检查；编辑页不查名单——名单是点「预览发送」才取的。 */
 function cwContentErr(){
+  if(cwMsgCount()>CW_MAX_MSG)return '发送内容最多 '+CW_MAX_MSG+' 条消息';
   if(CW_ITEMS.some(function(i){return i.up==='ing'}))return '附件还在上传';
   if(CW_ITEMS.some(function(i){return i.up==='fail'}))return '有附件上传失败，请重试或移除';
   if(!cwHasContent())return '还没有要发送的内容';
