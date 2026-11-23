@@ -19729,6 +19729,7 @@ render();
         <span class="rea-xn-label">每日私信上限</span>
         <div class="rea-xn-ctl rea-xn-ctl--mid">
           <span class="rea-op-inline"><input class="rea-xn-input rea-op-cap" type="number" min="0" max="20" value="5" data-xh-dmcap-input> 条</span>
+          <p class="rea-op-hint" data-xh-capwarn hidden>上限为 0，本任务不会发私信</p>
           <p class="rea-xn-err" data-xh-err="dmcap" hidden>请填写 0–20 的整数</p>
         </div>
       </div>
@@ -20256,7 +20257,7 @@ render();
 <section class="rea-dy-opgroup">
   <h2>执行设置</h2>
   <div class="rea-dy-row"><span class="rea-dy-lb"><i>*</i>单次执行上限</span><div class="rea-dy-ctl"><div class="rea-dy-opts" data-dyop-limit><button type="button" class="rea-dy-opt on" data-v="500">500</button><button type="button" class="rea-dy-opt" data-v="1000">1000</button><button type="button" class="rea-dy-opt" data-v="2000">2000</button><button type="button" class="rea-dy-opt" data-v="3000">3000</button><button type="button" class="rea-dy-opt" data-v="自定义">自定义</button></div><input class="rea-dy-mini" inputmode="numeric" placeholder="请输入上限" aria-label="自定义单次执行上限" data-dyop-limit-custom hidden></div></div>
-  <div class="rea-dy-row" data-dyop-dmcap><span class="rea-dy-lb">每日私信上限</span><div class="rea-dy-ctl"><span class="rea-dy-inline"><input class="rea-dy-num rea-op-cap" type="number" min="0" max="20" value="5" data-dyop-dmcap-input> 条</span></div></div>
+  <div class="rea-dy-row" data-dyop-dmcap><span class="rea-dy-lb">每日私信上限</span><div class="rea-dy-ctl"><span class="rea-dy-inline"><input class="rea-dy-num rea-op-cap" type="number" min="0" max="20" value="5" data-dyop-dmcap-input> 条</span><p class="rea-op-hint" data-dyop-capwarn hidden>上限为 0，本任务不会发私信</p></div></div>
   <div class="rea-dy-row"><span class="rea-dy-lb">执行频率</span><div class="rea-dy-ctl"><span class="rea-dy-inline">每刷一个视频，任务执行<input class="rea-dy-num" inputmode="numeric" value="1" aria-label="最少间隔分钟" data-dyop-freq-min>至<input class="rea-dy-num" inputmode="numeric" value="10" aria-label="最多间隔分钟" data-dyop-freq-max>分钟</span></div></div>
   <div class="rea-dy-row"><span class="rea-dy-lb"><i>*</i>发送消息</span><div class="rea-dy-ctl"><div class="rea-dy-opts" data-dyop-send><button type="button" class="rea-dy-opt on" data-v="私信消息">私信消息</button><button type="button" class="rea-dy-opt" data-v="回复评论">回复评论</button><button type="button" class="rea-dy-opt" data-v="前往主页作品评论">前往主页作品评论</button></div></div></div>
   <div class="rea-dy-row" data-dyop-fallback hidden><span class="rea-dy-lb">取不到作品时</span><div class="rea-dy-ctl"><div class="rea-dy-opts" data-dyop-fallback-opts><button type="button" class="rea-dy-opt on" data-v="原评论区评论">原评论区评论</button><button type="button" class="rea-dy-opt" data-v="私信兜底">私信兜底</button></div></div></div>
@@ -25726,9 +25727,12 @@ function syncSend(){
   $('[data-xh-fallback]').hidden=!third;
   var dm=sendType()==='私信消息'||(third&&fallbackType()==='私信兜底');
   $('[data-xh-dmcap]').hidden=!dm;
+  var cap=$('[data-xh-dmcap-input]'),w=$('[data-xh-capwarn]');
+  if(cap&&w)w.hidden=!(dm&&parseInt(cap.value,10)===0);
 }
 $$('[data-xh-send] .rea-xh-opt,[data-xh-fallback-opts] .rea-xh-opt').forEach(function(b){
   b.addEventListener('click',syncSend)});
+var capIn=$('[data-xh-dmcap-input]');if(capIn)capIn.addEventListener('input',syncSend);
 syncSend();
 function strategy(){return val('[data-xh-strategy]')||'词条'}
 function method(){return val('[data-xh-method]')||'手动输入'}
@@ -36774,9 +36778,12 @@ if(PAGE==="new"){
     $("[data-dyop-fallback]").hidden=!third;
     var dm=sendType()==="私信消息"||(third&&fallbackType()==="私信兜底");
     $("[data-dyop-dmcap]").hidden=!dm;
+    var cap=$("[data-dyop-dmcap-input]"),w=$("[data-dyop-capwarn]");
+    if(cap&&w)w.hidden=!(dm&&parseInt(cap.value,10)===0);
   }
   $$("[data-dyop-send] .rea-dy-opt,[data-dyop-fallback-opts] .rea-dy-opt").forEach(function(b){
     b.addEventListener("click",syncSend)});
+  var capIn=$("[data-dyop-dmcap-input]");if(capIn)capIn.addEventListener("input",syncSend);
   syncSend();
   function strat(){return val("[data-dyop-strategy]")||"词条"}
   function method(){return val("[data-dyop-method]")||"手动输入"}
@@ -37305,6 +37312,7 @@ if(PAGE==="detail"){
 .rea-op-fval.is-empty{color:#8F959E}
 .rea-op-cap{width:72px!important}
 .rea-op-inline{display:inline-flex;align-items:center;gap:8px;color:#646A73;font-size:13px;line-height:20px}
+.rea-op-hint{margin:4px 0 0;color:#FAAD14;font-size:12px;line-height:18px}
 .rea-op-tpl-empty{padding:56px 12px;color:#8F959E;text-align:center}
 `;
 
