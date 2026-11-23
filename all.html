@@ -17589,6 +17589,7 @@ render();
             <button type="button" class="bk" id="rea-bd-type-rel" hidden>‹ 返回全部大类</button>
             <button type="button" class="all" id="rea-bd-type-all">查看全部类型</button>
           </div>
+          <div class="rea-td-cols"><span class="nm"></span><span class="tr"></span><span class="cn">条数</span><span class="sh">占比</span></div>
           <ul class="rea-td-bars" id="rea-bd-type-bars"></ul>
         </div>
         <div class="rea-bd-tip" id="rea-bd-type-tip" role="tooltip"></div>
@@ -19754,7 +19755,14 @@ body .subapp{background:#F6F8FB!important}
 .rea-td-rh button:focus-visible{outline:2px solid #1677FF;outline-offset:1px}
 .rea-td-rh button.bk{color:#646A73}
 .rea-td-rh button.bk:hover{color:#1677FF}
-.rea-td-bars{list-style:none;margin:0;padding:8px 0 0;flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:2px}
+/* 列名行：与横条同一套列宽，两个表头压在数字列上（条数／占比）；名字列不再放表头，
+   上面那行标题已经说明这一列排的是什么（任务大类／某大类的类型分布）。 */
+.rea-td-cols{display:flex;align-items:center;gap:10px;padding:6px 8px 0;flex:0 0 auto;font-size:11.5px;line-height:16px;color:#8F959E}
+.rea-td-cols .nm{flex:0 0 132px;min-width:0}
+.rea-td-cols .tr{flex:1 1 auto;min-width:40px}
+.rea-td-cols .cn{flex:0 0 auto;min-width:34px;text-align:right}
+.rea-td-cols .sh{flex:0 0 auto;min-width:46px;text-align:right}
+.rea-td-bars{list-style:none;margin:0;padding:4px 0 0;flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:2px}
 .rea-td-bars li{display:flex;align-items:center;gap:10px;height:30px;padding:0 8px;border-radius:6px;cursor:pointer}
 .rea-td-bars li:hover{background:#F7F8FA}
 .rea-td-bars li:focus-visible{outline:2px solid #1677FF;outline-offset:0}
