@@ -1430,22 +1430,6 @@ textarea.cw-ta:focus{background:#fff;border-color:#8FB3F5;
 .cw-media{border-radius:18px;background:linear-gradient(150deg,#F1F5FF,#EEE9FF);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.8)}
 .cw-media img{border-radius:18px}
-/* 发送内容里的素材：整条一张卡（标题／关键词／消息条数＋来源角标），点卡头展开折叠。
-   排序与删除都按整条处理，不在发送内容里拆成单条消息。 */
-.cw-matcard{position:relative;background:#fff;border-radius:16px;overflow:hidden;
-  box-shadow:inset 0 0 0 1px #E6EEFB,0 10px 24px -26px rgba(40,70,150,.8)}
-.cw-mathead{display:flex;align-items:center;gap:10px;width:100%;min-height:64px;padding:14px 16px;text-align:left}
-.cw-matb{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
-.cw-matt{font-size:15.5px;font-weight:700;color:#17263F;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.cw-mats{font-size:12.5px;color:#6387C0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.cw-matchev{flex:none;color:#8AA5CF;line-height:0;transition:transform .2s var(--emph)}
-.cw-mat.open .cw-matchev{transform:rotate(90deg)}
-.cw-matbody{display:none;border-top:1px solid #EDF1F9;padding:12px 16px 14px}
-.cw-mat.open .cw-matbody{display:block}
-.cw-matmsg+.cw-matmsg{margin-top:10px}
-.cw-matty{display:inline-block;font-size:11px;font-weight:700;color:#4477C7;background:#EEF4FF;border-radius:6px;padding:2px 7px}
-.cw-mattx{margin-top:5px;font-size:14.5px;line-height:1.65;color:#26354D;white-space:pre-wrap;word-break:break-word}
-.cw-matfn{margin-top:5px;font-size:13px;color:#6387C0;word-break:break-all}
 .cw-up{display:flex;align-items:center;gap:8px;color:#617A9E}
 .cw-up::before{content:"";flex:none;width:14px;height:14px;border-radius:50%;
   border:2px solid #D8E4FA;border-top-color:#2E6BFF;animation:cwSpin .8s linear infinite}
@@ -6978,82 +6962,10 @@ function cwMediaView(id){
     openSheet('<div class="cw-sh">'+esc(it.c)+'</div><div class="cw-tutvid"><button class="cw-tutplay" onclick="toast(\'演示：播放\')" aria-label="播放视频">'+I('play',24,2)+'</button></div>','cw-sheet');
   }
 }
-/* 发送内容的有序单位：文字块／相册附件各算一条，素材整条算一条（卡片内部不再拆开）。 */
-function cwMatAliveIds(){
-  return ((CW_MAT&&CW_MAT.ids)||[]).filter(function(id){ return !!cwItemById(id) });
-}
-function cwMatItems(){ return cwMatAliveIds().map(cwItemById) }
-function cwUnits(){
-  var units=[],mat=null;
-  CW_ITEMS.forEach(function(it){
-    if(CW_MAT&&CW_MAT.ids.indexOf(it.id)>=0){
-      if(!mat){ mat={key:'mat',mat:true,items:[]}; units.push(mat) }
-      mat.items.push(it);
-    }else units.push({key:it.id,mat:false,items:[it]});
-  });
-  return units;
-}
-function cwMatSummary(items){
-  var types=[];
-  items.forEach(function(it){ var t=cwTypeN(it.t); if(types.indexOf(t)<0)types.push(t) });
-  return types.join('＋')+' · 共 '+items.length+' 条';
-}
-function cwMatMsgHtml(m){
-  var ty=esc(cwTypeN(m.t));
-  if(m.t==='text')return '<div class="cw-matmsg"><span class="cw-matty">'+ty+'</span><div class="cw-mattx">'+esc(m.c)+'</div></div>';
-  return '<div class="cw-matmsg"><span class="cw-matty">'+ty+'</span><div class="cw-matfn">'+esc(m.c||'')+'</div></div>';
-}
-/* 素材卡片：标题、关键词与消息条数在卡头，点开按原顺序看全部消息；来源角标与素材库同一枚。 */
-function cwMatCardHtml(ix,multi){
-  var items=cwMatItems(); if(!items.length)return '';
-  var kws=(CW_MAT.kws||[]).map(function(k){return '#'+k}).join(' ');
-  var sum=cwMatSummary(items)+(kws?' · '+kws:'');
-  var open=!!CW_MAT.open,fresh=CW_MAT.ids.indexOf(CW_FRESH_ID)>=0;
-  return '<div class="cw-it cw-mat'+(open?' open':'')+(fresh?' fresh':'')+'" data-item="mat" data-unit="mat">'
-    +(multi?'<span class="cw-itno" aria-hidden="true">'+(ix+1)+'</span>':'')
-    +'<div class="cw-itmain"><div class="cw-matcard">'
-      +(CW_MAT.src?srcTagHtml(CW_MAT.src):'')
-      +'<button type="button" class="cw-mathead" onclick="cwMatToggle()" aria-expanded="'+(open?'true':'false')+'">'
-        +'<span class="cw-matb"><b class="cw-matt">'+esc(CW_MAT.title||'素材')+'</b>'
-        +'<span class="cw-mats">'+esc(sum)+'</span></span>'
-        +'<span class="cw-matchev" aria-hidden="true">'+I('chev',18,2.2)+'</span>'
-      +'</button>'
-      +'<div class="cw-matbody">'+items.map(cwMatMsgHtml).join('')+'</div>'
-    +'</div></div></div>';
-}
-function cwMatToggle(){
-  if(!CW_MAT)return;
-  CW_MAT.open=!CW_MAT.open;
-  var card=document.querySelector('#cwContentBody .cw-mat'); if(!card)return;
-  card.classList.toggle('open',!!CW_MAT.open);
-  var b=card.querySelector('.cw-mathead');
-  if(b)b.setAttribute('aria-expanded',CW_MAT.open?'true':'false');
-}
-/* 整条删除：消息一起删，撤销也一起放回。 */
-function cwMatRemove(){
-  if(!CW_MAT)return;
-  var mat=CW_MAT,ids=mat.ids.slice(),at=-1,removed=[];
-  CW_ITEMS.forEach(function(it,i){
-    if(ids.indexOf(it.id)>=0){ if(at<0)at=i; removed.push(it) }
-  });
-  if(!removed.length)return;
-  CW_ITEMS=CW_ITEMS.filter(function(it){ return ids.indexOf(it.id)<0 });
-  CW_MAT=null;
-  REND['cw-content']();
-  toast('已删除整条素材','撤销',function(){
-    if(CW_ITEMS.some(function(it){ return ids.indexOf(it.id)>=0 }))return;
-    CW_ITEMS.splice.apply(CW_ITEMS,[Math.min(at,CW_ITEMS.length),0].concat(removed));
-    CW_MAT=mat; mat.open=false;
-    cwDropEmptyText();
-    cwRender();
-  });
-}
 function cwItemsHtml(){
-  var units=cwUnits(),multi=units.length>1;
-  return units.map(function(u,ix){
-    if(u.mat)return cwMatCardHtml(ix,multi);
-    var it=u.items[0];
-    var h='<div class="cw-it'+(it.t!=='text'?' media':'')+(it.id===CW_FRESH_ID?' fresh':'')+'" data-item="'+it.id+'" data-unit="'+it.id+'">';
+  var multi=CW_ITEMS.length>1;
+  return CW_ITEMS.map(function(it,ix){
+    var h='<div class="cw-it'+(it.t!=='text'?' media':'')+(it.id===CW_FRESH_ID?' fresh':'')+'" data-item="'+it.id+'">';
     if(multi)h+='<span class="cw-itno" aria-hidden="true">'+(ix+1)+'</span>';
     h+='<div class="cw-itmain">';
     if(it.t==='text'){
@@ -7118,7 +7030,7 @@ function cwDelZoneState(over){
   var z=$('cwDelZone'); if(!z)return;
   z.classList.toggle('open',!!over);
   var tx=z.querySelector('.cw-del-tx');
-  if(tx)tx.textContent=over?((CW_DRAG&&CW_DRAG.unit==='mat')?'松手删除整条素材':'松手即可删除'):'移动到此处删除';
+  if(tx)tx.textContent=over?'松手即可删除':'移动到此处删除';
   if(CW_DRAG&&CW_DRAG.el)CW_DRAG.el.classList.toggle('over-del',!!over);
   if(CW_DRAG&&CW_DRAG.gap)CW_DRAG.gap.style.opacity=over?'.35':'';  /* 进删除区时让位槽退到后面 */
 }
@@ -7137,7 +7049,7 @@ function cwDragDelete(d){
     document.body.classList.remove('cw-dragging');
     CW_DRAG=null;
     cwDelZone(false);
-    if(d.unit==='mat')cwMatRemove(); else cwItemRemove(d.id);
+    cwItemRemove(d.id);
   };
   if(cwRM()||!zr){finish();return}
   /* 条目和删除区都在 #cw-content 的布局坐标里，目标位移直接用 offset */
@@ -7155,9 +7067,8 @@ function cwDragArm(e){
   var t=e.target;
   if(!t||!t.closest)return;
   var it=t.closest('#cwContentBody .cw-it');
-  if(!it||it.classList.contains('cw-it-gap')||(t.closest('button')&&!t.closest('.cw-mathead')))return;
-  var d={el:it,id:it.getAttribute('data-item'),unit:it.getAttribute('data-unit')||it.getAttribute('data-item'),
-    x:e.clientX,y:e.clientY,lastX:e.clientX,lastY:e.clientY,
+  if(!it||it.classList.contains('cw-it-gap')||t.closest('button'))return;
+  var d={el:it,id:it.getAttribute('data-item'),x:e.clientX,y:e.clientY,lastX:e.clientX,lastY:e.clientY,
     pid:e.pointerId,timer:null,active:false,dropping:false,overDel:false,zoneShown:false};
   d.timer=setTimeout(function(){ cwDragBegin(d) },320);
   CW_DRAG=d;
@@ -7325,14 +7236,11 @@ function cwDragEnd(e){
       });
       target=kids.indexOf(gap);
     }
-    var units=cwUnits(),from=-1,i;
-    for(i=0;i<units.length;i++)if(units[i].key===d.unit){from=i;break}
-    if(target!=null&&target>=0&&from>=0&&target!==from){
-      var moved=units.splice(from,1)[0];
-      units.splice(Math.min(target,units.length),0,moved);
-      var flat=[];
-      units.forEach(function(u){ flat=flat.concat(u.items) });
-      CW_ITEMS=flat;
+    var ix=-1,i;
+    for(i=0;i<CW_ITEMS.length;i++)if(CW_ITEMS[i].id===d.id)ix=i;
+    if(target!=null&&target>=0&&ix>=0&&target!==ix){
+      var moved=CW_ITEMS.splice(ix,1)[0];
+      CW_ITEMS.splice(target,0,moved);
     }
     if(gap&&gap.parentNode)gap.parentNode.removeChild(gap);
     if(it.parentNode&&it.parentNode.id==='cw-content')it.parentNode.removeChild(it);
@@ -7383,7 +7291,6 @@ document.addEventListener('click',function(e){
 window.addEventListener('blur',function(){ if(CW_DRAG)cwDragEnd(null) });
 
 function cwItemRemove(id){
-  if(CW_MAT&&CW_MAT.ids.indexOf(id)>=0){ cwMatRemove(); return }
   var ix=-1,i;
   for(i=0;i<CW_ITEMS.length;i++)if(CW_ITEMS[i].id===id)ix=i;
   if(ix<0)return;
@@ -7587,8 +7494,7 @@ function cwPickAdd(id,force){
   var nw=p.msgs.map(function(m){return {id:cwItemSeq(),t:m.t,c:m.c,from:p.title}});
   at=(at<0||at>CW_ITEMS.length)?CW_ITEMS.length:at;
   CW_ITEMS.splice.apply(CW_ITEMS,[at,0].concat(nw));
-  CW_MAT={pid:p.id,title:p.title,ids:nw.map(function(it){return it.id}),
-    kws:matKeywords(p.ref).slice(0,3),src:p.src,open:false};
+  CW_MAT={pid:p.id,title:p.title,ids:nw.map(function(it){return it.id})};
   cwDropEmptyText();
   if(nw.length)cwMarkFresh(nw[nw.length-1].id);
   toast(oldIds.length?'已替换发送内容里的素材':'已添加到发送内容');
