@@ -19271,7 +19271,7 @@ render();
 </div>
 </script>
 
-<script type="text/plain" id="srcXhsNote"><div style="height: 100%"><div class="h-full overflow-auto"><div class="h-full"><div class="rea-xn-page" data-xn-list>
+<script type="text/plain" id="srcXhsNote"><div style="height: 100%"><div class="h-full overflow-auto" style="height:100%;overflow:auto"><div class="h-full"><div class="rea-xn-page" data-xn-list>
   <div class="rea-xn-head">
     <h1>笔记发布</h1>
     <div class="rea-xn-headact">
@@ -19308,7 +19308,7 @@ render();
 </div></div></div></div>
 </script>
 
-<script type="text/plain" id="srcXhsNoteNew"><div style="height: 100%"><div class="h-full overflow-auto"><div class="h-full"><div class="rea-xn-page" data-xn-newpage>
+<script type="text/plain" id="srcXhsNoteNew"><div style="height: 100%"><div class="h-full overflow-auto" style="height:100%;overflow:auto"><div class="h-full"><div class="rea-xn-page" data-xn-newpage>
   <div class="rea-xn-crumb"><a data-xn-back>笔记发布</a><span>/</span><span>新建任务</span></div>
   <div class="rea-xn-head"><h1>新建任务</h1></div>
   <div class="rea-xn-form">
@@ -19452,7 +19452,7 @@ render();
 </div></div></div></div>
 </script>
 
-<script type="text/plain" id="srcXhsNoteDetail"><div style="height: 100%"><div class="h-full overflow-auto"><div class="h-full"><div class="rea-xn-page" data-xn-detail>
+<script type="text/plain" id="srcXhsNoteDetail"><div style="height: 100%"><div class="h-full overflow-auto" style="height:100%;overflow:auto"><div class="h-full"><div class="rea-xn-page" data-xn-detail>
   <div class="rea-xn-crumb"><a data-xn-back>笔记发布</a><span>/</span><span>任务详情</span></div>
   <div class="rea-xn-head"><h1>任务详情</h1></div>
   <section class="rea-xn-sec">
@@ -19498,8 +19498,10 @@ render();
      （壳由 reaSynthPages() 从「新小红书运营」三页克隆），三页正文各一整块。列表的演示行
      取自现网截图（共 11 条，第一行带「13313」这类行业词），筛选与分页在页内消化；
      新建页按截图的任务信息／找谁／执行设置／执行安排四组排布；详情页补任务信息、
-     员工完成情况与两张弹窗。 -->
-<script type="text/plain" id="srcXhsOp"><div style="height: 100%"><div class="h-full overflow-auto"><div class="h-full"><div class="rea-xn-page" data-xh-list>
+     员工完成情况与两张弹窗。
+     包装层的高度与滚动必须写在**内联样式**里：快照 CSS 没有 Tailwind 的
+     .h-full／.overflow-auto，只挂这两个类名不会产生滚动容器，长表单会滚不动。 -->
+<script type="text/plain" id="srcXhsOp"><div style="height: 100%"><div class="h-full overflow-auto" style="height:100%;overflow:auto"><div class="h-full"><div class="rea-xn-page" data-xh-list>
   <div class="rea-xn-head">
     <h1>小红书运营</h1>
     <div class="rea-xn-headact">
@@ -19545,7 +19547,7 @@ render();
 </div></div></div></div>
 </script>
 
-<script type="text/plain" id="srcXhsOpNew"><div style="height: 100%"><div class="h-full overflow-auto"><div class="h-full"><div class="rea-xn-page" data-xh-newpage>
+<script type="text/plain" id="srcXhsOpNew"><div style="height: 100%"><div class="h-full overflow-auto" style="height:100%;overflow:auto"><div class="h-full"><div class="rea-xn-page" data-xh-newpage>
   <div class="rea-xn-crumb"><a data-xh-back>小红书运营</a><span>/</span><span>新建任务</span></div>
   <div class="rea-xn-head"><h1>新建任务</h1></div>
   <div class="rea-xn-form">
@@ -19829,7 +19831,7 @@ render();
 </div></div></div></div>
 </script>
 
-<script type="text/plain" id="srcXhsOpDetail"><div style="height: 100%"><div class="h-full overflow-auto"><div class="h-full"><div class="rea-xn-page" data-xh-detail>
+<script type="text/plain" id="srcXhsOpDetail"><div style="height: 100%"><div class="h-full overflow-auto" style="height:100%;overflow:auto"><div class="h-full"><div class="rea-xn-page" data-xh-detail>
   <div class="rea-xn-crumb"><a data-xh-back>小红书运营</a><span>/</span><span>任务详情</span></div>
   <div class="rea-xn-head"><h1>任务详情</h1></div>
   <section class="rea-xn-sec">
