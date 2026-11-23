@@ -1239,6 +1239,10 @@ select.cw-input{-webkit-appearance:none;appearance:none;padding-right:42px;curso
 .cw-rowhd>b,.cw-rowhd-b{font-size:16px;font-weight:600;color:var(--on-surface)}
 .cw-rowsub{font-size:12px;color:var(--on-surface-variant)}
 .cw-rowhd-b{flex:1}
+/* 发送内容的已用条数：常驻在段头右侧，满 10 条变色；数字本身就是状态，不加说明句。 */
+.cw-rowhd .cw-count{margin-left:auto;font-size:12.5px;font-weight:600;color:#6387C0;
+  font-variant-numeric:tabular-nums;letter-spacing:.01em}
+.cw-rowhd .cw-count.full{color:#B26B00}
 /* 发送内容：有序条目，序号只在该有序列表里出现 */
 .cw-items{display:flex;flex-direction:column}
 .cw-it{display:flex;gap:10px;padding:10px 0}
@@ -1288,6 +1292,8 @@ textarea.cw-ta::placeholder{color:var(--on-surface-variant)}
 .cwp-search{display:flex;align-items:center;gap:10px;height:52px;padding:0 16px;margin:4px 0 10px;
   border-radius:26px;background:var(--sc-high);color:var(--on-surface-variant)}
 .cwp-search input{flex:1;min-width:0;font-size:15px;color:var(--on-surface)}
+.cwp-room{margin:-2px 4px 8px;font-size:12.5px;color:#6387C0;text-align:right}
+.cwp-room b{font-weight:700;color:#2E6BFF;margin:0 2px;font-variant-numeric:tabular-nums}
 .cwp-tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:6px;scrollbar-width:none;
   -webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent)}
 .cwp-tabs::-webkit-scrollbar{display:none}
@@ -4190,7 +4196,7 @@ body[data-motion="fade"] .panel.anim-in{animation:panelSwapIn .36s var(--emph) .
           <div class="scroll cust-scroll" id="custAwakeBody"></div>
           <!-- 吸底「选择客户」· 客户唤醒两个入口之一（另一个在工具页「高效发送」组）。
                底栏只放这一枚主操作，不写三档人数。
-               点它不换页：这一页就地进入选取态（卡片左侧长出勾、底栏变成「已选 N 人＋下一步」），
+               点它不换页：这一页就地进入选取态（卡片左侧长出勾、底栏变成「已选 N 人＋写唤醒内容」），
                只勾当前这一档的人。选取态没有「全部／自定义」——那两段留在工具页那条路上。 -->
           <div class="cw-foot" id="custAwakeFoot">
             <button class="cw-btn block" onclick="cwFromAwake()">选择客户</button>
@@ -4227,7 +4233,8 @@ body[data-motion="fade"] .panel.anim-in{animation:panelSwapIn .36s var(--emph) .
         <!-- 客户唤醒（App 工具页）· ADR-0095／ADR-0113／docs/prd/客户唤醒-App工具页-PRD.md
              两个入口：工具页「高效发送」组的「客户唤醒」，与「待唤醒客户」页吸底的「选择客户」。
              工具页同屏定范围与准备内容。「AI 帮写」直接按范围逐人写；已准备的统一内容直接预览。
-             待唤醒客户入口在原列表勾选，之后同样进逐人文案页。
+             待唤醒客户入口在原列表勾选后进同一个内容页（顶部换成「已选客户」卡），
+             自己写统一内容，或从段头「AI 帮写」按勾选的人逐人起草。
              **没有发送中页与结果页**：脚本执行会切到微信、逐条发、占住屏幕，App 里画进度没意义；
              点发送回到对应入口；执行结束才落记录，状态为「已完成／已中断」。
              正文一律由 REND['cw-*'] 按数据填（同 cust 四页的口径：版式一份，换数据）。 -->
@@ -5772,13 +5779,15 @@ REND['host-reach']=function(){custRender('host-reach')};
 REND['host-chat']=function(){custRender('host-chat')};
 REND['host-newfriend']=function(){custRender('host-newfriend')};
 
-/* ---------- 客户唤醒（App 工具页）· ADR-0095／ADR-0113 / docs/prd/客户唤醒-App工具页-PRD.md ----------
-   2026-11-19 路径重排：逐人写扶正为主路径，统一内容退成「发同一份内容」。
-   · 工具页 cw-content：同屏定范围、编辑统一内容；「AI 帮写」按范围取人并直接进 cw-persons。
+/* ---------- 客户唤醒（App 工具页）· ADR-0095／ADR-0113／ADR-0117 / docs/prd/客户唤醒-App工具页-PRD.md ----------
+   两个入口共用一个内容页（cw-content），差别只在顶部：
+   · 工具页入口：同屏定范围、编辑统一内容；「AI 帮写」按范围取人并直接进 cw-persons。
+   · 待唤醒客户入口：原列表勾选后进同一内容页，顶部是「已选客户」卡；
+     自己写统一内容，或从段头「AI 帮写」按勾选的人进 cw-persons。
    · cw-persons：一人一行（姓名与状态 → 一句聊天原话 → 可编辑草稿 → 行操作），
      发送间隔在列表上方，底部直接「去微信发送」；缺实时事实时行内补齐再写这一人。只发文字。
-   · 工具页编辑的文字或素材走「预览发送」到 cw-preview。
-   · 待唤醒客户入口在原列表勾选，勾好同样进 cw-persons；两条路都保留本机的唤醒记录。
+   · 统一内容走「预览发送」到 cw-preview：工具页按范围取人，待唤醒入口用勾选的人。
+   · 两条路都保留本机的唤醒记录。
    素材一律复用 App 素材库的数据与读法（MATS／PS、msgsOf、visMats），不另造一份。 */
 
 var AWAKE_SELING=false, AWAKE_ENTER=false, CW_FROM='tools';
@@ -6220,6 +6229,9 @@ document.addEventListener('scroll',function(){
 /* ---------- 工具页：定唤醒范围与微信标签，再选人 ----------
    单卡同 v651：范围一行、标签一行，标签值靠右，与发送内容、发送间隔同一套白卡。 */
 function cwScopeCardHtml(){
+  /* 待唤醒入口已经手选好人：顶部换成已选客户卡，点它回列表改人。 */
+  if(CW_FROM==='awake')return '<button type="button" class="cw-pcard cw-rcpt" onclick="cwPickedEdit()" aria-label="修改已选客户">'
+    +'<span>已选客户 <b>'+awakeSelCount()+'</b> 人</span><span class="cw-chev" aria-hidden="true">›</span></button>';
   var on=CW_CUSTOM.on, u=CW_CUSTOM.u;
   return '<div class="cw-pcard">'
     +'<div class="cw-sech"><span class="sp" aria-hidden="true">'+I('sparkle',18,1.8)+'</span><b>唤醒范围</b>'
@@ -6265,6 +6277,9 @@ function cwEnter(){
   cwQueryStop();
   go('cw-content');
 }
+/* AI 帮写：工具页按范围启用，待唤醒入口按勾选启用。 */
+function cwAILinkOn(){ return CW_FROM==='awake'?awakeSelCount()>0:(CW_CUSTOM.on&&!CW_QBUSY) }
+function cwAIStart(){ if(CW_FROM==='awake'){ cwPersStart(); return } cwToolPersStart() }
 /* 直接逐人帮写。回到同一范围时沿用这一轮的勾选和文案。 */
 function cwToolPersStart(){
   if(cur!=='cw-content'||!CW_CUSTOM.on||CW_QBUSY)return;
@@ -6292,7 +6307,7 @@ function cwLastMsgHtml(c){
    点吸底「选择客户」不换页：这一页自己变成选取态，初始不勾任何人。
    · 0ms　只有按压波纹，页面、Tab、滚动位置都不动；
    · 60ms 起　卡片逐行（每行 +30ms）把左内衬 14→47、勾选框 scale(.7)→1；
-   · 底栏上方「已选 N 人」长出来，主按钮切到「按聊天记录帮写」。 */
+   · 底栏上方「已选 N 人」长出来，主按钮切到「写唤醒内容」。 */
 function awakeSelCount(){
   var n=0,b,k,list;
   for(b=0;b<3;b++){
@@ -6335,11 +6350,17 @@ function awakeAllSel(){
   REND['host-awake']();
   if(sc)sc.scrollTop=y;
 }
-/* 勾好的人直接进逐人文案页开始写；不再经过准备内容页。 */
+/* 勾好的人进内容页：自己写统一内容，或从段头「AI 帮写」逐人起草。 */
 function awakeNext(){
   if(!awakeSelCount()){ toast('先选几个客户'); return; }
   CW_FROM='awake';
-  cwPersStart();
+  go('cw-content');
+}
+/* 内容页顶部「已选客户」卡：回原列表的勾选态改人。 */
+function cwPickedEdit(){
+  AWAKE_SELING=true; AWAKE_ENTER=true;
+  if(stack.length>1&&stack[stack.length-2].id==='host-awake'){ back(); return; }
+  go('host-awake');
 }
 function awakeBackOrLeave(){ if(!awakeBack())back(); }
 function awakeBack(){
@@ -6384,7 +6405,7 @@ function awakeFoot(animate){
   if(!animate||cwRM()){
     f.className='cw-foot stack'; f.setAttribute('data-mode','next');
     f.innerHTML='<div class="cw-sum cw-fsum cw-selrow">'+awakeSumHtml(n)+'</div>'
-      +'<button class="cw-btn block" onclick="awakeNext()">按聊天记录帮写</button>';
+      +'<button class="cw-btn block" onclick="awakeNext()">写唤醒内容</button>';
     return;
   }
   var btn=f.querySelector('.cw-btn'), lab;
@@ -6404,7 +6425,7 @@ function awakeFoot(animate){
     lab.style.opacity='0';
   }) });
   setTimeout(function(){
-    lab.textContent='按聊天记录帮写';
+    lab.textContent='写唤醒内容';
     lab.style.transition='opacity .12s';
     lab.style.opacity='1';
     btn.setAttribute('onclick','awakeNext()');
@@ -6726,10 +6747,13 @@ function cwPersStop(){
   p.busy=false; p.needConfirm=false;
   cwPersProgressPaint();
 }
-/* 顶栏返回：工具入口回范围页；待唤醒入口回原列表的勾选态。
+/* 顶栏返回：回上一屏——工具入口回范围页，待唤醒入口回内容页，再退一次才到勾选态。
    返回就是改人入口，不再单设「换人」。草稿都留在内存里。 */
 function cwPersBackGo(){
-  if(CW_FROM==='awake'){ AWAKE_SELING=true; AWAKE_ENTER=true; go('host-awake'); return; }
+  if(CW_FROM==='awake'){
+    if(stack.length>1&&stack[stack.length-2].id==='cw-content'){ back(); return; }
+    AWAKE_SELING=true; AWAKE_ENTER=true; go('host-awake'); return;
+  }
   cwEditPeople();
 }
 function cwRestorePersSelection(){
@@ -6866,7 +6890,7 @@ function cwPersFoot(){
   if(p.needConfirm)sum='接收客户有变化，请再确认一次'+(sum?' · '+sum:'');
   var h=sum?'<div class="cw-sum'+(p.needConfirm?' bad':'')+'" role="status">'+esc(sum)+'</div>':'';
   if(cwPersBusy())h+='<button class="cw-btn block" disabled>正在写…</button>';
-  else if(!n)h+='<button class="cw-btn block" onclick="cwPersBackGo()">'+(CW_FROM==='awake'?'返回选人':'返回改范围')+'</button>';
+  else if(!n)h+='<button class="cw-btn block" onclick="cwPersBackGo()">'+(CW_FROM==='awake'?'返回改内容':'返回改范围')+'</button>';
   else h+='<button class="cw-btn block" onclick="cwPersSend()">去微信发送 · '+n+' 人</button>';
   f.innerHTML=h;
 }
@@ -6921,7 +6945,7 @@ function cwPersLaunch(ids){
          n:ids.length,gap:CW_SET.gap,st:'done',ok:ids.length,fail:0,items:[],people:people,
          personal:true,unsent:Math.max(0,p.order.length-ids.length)};
   cwQueueLaunch(r);
-  if(CW_FROM==='awake'){ AWAKE_SELING=false; AWAKE_ENTER=false; go('host-awake'); }
+  if(CW_FROM==='awake'){ AWAKE_SELING=false; AWAKE_ENTER=false; CW_SEL={}; go('host-awake'); }
   else go('host-tools');
   toast('已开始唤醒，完成后在记录里查看');
 }
@@ -7352,21 +7376,38 @@ function cwRetryUpload(id){
   setTimeout(function(){ it.up=''; cwRender() },600);
 }
 function cwContentBlockHtml(){
+  var n=cwMsgCount(),full=n>=CW_MAX_MSG;
   return '<div class="cw-pcard'+(CW_MODE_ANIM?' cw-mode-in':'')+'">'
     +'<div class="cw-rowhd"><span class="sp" aria-hidden="true">'+I('sparkle',16,1.8)+'</span><b>发送内容</b>'
-    +'<button class="cw-ai-link" '+(CW_CUSTOM.on&&!CW_QBUSY?'onclick="cwToolPersStart()"':'disabled')+'>'+I('sparkle',13,1.8)+'AI 帮写</button></div>'
+    +'<span class="cw-count'+(full?' full':'')+'" aria-label="发送内容 '+n+'/'+CW_MAX_MSG+' 条消息">'+n+'/'+CW_MAX_MSG+'</span>'
+    +'<button class="cw-ai-link" '+(cwAILinkOn()?'onclick="cwAIStart()"':'disabled')+'>'+I('sparkle',13,1.8)+'AI 帮写</button></div>'
     +'<div class="cw-items">'+cwItemsHtml()+'</div>'
-    +'<button class="cw-btn block cw-add-btn" onclick="cwAddSheet()">'+I('plus',18,2.2)+'添加内容</button>'
+    +'<button class="cw-btn block cw-add-btn" '+(full?'disabled aria-disabled="true"':'onclick="cwAddSheet()"')+'>'
+      +(full?'已达 '+CW_MAX_MSG+' 条上限':I('plus',18,2.2)+'添加内容')+'</button>'
     +'</div>';
 }
 /* 工具页同屏编辑统一内容，预览时才按范围取人。 */
 function cwContentFoot(){
   var f=$('cwContentFoot'); if(!f)return;
-  var err=cwContentErr();
-  var notice=CW_QBUSY?'正在获取客户…':(CW_QERR?'没能获取客户':(CW_CUSTOM.on?err:''));
+  var awake=CW_FROM==='awake', err=cwContentErr();
+  var notice=awake?err:(CW_QBUSY?'正在获取客户…':(CW_QERR?'没能获取客户':(CW_CUSTOM.on?err:'')));
+  var dis=err||CW_QBUSY||(!awake&&!CW_CUSTOM.on);
   f.innerHTML=(notice?'<div class="cw-sum" role="status">'+esc(notice)
     +(CW_QERR?' · <button class="cw-textact" onclick="cwQueryRetry()">重试</button>':'')+'</div>':'')
-    +'<button class="cw-btn block" '+(err||!CW_CUSTOM.on||CW_QBUSY?'disabled':'onclick="cwPreviewGo()"')+'>预览发送</button>';
+    +'<button class="cw-btn block" '+(dis?'disabled':'onclick="cwPreviewGo()"')+'>预览发送</button>';
+  cwCountPaint();
+}
+/* 条数、计数与「添加内容」的可用状态：输入、删除、加素材都从这里回写，不整页重绘。 */
+function cwCountPaint(){
+  var n=cwMsgCount(),full=n>=CW_MAX_MSG;
+  var c=document.querySelector('#cwContentBody .cw-count');
+  if(c){ c.textContent=n+'/'+CW_MAX_MSG; c.classList.toggle('full',full);
+    c.setAttribute('aria-label','发送内容 '+n+'/'+CW_MAX_MSG+' 条消息') }
+  var add=document.querySelector('#cwContentBody .cw-add-btn');
+  if(add){ add.disabled=full;
+    if(full)add.setAttribute('aria-disabled','true'); else add.removeAttribute('aria-disabled');
+    add.innerHTML=full?'已达 '+CW_MAX_MSG+' 条上限':I('plus',18,2.2)+'添加内容';
+  }
 }
 REND['cw-content']=function(){
   /* 别把正在拖的节点连同占位一起重画掉：真有外部重绘时先把拖拽收干净 */
@@ -7440,17 +7481,19 @@ function cwPickUnTypes(p){
    文字块、附件和素材消息合计最多 10 条，整条素材放不下时不能加入。 */
 function cwPickRowHtml(p){
   var open=CW_PICK.exp===p.id;
-  var blocked=!cwPickOk(p);
+  var blocked=!cwPickOk(p),room=cwMsgRoom();
+  var full=!blocked&&room<=0,partial=!blocked&&!full&&p.msgs.length>room;
   var mixed=(CW_PICK.tab==='全部'||CW_PICK.tab==='最近使用')&&CW_PICK.grp==='全部';
   var kws=matKeywords(p.ref);
   var line=kws.length?kws.map(function(k){return '#'+esc(k)}).join(' ')
     :(hasText(p.ref)?'':'无文字内容，附件可直接发送');
   var bad=blocked?'<span class="lc-tag bad">含'+cwPickUnTypes(p)+'</span>':'';
-  var aria=blocked?'含'+cwPickUnTypes(p)+'，不能用于唤醒':(p.msgs.length>cwMsgRoom()?'发送内容最多 '+CW_MAX_MSG+' 条消息':'添加这条素材并返回');
+  var aria=blocked?'含'+cwPickUnTypes(p)+'，不能用于唤醒'
+    :(full?'发送内容已达 '+CW_MAX_MSG+' 条上限':(partial?'添加这条素材的前 '+room+' 条消息':'添加这条素材并返回'));
   return '<div class="cwp-card">'
     +(mixed?srcTagHtml(p.src):'')
     +'<div class="cwp-row'+(open?' on':'')+'" data-p="'+esc(p.id)+'" aria-expanded="'+(open?'true':'false')+'" onclick="cwPickToggle(\''+p.id+'\')">'
-      +'<button class="cwp-add" '+(blocked?'disabled aria-disabled="true"':'onclick="event.stopPropagation();cwPickAdd(\''+p.id+'\')"')+' aria-label="'+esc(aria)+'">'+I('plus',17,2.4)+'</button>'
+      +'<button class="cwp-add" '+((blocked||full)?'disabled aria-disabled="true"':'onclick="event.stopPropagation();cwPickAdd(\''+p.id+'\')"')+' aria-label="'+esc(aria)+'">'+I('plus',17,2.4)+'</button>'
       +'<span class="cwp-spk">'+hvSpk(17)+'</span>'
       +'<div class="cwp-b"><div class="lc-h"><h5>'+esc(p.title)+'</h5>'+bad+chgTagHtml(p.ref)+'</div>'
       +(line?'<p>'+line+'</p>':'')+'</div>'
@@ -7485,8 +7528,9 @@ function cwPickGrp(g){ CW_PICK.grp=g; CW_PICK.exp=''; cwPickRefresh() }
 function cwPickAdd(id){
   var p=cwPickById(id); if(!p)return;
   if(!cwPickOk(p)){toast('含'+cwPickUnTypes(p)+'的素材不能用于唤醒');return}
-  if(p.msgs.length>cwMsgRoom()){toast('发送内容最多 '+CW_MAX_MSG+' 条消息，先删掉几条再添加');return}
-  var nw=p.msgs.map(function(m){return {id:cwItemSeq(),t:m.t,c:m.c}});
+  var room=cwMsgRoom();
+  if(room<=0){toast('发送内容已达 '+CW_MAX_MSG+' 条上限');return}
+  var nw=p.msgs.slice(0,room).map(function(m){return {id:cwItemSeq(),t:m.t,c:m.c}});
   CW_ITEMS=CW_ITEMS.concat(nw);
   cwDropEmptyText();
   if(nw.length)cwMarkFresh(nw[nw.length-1].id);
@@ -7499,6 +7543,7 @@ REND['cw-pick']=function(){
   var h='';
   h+='<div class="cwp-search">'+I('search',20,2)
     +'<input id="cwPickQ" type="search" placeholder="搜索素材" value="'+esc(CW_PICK.q)+'" oninput="cwPickSearch(this.value)"></div>'
+    +'<div class="cwp-room" role="status">还可加 <b>'+cwMsgRoom()+'</b> 条</div>'
     +'<div class="cwp-tabs">'+tabs.map(function(t){return '<button class="'+(CW_PICK.tab===t?'on':'')+'" onclick="cwPickTab(\''+t+'\')">'+t+'</button>'}).join('')+'</div>';
   var grps=cwPickGrps();
   if(grps.length)h+='<div class="cwp-grps"><button class="'+(CW_PICK.grp==='全部'?'on':'')+'" onclick="cwPickGrp(\'全部\')">全部分组</button>'
@@ -7532,13 +7577,20 @@ function cwPreviewBlocked(){
   if(!cwSelCount())return '还没有可发送的客户';
   return cwContentErr();
 }
-function cwSendCount(){ return cwSendableIds(cwSelIds()).length }
-/* 「预览发送」：预览时才按范围取人；取到人再进预览。 */
+/* 接收人：统一内容看内容能否解析；待唤醒入口再剔除刚回过的人。 */
+function cwPreviewPeople(){
+  var ids=cwSelByH().filter(cwIsSendable);
+  if(CW_FROM==='awake')ids=ids.filter(function(id){ return cwLatestSide(cwCust(id))!=='c' });
+  return ids;
+}
+function cwSendCount(){ return cwPreviewPeople().length }
+/* 「预览发送」：工具页预览时才按范围取人；待唤醒入口直接用勾选的人。 */
 function cwPreviewGo(){
   if(CW_QBUSY)return;
-  if(!CW_CUSTOM.on){ cwContentFoot(); toast('先设置未回复时长'); return; }
+  if(CW_FROM!=='awake'&&!CW_CUSTOM.on){ cwContentFoot(); toast('先设置未回复时长'); return; }
   var bad=cwContentErr();
   if(bad){ cwContentFoot(); toast(bad); return; }
+  if(CW_FROM==='awake'){ CW_SEND_NOTICE=''; go('cw-preview'); return; }
   cwQueryRun('preview');
 }
 function cwPreviewFoot(){
@@ -7548,7 +7600,7 @@ function cwPreviewFoot(){
   var notice=CW_QBUSY||CW_QERR?err:(CW_SEND_NOTICE||err);
   $('cwPreviewFoot').innerHTML=(notice?'<div class="cw-sum" role="status">'+esc(notice)+retry+'</div>':'')
     +'<button class="cw-btn block" '+(err&&!zero?'disabled':'onclick="'+(zero?'cwEditPeople()':'cwStart()')+'"')+'>'
-    +(zero?'修改范围':'去微信发送 · '+n+' 人')+'</button>';
+    +(zero?(CW_FROM==='awake'?'修改客户':'修改范围'):'去微信发送 · '+n+' 人')+'</button>';
 }
 REND['cw-preview']=function(){
   $('cwPreviewBack').innerHTML=I('back',24,2);
@@ -7559,7 +7611,7 @@ REND['cw-preview']=function(){
 };
 REND['cw-people']=function(){
   $('cwPeopleBack').innerHTML=I('back',24,2);
-  var ids=cwSelByH().filter(cwIsSendable);
+  var ids=cwPreviewPeople();
   var h='<div class="cw-people"><div class="cw-peoplect"><span>共 '+ids.length+' 人</span>'
     +'<button class="cw-textact" onclick="cwEditPeople()">修改</button></div>';
   h+=ids.map(function(id){ var c=cwCust(id); if(!c)return '';
@@ -7567,10 +7619,15 @@ REND['cw-people']=function(){
   }).join('');
   $('cwPeopleBody').innerHTML=h+'</div>';
 };
-/* 统一内容改人：回工具页改范围；改完再点一次「预览发送」重新取人。 */
+/* 统一内容改人：工具页回范围；待唤醒入口回原列表的勾选态。改完再点一次「预览发送」。 */
 function cwEditPeople(){
   if(cur==='cw-content')return;
   cwQueryStop();
+  if(CW_FROM==='awake'){
+    AWAKE_SELING=true; AWAKE_ENTER=true;
+    stack=stack.filter(function(p){return ['cw-content','cw-preview','cw-people','cw-persons'].indexOf(p.id)<0});
+    go('host-awake'); return;
+  }
   var scope=stack.map(function(p){return p.id}).lastIndexOf('cw-content');
   if(scope<0){ go('cw-content'); return; }
   stack.length=scope+2;
@@ -7590,6 +7647,15 @@ function cwSendVersion(){ return JSON.stringify([cwItemsSig(),cwSendableIds(cwSe
 function cwStart(){
   if(CW_QBUSY||CW_LAUNCHING)return;
   var bad=cwPreviewBlocked(); if(bad){cwPreviewFoot();toast(bad);return}
+  /* 待唤醒入口没有范围查询，发送前在这里做同等的回复复核：只剔除、不补人。 */
+  if(CW_FROM==='awake'){
+    var rep=0;
+    cwSelIds().forEach(function(id){ if(cwLatestSide(cwCust(id))==='c'){ delete CW_SEL[id]; rep++ } });
+    if(rep){
+      CW_SEND_NOTICE=rep+' 人已回复，接收客户已变为 '+cwSendCount()+' 人，请重新确认';
+      cwRender(); toast('接收客户有变化，请再确认一次'); return;
+    }
+  }
   var ids=cwSendableIds(cwSelIds());
   if(!ids.length){ cwEditPeople(); return; }
   CW_SEND_IDS=ids.slice(); CW_SEND_SKIP=Math.max(0,cwSelCount()-ids.length); CW_SEND_VERSION=cwSendVersion();
@@ -7616,11 +7682,13 @@ function cwLaunch(ids){
   });
   var skipped=CW_SEND_SKIP;
   var r={id:'r'+Date.now(),when:cwDay()+'\n'+cwClock(),
-         scope:'未回复 '+cwRangeLabel()+((CW_CUSTOM.tags||[]).length?' · '+cwTagSummary():''),
+         scope:(CW_FROM==='awake'?'待唤醒客户 · 手选'
+           :'未回复 '+cwRangeLabel()+((CW_CUSTOM.tags||[]).length?' · '+cwTagSummary():'')),
          n:n,gap:CW_SET.gap,st:'done',ok:n,fail:0,items:items,people:people,
          personal:false,unsent:0,skipped:skipped};
   cwQueueLaunch(r);
-  go('host-tools');
+  if(CW_FROM==='awake'){ AWAKE_SELING=false; AWAKE_ENTER=false; CW_SEL={}; go('host-awake'); }
+  else go('host-tools');
   toast('已开始唤醒，完成后在记录里查看');
 }
 function cwQueueLaunch(r){
