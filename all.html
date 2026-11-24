@@ -37631,16 +37631,10 @@ draw();
 .rea-dcc-row{display:flex;align-items:center;gap:8px}
 .rea-dcc-lab{flex:none;font-size:14px;line-height:32px;color:rgba(0,0,0,.88);white-space:nowrap}
 .rea-dcc-name{flex:0 0 220px!important;width:220px!important}
+.rea-dcc-val{flex:1}
 .rea-dcc-err{display:none;margin:6px 0 12px 36px;font-size:12px;line-height:18px;color:#ff4d4f}
 .rea-dcc-err.on{display:block}
-.rea-dcc-tags{display:flex;flex-wrap:wrap;align-items:center;gap:6px;flex:1;min-width:220px;min-height:32px;padding:2px 8px;border:1px solid #d9d9d9;border-radius:6px;background:#fff;cursor:text;transition:border-color .2s,box-shadow .2s}
-.rea-dcc-tags:focus-within{border-color:#4096ff;box-shadow:0 0 0 2px rgba(5,145,255,.1)}
-.rea-dcc-tags.rea-bad,.rea-dcc-name.rea-bad{border-color:#ff4d4f}
-.rea-dcc-tag{display:inline-flex;align-items:center;gap:4px;height:24px;padding:0 6px;border-radius:4px;background:#f5f5f5;color:rgba(0,0,0,.88);font-size:12px;line-height:22px}
-.rea-dcc-tag b{font-weight:400;color:#8c8c8c;cursor:pointer}
-.rea-dcc-tag b:hover{color:#ff4d4f}
-.rea-dcc-tagin{flex:1;min-width:120px;height:24px;padding:0;border:0;outline:0;background:none;color:rgba(0,0,0,.88);font-size:14px;line-height:24px}
-.rea-dcc-tagin::placeholder{color:rgba(0,0,0,.25)}
+.rea-dcc-name.rea-bad,.rea-dcc-val.rea-bad{border-color:#ff4d4f}
 .rea-dcc-del{flex:none;height:32px;padding:0 2px;border:0;background:none;color:#ff4d4f;font-size:14px;cursor:pointer}
 .rea-dcc-del:hover{color:#ff7875}
 .rea-dcc-tip{position:fixed;z-index:1300;display:none;max-width:320px;padding:10px 12px;border-radius:6px;background:#fff;box-shadow:0 6px 16px rgba(0,0,0,.12);color:#1f2329;font-size:12px;line-height:18px}
@@ -37659,7 +37653,7 @@ draw();
       var row = anchor.closest('.ant-form-item');
       if(!row) return;
 
-      var TIP = '大众点评发布页要求填写、这里没有内置的项；执行时员工从你给的选项里选一个。';
+      var TIP = '执行时脚本按名称找到大众点评页上的这一项，点你填的那个值。';
       var sec = document.createElement('div');
       sec.className = 'rea-dcc';
       sec.setAttribute('data-dcc','1');
@@ -37703,44 +37697,12 @@ draw();
           '<div class="rea-dcc-row">'
           + '<span class="rea-dcc-lab">名称</span>'
           + '<input type="text" class="ant-input css-vgijab ant-input-outlined rea-dcc-name" placeholder="如：课程类型">'
-          + '<span class="rea-dcc-lab">选项</span>'
-          + '<div class="rea-dcc-tags"><input type="text" class="rea-dcc-tagin" placeholder="输入选项后回车"></div>'
+          + '<span class="rea-dcc-lab">值</span>'
+          + '<input type="text" class="ant-input css-vgijab ant-input-outlined rea-dcc-val" placeholder="如：正式课">'
           + '<button type="button" class="rea-dcc-del">删除</button>'
           + '</div><div class="rea-dcc-err"></div>';
-        item.__opts = [];
         list.appendChild(item);
         return item;
-      }
-
-      function renderTags(item, keepFocus){
-        var box = item.querySelector('.rea-dcc-tags');
-        var input = item.querySelector('.rea-dcc-tagin');
-        while(box.firstChild) box.removeChild(box.firstChild);
-        for(var i=0;i<item.__opts.length;i++){
-          var tag = document.createElement('span');
-          tag.className = 'rea-dcc-tag';
-          tag.setAttribute('data-i', i);
-          var tx = document.createElement('span');
-          tx.textContent = item.__opts[i];
-          var x = document.createElement('b');
-          x.setAttribute('role','button');
-          x.setAttribute('aria-label','删除选项');
-          x.textContent = '×';
-          tag.appendChild(tx); tag.appendChild(x);
-          box.appendChild(tag);
-        }
-        box.appendChild(input);
-        if(keepFocus) input.focus();
-      }
-
-      function addTag(item, raw, quiet){
-        var v = String(raw || '').trim().replace(/[,，;；、]+$/,'').trim();
-        var input = item.querySelector('.rea-dcc-tagin');
-        if(v && item.__opts.indexOf(v) < 0) item.__opts.push(v);
-        if(input) input.value = '';
-        renderTags(item, !quiet);
-        item.querySelector('.rea-dcc-err').classList.remove('on');
-        item.querySelector('.rea-dcc-tags').classList.remove('rea-bad');
       }
 
       function validate(){
@@ -37748,21 +37710,22 @@ draw();
         for(var i=0;i<items.length;i++){
           var it = items[i];
           var nameEl = it.querySelector('.rea-dcc-name');
-          var tagsEl = it.querySelector('.rea-dcc-tags');
+          var valEl = it.querySelector('.rea-dcc-val');
           var errEl = it.querySelector('.rea-dcc-err');
           var name = (nameEl.value || '').trim();
-          var dirty = !!name || (it.__opts || []).length > 0;
-          var ok = !dirty || (!!name && (it.__opts || []).length >= 2);
+          var val = (valEl.value || '').trim();
+          var dirty = !!name || !!val;
+          var ok = !dirty || (!!name && !!val);
           errEl.classList.toggle('on', !ok);
-          errEl.textContent = ok ? '' : '请填写名称，并至少添加两个选项';
+          errEl.textContent = ok ? '' : '请填写名称和值';
           nameEl.classList.toggle('rea-bad', !ok && !name);
-          tagsEl.classList.toggle('rea-bad', !ok && (it.__opts || []).length < 2);
+          valEl.classList.toggle('rea-bad', !ok && !val);
           if(!ok && !firstBad) firstBad = it;
         }
         if(firstBad){
           var f = firstBad.querySelector('.rea-dcc-name');
           if(!(f.value || '').trim()) f.focus();
-          else firstBad.querySelector('.rea-dcc-tagin').focus();
+          else firstBad.querySelector('.rea-dcc-val').focus();
           toast('请补全「点评页其他必填项」');
           return false;
         }
@@ -37775,53 +37738,15 @@ draw();
 
       list.addEventListener('click', function(e){
         var del = e.target.closest('.rea-dcc-del');
-        if(del){ del.closest('.rea-dcc-item').remove(); return; }
-        var x = e.target.closest('.rea-dcc-tag b');
-        if(x){
-          var item = x.closest('.rea-dcc-item');
-          var idx = parseInt(x.closest('.rea-dcc-tag').getAttribute('data-i'), 10);
-          item.__opts.splice(idx, 1);
-          renderTags(item);
-          return;
-        }
-        var tags = e.target.closest('.rea-dcc-tags');
-        if(tags) tags.querySelector('.rea-dcc-tagin').focus();
-      });
-
-      list.addEventListener('keydown', function(e){
-        if(!e.target.classList || !e.target.classList.contains('rea-dcc-tagin')) return;
-        var item = e.target.closest('.rea-dcc-item');
-        if(e.key === 'Enter' || e.key === ',' || e.key === '，'){
-          e.preventDefault();
-          addTag(item, e.target.value);
-        } else if(e.key === 'Backspace' && !e.target.value && item.__opts.length){
-          item.__opts.pop();
-          renderTags(item, true);
-        }
+        if(del) del.closest('.rea-dcc-item').remove();
       });
 
       list.addEventListener('input', function(e){
         var t = e.target;
-        if(t.classList && t.classList.contains('rea-dcc-tagin')){
-          if(/[,，;；、]/.test(t.value)){
-            var parts = t.value.split(/[,，;；、]+/);
-            t.value = '';
-            var item = t.closest('.rea-dcc-item');
-            for(var i=0;i<parts.length;i++) if(parts[i].trim()) addTag(item, parts[i]);
-          }
-          return;
-        }
-        if(t.classList && t.classList.contains('rea-dcc-name')){
+        if(t.classList && (t.classList.contains('rea-dcc-name') || t.classList.contains('rea-dcc-val'))){
           var it = t.closest('.rea-dcc-item');
           it.querySelector('.rea-dcc-err').classList.remove('on');
           t.classList.remove('rea-bad');
-        }
-      });
-
-      list.addEventListener('focusout', function(e){
-        var t = e.target;
-        if(t.classList && t.classList.contains('rea-dcc-tagin') && t.value.trim()){
-          addTag(t.closest('.rea-dcc-item'), t.value, true);
         }
       });
 
