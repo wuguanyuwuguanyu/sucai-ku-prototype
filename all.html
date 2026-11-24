@@ -37419,6 +37419,52 @@ draw();
 })();`;
   }
 
+  /* 数智员工（2026-11-24）：顶栏「云小智」那一组的快照页。版式与数据都是抓来的原样，
+     这里只接页内的路——列表页三枚按钮各开一张抽屉／弹窗页；抽屉／弹窗的 × 与「取消」回列表；
+     任务中心三个页签活在同一份 DOM 里，原地换页签、不整页重载；智能体的「阿里百炼」页签
+     另有快照，接成换页。筛选、搜索、使用指南、弹窗里的「确定」保持快照原样，不另造行为。 */
+  function reaDseJs(page){
+    var MAP = {
+      '知识库': { btn: { '全局日志': '知识库 · 操作日志（全局）',
+                         '任务中心': '知识库 · 任务中心',
+                         '新建知识库': '知识库 · 新建' } },
+      '知识库 · 新建': { close: '知识库', cancel: '知识库' },
+      '知识库 · 操作日志（全局）': { close: '知识库' },
+      '知识库 · 任务中心': { close: '知识库', panes: '.ant-drawer' },
+      '智能体': { tabs: { '阿里百炼': '智能体 · 阿里百炼' } }
+    }[page] || {};
+    return '(function(){var M=' + reaJson(MAP) + ';'
+      /* 按钮按文字找：快照里的按钮没有稳定钩子，文字是唯一能跨重抓存还原的键 */
+      + 'function txt(e){return (e.textContent||"").replace(/\\s+/g,"")}'
+      + 'var i,bs;'
+      + 'if(M.btn){bs=document.querySelectorAll(".ant-btn");'
+        + 'for(i=0;i<bs.length;i++){if(bs[i].closest(".ant-modal"))continue;'
+        + 'var t=txt(bs[i]);if(M.btn[t])bs[i].setAttribute("data-rea",M.btn[t]);}}'
+      + 'if(M.close){bs=document.querySelectorAll(".ant-modal-close, .ant-drawer-close");'
+        + 'for(i=0;i<bs.length;i++)bs[i].setAttribute("data-rea",M.close);}'
+      + 'if(M.cancel){bs=document.querySelectorAll(".ant-modal .ant-btn");'
+        + 'for(i=0;i<bs.length;i++)if(txt(bs[i])==="取消")bs[i].setAttribute("data-rea",M.cancel);}'
+      /* 页签换页：跟按钮同一套 data-rea，交给 reaNavJs 那条点击委托 */
+      + 'if(M.tabs){var ts=document.querySelectorAll(".ant-tabs-tab");'
+        + 'for(i=0;i<ts.length;i++){var tt=txt(ts[i]);if(M.tabs[tt])ts[i].setAttribute("data-rea",M.tabs[tt]);}}'
+      /* 页签原地换（任务中心），照 AntD 的换法：活动类名、aria、页签下划线一起挪 */
+      + 'if(M.panes){var box=document.querySelector(M.panes)||document;'
+        + 'var tabs=box.querySelectorAll(".ant-tabs-tab"),panes=box.querySelectorAll(".ant-tabs-tabpane"),'
+        + 'ink=box.querySelector(".ant-tabs-ink-bar");'
+        + 'function pick(tab){var key=tab.getAttribute("data-node-key"),on,j,b;'
+          + 'for(j=0;j<tabs.length;j++){on=tabs[j]===tab;tabs[j].classList.toggle("ant-tabs-tab-active",on);'
+            + 'b=tabs[j].querySelector(".ant-tabs-tab-btn");'
+            + 'if(b){b.setAttribute("aria-selected",on?"true":"false");b.setAttribute("tabindex",on?"0":"-1");}}'
+          + 'for(j=0;j<panes.length;j++){on=((panes[j].id||"").indexOf("-panel-"+key)>=0);'
+            + 'panes[j].classList.toggle("ant-tabs-tabpane-active",on);'
+            + 'panes[j].classList.toggle("ant-tabs-tabpane-hidden",!on);'
+            + 'panes[j].setAttribute("aria-hidden",on?"false":"true");}'
+          + 'if(ink){b=tab.querySelector(".ant-tabs-tab-btn");ink.style.width=(b?b.offsetWidth:tab.offsetWidth)+"px";'
+            + 'ink.style.left=(tab.offsetLeft+tab.offsetWidth/2)+"px";}}'
+        + 'for(j=0;j<tabs.length;j++)(function(t){t.addEventListener("click",function(e){e.preventDefault();pick(t)})})(tabs[j]);}'
+      + '})();';
+  }
+
   var REA_COVER = {
     '使用总览': { html: 'srcOverview', css: docOf('srcOverviewStyle'), js: function(){ return reaOverviewDataJs()+docOf('srcOverviewScript'); } },
     '使用总览 · 使用详情': { html: 'srcOverview', css: docOf('srcOverviewStyle'), js: function(){ return 'window.__REA_USAGE_DETAIL=true;'+reaOverviewDataJs()+docOf('srcOverviewScript'); } },
@@ -37500,7 +37546,14 @@ draw();
     [REA_WX_VIDEO_NEW]: { css: REA_VC_CSS, js: function(){ return reaWxVideoNewJs(); } },
     /* 客户唤醒 · 新建（2026-11-11）：单位下拉、执行人员、添加回复内容弹窗（固定内容／AI 两套）
        ＋ 唤醒内容行的增删改；正文与设计语言都还是快照，只补交互 */
-    '客户唤醒 · 新建': { css: REA_HX_CSS, js: reaHxJs }
+    '客户唤醒 · 新建': { css: REA_HX_CSS, js: reaHxJs },
+    /* 数智员工（2026-11-24）：只接页内的路，正文与设计语言都是快照原样。
+       「任务中心」「操作日志（全局）」「新建」三页是从列表页那三枚按钮开出来的快照。 */
+    '知识库': { js: function(){ return reaDseJs('知识库'); } },
+    '知识库 · 新建': { js: function(){ return reaDseJs('知识库 · 新建'); } },
+    '知识库 · 操作日志（全局）': { js: function(){ return reaDseJs('知识库 · 操作日志（全局）'); } },
+    '知识库 · 任务中心': { js: function(){ return reaDseJs('知识库 · 任务中心'); } },
+    '智能体': { js: function(){ return reaDseJs('智能体'); } }
   };
 
   /* 把被覆盖页的正文区（contentStart..contentEnd，构建脚本给出的那道缝）换成它登记表里那个载体的内容。
@@ -38610,6 +38663,10 @@ document.addEventListener('click',function(event){
       + '<meta charset="utf-8">'
       + '<title>' + reaName(p.name) + ' · 线上后台复刻</title>'
       + '<style>' + P.css + '</style>'
+      /* 数智员工那几页的样式单放一份（P.cssModules），只给挂了 cssModule 的页追加：
+         并进全站并集会把别的页顶栏与侧栏的字挤歪，丢掉又会让它的卡片网格变裸文字。 */
+      + (p.cssModule && P.cssModules && P.cssModules[p.cssModule]
+          ? '<style>' + P.cssModules[p.cssModule] + '</style>' : '')
       + '<style>' + REA_CSS + (cv && cv.css ? cv.css : '') + '</style>'
       + '</head><body>' + P.shell + reaSplice(p, p.rest)
       + (reaOverviewNavJs(p.name) ? '<script>' + reaOverviewNavJs(p.name) + '<' + '/script>' : '')
