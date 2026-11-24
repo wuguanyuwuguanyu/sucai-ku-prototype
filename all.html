@@ -25524,7 +25524,8 @@ SAVED.forEach(function(r){addRow(r,true)});
 function tplRowHtml(t,i){
   return '<td class="rea-xn-cell-name">'+esc(t.name)+'</td><td>'+esc(t.creator||'18569299465')+'</td>'
     +'<td class="rea-xn-cell-time">'+esc(t.updated||'')+'</td>'
-    +'<td class="rea-xn-cell-ops"><button type="button" class="rea-xn-btn rea-xn-btn--text" data-xh-tpledit="'+i+'">编辑</button>'
+    +'<td class="rea-xn-cell-ops"><button type="button" class="rea-xn-btn rea-xn-btn--text" data-xh-tpluse="'+i+'">使用模板</button>'
+    +'<button type="button" class="rea-xn-btn rea-xn-btn--text" data-xh-tpledit="'+i+'">编辑</button>'
     +'<button type="button" class="rea-xn-btn rea-xn-btn--text rea-xn-btn--danger" data-xh-tpldel="'+i+'">删除</button></td>';
 }
 function renderTpls(){
@@ -25633,6 +25634,8 @@ document.addEventListener('click',function(e){
   if(nt){parent.postMessage({reaPage:NEW,reaXhOpMode:'template'},'*');return}
   var tab=t.closest?t.closest('[data-xh-tab]'):null;
   if(tab){showTab(tab.getAttribute('data-xh-tab'));return}
+  var tu=t.closest?t.closest('[data-xh-tpluse]'):null;
+  if(tu){var ui=+tu.getAttribute('data-xh-tpluse');parent.postMessage({reaPage:NEW,reaXhOpMode:'useTemplate',reaXhOpTpl:TPLS[ui]},'*');return}
   var te=t.closest?t.closest('[data-xh-tpledit]'):null;
   if(te){var ti=+te.getAttribute('data-xh-tpledit');parent.postMessage({reaPage:NEW,reaXhOpMode:'editTemplate',reaXhOpTpl:TPLS[ti]},'*');return}
   var td=t.closest?t.closest('[data-xh-tpldel]'):null;
@@ -25873,6 +25876,13 @@ function setupMode(){
     $('[data-xh-save]').textContent='保存模板';
     if(isEdit&&TPL){$('[data-xh-name]').value=TPL.name||'';applyConfig(TPL.cfg||{});}
     else if(SEED){$('[data-xh-name]').value=SEED.name||'';applyConfig(demoCfg(SEED));}
+  } else if(MODE==='useTemplate'&&TPL){
+    $('[data-xh-name]').value=TPL.name||'';
+    applyConfig(TPL.cfg||{});
+    var ts=$('[data-xh-tplselect]');
+    if(ts){var ti=-1;TPLS.forEach(function(t,k){if(t.id!=null&&t.id===TPL.id)ti=k});
+      if(ti<0)TPLS.forEach(function(t,k){if(ti<0&&t.name===TPL.name)ti=k});
+      if(ti>=0)ts.value=String(ti)}
   } else if(MODE==='copy'&&SEED){
     $('[data-xh-name]').value=(SEED.name||'')+'-副本';
     applyConfig(demoCfg(SEED));
@@ -36698,7 +36708,7 @@ if(PAGE==="list"){
   syncTotal();
   function tplRowHtml(t,i){
     return '<td class="rea-dy-name">'+esc(t.name)+'</td><td>'+esc(t.creator||"18569299465")+'</td><td>'+esc(t.updated||"")+'</td>'
-      +'<td class="rea-dy-ops"><a href="#" data-dyop-tpledit="'+i+'">编辑</a><a href="#" class="rea-dy-danger" data-dyop-tpldel="'+i+'">删除</a></td>';
+      +'<td class="rea-dy-ops"><a href="#" data-dyop-tpluse="'+i+'">使用模板</a><a href="#" data-dyop-tpledit="'+i+'">编辑</a><a href="#" class="rea-dy-danger" data-dyop-tpldel="'+i+'">删除</a></td>';
   }
   function renderTpls(){
     var tb2=$("[data-dyop-tpl-rows]");if(!tb2)return;tb2.innerHTML="";
@@ -36736,10 +36746,11 @@ if(PAGE==="list"){
   }
   var tplTb=$("[data-dyop-tpl-rows]");
   if(tplTb)tplTb.addEventListener("click",function(e){
-    var a=e.target.closest?e.target.closest("a[data-dyop-tpledit],a[data-dyop-tpldel]"):null;
+    var a=e.target.closest?e.target.closest("a[data-dyop-tpluse],a[data-dyop-tpledit],a[data-dyop-tpldel]"):null;
     if(!a)return;e.preventDefault();
-    var i=+(a.getAttribute("data-dyop-tpledit")||a.getAttribute("data-dyop-tpldel"));
-    if(a.hasAttribute("data-dyop-tpledit")) goNew("editTemplate",{reaDyOpTpl:TPLS[i]});
+    var i=+(a.getAttribute("data-dyop-tpluse")||a.getAttribute("data-dyop-tpledit")||a.getAttribute("data-dyop-tpldel"));
+    if(a.hasAttribute("data-dyop-tpluse")) goNew("useTemplate",{reaDyOpTpl:TPLS[i]});
+    else if(a.hasAttribute("data-dyop-tpledit")) goNew("editTemplate",{reaDyOpTpl:TPLS[i]});
     else confirmTplDel(i);
   });
   $("[data-dyop-new]").addEventListener("click",function(){goNew("")});
@@ -36861,6 +36872,13 @@ if(PAGE==="new"){
       var sb=$(".rea-dy-actions .rea-dy-primary");if(sb)sb.textContent="保存模板";
       if(isEdit&&TPL){$("#dyOpName").value=TPL.name||"";applyConfig(TPL.cfg||{});}
       else if(SEED){$("#dyOpName").value=SEED.name||"";applyConfig(demoCfg(SEED));}
+    } else if(MODE==="useTemplate"&&TPL){
+      $("#dyOpName").value=TPL.name||"";
+      applyConfig(TPL.cfg||{});
+      var ts=$("[data-dyop-tplselect]");
+      if(ts){var ti=-1;TPLS.forEach(function(t,k){if(t.id!=null&&t.id===TPL.id)ti=k});
+        if(ti<0)TPLS.forEach(function(t,k){if(ti<0&&t.name===TPL.name)ti=k});
+        if(ti>=0)ts.value=String(ti)}
     } else if(MODE==="copy"&&SEED){
       $("#dyOpName").value=(SEED.name||"")+"-副本";applyConfig(demoCfg(SEED));
     }
