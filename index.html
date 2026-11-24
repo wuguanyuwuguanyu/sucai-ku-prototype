@@ -20090,34 +20090,109 @@ render();
 <div class="rea-dy-pager"><span class="rea-dy-total" data-dy-total>共 126 条记录</span><span class="rea-dy-pages"><button type="button" class="on">1</button><button type="button">2</button><button type="button">3</button><button type="button">4</button><button type="button">5</button><span>…</span><button type="button">13</button></span><span class="rea-dy-size">10 条/页</span><span class="rea-dy-jump">跳至<input type="text" inputmode="numeric" aria-label="页码">页</span></div>
 </script>
 
-<script type="text/plain" id="srcDyNew"><div class="rea-dy-head rea-dy-head--sub"><div class="rea-dy-crumb"><a href="#" data-dy-back>发短视频</a><span>/</span><span>新建任务</span></div><h1>新建任务</h1></div>
-<form class="rea-dy-form" data-dy-form novalidate>
-  <section class="rea-dy-sec">
-    <div class="rea-dy-sec-h"><h2>基本信息</h2></div>
-    <div class="rea-dy-row"><label class="rea-dy-lb" for="dyOrg"><i>*</i>执行人员</label><div class="rea-dy-ctl"><select id="dyOrg"><option value="">请选择组织架构</option><option>销售一部</option><option>销售二部</option><option>产品部</option><option>测试环境雅楠公司</option></select><p class="rea-dy-err" data-dy-err="org" hidden>请选择执行人员</p></div></div>
-    <div class="rea-dy-row"><span class="rea-dy-lb">发布应用</span><div class="rea-dy-ctl"><label class="rea-dy-radio"><input type="radio" name="dyApp" checked><span>微小助</span></label></div></div>
-    <div class="rea-dy-row"><label class="rea-dy-lb" for="dyTaskName"><i>*</i>任务名称</label><div class="rea-dy-ctl"><input id="dyTaskName" maxlength="21" autocomplete="off"><span class="rea-dy-count" data-dy-count-for="dyTaskName">0/21</span><p class="rea-dy-err" data-dy-err="name" hidden>请填写任务名称</p></div></div>
-  </section>
-
-  <section class="rea-dy-sec">
-    <div class="rea-dy-sec-h"><h2>发布内容</h2><div class="rea-dy-sec-actions"><span class="rea-dy-cnt" data-dy-cnt>0 条内容 / 0 位执行人员</span><button type="button" class="rea-dy-btn rea-dy-soft" data-dy-addfile>+ 添加视频</button><button type="button" class="rea-dy-btn rea-dy-soft" data-dy-addcover>+ 添加封面</button></div></div>
-    <div class="rea-dy-row"><span class="rea-dy-lb">素材来源</span><div class="rea-dy-ctl"><span class="rea-dy-chip">临时创建</span></div></div>
-    <div class="rea-dy-row"><span class="rea-dy-lb">发布类型</span><div class="rea-dy-ctl"><label class="rea-dy-radio"><input type="radio" name="dyPublish" checked><span>发视频</span></label></div></div>
-    <p class="rea-dy-err" data-dy-err="video" hidden>请添加视频</p>
-    <div data-dy-bulk></div>
-  </section>
-
-  <section class="rea-dy-sec">
-    <div class="rea-dy-sec-h"><h2>任务设置</h2></div>
-    <div class="rea-dy-row"><span class="rea-dy-lb">推广类型</span><div class="rea-dy-ctl"><span class="rea-dy-options"><label class="rea-dy-radio"><input type="radio" name="dyPromo" checked><span>不添加推广</span></label><label class="rea-dy-radio"><input type="radio" name="dyPromo"><span>门店推广</span></label><label class="rea-dy-radio"><input type="radio" name="dyPromo"><span>商品推广</span></label><label class="rea-dy-radio"><input type="radio" name="dyPromo"><span>团购</span></label></span></div></div>
-    <div class="rea-dy-row"><span class="rea-dy-lb">任务类型</span><div class="rea-dy-ctl"><span class="rea-dy-options"><label class="rea-dy-radio"><input type="radio" name="dyCycle" checked><span>单次任务</span></label><label class="rea-dy-radio"><input type="radio" name="dyCycle"><span>周循环</span></label><label class="rea-dy-radio"><input type="radio" name="dyCycle"><span>月循环</span></label><label class="rea-dy-radio"><input type="radio" name="dyCycle"><span>自定义循环</span></label><span class="rea-dy-help" tabindex="0" role="img" aria-label="任务类型说明">i<span class="rea-dy-tip">单次任务只下发一次；周循环、月循环按所选周期重复下发；自定义循环按设定的周期执行。</span></span></span></div></div>
-    <div class="rea-dy-row"><span class="rea-dy-lb">全局弹窗</span><div class="rea-dy-ctl"><button type="button" class="rea-dy-switch" role="switch" aria-checked="false" aria-label="全局弹窗" data-dy-global><i></i></button></div></div>
-    <div class="rea-dy-row"><span class="rea-dy-lb"><i>*</i>通知时间</span><div class="rea-dy-ctl"><span class="rea-dy-dt"><input type="date" data-dy-notify-date aria-label="通知日期"><input type="time" data-dy-notify-time aria-label="通知时间"></span></div></div>
-    <div class="rea-dy-row"><span class="rea-dy-lb"><i>*</i>截止时间</span><div class="rea-dy-ctl"><span class="rea-dy-dt"><input type="date" data-dy-end-date aria-label="截止日期"><input type="time" data-dy-end-time aria-label="截止时间"></span></div></div>
-  </section>
-  <div class="rea-dy-actions"><button type="submit" class="rea-dy-btn rea-dy-primary">保存</button><button type="button" class="rea-dy-btn" data-dy-cancel>取消</button></div>
-</form>
-</script>
+<script type="text/plain" id="srcDyNew"><div style="height: 100%"><div class="h-full overflow-auto" style="height:100%;overflow:auto"><div class="h-full"><div class="_boxadd_lzm36_126">
+  <h4 style="padding-left:10px;font-weight:normal"><nav class="ant-breadcrumb css-vgijab"><ol><li class="ant-breadcrumb-item"><a class="ant-breadcrumb-link" href="#" data-dy-back>发短视频</a></li><li class="ant-breadcrumb-separator" aria-hidden="true">/</li><li class="ant-breadcrumb-item"><span class="ant-breadcrumb-link">新建任务</span></li></ol></nav></h4>
+  <div class="_box_lzm36_4" style="padding:10px">
+    <div class="_con_lzm36_14">
+      <h4 class="_titleBar_lzm36_26" style="margin-bottom:0">新建任务</h4>
+      <form class="rea-dy-adminform" data-dy-form novalidate>
+        <div class="_form_input_lzm36_71">
+          <span class="_must_white_lzm36_76">执行人员</span>
+          <div class="_upload_box_lzm36_100">
+            <select id="dyOrg" class="rea-dy-admin-select"><option value="">请选择组织架构</option><option>销售一部</option><option>销售二部</option><option>产品部</option><option>测试环境雅楠公司</option></select>
+            <p class="rea-dy-adminerr" data-dy-err="org" hidden>请选择执行人员</p>
+          </div>
+        </div>
+        <div class="_form_input_lzm36_71">
+          <span class="_must_white_lzm36_76">发布应用</span>
+          <div class="_upload_box_lzm36_100">
+            <div class="ant-radio-group ant-radio-group-outline css-vgijab">
+              <label class="ant-radio-wrapper ant-radio-wrapper-checked css-vgijab"><span class="ant-radio ant-wave-target ant-radio-checked"><input name="dyApp" class="ant-radio-input" type="radio" value="微小助" checked><span class="ant-radio-inner"></span></span><span class="ant-radio-label">微小助</span></label>
+              <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="dyApp" class="ant-radio-input" type="radio" value="KOS app"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">KOS app</span></label>
+            </div>
+          </div>
+        </div>
+        <div class="_form_input_lzm36_71">
+          <span class="_must_white_lzm36_76">任务名称</span>
+          <div class="_upload_box_lzm36_100">
+            <span class="ant-input-affix-wrapper css-vgijab ant-input-outlined"><input id="dyTaskName" maxlength="21" autocomplete="off" placeholder="请输入任务名称" class="ant-input css-vgijab" type="text"><span class="ant-input-suffix"><span class="ant-input-show-count-suffix" data-dy-count-for="dyTaskName">0 / 21</span></span></span>
+            <p class="rea-dy-adminerr" data-dy-err="name" hidden>请填写任务名称</p>
+          </div>
+        </div>
+        <div class="_form_input_lzm36_71">
+          <span class="_must_white_lzm36_76">素材来源</span>
+          <div class="_upload_box_lzm36_100"><button type="button" class="ant-btn css-vgijab ant-btn-primary ant-btn-color-primary ant-btn-variant-solid"><span>临时创建</span></button></div>
+        </div>
+        <div class="_form_input_lzm36_71">
+          <span class="_must_white_lzm36_76">发布类型</span>
+          <div class="_upload_box_lzm36_100"><div class="ant-radio-group ant-radio-group-outline css-vgijab"><label class="ant-radio-wrapper ant-radio-wrapper-checked css-vgijab"><span class="ant-radio ant-wave-target ant-radio-checked"><input name="dyPublish" class="ant-radio-input" type="radio" value="发视频" checked><span class="ant-radio-inner"></span></span><span class="ant-radio-label">发视频</span></label></div></div>
+        </div>
+        <div class="_form_input_lzm36_71 rea-dy-row--wide">
+          <span class="_must_white_lzm36_76">发布内容</span>
+          <div class="_upload_box_lzm36_100">
+            <div class="rea-dy-bulkbar"><span class="rea-dy-bulkcnt" data-dy-cnt>0 条内容 / 0 位执行人员</span><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-addfile><span>+ 添加视频</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-addcover><span>+ 添加封面</span></button></div>
+            <div data-dy-bulk></div>
+            <p class="rea-dy-adminerr" data-dy-err="video" hidden>请添加视频</p>
+          </div>
+        </div>
+        <div class="_form_input_lzm36_71" data-dy-moderow style="display:none">
+          <span class="_must_white_lzm36_76">文案类型</span>
+          <div class="_upload_box_lzm36_100">
+            <div class="ant-radio-group ant-radio-group-solid css-vgijab" data-dy-modes>
+              <label class="ant-radio-button-wrapper ant-radio-button-wrapper-checked css-vgijab"><span class="ant-radio-button ant-radio-button-checked"><input name="dyCopyMode" class="ant-radio-button-input" type="radio" value="ai" checked><span class="ant-radio-button-inner"></span></span><span class="ant-radio-button-label">AI生成</span></label>
+              <label class="ant-radio-button-wrapper css-vgijab"><span class="ant-radio-button"><input name="dyCopyMode" class="ant-radio-button-input" type="radio" value="manual"><span class="ant-radio-button-inner"></span></span><span class="ant-radio-button-label">手动输入</span></label>
+              <label class="ant-radio-button-wrapper css-vgijab"><span class="ant-radio-button"><input name="dyCopyMode" class="ant-radio-button-input" type="radio" value="import"><span class="ant-radio-button-inner"></span></span><span class="ant-radio-button-label">导入文案</span></label>
+            </div>
+          </div>
+        </div>
+        <div class="_form_input_lzm36_71 rea-dy-row--wide" data-dy-copyrow style="display:none;align-items:flex-start">
+          <span class="_must_white1_lzm36_76">文案</span>
+          <div class="_upload_box_lzm36_100"><div class="rea-dy-copystatus" data-dy-copystatus></div><div data-dy-copy></div></div>
+        </div>
+        <div class="_form_input_lzm36_71">
+          <span class="_must_white_lzm36_76">推广类型</span>
+          <div class="_upload_box_lzm36_100">
+            <div class="ant-radio-group ant-radio-group-outline css-vgijab">
+              <label class="ant-radio-wrapper ant-radio-wrapper-checked css-vgijab"><span class="ant-radio ant-wave-target ant-radio-checked"><input name="dyPromo" class="ant-radio-input" type="radio" value="不添加推广" checked><span class="ant-radio-inner"></span></span><span class="ant-radio-label">不添加推广</span></label>
+              <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="dyPromo" class="ant-radio-input" type="radio" value="门店推广"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">门店推广</span></label>
+              <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="dyPromo" class="ant-radio-input" type="radio" value="商品推广"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">商品推广</span></label>
+              <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="dyPromo" class="ant-radio-input" type="radio" value="团购"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">团购</span></label>
+            </div>
+          </div>
+        </div>
+        <div class="_form_input_lzm36_71" style="align-items:center">
+          <span class="_must_white_lzm36_76">任务类型</span>
+          <div class="ant-radio-group ant-radio-group-outline css-vgijab">
+            <label class="ant-radio-wrapper ant-radio-wrapper-checked css-vgijab"><span class="ant-radio ant-wave-target ant-radio-checked"><input name="dyCycle" class="ant-radio-input" type="radio" value="单次任务" checked><span class="ant-radio-inner"></span></span><span class="ant-radio-label">单次任务</span></label>
+            <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="dyCycle" class="ant-radio-input" type="radio" value="周循环"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">周循环</span></label>
+            <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="dyCycle" class="ant-radio-input" type="radio" value="月循环"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">月循环</span></label>
+            <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="dyCycle" class="ant-radio-input" type="radio" value="自定义循环"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">自定义循环</span></label>
+          </div>
+          <span class="rea-dy-q" title="单次任务只下发一次；周循环、月循环按所选周期重复下发；自定义循环按设定的周期执行。">?</span>
+        </div>
+        <div class="_form_input_lzm36_71" style="align-items:flex-start">
+          <span class="_must_white1_lzm36_76">全局弹窗</span>
+          <div class="_upload_box_lzm36_100">
+            <button type="button" role="switch" aria-checked="false" class="ant-switch css-vgijab" data-dy-global><div class="ant-switch-handle"></div><span class="ant-switch-inner"><span class="ant-switch-inner-checked"></span><span class="ant-switch-inner-unchecked"></span></span></button>
+            <p style="margin-top:8px;font-size:14px;color:rgb(170,170,170)">开启后，将在手机的所有页面中弹出任务提醒；关闭，则只在抖音中弹出任务提醒。</p>
+          </div>
+        </div>
+        <div class="_form_input_lzm36_71">
+          <span class="_must_white_lzm36_76">通知时间</span>
+          <div class="_upload_box_lzm36_100"><div class="rea-dy-dt"><input type="date" data-dy-notify-date aria-label="通知日期"><input type="time" data-dy-notify-time aria-label="通知时间"></div></div>
+        </div>
+        <div class="_form_input_lzm36_71">
+          <span class="_must_white_lzm36_76">截止时间</span>
+          <div class="_upload_box_lzm36_100"><div class="rea-dy-dt"><input type="date" data-dy-end-date aria-label="截止日期"><input type="time" data-dy-end-time aria-label="截止时间"></div></div>
+        </div>
+        <div class="_form_input_lzm36_71" style="padding-top:32px;padding-bottom:24px">
+          <span class="_must_white1_lzm36_76"></span>
+          <div class="_upload_box_lzm36_100"><button type="submit" class="ant-btn css-vgijab ant-btn-primary ant-btn-color-primary ant-btn-variant-solid" data-dy-save><span>保存</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-cancel style="margin-left:10px"><span>取消</span></button></div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div></div></div></div></script>
 
 <script type="text/plain" id="srcDyDetail"><div class="rea-dy-head rea-dy-head--sub"><div class="rea-dy-crumb"><a href="#" data-dy-back>发短视频</a><span>/</span><span>任务详情</span></div><h1>任务详情</h1></div>
 <section class="rea-dy-sec">
@@ -37098,7 +37173,7 @@ syncTip();drawRows();
     + '</div>'
     + '<div class="rea-bulk-tablewrap" data-bulk-tablewrap hidden>'
     + '<table class="rea-bulk-table"><colgroup>'
-    + '<col style="width:40px"><col style="width:24%"><col style="width:64px"><col style="width:13%"><col style="width:13%"><col style="width:20%"><col style="width:80px">'
+    + '<col style="width:36px"><col style="width:22%"><col style="width:60px"><col style="width:17%"><col style="width:17%"><col style="width:17%"><col style="width:64px">'
     + '</colgroup><thead><tr><th>#</th><th>视频素材</th><th>封面<span class="rea-bulk-help" tabindex="0" role="img" aria-label="视频封面说明" title="建议竖版 3:4（1080×1440），支持 png、jpg，单张不超过 10MB；不上传则用平台默认封面">?</span></th><th>标题</th><th>话题</th><th>文案</th><th>操作</th></tr></thead>'
     + '<tbody data-bulk-rows></tbody></table></div>'
     + '<p class="rea-bulk-alloc" data-bulk-alloc hidden></p>'
@@ -37129,6 +37204,9 @@ syncTip();drawRows();
   var importBox=$('[data-bulk-import]'), aiBox=$('[data-bulk-ai]'), aiInput=$('[data-bulk-aiinput]'), aiErr=$('[data-bulk-aierr]');
   var importChip=$('[data-bulk-importfile]'), importInput=$('[data-bulk-importinput]');
   var vinput=$('[data-bulk-vinput]'), cinput=$('[data-bulk-cinput]');
+  /* 抖音新建页按现网表单排布：素材表留在「发布内容」行，文案列表挪到「文案类型」下面的独立行 */
+  if(opts.copyRoot && opts.copyRoot.appendChild) opts.copyRoot.appendChild(copyBlock);
+  if(opts.hideCopyHead && copyBlock){ var copyHead=copyBlock.querySelector('.rea-bulk-copy-h'); if(copyHead)copyHead.style.display='none'; }
 
   function allocText(){
     var N=VIDEOS.length, M=PEOPLE, i, k, counts=[], groups={}, parts=[];
@@ -37170,7 +37248,7 @@ syncTip();drawRows();
     $$('[data-bulk-mode]').forEach(function(b){ b.classList.toggle('is-on', b.getAttribute('data-bulk-mode')===MODE); });
     importBox.hidden = MODE!=='import';
     aiBox.hidden = MODE!=='ai';
-    if(opts.onChange) opts.onChange({videos:N,copies:COPIES.length,people:PEOPLE,alloc:alloc.textContent});
+    if(opts.onChange) opts.onChange({videos:N,copies:COPIES.length,people:PEOPLE,alloc:alloc.textContent,copyStatus:{text:st.text,warn:st.warn}});
   }
   function renderTable(){
     rows.innerHTML='';
@@ -37335,8 +37413,8 @@ syncTip();drawRows();
   }
   function moveVideo(i,d){ var j=i+d; if(j<0||j>=VIDEOS.length)return; var a=VIDEOS[i];VIDEOS[i]=VIDEOS[j];VIDEOS[j]=a; renderTable(); renderCopies(); sync(); }
   function moveCopy(i,d){ var j=i+d; if(j<0||j>=COPIES.length)return; var a=COPIES[i];COPIES[i]=COPIES[j];COPIES[j]=a; renderCopies(); renderTable(); sync(); }
-  root.addEventListener('click',function(e){
-    var t=e.target.closest?e.target.closest('button'):null; if(!t||!root.contains(t))return;
+  function onBulkClick(e){
+    var t=e.target.closest?e.target.closest('button'):null; if(!t)return;
     function idx(a){return +t.getAttribute(a)}
     if(t.hasAttribute('data-bulk-addvideo')){ pickVideos(); return; }
     if(t.hasAttribute('data-bulk-replacevideo')){ REPLACE_VIDEO=idx('data-bulk-replacevideo'); vinput.value=''; vinput.click(); return; }
@@ -37355,8 +37433,8 @@ syncTip();drawRows();
     if(t.hasAttribute('data-bulk-template')){ toast('模板已下载'); return; }
     if(t.hasAttribute('data-bulk-importbtn')){ importInput.value=''; importInput.click(); return; }
     if(t.hasAttribute('data-bulk-gen')){ generate(); return; }
-  });
-  root.addEventListener('input',function(e){
+  }
+  function onBulkInput(e){
     var t=e.target;
     if(t.hasAttribute('data-bulk-field')){
       var ci=+t.getAttribute('data-ci'), f=t.getAttribute('data-bulk-field'), c=COPIES[ci]; if(!c)return;
@@ -37370,7 +37448,10 @@ syncTip();drawRows();
       if(!c2||!c2.groups[g])return; c2.groups[g][f2]=t.value; updatePair(ci2); return;
     }
     if(t.hasAttribute('data-bulk-aiinput')){ aiErr.hidden=true; }
-  });
+  }
+  root.addEventListener('click',onBulkClick);
+  root.addEventListener('input',onBulkInput);
+  if(copyBlock && copyBlock!==root){ copyBlock.addEventListener('click',onBulkClick); copyBlock.addEventListener('input',onBulkInput); }
   vinput.addEventListener('change',function(){
     var files=Array.prototype.slice.call(this.files||[]); this.value='';
     if(!files.length) return;
@@ -37393,6 +37474,7 @@ syncTip();drawRows();
   return {
     pickVideos:pickVideos, pickCovers:pickCovers,
     setPeople:function(n){ PEOPLE=n||0; sync(); },
+    setMode:function(m){ MODE=m; sync(); },
     getState:function(){ return {videos:VIDEOS.slice(),copies:COPIES.slice(),people:PEOPLE,mode:MODE}; },
     sync:sync
   };
@@ -37450,26 +37532,61 @@ if(PAGE==="new"){
   $("[data-dy-end-time]").value="14:44";
   function syncCounts(){$$("[data-dy-count-for]").forEach(function(sp){
     var i=document.getElementById(sp.getAttribute("data-dy-count-for"));
-    if(i)sp.textContent=i.value.length+"/"+(i.getAttribute("maxlength")||"")})}
+    if(i)sp.textContent=i.value.length+" / "+(i.getAttribute("maxlength")||"")})}
   $("#dyTaskName").addEventListener("input",syncCounts);syncCounts();
   var DEPT_COUNT={"销售一部":6,"销售二部":8,"产品部":5,"测试环境雅楠公司":3};
   var M=0;
+  var MODEROW=$("[data-dy-moderow]"),COPYROW=$("[data-dy-copyrow]"),COPYST=$("[data-dy-copystatus]");
   var BULK=createBulk({
     root:$("[data-dy-bulk]"),
+    copyRoot:$("[data-dy-copy]"),
+    hideCopyHead:true,
     toast:toast,
     multiCopy:true,
     modes:[{key:"ai",label:"AI生成"},{key:"manual",label:"手动输入"},{key:"import",label:"导入文案"}],
     defaultMode:"ai",
     labels:{title:"视频标题",topic:"视频话题",copy:"视频文案"},
-    onChange:function(s){$("[data-dy-cnt]").textContent=s.videos+" 条内容 / "+s.people+" 位执行人员"}
+    onChange:function(s){
+      $("[data-dy-cnt]").textContent=s.videos+" 条内容 / "+s.people+" 位执行人员";
+      var show=s.videos>0;
+      MODEROW.style.display=show?"flex":"none";
+      COPYROW.style.display=show?"flex":"none";
+      COPYST.textContent=s.copyStatus.text;
+      COPYST.className="rea-dy-copystatus"+(s.copyStatus.warn?" is-warn":"");
+    }
+  });
+  /* 文案类型那排是抓存页的 AntD 分段控件，切它等于切共用件的文案模式 */
+  $$("[data-dy-modes] input").forEach(function(r){
+    r.addEventListener("change",function(){ if(r.checked)BULK.setMode(r.value); });
+  });
+  /* AntD 单选、开关的选中态类由这里补：快照里的类名是 React 渲染出来的，原型里自己切 */
+  function bindAntdRadios(){
+    var all=$$(".rea-dy-adminform input[type=radio]");
+    all.forEach(function(r){
+      r.addEventListener("change",function(){
+        if(!r.checked)return;
+        all.forEach(function(x){
+          if(x.name!==r.name)return;
+          var w=x.closest(".ant-radio-wrapper");if(w)w.classList.toggle("ant-radio-wrapper-checked",x.checked);
+          var a=x.closest(".ant-radio");if(a)a.classList.toggle("ant-radio-checked",x.checked);
+          var bw=x.closest(".ant-radio-button-wrapper");if(bw)bw.classList.toggle("ant-radio-button-wrapper-checked",x.checked);
+          var ba=x.closest(".ant-radio-button");if(ba)ba.classList.toggle("ant-radio-button-checked",x.checked);
+        });
+      });
+    });
+  }
+  bindAntdRadios();
+  var glob=$("[data-dy-global]");
+  if(glob)glob.addEventListener("click",function(){
+    var on=this.getAttribute("aria-checked")==="true";
+    this.setAttribute("aria-checked",on?"false":"true");
+    this.classList.toggle("ant-switch-checked",!on);
   });
   $("[data-dy-addfile]").addEventListener("click",function(){BULK.pickVideos()});
   $("[data-dy-addcover]").addEventListener("click",function(){BULK.pickCovers()});
   var orgSel=$("#dyOrg");
   orgSel.value="销售一部";M=DEPT_COUNT[orgSel.value]||0;BULK.setPeople(M);
   orgSel.addEventListener("change",function(){M=DEPT_COUNT[this.value]||0;BULK.setPeople(M)});
-  $("[data-dy-global]").addEventListener("click",function(){
-    var on=this.getAttribute("aria-checked")==="true";this.setAttribute("aria-checked",on?"false":"true")});
   $("[data-dy-form]").addEventListener("submit",function(e){
     e.preventDefault();
     var bad=false,org=$("#dyOrg"),name=$("#dyTaskName");
@@ -37478,7 +37595,7 @@ if(PAGE==="new"){
     showErr("name",!name.value.replace(/^\s+|\s+$/g,""));if(!name.value.replace(/^\s+|\s+$/g,""))bad=true;
     var st=BULK.getState();
     showErr("video",!st.videos.length);if(!st.videos.length)bad=true;
-    if(bad){var first=$(".rea-dy-err:not([hidden])");if(first&&first.scrollIntoView)first.scrollIntoView({block:"center"});return}
+    if(bad){var first=$(".rea-dy-adminerr:not([hidden])");if(first&&first.scrollIntoView)first.scrollIntoView({block:"center"});return}
     toast("任务已保存");
     setTimeout(function(){go(LIST)},700);
   });
@@ -38590,6 +38707,49 @@ draw();
 .rea-bulk-addcopy:hover{border-color:#BBD9FF;background:#F5FAFF}
 `;
 
+  /* 发短视频 · 新建（2026-11-24 按抓存的现网页还原）：表单排布沿用现网页的
+     _box／_con／_titleBar／_form_input／_upload_box 一套 CSS Modules，控件挂 AntD 类；
+     批量素材表与文案列表仍是共用件，只在本页把观感扳到 AntD。 */
+  var REA_DY_ADMIN_CSS = `
+._box_lzm36_4{display:flex;flex-direction:row;height:calc(100vh - 117px);min-height:100%;overflow:hidden;padding:20px;box-sizing:border-box;background:var(--yk-global-bg)}._con_lzm36_14{width:100%;height:100%;border:1px solid #f1f2f5;border-radius:5px;display:flex;flex-direction:column;box-sizing:border-box;overflow:auto;background:var(--yk-content-bg);padding:0 20px 20px}._con_lzm36_14 ._titleBar_lzm36_26{height:55px;line-height:55px;border-bottom:1px solid rgba(0,0,0,.06);font-size:16px;font-family:PingFangSC-Medium,PingFang SC;font-weight:500;color:var(--yk-text-bold, rgba(0, 0, 0, .85));margin-bottom:16px}._con_lzm36_14 ._headerH4_lzm36_36{width:100%;height:auto;display:flex;margin-bottom:16px}._con_lzm36_14 ._headerH4_lzm36_36>div:nth-child(2){width:auto}._con_lzm36_14 ._headerH4_lzm36_36>div:nth-child(1){flex:1}._con_lzm36_14 ._condel_lzm36_48{width:100%;height:100%;border:1px solid #f1f2f5;border-radius:5px;display:flex;flex-direction:column;box-sizing:border-box;overflow:auto;padding-top:0}._daocu_lzm36_59{float:right;margin-left:10px}._comclass_lzm36_63{max-height:500px!important;overflow:auto!important}._comclass_lzm36_63 ._titHea_lzm36_67{width:100%!important;height:40px!important}._form_input_lzm36_71{padding:24px 20% 0;display:flex;align-items:flex-start}._form_input_lzm36_71 ._must_white1_lzm36_76,._form_input_lzm36_71 ._must_white_lzm36_76{width:120px;position:relative;margin-right:20px;font-size:15px;text-align:right;font-weight:400}._form_input_lzm36_71 ._must_white_lzm36_76:after{content:"*";position:absolute;right:-10px;top:5px;font-size:14px;color:red}._upload_box_lzm36_100{font-size:14px;width:100%}._upload_box_lzm36_100 p{margin:0}._upload_box_lzm36_100 p:not(:first-child){padding:8px 0}._upload_box_lzm36_100 p:nth-of-type(2){color:#606266;font-size:13px}._upload_box_lzm36_100 p:last-child{color:#606266;font-size:13px}._detaiHeader_lzm36_118{width:100%;margin:0 0 16px;display:flex}._detaiHeader_lzm36_118 div{flex:1}._boxadd_lzm36_126{background:var(--yk-global-bg);padding:10px}._boxadd_lzm36_126>h4{padding:6px 0 6px 10px;margin:0}._condel_lzm36_48{width:100%;height:100%;border:1px solid #f1f2f5;border-radius:5px;display:flex;flex-direction:column;box-sizing:border-box;overflow:auto;padding-top:0}._task_information_lzm36_145{margin-bottom:20px;width:calc(100% + -0px);border-radius:4px;border:1px solid #f0f0f2;padding:0 20px 20px;background:var(--yk-content-bg)}._task_information_lzm36_145 ._task_information_header_lzm36_154{color:var(--yk-text-bold, rgba(0, 0, 0, .85));display:flex;align-items:center;width:100%;height:55px;line-height:55px;font-size:16px;border-bottom:1px solid #f0f0f2;font-weight:500}._task_information_lzm36_145 ._task_information_body_lzm36_165{min-height:120px;border-top:none;display:flex;justify-content:flex-start;align-items:center;flex-wrap:wrap}._task_information_lzm36_145 ._task_information_body_lzm36_165 p{font-size:14px;margin:15px 0 0;flex:33%;overflow-x:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;justify-content:flex-start;align-items:center}._condel_lzm36_48::-webkit-scrollbar{width:0!important}._condel_lzm36_48{-ms-overflow-style:none}._condel_lzm36_48{overflow:-moz-scrollbars-none}._treeContent_lzm36_194{width:100%;max-height:500px;overflow:auto}._selectTreeNode_lzm36_199{box-sizing:border-box;margin:0;font-variant:tabular-nums;list-style:none;-webkit-font-feature-settings:"tnum";font-feature-settings:"tnum";position:relative;display:inline-block;width:100%;min-height:32px;padding:4px 11px;color:#000000a6;font-size:14px;line-height:1.5;background-color:#fff;background-image:none;border:1px solid #e6e6e6;border-radius:4px;-webkit-transition:all .3s;transition:all .3s}._treeModeModal_lzm36_221{min-width:483px;height:100%;overflow:auto}._labelGroup_lzm36_226{padding:10px}._eachvideo_lzm36_229{width:178px;height:314px;border-radius:6px;overflow:hidden;background:#fff;position:relative}._checkbox_lzm36_237{position:absolute;right:10px;top:10px}._videocover_lzm36_242{width:178px;height:280px}._dvTitle_lzm36_246{padding:6px 12px}
+
+/* 发短视频 · 新建（2026-11-24 按抓存的现网页还原）：表单排布沿用现网页的
+   _box／_con／_titleBar／_form_input／_upload_box 一套 CSS Modules，控件挂 AntD 类；
+   批量素材表与文案列表仍是共用件，只在本页把观感扳到 AntD。 */
+.rea-dy-adminform .rea-dy-admin-select{width:100%;height:32px;padding:0 11px;border:1px solid #d9d9d9;border-radius:6px;background:#fff;color:rgba(0,0,0,.88);font-size:14px;outline:none;appearance:none;-webkit-appearance:none;background-image:linear-gradient(45deg,transparent 50%,#999 50%),linear-gradient(135deg,#999 50%,transparent 50%);background-position:calc(100% - 15px) 14px,calc(100% - 10px) 14px;background-size:5px 5px;background-repeat:no-repeat}
+.rea-dy-adminform .rea-dy-admin-select:focus{border-color:#1677ff;box-shadow:0 0 0 2px rgba(5,145,255,.1)}
+.rea-dy-adminform .rea-dy-row--wide{padding-right:5%}
+.rea-dy-adminform .rea-dy-q{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;margin-left:8px;border:1px solid #d9d9d9;border-radius:50%;color:#999;font-size:12px;line-height:1;cursor:help}
+.rea-dy-adminform .rea-dy-bulkbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.rea-dy-adminform .rea-dy-bulkcnt{color:#999;font-size:13px;margin-right:auto}
+.rea-dy-adminform .rea-dy-copystatus{color:#999;font-size:13px;line-height:20px;margin-bottom:8px}
+.rea-dy-adminform .rea-dy-copystatus.is-warn{color:#faad14}
+.rea-dy-adminform .rea-dy-dt{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.rea-dy-adminform .rea-dy-dt input{height:32px;padding:0 11px;border:1px solid #d9d9d9;border-radius:6px;background:#fff;color:rgba(0,0,0,.88);font-size:14px;outline:none}
+.rea-dy-adminform .rea-dy-dt input:focus{border-color:#1677ff;box-shadow:0 0 0 2px rgba(5,145,255,.1)}
+.rea-dy-adminform .rea-dy-adminerr{margin:4px 0 0;color:#ff4d4f;font-size:12px;line-height:1.5}
+.rea-dy-adminform .rea-bulk{color:rgba(0,0,0,.88);font-size:14px}
+.rea-dy-adminform .rea-bulk-table th{height:40px;background:#fafafa;color:rgba(0,0,0,.88);font-size:13px;font-weight:500;border-bottom:1px solid #f0f0f0}
+.rea-dy-adminform .rea-bulk-table td{padding:10px 8px;border-bottom:1px solid #f0f0f0}
+.rea-dy-adminform .rea-bulk-cell{color:rgba(0,0,0,.65);font-size:13px}
+.rea-dy-adminform .rea-bulk-input,.rea-dy-adminform .rea-bulk-textarea{border-color:#d9d9d9;border-radius:6px;color:rgba(0,0,0,.88);font-size:14px}
+.rea-dy-adminform .rea-bulk-input:focus,.rea-dy-adminform .rea-bulk-textarea:focus{border-color:#1677ff;box-shadow:0 0 0 2px rgba(5,145,255,.1)}
+.rea-dy-adminform .rea-bulk-btn{border-color:#d9d9d9;border-radius:6px;background:#fff;color:rgba(0,0,0,.88);font-size:14px;box-shadow:0 2px 0 rgba(0,0,0,.02)}
+.rea-dy-adminform .rea-bulk-btn:hover{border-color:#4096ff;color:#4096ff}
+.rea-dy-adminform .rea-bulk-btn--soft{border-color:#d9d9d9;background:#fff;color:rgba(0,0,0,.88)}
+.rea-dy-adminform [data-bulk-gen]{border-color:#1677ff;background:#1677ff;color:#fff}
+.rea-dy-adminform [data-bulk-gen]:hover{background:#4096ff;color:#fff}
+.rea-dy-adminform .rea-bulk-copy{margin-top:0;padding-top:0;border-top:0}
+.rea-dy-adminform .rea-bulk-copy-h{display:none}
+.rea-dy-adminform .rea-bulk-import,.rea-dy-adminform .rea-bulk-ai{background:#fafafa}
+.rea-dy-adminform .rea-bulk-crow{border-bottom:1px solid #f0f0f0}
+.rea-dy-adminform .rea-bulk-addcopy{border:1px dashed #d9d9d9;border-radius:6px;color:rgba(0,0,0,.65);font-size:14px}
+.rea-dy-adminform .rea-bulk-addcopy:hover{border-color:#1677ff;color:#1677ff}
+.rea-dy-adminform .rea-bulk-empty{border-color:#d9d9d9;color:#999}
+.rea-dy-adminform .rea-bulk-alloc{color:#999;font-size:13px}
+.rea-dy-adminform .rea-bulk-modes{display:none}
+`;
+
   var REA_COVER = {
     '使用总览': { html: 'srcOverview', css: docOf('srcOverviewStyle'), js: function(){ return reaOverviewDataJs()+docOf('srcOverviewScript'); } },
     '使用总览 · 使用详情': { html: 'srcOverview', css: docOf('srcOverviewStyle'), js: function(){ return 'window.__REA_USAGE_DETAIL=true;'+reaOverviewDataJs()+docOf('srcOverviewScript'); } },
@@ -38633,7 +38793,7 @@ draw();
     /* 抖音营销 · 发短视频三页（2026-11-23）：运行时合成页，正文已随 rest 拼好，
        这里只登记样式与交互；没有 html 载体，reaSplice 原样放过。 */
     [REA_DY_PAGE]: { css: REA_DY_CSS, js: function(){ return reaDyJs('list'); } },
-    [REA_DY_NEW]: { css: REA_DY_CSS + REA_BULK_CSS, js: function(){ return reaDyJs('new'); } },
+    [REA_DY_NEW]: { css: REA_DY_CSS + REA_DY_ADMIN_CSS + REA_BULK_CSS, js: function(){ return reaDyJs('new'); } },
     [REA_DY_DETAIL]: { css: REA_DY_CSS + REA_WX_SNAP_CSS, js: function(){ return reaDyJs('detail') + reaWxSnapshotDrawerJs(REA_DY_DETAIL); } },
     /* 抖音营销 · 抖音运营三页（2026-11-23）：同上，运行时合成页；正文来自
        srcDyOpList／srcDyOpNew／srcDyOpDetail，样式在 REA_DY_CSS 之上补 REA_DY_OP_CSS。 */
