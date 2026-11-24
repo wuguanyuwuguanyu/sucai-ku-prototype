@@ -20130,27 +20130,9 @@ render();
         <div class="_form_input_lzm36_71 rea-dy-row--wide">
           <span class="_must_white_lzm36_76">发布内容</span>
           <div class="_upload_box_lzm36_100">
-            <div class="rea-dy-bulkbar"><span class="rea-dy-bulkcnt" data-dy-cnt>0 条内容 / 0 位执行人员</span><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-addfile><span>+ 添加视频</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-addcover><span>+ 添加封面</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-importshortcut><span>导入文案</span></button></div>
+            <div class="rea-dy-bulkbar"><span class="rea-dy-bulkcnt" data-dy-cnt>0 条内容 / 0 位执行人员</span><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-addfile><span>+ 添加视频</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-addcover><span>+ 添加封面</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-addcopy><span>添加文案</span></button></div>
             <div data-dy-bulk></div>
             <p class="rea-dy-adminerr" data-dy-err="video" hidden>请添加视频</p>
-          </div>
-        </div>
-        <div class="_form_input_lzm36_71" data-dy-importrow style="display:none;align-items:flex-start">
-          <span class="_must_white1_lzm36_76">上传文件</span>
-          <div class="_upload_box_lzm36_100">
-            <div class="rea-dy-importsteps">
-              <div class="rea-dy-importstep">
-                <span class="rea-dy-importstepno">1</span>
-                <div class="rea-dy-importstepbody"><button type="button" class="rea-dy-importsteplink" data-dy-template><b>下载</b>文件模板</button></div>
-              </div>
-              <div class="rea-dy-importstep">
-                <span class="rea-dy-importstepno">2</span>
-                <div class="rea-dy-importstepbody">
-                  <span class="rea-dy-importsteptext">从电脑上选择文件模板上传：</span>
-                  <div class="rea-dy-importstepact"><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-importbtn><span class="rea-dy-upicon"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M12 3l5 5h-3v7h-4V8H7l5-5zM5 19h14v2H5z"></path></svg></span><span>上传文件</span></button><span class="rea-dy-importfile" data-dy-importfile hidden></span></div>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
         <div data-dy-copy hidden></div>
@@ -20193,6 +20175,28 @@ render();
         <div class="_form_input_lzm36_71" style="padding-top:32px;padding-bottom:24px">
           <span class="_must_white1_lzm36_76"></span>
           <div class="_upload_box_lzm36_100"><button type="submit" class="ant-btn css-vgijab ant-btn-primary ant-btn-color-primary ant-btn-variant-solid" data-dy-save><span>保存</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-cancel style="margin-left:10px"><span>取消</span></button></div>
+        </div>
+        <div class="rea-dy-addmodal" data-dy-addmodal hidden>
+          <div class="rea-dy-addmodal-box" role="dialog" aria-modal="true" aria-label="添加文案">
+            <div class="rea-dy-addmodal-h"><h3>添加文案</h3><button type="button" class="rea-dy-addmodal-x" data-dy-modalclose aria-label="关闭">×</button></div>
+            <div class="rea-dy-addtabs" role="tablist"><button type="button" class="rea-dy-addtab on" data-dy-addtab="ai" role="tab" aria-selected="true">AI生成</button><button type="button" class="rea-dy-addtab" data-dy-addtab="import" role="tab" aria-selected="false">导入文案</button></div>
+            <div class="rea-dy-addbody" data-dy-addpanel="ai">
+              <div class="rea-dy-addfield"><label for="dyAiTitle">示例标题</label><input id="dyAiTitle" class="ant-input css-vgijab ant-input-outlined" type="text" maxlength="20" placeholder="请输入示例标题" data-dy-ai-title></div>
+              <div class="rea-dy-addfield"><label for="dyAiCopy">示例文案</label><textarea id="dyAiCopy" class="rea-dy-addtextarea" maxlength="1000" placeholder="请输入示例文案" data-dy-ai-copy></textarea></div>
+              <div class="rea-dy-addfield"><label for="dyAiTopic">示例话题</label><input id="dyAiTopic" class="ant-input css-vgijab ant-input-outlined" type="text" placeholder="请输入示例话题" data-dy-ai-topic></div>
+              <p class="rea-dy-adminerr" data-dy-ai-err hidden>请填写示例标题、文案和话题</p>
+              <p class="rea-dy-addcount" data-dy-aicount>将生成 0 条文案</p>
+              <div class="rea-dy-addfoot"><button type="button" class="ant-btn css-vgijab ant-btn-primary ant-btn-color-primary ant-btn-variant-solid" data-dy-aigen><span>生成文案</span></button></div>
+            </div>
+            <div class="rea-dy-addbody" data-dy-addpanel="import" hidden>
+              <div class="rea-dy-importsteps">
+                <div class="rea-dy-importstep"><span class="rea-dy-importstepno">1</span><div class="rea-dy-importstepbody"><button type="button" class="rea-dy-importsteplink" data-dy-modaltemplate><b>下载</b>文件模板</button></div></div>
+                <div class="rea-dy-importstep"><span class="rea-dy-importstepno">2</span><div class="rea-dy-importstepbody"><span class="rea-dy-importsteptext">从电脑上选择文件模板上传：</span><div class="rea-dy-importstepact"><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-modalimport><span class="rea-dy-upicon"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M12 3l5 5h-3v7h-4V8H7l5-5zM5 19h14v2H5z"></path></svg></span><span>上传文件</span></button></div></div></div>
+              </div>
+              <input type="file" accept=".csv,.xlsx" hidden data-dy-modalimportinput>
+            </div>
+            <div class="rea-dy-addmodal-foot"><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-modalclose><span>取消</span></button></div>
+          </div>
         </div>
       </form>
     </div>
@@ -37496,6 +37500,19 @@ syncTip();drawRows();
     setPeople:function(n){ PEOPLE=n||0; sync(); },
     setMode:function(m){ MODE=m; sync(); },
     pickImport:function(){ importInput.value=''; importInput.click(); },
+    importFile:function(f){
+      if(!VIDEOS.length){ toast('先添加视频'); return false; }
+      if(COPIES.length && !confirm('导入会替换现有 '+COPIES.length+' 条文案，继续？')) return false;
+      doImport(f); return true;
+    },
+    setCopies:function(list){
+      COPIES=[];
+      for(var i=0;i<list.length;i++){
+        var x=list[i]||{};
+        COPIES.push({title:x.title||'',groups:[{copy:x.copy||'',topic:x.topic||''}]});
+      }
+      renderTable(); renderCopies(); sync();
+    },
     getState:function(){ return {videos:VIDEOS.slice(),copies:COPIES.slice(),people:PEOPLE,mode:MODE,importName:(importChip&&!importChip.hidden?importChip.textContent:'')}; },
     sync:sync
   };
@@ -37557,8 +37574,6 @@ if(PAGE==="new"){
   $("#dyTaskName").addEventListener("input",syncCounts);syncCounts();
   var DEPT_COUNT={"销售一部":6,"销售二部":8,"产品部":5,"测试环境雅楠公司":3};
   var M=0;
-  var IMPROW=$("[data-dy-importrow]"),IMPFILE=$("[data-dy-importfile]");
-  var IMPORT_OPEN=false;
   var BULK=createBulk({
     root:$("[data-dy-bulk]"),
     copyRoot:$("[data-dy-copy]"),
@@ -37571,22 +37586,80 @@ if(PAGE==="new"){
     labels:{title:"标题",topic:"话题",copy:"文案"},
     onChange:function(s){
       $("[data-dy-cnt]").textContent=s.videos+" 条内容 / "+s.people+" 位执行人员";
-      var show=s.videos>0;
-      IMPROW.style.display=show&&IMPORT_OPEN?"flex":"none";
-      IMPFILE.textContent=s.importName||"";
-      IMPFILE.hidden=!s.importName;
-      var ib=$("[data-dy-importshortcut]");if(ib)ib.classList.toggle("is-on",IMPORT_OPEN);
     }
   });
-  var importShortcut=$("[data-dy-importshortcut]");
-  if(importShortcut)importShortcut.addEventListener("click",function(){
-    if(!BULK.getState().videos.length){toast("先添加视频");return}
-    IMPORT_OPEN=!IMPORT_OPEN;
-    BULK.sync();
-    if(IMPORT_OPEN)setTimeout(function(){if(IMPROW&&IMPROW.scrollIntoView)IMPROW.scrollIntoView({block:"center"})},60);
+  /* 添加文案：AI生成按示例仿写，输出条数＝视频数；导入文案走两步上传 */
+  var ADDMODAL=$("[data-dy-addmodal]");
+  function addModalHasCopy(){
+    var st=BULK.getState();
+    for(var i=0;i<st.copies.length;i++){
+      var c=st.copies[i]; if(!c)continue;
+      var g=c.groups&&c.groups[0];
+      if((c.title||"")||(g&&((g.copy||"")||(g.topic||""))))return true;
+    }
+    return false;
+  }
+  function selectAddTab(tab){
+    $$("[data-dy-addtab]").forEach(function(b){
+      var on=b.getAttribute("data-dy-addtab")===tab;
+      b.classList.toggle("on",on);b.setAttribute("aria-selected",on?"true":"false");
+    });
+    $$("[data-dy-addpanel]").forEach(function(p){p.hidden=p.getAttribute("data-dy-addpanel")!==tab});
+  }
+  function openAddCopy(){
+    var st=BULK.getState();
+    if(!st.videos.length){toast("先添加视频");return}
+    $("[data-dy-aicount]").textContent="将生成 "+st.videos.length+" 条文案";
+    $("[data-dy-ai-err]").hidden=true;
+    ADDMODAL.hidden=false;
+    selectAddTab("ai");
+    setTimeout(function(){var t=$("[data-dy-ai-title]");if(t)t.focus()},30);
+  }
+  function closeAddCopy(){if(ADDMODAL)ADDMODAL.hidden=true}
+  var addCopyBtn=$("[data-dy-addcopy]");if(addCopyBtn)addCopyBtn.addEventListener("click",openAddCopy);
+  $$("[data-dy-addtab]").forEach(function(b){b.addEventListener("click",function(){selectAddTab(b.getAttribute("data-dy-addtab"))})});
+  $$("[data-dy-modalclose]").forEach(function(b){b.addEventListener("click",function(e){e.preventDefault();closeAddCopy()})});
+  if(ADDMODAL)ADDMODAL.addEventListener("click",function(e){if(e.target===ADDMODAL)closeAddCopy()});
+  if(ADDMODAL)ADDMODAL.addEventListener("keydown",function(e){
+    if(e.key==="Enter"&&e.target&&e.target.tagName==="INPUT"){e.preventDefault();if(aiGen)aiGen.click()}
   });
-  var impBtn=$("[data-dy-importbtn]");if(impBtn)impBtn.addEventListener("click",function(){BULK.pickImport()});
-  var tplBtn=$("[data-dy-template]");if(tplBtn)tplBtn.addEventListener("click",function(e){e.preventDefault();toast("模板已下载")});
+  document.addEventListener("keydown",function(e){if(e.key==="Escape"&&ADDMODAL&&!ADDMODAL.hidden)closeAddCopy()});
+  $$("[data-dy-ai-title],[data-dy-ai-copy],[data-dy-ai-topic]").forEach(function(i){i.addEventListener("input",function(){$("[data-dy-ai-err]").hidden=true})});
+  var aiGen=$("[data-dy-aigen]");
+  if(aiGen)aiGen.addEventListener("click",function(){
+    var title=($("[data-dy-ai-title]").value||"").replace(/^\s+|\s+$/g,""),
+        copy=($("[data-dy-ai-copy]").value||"").replace(/^\s+|\s+$/g,""),
+        topic=($("[data-dy-ai-topic]").value||"").replace(/^\s+|\s+$/g,""),
+        err=$("[data-dy-ai-err]");
+    if(!title||!copy||!topic){
+      err.hidden=false;
+      var first=!title?$("[data-dy-ai-title]"):(!copy?$("[data-dy-ai-copy]") : $("[data-dy-ai-topic]"));
+      if(first)first.focus();
+      return;
+    }
+    err.hidden=true;
+    var n=BULK.getState().videos.length;
+    if(!n){toast("先添加视频");return}
+    if(addModalHasCopy()&&!confirm("生成会替换现有文案，继续？"))return;
+    var list=[];
+    for(var i=0;i<n;i++){
+      list.push({
+        title:(i===0?title:title+" · "+(i+1)).slice(0,20),
+        copy:(i===0?copy:copy+"\n\n（第 "+(i+1)+" 条）").slice(0,1000),
+        topic:topic
+      });
+    }
+    BULK.setCopies(list);
+    closeAddCopy();
+    toast("已生成 "+n+" 条文案");
+  });
+  var modalImportBtn=$("[data-dy-modalimport]"),modalImportInput=$("[data-dy-modalimportinput]");
+  if(modalImportBtn&&modalImportInput)modalImportBtn.addEventListener("click",function(){modalImportInput.value="";modalImportInput.click()});
+  if(modalImportInput)modalImportInput.addEventListener("change",function(){
+    var f=this.files&&this.files[0];this.value="";if(!f)return;
+    if(BULK.importFile(f))closeAddCopy();
+  });
+  var modalTpl=$("[data-dy-modaltemplate]");if(modalTpl)modalTpl.addEventListener("click",function(e){e.preventDefault();toast("模板已下载")});
   /* AntD 单选、开关的选中态类由这里补：快照里的类名是 React 渲染出来的，原型里自己切 */
   function bindAntdRadios(){
     var all=$$(".rea-dy-adminform input[type=radio]");
@@ -37617,6 +37690,7 @@ if(PAGE==="new"){
   orgSel.addEventListener("change",function(){M=DEPT_COUNT[this.value]||0;BULK.setPeople(M)});
   $("[data-dy-form]").addEventListener("submit",function(e){
     e.preventDefault();
+    if(ADDMODAL&&!ADDMODAL.hidden)return;
     var bad=false,org=$("#dyOrg"),name=$("#dyTaskName");
     function showErr(k,on){var p=$('[data-dy-err="'+k+'"]');if(p)p.hidden=!on}
     showErr("org",!org.value);if(!org.value)bad=true;
@@ -38762,10 +38836,29 @@ draw();
 .rea-dy-adminform .rea-dy-upicon{display:inline-flex;margin-right:6px;vertical-align:-2px}
 .rea-dy-adminform .rea-dy-importfile{color:#646a73;font-size:13px;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .rea-dy-adminform [data-bulk-import]{display:none!important}
+/* 添加文案弹窗：AI生成／导入文案两个页签，AI按示例仿写，输出条数＝视频数 */
+.rea-dy-addmodal{position:fixed;inset:0;z-index:1200;display:flex;align-items:flex-start;justify-content:center;padding:10vh 16px 24px;background:rgba(0,0,0,.45)}
+.rea-dy-addmodal[hidden]{display:none!important}
+.rea-dy-addmodal-box{width:640px;max-width:100%;max-height:76vh;overflow:auto;background:#fff;border-radius:8px;box-shadow:0 6px 16px rgba(0,0,0,.12);padding:0 24px 20px}
+.rea-dy-addmodal-h{display:flex;align-items:center;justify-content:space-between;height:56px;border-bottom:1px solid #f0f0f0;margin:0 -24px;padding:0 24px}
+.rea-dy-addmodal-h h3{margin:0;font-size:16px;font-weight:600;color:rgba(0,0,0,.88)}
+.rea-dy-addmodal-x{border:0;background:none;color:#999;font-size:22px;line-height:1;cursor:pointer}
+.rea-dy-addtabs{display:flex;gap:24px;border-bottom:1px solid #f0f0f0;margin:0 -24px 16px;padding:0 24px}
+.rea-dy-addtab{border:0;background:none;padding:12px 0;color:rgba(0,0,0,.65);font:inherit;font-size:14px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.rea-dy-addtab.on{color:#1677ff;border-bottom-color:#1677ff}
+.rea-dy-addbody{padding-top:4px}
+.rea-dy-addbody[hidden]{display:none!important}
+.rea-dy-addfield{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px}
+.rea-dy-addfield label{flex:0 0 72px;font-size:14px;color:rgba(0,0,0,.88);line-height:32px;text-align:right}
+.rea-dy-addfield .ant-input{flex:1;min-width:0}
+.rea-dy-addtextarea{flex:1;min-width:0;min-height:96px;padding:6px 11px;border:1px solid #d9d9d9;border-radius:6px;background:#fff;color:rgba(0,0,0,.88);font:inherit;font-size:14px;line-height:1.5;resize:vertical;outline:none}
+.rea-dy-addtextarea:focus{border-color:#1677ff;box-shadow:0 0 0 2px rgba(5,145,255,.1)}
+.rea-dy-addcount{margin:0 0 12px 84px;color:#999;font-size:13px}
+.rea-dy-addfoot{display:flex;justify-content:flex-end;margin-top:4px}
+.rea-dy-addmodal-foot{display:flex;justify-content:flex-end;margin-top:18px;padding-top:16px;border-top:1px solid #f0f0f0}
 .rea-dy-adminform .rea-dy-bulkbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
 .rea-dy-adminform .rea-dy-bulkcnt{color:#999;font-size:13px;margin-right:auto}
 .rea-dy-adminform .rea-bulk-copy-empty{display:none}
-.rea-dy-adminform .rea-dy-bulkbar [data-dy-importshortcut].is-on{border-color:#1677ff;color:#1677ff;background:#e6f4ff}
 .rea-dy-adminform .rea-dy-dt{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .rea-dy-adminform .rea-dy-dt input{height:32px;padding:0 11px;border:1px solid #d9d9d9;border-radius:6px;background:#fff;color:rgba(0,0,0,.88);font-size:14px;outline:none}
 .rea-dy-adminform .rea-dy-dt input:focus{border-color:#1677ff;box-shadow:0 0 0 2px rgba(5,145,255,.1)}
