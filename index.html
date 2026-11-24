@@ -31050,6 +31050,32 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
     '视频内容':REA_WX_SEC_SVG.video,
     '更多设置':REA_WX_SEC_SVG.sliders
   };
+  /* 发布任务的封面演示图：3:4 竖版海报，快照里点「查看」在弹窗里放大。
+     真实数据里换成任务创建时上传的封面图即可。 */
+  function reaCoverEsc(s){
+    return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/'/g,'&apos;');
+  }
+  function reaDemoCover(line1,line2){
+    return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
+      "<svg xmlns='http://www.w3.org/2000/svg' width='300' height='400' viewBox='0 0 300 400'>"
+      +"<defs>"
+      +"<linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#FFE3C7'/><stop offset='.5' stop-color='#FFB27A'/><stop offset='1' stop-color='#E96B3C'/></linearGradient>"
+      +"<linearGradient id='s' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#000' stop-opacity='0'/><stop offset='1' stop-color='#000' stop-opacity='.42'/></linearGradient>"
+      +"</defs>"
+      +"<rect width='300' height='400' fill='url(#g)'/>"
+      +"<circle cx='236' cy='78' r='48' fill='#FFF4E8' opacity='.5'/>"
+      +"<path d='M0 252 300 206v194H0z' fill='#B94727' opacity='.32'/>"
+      +"<rect y='230' width='300' height='170' fill='url(#s)'/>"
+      +"<text x='30' y='318' font-family='PingFang SC,Microsoft YaHei,sans-serif' font-size='30' font-weight='700' fill='#fff'>"+reaCoverEsc(line1)+"</text>"
+      +"<text x='30' y='356' font-family='PingFang SC,Microsoft YaHei,sans-serif' font-size='30' font-weight='700' fill='#fff'>"+reaCoverEsc(line2)+"</text>"
+      +"<rect x='30' y='372' width='72' height='3' rx='1.5' fill='#fff' opacity='.85'/>"
+      +"</svg>"
+    );
+  }
+  var REA_XN_COVER = reaDemoCover('门店探店','招牌菜实拍');
+  var REA_DY_COVER = reaDemoCover('秋季新品','到店试戴');
+  var REA_WXV_COVER = reaDemoCover('秋季新品','开箱');
   var REA_WXS = {
     /* 分组跟随创建页（2026-11-16）：快照是创建表单的只读回放，块名与顺序照抄
        「X · 新建」（任务安排／可见范围或发送范围／发送内容；批量加好友是
@@ -31237,6 +31263,7 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
        任务发布渠道是详情页才有的系统字段，与有效期、创建时间一起收在基础信息。 */
     '发短视频 · 任务配置快照': {
       list:'发短视频', detail:'发短视频 · 详情',
+      preview:{kind:'cover',src:REA_DY_COVER,name:'cover.jpg'},
       base:[
         {label:'任务类型',value:'发短视频'},
         {label:'任务状态',value:'执行完毕'},
@@ -31260,7 +31287,7 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
           {label:'发布类型',value:'发视频'},
           {label:'选择视频来源',value:'手动上传'},
           {label:'上传视频',value:'demo-video.mp4'},
-          {label:'视频封面',value:'cover.jpg'},
+          {label:'视频封面',preview:true},
           {label:'文案类型',value:'AI生成'},
           {label:'视频文案',value:'秋季新品到店，到店试戴有礼。'},
           {label:'视频标题',value:'秋季新品到店'},
@@ -31273,8 +31300,10 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
     '笔记发布 · 任务配置快照': {
       list:'笔记发布', detail:'笔记发布 · 详情',
       /* 列表可点开任意一条任务，名称／状态／有效期／创建时间按详情页回显的那条同步；
-         其余配置仍是创建时冻结的演示值。 */
-      dyn:{name:'[data-xn-i="name"]',state:'[data-xn-i="state"]',valid:'[data-xn-i="valid"]',created:'[data-xn-i="created"]'},
+         发布内容按发布类型切三套字段，其余配置仍是创建时冻结的演示值。 */
+      dyn:{name:'[data-xn-i="name"]',state:'[data-xn-i="state"]',valid:'[data-xn-i="valid"]',created:'[data-xn-i="created"]',who:'[data-xn-i="who"]',type:'[data-xn-i="type"]'},
+      dynParse:[{from:'[data-xn-i="valid"]',sep:' ~ ',to:['notify','end']}],
+      preview:{kind:'cover',src:REA_XN_COVER,name:'cover.jpg'},
       base:[
         {label:'任务类型',value:'笔记发布'},
         {label:'任务状态',value:'执行完毕',key:'state'},
@@ -31285,20 +31314,41 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
       sections:[
         {title:'任务安排',rows:[
           {label:'任务名称',value:'笔记发布任务20261102',key:'name'},
-          {label:'执行人员',value:'测试人员33'},
+          {label:'执行人员',value:'测试人员33',key:'who'},
           {label:'发布应用',value:'微小助'},
           {label:'循环方式',value:'单次任务'},
-          {label:'通知时间',value:'2026-11-02 11:19'},
-          {label:'截止时间',value:'2026-11-09 11:14'},
+          {label:'通知时间',value:'2026-11-02 11:19',key:'notify'},
+          {label:'截止时间',value:'2026-11-09 11:14',key:'end'},
           {label:'全局弹窗',value:'关闭'}
         ]},
-        {title:'发布内容',rows:[
-          {label:'素材来源',value:'临时创建'},
-          {label:'发布类型',value:'发图文'},
-          {label:'选择图片',value:'门店新品 1.jpg 等 3 张'},
-          {label:'视频文案',value:'秋季新品到店，三张图看全系列配色。'},
-          {label:'视频标题',value:'秋季新品到店'},
-          {label:'视频话题',value:'#秋季新品 #店内实拍'}
+        {title:'发布内容',variants:[
+          {type:'发图文',rows:[
+            {label:'素材来源',value:'临时创建'},
+            {label:'发布类型',value:'发图文'},
+            {label:'选择图片',value:'门店新品 1.jpg 等 3 张'},
+            {label:'视频文案',value:'秋季新品到店，三张图看全系列配色。'},
+            {label:'视频标题',value:'秋季新品到店'},
+            {label:'视频话题',value:'#秋季新品 #店内实拍'}
+          ]},
+          {type:'发视频',rows:[
+            {label:'素材来源',value:'临时创建'},
+            {label:'发布类型',value:'发视频'},
+            {label:'选择视频来源',value:'手动上传'},
+            {label:'上传视频',value:'门店探店 vlog.mp4'},
+            {label:'视频封面',preview:true},
+            {label:'视频文案',value:'门店探店 vlog，30 秒竖版，拍到出餐和招牌菜。'},
+            {label:'视频标题',value:'门店探店 vlog'},
+            {label:'视频话题',value:'#探店 #招牌菜'}
+          ]},
+          {type:'发文案配图',rows:[
+            {label:'素材来源',value:'临时创建'},
+            {label:'发布类型',value:'发文案配图'},
+            {label:'选择图片',value:'门店新品 1.jpg 等 3 张'},
+            {label:'文案内容',value:'秋季新品到店，欢迎来店试戴。'},
+            {label:'笔记标题',value:'秋季新品到店'},
+            {label:'正文内容',value:'三张图看全系列配色，到店可试戴。'},
+            {label:'话题',value:'#秋季新品 #店内实拍'}
+          ]}
         ]}
       ]
     },
@@ -31307,6 +31357,7 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
        任务发布渠道是详情页才有的系统字段，与创建时间一起收在基础信息。 */
     '视频号发布任务 · 任务配置快照': {
       list:'视频号发布任务', detail:'视频号发布任务 · 详情',
+      preview:{kind:'cover',src:REA_WXV_COVER,name:'cover.jpg'},
       base:[
         {label:'任务类型',value:'视频号发布'},
         {label:'任务状态',value:'进行中'},
@@ -31329,6 +31380,7 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
           {label:'发布类型',value:'发视频'},
           {label:'选择视频来源',value:'手动上传'},
           {label:'上传视频',value:'秋季新品开箱.mp4'},
+          {label:'视频封面',preview:true},
           {label:'视频文案',value:'秋季新品开箱，30 秒竖版，门店实拍'},
           {label:'视频标题',value:'秋季新品开箱'},
           {label:'视频话题',value:'#秋季新品 #开箱'},
@@ -31354,9 +31406,19 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
     }
     return h;
   }
-  function wxsSection(title,rows){
-    var icon=REA_WX_SEC_ICON[title]||'';
-    return '<div class="rea-wxs-sec">'+(title?'<h4>'+icon+'<span>'+wxsEsc(title)+'</span></h4>':'')+wxsRows(rows)+'</div>';
+  function wxsSection(title,rows,variants){
+    var icon=REA_WX_SEC_ICON[title]||'',body='',i;
+    if(variants){
+      /* 同一组按发布类型分几套字段：默认只露第一套，打开抽屉时按详情页的类型切换。 */
+      for(i=0;i<variants.length;i++){
+        body+='<div data-wxs-variant="'+wxsEsc(variants[i].type)+'"'+(i?' hidden':'')+'>'
+          +wxsRows(variants[i].rows)+'</div>';
+      }
+    }else{
+      body=wxsRows(rows);
+    }
+    return '<div class="rea-wxs-sec" data-wxs-sec="'+wxsEsc(title)+'">'
+      +(title?'<h4>'+icon+'<span>'+wxsEsc(title)+'</span></h4>':'')+body+'</div>';
   }
   function wxsTaskName(d){
     var groups=[d.base||[]].concat((d.sections||[]).map(function(s){return s.rows||[]}))
@@ -31372,7 +31434,7 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
     var d=REA_WXS[page];
     if(!d)return '';
     var h=wxsSection('基础信息',d.base);
-    for(var i=0;i<d.sections.length;i++)h+=wxsSection(d.sections[i].title,d.sections[i].rows);
+    for(var i=0;i<d.sections.length;i++)h+=wxsSection(d.sections[i].title,d.sections[i].rows,d.sections[i].variants);
     if(d.more&&d.more.length)h+=wxsSection('更多设置',d.more);
     return h;
   }
@@ -31397,7 +31459,12 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
     var THUMB='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#98a2b3" stroke-width="1.5" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="M21 15l-4.6-4.6L7 20"/></svg>';
     var h='<div class="ant-modal-content">';
     h+='<button type="button" class="ant-modal-close" aria-label="关闭"><span class="ant-modal-close-x">×</span></button>';
-    if(p.kind==='moments'){
+    if(p.kind==='cover'){
+      h+='<div class="ant-modal-header"><div class="ant-modal-title">视频封面</div></div>';
+      h+='<div class="ant-modal-body"><div class="rea-wxs-cover">'
+        +'<img src="'+wxsEsc(p.src||'')+'" alt="视频封面">'
+        +'</div>'+(p.name?'<p class="rea-wxs-covername">'+wxsEsc(p.name)+'</p>':'')+'</div>';
+    }else if(p.kind==='moments'){
       h+='<div class="ant-modal-header"><div class="ant-modal-title">朋友圈预览</div></div>';
       h+='<div class="ant-modal-body"><div class="rea-fqc-moments"><div class="rea-fqc-mrow">';
       h+='<div class="rea-fqc-mava" aria-hidden="true">'+wxsEsc((p.name||'张').slice(0,1))+'</div>';
@@ -31432,6 +31499,7 @@ var H=${reaJson(reaWxSnapshotDrawerHtml(key))};
 var B=${reaJson(body)};
 var KIND=${reaJson(d.preview?d.preview.kind:'')};
 var DYN=${reaJson(d.dyn||null)};
+var PARSE=${reaJson(d.dynParse||null)};
 var BTN=document.querySelector('[data-wx-snap]');
 if(!BTN||document.querySelector('[data-wx-snap-drawer]'))return;
 var host=document.createElement('div');
@@ -31446,8 +31514,8 @@ function previewOpen(){
   var old=document.querySelector('[data-wxs-modal]');if(old)previewClose(old);
   var w=document.createElement('div');
   w.className='ant-modal-root css-vgijab';w.setAttribute('data-wxs-modal','1');
-  var cls=KIND==='moments'?'rea-fqc-modal':'rea-wxs-modal';
-  var width=KIND==='moments'?'560px':'420px';
+  var cls=KIND==='moments'?'rea-fqc-modal':(KIND==='cover'?'rea-wxs-covermodal':'rea-wxs-modal');
+  var width=KIND==='moments'?'560px':(KIND==='cover'?'360px':'420px');
   w.innerHTML='<div class="ant-modal-mask"></div><div class="ant-modal-wrap ant-modal-centered"><div class="ant-modal css-vgijab '+cls+'" role="dialog" aria-modal="true" style="width:'+width+'">'+B+'</div></div>';
   /* 挂在抽屉里：抽屉是 1001 的层，预览在其中自然压住抽屉内容 */
   DRAWER.appendChild(w);
@@ -31471,8 +31539,31 @@ function syncDyn(){
     dst.textContent=src.textContent;
     if(k==='name')name=src.textContent;
   }
+  /* 页面把起止时间并成一格「有效期」时，按分隔符拆回通知／截止两行。 */
+  if(PARSE){
+    for(var pi=0;pi<PARSE.length;pi++){
+      var rule=PARSE[pi],psrc=document.querySelector(rule.from);
+      if(!psrc)continue;
+      var parts=psrc.textContent.split(rule.sep||' ~ ');
+      if(parts.length<2)continue;
+      var trimm=function(s){return s.replace(/^\s+|\s+$/g,'')};
+      dst=DRAWER.querySelector('[data-wxs-f="'+rule.to[0]+'"]');
+      if(dst)dst.textContent=trimm(parts[0]);
+      dst=DRAWER.querySelector('[data-wxs-f="'+rule.to[1]+'"]');
+      if(dst)dst.textContent=trimm(parts[1]);
+    }
+  }
   var sub=DRAWER.querySelector('.rea-wxd-dsub');
   if(name&&sub)sub.textContent=name+' · 只读';
+  /* 发布内容按发布类型切字段：只露与详情页当前类型一致的那一套。 */
+  if(DYN.type){
+    var tpEl=document.querySelector(DYN.type),tp='',vg,j;
+    if(tpEl)tp=tpEl.textContent.replace(/^\s+|\s+$/g,'');
+    if(tp){
+      vg=DRAWER.querySelectorAll('[data-wxs-variant]');
+      for(j=0;j<vg.length;j++)vg[j].hidden=vg[j].getAttribute('data-wxs-variant')!==tp;
+    }
+  }
 }
 function open(){
   syncDyn();
@@ -31503,6 +31594,11 @@ for(i=0;i<vs.length;i++)vs[i].addEventListener('click',function(e){e.preventDefa
     '.rea-wxs-link{border:0;background:none;padding:0;font:inherit;color:#1677ff;cursor:pointer}',
     '.rea-wxs-link:hover{text-decoration:underline}',
     '.rea-wxs-empty{color:#999}',
+    /* 视频封面预览（发短视频／笔记发布／视频号发布任务）：弹窗里按 3:4 显示封面原图。 */
+    '.rea-wxs-covermodal .ant-modal-body{padding:16px 16px 8px;text-align:center}',
+    '.rea-wxs-cover{display:flex;align-items:center;justify-content:center;max-height:56vh;overflow:hidden;border-radius:8px;background:#F2F3F5}',
+    '.rea-wxs-cover img{display:block;max-width:100%;max-height:56vh;object-fit:contain}',
+    '.rea-wxs-covername{margin:10px 0 0;font-size:12px;line-height:18px;color:#8F959E;word-break:break-all}',
     /* 任务配置快照抽屉（2026-11-16）：右侧 560px，遮罩压住详情页；
        z-index 1000／1001 与智能回复抽屉同一档，预览弹窗靠更高一层盖在抽屉上。 */
     '.rea-wxd-mask{position:fixed;inset:0;z-index:1000;background:rgba(31,35,41,.45);opacity:0;visibility:hidden;transition:opacity .18s}',
