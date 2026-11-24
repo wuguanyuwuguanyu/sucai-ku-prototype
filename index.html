@@ -19354,24 +19354,6 @@ render();
             </div>
           </div>
         </div>
-        <div data-xn-section="copy" hidden>
-          <div class="_form_input_lzm36_71">
-            <span class="_must_white1_lzm36_76">文案内容</span>
-            <div class="_upload_box_lzm36_100"><input class="ant-input css-vgijab ant-input-outlined" type="text" data-xn-copy-text placeholder="请输入文案内容"><p style="font-size:14px;color:rgb(170,170,170)">若为空则使用标题作为图片文案内容</p></div>
-          </div>
-          <div class="_form_input_lzm36_71">
-            <span class="_must_white1_lzm36_76">笔记标题</span>
-            <div class="_upload_box_lzm36_100"><span class="ant-input-affix-wrapper css-vgijab ant-input-outlined"><input maxlength="20" data-xn-copy-title placeholder="请输入笔记标题" class="ant-input css-vgijab" type="text"><span class="ant-input-suffix"><span class="ant-input-show-count-suffix" data-xn-copy-titlecount>0 / 20</span></span></span></div>
-          </div>
-          <div class="_form_input_lzm36_71">
-            <span class="_must_white1_lzm36_76">正文内容</span>
-            <div class="_upload_box_lzm36_100"><span class="ant-input-affix-wrapper ant-input-textarea-affix-wrapper ant-input-textarea-show-count css-vgijab ant-input-show-count ant-input-outlined"><textarea maxlength="1000" data-xn-copy-body placeholder="请输入正文内容" class="ant-input css-vgijab" style="height:93px;resize:none"></textarea><span class="ant-input-suffix"><span class="ant-input-data-count" data-xn-copy-bodycount>0 / 1000</span></span></span></div>
-          </div>
-          <div class="_form_input_lzm36_71">
-            <span class="_must_white1_lzm36_76">话题</span>
-            <div class="_upload_box_lzm36_100"><input class="ant-input css-vgijab ant-input-outlined" type="text" data-xn-copy-topic placeholder="请输入话题"><p style="font-size:14px;color:rgb(170,170,170)">多个话题使用#分割，话题中请勿包含其他标点符号，例：#话题1#话题2</p></div>
-          </div>
-        </div>
         <div class="_form_input_lzm36_71" style="align-items:center">
           <span class="_must_white_lzm36_76">任务类型</span>
           <div class="ant-radio-group ant-radio-group-outline css-vgijab" data-xn-tasktype>
@@ -19397,8 +19379,6 @@ render();
               <div class="rea-dy-addfield"><label for="xnAiTitle">示例标题</label><input id="xnAiTitle" class="ant-input css-vgijab ant-input-outlined" type="text" maxlength="20" placeholder="请输入示例标题" data-dy-ai-title></div>
               <div class="rea-dy-addfield"><label for="xnAiCopy">示例文案</label><textarea id="xnAiCopy" class="rea-dy-addtextarea" maxlength="1000" placeholder="请输入示例文案" data-dy-ai-copy></textarea></div>
               <div class="rea-dy-addfield"><label for="xnAiTopic">示例话题</label><input id="xnAiTopic" class="ant-input css-vgijab ant-input-outlined" type="text" placeholder="请输入示例话题" data-dy-ai-topic></div>
-              <div class="rea-dy-addfield" data-dy-ai-extra hidden><label for="xnAiText">示例文案内容</label><input id="xnAiText" class="ant-input css-vgijab ant-input-outlined" type="text" placeholder="请输入示例文案内容" data-dy-ai-text></div>
-              <div class="rea-dy-candidates" data-dy-candidates hidden></div>
               <p class="rea-dy-adminerr" data-dy-ai-err hidden>请填写示例标题、文案和话题</p>
               <p class="rea-dy-addcount" data-dy-aicount>将生成 0 条文案</p>
               <div class="rea-dy-addfoot"><button type="button" class="ant-btn css-vgijab ant-btn-primary ant-btn-color-primary ant-btn-variant-solid" data-dy-aigen><span>生成文案</span></button></div>
@@ -25606,19 +25586,10 @@ var VID=createBulk({
 });
 IMG.setPeople(M);VID.setPeople(M);
 function activeBulk(){return TYPE==='发视频'?VID:IMG}
-var COPY_TEXT=$('[data-xn-copy-text]'),COPY_TITLE=$('[data-xn-copy-title]'),COPY_BODY=$('[data-xn-copy-body]'),COPY_TOPIC=$('[data-xn-copy-topic]');
-function syncCopyCounts(){
-  if(COPY_TITLE)$('[data-xn-copy-titlecount]').textContent=(COPY_TITLE.value||'').length+' / 20';
-  if(COPY_BODY)$('[data-xn-copy-bodycount]').textContent=(COPY_BODY.value||'').length+' / 1000';
-}
-if(COPY_TITLE)COPY_TITLE.addEventListener('input',syncCopyCounts);
-if(COPY_BODY)COPY_BODY.addEventListener('input',syncCopyCounts);
-syncCopyCounts();
 function applyType(){
-  var isVideo=TYPE==='发视频',isCopy=TYPE==='发文案配图';
-  var cr=$('[data-xn-contentrow]');if(cr)cr.hidden=isCopy;
-  var a=$('[data-xn-section="image"]'),b=$('[data-xn-section="video"]'),c=$('[data-xn-section="copy"]');
-  if(a)a.hidden=isVideo||isCopy;if(b)b.hidden=!isVideo||isCopy;if(c)c.hidden=!isCopy;
+  var isVideo=TYPE==='发视频';
+  var a=$('[data-xn-section="image"]'),b=$('[data-xn-section="video"]');
+  if(a)a.hidden=isVideo;if(b)b.hidden=!isVideo;
 }
 function setSource(src){
   SOURCE=src;
@@ -25630,7 +25601,6 @@ function setSource(src){
 }
 $$('[data-xn-source]').forEach(function(b){b.addEventListener('click',function(){
   setSource(b.getAttribute('data-xn-source'));
-  if(b.getAttribute('data-xn-source')==='AI生成'&&TYPE==='发文案配图')openAddCopy();
 })});
 $$('[data-xn-type] input').forEach(function(r){r.addEventListener('change',function(){if(r.checked){TYPE=r.value;applyType()}})});
 var typeGroup=$('[data-xn-type]');
@@ -25663,18 +25633,7 @@ function selectAddTab(tab){
   $$('[data-dy-addpanel]',ADDMODAL).forEach(function(p){p.hidden=p.getAttribute('data-dy-addpanel')!==tab});
 }
 function openAddCopy(){
-  var isCopy=TYPE==='发文案配图';
-  $('[data-dy-ai-extra]',ADDMODAL).hidden=!isCopy;
-  var C=$('[data-dy-candidates]',ADDMODAL);C.hidden=true;C.innerHTML='';
-  var importTab=$('[data-dy-addtab="import"]',ADDMODAL);if(importTab)importTab.style.display=isCopy?'none':'';
   var err=$('[data-dy-ai-err]',ADDMODAL);
-  if(isCopy){
-    $('[data-dy-aicount]',ADDMODAL).textContent='生成 3 套供选择';
-    err.textContent='请填写示例标题、文案、话题和文案内容';err.hidden=true;
-    ADDMODAL.hidden=false;selectAddTab('ai');
-    setTimeout(function(){var t=$('[data-dy-ai-title]',ADDMODAL);if(t)t.focus()},30);
-    return;
-  }
   var b=activeBulk(),st=b.getState();
   if(!st.videos.length){toast('先添加内容');return}
   $('[data-dy-aicount]',ADDMODAL).textContent='将生成 '+st.videos.length+' 条文案';
@@ -25699,42 +25658,6 @@ aiGen.addEventListener('click',function(){
       copy=($('[data-dy-ai-copy]',ADDMODAL).value||'').replace(/^\s+|\s+$/g,''),
       topic=($('[data-dy-ai-topic]',ADDMODAL).value||'').replace(/^\s+|\s+$/g,''),
       err=$('[data-dy-ai-err]',ADDMODAL);
-  if(TYPE==='发文案配图'){
-    var text=($('[data-dy-ai-text]',ADDMODAL).value||'').replace(/^\s+|\s+$/g,'');
-    if(!title||!copy||!topic||!text){
-      err.hidden=false;
-      var first=!title?$('[data-dy-ai-title]',ADDMODAL):(!copy?$('[data-dy-ai-copy]',ADDMODAL):(!topic?$('[data-dy-ai-topic]',ADDMODAL):$('[data-dy-ai-text]',ADDMODAL)));
-      if(first)first.focus();return;
-    }
-    err.hidden=true;
-    var C=$('[data-dy-candidates]',ADDMODAL);C.innerHTML='';
-    for(var ci=0;ci<3;ci++){
-      (function(n){
-        var cand={
-          title:(n===0?title:title+' · '+(n+1)).slice(0,20),
-          copy:(n===0?copy:copy+'\n\n（第 '+(n+1)+' 套）').slice(0,1000),
-          topic:topic,
-          text:(n===0?text:text+' · '+(n+1))
-        };
-        var row=document.createElement('div');row.className='rea-dy-candidate';
-        var main=document.createElement('div');main.className='rea-dy-candidate-main';
-        var ttl=document.createElement('b');ttl.textContent=cand.title;main.appendChild(ttl);
-        var em=document.createElement('em');em.textContent=(cand.text||'')+' · '+(cand.copy||'').slice(0,40);main.appendChild(em);
-        row.appendChild(main);
-        var btn=document.createElement('button');btn.type='button';btn.className='ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined';btn.textContent='用这套';
-        btn.addEventListener('click',function(){
-          if(COPY_TEXT)COPY_TEXT.value=cand.text;
-          if(COPY_TITLE)COPY_TITLE.value=cand.title;
-          if(COPY_BODY)COPY_BODY.value=cand.copy;
-          if(COPY_TOPIC)COPY_TOPIC.value=cand.topic;
-          syncCopyCounts();closeAddCopy();
-        });
-        row.appendChild(btn);C.appendChild(row);
-      })(ci);
-    }
-    C.hidden=false;
-    return;
-  }
   if(!title||!copy||!topic){
     err.hidden=false;
     var first=!title?$('[data-dy-ai-title]',ADDMODAL):(!copy?$('[data-dy-ai-copy]',ADDMODAL):$('[data-dy-ai-topic]',ADDMODAL));
@@ -25787,27 +25710,15 @@ $('[data-xn-form]').addEventListener('submit',function(e){
   if(ADDMODAL&&!ADDMODAL.hidden)return;
   var name=(nameInput.value||'').replace(/^\s+|\s+$/g,'');
   if(!name){toast('请输入任务名称');nameInput.focus();return}
-  var isCopy=TYPE==='发文案配图',st=null;
-  if(isCopy){
-    var ct=(COPY_TEXT.value||'').replace(/^\s+|\s+$/g,''),cti=(COPY_TITLE.value||'').replace(/^\s+|\s+$/g,''),cb=(COPY_BODY.value||'').replace(/^\s+|\s+$/g,'');
-    if(!ct&&!cti&&!cb){toast('请填写文案内容或笔记标题');if(COPY_TEXT)COPY_TEXT.focus();return}
-  }else{
-    st=activeBulk().getState();
-    if(!st.videos.length){toast('请添加内容');return}
-  }
+  var st=activeBulk().getState();
+  if(!st.videos.length){toast('请添加内容');return}
   var nd=$('[data-xn-notify-date]').value,nt=$('[data-xn-notify-time]').value,
       ed=$('[data-xn-end-date]').value,et=$('[data-xn-end-time]').value;
   if(!nd||!nt||!ed||!et){toast('请选择通知时间和截止时间');return}
   if((ed+' '+et)<=(nd+' '+nt)){toast('截止时间需晚于通知时间');return}
-  var copy='',topic='',count=1;
-  if(isCopy){
-    copy=(COPY_TEXT.value||'').replace(/^\s+|\s+$/g,'')||(COPY_TITLE.value||'').replace(/^\s+|\s+$/g,'');
-    topic=(COPY_TOPIC.value||'').replace(/^\s+|\s+$/g,'');
-  }else{
-    var first=st.copies[0];
-    if(first&&first.groups&&first.groups[0]){copy=first.groups[0].copy||'';topic=first.groups[0].topic||''}
-    count=st.videos.length;
-  }
+  var copy='',topic='',count=st.videos.length;
+  var first=st.copies[0];
+  if(first&&first.groups&&first.groups[0]){copy=first.groups[0].copy||'';topic=first.groups[0].topic||''}
   var task={id:'xn-'+Date.now(),name:name,type:TYPE,copy:copy,topic:topic,count:count,
     who:'张伯阳 等 2 人',start:nd+' '+nt,end:ed+' '+et,state:'执行中',created:stamp(),creator:'18569299465'};
   var btn=$('[data-xn-save]');btn.disabled=true;btn.textContent='保存中…';
@@ -39235,12 +39146,6 @@ draw();
 .rea-dy-addcount{margin:0 0 12px 84px;color:#999;font-size:13px}
 .rea-dy-addfoot{display:flex;justify-content:flex-end;margin-top:4px}
 .rea-dy-addmodal-foot{display:flex;justify-content:flex-end;margin-top:18px;padding-top:16px;border-top:1px solid #f0f0f0}
-.rea-dy-candidates{display:flex;flex-direction:column;gap:8px;margin:0 0 12px 84px;max-height:220px;overflow:auto}
-.rea-dy-candidate{display:flex;align-items:flex-start;gap:12px;padding:10px 12px;border:1px solid #f0f0f0;border-radius:6px;background:#fafafa}
-.rea-dy-candidate-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
-.rea-dy-candidate-main b{font-size:13px;font-weight:500;color:rgba(0,0,0,.88);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.rea-dy-candidate-main em{font-style:normal;color:#8f959e;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.rea-dy-candidate .ant-btn{flex:none}
 .rea-dy-adminform .rea-dy-bulkbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
 .rea-dy-adminform .rea-dy-bulkcnt{color:#999;font-size:13px;margin-right:auto}
 .rea-dy-adminform .rea-bulk-copy-empty{display:none}
