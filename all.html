@@ -19352,6 +19352,10 @@ render();
               <div class="rea-dy-bulkbar"><span class="rea-dy-bulkcnt" data-xn-vidcnt></span><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-addvid><span>+ 添加视频</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-addcover><span>+ 添加封面</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-addcopy><span>添加文案</span></button></div>
               <div data-xn-vidbulk></div><div data-xn-vidcopy hidden></div>
             </div>
+            <div data-xn-section="copyimage" hidden>
+              <div class="rea-dy-bulkbar"><span class="rea-dy-bulkcnt" data-xn-txtcnt></span><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-addtxtimg><span>+ 添加图文</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-addcopy><span>添加文案</span></button></div>
+              <div data-xn-txtbulk></div><div data-xn-txtcopy hidden></div>
+            </div>
           </div>
         </div>
         <div class="_form_input_lzm36_71" style="align-items:center">
@@ -25584,12 +25588,24 @@ var VID=createBulk({
   labels:{title:'标题',topic:'话题',copy:'文案'},
   onChange:function(s){var c=$('[data-xn-vidcnt]');if(c)c.textContent=s.videos+' 条内容 / '+s.people+' 位执行人员'}
 });
-IMG.setPeople(M);VID.setPeople(M);
-function activeBulk(){return TYPE==='发视频'?VID:IMG}
+var IMG2=createBulk({
+  root:$('[data-xn-txtbulk]'),copyRoot:$('[data-xn-txtcopy]'),mediaType:'image',
+  hideCopyHead:true,toast:toast,multiCopy:false,inlineCopy:true,
+  modes:[{key:'manual',label:'手动输入'}],defaultMode:'manual',
+  fields:[
+    {key:'text',label:'图片文案',type:'text',width:'15%'},
+    {key:'title',label:'标题',type:'text',max:20,width:'13%'},
+    {key:'copy',label:'笔记正文',type:'textarea',max:1000,width:'26%'},
+    {key:'topic',label:'话题',type:'text',width:'15%'}
+  ],
+  onChange:function(s){var c=$('[data-xn-txtcnt]');if(c)c.textContent=s.videos+' 条内容 / '+s.people+' 位执行人员'}
+});
+IMG.setPeople(M);VID.setPeople(M);IMG2.setPeople(M);
+function activeBulk(){return TYPE==='发视频'?VID:(TYPE==='发文案配图'?IMG2:IMG)}
 function applyType(){
-  var isVideo=TYPE==='发视频';
-  var a=$('[data-xn-section="image"]'),b=$('[data-xn-section="video"]');
-  if(a)a.hidden=isVideo;if(b)b.hidden=!isVideo;
+  var isVideo=TYPE==='发视频',isCopy=TYPE==='发文案配图';
+  var a=$('[data-xn-section="image"]'),b=$('[data-xn-section="video"]'),d=$('[data-xn-section="copyimage"]');
+  if(a)a.hidden=isVideo||isCopy;if(b)b.hidden=!isVideo;if(d)d.hidden=!isCopy;
 }
 function setSource(src){
   SOURCE=src;
@@ -25611,6 +25627,7 @@ if(typeGroup)typeGroup.addEventListener('click',function(){
   },0);
 });
 $('[data-xn-addimg]').addEventListener('click',function(){IMG.pickVideos()});
+$('[data-xn-addtxtimg]').addEventListener('click',function(){IMG2.pickVideos()});
 $('[data-xn-addvid]').addEventListener('click',function(){VID.pickVideos()});
 $('[data-xn-addcover]').addEventListener('click',function(){VID.pickCovers()});
 applyType();setSource('临时创建');
@@ -37410,6 +37427,19 @@ syncTip();drawRows();
   var PEOPLE = 0;
   var REPLACE_VIDEO = -1;
   var COVER_ROW = -1;
+  /* 行内可编辑列：默认「标题／话题／文案」三列；发文案配图传四列（图片文案／标题／笔记正文／话题）。
+     title 存在 copy 对象上，其余列存在 groups[0] 上。 */
+  var FIELDS = opts.fields || [
+    {key:'title',label:labels.title||'标题',type:'text',max:20},
+    {key:'topic',label:labels.topic||'话题',type:'text'},
+    {key:'copy',label:labels.copy||'文案',type:'textarea',max:1000}
+  ];
+  var colHtml = '<col style="width:36px"><col style="width:22%"><col style="width:60px">';
+  FIELDS.forEach(function(f){ colHtml += '<col style="width:'+(f.width||'17%')+'">'; });
+  colHtml += '<col style="width:64px">';
+  var headHtml = '<th>#</th><th>视频素材</th><th>封面<span class="rea-bulk-help" tabindex="0" role="img" aria-label="视频封面说明" title="建议竖版 3:4（1080×1440），支持 png、jpg，单张不超过 10MB；不上传则用平台默认封面">?</span></th>';
+  FIELDS.forEach(function(f){ headHtml += '<th>'+f.label+'</th>'; });
+  headHtml += '<th>操作</th>';
   function el(tag, cls, txt){ var n=document.createElement(tag); if(cls)n.className=cls; if(txt!=null)n.textContent=txt; return n; }
   function $(s,r){ return (r||root).querySelector(s); }
   function $$(s,r){ return Array.prototype.slice.call((r||root).querySelectorAll(s)); }
@@ -37421,9 +37451,8 @@ syncTip();drawRows();
     + '<button type="button" class="rea-bulk-btn rea-bulk-btn--soft" data-bulk-addvideo>+ 添加视频</button>'
     + '</div>'
     + '<div class="rea-bulk-tablewrap" data-bulk-tablewrap hidden>'
-    + '<table class="rea-bulk-table"><colgroup>'
-    + '<col style="width:36px"><col style="width:22%"><col style="width:60px"><col style="width:17%"><col style="width:17%"><col style="width:17%"><col style="width:64px">'
-    + '</colgroup><thead><tr><th>#</th><th>视频素材</th><th>封面<span class="rea-bulk-help" tabindex="0" role="img" aria-label="视频封面说明" title="建议竖版 3:4（1080×1440），支持 png、jpg，单张不超过 10MB；不上传则用平台默认封面">?</span></th><th>标题</th><th>话题</th><th>文案</th><th>操作</th></tr></thead>'
+    + '<table class="rea-bulk-table'+(FIELDS.length>3?' rea-bulk-table--four':'')+'"><colgroup>'+colHtml
+    + '</colgroup><thead><tr>'+headHtml+'</tr></thead>'
     + '<tbody data-bulk-rows></tbody></table></div>'
     + '<p class="rea-bulk-alloc" data-bulk-alloc hidden></p>'
     + '<div class="rea-bulk-copy" data-bulk-copy hidden>'
@@ -37484,10 +37513,14 @@ syncTip();drawRows();
     return {text:'多出 '+(C-N)+' 条文案，不参与发布',warn:true};
   }
   function pairFor(i){
+    var out={groups:0};
+    FIELDS.forEach(function(f){ out[f.key]=''; });
     var c=COPIES[i];
-    if(!c) return {title:'',topic:'',copy:'',groups:0};
+    if(!c) return out;
     var g=c.groups[0]||{};
-    return {title:c.title||'',topic:g.topic||'',copy:g.copy||'',groups:c.groups.length};
+    FIELDS.forEach(function(f){ out[f.key]= f.key==='title' ? (c.title||'') : (g[f.key]||''); });
+    out.groups=c.groups.length;
+    return out;
   }
   function setCell(td,val){
     var v=String(val||''); td.textContent=v||'—'; td.title=v; td.classList.toggle('is-empty',!v);
@@ -37539,17 +37572,21 @@ syncTip();drawRows();
         tr.appendChild(tdC);
       }
       var pair=pairFor(i);
-      if(opts.inlineCopy){
-        var tdT=el('td','rea-bulk-cell'); var ti=el('input','rea-bulk-tinput'); ti.type='text'; ti.maxLength=20; ti.value=pair.title; ti.placeholder=labels.title||'标题'; ti.setAttribute('data-bulk-inline','title'); ti.setAttribute('data-row',String(i)); ti.setAttribute('aria-label',ti.placeholder); tdT.appendChild(ti); tr.appendChild(tdT);
-        var tdTopic=el('td','rea-bulk-cell'); var tpi=el('input','rea-bulk-tinput'); tpi.type='text'; tpi.value=pair.topic; tpi.placeholder=labels.topic||'话题'; tpi.setAttribute('data-bulk-inline','topic'); tpi.setAttribute('data-row',String(i)); tpi.setAttribute('aria-label',tpi.placeholder); tdTopic.appendChild(tpi); tr.appendChild(tdTopic);
-        var tdCopy=el('td','rea-bulk-cell'); var cpa=el('textarea','rea-bulk-tarea'); cpa.value=pair.copy; cpa.maxLength=1000; cpa.placeholder=labels.copy||'文案'; cpa.setAttribute('data-bulk-inline','copy'); cpa.setAttribute('data-row',String(i)); cpa.setAttribute('aria-label',cpa.placeholder); tdCopy.appendChild(cpa); tr.appendChild(tdCopy);
-      } else {
-        var tdT=el('td','rea-bulk-cell'); setCell(tdT,pair.title); tr.appendChild(tdT);
-        var tdTopic=el('td','rea-bulk-cell'); setCell(tdTopic,pair.topic); tr.appendChild(tdTopic);
-        var tdCopy=el('td','rea-bulk-cell');
-        var disp=pair.copy ? (pair.groups>1 ? short(pair.copy,18)+' · '+pair.groups+' 组' : short(pair.copy,18)) : '';
-        tdCopy.textContent=disp||'—'; tdCopy.title=pair.copy||''; tdCopy.classList.toggle('is-empty',!pair.copy); tr.appendChild(tdCopy);
-      }
+      FIELDS.forEach(function(f){
+        var td=el('td','rea-bulk-cell');
+        if(opts.inlineCopy){
+          if(f.type==='textarea'){
+            var ta=el('textarea','rea-bulk-tarea'); ta.value=pair[f.key]||''; if(f.max)ta.maxLength=f.max; ta.placeholder=f.label; ta.setAttribute('data-bulk-inline',f.key); ta.setAttribute('data-row',String(i)); ta.setAttribute('aria-label',f.label); td.appendChild(ta);
+          } else {
+            var inp=el('input','rea-bulk-tinput'); inp.type='text'; if(f.max)inp.maxLength=f.max; inp.value=pair[f.key]||''; inp.placeholder=f.label; inp.setAttribute('data-bulk-inline',f.key); inp.setAttribute('data-row',String(i)); inp.setAttribute('aria-label',f.label); td.appendChild(inp);
+          }
+        } else {
+          var val=pair[f.key];
+          var disp=val ? (pair.groups>1 ? short(val,18)+' · '+pair.groups+' 组' : short(val,18)) : '';
+          td.textContent=disp||'—'; td.title=val||''; td.classList.toggle('is-empty',!val);
+        }
+        tr.appendChild(td);
+      });
       var tdOps=el('td'), ops=el('div','rea-bulk-ops');
       var up=el('button',null,'↑'); up.type='button'; up.setAttribute('data-bulk-upvideo',String(i)); up.setAttribute('aria-label','上移'); up.title='上移'; up.disabled=i===0; ops.appendChild(up);
       var down=el('button',null,'↓'); down.type='button'; down.setAttribute('data-bulk-downvideo',String(i)); down.setAttribute('aria-label','下移'); down.title='下移'; down.disabled=i===VIDEOS.length-1; ops.appendChild(down);
@@ -37600,11 +37637,13 @@ syncTip();drawRows();
   }
   function updatePair(ci){
     var tr=rows.querySelector('[data-bulk-row="'+ci+'"]'); if(!tr) return;
-    var cells=tr.querySelectorAll('.rea-bulk-cell'); if(cells.length<3) return;
+    var cells=tr.querySelectorAll('.rea-bulk-cell'); if(cells.length<FIELDS.length) return;
     var p=pairFor(ci);
-    setCell(cells[0],p.title); setCell(cells[1],p.topic);
-    var disp=p.copy ? (p.groups>1 ? short(p.copy,18)+' · '+p.groups+' 组' : short(p.copy,18)) : '';
-    cells[2].textContent=disp||'—'; cells[2].title=p.copy||''; cells[2].classList.toggle('is-empty',!p.copy);
+    FIELDS.forEach(function(f,idx){
+      if(!cells[idx]) return;
+      var v=p[f.key], disp=v ? (p.groups>1 ? short(v,18)+' · '+p.groups+' 组' : short(v,18)) : '';
+      cells[idx].textContent=disp||'—'; cells[idx].title=v||''; cells[idx].classList.toggle('is-empty',!v);
+    });
   }
   function pickVideos(){ REPLACE_VIDEO=-1; vinput.value=''; vinput.click(); }
   function pickCovers(){ COVER_ROW=-1; cinput.value=''; cinput.click(); }
@@ -37799,7 +37838,7 @@ syncTip();drawRows();
       COPIES=[];
       for(var i=0;i<list.length;i++){
         var x=list[i]||{};
-        COPIES.push({title:x.title||'',groups:[{copy:x.copy||'',topic:x.topic||''}]});
+        COPIES.push({title:x.title||'',groups:[{copy:x.copy||'',topic:x.topic||'',text:x.text||''}]});
       }
       renderTable(); renderCopies(); sync();
     },
@@ -39161,6 +39200,12 @@ draw();
 .rea-dy-adminform .rea-bulk-table col:nth-child(4){width:18%!important}
 .rea-dy-adminform .rea-bulk-table col:nth-child(5){width:18%!important}
 .rea-dy-adminform .rea-bulk-table col:nth-child(6){width:30%!important}
+/* 发文案配图的四列变体：图片文案／标题／笔记正文／话题 */
+.rea-dy-adminform .rea-bulk-table--four col:nth-child(2){width:16%!important}
+.rea-dy-adminform .rea-bulk-table--four col:nth-child(4){width:15%!important}
+.rea-dy-adminform .rea-bulk-table--four col:nth-child(5){width:13%!important}
+.rea-dy-adminform .rea-bulk-table--four col:nth-child(6){width:26%!important}
+.rea-dy-adminform .rea-bulk-table--four col:nth-child(7){width:15%!important}
 .rea-dy-adminform .rea-bulk-table td{vertical-align:top}
 .rea-dy-adminform .rea-bulk-table td.rea-bulk-cell{padding:6px;white-space:normal;overflow:visible;text-overflow:clip}
 .rea-dy-adminform .rea-bulk-tinput{width:100%;height:58px;padding:0 8px;border:1px solid #d9d9d9;border-radius:6px;background:#fff;color:rgba(0,0,0,.88);font:inherit;font-size:14px;outline:none}
