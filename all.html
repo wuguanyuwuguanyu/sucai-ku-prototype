@@ -38755,6 +38755,12 @@ draw();
         + 'var ct=(CR[ci].textContent||"").trim(),cto=ct?modOf(ct):null;'
         + 'if(cto&&cto!==CUR)CR[ci].setAttribute("data-rea",cto);'
       + '}'
+      /* 第一枚面包屑是「回列表」：文字对不上模块页时（如大众点评互动那张的
+         「社交媒体互动任务 / 大众点评 / 新建任务」），只要是子页就接回它的模块页，
+         免得点到现网去。对得上的页不受影响（上面已经接过）。 */
+      + 'if(CUR.indexOf(" · ")>0&&CR.length&&!CR[0].getAttribute("data-rea")){'
+        + 'CR[0].setAttribute("data-rea",CUR.split(" · ")[0]);'
+      + '}'
       + 'document.addEventListener("click",function(e){'
         + 'var n=e.target;'
         + 'while(n&&n!==document.body){'
