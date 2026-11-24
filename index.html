@@ -20145,6 +20145,25 @@ render();
             </div>
           </div>
         </div>
+        <div class="_form_input_lzm36_71" data-dy-importrow style="display:none;align-items:flex-start">
+          <span class="_must_white_lzm36_76">上传文件</span>
+          <div class="_upload_box_lzm36_100">
+            <div class="rea-dy-importsteps">
+              <div class="rea-dy-importstep">
+                <span class="rea-dy-importstepno">1</span>
+                <div class="rea-dy-importstepbody"><button type="button" class="rea-dy-importsteplink" data-dy-template><b>下载</b>文件模板</button></div>
+              </div>
+              <div class="rea-dy-importstep">
+                <span class="rea-dy-importstepno">2</span>
+                <div class="rea-dy-importstepbody">
+                  <span class="rea-dy-importsteptext">从电脑上选择文件模板上传：</span>
+                  <div class="rea-dy-importstepact"><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-importbtn><span class="rea-dy-upicon"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M12 3l5 5h-3v7h-4V8H7l5-5zM5 19h14v2H5z"></path></svg></span><span>上传文件</span></button><span class="rea-dy-importfile" data-dy-importfile hidden></span></div>
+                </div>
+              </div>
+            </div>
+            <p class="rea-dy-adminerr" data-dy-err="import" hidden>请上传文件</p>
+          </div>
+        </div>
         <div class="_form_input_lzm36_71 rea-dy-row--wide" data-dy-copyrow style="display:none;align-items:flex-start">
           <span class="_must_white1_lzm36_76">文案</span>
           <div class="_upload_box_lzm36_100"><div class="rea-dy-copystatus" data-dy-copystatus></div><div data-dy-copy></div></div>
@@ -37248,7 +37267,7 @@ syncTip();drawRows();
     $$('[data-bulk-mode]').forEach(function(b){ b.classList.toggle('is-on', b.getAttribute('data-bulk-mode')===MODE); });
     importBox.hidden = MODE!=='import';
     aiBox.hidden = MODE!=='ai';
-    if(opts.onChange) opts.onChange({videos:N,copies:COPIES.length,people:PEOPLE,alloc:alloc.textContent,copyStatus:{text:st.text,warn:st.warn}});
+    if(opts.onChange) opts.onChange({videos:N,copies:COPIES.length,people:PEOPLE,alloc:alloc.textContent,copyStatus:{text:st.text,warn:st.warn},mode:MODE,importName:(importChip&&!importChip.hidden?importChip.textContent:'')});
   }
   function renderTable(){
     rows.innerHTML='';
@@ -37475,7 +37494,8 @@ syncTip();drawRows();
     pickVideos:pickVideos, pickCovers:pickCovers,
     setPeople:function(n){ PEOPLE=n||0; sync(); },
     setMode:function(m){ MODE=m; sync(); },
-    getState:function(){ return {videos:VIDEOS.slice(),copies:COPIES.slice(),people:PEOPLE,mode:MODE}; },
+    pickImport:function(){ importInput.value=''; importInput.click(); },
+    getState:function(){ return {videos:VIDEOS.slice(),copies:COPIES.slice(),people:PEOPLE,mode:MODE,importName:(importChip&&!importChip.hidden?importChip.textContent:'')}; },
     sync:sync
   };
 }`;
@@ -37537,6 +37557,7 @@ if(PAGE==="new"){
   var DEPT_COUNT={"销售一部":6,"销售二部":8,"产品部":5,"测试环境雅楠公司":3};
   var M=0;
   var MODEROW=$("[data-dy-moderow]"),COPYROW=$("[data-dy-copyrow]"),COPYST=$("[data-dy-copystatus]");
+  var IMPROW=$("[data-dy-importrow]"),IMPFILE=$("[data-dy-importfile]");
   var BULK=createBulk({
     root:$("[data-dy-bulk]"),
     copyRoot:$("[data-dy-copy]"),
@@ -37548,9 +37569,14 @@ if(PAGE==="new"){
     labels:{title:"视频标题",topic:"视频话题",copy:"视频文案"},
     onChange:function(s){
       $("[data-dy-cnt]").textContent=s.videos+" 条内容 / "+s.people+" 位执行人员";
-      var show=s.videos>0;
+      var show=s.videos>0,imp=s.mode==="import";
       MODEROW.style.display=show?"flex":"none";
-      COPYROW.style.display=show?"flex":"none";
+      IMPROW.style.display=show&&imp?"flex":"none";
+      COPYROW.style.display=show&&(!imp||s.copies>0)?"flex":"none";
+      IMPFILE.textContent=s.importName||"";
+      IMPFILE.hidden=!s.importName;
+      var ie=$('[data-dy-err="import"]');
+      if(ie&&(!imp||s.importName))ie.hidden=true;
       COPYST.textContent=s.copyStatus.text;
       COPYST.className="rea-dy-copystatus"+(s.copyStatus.warn?" is-warn":"");
     }
@@ -37559,6 +37585,8 @@ if(PAGE==="new"){
   $$("[data-dy-modes] input").forEach(function(r){
     r.addEventListener("change",function(){ if(r.checked)BULK.setMode(r.value); });
   });
+  var impBtn=$("[data-dy-importbtn]");if(impBtn)impBtn.addEventListener("click",function(){BULK.pickImport()});
+  var tplBtn=$("[data-dy-template]");if(tplBtn)tplBtn.addEventListener("click",function(e){e.preventDefault();toast("模板已下载")});
   /* AntD 单选、开关的选中态类由这里补：快照里的类名是 React 渲染出来的，原型里自己切 */
   function bindAntdRadios(){
     var all=$$(".rea-dy-adminform input[type=radio]");
@@ -37595,6 +37623,8 @@ if(PAGE==="new"){
     showErr("name",!name.value.replace(/^\s+|\s+$/g,""));if(!name.value.replace(/^\s+|\s+$/g,""))bad=true;
     var st=BULK.getState();
     showErr("video",!st.videos.length);if(!st.videos.length)bad=true;
+    var impBad=st.mode==="import"&&!st.importName;
+    showErr("import",impBad);if(impBad)bad=true;
     if(bad){var first=$(".rea-dy-adminerr:not([hidden])");if(first&&first.scrollIntoView)first.scrollIntoView({block:"center"});return}
     toast("任务已保存");
     setTimeout(function(){go(LIST)},700);
@@ -38720,6 +38750,19 @@ draw();
 .rea-dy-adminform .rea-dy-admin-select:focus{border-color:#1677ff;box-shadow:0 0 0 2px rgba(5,145,255,.1)}
 .rea-dy-adminform .rea-dy-row--wide{padding-right:5%}
 .rea-dy-adminform .rea-dy-q{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;margin-left:8px;border:1px solid #d9d9d9;border-radius:50%;color:#999;font-size:12px;line-height:1;cursor:help}
+.rea-dy-adminform .rea-dy-importsteps{display:flex;flex-direction:column}
+.rea-dy-adminform .rea-dy-importstep{position:relative;display:flex;align-items:flex-start;gap:16px;padding-bottom:28px}
+.rea-dy-adminform .rea-dy-importstep:last-child{padding-bottom:0}
+.rea-dy-adminform .rea-dy-importstep:not(:last-child)::before{content:"";position:absolute;left:17px;top:36px;bottom:0;width:1px;background:#d9d9d9}
+.rea-dy-adminform .rea-dy-importstepno{position:relative;z-index:1;flex:none;display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:#1677ff;color:#fff;font-size:16px;line-height:1}
+.rea-dy-adminform .rea-dy-importstepbody{display:flex;flex-direction:column;gap:10px;min-width:0}
+.rea-dy-adminform .rea-dy-importsteptext{font-size:16px;line-height:36px;color:rgba(0,0,0,.88)}
+.rea-dy-adminform .rea-dy-importsteplink{align-self:flex-start;border:0;background:none;padding:0;color:#1677ff;font:inherit;font-size:16px;line-height:36px;cursor:pointer;text-align:left}
+.rea-dy-adminform .rea-dy-importsteplink b{color:rgba(0,0,0,.88);font-weight:400}
+.rea-dy-adminform .rea-dy-importstepact{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.rea-dy-adminform .rea-dy-upicon{display:inline-flex;margin-right:6px;vertical-align:-2px}
+.rea-dy-adminform .rea-dy-importfile{color:#646a73;font-size:13px;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rea-dy-adminform [data-bulk-import]{display:none!important}
 .rea-dy-adminform .rea-dy-bulkbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
 .rea-dy-adminform .rea-dy-bulkcnt{color:#999;font-size:13px;margin-right:auto}
 .rea-dy-adminform .rea-dy-copystatus{color:#999;font-size:13px;line-height:20px;margin-bottom:8px}
