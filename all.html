@@ -19385,6 +19385,13 @@ render();
           <p class="rea-xn-err" data-xn-err="video" hidden>请上传视频文件</p>
         </div>
       </div>
+      <div class="rea-xn-row" data-xn-g="video" hidden>
+        <span class="rea-xn-label">视频封面<span class="rea-xn-help" tabindex="0" role="img" aria-label="视频封面说明" data-tip="建议竖版 3:4（1080×1440），支持 png、jpg，单张不超过 10MB；平台按自己的封面框裁切，不上传则用平台默认封面。">?</span></span>
+        <div class="rea-xn-ctl">
+          <div class="rea-vcover" data-xn-cover></div>
+          <input type="file" accept="image/png,image/jpeg" hidden data-xn-coverinput>
+        </div>
+      </div>
       <div class="rea-xn-row" data-xn-g="note">
         <label class="rea-xn-label" for="xnCopy">视频文案</label>
         <div class="rea-xn-ctl"><textarea id="xnCopy" class="rea-xn-textarea" data-xn-copy maxlength="1000" placeholder="请输入视频文案"></textarea><div class="rea-xn-countline"><span class="rea-xn-count" data-xn-copycount>0 / 1000</span></div></div>
@@ -20084,6 +20091,7 @@ render();
   <div class="rea-dy-row"><span class="rea-dy-lb">发布类型</span><div class="rea-dy-ctl"><label class="rea-dy-radio"><input type="radio" name="dyPublish" checked><span>发视频</span></label></div></div>
   <div class="rea-dy-row"><span class="rea-dy-lb">选择视频来源</span><div class="rea-dy-ctl"><label class="rea-dy-radio"><input type="radio" name="dySrc" checked><span>手动上传</span></label></div></div>
   <div class="rea-dy-row"><span class="rea-dy-lb"><i>*</i>上传视频</span><div class="rea-dy-ctl"><div class="rea-dy-upload"><button type="button" class="rea-dy-btn" data-dy-upload>上传视频文件</button><span class="rea-dy-file" data-dy-file hidden></span></div><p class="rea-dy-err" data-dy-err="video" hidden>请上传视频文件</p></div></div>
+  <div class="rea-dy-row"><span class="rea-dy-lb">视频封面<span class="rea-dy-help" tabindex="0" role="img" aria-label="视频封面说明">i<span class="rea-dy-tip">建议竖版 3:4（1080×1440），支持 png、jpg，单张不超过 10MB；平台按自己的封面框裁切，不上传则用平台默认封面。</span></span></span><div class="rea-dy-ctl"><div class="rea-vcover" data-dy-cover></div><input type="file" accept="image/png,image/jpeg" hidden data-dy-coverinput></div></div>
   <div class="rea-dy-row"><span class="rea-dy-lb"><i>*</i>文案类型</span><div class="rea-dy-ctl"><div class="rea-dy-seg" role="tablist" data-dy-tabs><button type="button" role="tab" aria-selected="true" class="on" data-dy-tab="ai">AI生成</button><button type="button" role="tab" aria-selected="false" data-dy-tab="manual">手动输入</button><button type="button" role="tab" aria-selected="false" data-dy-tab="import">导入文案</button></div></div></div>
   <div class="rea-dy-panel" data-dy-panel="ai">
     <div class="rea-dy-row"><label class="rea-dy-lb" for="dyCopy">视频文案</label><div class="rea-dy-ctl"><textarea id="dyCopy" maxlength="1000" placeholder="请输入视频文案"></textarea><span class="rea-dy-count" data-dy-count-for="dyCopy">0/1000</span><div><button type="button" class="rea-dy-btn rea-dy-soft" data-dy-gen>生成文案</button></div></div></div>
@@ -20144,6 +20152,7 @@ render();
     <div><dt>发布类型</dt><dd>发视频</dd></div>
     <div><dt>选择视频来源</dt><dd>手动上传</dd></div>
     <div><dt>上传视频</dt><dd>demo-video.mp4</dd></div>
+    <div><dt>视频封面</dt><dd>cover.jpg</dd></div>
     <div><dt>文案类型</dt><dd>AI生成</dd></div>
     <div><dt>视频文案</dt><dd>秋季新品到店，到店试戴有礼。</dd></div>
     <div><dt>视频标题</dt><dd>秋季新品到店</dd></div>
@@ -20406,6 +20415,7 @@ render();
     <section class="rea-wxd-group"><h4 class="rea-wxd-gt"><svg class="rea-wx-secic" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="6" width="13" height="12" rx="2"/><path d="m15.5 10.3 6-3.4v10.2l-6-3.4"/></svg><span>视频内容</span></h4><div class="rea-wxd-kv">
       <p><span>视频文案</span><span>秋季新品开箱，30 秒竖版，门店实拍</span></p>
       <p><span>视频话题</span><span>#秋季新品 #开箱</span></p>
+      <p><span>视频封面</span><span><span class="rea-vcover-demo" aria-label="视频封面缩略图">封面</span></span></p>
     </div></section>
   </div></div>
 </div></div>
@@ -20643,6 +20653,7 @@ render();
      与 REA_WX_DETAIL_CSS，与其余六张微信营销详情页同一套。 */
   var REA_WX_VIDEO = '视频号发布任务';
   var REA_WX_VIDEO_DETAIL = REA_WX_VIDEO + ' · 详情';
+  var REA_WX_VIDEO_NEW = REA_WX_VIDEO + ' · 新建';
   /* 「详细数据」子页：现网路由 board/wxz/task 不在 37 页快照里，
      由 reaSynthPages() 在运行时克隆看板页外壳合成，正文来自下面那个载体块。 */
   var REA_DETAIL_TASK = '微小助看板 · 执行人明细';
@@ -25342,6 +25353,7 @@ $('[data-xn-cancel]').addEventListener('click',back);
   }
 })();
 applyType();drawImgs();
+` + reaVcoverJs('[data-xn-cover]','[data-xn-coverinput]','toast') + String.raw`
 })();`;
   }
 
@@ -31512,6 +31524,35 @@ for(i=0;i<vs.length;i++)vs[i].addEventListener('click',function(e){
 });
 })();`;
   }
+  /* 视频号发布任务 · 新建（2026-11-24）：快照那一页的表单原样保留，只在「上传视频」行后
+     插一行「视频封面」——上传一张竖版图，执行时用它替换平台默认封面。行、标签、控制区
+     沿用快照的 CSS Modules 类（_form_input_／_must_white1_／_upload_box_），版式才对得齐；
+     取不到这几类时退回自己的 .rea-vcover 布局，不把行插歪。 */
+  function reaWxVideoNewJs(){
+    return String.raw`(function(){
+function msg(t){
+  var d=document.querySelector('.rea-vcover-toast');
+  if(!d){d=document.createElement('div');d.className='rea-vcover-toast';document.body.appendChild(d)}
+  d.textContent=t;d.classList.add('on');clearTimeout(d._t);
+  d._t=setTimeout(function(){d.classList.remove('on')},1800);
+}
+var rows=document.querySelectorAll('[class*="_form_input_"]'),host=null,i;
+for(i=0;i<rows.length;i++){
+  var lb=rows[i].querySelector('span');
+  if(lb&&lb.textContent.replace(/^\s+|\s+$/g,'')==='上传视频'){host=rows[i];break}
+}
+if(!host)return;
+if(document.querySelector('[data-wxv-cover]'))return;
+var row=document.createElement('div');
+row.className=host.className;
+row.innerHTML='<span class="_must_white1_lzm36_76">视频封面<span class="rea-vcover-help" tabindex="0" role="img" aria-label="视频封面说明" data-tip="建议竖版 3:4（1080×1440），支持 png、jpg，单张不超过 10MB；平台按自己的封面框裁切，不上传则用平台默认封面。">i</span></span>'
+  +'<div class="_upload_box_lzm36_100"><div class="rea-vcover" data-wxv-cover></div>'
+  +'<input type="file" accept="image/png,image/jpeg" hidden data-wxv-coverinput></div>';
+host.parentNode.insertBefore(row,host.nextSibling);
+` + reaVcoverJs('[data-wxv-cover]','[data-wxv-coverinput]','msg') + String.raw`
+})();`;
+  }
+
   /* 视频号发布任务 · 详情（2026-11-23）：员工完成情况的「发布视频」点「查看」开预览。
      视频本体是演示件（深底＋播放圆钮＋文件名），弹窗骨架仍用 AntD 的 modal 类。 */
   var REA_WXV_CSS = [
@@ -31519,7 +31560,8 @@ for(i=0;i<vs.length;i++)vs[i].addEventListener('click',function(e){
     '.rea-wxv-play{position:relative;width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.16)}',
     '.rea-wxv-play::after{content:"";position:absolute;left:22px;top:17px;border-style:solid;border-width:11px 0 11px 18px;border-color:transparent transparent transparent #fff}',
     '.rea-wxv-video em{position:relative;font-style:normal;font-size:13px;color:#C9CED6}',
-    '.rea-wxv-meta{margin:12px 0 0;font-size:13px;line-height:20px;color:#646A73;text-align:center}'
+    '.rea-wxv-meta{margin:12px 0 0;font-size:13px;line-height:20px;color:#646A73;text-align:center}',
+    '.rea-vcover-demo{display:inline-flex;align-items:center;justify-content:center;width:44px;height:59px;border-radius:4px;background:linear-gradient(135deg,#DCEBFF,#F5F8FF);color:#1677FF;font-size:11px;line-height:1.4;text-align:center}'
   ].join('\n');
 
   /* ============================================================
@@ -36621,6 +36663,7 @@ if(PAGE==="detail"){
   $$("[data-dy-back]").forEach(function(b){b.addEventListener("click",function(e){e.preventDefault();go(LIST)})});
   var df=$("[data-dy-dfilter]");if(df)df.addEventListener("submit",function(e){e.preventDefault();toast("已按筛选条件查询")});
 }
+` + reaVcoverJs('[data-dy-cover]','[data-dy-coverinput]','toast') + String.raw`
 })();`;
   }
 
@@ -37317,6 +37360,65 @@ if(PAGE==="detail"){
 .rea-op-tpl-empty{padding:56px 12px;color:#8F959E;text-align:center}
 `;
 
+  /* 视频封面（2026-11-24）：发短视频／笔记发布／视频号发布任务三张新建页共用一枚上传部件。
+     空态是 3:4 虚线框，选中后换成缩略图＋更换／删除；图只读进内存，不上传、不落盘。
+     三页样式共用 REA_VC_CSS，行为共用 reaVcoverJs（需要 toast 的页面把函数名传进来）。 */
+  var REA_VC_CSS = [
+    '.rea-vcover{display:flex;align-items:flex-start;gap:12px;padding-top:2px}',
+    '.rea-vcover-add{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;width:72px;height:96px;padding:0;border:1px dashed #C9CED8;border-radius:8px;background:#fff;color:#8F959E;font:inherit;font-size:12px;line-height:16px;cursor:pointer;box-sizing:border-box}',
+    '.rea-vcover-add b{font-size:20px;font-weight:400;line-height:1}',
+    '.rea-vcover-add:hover{border-color:#1677FF;color:#1677FF}',
+    '.rea-vcover-box{display:flex;flex-direction:column;gap:6px}',
+    '.rea-vcover-thumb{width:72px;height:96px;border-radius:8px;overflow:hidden;background:#F2F3F5}',
+    '.rea-vcover-thumb img{display:block;width:100%;height:100%;object-fit:cover}',
+    '.rea-vcover-ops{display:flex;gap:10px}',
+    '.rea-vcover-ops button{padding:0;border:0;background:none;color:#1677FF;font:inherit;font-size:12px;line-height:16px;cursor:pointer}',
+    '.rea-vcover-ops button[data-vc-rm]{color:#FF4D4F}',
+    '.rea-dy-lb .rea-dy-help{margin-left:4px}',
+    '.rea-vcover-help{position:relative;display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;margin-left:4px;border:1px solid #B7BCC4;border-radius:50%;color:#8F959E;font-size:10px;font-style:normal;line-height:1;cursor:help;vertical-align:middle}',
+    '.rea-vcover-help:hover,.rea-vcover-help:focus{border-color:#1677FF;color:#1677FF;outline:none}',
+    '.rea-vcover-help::after{content:attr(data-tip);position:absolute;left:-70px;top:calc(100% + 8px);z-index:90;width:272px;padding:8px 10px;border-radius:6px;background:#1F2329;color:#fff;font-size:12px;line-height:1.5;text-align:left;visibility:hidden;opacity:0;transition:opacity .15s;pointer-events:none}',
+    '.rea-vcover-help:hover::after,.rea-vcover-help:focus::after{visibility:visible;opacity:1}',
+    '.rea-vcover-toast{position:fixed;left:50%;top:24px;z-index:200;padding:8px 14px;border-radius:6px;background:#1F2329;color:#fff;font-size:13px;line-height:20px;transform:translate(-50%,-8px);opacity:0;visibility:hidden;transition:opacity .15s,transform .15s}',
+    '.rea-vcover-toast.on{opacity:1;visibility:visible;transform:translate(-50%,0)}'
+  ].join('\n');
+  function reaVcoverJs(boxSel,inputSel,toastExpr){
+    return String.raw`(function(){
+var BOX=document.querySelector(${reaJson(boxSel)}),INPUT=document.querySelector(${reaJson(inputSel)}),COVER=null;
+if(!BOX||!INPUT)return;
+var say=${toastExpr||'function(){}'};
+function draw(){
+  BOX.innerHTML='';
+  if(!COVER){
+    var add=document.createElement('button');add.type='button';add.className='rea-vcover-add';add.setAttribute('data-vc-add','');
+    var b=document.createElement('b');b.textContent='+';add.appendChild(b);
+    add.appendChild(document.createTextNode('上传封面'));BOX.appendChild(add);return;
+  }
+  var box=document.createElement('div');box.className='rea-vcover-box';
+  var th=document.createElement('div');th.className='rea-vcover-thumb';
+  var im=document.createElement('img');im.src=COVER.src;im.alt='视频封面';th.appendChild(im);
+  var ops=document.createElement('div');ops.className='rea-vcover-ops';
+  var ch=document.createElement('button');ch.type='button';ch.setAttribute('data-vc-change','');ch.textContent='更换';
+  var rm=document.createElement('button');rm.type='button';rm.setAttribute('data-vc-rm','');rm.textContent='删除';
+  ops.appendChild(ch);ops.appendChild(rm);box.appendChild(th);box.appendChild(ops);BOX.appendChild(box);
+}
+BOX.addEventListener('click',function(e){
+  var t=e.target.closest?e.target.closest('button'):null;if(!t||!BOX.contains(t))return;
+  if(t.hasAttribute('data-vc-add')||t.hasAttribute('data-vc-change')){INPUT.click();return}
+  if(t.hasAttribute('data-vc-rm')){COVER=null;draw()}
+});
+INPUT.addEventListener('change',function(){
+  var f=this.files&&this.files[0];this.value='';if(!f)return;
+  if(!/^image\/(png|jpe?g)$/.test(f.type)){say('封面只支持 png、jpg 图片');return}
+  if(f.size>10*1024*1024){say('封面图片不能超过 10MB');return}
+  var rd=new FileReader();
+  rd.onload=function(){COVER={src:rd.result,name:f.name};draw()};
+  rd.readAsDataURL(f);
+});
+draw();
+})();`;
+  }
+
   var REA_COVER = {
     '使用总览': { html: 'srcOverview', css: docOf('srcOverviewStyle'), js: function(){ return reaOverviewDataJs()+docOf('srcOverviewScript'); } },
     '使用总览 · 使用详情': { html: 'srcOverview', css: docOf('srcOverviewStyle'), js: function(){ return 'window.__REA_USAGE_DETAIL=true;'+reaOverviewDataJs()+docOf('srcOverviewScript'); } },
@@ -37347,7 +37449,7 @@ if(PAGE==="detail"){
     /* 笔记发布三页（2026-11-23）：合成页没有正文缝，覆盖脚本整段换 #subapp-viewport，
        样式共用 REA_XN_CSS；列表页的演示集与新建页保存的任务经 reaDataJs / postMessage 共用一份。 */
     [REA_XN_PAGE]: { css: REA_XN_CSS, js: reaXhsNoteListJs },
-    [REA_XN_NEW]: { css: REA_XN_CSS, js: reaXhsNoteNewJs },
+    [REA_XN_NEW]: { css: REA_XN_CSS + REA_VC_CSS, js: reaXhsNoteNewJs },
     [REA_XN_DETAIL]: { css: REA_XN_CSS, js: reaXhsNoteDetailJs },
     /* 小红书运营三页（2026-11-23）：同组、同壳；样式在 REA_XN_CSS 之上补 REA_XHOP_CSS
        （选项组、话题面板、页签、弹窗、搜索框）。正文来自 srcXhsOp／srcXhsOpNew／srcXhsOpDetail。 */
@@ -37357,7 +37459,7 @@ if(PAGE==="detail"){
     /* 抖音营销 · 发短视频三页（2026-11-23）：运行时合成页，正文已随 rest 拼好，
        这里只登记样式与交互；没有 html 载体，reaSplice 原样放过。 */
     [REA_DY_PAGE]: { css: REA_DY_CSS, js: function(){ return reaDyJs('list'); } },
-    [REA_DY_NEW]: { css: REA_DY_CSS, js: function(){ return reaDyJs('new'); } },
+    [REA_DY_NEW]: { css: REA_DY_CSS + REA_VC_CSS, js: function(){ return reaDyJs('new'); } },
     [REA_DY_DETAIL]: { css: REA_DY_CSS, js: function(){ return reaDyJs('detail'); } },
     /* 抖音营销 · 抖音运营三页（2026-11-23）：同上，运行时合成页；正文来自
        srcDyOpList／srcDyOpNew／srcDyOpDetail，样式在 REA_DY_CSS 之上补 REA_DY_OP_CSS。 */
@@ -37393,6 +37495,9 @@ if(PAGE==="detail"){
     /* 视频号发布任务 · 详情（2026-11-23）：快照里没有这一页的正文，由 reaWxVideoDetailJs
        把载体 srcWxVideoDetail 整段换进克隆来的模块页壳；版式与上面六页同一套 */
     [REA_WX_VIDEO_DETAIL]: { css: REA_WX_DETAIL_CSS + REA_WX_SNAP_CSS + REA_WXV_CSS, js: function(){ return reaWxVideoDetailJs() + reaWxSnapshotDrawerJs(REA_WX_VIDEO_DETAIL); } },
+    /* 视频号发布任务 · 新建（2026-11-24）：正文与样式仍是快照那一页，只在「上传视频」后
+       插一行「视频封面」，所以只带封面部件的样式与脚本。 */
+    [REA_WX_VIDEO_NEW]: { css: REA_VC_CSS, js: function(){ return reaWxVideoNewJs(); } },
     /* 客户唤醒 · 新建（2026-11-11）：单位下拉、执行人员、添加回复内容弹窗（固定内容／AI 两套）
        ＋ 唤醒内容行的增删改；正文与设计语言都还是快照，只补交互 */
     '客户唤醒 · 新建': { css: REA_HX_CSS, js: reaHxJs }
