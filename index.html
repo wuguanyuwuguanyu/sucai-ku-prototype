@@ -37653,7 +37653,7 @@ draw();
       var row = anchor.closest('.ant-form-item');
       if(!row) return;
 
-      var TIP = '执行时脚本按名称找到大众点评页上的这一项，点你填的那个值。';
+      var TIP = '执行时脚本按名称找到大众点评页上的这一项，点你填的那个选项。';
       var sec = document.createElement('div');
       sec.className = 'rea-dcc';
       sec.setAttribute('data-dcc','1');
@@ -37697,7 +37697,7 @@ draw();
           '<div class="rea-dcc-row">'
           + '<span class="rea-dcc-lab">名称</span>'
           + '<input type="text" class="ant-input css-vgijab ant-input-outlined rea-dcc-name" placeholder="如：课程类型">'
-          + '<span class="rea-dcc-lab">值</span>'
+          + '<span class="rea-dcc-lab">选项</span>'
           + '<input type="text" class="ant-input css-vgijab ant-input-outlined rea-dcc-val" placeholder="如：正式课">'
           + '<button type="button" class="rea-dcc-del">删除</button>'
           + '</div><div class="rea-dcc-err"></div>';
@@ -37717,7 +37717,7 @@ draw();
           var dirty = !!name || !!val;
           var ok = !dirty || (!!name && !!val);
           errEl.classList.toggle('on', !ok);
-          errEl.textContent = ok ? '' : '请填写名称和值';
+          errEl.textContent = ok ? '' : '请填写名称和选项';
           nameEl.classList.toggle('rea-bad', !ok && !name);
           valEl.classList.toggle('rea-bad', !ok && !val);
           if(!ok && !firstBad) firstBad = it;
