@@ -37395,11 +37395,16 @@ draw();
     var MAP = {
       '知识库': { btn: { '全局日志': '知识库 · 操作日志（全局）',
                          '任务中心': '知识库 · 任务中心',
-                         '新建知识库': '知识库 · 新建' } },
+                         '新建知识库': '知识库 · 新建',
+                         '使用指南': '知识库 · 使用指南' } },
       '知识库 · 新建': { close: '知识库', cancel: '知识库' },
       '知识库 · 操作日志（全局）': { close: '知识库' },
       '知识库 · 任务中心': { close: '知识库', panes: '.ant-drawer' },
-      '智能体': { tabs: { '阿里百炼': '智能体 · 阿里百炼' } }
+      /* 智能体：「阿里百炼」页签另有快照；「创建自有机器人」是张虚线卡片（不是 .ant-btn），
+         单独按 class 认。 */
+      '智能体': { tabs: { '阿里百炼': '智能体 · 阿里百炼' },
+                  card: { '创建自有机器人': '智能体 · 创建自有机器人' } },
+      '智能体 · 创建自有机器人': { close: '智能体', cancel: '智能体' }
     }[page] || {};
     return '(function(){var M=' + reaJson(MAP) + ';'
       /* 按钮按文字找：快照里的按钮没有稳定钩子，文字是唯一能跨重抓存还原的键 */
@@ -37408,6 +37413,9 @@ draw();
       + 'if(M.btn){bs=document.querySelectorAll(".ant-btn");'
         + 'for(i=0;i<bs.length;i++){if(bs[i].closest(".ant-modal"))continue;'
         + 'var t=txt(bs[i]);if(M.btn[t])bs[i].setAttribute("data-rea",M.btn[t]);}}'
+      /* 虚线卡片（智能体的「创建自有机器人」）不是按钮：按 class 前缀认，文字对上才接 */
+      + 'if(M.card){bs=document.querySelectorAll("[class*=\\"_newCard\\"]");'
+        + 'for(i=0;i<bs.length;i++){var ct=txt(bs[i]);if(M.card[ct])bs[i].setAttribute("data-rea",M.card[ct]);}}'
       + 'if(M.close){bs=document.querySelectorAll(".ant-modal-close, .ant-drawer-close");'
         + 'for(i=0;i<bs.length;i++)bs[i].setAttribute("data-rea",M.close);}'
       + 'if(M.cancel){bs=document.querySelectorAll(".ant-modal .ant-btn");'
@@ -37521,7 +37529,8 @@ draw();
     '知识库 · 新建': { js: function(){ return reaDseJs('知识库 · 新建'); } },
     '知识库 · 操作日志（全局）': { js: function(){ return reaDseJs('知识库 · 操作日志（全局）'); } },
     '知识库 · 任务中心': { js: function(){ return reaDseJs('知识库 · 任务中心'); } },
-    '智能体': { js: function(){ return reaDseJs('智能体'); } }
+    '智能体': { js: function(){ return reaDseJs('智能体'); } },
+    '智能体 · 创建自有机器人': { js: function(){ return reaDseJs('智能体 · 创建自有机器人'); } }
   };
 
   /* 把被覆盖页的正文区（contentStart..contentEnd，构建脚本给出的那道缝）换成它登记表里那个载体的内容。
@@ -37708,6 +37717,14 @@ draw();
     }
     /* 微信营销任务的配置快照不再单独成页（2026-11-16）：改从详情页右侧抽屉展开，
        不再克隆详情页的壳，也不进页序。 */
+    /* 独立文档页（知识库 · 使用指南，即「知识管理 - 操作指南」）：它没有后台外壳，
+       自带 header／tabs 与样式，塞不进「共用外壳前缀 ＋ 每页 rest」那套，所以由构建单存一份，
+       在这里合成一张带 standalone 标记的页条目——reaDoc 见到标记就走整页渲染那条分支。 */
+    var ST = P.standalone || {};
+    for (var stn in ST){
+      P.pages.push({ name: stn, rest: ST[stn].html, standalone: true,
+                     contentStart: null, contentEnd: null });
+    }
     reaSynthDone = true;
   }
 
@@ -38661,8 +38678,32 @@ document.addEventListener('click',function(event){
 })();`;
   }
 
+  /* 独立文档页的页内脚本：只挂一枚「返回」——那页没有后台侧栏与顶栏，不给回程就出不去。
+     回去的目标按页名推（「知识库 · 使用指南」→ 知识库），不写死。 */
+  function reaStandaloneJs(name){
+    var back = name.split(' · ')[0];
+    return '(function(){var b=document.createElement("button");b.type="button";'
+      + 'b.textContent="‹ 返回" + ' + reaJson(back) + ';'
+      + 'b.style.cssText="position:fixed;left:16px;bottom:16px;z-index:99;padding:8px 14px;'
+      + 'border:1px solid #E9EEF6;border-radius:8px;background:#fff;color:#1677FF;'
+      + 'font:14px -apple-system,PingFang SC,Microsoft YaHei,sans-serif;cursor:pointer;'
+      + 'box-shadow:0 2px 8px rgba(0,0,0,.06)";'
+      + 'b.onclick=function(){parent.postMessage({reaPage:' + reaJson(back) + '},"*")};'
+      + 'document.body.appendChild(b);})();';
+  }
+
   function reaDoc(i){
     var P = window.__REAL_ADMIN__, p = P.pages[i];
+    /* 独立文档页：整页自带样式与正文，不拼外壳、不注入 REA_CSS 与导航脚本。 */
+    if (p.standalone){
+      var ST = (P.standalone || {})[p.name] || { html: p.rest, css: '' };
+      return '<!DOCTYPE html>\n<html lang="zh-CN"><head><meta charset="utf-8">'
+        + '<title>' + reaName(p.name) + ' · 线上后台复刻</title>'
+        + '<style>' + ST.css + '</style>'
+        + '</head><body>' + ST.html
+        + '<script>' + reaStandaloneJs(p.name) + '<' + '/script>'
+        + '</body></html>';
+    }
     /* 覆盖页多两样：它那份样式，和它那段脚本（查 REA_COVER 登记表）。
        未覆盖页拼出来的字符串与覆盖功能上线前逐字节相同——这是「逐页覆盖」的底线。 */
     var cv = REA_COVER[p.name];
