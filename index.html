@@ -20135,18 +20135,8 @@ render();
             <p class="rea-dy-adminerr" data-dy-err="video" hidden>请添加视频</p>
           </div>
         </div>
-        <div class="_form_input_lzm36_71" data-dy-moderow style="display:none">
-          <span class="_must_white_lzm36_76">文案类型</span>
-          <div class="_upload_box_lzm36_100">
-            <div class="ant-radio-group ant-radio-group-solid css-vgijab" data-dy-modes>
-              <label class="ant-radio-button-wrapper ant-radio-button-wrapper-checked css-vgijab"><span class="ant-radio-button ant-radio-button-checked"><input name="dyCopyMode" class="ant-radio-button-input" type="radio" value="ai" checked><span class="ant-radio-button-inner"></span></span><span class="ant-radio-button-label">AI生成</span></label>
-              <label class="ant-radio-button-wrapper css-vgijab"><span class="ant-radio-button"><input name="dyCopyMode" class="ant-radio-button-input" type="radio" value="manual"><span class="ant-radio-button-inner"></span></span><span class="ant-radio-button-label">手动输入</span></label>
-              <label class="ant-radio-button-wrapper css-vgijab"><span class="ant-radio-button"><input name="dyCopyMode" class="ant-radio-button-input" type="radio" value="import"><span class="ant-radio-button-inner"></span></span><span class="ant-radio-button-label">导入文案</span></label>
-            </div>
-          </div>
-        </div>
         <div class="_form_input_lzm36_71" data-dy-importrow style="display:none;align-items:flex-start">
-          <span class="_must_white_lzm36_76">上传文件</span>
+          <span class="_must_white1_lzm36_76">上传文件</span>
           <div class="_upload_box_lzm36_100">
             <div class="rea-dy-importsteps">
               <div class="rea-dy-importstep">
@@ -20161,12 +20151,11 @@ render();
                 </div>
               </div>
             </div>
-            <p class="rea-dy-adminerr" data-dy-err="import" hidden>请上传文件</p>
           </div>
         </div>
         <div class="_form_input_lzm36_71 rea-dy-row--wide" data-dy-copyrow style="display:none;align-items:flex-start">
           <span class="_must_white1_lzm36_76">文案</span>
-          <div class="_upload_box_lzm36_100"><div class="rea-dy-copystatus" data-dy-copystatus></div><div data-dy-copy></div></div>
+          <div class="_upload_box_lzm36_100"><div data-dy-copy></div></div>
         </div>
         <div class="_form_input_lzm36_71">
           <span class="_must_white_lzm36_76">推广类型</span>
@@ -37556,48 +37545,33 @@ if(PAGE==="new"){
   $("#dyTaskName").addEventListener("input",syncCounts);syncCounts();
   var DEPT_COUNT={"销售一部":6,"销售二部":8,"产品部":5,"测试环境雅楠公司":3};
   var M=0;
-  var MODEROW=$("[data-dy-moderow]"),COPYROW=$("[data-dy-copyrow]"),COPYST=$("[data-dy-copystatus]");
-  var IMPROW=$("[data-dy-importrow]"),IMPFILE=$("[data-dy-importfile]");
+  var COPYROW=$("[data-dy-copyrow]"),IMPROW=$("[data-dy-importrow]"),IMPFILE=$("[data-dy-importfile]");
+  var IMPORT_OPEN=false;
   var BULK=createBulk({
     root:$("[data-dy-bulk]"),
     copyRoot:$("[data-dy-copy]"),
     hideCopyHead:true,
     toast:toast,
     multiCopy:true,
-    modes:[{key:"ai",label:"AI生成"},{key:"manual",label:"手动输入"},{key:"import",label:"导入文案"}],
-    defaultMode:"ai",
+    modes:[{key:"manual",label:"手动输入"}],
+    defaultMode:"manual",
     labels:{title:"视频标题",topic:"视频话题",copy:"视频文案"},
     onChange:function(s){
       $("[data-dy-cnt]").textContent=s.videos+" 条内容 / "+s.people+" 位执行人员";
-      var show=s.videos>0,imp=s.mode==="import";
-      MODEROW.style.display=show?"flex":"none";
-      IMPROW.style.display=show&&imp?"flex":"none";
-      COPYROW.style.display=show&&(!imp||s.copies>0)?"flex":"none";
+      var show=s.videos>0;
+      COPYROW.style.display=show?"flex":"none";
+      IMPROW.style.display=show&&IMPORT_OPEN?"flex":"none";
       IMPFILE.textContent=s.importName||"";
       IMPFILE.hidden=!s.importName;
-      var ie=$('[data-dy-err="import"]');
-      if(ie&&(!imp||s.importName))ie.hidden=true;
-      COPYST.textContent=s.copyStatus.text;
-      COPYST.className="rea-dy-copystatus"+(s.copyStatus.warn?" is-warn":"");
+      var ib=$("[data-dy-importshortcut]");if(ib)ib.classList.toggle("is-on",IMPORT_OPEN);
     }
-  });
-  /* 文案类型那排是抓存页的 AntD 分段控件，切它等于切共用件的文案模式 */
-  function selectCopyMode(mode){
-    $$("[data-dy-modes] input").forEach(function(r){
-      r.checked = r.value===mode;
-      var bw=r.closest(".ant-radio-button-wrapper");if(bw)bw.classList.toggle("ant-radio-button-wrapper-checked",r.checked);
-      var ba=r.closest(".ant-radio-button");if(ba)ba.classList.toggle("ant-radio-button-checked",r.checked);
-    });
-    BULK.setMode(mode);
-  }
-  $$("[data-dy-modes] input").forEach(function(r){
-    r.addEventListener("change",function(){ if(r.checked)selectCopyMode(r.value); });
   });
   var importShortcut=$("[data-dy-importshortcut]");
   if(importShortcut)importShortcut.addEventListener("click",function(){
     if(!BULK.getState().videos.length){toast("先添加视频");return}
-    selectCopyMode("import");
-    setTimeout(function(){if(IMPROW&&IMPROW.scrollIntoView)IMPROW.scrollIntoView({block:"center"})},60);
+    IMPORT_OPEN=!IMPORT_OPEN;
+    BULK.sync();
+    if(IMPORT_OPEN)setTimeout(function(){if(IMPROW&&IMPROW.scrollIntoView)IMPROW.scrollIntoView({block:"center"})},60);
   });
   var impBtn=$("[data-dy-importbtn]");if(impBtn)impBtn.addEventListener("click",function(){BULK.pickImport()});
   var tplBtn=$("[data-dy-template]");if(tplBtn)tplBtn.addEventListener("click",function(e){e.preventDefault();toast("模板已下载")});
@@ -37637,8 +37611,6 @@ if(PAGE==="new"){
     showErr("name",!name.value.replace(/^\s+|\s+$/g,""));if(!name.value.replace(/^\s+|\s+$/g,""))bad=true;
     var st=BULK.getState();
     showErr("video",!st.videos.length);if(!st.videos.length)bad=true;
-    var impBad=st.mode==="import"&&!st.importName;
-    showErr("import",impBad);if(impBad)bad=true;
     if(bad){var first=$(".rea-dy-adminerr:not([hidden])");if(first&&first.scrollIntoView)first.scrollIntoView({block:"center"});return}
     toast("任务已保存");
     setTimeout(function(){go(LIST)},700);
@@ -38779,8 +38751,8 @@ draw();
 .rea-dy-adminform [data-bulk-import]{display:none!important}
 .rea-dy-adminform .rea-dy-bulkbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
 .rea-dy-adminform .rea-dy-bulkcnt{color:#999;font-size:13px;margin-right:auto}
-.rea-dy-adminform .rea-dy-copystatus{color:#999;font-size:13px;line-height:20px;margin-bottom:8px}
-.rea-dy-adminform .rea-dy-copystatus.is-warn{color:#faad14}
+.rea-dy-adminform .rea-bulk-copy-empty{display:none}
+.rea-dy-adminform .rea-dy-bulkbar [data-dy-importshortcut].is-on{border-color:#1677ff;color:#1677ff;background:#e6f4ff}
 .rea-dy-adminform .rea-dy-dt{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .rea-dy-adminform .rea-dy-dt input{height:32px;padding:0 11px;border:1px solid #d9d9d9;border-radius:6px;background:#fff;color:rgba(0,0,0,.88);font-size:14px;outline:none}
 .rea-dy-adminform .rea-dy-dt input:focus{border-color:#1677ff;box-shadow:0 0 0 2px rgba(5,145,255,.1)}
