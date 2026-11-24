@@ -19295,7 +19295,7 @@ render();
       <th>发布类型</th>
       <th>视频文案</th>
       <th>视频话题</th>
-      <th>执行人员</th>
+      <th>执行人员</th><th>发布内容</th>
       <th class="rea-xn-th-time">发布时间</th>
       <th>状态</th>
       <th class="rea-xn-th-time">创建时间</th>
@@ -19344,18 +19344,11 @@ render();
       </div>
     </section>
     <section class="rea-xn-sec">
-      <h2>发布内容</h2>
+      <div class="rea-xn-sechead"><h2>发布内容</h2><div class="rea-xn-secact"><span class="rea-xn-cnt" data-xn-cnt>1 条内容 / 0 位执行人员</span><button type="button" class="rea-xn-btn" data-xn-addfile>+ 添加内容</button></div></div>
+      <input type="file" accept="image/*,video/*" multiple hidden data-xn-addinput>
       <div class="rea-xn-row">
         <span class="rea-xn-label rea-xn-req">素材来源</span>
         <div class="rea-xn-ctl"><div class="rea-xn-seg" data-xn-source><button type="button" class="is-on" data-v="临时创建">临时创建</button><button type="button" data-v="AI生成">AI生成</button></div></div>
-      </div>
-      <div class="rea-xn-row" data-xn-aigenrow hidden>
-        <label class="rea-xn-label" for="xnAi">生成要求</label>
-        <div class="rea-xn-ctl">
-          <textarea id="xnAi" class="rea-xn-textarea" data-xn-aigen placeholder="描述想发布的内容，例如产品、活动、目标人群"></textarea>
-          <div class="rea-xn-inline"><button type="button" class="rea-xn-btn" data-xn-gen>生成</button></div>
-          <p class="rea-xn-err" data-xn-err="aigen" hidden>请填写生成要求</p>
-        </div>
       </div>
       <div class="rea-xn-row">
         <span class="rea-xn-label rea-xn-req">发布类型</span>
@@ -19365,60 +19358,83 @@ render();
           <label class="rea-xn-radio"><input type="radio" name="xnType" value="发文案配图">发文案配图</label>
         </div></div>
       </div>
-      <div class="rea-xn-row" data-xn-g="img">
-        <span class="rea-xn-label rea-xn-req">选择图片<span class="rea-xn-help" data-tip="最多上传 18 张；支持 png、jpg、jpeg，单张不超过 20MB；首图即封面，可拖动调整顺序。">?</span></span>
-        <div class="rea-xn-ctl">
-          <div class="rea-xn-upload" data-xn-imgs></div>
-          <input type="file" accept="image/png,image/jpeg,image/jpg" multiple hidden data-xn-imginput>
-          <p class="rea-xn-err" data-xn-err="img" hidden>请至少上传一张图片</p>
+      <p class="rea-xn-hint" data-xn-hint>选择执行人员后显示分配结果</p>
+      <div class="rea-xn-cards" data-xn-cards>
+        <div class="rea-xn-card" data-xn-card data-open="true">
+          <div class="rea-xn-card-h">
+            <button type="button" class="rea-xn-card-toggle" data-xn-toggle aria-expanded="true">
+              <span class="rea-xn-cardno" data-xn-cardno>1</span>
+              <span class="rea-xn-cardname" data-xn-cardname>未选择图片</span>
+              <span class="rea-xn-cardsum" data-xn-cardsum></span>
+            </button>
+            <button type="button" class="rea-xn-carddel" data-xn-carddel aria-label="删除这条内容">×</button>
+          </div>
+          <div class="rea-xn-card-b">
+            <div class="rea-xn-row" data-xn-aigenrow hidden>
+              <label class="rea-xn-label">生成要求</label>
+              <div class="rea-xn-ctl">
+                <textarea class="rea-xn-textarea" data-xn-aigen placeholder="描述想发布的内容，例如产品、活动、目标人群"></textarea>
+                <div class="rea-xn-inline"><button type="button" class="rea-xn-btn" data-xn-gen>生成</button></div>
+                <p class="rea-xn-err" data-xn-err="aigen" hidden>请填写生成要求</p>
+              </div>
+            </div>
+            <div class="rea-xn-row" data-xn-g="img">
+              <span class="rea-xn-label rea-xn-req">选择图片<span class="rea-xn-help" data-tip="最多上传 18 张；支持 png、jpg、jpeg，单张不超过 20MB；首图即封面，可拖动调整顺序。">?</span></span>
+              <div class="rea-xn-ctl">
+                <div class="rea-xn-upload" data-xn-imgs></div>
+                <input type="file" accept="image/png,image/jpeg,image/jpg" multiple hidden data-xn-imginput>
+                <p class="rea-xn-err" data-xn-err="img" hidden>请至少上传一张图片</p>
+              </div>
+            </div>
+            <div class="rea-xn-row" data-xn-g="video" hidden>
+              <span class="rea-xn-label rea-xn-req">选择视频来源</span>
+              <div class="rea-xn-ctl"><span class="rea-xn-radios"><label class="rea-xn-radio is-on"><input type="radio" name="xnVsrc" checked>手动上传</label></span></div>
+            </div>
+            <div class="rea-xn-row" data-xn-g="video" hidden>
+              <span class="rea-xn-label rea-xn-req">上传视频</span>
+              <div class="rea-xn-ctl">
+                <div class="rea-xn-filewrap"><button type="button" class="rea-xn-btn" data-xn-vbtn>上传视频文件</button><span class="rea-xn-filechip" data-xn-vfile hidden></span></div>
+                <input type="file" accept="video/*" hidden data-xn-vinput>
+                <p class="rea-xn-err" data-xn-err="video" hidden>请上传视频文件</p>
+              </div>
+            </div>
+            <div class="rea-xn-row" data-xn-g="video" hidden>
+              <span class="rea-xn-label">视频封面<span class="rea-xn-help" tabindex="0" role="img" aria-label="视频封面说明" data-tip="建议竖版 3:4（1080×1440），支持 png、jpg，单张不超过 10MB；平台按自己的封面框裁切，不上传则用平台默认封面。">?</span></span>
+              <div class="rea-xn-ctl">
+                <div class="rea-vcover" data-xn-cover></div>
+                <input type="file" accept="image/png,image/jpeg" hidden data-xn-coverinput>
+              </div>
+            </div>
+            <div class="rea-xn-row" data-xn-g="note">
+              <label class="rea-xn-label">视频文案</label>
+              <div class="rea-xn-ctl"><textarea class="rea-xn-textarea" data-xn-field="copy" maxlength="1000" placeholder="请输入视频文案"></textarea><div class="rea-xn-countline"><span class="rea-xn-count" data-xn-cc="copy">0 / 1000</span></div></div>
+            </div>
+            <div class="rea-xn-row" data-xn-g="note">
+              <label class="rea-xn-label">视频标题</label>
+              <div class="rea-xn-ctl"><div class="rea-xn-inputwrap"><input class="rea-xn-input" data-xn-field="title" maxlength="20" placeholder="请输入视频标题"><span class="rea-xn-count" data-xn-cc="title">0 / 20</span></div></div>
+            </div>
+            <div class="rea-xn-row" data-xn-g="note">
+              <label class="rea-xn-label">视频话题<span class="rea-xn-help" data-tip="多个话题使用 # 分割，话题中请勿包含其他标点符号，例如：#话题1#话题2。">?</span></label>
+              <div class="rea-xn-ctl"><input class="rea-xn-input" data-xn-field="topic" placeholder="请输入视频话题"></div>
+            </div>
+            <div class="rea-xn-row" data-xn-g="copy" hidden>
+              <label class="rea-xn-label">文案内容<span class="rea-xn-help" data-tip="若为空，则使用标题作为图片文案内容。">?</span></label>
+              <div class="rea-xn-ctl"><input class="rea-xn-input" data-xn-field="copytext" placeholder="请输入文案内容"></div>
+            </div>
+            <div class="rea-xn-row" data-xn-g="copy" hidden>
+              <label class="rea-xn-label">笔记标题</label>
+              <div class="rea-xn-ctl"><div class="rea-xn-inputwrap"><input class="rea-xn-input" data-xn-field="notetitle" maxlength="20" placeholder="请输入笔记标题"><span class="rea-xn-count" data-xn-cc="notetitle">0 / 20</span></div></div>
+            </div>
+            <div class="rea-xn-row" data-xn-g="copy" hidden>
+              <label class="rea-xn-label">正文内容</label>
+              <div class="rea-xn-ctl"><textarea class="rea-xn-textarea" data-xn-field="body" maxlength="1000" placeholder="请输入正文内容"></textarea><div class="rea-xn-countline"><span class="rea-xn-count" data-xn-cc="body">0 / 1000</span></div></div>
+            </div>
+            <div class="rea-xn-row" data-xn-g="copy" hidden>
+              <label class="rea-xn-label">话题<span class="rea-xn-help" data-tip="多个话题使用 # 分割，话题中请勿包含其他标点符号，例如：#话题1#话题2。">?</span></label>
+              <div class="rea-xn-ctl"><input class="rea-xn-input" data-xn-field="topic2" placeholder="请输入话题"></div>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="rea-xn-row" data-xn-g="video" hidden>
-        <span class="rea-xn-label rea-xn-req">选择视频来源</span>
-        <div class="rea-xn-ctl"><span class="rea-xn-radios"><label class="rea-xn-radio is-on"><input type="radio" name="xnVsrc" checked>手动上传</label></span></div>
-      </div>
-      <div class="rea-xn-row" data-xn-g="video" hidden>
-        <span class="rea-xn-label rea-xn-req">上传视频</span>
-        <div class="rea-xn-ctl">
-          <div class="rea-xn-filewrap"><button type="button" class="rea-xn-btn" data-xn-vbtn>上传视频文件</button><span class="rea-xn-filechip" data-xn-vfile hidden></span></div>
-          <input type="file" accept="video/*" hidden data-xn-vinput>
-          <p class="rea-xn-err" data-xn-err="video" hidden>请上传视频文件</p>
-        </div>
-      </div>
-      <div class="rea-xn-row" data-xn-g="video" hidden>
-        <span class="rea-xn-label">视频封面<span class="rea-xn-help" tabindex="0" role="img" aria-label="视频封面说明" data-tip="建议竖版 3:4（1080×1440），支持 png、jpg，单张不超过 10MB；平台按自己的封面框裁切，不上传则用平台默认封面。">?</span></span>
-        <div class="rea-xn-ctl">
-          <div class="rea-vcover" data-xn-cover></div>
-          <input type="file" accept="image/png,image/jpeg" hidden data-xn-coverinput>
-        </div>
-      </div>
-      <div class="rea-xn-row" data-xn-g="note">
-        <label class="rea-xn-label" for="xnCopy">视频文案</label>
-        <div class="rea-xn-ctl"><textarea id="xnCopy" class="rea-xn-textarea" data-xn-copy maxlength="1000" placeholder="请输入视频文案"></textarea><div class="rea-xn-countline"><span class="rea-xn-count" data-xn-copycount>0 / 1000</span></div></div>
-      </div>
-      <div class="rea-xn-row" data-xn-g="note">
-        <label class="rea-xn-label" for="xnTitle">视频标题</label>
-        <div class="rea-xn-ctl"><div class="rea-xn-inputwrap"><input id="xnTitle" class="rea-xn-input" data-xn-title maxlength="20" placeholder="请输入视频标题"><span class="rea-xn-count" data-xn-titlecount>0 / 20</span></div></div>
-      </div>
-      <div class="rea-xn-row" data-xn-g="note">
-        <label class="rea-xn-label" for="xnTopic">视频话题<span class="rea-xn-help" data-tip="多个话题使用 # 分割，话题中请勿包含其他标点符号，例如：#话题1#话题2。">?</span></label>
-        <div class="rea-xn-ctl"><input id="xnTopic" class="rea-xn-input" data-xn-topic placeholder="请输入视频话题"></div>
-      </div>
-      <div class="rea-xn-row" data-xn-g="copy" hidden>
-        <label class="rea-xn-label" for="xnCopytext">文案内容<span class="rea-xn-help" data-tip="若为空，则使用标题作为图片文案内容。">?</span></label>
-        <div class="rea-xn-ctl"><input id="xnCopytext" class="rea-xn-input" data-xn-copytext placeholder="请输入文案内容"></div>
-      </div>
-      <div class="rea-xn-row" data-xn-g="copy" hidden>
-        <label class="rea-xn-label" for="xnNoteTitle">笔记标题</label>
-        <div class="rea-xn-ctl"><div class="rea-xn-inputwrap"><input id="xnNoteTitle" class="rea-xn-input" data-xn-notetitle maxlength="20" placeholder="请输入笔记标题"><span class="rea-xn-count" data-xn-notetitlecount>0 / 20</span></div></div>
-      </div>
-      <div class="rea-xn-row" data-xn-g="copy" hidden>
-        <label class="rea-xn-label" for="xnBody">正文内容</label>
-        <div class="rea-xn-ctl"><textarea id="xnBody" class="rea-xn-textarea" data-xn-body maxlength="1000" placeholder="请输入正文内容"></textarea><div class="rea-xn-countline"><span class="rea-xn-count" data-xn-bodycount>0 / 1000</span></div></div>
-      </div>
-      <div class="rea-xn-row" data-xn-g="copy" hidden>
-        <label class="rea-xn-label" for="xnTopic2">话题<span class="rea-xn-help" data-tip="多个话题使用 # 分割，话题中请勿包含其他标点符号，例如：#话题1#话题2。">?</span></label>
-        <div class="rea-xn-ctl"><input id="xnTopic2" class="rea-xn-input" data-xn-topic2 placeholder="请输入话题"></div>
       </div>
     </section>
     <section class="rea-xn-sec">
@@ -19468,6 +19484,7 @@ render();
       <div class="rea-xn-info-item"><span>任务名称</span><b data-xn-i="name">—</b></div>
       <div class="rea-xn-info-item"><span>任务类型</span><b data-xn-i="kind">笔记发布</b></div>
       <div class="rea-xn-info-item"><span>发布类型</span><b data-xn-i="type">—</b></div>
+      <div class="rea-xn-info-item"><span>发布内容</span><b><button type="button" class="rea-xn-btn rea-xn-btn--text" data-xn-contents>1 条 · 查看</button></b></div>
       <div class="rea-xn-info-item"><span>发布渠道</span><b><span class="rea-xn-tag">小红书</span></b></div>
       <div class="rea-xn-info-item"><span>执行人员</span><b data-xn-i="who">—</b></div>
       <div class="rea-xn-info-item"><span>任务状态</span><b data-xn-i="state">—</b></div>
@@ -20054,18 +20071,18 @@ render();
 </form>
 <div class="rea-dy-bar"><button type="button" class="rea-dy-btn rea-dy-primary" data-dy-new>新建任务</button></div>
 <div class="rea-dy-tablewrap"><table class="rea-dy-table rea-dy-list">
-  <thead><tr><th>任务名称</th><th>视频文案</th><th>视频话题</th><th>执行人员</th><th>发布时间</th><th>状态</th><th>创建时间</th><th>创建人</th><th class="rea-dy-ops">操作</th></tr></thead>
+  <thead><tr><th>任务名称</th><th>视频文案</th><th>视频话题</th><th>执行人员</th><th>发布内容</th><th>发布时间</th><th>状态</th><th>创建时间</th><th>创建人</th><th class="rea-dy-ops">操作</th></tr></thead>
   <tbody data-dy-rows>
-    <tr data-name="发短视频任务20261029" data-state="执行完毕"><td class="rea-dy-name">发短视频任务20261029</td><td>-</td><td>-</td><td>18569299465</td><td>2026-10-29 11:02~2026-11-05 11:02</td><td><span class="rea-dy-st ok"><i></i>执行完毕</span></td><td>2026-10-29 11:02</td><td>18569299465</td><td class="rea-dy-ops"><a href="#" data-dy-detail>详情</a><a href="#" class="rea-dy-danger" data-dy-del>删除</a></td></tr>
-    <tr data-name="发短视频任务20261028" data-state="已过期"><td class="rea-dy-name">发短视频任务20261028</td><td>-</td><td>-</td><td>测试人员33</td><td>2026-10-28 15:40~2026-11-04 15:40</td><td><span class="rea-dy-st bad"><i></i>已过期</span></td><td>2026-10-28 15:40</td><td>18569299465</td><td class="rea-dy-ops"><a href="#" data-dy-detail>详情</a><a href="#" class="rea-dy-danger" data-dy-del>删除</a></td></tr>
-    <tr data-name="任务2026-10-27 15:41:41" data-state="已过期"><td class="rea-dy-name">任务2026-10-27 15:41:41</td><td>娱乐一下</td><td>-</td><td>18569299465</td><td>2026-10-27 15:41~2026-11-03 15:41</td><td><span class="rea-dy-st bad"><i></i>已过期</span></td><td>2026-10-27 15:41</td><td>18569299465</td><td class="rea-dy-ops"><a href="#" data-dy-detail>详情</a><a href="#" class="rea-dy-danger" data-dy-del>删除</a></td></tr>
-    <tr data-name="不推广" data-state="执行完毕"><td class="rea-dy-name">不推广</td><td>-</td><td>-</td><td>雅楠002,18569299465</td><td>2026-09-22 14:18~2026-09-29 14:18</td><td><span class="rea-dy-st ok"><i></i>执行完毕</span></td><td>2026-09-22 14:18</td><td>18569299465</td><td class="rea-dy-ops"><a href="#" data-dy-detail>详情</a><a href="#" class="rea-dy-danger" data-dy-del>删除</a></td></tr>
-    <tr data-name="商品推广+不发视频" data-state="执行完毕"><td class="rea-dy-name">商品推广+不发视频</td><td>-</td><td>-</td><td>18569299465</td><td>2026-09-22 13:22~2026-09-29 13:22</td><td><span class="rea-dy-st ok"><i></i>执行完毕</span></td><td>2026-09-22 13:24</td><td>18569299465</td><td class="rea-dy-ops"><a href="#" data-dy-detail>详情</a><a href="#" class="rea-dy-danger" data-dy-del>删除</a></td></tr>
-    <tr data-name="商品推广+发视频" data-state="已过期"><td class="rea-dy-name">商品推广+发视频</td><td>-</td><td>-</td><td>雅楠002,18569299465</td><td>2026-09-22 11:38~2026-09-29 11:38</td><td><span class="rea-dy-st bad"><i></i>已过期</span></td><td>2026-09-22 11:38</td><td>18569299465</td><td class="rea-dy-ops"><a href="#" data-dy-detail>详情</a><a href="#" class="rea-dy-danger" data-dy-del>删除</a></td></tr>
-    <tr data-name="发短视频任务20260922" data-state="已过期"><td class="rea-dy-name">发短视频任务20260922</td><td>1111,2222</td><td>#111222</td><td>雅楠002,18569299465</td><td>2026-09-22 11:20~2026-09-29 11:20</td><td><span class="rea-dy-st bad"><i></i>已过期</span></td><td>2026-09-22 11:21</td><td>18569299465</td><td class="rea-dy-ops"><a href="#" data-dy-detail>详情</a><a href="#" class="rea-dy-danger" data-dy-del>删除</a></td></tr>
-    <tr data-name="没有推广权限+不发视频" data-state="执行完毕"><td class="rea-dy-name">没有推广权限+不发视频</td><td>-</td><td>-</td><td>18569299465</td><td>2026-09-22 11:15~2026-09-29 11:15</td><td><span class="rea-dy-st ok"><i></i>执行完毕</span></td><td>2026-09-22 11:16</td><td>18569299465</td><td class="rea-dy-ops"><a href="#" data-dy-detail>详情</a><a href="#" class="rea-dy-danger" data-dy-del>删除</a></td></tr>
-    <tr data-name="发短视频任务20260922" data-state="执行完毕"><td class="rea-dy-name">发短视频任务20260922</td><td>-</td><td>-</td><td>18569299465</td><td>2026-09-22 11:14~2026-09-29 11:14</td><td><span class="rea-dy-st ok"><i></i>执行完毕</span></td><td>2026-09-22 11:14</td><td>18569299465</td><td class="rea-dy-ops"><a href="#" data-dy-detail>详情</a><a href="#" class="rea-dy-danger" data-dy-del>删除</a></td></tr>
-    <tr data-name="发短视频任务20260921" data-state="已过期"><td class="rea-dy-name">发短视频任务20260921</td><td>-</td><td>-</td><td>18569299465</td><td>2026-09-21 17:13~2026-09-28 17:13</td><td><span class="rea-dy-st bad"><i></i>已过期</span></td><td>2026-09-21 17:13</td><td>18569299465</td><td class="rea-dy-ops"><a href="#" data-dy-detail>详情</a><a href="#" class="rea-dy-danger" data-dy-del>删除</a></td></tr>
+    <tr data-name="发短视频任务20261029" data-state="执行完毕"><td class="rea-dy-name">发短视频任务20261029</td><td>秋季新品到店</td><td>#秋季新品#到店有礼</td><td>18569299465</td><td>3 条</td><td>2026-10-29 11:02~2026-11-05 11:02</td><td><span class="rea-dy-st ok"><i></i>执行完毕</span></td><td>2026-10-29 11:02</td><td>18569299465</td><td class="rea-dy-ops"><a href="#" data-dy-detail>详情</a><a href="#" class="rea-dy-danger" data-dy-del>删除</a></td></tr>
+    <tr data-name="发短视频任务20261028" data-state="已过期"><td class="rea-dy-name">发短视频任务20261028</td><td>-</td><td>-</td><td>测试人员33</td><td>1 条</td><td>2026-10-28 15:40~2026-11-04 15:40</td><td><span class="rea-dy-st bad"><i></i>已过期</span></td><td>2026-10-28 15:40</td><td>18569299465</td><td class="rea-dy-ops"><a href="#" data-dy-detail>详情</a><a href="#" class="rea-dy-danger" data-dy-del>删除</a></td></tr>
+    <tr data-name="任务2026-10-27 15:41:41" data-state="已过期"><td class="rea-dy-name">任务2026-10-27 15:41:41</td><td>娱乐一下</td><td>-</td><td>18569299465</td><td>2 条</td><td>2026-10-27 15:41~2026-11-03 15:41</td><td><span class="rea-dy-st bad"><i></i>已过期</span></td><td>2026-10-27 15:41</td><td>18569299465</td><td class="rea-dy-ops"><a href="#" data-dy-detail>详情</a><a href="#" class="rea-dy-danger" data-dy-del>删除</a></td></tr>
+    <tr data-name="不推广" data-state="执行完毕"><td class="rea-dy-name">不推广</td><td>-</td><td>-</td><td>雅楠002,18569299465</td><td>1 条</td><td>2026-09-22 14:18~2026-09-29 14:18</td><td><span class="rea-dy-st ok"><i></i>执行完毕</span></td><td>2026-09-22 14:18</td><td>18569299465</td><td class="rea-dy-ops"><a href="#" data-dy-detail>详情</a><a href="#" class="rea-dy-danger" data-dy-del>删除</a></td></tr>
+    <tr data-name="商品推广+不发视频" data-state="执行完毕"><td class="rea-dy-name">商品推广+不发视频</td><td>-</td><td>-</td><td>18569299465</td><td>1 条</td><td>2026-09-22 13:22~2026-09-29 13:22</td><td><span class="rea-dy-st ok"><i></i>执行完毕</span></td><td>2026-09-22 13:24</td><td>18569299465</td><td class="rea-dy-ops"><a href="#" data-dy-detail>详情</a><a href="#" class="rea-dy-danger" data-dy-del>删除</a></td></tr>
+    <tr data-name="商品推广+发视频" data-state="已过期"><td class="rea-dy-name">商品推广+发视频</td><td>-</td><td>-</td><td>雅楠002,18569299465</td><td>2 条</td><td>2026-09-22 11:38~2026-09-29 11:38</td><td><span class="rea-dy-st bad"><i></i>已过期</span></td><td>2026-09-22 11:38</td><td>18569299465</td><td class="rea-dy-ops"><a href="#" data-dy-detail>详情</a><a href="#" class="rea-dy-danger" data-dy-del>删除</a></td></tr>
+    <tr data-name="发短视频任务20260922" data-state="已过期"><td class="rea-dy-name">发短视频任务20260922</td><td>1111,2222</td><td>#111222</td><td>雅楠002,18569299465</td><td>1 条</td><td>2026-09-22 11:20~2026-09-29 11:20</td><td><span class="rea-dy-st bad"><i></i>已过期</span></td><td>2026-09-22 11:21</td><td>18569299465</td><td class="rea-dy-ops"><a href="#" data-dy-detail>详情</a><a href="#" class="rea-dy-danger" data-dy-del>删除</a></td></tr>
+    <tr data-name="没有推广权限+不发视频" data-state="执行完毕"><td class="rea-dy-name">没有推广权限+不发视频</td><td>-</td><td>-</td><td>18569299465</td><td>1 条</td><td>2026-09-22 11:15~2026-09-29 11:15</td><td><span class="rea-dy-st ok"><i></i>执行完毕</span></td><td>2026-09-22 11:16</td><td>18569299465</td><td class="rea-dy-ops"><a href="#" data-dy-detail>详情</a><a href="#" class="rea-dy-danger" data-dy-del>删除</a></td></tr>
+    <tr data-name="发短视频任务20260922" data-state="执行完毕"><td class="rea-dy-name">发短视频任务20260922</td><td>-</td><td>-</td><td>18569299465</td><td>1 条</td><td>2026-09-22 11:14~2026-09-29 11:14</td><td><span class="rea-dy-st ok"><i></i>执行完毕</span></td><td>2026-09-22 11:14</td><td>18569299465</td><td class="rea-dy-ops"><a href="#" data-dy-detail>详情</a><a href="#" class="rea-dy-danger" data-dy-del>删除</a></td></tr>
+    <tr data-name="发短视频任务20260921" data-state="已过期"><td class="rea-dy-name">发短视频任务20260921</td><td>-</td><td>-</td><td>18569299465</td><td>1 条</td><td>2026-09-21 17:13~2026-09-28 17:13</td><td><span class="rea-dy-st bad"><i></i>已过期</span></td><td>2026-09-21 17:13</td><td>18569299465</td><td class="rea-dy-ops"><a href="#" data-dy-detail>详情</a><a href="#" class="rea-dy-danger" data-dy-del>删除</a></td></tr>
   </tbody>
 </table></div>
 <div class="rea-dy-pager"><span class="rea-dy-total" data-dy-total>共 126 条记录</span><span class="rea-dy-pages"><button type="button" class="on">1</button><button type="button">2</button><button type="button">3</button><button type="button">4</button><button type="button">5</button><span>…</span><button type="button">13</button></span><span class="rea-dy-size">10 条/页</span><span class="rea-dy-jump">跳至<input type="text" inputmode="numeric" aria-label="页码">页</span></div>
@@ -20073,32 +20090,60 @@ render();
 
 <script type="text/plain" id="srcDyNew"><div class="rea-dy-head rea-dy-head--sub"><div class="rea-dy-crumb"><a href="#" data-dy-back>发短视频</a><span>/</span><span>新建任务</span></div><h1>新建任务</h1></div>
 <form class="rea-dy-form" data-dy-form novalidate>
-  <div class="rea-dy-row"><label class="rea-dy-lb" for="dyOrg"><i>*</i>执行人员</label><div class="rea-dy-ctl"><select id="dyOrg"><option value="">请选择组织架构</option><option>销售一部</option><option>销售二部</option><option>产品部</option><option>测试环境雅楠公司</option></select><p class="rea-dy-err" data-dy-err="org" hidden>请选择执行人员</p></div></div>
-  <div class="rea-dy-row"><span class="rea-dy-lb">发布应用</span><div class="rea-dy-ctl"><label class="rea-dy-radio"><input type="radio" name="dyApp" checked><span>微小助</span></label></div></div>
-  <div class="rea-dy-row"><label class="rea-dy-lb" for="dyTaskName"><i>*</i>任务名称</label><div class="rea-dy-ctl"><input id="dyTaskName" maxlength="21" autocomplete="off"><span class="rea-dy-count" data-dy-count-for="dyTaskName">0/21</span><p class="rea-dy-err" data-dy-err="name" hidden>请填写任务名称</p></div></div>
-  <div class="rea-dy-row"><span class="rea-dy-lb"><i>*</i>素材来源</span><div class="rea-dy-ctl"><span class="rea-dy-chip">临时创建</span></div></div>
-  <div class="rea-dy-row"><span class="rea-dy-lb">发布类型</span><div class="rea-dy-ctl"><label class="rea-dy-radio"><input type="radio" name="dyPublish" checked><span>发视频</span></label></div></div>
-  <div class="rea-dy-row"><span class="rea-dy-lb">选择视频来源</span><div class="rea-dy-ctl"><label class="rea-dy-radio"><input type="radio" name="dySrc" checked><span>手动上传</span></label></div></div>
-  <div class="rea-dy-row"><span class="rea-dy-lb"><i>*</i>上传视频</span><div class="rea-dy-ctl"><div class="rea-dy-upload"><button type="button" class="rea-dy-btn" data-dy-upload>上传视频文件</button><span class="rea-dy-file" data-dy-file hidden></span></div><p class="rea-dy-err" data-dy-err="video" hidden>请上传视频文件</p></div></div>
-  <div class="rea-dy-row"><span class="rea-dy-lb">视频封面<span class="rea-dy-help" tabindex="0" role="img" aria-label="视频封面说明">i<span class="rea-dy-tip">建议竖版 3:4（1080×1440），支持 png、jpg，单张不超过 10MB；平台按自己的封面框裁切，不上传则用平台默认封面。</span></span></span><div class="rea-dy-ctl"><div class="rea-vcover" data-dy-cover></div><input type="file" accept="image/png,image/jpeg" hidden data-dy-coverinput></div></div>
-  <div class="rea-dy-row"><span class="rea-dy-lb"><i>*</i>文案类型</span><div class="rea-dy-ctl"><div class="rea-dy-seg" role="tablist" data-dy-tabs><button type="button" role="tab" aria-selected="true" class="on" data-dy-tab="ai">AI生成</button><button type="button" role="tab" aria-selected="false" data-dy-tab="manual">手动输入</button><button type="button" role="tab" aria-selected="false" data-dy-tab="import">导入文案</button></div></div></div>
-  <div class="rea-dy-panel" data-dy-panel="ai">
-    <div class="rea-dy-row"><label class="rea-dy-lb" for="dyCopy">视频文案</label><div class="rea-dy-ctl"><textarea id="dyCopy" maxlength="1000" placeholder="请输入视频文案"></textarea><span class="rea-dy-count" data-dy-count-for="dyCopy">0/1000</span><div><button type="button" class="rea-dy-btn rea-dy-soft" data-dy-gen>生成文案</button></div></div></div>
-    <div class="rea-dy-row"><label class="rea-dy-lb" for="dyTitle">视频标题</label><div class="rea-dy-ctl"><input id="dyTitle" maxlength="20" placeholder="请输入视频标题"><span class="rea-dy-count" data-dy-count-for="dyTitle">0/20</span></div></div>
-    <div class="rea-dy-row"><label class="rea-dy-lb" for="dyTopic">视频话题</label><div class="rea-dy-ctl"><span class="rea-dy-topic"><input id="dyTopic" placeholder="请输入视频话题"><span class="rea-dy-help" tabindex="0" role="img" aria-label="视频话题填写说明">i<span class="rea-dy-tip">多个话题使用#分割，话题中请勿包含其他标点符号，例：#话题1#话题2（最多 5 个话题）</span></span></span></div></div>
-  </div>
-  <div class="rea-dy-panel" data-dy-panel="manual" hidden>
-    <div class="rea-dy-row"><span class="rea-dy-lb">多文案+话题</span><div class="rea-dy-ctl"><div class="rea-dy-multi" data-dy-multi><div class="rea-dy-multi-row"><input placeholder="请输入文案" aria-label="文案"><input placeholder="请输入话题" aria-label="话题"><button type="button" class="rea-dy-add" data-dy-add>+ 添加</button></div></div></div></div>
-    <div class="rea-dy-row"><label class="rea-dy-lb" for="dyMTitle">标题</label><div class="rea-dy-ctl"><input id="dyMTitle" placeholder="请输入标题"></div></div>
-  </div>
-  <div class="rea-dy-panel" data-dy-panel="import" hidden>
-    <div class="rea-dy-row"><span class="rea-dy-lb"><i>*</i>上传文件</span><div class="rea-dy-ctl"><ol class="rea-dy-steps"><li><b>1</b><a href="#" class="rea-dy-link" data-dy-template>下载文件模板</a></li><li><b>2</b><span>从电脑上选择文件模板上传：</span><span class="rea-dy-upload"><button type="button" class="rea-dy-btn" data-dy-upload-copy>上传文件</button><span class="rea-dy-file" data-dy-copy-file hidden></span></span></li></ol></div></div>
-  </div>
-  <div class="rea-dy-row"><span class="rea-dy-lb">推广类型</span><div class="rea-dy-ctl"><span class="rea-dy-options"><label class="rea-dy-radio"><input type="radio" name="dyPromo" checked><span>不添加推广</span></label><label class="rea-dy-radio"><input type="radio" name="dyPromo"><span>门店推广</span></label><label class="rea-dy-radio"><input type="radio" name="dyPromo"><span>商品推广</span></label><label class="rea-dy-radio"><input type="radio" name="dyPromo"><span>团购</span></label></span></div></div>
-  <div class="rea-dy-row"><span class="rea-dy-lb">任务类型</span><div class="rea-dy-ctl"><span class="rea-dy-options"><label class="rea-dy-radio"><input type="radio" name="dyCycle" checked><span>单次任务</span></label><label class="rea-dy-radio"><input type="radio" name="dyCycle"><span>周循环</span></label><label class="rea-dy-radio"><input type="radio" name="dyCycle"><span>月循环</span></label><label class="rea-dy-radio"><input type="radio" name="dyCycle"><span>自定义循环</span></label><span class="rea-dy-help" tabindex="0" role="img" aria-label="任务类型说明">i<span class="rea-dy-tip">单次任务只下发一次；周循环、月循环按所选周期重复下发；自定义循环按设定的周期执行。</span></span></span></div></div>
-  <div class="rea-dy-row"><span class="rea-dy-lb">全局弹窗</span><div class="rea-dy-ctl"><button type="button" class="rea-dy-switch" role="switch" aria-checked="false" aria-label="全局弹窗" data-dy-global><i></i></button></div></div>
-  <div class="rea-dy-row"><span class="rea-dy-lb"><i>*</i>通知时间</span><div class="rea-dy-ctl"><span class="rea-dy-dt"><input type="date" data-dy-notify-date aria-label="通知日期"><input type="time" data-dy-notify-time aria-label="通知时间"></span></div></div>
-  <div class="rea-dy-row"><span class="rea-dy-lb"><i>*</i>截止时间</span><div class="rea-dy-ctl"><span class="rea-dy-dt"><input type="date" data-dy-end-date aria-label="截止日期"><input type="time" data-dy-end-time aria-label="截止时间"></span></div></div>
+  <section class="rea-dy-sec">
+    <div class="rea-dy-sec-h"><h2>基本信息</h2></div>
+    <div class="rea-dy-row"><label class="rea-dy-lb" for="dyOrg"><i>*</i>执行人员</label><div class="rea-dy-ctl"><select id="dyOrg"><option value="">请选择组织架构</option><option>销售一部</option><option>销售二部</option><option>产品部</option><option>测试环境雅楠公司</option></select><p class="rea-dy-err" data-dy-err="org" hidden>请选择执行人员</p></div></div>
+    <div class="rea-dy-row"><span class="rea-dy-lb">发布应用</span><div class="rea-dy-ctl"><label class="rea-dy-radio"><input type="radio" name="dyApp" checked><span>微小助</span></label></div></div>
+    <div class="rea-dy-row"><label class="rea-dy-lb" for="dyTaskName"><i>*</i>任务名称</label><div class="rea-dy-ctl"><input id="dyTaskName" maxlength="21" autocomplete="off"><span class="rea-dy-count" data-dy-count-for="dyTaskName">0/21</span><p class="rea-dy-err" data-dy-err="name" hidden>请填写任务名称</p></div></div>
+  </section>
+
+  <section class="rea-dy-sec">
+    <div class="rea-dy-sec-h"><h2>发布内容</h2><div class="rea-dy-sec-actions"><span class="rea-dy-cnt" data-dy-cnt>1 条内容 / 0 位执行人员</span><button type="button" class="rea-dy-btn rea-dy-soft" data-dy-addfile>+ 添加内容</button></div></div>
+    <input type="file" accept="video/*" multiple hidden data-dy-addinput>
+    <div class="rea-dy-row"><span class="rea-dy-lb">素材来源</span><div class="rea-dy-ctl"><span class="rea-dy-chip">临时创建</span></div></div>
+    <div class="rea-dy-row"><span class="rea-dy-lb">发布类型</span><div class="rea-dy-ctl"><label class="rea-dy-radio"><input type="radio" name="dyPublish" checked><span>发视频</span></label></div></div>
+    <div class="rea-dy-row"><span class="rea-dy-lb">文案类型</span><div class="rea-dy-ctl"><div class="rea-dy-seg" role="tablist" data-dy-tabs><button type="button" role="tab" aria-selected="true" class="on" data-dy-tab="ai">AI生成</button><button type="button" role="tab" aria-selected="false" data-dy-tab="manual">手动输入</button><button type="button" role="tab" aria-selected="false" data-dy-tab="import">导入文案</button></div></div></div>
+    <div class="rea-dy-row" data-dy-importrow hidden>
+      <span class="rea-dy-lb"><i>*</i>导入文案</span>
+      <div class="rea-dy-ctl"><ol class="rea-dy-steps"><li><b>1</b><a href="#" class="rea-dy-link" data-dy-template>下载文件模板</a></li><li><b>2</b><span>从电脑上选择文件模板上传：</span><span class="rea-dy-upload"><button type="button" class="rea-dy-btn" data-dy-importbtn>上传文件</button><span class="rea-dy-file" data-dy-importfile hidden></span></span></li></ol></div>
+      <input type="file" accept=".csv,.xlsx" hidden data-dy-importinput>
+    </div>
+    <p class="rea-dy-hint" data-dy-hint>选择执行人员后显示分配结果</p>
+    <div class="rea-dy-cards" data-dy-cards>
+      <div class="rea-dy-card" data-dy-card data-open="true">
+        <div class="rea-dy-card-h">
+          <button type="button" class="rea-dy-card-toggle" data-dy-toggle aria-expanded="true">
+            <span class="rea-dy-card-no" data-dy-cardno>1</span>
+            <span class="rea-dy-card-name" data-dy-cardname>未选择视频</span>
+            <span class="rea-dy-card-sum" data-dy-cardsum></span>
+          </button>
+          <button type="button" class="rea-dy-card-del" data-dy-carddel aria-label="删除这条内容">×</button>
+        </div>
+        <div class="rea-dy-card-b">
+          <div class="rea-dy-row"><span class="rea-dy-lb"><i>*</i>上传视频</span><div class="rea-dy-ctl"><div class="rea-dy-upload"><button type="button" class="rea-dy-btn" data-dy-upload>上传视频文件</button><span class="rea-dy-file" data-dy-file hidden></span></div><input type="file" accept="video/*" hidden data-dy-vinput><p class="rea-dy-err" data-dy-err="video" hidden>请上传视频文件</p></div></div>
+          <div class="rea-dy-row"><span class="rea-dy-lb">视频封面<span class="rea-dy-help" tabindex="0" role="img" aria-label="视频封面说明">i<span class="rea-dy-tip">建议竖版 3:4（1080×1440），支持 png、jpg，单张不超过 10MB；平台按自己的封面框裁切，不上传则用平台默认封面。</span></span></span><div class="rea-dy-ctl"><div class="rea-vcover" data-dy-cover></div><input type="file" accept="image/png,image/jpeg" hidden data-dy-coverinput></div></div>
+          <div class="rea-dy-copy" data-dy-copy="ai">
+            <div class="rea-dy-row"><label class="rea-dy-lb">视频文案</label><div class="rea-dy-ctl"><textarea data-dy-field="copy" maxlength="1000" placeholder="请输入视频文案"></textarea><span class="rea-dy-count" data-dy-cc="copy">0/1000</span><div><button type="button" class="rea-dy-btn rea-dy-soft" data-dy-gen>生成文案</button></div></div></div>
+            <div class="rea-dy-row"><label class="rea-dy-lb">视频标题</label><div class="rea-dy-ctl"><input data-dy-field="title" maxlength="20" placeholder="请输入视频标题"><span class="rea-dy-count" data-dy-cc="title">0/20</span></div></div>
+            <div class="rea-dy-row"><label class="rea-dy-lb">视频话题</label><div class="rea-dy-ctl"><span class="rea-dy-topic"><input data-dy-field="topic" placeholder="请输入视频话题"><span class="rea-dy-help" tabindex="0" role="img" aria-label="视频话题填写说明">i<span class="rea-dy-tip">多个话题使用#分割，话题中请勿包含其他标点符号，例：#话题1#话题2（最多 5 个话题）</span></span></span></div></div>
+          </div>
+          <div class="rea-dy-copy" data-dy-copy="manual" hidden>
+            <div class="rea-dy-row"><span class="rea-dy-lb">多文案+话题</span><div class="rea-dy-ctl"><div class="rea-dy-multi" data-dy-multi><div class="rea-dy-multi-row"><input placeholder="请输入文案" aria-label="文案" data-dy-field="copy"><input placeholder="请输入话题" aria-label="话题" data-dy-field="topic"><button type="button" class="rea-dy-add" data-dy-add>+ 添加</button></div></div></div></div>
+            <div class="rea-dy-row"><label class="rea-dy-lb">标题</label><div class="rea-dy-ctl"><input data-dy-field="title" placeholder="请输入标题"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="rea-dy-sec">
+    <div class="rea-dy-sec-h"><h2>任务设置</h2></div>
+    <div class="rea-dy-row"><span class="rea-dy-lb">推广类型</span><div class="rea-dy-ctl"><span class="rea-dy-options"><label class="rea-dy-radio"><input type="radio" name="dyPromo" checked><span>不添加推广</span></label><label class="rea-dy-radio"><input type="radio" name="dyPromo"><span>门店推广</span></label><label class="rea-dy-radio"><input type="radio" name="dyPromo"><span>商品推广</span></label><label class="rea-dy-radio"><input type="radio" name="dyPromo"><span>团购</span></label></span></div></div>
+    <div class="rea-dy-row"><span class="rea-dy-lb">任务类型</span><div class="rea-dy-ctl"><span class="rea-dy-options"><label class="rea-dy-radio"><input type="radio" name="dyCycle" checked><span>单次任务</span></label><label class="rea-dy-radio"><input type="radio" name="dyCycle"><span>周循环</span></label><label class="rea-dy-radio"><input type="radio" name="dyCycle"><span>月循环</span></label><label class="rea-dy-radio"><input type="radio" name="dyCycle"><span>自定义循环</span></label><span class="rea-dy-help" tabindex="0" role="img" aria-label="任务类型说明">i<span class="rea-dy-tip">单次任务只下发一次；周循环、月循环按所选周期重复下发；自定义循环按设定的周期执行。</span></span></span></div></div>
+    <div class="rea-dy-row"><span class="rea-dy-lb">全局弹窗</span><div class="rea-dy-ctl"><button type="button" class="rea-dy-switch" role="switch" aria-checked="false" aria-label="全局弹窗" data-dy-global><i></i></button></div></div>
+    <div class="rea-dy-row"><span class="rea-dy-lb"><i>*</i>通知时间</span><div class="rea-dy-ctl"><span class="rea-dy-dt"><input type="date" data-dy-notify-date aria-label="通知日期"><input type="time" data-dy-notify-time aria-label="通知时间"></span></div></div>
+    <div class="rea-dy-row"><span class="rea-dy-lb"><i>*</i>截止时间</span><div class="rea-dy-ctl"><span class="rea-dy-dt"><input type="date" data-dy-end-date aria-label="截止日期"><input type="time" data-dy-end-time aria-label="截止时间"></span></div></div>
+  </section>
   <div class="rea-dy-actions"><button type="submit" class="rea-dy-btn rea-dy-primary">保存</button><button type="button" class="rea-dy-btn" data-dy-cancel>取消</button></div>
 </form>
 </script>
@@ -20109,7 +20154,8 @@ render();
   <dl class="rea-dy-info">
     <div><dt>任务名称</dt><dd>发短视频任务20261029</dd></div>
     <div><dt>任务类型</dt><dd>发短视频</dd></div>
-    <div><dt>执行人员</dt><dd>18569299465</dd></div>
+    <div><dt>执行人员</dt><dd>张伟 等 6 人</dd></div>
+    <div><dt>发布内容</dt><dd><button type="button" class="rea-dy-link" data-dy-contents>3 条 · 查看</button></dd></div>
     <div><dt>任务发布渠道</dt><dd><span class="rea-dy-tag">抖音</span></dd></div>
     <div><dt>任务状态</dt><dd>任务执行完毕</dd></div>
     <div><dt>有效期</dt><dd>2026/10/29 11:02~2026/11/05 11:02</dd></div>
@@ -20126,11 +20172,25 @@ render();
   </form>
   <div class="rea-dy-tablewrap"><table class="rea-dy-table">
     <thead><tr><th>用户名</th><th>用户手机号</th><th>文案·话题</th><th>发布视频</th><th>所属部门</th><th>任务状态</th><th>执行时间</th></tr></thead>
-    <tbody><tr><td>18569299465</td><td>18569299465</td><td>-</td><td><a href="#" data-dy-video>查看</a></td><td>测试环境雅楠公司</td><td>已执行</td><td>2026-10-29 11:03</td></tr></tbody>
+    <tbody>
+      <tr><td>张伟</td><td>18569299465</td><td>秋季新品到店</td><td><a href="#" data-dy-video>第 1 条 · 查看</a></td><td>销售一部</td><td>已执行</td><td>2026-10-29 11:03</td></tr>
+      <tr><td>李娜</td><td>13800000000</td><td>秋季新品到店，第二条</td><td><a href="#" data-dy-video>第 2 条 · 查看</a></td><td>销售二部</td><td>已执行</td><td>2026-10-29 11:05</td></tr>
+      <tr><td>王强</td><td>13900000000</td><td>秋季新品到店，第三条</td><td><a href="#" data-dy-video>第 3 条 · 查看</a></td><td>产品部</td><td>已执行</td><td>2026-10-29 11:06</td></tr>
+    </tbody>
   </table></div>
-  <div class="rea-dy-pager"><span class="rea-dy-total">共 1 条记录</span><span class="rea-dy-pages"><button type="button" class="on">1</button></span><span class="rea-dy-size">10 条/页</span></div>
+  <div class="rea-dy-pager"><span class="rea-dy-total">共 3 条记录</span><span class="rea-dy-pages"><button type="button" class="on">1</button></span><span class="rea-dy-size">10 条/页</span></div>
 </section>
 <div class="rea-dy-mask" data-dy-mask hidden></div>
+<div class="rea-dy-modal" data-dy-cmodal hidden role="dialog" aria-label="发布内容">
+  <div class="rea-dy-modal-box rea-dy-cmodal">
+    <div class="rea-dy-modal-h"><h3>发布内容 · 3 条</h3><button type="button" class="rea-dy-x" data-dy-close-contents aria-label="关闭">×</button></div>
+    <div class="rea-dy-clist">
+      <div class="rea-dy-crow"><span class="rea-dy-cno">1</span><span class="rea-dy-cmain"><b>秋季新品到店.mp4</b><em>秋季新品到店，到店试戴有礼。</em></span><span class="rea-dy-cpeople">2 人</span></div>
+      <div class="rea-dy-crow"><span class="rea-dy-cno">2</span><span class="rea-dy-cmain"><b>秋季新品开箱.mp4</b><em>秋季新品开箱，30 秒竖版。</em></span><span class="rea-dy-cpeople">2 人</span></div>
+      <div class="rea-dy-crow"><span class="rea-dy-cno">3</span><span class="rea-dy-cmain"><b>秋季新品上身.mp4</b><em>秋季新品上身，三种配色。</em></span><span class="rea-dy-cpeople">2 人</span></div>
+    </div>
+  </div>
+</div>
 <div class="rea-dy-modal" data-dy-modal hidden role="dialog" aria-label="发布视频">
   <div class="rea-dy-modal-box">
     <div class="rea-dy-modal-h"><h3>发布视频</h3><button type="button" class="rea-dy-x" data-dy-close-video aria-label="关闭">×</button></div>
@@ -24913,8 +24973,8 @@ for(i=0;i<rows.length;i++){
      新建页保存、列表页删除都改这一份（见 message 监听），刷新即回原样。 */
   function reaXnSeed(){
    return [
-    {id:'xn-01',name:'笔记发布任务20261102',type:'发图文',copy:'',topic:'',who:'测试人员33',start:'2026-11-02 11:19',end:'2026-11-09 11:14',state:'执行完毕',created:'2026-11-02 11:14',creator:'18569299465'},
-    {id:'xn-02',name:'笔记发布任务20260905',type:'发视频',copy:'123123',topic:'',who:'wxz测试111',start:'2026-09-05 10:21',end:'2026-09-05 13:21',state:'已过期',created:'2026-09-05 10:21',creator:'18569299465'},
+    {id:'xn-01',name:'笔记发布任务20261102',type:'发图文',copy:'秋季新品到店',topic:'#秋季新品',count:2,who:'测试人员33,张伯阳,雅楠002',start:'2026-11-02 11:19',end:'2026-11-09 11:14',state:'执行完毕',created:'2026-11-02 11:14',creator:'18569299465'},
+    {id:'xn-02',name:'笔记发布任务20260905',type:'发视频',copy:'123123',topic:'',count:2,who:'wxz测试111',start:'2026-09-05 10:21',end:'2026-09-05 13:21',state:'已过期',created:'2026-09-05 10:21',creator:'18569299465'},
     {id:'xn-03',name:'笔记发布任务20260905',type:'发图文',copy:'',topic:'',who:'wxz测试111',start:'2026-09-05 09:14',end:'2026-09-12 09:14',state:'执行完毕',created:'2026-09-05 09:15',creator:'18569299465'},
     {id:'xn-04',name:'笔记发布任务20260811',type:'发视频',copy:'',topic:'',who:'18569299465',start:'2026-08-11 14:01',end:'2026-08-18 14:01',state:'已过期',created:'2026-08-11 14:01',creator:'18569299465'},
     {id:'xn-05',name:'日循环',type:'发文案配图',copy:'',topic:'',who:'雅楠002',start:'2026-08-12 09:10',end:'2026-08-12 15:00',state:'已过期',created:'2026-08-05 15:01',creator:'18569299465'},
@@ -24960,7 +25020,7 @@ function pager(){
 function render(){
   TB.innerHTML='';
   var from=(PAGE-1)*SIZE,rows=VIEW.slice(from,from+SIZE),i;
-  if(!rows.length){var tr0=el('tr'),td0=el('td','rea-xn-emptycell','暂无符合条件的任务');td0.colSpan=10;tr0.appendChild(td0);TB.appendChild(tr0)}
+  if(!rows.length){var tr0=el('tr'),td0=el('td','rea-xn-emptycell','暂无符合条件的任务');td0.colSpan=11;tr0.appendChild(td0);TB.appendChild(tr0)}
   for(i=0;i<rows.length;i++){(function(r){
     var tr=el('tr'),td;
     td=el('td','rea-xn-cell-name');td.textContent=r.name;tr.appendChild(td);
@@ -24968,6 +25028,7 @@ function render(){
     td=el('td','rea-xn-muted');td.textContent=r.copy||'—';tr.appendChild(td);
     td=el('td','rea-xn-muted');td.textContent=r.topic||'—';tr.appendChild(td);
     td=el('td','rea-xn-cell-people');td.textContent=r.who||'—';tr.appendChild(td);
+    td=el('td','rea-xn-muted');td.textContent=(r.count||1)+' 条';tr.appendChild(td);
     td=el('td','rea-xn-cell-time');td.textContent=r.start+' ~ '+r.end;tr.appendChild(td);
     td=el('td');var sp=el('span','rea-xn-status');sp.appendChild(el('i','rea-xn-dot '+runOf(r.state)));
     sp.appendChild(document.createTextNode(r.state));td.appendChild(sp);tr.appendChild(td);
@@ -25059,8 +25120,8 @@ render();
     + 'var v=document.getElementById("subapp-viewport");if(!v)return;v.innerHTML=H;'
     + 'var LIST=' + reaJson(REA_XN_PAGE) + ',DET=' + reaJson(REA_XN_DETAIL) + ';'
     + String.raw`
-var $=function(s){return document.querySelector(s)};
-function $$(s){return Array.prototype.slice.call(document.querySelectorAll(s))}
+var $=function(s,r){return (r||document).querySelector(s)};
+function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
 function el(tag,cls,txt){var n=document.createElement(tag);if(cls)n.className=cls;if(txt!=null)n.textContent=txt;return n}
 var TOAST=null,TOASTT=0;
 function toast(msg){
@@ -25068,13 +25129,13 @@ function toast(msg){
   TOAST.querySelector('span').textContent=msg;TOAST.classList.add('is-on');
   clearTimeout(TOASTT);TOASTT=setTimeout(function(){TOAST.classList.remove('is-on')},1800);
 }
-function err(k,msg){var p=$('[data-xn-err="'+k+'"]');if(p){p.textContent=msg;p.hidden=false}}
-function noerr(k){var p=$('[data-xn-err="'+k+'"]');if(p)p.hidden=true}
+function err(k,msg,c){var p=(c||document).querySelector('[data-xn-err="'+k+'"]');if(p){if(msg)p.textContent=msg;p.hidden=false}}
+function noerr(k,c){var p=(c||document).querySelector('[data-xn-err="'+k+'"]');if(p)p.hidden=true}
 function clearErrs(){$$('.rea-xn-err').forEach(function(p){p.hidden=true})}
 function pad(n){return (n<10?'0':'')+n}
 function ymd(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
 function hm(d){return pad(d.getHours())+':'+pad(d.getMinutes())}
-var TYPE='发图文',SOURCE='临时创建',PEOPLE=[],IMGS=[],VIDEO=null,POPUP=false,DRAG=null;
+var TYPE='发图文',SOURCE='临时创建',PEOPLE=[],POPUP=false,DRAG=null;
 var ORG=[{n:'测试二级一部',p:['测试人员33','张伯阳']},{n:'测试二级二部',p:['雅楠002','wxz测试111']}];
 /* 字数：maxlength 已经卡住上限，这里只显示读数 */
 function bindCount(input,out){
@@ -25083,10 +25144,6 @@ function bindCount(input,out){
   input.addEventListener('input',upd);upd();
 }
 bindCount($('[data-xn-name]'),$('[data-xn-namecount]'));
-bindCount($('[data-xn-copy]'),$('[data-xn-copycount]'));
-bindCount($('[data-xn-title]'),$('[data-xn-titlecount]'));
-bindCount($('[data-xn-notetitle]'),$('[data-xn-notetitlecount]'));
-bindCount($('[data-xn-body]'),$('[data-xn-bodycount]'));
 /* 单选组：选中态画在 label 上，视觉自己控 */
 function bindRadios(sel){
   $$(sel+' .rea-xn-radio input').forEach(function(r){
@@ -25096,36 +25153,247 @@ function bindRadios(sel){
     });
   });
 }
-bindRadios('[data-xn-type]');bindRadios('[data-xn-tasktype]');
-function applyType(){
-  $$('[data-xn-g]').forEach(function(row){
-    var k=row.getAttribute('data-xn-g'),show=true;
-    if(k==='img')show=TYPE==='发图文';
-    else if(k==='video')show=TYPE==='发视频';
-    else if(k==='note')show=TYPE!=='发文案配图';
-    else if(k==='copy')show=TYPE==='发文案配图';
-    row.hidden=!show;
+bindRadios('[data-xn-tasktype]');
+/* ---------------- 发布内容：多条内容 ---------- */
+var BOX=$('[data-xn-cards]'),TPL=BOX.firstElementChild.cloneNode(true);
+function cards(){return $$('[data-xn-card]',BOX)}
+function cardName(c){
+  if(c._video&&c._video.name)return c._video.name;
+  if(c._imgs&&c._imgs.length)return c._imgs[0].name;
+  return '未选择图片';
+}
+function renumber(){cards().forEach(function(c,i){var n=$('[data-xn-cardno]',c);if(n)n.textContent=String(i+1)})}
+function sync(){
+  var N=cards().length,M=PEOPLE.length,over=N>M?N-M:0,i,k,counts=[],groups={},parts=[];
+  $('[data-xn-cnt]').textContent=N+' 条内容 / '+M+' 位执行人员';
+  if(!M)parts=['选择执行人员后显示分配结果'];
+  else if(over)parts=['前 '+M+' 条下发，'+over+' 条不下发'];
+  else{
+    for(k=0;k<N;k++)counts.push(0);
+    for(i=0;i<M;i++)counts[i%N]++;
+    for(k=0;k<N;k++)if(counts[k]>1){(groups[counts[k]]=groups[counts[k]]||[]).push('第 '+(k+1)+' 条')}
+    Object.keys(groups).forEach(function(n){var a=groups[n];parts.push(a.join('、')+(a.length>1?'各有 ':'有 ')+n+' 人发布')});
+    if(!parts.length)parts=['每人 1 条，内容不重复'];
+  }
+  $('[data-xn-hint]').textContent=parts.join('；');
+  renumber();
+}
+function expand(c,on){
+  cards().forEach(function(x){
+    var open=x===c?on:false;
+    x.setAttribute('data-open',open?'true':'false');
+    var t=$('[data-xn-toggle]',x);if(t)t.setAttribute('aria-expanded',open?'true':'false');
   });
-  if(TYPE!=='发图文')noerr('img');
-  if(TYPE!=='发视频')noerr('video');
+}
+function sortCards(){
+  var list=cards();
+  list.sort(function(a,b){
+    var fa=cardName(a),fb=cardName(b),ea=fa==='未选择图片',eb=fb==='未选择图片';
+    if(ea&&eb)return 0;if(ea)return 1;if(eb)return -1;
+    return fa.localeCompare(fb,'zh');
+  });
+  list.forEach(function(c){BOX.appendChild(c)});
+  renumber();sync();
+}
+function applyType(){
+  cards().forEach(function(c){
+    $$('[data-xn-g]',c).forEach(function(row){
+      var k=row.getAttribute('data-xn-g'),show=true;
+      if(k==='img')show=TYPE==='发图文';
+      else if(k==='video')show=TYPE==='发视频';
+      else if(k==='note')show=TYPE!=='发文案配图';
+      else if(k==='copy')show=TYPE==='发文案配图';
+      row.hidden=!show;
+    });
+  });
+}
+function applySource(){
+  cards().forEach(function(c){
+    var r=$('[data-xn-aigenrow]',c);if(r)r.hidden=SOURCE!=='AI生成';
+  });
+}
+function drawImgs(c){
+  var box=$('[data-xn-imgs]',c);if(!box)return;
+  box.innerHTML='';
+  (c._imgs||[]).forEach(function(it,i){
+    var th=el('div','rea-xn-thumb');th.draggable=true;th.setAttribute('data-i',String(i));
+    var img=document.createElement('img');img.src=it.src;img.alt='';th.appendChild(img);
+    if(i===0)th.appendChild(el('span','rea-xn-cover','封面'));
+    var rm=el('span','rea-xn-thumbrm','×');rm.setAttribute('data-xn-rmimg',String(i));th.appendChild(rm);
+    box.appendChild(th);
+  });
+  if((c._imgs||[]).length<18){
+    var add=el('button','rea-xn-add');add.type='button';add.setAttribute('data-xn-addimg','');
+    add.appendChild(el('b',null,'+'));add.appendChild(el('span',null,'上传图片'));box.appendChild(add);
+  }
+}
+function drawVideo(c){
+  var chip=$('[data-xn-vfile]',c);if(!chip)return;
+  if(c._video){chip.hidden=false;chip.textContent=c._video.name+' · '+(c._video.size/1024/1024).toFixed(1)+'MB'}
+  else{chip.hidden=true;chip.textContent=''}
+}
+function drawCover(c){
+  var box=$('[data-xn-cover]',c);if(!box)return;
+  box.innerHTML='';
+  if(!c._cover){
+    var add=document.createElement('button');add.type='button';add.className='rea-vcover-add';add.setAttribute('data-vc-add','');
+    var b=document.createElement('b');b.textContent='+';add.appendChild(b);
+    add.appendChild(document.createTextNode('上传封面'));box.appendChild(add);return;
+  }
+  var wrap=document.createElement('div');wrap.className='rea-vcover-box';
+  var th=document.createElement('div');th.className='rea-vcover-thumb';
+  var im=document.createElement('img');im.src=c._cover.src;im.alt='视频封面';th.appendChild(im);
+  var ops=document.createElement('div');ops.className='rea-vcover-ops';
+  var ch=document.createElement('button');ch.type='button';ch.setAttribute('data-vc-change','');ch.textContent='更换';
+  var rm=document.createElement('button');rm.type='button';rm.setAttribute('data-vc-rm','');rm.textContent='删除';
+  ops.appendChild(ch);ops.appendChild(rm);wrap.appendChild(th);wrap.appendChild(ops);box.appendChild(wrap);
+}
+function addImgs(c,files){
+  var room=18-(c._imgs||[]).length;
+  if(files.length>room){toast('最多上传 18 张图片');files=files.slice(0,room)}
+  files.forEach(function(f){
+    if(f.size>20*1024*1024){toast('「'+f.name+'」超过 20MB，已跳过');return}
+    var rd=new FileReader();
+    rd.onload=function(){
+      c._imgs.push({src:rd.result,name:f.name});drawImgs(c);noerr('img',c);
+      var nm=$('[data-xn-cardname]',c);if(nm)nm.textContent=cardName(c);
+      sortCards();
+    };
+    rd.readAsDataURL(f);
+  });
+}
+function addCard(){
+  var c=TPL.cloneNode(true);
+  c._imgs=[];c._video=null;c._cover=null;
+  $$('input,textarea',c).forEach(function(i){
+    if(i.type==='radio'||i.type==='checkbox'||i.type==='file')return;
+    i.value='';
+  });
+  var vf=$('[data-xn-vfile]',c);if(vf){vf.hidden=true;vf.textContent=''}
+  var nm=$('[data-xn-cardname]',c);if(nm)nm.textContent='未选择图片';
+  var sm=$('[data-xn-cardsum]',c);if(sm)sm.textContent='';
+  BOX.appendChild(c);
+  drawImgs(c);drawVideo(c);drawCover(c);
+  expand(c,true);applyType();applySource();sync();
+  return c;
+}
+function addCardFromFile(f){
+  var c=addCard();
+  if(/^video\//.test(f.type)||/\.(mp4|mov|m4v|webm)$/i.test(f.name)){
+    c._video={name:f.name,size:f.size};drawVideo(c);
+    var nm=$('[data-xn-cardname]',c);if(nm)nm.textContent=f.name;
+  }else{
+    addImgs(c,[f]);
+  }
+}
+function genCard(c){
+  var req=($('[data-xn-aigen]',c).value||'').trim();
+  if(!req){err('aigen','请填写生成要求',c);return}
+  noerr('aigen',c);
+  var title=req.length>20?req.slice(0,20):req;
+  var body='开学季把宿舍收拾成喜欢的样子，从一张好床垫开始。软硬双面、可拆洗，睡了一周腰不酸了，室友都来问链接。需要的宝子评论区扣 1～';
+  if(TYPE==='发文案配图'){
+    $('[data-xn-field="copytext"]',c).value='开学季宿舍好物，一张床垫解决睡眠';
+    $('[data-xn-field="notetitle"]',c).value=title;
+    $('[data-xn-field="body"]',c).value=body;
+    $('[data-xn-field="topic2"]',c).value='#开学季 #宿舍好物';
+  }else{
+    $('[data-xn-field="copy"]',c).value=body;
+    $('[data-xn-field="title"]',c).value=title;
+    $('[data-xn-field="topic"]',c).value='#开学季 #宿舍好物';
+  }
+  var sm=$('[data-xn-cardsum]',c);if(sm)sm.textContent=body.slice(0,16)+'…';
+  $$('[data-xn-cc]',c).forEach(function(sp){
+    var f=sp.getAttribute('data-xn-cc');
+    var inp=$('[data-xn-field="'+f+'"]',c);
+    if(inp)sp.textContent=(inp.value||'').length+' / '+(inp.getAttribute('maxlength')||'')
+  });
+  toast('已生成，可继续修改');
 }
 $$('[data-xn-type] input').forEach(function(r){
   r.addEventListener('change',function(){TYPE=r.value;applyType()});
 });
-/* 素材来源：临时创建／AI 生成 */
 $$('[data-xn-source] button').forEach(function(b){
   b.addEventListener('click',function(){
     SOURCE=b.getAttribute('data-v');
     $$('[data-xn-source] button').forEach(function(x){x.classList.toggle('is-on',x===b)});
-    $('[data-xn-aigenrow]').hidden=SOURCE!=='AI生成';
-    noerr('aigen');
+    applySource();
   });
 });
-var SW=$('[data-xn-switch]');
-SW.addEventListener('click',function(){
-  POPUP=!POPUP;SW.setAttribute('aria-checked',POPUP?'true':'false');
+$('[data-xn-addfile]').addEventListener('click',function(){$('[data-xn-addinput]').click()});
+$('[data-xn-addinput]').addEventListener('change',function(){
+  var fs=Array.prototype.slice.call(this.files||[]);this.value='';
+  if(!fs.length)return;
+  var room=50-cards().length;
+  if(fs.length>room){toast('一个任务最多 50 条内容');fs=fs.slice(0,room)}
+  fs.sort(function(a,b){return a.name.localeCompare(b.name,'zh')});
+  fs.forEach(function(f){addCardFromFile(f)});
+  sortCards();
 });
-/* 执行人员：部门树（演示两组）＋ 多选，选中项落在按钮里当标签 */
+BOX.addEventListener('click',function(e){
+  var c=e.target.closest?e.target.closest('[data-xn-card]'):null;if(!c)return;
+  var t=e.target.closest?e.target.closest('button,span'):null;if(!t)return;
+  if(t.hasAttribute('data-xn-toggle')){expand(c,c.getAttribute('data-open')!=='true');return}
+  if(t.hasAttribute('data-xn-carddel')){if(cards().length<=1){toast('至少保留一条内容');return}c.parentNode.removeChild(c);sync();return}
+  if(t.hasAttribute('data-xn-vbtn')){$('[data-xn-vinput]',c).click();return}
+  if(t.hasAttribute('data-xn-gen')){genCard(c);return}
+  if(t.hasAttribute('data-xn-addimg')){$('[data-xn-imginput]',c).click();return}
+  if(t.hasAttribute('data-vc-add')||t.hasAttribute('data-vc-change')){$('[data-xn-coverinput]',c).click();return}
+  if(t.hasAttribute('data-vc-rm')){c._cover=null;drawCover(c);return}
+  if(t.hasAttribute('data-xn-rmimg')){
+    var i=+t.getAttribute('data-xn-rmimg');c._imgs.splice(i,1);drawImgs(c);
+    var nm=$('[data-xn-cardname]',c);if(nm)nm.textContent=cardName(c);sync();return;
+  }
+});
+BOX.addEventListener('change',function(e){
+  var c=e.target.closest?e.target.closest('[data-xn-card]'):null;if(!c)return;
+  if(e.target.hasAttribute('data-xn-imginput')){
+    var fs=Array.prototype.slice.call(e.target.files||[]);e.target.value='';
+    if(fs.length)addImgs(c,fs);return;
+  }
+  if(e.target.hasAttribute('data-xn-vinput')){
+    var f=e.target.files&&e.target.files[0];if(!f)return;
+    c._video={name:f.name,size:f.size};drawVideo(c);
+    var nm2=$('[data-xn-cardname]',c);if(nm2)nm2.textContent=f.name;
+    noerr('video',c);sync();return;
+  }
+  if(e.target.hasAttribute('data-xn-coverinput')){
+    var cf=e.target.files&&e.target.files[0];e.target.value='';if(!cf)return;
+    if(!/^image\/(png|jpe?g)$/.test(cf.type)){toast('封面只支持 png、jpg 图片');return}
+    if(cf.size>10*1024*1024){toast('封面图片不能超过 10MB');return}
+    var rd=new FileReader();rd.onload=function(){c._cover={src:rd.result,name:cf.name};drawCover(c)};rd.readAsDataURL(cf);
+  }
+});
+BOX.addEventListener('input',function(e){
+  var c=e.target.closest?e.target.closest('[data-xn-card]'):null;if(!c)return;
+  var f=e.target.getAttribute('data-xn-field');
+  if(f==='copy'||f==='copytext'||f==='body'){
+    var v=(e.target.value||'').replace(/^\s+|\s+$/g,'');
+    var sm=$('[data-xn-cardsum]',c);
+    if(sm)sm.textContent=v?(v.length>16?v.slice(0,16)+'…':v):'';
+  }
+  var cc=e.target.parentNode?e.target.parentNode.querySelector('[data-xn-cc]'):null;
+  if(cc)cc.textContent=(e.target.value||'').length+' / '+(e.target.getAttribute('maxlength')||'');
+});
+BOX.addEventListener('dragstart',function(e){
+  var th=e.target.closest?e.target.closest('.rea-xn-thumb'):null;if(!th)return;
+  var c=th.closest('[data-xn-card]');if(!c)return;
+  DRAG={card:c,from:+th.getAttribute('data-i')};
+  if(e.dataTransfer){e.dataTransfer.effectAllowed='move';try{e.dataTransfer.setData('text/plain','')}catch(x){}}
+});
+BOX.addEventListener('dragover',function(e){
+  var th=e.target.closest?e.target.closest('.rea-xn-thumb'):null;
+  if(th&&DRAG){e.preventDefault();if(e.dataTransfer)e.dataTransfer.dropEffect='move'}
+});
+BOX.addEventListener('drop',function(e){
+  var th=e.target.closest?e.target.closest('.rea-xn-thumb'):null;if(!th||!DRAG)return;
+  var c=th.closest('[data-xn-card]');if(!c||c!==DRAG.card)return;
+  e.preventDefault();var to=+th.getAttribute('data-i');
+  if(to!==DRAG.from){var it=c._imgs.splice(DRAG.from,1)[0];c._imgs.splice(to,0,it)}
+  DRAG=null;drawImgs(c);sync();
+});
+BOX.addEventListener('dragend',function(){DRAG=null});
+/* ---------------- 执行人员 ---------------- */
 function deptPeople(n){for(var i=0;i<ORG.length;i++)if(ORG[i].n===n)return ORG[i].p;return []}
 function drawPeople(){
   var box=$('[data-xn-orgtags]');box.innerHTML='';
@@ -25140,6 +25408,7 @@ function drawPeople(){
     var ps=deptPeople(cb.getAttribute('data-xn-dept'));
     cb.checked=ps.length>0&&ps.every(function(n){return PEOPLE.indexOf(n)>=0});
   });
+  sync();
 }
 function drawDrop(filter){
   var box=$('[data-xn-orglist]');box.innerHTML='';
@@ -25191,87 +25460,9 @@ document.addEventListener('click',function(e){
   }
   if(!DROP.hidden&&!(e.target.closest&&e.target.closest('.rea-xn-picker')))DROP.hidden=true;
 });
-/* 图片：本地上传（FileReader 出缩略图）、拖动排序、首图封面 */
-function drawImgs(){
-  var box=$('[data-xn-imgs]');box.innerHTML='';
-  IMGS.forEach(function(it,i){
-    var th=el('div','rea-xn-thumb');th.draggable=true;th.setAttribute('data-i',String(i));
-    var img=document.createElement('img');img.src=it.src;img.alt='';th.appendChild(img);
-    if(i===0)th.appendChild(el('span','rea-xn-cover','封面'));
-    var rm=el('span','rea-xn-thumbrm','×');rm.setAttribute('data-xn-rmimg',String(i));th.appendChild(rm);
-    box.appendChild(th);
-  });
-  if(IMGS.length<18){
-    var add=el('button','rea-xn-add');add.type='button';add.setAttribute('data-xn-addimg','');
-    add.appendChild(el('b',null,'+'));add.appendChild(el('span',null,'上传图片'));box.appendChild(add);
-  }
-}
-$('[data-xn-imginput]').addEventListener('change',function(){
-  var fs=Array.prototype.slice.call(this.files||[]);this.value='';
-  var room=18-IMGS.length;
-  if(fs.length>room){toast('最多上传 18 张图片');fs=fs.slice(0,room)}
-  fs.forEach(function(f){
-    if(f.size>20*1024*1024){toast('「'+f.name+'」超过 20MB，已跳过');return}
-    var rd=new FileReader();
-    rd.onload=function(){IMGS.push({src:rd.result,name:f.name});drawImgs();noerr('img')};
-    rd.readAsDataURL(f);
-  });
-});
-var UPL=$('[data-xn-imgs]');
-UPL.addEventListener('click',function(e){
-  var a=e.target.closest?e.target.closest('[data-xn-addimg]'):null;
-  if(a){$('[data-xn-imginput]').click();return}
-  var r=e.target.closest?e.target.closest('[data-xn-rmimg]'):null;
-  if(r){var i=+r.getAttribute('data-xn-rmimg');IMGS.splice(i,1);drawImgs()}
-});
-UPL.addEventListener('dragstart',function(e){
-  var t=e.target.closest?e.target.closest('.rea-xn-thumb'):null;if(!t)return;
-  DRAG=+t.getAttribute('data-i');
-  if(e.dataTransfer){e.dataTransfer.effectAllowed='move';try{e.dataTransfer.setData('text/plain','')}catch(x){}}
-});
-UPL.addEventListener('dragover',function(e){
-  var t=e.target.closest?e.target.closest('.rea-xn-thumb'):null;
-  if(t&&DRAG!=null){e.preventDefault();if(e.dataTransfer)e.dataTransfer.dropEffect='move'}
-});
-UPL.addEventListener('drop',function(e){
-  var t=e.target.closest?e.target.closest('.rea-xn-thumb'):null;
-  if(!t||DRAG==null)return;
-  e.preventDefault();
-  var to=+t.getAttribute('data-i');
-  if(to!==DRAG){var it=IMGS.splice(DRAG,1)[0];IMGS.splice(to,0,it)}
-  DRAG=null;drawImgs();
-});
-UPL.addEventListener('dragend',function(){DRAG=null});
-/* 视频：一枚文件即可，chip 上显示文件名与大小 */
-$('[data-xn-vbtn]').addEventListener('click',function(){$('[data-xn-vinput]').click()});
-$('[data-xn-vinput]').addEventListener('change',function(){
-  var f=this.files&&this.files[0];if(!f)return;
-  VIDEO={name:f.name,size:f.size};
-  var chip=$('[data-xn-vfile]');chip.hidden=false;
-  chip.textContent=f.name+' · '+(f.size/1024/1024).toFixed(1)+'MB';
-  noerr('video');
-});
-/* AI 生成：按「生成要求」填一套演示文案，选图文/视频填视频文案那组，文案配图填笔记那组 */
-var AI_BODY='开学季把宿舍收拾成喜欢的样子，从一张好床垫开始。软硬双面、可拆洗，睡了一周腰不酸了，室友都来问链接。需要的宝子评论区扣 1～';
-$('[data-xn-gen]').addEventListener('click',function(){
-  var req=($('[data-xn-aigen]').value||'').trim();
-  if(!req){err('aigen','请填写生成要求');return}
-  noerr('aigen');
-  var title=req.length>20?req.slice(0,20):req;
-  if(TYPE==='发文案配图'){
-    $('[data-xn-copytext]').value='开学季宿舍好物，一张床垫解决睡眠';
-    $('[data-xn-notetitle]').value=title;
-    $('[data-xn-body]').value=AI_BODY;
-    $('[data-xn-topic2]').value='#开学季 #宿舍好物';
-  }else{
-    $('[data-xn-copy]').value=AI_BODY;
-    $('[data-xn-title]').value=title;
-    $('[data-xn-topic]').value='#开学季 #宿舍好物';
-  }
-  ['[data-xn-copy]','[data-xn-title]','[data-xn-notetitle]','[data-xn-body]'].forEach(function(s){
-    var n=$(s);if(n)n.dispatchEvent(new Event('input',{bubbles:true}));
-  });
-  toast('已生成，可继续修改');
+var SW=$('[data-xn-switch]');
+SW.addEventListener('click',function(){
+  POPUP=!POPUP;SW.setAttribute('aria-checked',POPUP?'true':'false');
 });
 /* 默认通知时间＝一小时后，截止时间＝七天后 */
 (function(){
@@ -25280,26 +25471,32 @@ $('[data-xn-gen]').addEventListener('click',function(){
   $('[data-xn-end-date]').value=ymd(d2);$('[data-xn-end-time]').value=hm(d2);
 })();
 function stamp(){var d=new Date();return ymd(d)+' '+hm(d)}
+function field(c,k){var n=$('[data-xn-field="'+k+'"]',c);return n?n.value:''}
 $('[data-xn-save]').addEventListener('click',function(){
   clearErrs();
   var bad=[],name=($('[data-xn-name]').value||'').trim();
   if(!PEOPLE.length){err('org','请选择执行人员');bad.push('org')}
   if(!name){err('name','请输入任务名称');bad.push('name')}
-  if(TYPE==='发图文'&&!IMGS.length){err('img','请至少上传一张图片');bad.push('img')}
-  if(TYPE==='发视频'&&!VIDEO){err('video','请上传视频文件');bad.push('video')}
+  var firstBad=null;
+  cards().forEach(function(c){
+    if(TYPE==='发图文'&&!(c._imgs&&c._imgs.length)){err('img','请至少上传一张图片',c);bad.push('img');if(!firstBad)firstBad=c}
+    if(TYPE==='发视频'&&!c._video){err('video','请上传视频文件',c);bad.push('video');if(!firstBad)firstBad=c}
+  });
   var nd=$('[data-xn-notify-date]').value,nt=$('[data-xn-notify-time]').value,
       ed=$('[data-xn-end-date]').value,et=$('[data-xn-end-time]').value;
   if(!nd||!nt){err('notify','请选择通知时间');bad.push('notify')}
   if(!ed||!et){err('end','请选择截止时间');bad.push('end')}
   else if(nd&&nt&&((ed+' '+et)<=(nd+' '+nt))){err('end','截止时间需晚于通知时间');bad.push('end')}
   if(bad.length){
+    if(firstBad)expand(firstBad,true);
     var p=$('[data-xn-err="'+bad[0]+'"]');
     if(p&&p.scrollIntoView)p.scrollIntoView({block:'center'});
     toast('请先补全必填项');return;
   }
-  var copy=TYPE==='发文案配图'?$('[data-xn-copytext]').value:$('[data-xn-copy]').value;
-  var topic=TYPE==='发文案配图'?$('[data-xn-topic2]').value:$('[data-xn-topic]').value;
-  var task={id:'xn-'+Date.now(),name:name,type:TYPE,copy:copy||'',topic:topic||'',
+  var first=cards()[0];
+  var copy=TYPE==='发文案配图'?field(first,'copytext'):field(first,'copy');
+  var topic=TYPE==='发文案配图'?field(first,'topic2'):field(first,'topic');
+  var task={id:'xn-'+Date.now(),name:name,type:TYPE,copy:copy||'',topic:topic||'',count:cards().length,
     who:PEOPLE.join(','),start:nd+' '+nt,end:ed+' '+et,state:'执行中',created:stamp(),creator:'18569299465'};
   var btn=this;btn.disabled=true;btn.textContent='保存中…';
   toast('任务已保存');
@@ -25317,8 +25514,12 @@ $('[data-xn-cancel]').addEventListener('click',back);
     else if(rows[i].classList.contains('ykActive')){rows[i].classList.remove('ykActive');rows[i].removeAttribute('aria-current')}
   }
 })();
-applyType();drawImgs();
-` + reaVcoverJs('[data-xn-cover]','[data-xn-coverinput]','toast') + String.raw`
+/* 起手：第一条内容挂状态并画空态 */
+(function(){
+  var c=cards()[0];c._imgs=[];c._video=null;c._cover=null;
+  drawImgs(c);drawVideo(c);drawCover(c);
+  applyType();applySource();sync();
+})();
 })();`;
   }
 
@@ -25343,6 +25544,10 @@ if(T){
     valid:val(T.start)+' ~ '+val(T.end)};
   for(var k in slots){var n=$('[data-xn-i="'+k+'"]');if(n)n.textContent=val(slots[k])}
 }
+var CNT=(T&&T.count)||1;
+(function(){
+  var cb=$('[data-xn-contents]');if(cb)cb.textContent=CNT+' 条 · 查看';
+})();
 var PHONES=['18833335555','18800001234','13300006789'],DEPTS=['测试二级二部','销售一部','内容运营组'];
 var NOTE={title:'学生党天津游实测避坑指南✨',
  body:'宝子们作为踩过坑的过来人，把天津游的实测测评全整理好了，全是学生党最在意的省钱痛点！🚇交通实测：天津地铁支付宝领乘车码，景点基本都能到，别打车，从站口到五大道打车要价 30 纯纯宰学生，公交 2 块直达超划算。🍜美食测评：别去景区门口的网红店，西北角的锅巴菜老居民区店 8 块一碗，比景点里 25 的味道正 10 倍，熟梨糕 5 块钱 6 个超满足。🏞️景点实测：大部分景点学生票半价！天津之眼提前 3 天抢学生票，五大道骑共享单车逛比坐 80 的观光车爽太多，瓷房子在外边拍照就够，进去 30 门票完全不值。全程 3 天人均 500 就能玩爽，完全适配学生党生活费预算，照着走绝对不踩雷！',
@@ -25353,9 +25558,10 @@ var ROWS=(function(){
   ps.forEach(function(n,i){
     var st=(T&&T.state)==='执行完毕'?'已执行':((T&&T.state)==='执行中'?'待执行':'未执行');
     var copy=[T&&T.copy,T&&T.topic].filter(Boolean).join('  ');
+    var no=i%((T&&T.count)||1)+1;
     out.push({name:n,phone:PHONES[i%PHONES.length],dept:DEPTS[i%DEPTS.length],state:st,
-      at:st==='未执行'?'—':(T.start||'—'),note:st!=='未执行',
-      video:st!=='未执行'&&T.type==='发视频',copy:copy||'—'});
+      at:st==='未执行'?'—':(T.start||'—'),note:st!=='未执行',no:no,
+      video:st!=='未执行'&&T.type==='发视频',copy:(CNT>1?'第 '+no+' 条 · ':'')+(copy||'—')});
   });
   return out;
 })();
@@ -25370,7 +25576,7 @@ function render(){
     td=el('td','rea-xn-muted');td.textContent=r.phone;tr.appendChild(td);
     td=el('td','rea-xn-muted');td.textContent=r.copy;tr.appendChild(td);
     td=el('td');
-    if(r.video){var vb=el('button','rea-xn-link','查看');vb.type='button';vb.setAttribute('data-xn-video','');td.appendChild(vb)}
+    if(r.video){var vb=el('button','rea-xn-link',(CNT>1?'第 '+r.no+' 条 · 查看':'查看'));vb.type='button';vb.setAttribute('data-xn-video','');td.appendChild(vb)}
     else td.textContent='—';
     tr.appendChild(td);
     td=el('td');
@@ -25416,8 +25622,25 @@ function openPop(anchor,html,w){
   left=Math.max(8,Math.min(left,window.innerWidth-w-16));
   p.style.top=top+'px';p.style.left=left+'px';
 }
+function openContents(){
+  var mask=el('div','rea-xn-mask');
+  var box=el('div','rea-xn-modal rea-xn-cmodal');
+  var h='<h3>发布内容 · '+CNT+' 条</h3>';
+  for(var i=1;i<=CNT;i++){
+    var people=peopleOf(T).filter(function(_,j){return j%CNT+1===i});
+    h+='<div class="rea-xn-crow"><span class="rea-xn-cno">'+i+'</span><span class="rea-xn-cmain"><b>内容 '+i+' · demo-'+i+'.jpg</b><em>'+val(i===1?(T&&T.copy):'秋季新品到店（第二条）')+'</em></span><span class="rea-xn-cpeople">'+people.length+' 人</span></div>';
+  }
+  box.innerHTML=h+'<div class="rea-xn-modalfoot"><button type="button" class="rea-xn-btn" data-xn-cclose>关闭</button></div>';
+  mask.appendChild(box);document.body.appendChild(mask);
+  function close(){if(mask.parentNode)mask.parentNode.removeChild(mask);document.removeEventListener('keydown',esc)}
+  function esc(e){if(e.key==='Escape')close()}
+  mask.onclick=function(e){if(e.target===mask)close()};
+  box.querySelector('[data-xn-cclose]').onclick=close;
+  document.addEventListener('keydown',esc);
+}
 document.addEventListener('click',function(e){
   var t=e.target;
+  if(t&&t.closest&&t.closest('[data-xn-contents]')){openContents();return}
   var nb=t&&t.closest?t.closest('[data-xn-note]'):null;
   var vb=t&&t.closest?t.closest('[data-xn-video]'):null;
   if(nb){
@@ -29923,6 +30146,36 @@ dl.rea-dy-info{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12
   border-radius:8px;background:#1F2329;color:#fff;font-size:13px;z-index:2000;
   box-shadow:0 6px 16px rgba(0,0,0,.18);opacity:0;transition:opacity .18s;pointer-events:none}
 .rea-dy-toast.on{opacity:1}
+
+/* ---------- 发布内容·多内容折叠卡 ---------- */
+.rea-dy-sec-actions{display:flex;align-items:center;gap:12px}
+.rea-dy-cnt{color:#646A73;font-size:13px}
+.rea-dy-hint{margin:0 0 12px 136px;color:#8F959E;font-size:12px;line-height:1.5}
+.rea-dy-cards{display:flex;flex-direction:column;gap:10px}
+.rea-dy-card{border:1px solid #E5E8EF;border-radius:10px;background:#fff;overflow:hidden}
+.rea-dy-card[data-open="true"]{border-color:#BBD9FF;box-shadow:0 0 0 3px rgba(22,119,255,.08)}
+.rea-dy-card-h{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#F7F8FA}
+.rea-dy-card-toggle{flex:1;display:flex;align-items:center;gap:10px;min-width:0;padding:0;border:0;
+  background:none;color:#1F2329;font:inherit;font-size:13px;text-align:left;cursor:pointer}
+.rea-dy-card-no{flex:none;display:flex;align-items:center;justify-content:center;width:22px;height:22px;
+  border-radius:50%;background:#E6F4FF;color:#1677FF;font-size:12px}
+.rea-dy-card-name{flex:none;max-width:42%;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rea-dy-card-sum{flex:1;min-width:0;color:#8F959E;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rea-dy-card-del{flex:none;width:26px;height:26px;border:0;border-radius:6px;background:none;color:#8F959E;
+  font-size:18px;line-height:1;cursor:pointer}
+.rea-dy-card-del:hover{background:#FFF1F0;color:#FF4D4F}
+.rea-dy-card-b{padding:4px 12px 12px}
+.rea-dy-card[data-open="false"] .rea-dy-card-b{display:none}
+.rea-dy-copy[hidden]{display:none}
+.rea-dy-cmodal{width:640px}
+.rea-dy-clist{display:flex;flex-direction:column;gap:8px;max-height:60vh;overflow:auto;padding:8px 20px 20px}
+.rea-dy-crow{display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid #E5E8EF;border-radius:8px}
+.rea-dy-cno{flex:none;display:flex;align-items:center;justify-content:center;width:22px;height:22px;
+  border-radius:50%;background:#E6F4FF;color:#1677FF;font-size:12px}
+.rea-dy-cmain{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.rea-dy-cmain b{font-size:13px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rea-dy-cmain em{font-style:normal;color:#8F959E;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rea-dy-cpeople{flex:none;color:#646A73;font-size:12px}
 `;
 
   /* 抖音营销 · 抖音运营三页（2026-11-23）的补充样式：只在 REA_DY_CSS 之上加这一页要用的件——
@@ -31282,16 +31535,20 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
           {label:'截止时间',value:'2026-11-05 11:02'},
           {label:'全局弹窗',value:'关闭'}
         ]},
-        {title:'视频内容',rows:[
+        {title:'发布内容',rows:[
           {label:'素材来源',value:'临时创建'},
           {label:'发布类型',value:'发视频'},
-          {label:'选择视频来源',value:'手动上传'},
-          {label:'上传视频',value:'demo-video.mp4'},
-          {label:'视频封面',preview:true},
           {label:'文案类型',value:'AI生成'},
-          {label:'视频文案',value:'秋季新品到店，到店试戴有礼。'},
-          {label:'视频标题',value:'秋季新品到店'},
-          {label:'视频话题',value:'#秋季新品#到店有礼'}
+          {label:'共 3 条',value:'3 条'},
+          {label:'内容 1',value:'秋季新品到店.mp4 · 秋季新品到店 · #秋季新品#到店有礼'},
+          {label:'内容 2',value:'秋季新品开箱.mp4 · 秋季新品开箱 · #秋季新品#开箱'},
+          {label:'内容 3',value:'秋季新品上身.mp4 · 秋季新品上身 · #秋季新品#穿搭'},
+          {label:'视频封面',preview:true}
+        ]},
+        {title:'分配结果',rows:[
+          {label:'张伟、李娜',value:'第 1 条'},
+          {label:'王强、赵敏',value:'第 2 条'},
+          {label:'孙悦、周涛',value:'第 3 条'}
         ]}
       ]
     },
@@ -31325,30 +31582,29 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
           {type:'发图文',rows:[
             {label:'素材来源',value:'临时创建'},
             {label:'发布类型',value:'发图文'},
-            {label:'选择图片',value:'门店新品 1.jpg 等 3 张'},
-            {label:'视频文案',value:'秋季新品到店，三张图看全系列配色。'},
-            {label:'视频标题',value:'秋季新品到店'},
-            {label:'视频话题',value:'#秋季新品 #店内实拍'}
+            {label:'共 2 条',value:'2 条'},
+            {label:'内容 1',value:'门店新品 1.jpg 等 3 张 · 秋季新品到店'},
+            {label:'内容 2',value:'门店新品 4.jpg 等 2 张 · 秋季新品到店（第二条）'}
           ]},
           {type:'发视频',rows:[
             {label:'素材来源',value:'临时创建'},
             {label:'发布类型',value:'发视频'},
-            {label:'选择视频来源',value:'手动上传'},
-            {label:'上传视频',value:'门店探店 vlog.mp4'},
-            {label:'视频封面',preview:true},
-            {label:'视频文案',value:'门店探店 vlog，30 秒竖版，拍到出餐和招牌菜。'},
-            {label:'视频标题',value:'门店探店 vlog'},
-            {label:'视频话题',value:'#探店 #招牌菜'}
+            {label:'共 2 条',value:'2 条'},
+            {label:'内容 1',value:'门店探店 vlog.mp4 · 门店探店 vlog'},
+            {label:'内容 2',value:'门店招牌菜实拍.mp4 · 招牌菜实拍'},
+            {label:'视频封面',preview:true}
           ]},
           {type:'发文案配图',rows:[
             {label:'素材来源',value:'临时创建'},
             {label:'发布类型',value:'发文案配图'},
-            {label:'选择图片',value:'门店新品 1.jpg 等 3 张'},
-            {label:'文案内容',value:'秋季新品到店，欢迎来店试戴。'},
-            {label:'笔记标题',value:'秋季新品到店'},
-            {label:'正文内容',value:'三张图看全系列配色，到店可试戴。'},
-            {label:'话题',value:'#秋季新品 #店内实拍'}
+            {label:'共 2 条',value:'2 条'},
+            {label:'内容 1',value:'门店新品 1.jpg 等 3 张 · 秋季新品到店'},
+            {label:'内容 2',value:'门店新品 4.jpg 等 2 张 · 秋季新品到店（第二条）'}
           ]}
+        ]},
+        {title:'分配结果',rows:[
+          {label:'张伯阳、雅楠002',value:'第 1 条'},
+          {label:'测试人员33',value:'第 2 条'}
         ]}
       ]
     },
@@ -31375,16 +31631,18 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
           {label:'截止时间',value:'2026-11-25 10:00'},
           {label:'全局弹窗',value:'关闭'}
         ]},
-        {title:'视频内容',rows:[
+        {title:'发布内容',rows:[
           {label:'素材来源',value:'临时创建'},
           {label:'发布类型',value:'发视频'},
-          {label:'选择视频来源',value:'手动上传'},
-          {label:'上传视频',value:'秋季新品开箱.mp4'},
-          {label:'视频封面',preview:true},
-          {label:'视频文案',value:'秋季新品开箱，30 秒竖版，门店实拍'},
-          {label:'视频标题',value:'秋季新品开箱'},
-          {label:'视频话题',value:'#秋季新品 #开箱'},
-          {label:'是否转发朋友圈',value:'否'}
+          {label:'是否转发朋友圈',value:'否'},
+          {label:'共 2 条',value:'2 条'},
+          {label:'内容 1',value:'秋季新品开箱.mp4 · 秋季新品开箱 · #秋季新品 #开箱'},
+          {label:'内容 2',value:'秋季新品上身.mp4 · 秋季新品上身 · #秋季新品 #穿搭'},
+          {label:'视频封面',preview:true}
+        ]},
+        {title:'分配结果',rows:[
+          {label:'张伯阳',value:'第 1 条'},
+          {label:'李静',value:'第 2 条'}
         ]}
       ]
     }
@@ -31656,13 +31914,58 @@ function openVideo(name,time){
   $('.ant-modal-wrap',w).addEventListener('click',function(e){if(e.target===this)closeVideo()});
   document.addEventListener('keydown',onKey);
 }
+/* 发布内容：把「视频内容」组换成入口，点开弹窗列两条内容 */
+var CNT=2,gi,grp=null,groups=document.querySelectorAll('.rea-wxd-group');
+for(gi=0;gi<groups.length;gi++){
+  var gs=groups[gi].querySelector('.rea-wxd-gt span');
+  if(gs&&gs.textContent.replace(/^\s+|\s+$/g,'')==='视频内容'){grp=groups[gi];break}
+}
+if(grp){
+  var gt=grp.querySelector('.rea-wxd-gt span');if(gt)gt.textContent='发布内容';
+  var kv=grp.querySelector('.rea-wxd-kv');
+  if(kv)kv.innerHTML='<p><span>发布内容</span><span><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-wxv-contents style="padding:0;"><span>'+CNT+' 条 · 查看</span></button></span></p>';
+}
+function closeContents(){
+  var m=document.querySelector('[data-wxv-cmodal]');
+  if(m&&m.parentNode)m.parentNode.removeChild(m);
+  document.removeEventListener('keydown',onContentsKey);
+}
+function onContentsKey(e){if(e.key==='Escape'||e.keyCode===27)closeContents()}
+function openContents(){
+  closeContents();
+  var rows=[{no:1,name:'秋季新品开箱.mp4',copy:'秋季新品开箱 · #秋季新品',n:5},
+            {no:2,name:'秋季新品上身.mp4',copy:'秋季新品上身 · #秋季新品 #穿搭',n:5}];
+  var body='';
+  for(var k=0;k<rows.length;k++){var r=rows[k];
+    body+='<div class="rea-wxv-crow"><span class="rea-wxv-cno">'+r.no+'</span><span class="rea-wxv-cmain"><b>'+r.name+'</b><em>'+r.copy+'</em></span><span class="rea-wxv-cnum">'+r.n+' 人</span></div>';
+  }
+  var w=document.createElement('div');w.className='ant-modal-root css-vgijab';w.setAttribute('data-wxv-cmodal','1');
+  w.innerHTML='<div class="ant-modal-mask"></div><div class="ant-modal-wrap ant-modal-centered">'
+    +'<div class="ant-modal css-vgijab rea-wxv-modal" role="dialog" aria-modal="true" aria-label="发布内容" style="width:520px">'
+    +'<div class="ant-modal-content"><button type="button" class="ant-modal-close" aria-label="关闭"><span class="ant-modal-close-x">×</span></button>'
+    +'<div class="ant-modal-header"><div class="ant-modal-title">发布内容 · '+CNT+' 条</div></div>'
+    +'<div class="ant-modal-body"><div class="rea-wxv-clist">'+body+'</div></div>'
+    +'<div class="ant-modal-footer"><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined"><span>关 闭</span></button></div>'
+    +'</div></div></div>';
+  document.body.appendChild(w);
+  var cb=w.querySelector('[data-wxv-contents]');
+  w.querySelector('.ant-modal-close').addEventListener('click',closeContents);
+  w.querySelector('.ant-modal-footer button').addEventListener('click',closeContents);
+  w.querySelector('.ant-modal-wrap').addEventListener('click',function(e){if(e.target===this)closeContents()});
+  document.addEventListener('keydown',onContentsKey);
+}
+var cb0=document.querySelector('[data-wxv-contents]');
+if(cb0)cb0.addEventListener('click',openContents);
 var vs=document.querySelectorAll('[data-wxv-video]'),i;
-for(i=0;i<vs.length;i++)vs[i].addEventListener('click',function(e){
+for(i=0;i<vs.length;i++){
+  vs[i].querySelector('span').textContent='第 '+(i%CNT+1)+' 条 · 查看';
+  vs[i].addEventListener('click',function(e){
   e.preventDefault();
   var tr=this.closest?this.closest('tr'):null;
   var tds=tr?tr.children:null;
   openVideo(this.getAttribute('data-wxv-video'),tds&&tds.length?tds[tds.length-1].textContent:'');
-});
+  });
+}
 })();`;
   }
   /* 视频号发布任务 · 新建（2026-11-24）：快照那一页的表单原样保留，只在「上传视频」行后
@@ -31677,20 +31980,153 @@ function msg(t){
   d.textContent=t;d.classList.add('on');clearTimeout(d._t);
   d._t=setTimeout(function(){d.classList.remove('on')},1800);
 }
-var rows=document.querySelectorAll('[class*="_form_input_"]'),host=null,i;
-for(i=0;i<rows.length;i++){
-  var lb=rows[i].querySelector('span');
-  if(lb&&lb.textContent.replace(/^\s+|\s+$/g,'')==='上传视频'){host=rows[i];break}
+function txt(e){return (e.textContent||'').replace(/\s+/g,'')}
+var ROWS=document.querySelectorAll('[class*="_form_input_"]');
+function byLabel(k){for(var i=0;i<ROWS.length;i++){var lb=ROWS[i].querySelector('span');if(lb&&txt(lb)===k)return ROWS[i]}return null}
+var src=byLabel('选择视频来源'),up=byLabel('上传视频'),cp=byLabel('视频文案'),tt=byLabel('视频标题'),tp=byLabel('视频话题');
+if(!src||!up||!cp||!tt||!tp)return;
+var PARENT=up.parentNode;
+/* 执行人员：快照是空的静态控件，这里填一条演示值，让分配结果看得见 */
+var orgRow=byLabel('执行人员');
+if(orgRow){var ow=orgRow.querySelector('.yk-select-wrap span');if(ow){ow.textContent='张伯阳 等 2 人';ow.style.color='#1F2329'}}
+var M=2;
+/* 内容卡 */
+var cards=document.createElement('div');cards.className='rea-wxv-cards';cards.setAttribute('data-wxv-cards','');
+var card=document.createElement('div');card.className='rea-wxv-card';card.setAttribute('data-wxv-card','');card.setAttribute('data-open','true');
+card.innerHTML='<div class="rea-wxv-cardh"><button type="button" class="rea-wxv-toggle" data-wxv-toggle aria-expanded="true">'
+ +'<span class="rea-wxv-no" data-wxv-no>1</span><span class="rea-wxv-name" data-wxv-name>未选择视频</span>'
+ +'<span class="rea-wxv-sum" data-wxv-sum></span></button>'
+ +'<button type="button" class="rea-wxv-del" data-wxv-del aria-label="删除这条内容">×</button></div>'
+ +'<div class="rea-wxv-cardb"></div>';
+var BODY=card.querySelector('.rea-wxv-cardb');
+cards.appendChild(card);
+/* 表头与提示：先插到 PARENT 里、锚在 src 上，再把内容行挪进卡片——
+   顺序反了 src 已经不在 PARENT 下，insertBefore 会抛 NotFoundError */
+var head=document.createElement('div');head.className='rea-wxv-chead';
+head.innerHTML='<span class="rea-wxv-ctitle">发布内容</span><span class="rea-wxv-cnt" data-wxv-cnt></span>'
+ +'<button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-wxv-add><span>+ 添加内容</span></button>';
+var hint=document.createElement('p');hint.className='rea-wxv-hint';hint.setAttribute('data-wxv-hint','');
+PARENT.insertBefore(head,src);PARENT.insertBefore(hint,src);PARENT.insertBefore(cards,src);
+/* 把内容行挪进卡片 */
+BODY.appendChild(src);BODY.appendChild(up);
+var cover=document.createElement('div');cover.className=up.className;
+cover.innerHTML='<span class="_must_white1_lzm36_76">视频封面<span class="rea-vcover-help" tabindex="0" role="img" aria-label="视频封面说明" data-tip="建议竖版 3:4（1080×1440），支持 png、jpg，单张不超过 10MB；平台按自己的封面框裁切，不上传则用平台默认封面。">i</span></span>'
+ +'<div class="_upload_box_lzm36_100"><div class="rea-vcover" data-wxv-cover></div>'
+ +'<input type="file" accept="image/png,image/jpeg" hidden data-wxv-coverinput></div>';
+BODY.appendChild(cover);BODY.appendChild(cp);BODY.appendChild(tt);BODY.appendChild(tp);
+var TPL=card.cloneNode(true);
+function cardsAll(){return Array.prototype.slice.call(cards.querySelectorAll('[data-wxv-card]'))}
+function renumber(){cardsAll().forEach(function(c,i){var n=c.querySelector('[data-wxv-no]');if(n)n.textContent=String(i+1)})}
+function sync(){
+  var N=cardsAll().length,over=N>M?N-M:0,i,k,counts=[],groups={},parts=[];
+  var cnt=document.querySelector('[data-wxv-cnt]');if(cnt)cnt.textContent=N+' 条内容 / '+M+' 位执行人员';
+  if(!M)parts=['选择执行人员后显示分配结果'];
+  else if(over)parts=['前 '+M+' 条下发，'+over+' 条不下发'];
+  else{
+    for(k=0;k<N;k++)counts.push(0);
+    for(i=0;i<M;i++)counts[i%N]++;
+    for(k=0;k<N;k++)if(counts[k]>1){(groups[counts[k]]=groups[counts[k]]||[]).push('第 '+(k+1)+' 条')}
+    Object.keys(groups).forEach(function(n){var a=groups[n];parts.push(a.join('、')+(a.length>1?'各有 ':'有 ')+n+' 人发布')});
+    if(!parts.length)parts=['每人 1 条，内容不重复'];
+  }
+  var h=document.querySelector('[data-wxv-hint]');if(h)h.textContent=parts.join('；');
+  renumber();
 }
-if(!host)return;
-if(document.querySelector('[data-wxv-cover]'))return;
-var row=document.createElement('div');
-row.className=host.className;
-row.innerHTML='<span class="_must_white1_lzm36_76">视频封面<span class="rea-vcover-help" tabindex="0" role="img" aria-label="视频封面说明" data-tip="建议竖版 3:4（1080×1440），支持 png、jpg，单张不超过 10MB；平台按自己的封面框裁切，不上传则用平台默认封面。">i</span></span>'
-  +'<div class="_upload_box_lzm36_100"><div class="rea-vcover" data-wxv-cover></div>'
-  +'<input type="file" accept="image/png,image/jpeg" hidden data-wxv-coverinput></div>';
-host.parentNode.insertBefore(row,host.nextSibling);
-` + reaVcoverJs('[data-wxv-cover]','[data-wxv-coverinput]','msg') + String.raw`
+function expand(c,on){
+  cardsAll().forEach(function(x){
+    var open=x===c?on:false;
+    x.setAttribute('data-open',open?'true':'false');
+    var t=x.querySelector('[data-wxv-toggle]');if(t)t.setAttribute('aria-expanded',open?'true':'false');
+  });
+}
+function bindCover(c){
+  var box=c.querySelector('[data-wxv-cover]'),input=c.querySelector('[data-wxv-coverinput]'),cv=null;
+  if(!box||!input)return;
+  function draw(){
+    box.innerHTML='';
+    if(!cv){
+      var add=document.createElement('button');add.type='button';add.className='rea-vcover-add';add.setAttribute('data-vc-add','');
+      var b=document.createElement('b');b.textContent='+';add.appendChild(b);add.appendChild(document.createTextNode('上传封面'));box.appendChild(add);return;
+    }
+    var wrap=document.createElement('div');wrap.className='rea-vcover-box';
+    var th=document.createElement('div');th.className='rea-vcover-thumb';
+    var im=document.createElement('img');im.src=cv.src;im.alt='视频封面';th.appendChild(im);
+    var ops=document.createElement('div');ops.className='rea-vcover-ops';
+    var ch=document.createElement('button');ch.type='button';ch.setAttribute('data-vc-change','');ch.textContent='更换';
+    var rm=document.createElement('button');rm.type='button';rm.setAttribute('data-vc-rm','');rm.textContent='删除';
+    ops.appendChild(ch);ops.appendChild(rm);wrap.appendChild(th);wrap.appendChild(ops);box.appendChild(wrap);
+  }
+  box.addEventListener('click',function(e){
+    var t=e.target.closest?e.target.closest('button'):null;if(!t||!box.contains(t))return;
+    if(t.hasAttribute('data-vc-add')||t.hasAttribute('data-vc-change')){input.click();return}
+    if(t.hasAttribute('data-vc-rm')){cv=null;draw()}
+  });
+  input.addEventListener('change',function(){
+    var f=this.files&&this.files[0];this.value='';if(!f)return;
+    if(!/^image\/(png|jpe?g)$/.test(f.type)){msg('封面只支持 png、jpg 图片');return}
+    if(f.size>10*1024*1024){msg('封面图片不能超过 10MB');return}
+    var rd=new FileReader();rd.onload=function(){cv={src:rd.result,name:f.name};draw()};rd.readAsDataURL(f);
+  });
+  draw();
+}
+function bindVideo(c){
+  var row=c.querySelector('[data-wxv-cardb]')&&c.querySelector('[data-wxv-cardb]').children[1];
+  if(!row)return;
+  var btn=row.querySelector('button'),input=row.querySelector('input[type=file]');
+  if(!btn||!input)return;
+  if(!btn._wxv){btn._wxv=true;btn.addEventListener('click',function(){input.click()});
+    input.addEventListener('change',function(){
+      var f=this.files&&this.files[0];if(!f)return;
+      input._fname=f.name;
+      var nm=c.querySelector('[data-wxv-name]');if(nm)nm.textContent=f.name;
+      msg('已上传 '+f.name);
+    });
+  }
+}
+function addCard(){
+  var c=TPL.cloneNode(true);
+  Array.prototype.slice.call(c.querySelectorAll('input,textarea')).forEach(function(i){
+    if(i.type==='radio'||i.type==='checkbox')return;i.value='';
+  });
+  var nm=c.querySelector('[data-wxv-name]');if(nm)nm.textContent='未选择视频';
+  var sm=c.querySelector('[data-wxv-sum]');if(sm)sm.textContent='';
+  cards.appendChild(c);
+  bindCover(c);bindVideo(c);expand(c,true);sync();
+  return c;
+}
+/* 第一条卡挂交互 */
+bindCover(card);bindVideo(card);
+cards.addEventListener('click',function(e){
+  var c=e.target.closest?e.target.closest('[data-wxv-card]'):null;if(!c)return;
+  var t=e.target.closest?e.target.closest('button'):null;if(!t)return;
+  if(t.hasAttribute('data-wxv-toggle')){expand(c,c.getAttribute('data-open')!=='true');return}
+  if(t.hasAttribute('data-wxv-del')){
+    if(cardsAll().length<=1){msg('至少保留一条内容');return}
+    c.parentNode.removeChild(c);sync();return;
+  }
+});
+cards.addEventListener('input',function(e){
+  var c=e.target.closest?e.target.closest('[data-wxv-card]'):null;if(!c)return;
+  var sm=c.querySelector('[data-wxv-sum]');if(!sm)return;
+  var v=(e.target.value||'').replace(/^\s+|\s+$/g,'');
+  if(e.target.tagName==='TEXTAREA'||/文案|标题|话题/.test(e.target.getAttribute('placeholder')||''))
+    sm.textContent=v?(v.length>16?v.slice(0,16)+'…':v):'';
+});
+head.querySelector('[data-wxv-add]').addEventListener('click',function(){addCard()});
+/* 保存：每条内容必须有视频 */
+var saveBtn=null;
+Array.prototype.slice.call(PARENT.querySelectorAll('button')).forEach(function(b){if(txt(b)==='保存')saveBtn=b});
+if(saveBtn)saveBtn.addEventListener('click',function(){
+  var bad=false;
+  cardsAll().forEach(function(c){
+    var row=c.querySelector('[data-wxv-cardb]').children[1];
+    var input=row?row.querySelector('input[type=file]'):null;
+    if(!input||!input._fname){bad=true;expand(c,true)}
+  });
+  if(bad){msg('请先上传每条内容的视频');return}
+  msg('任务已保存');
+});
+sync();
 })();`;
   }
 
@@ -31702,7 +32138,31 @@ host.parentNode.insertBefore(row,host.nextSibling);
     '.rea-wxv-play::after{content:"";position:absolute;left:22px;top:17px;border-style:solid;border-width:11px 0 11px 18px;border-color:transparent transparent transparent #fff}',
     '.rea-wxv-video em{position:relative;font-style:normal;font-size:13px;color:#C9CED6}',
     '.rea-wxv-meta{margin:12px 0 0;font-size:13px;line-height:20px;color:#646A73;text-align:center}',
-    '.rea-vcover-demo{display:inline-flex;align-items:center;justify-content:center;width:44px;height:59px;border-radius:4px;background:linear-gradient(135deg,#DCEBFF,#F5F8FF);color:#1677FF;font-size:11px;line-height:1.4;text-align:center}'
+    '.rea-vcover-demo{display:inline-flex;align-items:center;justify-content:center;width:44px;height:59px;border-radius:4px;background:linear-gradient(135deg,#DCEBFF,#F5F8FF);color:#1677FF;font-size:11px;line-height:1.4;text-align:center}',
+    '.rea-wxv-chead{display:flex;align-items:center;gap:12px;padding:12px 0 4px;width:1020px}',
+    '.rea-wxv-ctitle{font-size:14px;font-weight:500;color:#1F2329}',
+    '.rea-wxv-cnt{color:#646A73;font-size:12px}',
+    '.rea-wxv-chead .ant-btn{margin-left:auto}',
+    '.rea-wxv-hint{margin:0 0 10px;color:#8F959E;font-size:12px;line-height:1.5;width:1020px}',
+    '.rea-wxv-cards{display:flex;flex-direction:column;gap:10px;width:1020px}',
+    '.rea-wxv-card{border:1px solid #E5E8EF;border-radius:10px;background:#fff;overflow:hidden}',
+    '.rea-wxv-card[data-open="true"]{border-color:#BBD9FF;box-shadow:0 0 0 3px rgba(22,119,255,.08)}',
+    '.rea-wxv-cardh{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#F7F8FA}',
+    '.rea-wxv-toggle{flex:1;display:flex;align-items:center;gap:10px;min-width:0;padding:0;border:0;background:none;color:#1F2329;font:inherit;font-size:13px;text-align:left;cursor:pointer}',
+    '.rea-wxv-no{flex:none;display:flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#E6F4FF;color:#1677FF;font-size:12px}',
+    '.rea-wxv-name{flex:none;max-width:42%;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+    '.rea-wxv-sum{flex:1;min-width:0;color:#8F959E;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+    '.rea-wxv-del{flex:none;width:26px;height:26px;border:0;border-radius:6px;background:none;color:#8F959E;font-size:18px;line-height:1;cursor:pointer}',
+    '.rea-wxv-del:hover{background:#FFF1F0;color:#FF4D4F}',
+    '.rea-wxv-cardb{padding:4px 12px 12px}',
+    '.rea-wxv-card[data-open="false"] .rea-wxv-cardb{display:none}',
+    '.rea-wxv-clist{display:flex;flex-direction:column;gap:8px}',
+    '.rea-wxv-crow{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #F0F2F5}',
+    '.rea-wxv-cno{flex:none;display:flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#E6F4FF;color:#1677FF;font-size:12px}',
+    '.rea-wxv-cmain{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}',
+    '.rea-wxv-cmain b{font-size:13px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+    '.rea-wxv-cmain em{font-style:normal;color:#8F959E;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+    '.rea-wxv-cnum{flex:none;color:#646A73;font-size:12px}'
   ].join('\n');
 
   /* ============================================================
@@ -36748,57 +37208,220 @@ if(PAGE==="new"){
   $("[data-dy-notify-time]").value="14:44";
   $("[data-dy-end-date]").value=ymd(end);
   $("[data-dy-end-time]").value="14:44";
-  function syncCounts(){$$("[data-dy-count-for]").forEach(function(sp){
-    var i=document.getElementById(sp.getAttribute("data-dy-count-for"));
-    if(i)sp.textContent=i.value.length+"/"+(i.getAttribute("maxlength")||"")})}
-  $$("#dyTaskName,#dyCopy,#dyTitle").forEach(function(i){i.addEventListener("input",syncCounts)});
-  syncCounts();
-  function setTab(k){
-    $$("[data-dy-tab]").forEach(function(b){var on=b.getAttribute("data-dy-tab")===k;
-      b.classList.toggle("on",on);b.setAttribute("aria-selected",on?"true":"false")});
-    $$("[data-dy-panel]").forEach(function(p){p.hidden=p.getAttribute("data-dy-panel")!==k});
+  var DEPT_COUNT={"销售一部":6,"销售二部":8,"产品部":5,"测试环境雅楠公司":3};
+  var MODE="ai",M=0,BOX=$("[data-dy-cards]"),TPL=BOX.firstElementChild.cloneNode(true);
+  function inner(sel,c){return Array.prototype.slice.call((c||document).querySelectorAll(sel))}
+  function cards(){return inner("[data-dy-card]",BOX)}
+  function cardFile(c){var f=$("[data-dy-file]",c);return f&&!f.hidden?(f.textContent||"").replace(/^\s+|\s+$/g,""):""}
+  function renumber(){cards().forEach(function(c,i){var n=$("[data-dy-cardno]",c);if(n)n.textContent=String(i+1)})}
+  function sync(){
+    var N=cards().length,over=N>M?N-M:0,i,k,counts=[],groups={},parts=[];
+    $("[data-dy-cnt]").textContent=N+" 条内容 / "+M+" 位执行人员";
+    if(!M)parts=["选择执行人员后显示分配结果"];
+    else if(over)parts=["前 "+M+" 条下发，"+over+" 条不下发"];
+    else{
+      for(k=0;k<N;k++)counts.push(0);
+      for(i=0;i<M;i++)counts[i%N]++;
+      for(k=0;k<N;k++)if(counts[k]>1){(groups[counts[k]]=groups[counts[k]]||[]).push("第 "+(k+1)+" 条")}
+      Object.keys(groups).forEach(function(n){var a=groups[n];parts.push(a.join("、")+(a.length>1?"各有 ":"有 ")+n+" 人发布")});
+      if(!parts.length)parts=["每人 1 条，内容不重复"];
+    }
+    $("[data-dy-hint]").textContent=parts.join("；");
+    renumber();
   }
-  $$("[data-dy-tab]").forEach(function(b){b.addEventListener("click",function(){setTab(b.getAttribute("data-dy-tab"))})});
-  function bindAdd(row){
-    var b=$("[data-dy-add]",row);if(!b||b._bound)return;b._bound=true;
-    b.addEventListener("click",function(){
-      var c=row.cloneNode(true);
-      $$("input",c).forEach(function(i){i.value=""});
-      var cb=$("[data-dy-add]",c);if(cb)cb._bound=false;
-      row.parentNode.appendChild(c);bindAdd(c);
+  function expand(c,on){
+    cards().forEach(function(x){
+      var open=x===c?on:false;
+      x.setAttribute("data-open",open?"true":"false");
+      var t=$("[data-dy-toggle]",x);if(t)t.setAttribute("aria-expanded",open?"true":"false");
     });
   }
-  $$(".rea-dy-multi-row").forEach(bindAdd);
-  function showErr(k,on){var p=$('[data-dy-err="'+k+'"]');if(p)p.hidden=!on}
-  $("[data-dy-upload]").addEventListener("click",function(){
-    var f=$("[data-dy-file]");f.hidden=false;f.textContent="demo-video.mp4";showErr("video",false)});
-  var cu=$("[data-dy-upload-copy]");if(cu)cu.addEventListener("click",function(){
-    var f=$("[data-dy-copy-file]");f.hidden=false;f.textContent="文案模板.xlsx"});
-  var tpl=$("[data-dy-template]");if(tpl)tpl.addEventListener("click",function(e){e.preventDefault();toast("模板已下载")});
+  function setFile(c,name){
+    var f=$("[data-dy-file]",c);if(f){f.hidden=false;f.textContent=name}
+    var nm=$("[data-dy-cardname]",c);if(nm)nm.textContent=name;
+    var er=$('[data-dy-err="video"]',c);if(er)er.hidden=true;
+  }
+  function sortCards(){
+    var list=cards();
+    list.sort(function(a,b){
+      var fa=cardFile(a),fb=cardFile(b);
+      if(fa&&fb)return fa.localeCompare(fb,"zh");
+      if(fa)return -1;if(fb)return 1;return 0;
+    });
+    list.forEach(function(c){BOX.appendChild(c)});
+    renumber();sync();
+  }
+  function bindCover(c){
+    var box=$("[data-dy-cover]",c),input=$("[data-dy-coverinput]",c),cover=null;
+    if(!box||!input)return;
+    function draw(){
+      box.innerHTML="";
+      if(!cover){
+        var add=document.createElement("button");add.type="button";add.className="rea-vcover-add";add.setAttribute("data-vc-add","");
+        var b=document.createElement("b");b.textContent="+";add.appendChild(b);
+        add.appendChild(document.createTextNode("上传封面"));box.appendChild(add);return;
+      }
+      var wrap=document.createElement("div");wrap.className="rea-vcover-box";
+      var th=document.createElement("div");th.className="rea-vcover-thumb";
+      var im=document.createElement("img");im.src=cover.src;im.alt="视频封面";th.appendChild(im);
+      var ops=document.createElement("div");ops.className="rea-vcover-ops";
+      var ch=document.createElement("button");ch.type="button";ch.setAttribute("data-vc-change","");ch.textContent="更换";
+      var rm=document.createElement("button");rm.type="button";rm.setAttribute("data-vc-rm","");rm.textContent="删除";
+      ops.appendChild(ch);ops.appendChild(rm);wrap.appendChild(th);wrap.appendChild(ops);box.appendChild(wrap);
+    }
+    box.addEventListener("click",function(e){
+      var t=e.target.closest?e.target.closest("button"):null;if(!t||!box.contains(t))return;
+      if(t.hasAttribute("data-vc-add")||t.hasAttribute("data-vc-change")){input.click();return}
+      if(t.hasAttribute("data-vc-rm")){cover=null;draw()}
+    });
+    input.addEventListener("change",function(){
+      var f=this.files&&this.files[0];this.value="";if(!f)return;
+      if(!/^image\/(png|jpe?g)$/.test(f.type)){toast("封面只支持 png、jpg 图片");return}
+      if(f.size>10*1024*1024){toast("封面图片不能超过 10MB");return}
+      var rd=new FileReader();
+      rd.onload=function(){cover={src:rd.result,name:f.name};draw()};
+      rd.readAsDataURL(f);
+    });
+    draw();
+  }
+  function applyMode(){
+    inner("[data-dy-tab]").forEach(function(b){
+      var on=b.getAttribute("data-dy-tab")===MODE;
+      b.classList.toggle("on",on);b.setAttribute("aria-selected",on?"true":"false");
+    });
+    $("[data-dy-importrow]").hidden=MODE!=="import";
+    cards().forEach(function(c){
+      var ai=$('[data-dy-copy="ai"]',c),man=$('[data-dy-copy="manual"]',c);
+      if(ai)ai.hidden=MODE!=="ai";
+      if(man)man.hidden=MODE==="ai";
+    });
+  }
+  function addCard(name){
+    var c=TPL.cloneNode(true);
+    inner("input,textarea",c).forEach(function(i){
+      if(i.type==="radio"||i.type==="checkbox"||i.type==="file")return;
+      i.value="";
+    });
+    inner("[data-dy-file]",c).forEach(function(x){x.hidden=true;x.textContent=""});
+    var nm=$("[data-dy-cardname]",c);if(nm)nm.textContent="未选择视频";
+    var sm=$("[data-dy-cardsum]",c);if(sm)sm.textContent="";
+    var er=$('[data-dy-err="video"]',c);if(er)er.hidden=true;
+    BOX.appendChild(c);
+    bindCover(c);
+    if(name)setFile(c,name);
+    expand(c,true);applyMode();sync();
+    return c;
+  }
+  function genCopy(c){
+    var no=$("[data-dy-cardno]",c).textContent;
+    $('[data-dy-copy="ai"] [data-dy-field="copy"]',c).value="秋季新品到店，第 "+no+" 条视频，到店试戴有礼。";
+    $('[data-dy-copy="ai"] [data-dy-field="title"]',c).value="秋季新品到店";
+    $('[data-dy-copy="ai"] [data-dy-field="topic"]',c).value="#秋季新品#到店有礼";
+    var cc=$('[data-dy-cc="copy"]',c),tc=$('[data-dy-cc="title"]',c);
+    if(cc)cc.textContent="30/1000";
+    if(tc)tc.textContent="6/20";
+    toast("已生成，可继续修改");
+  }
+  function syncCounts(){inner("[data-dy-count-for]").forEach(function(sp){
+    var i=document.getElementById(sp.getAttribute("data-dy-count-for"));
+    if(i)sp.textContent=i.value.length+"/"+(i.getAttribute("maxlength")||"")})}
+  inner("#dyTaskName").forEach(function(i){i.addEventListener("input",syncCounts)});
+  syncCounts();
+  $("#dyOrg").addEventListener("change",function(){M=DEPT_COUNT[this.value]||0;sync()});
+  inner("[data-dy-tab]").forEach(function(b){b.addEventListener("click",function(){MODE=b.getAttribute("data-dy-tab");applyMode()})});
+  inner("[data-dy-template]").forEach(function(a){a.addEventListener("click",function(e){e.preventDefault();toast("模板已下载")})});
+  $("[data-dy-addfile]").addEventListener("click",function(){$("[data-dy-addinput]").click()});
+  $("[data-dy-addinput]").addEventListener("change",function(){
+    var fs=Array.prototype.slice.call(this.files||[]);this.value="";
+    if(!fs.length)return;
+    var room=50-cards().length;
+    if(fs.length>room){toast("一个任务最多 50 条内容");fs=fs.slice(0,room)}
+    fs.sort(function(a,b){return a.name.localeCompare(b.name,"zh")});
+    fs.forEach(function(f){addCard(f.name)});
+    sortCards();
+  });
+  $("[data-dy-importbtn]").addEventListener("click",function(){$("[data-dy-importinput]").click()});
+  $("[data-dy-importinput]").addEventListener("change",function(){
+    var f=this.files&&this.files[0];this.value="";if(!f)return;
+    var chip=$("[data-dy-importfile]");chip.hidden=false;chip.textContent=f.name;
+    cards().forEach(function(c,i){
+      var cp=$('[data-dy-copy="manual"] [data-dy-field="copy"]',c);
+      var tp=$('[data-dy-copy="manual"] [data-dy-field="topic"]',c);
+      var ti=$('[data-dy-copy="manual"] [data-dy-field="title"]',c);
+      if(cp)cp.value="秋季新品第 "+(i+1)+" 条文案，到店试戴有礼";
+      if(tp)tp.value="#秋季新品#第"+(i+1)+"条";
+      if(ti)ti.value="秋季新品第 "+(i+1)+" 条";
+      var sm=$("[data-dy-cardsum]",c);if(sm)sm.textContent="秋季新品第 "+(i+1)+" 条文案";
+    });
+    toast("已导入 "+cards().length+" 条文案");
+  });
+  BOX.addEventListener("click",function(e){
+    var c=e.target.closest?e.target.closest("[data-dy-card]"):null;if(!c)return;
+    var t=e.target.closest?e.target.closest("button"):null;if(!t)return;
+    if(t.hasAttribute("data-dy-toggle")){expand(c,c.getAttribute("data-open")!=="true");return}
+    if(t.hasAttribute("data-dy-carddel")){
+      if(cards().length<=1){toast("至少保留一条内容");return}
+      c.parentNode.removeChild(c);sync();return;
+    }
+    if(t.hasAttribute("data-dy-upload")){$("[data-dy-vinput]",c).click();return}
+    if(t.hasAttribute("data-dy-gen")){genCopy(c);return}
+    if(t.hasAttribute("data-dy-add")){
+      var row=t.parentNode,mr=row.cloneNode(true);
+      inner("input",mr).forEach(function(i){i.value=""});
+      row.parentNode.appendChild(mr);return;
+    }
+  });
+  BOX.addEventListener("change",function(e){
+    var c=e.target.closest?e.target.closest("[data-dy-card]"):null;if(!c)return;
+    if(e.target.hasAttribute("data-dy-vinput")){
+      var f=e.target.files&&e.target.files[0];if(!f)return;
+      setFile(c,f.name);sortCards();
+    }
+  });
+  BOX.addEventListener("input",function(e){
+    var c=e.target.closest?e.target.closest("[data-dy-card]"):null;if(!c)return;
+    if(e.target.getAttribute("data-dy-field")==="copy"){
+      var v=(e.target.value||"").replace(/^\s+|\s+$/g,"");
+      var sm=$("[data-dy-cardsum]",c);
+      if(sm)sm.textContent=v?(v.length>16?v.slice(0,16)+"…":v):"";
+    }
+    var cc=e.target.parentNode?e.target.parentNode.querySelector("[data-dy-cc]"):null;
+    if(cc)cc.textContent=(e.target.value||"").length+"/"+(e.target.getAttribute("maxlength")||"");
+  });
   $("[data-dy-global]").addEventListener("click",function(){
     var on=this.getAttribute("aria-checked")==="true";this.setAttribute("aria-checked",on?"false":"true")});
   $("[data-dy-form]").addEventListener("submit",function(e){
     e.preventDefault();
-    var bad=false,org=$("#dyOrg"),name=$("#dyTaskName"),noVideo=$("[data-dy-file]").hidden;
+    var bad=false,org=$("#dyOrg"),name=$("#dyTaskName"),missing=null;
+    function showErr(k,on){var p=$('[data-dy-err="'+k+'"]');if(p)p.hidden=!on}
     showErr("org",!org.value);if(!org.value)bad=true;
     showErr("name",!name.value.replace(/^\s+|\s+$/g,""));if(!name.value.replace(/^\s+|\s+$/g,""))bad=true;
-    showErr("video",noVideo);if(noVideo)bad=true;
-    if(bad){var first=$(".rea-dy-err:not([hidden])");if(first)first.scrollIntoView({block:"center"});return}
+    cards().forEach(function(c){
+      if(!cardFile(c)){var er=$('[data-dy-err="video"]',c);if(er)er.hidden=false;if(!missing)missing=c}
+    });
+    if(missing){expand(missing,true);bad=true}
+    if(bad){var first=$(".rea-dy-err:not([hidden])");if(first&&first.scrollIntoView)first.scrollIntoView({block:"center"});return}
     toast("任务已保存");
     setTimeout(function(){go(LIST)},700);
   });
+  bindCover(cards()[0]);applyMode();sync();
   $$("[data-dy-cancel],[data-dy-back]").forEach(function(b){
     b.addEventListener("click",function(e){e.preventDefault();go(LIST)})});
 }
-
 if(PAGE==="detail"){
-  /* 配置快照抽屉由 reaWxSnapshotDrawerJs 挂；这里只管「发布视频」预览弹窗与它的遮罩。 */
-  var mask=$("[data-dy-mask]"),modal=$("[data-dy-modal]");
+  /* 配置快照抽屉由 reaWxSnapshotDrawerJs 挂；这里只管「发布视频」预览弹窗、发布内容清单弹窗与遮罩。 */
+  var mask=$("[data-dy-mask]"),modal=$("[data-dy-modal]"),cm=$("[data-dy-cmodal]");
   function closeVideo(){mask.hidden=true;modal.hidden=true}
+  function closeContents(){if(cm)cm.hidden=true}
   $("[data-dy-close-video]").addEventListener("click",closeVideo);
   mask.addEventListener("click",closeVideo);
-  document.addEventListener("keydown",function(e){if(e.key==="Escape")closeVideo()});
-  $("[data-dy-video]").addEventListener("click",function(e){e.preventDefault();mask.hidden=false;modal.hidden=false});
+  if(cm){
+    var cb=$("[data-dy-contents]");if(cb)cb.addEventListener("click",function(){cm.hidden=false});
+    var cx=$("[data-dy-close-contents]",cm);if(cx)cx.addEventListener("click",closeContents);
+    cm.addEventListener("click",function(e){if(e.target===cm)closeContents()});
+  }
+  document.addEventListener("keydown",function(e){if(e.key==="Escape"){closeVideo();closeContents()}});
+  $$("[data-dy-video]").forEach(function(a){a.addEventListener("click",function(e){e.preventDefault();mask.hidden=false;modal.hidden=false})});
   $("[data-dy-export]").addEventListener("click",function(){toast("已导出")});
   $$("[data-dy-back]").forEach(function(b){b.addEventListener("click",function(e){e.preventDefault();go(LIST)})});
   var df=$("[data-dy-dfilter]");if(df)df.addEventListener("submit",function(e){e.preventDefault();toast("已按筛选条件查询")});
@@ -37406,6 +38029,34 @@ if(PAGE==="detail"){
 .rea-xn-filters--d{margin-bottom:12px}
 @media (max-width:1100px){.rea-xn-info{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:720px){.rea-xn-info{grid-template-columns:1fr}}
+
+/* ---------- 发布内容·多内容折叠卡 ---------- */
+.rea-xn-secact{margin-left:auto;display:flex;align-items:center;gap:12px}
+.rea-xn-cnt{color:#646A73;font-size:12px}
+.rea-xn-hint{margin:0 0 12px 96px;color:#8F959E;font-size:12px;line-height:1.5}
+.rea-xn-cards{display:flex;flex-direction:column;gap:10px}
+.rea-xn-card{border:1px solid #E5E8EF;border-radius:10px;background:#fff;overflow:hidden}
+.rea-xn-card[data-open="true"]{border-color:#BBD9FF;box-shadow:0 0 0 3px rgba(22,119,255,.08)}
+.rea-xn-card-h{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#F7F8FA}
+.rea-xn-card-toggle{flex:1;display:flex;align-items:center;gap:10px;min-width:0;padding:0;border:0;
+  background:none;color:#1F2329;font:inherit;font-size:13px;text-align:left;cursor:pointer}
+.rea-xn-cardno{flex:none;display:flex;align-items:center;justify-content:center;width:22px;height:22px;
+  border-radius:50%;background:#E6F4FF;color:#1677FF;font-size:12px}
+.rea-xn-cardname{flex:none;max-width:42%;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rea-xn-cardsum{flex:1;min-width:0;color:#8F959E;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rea-xn-carddel{flex:none;width:26px;height:26px;border:0;border-radius:6px;background:none;color:#8F959E;
+  font-size:18px;line-height:1;cursor:pointer}
+.rea-xn-carddel:hover{background:#FFF1F0;color:#FF4D4F}
+.rea-xn-card-b{padding:4px 12px 12px}
+.rea-xn-card[data-open="false"] .rea-xn-card-b{display:none}
+.rea-xn-cmodal{width:520px}
+.rea-xn-crow{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #F0F2F5}
+.rea-xn-cno{flex:none;display:flex;align-items:center;justify-content:center;width:22px;height:22px;
+  border-radius:50%;background:#E6F4FF;color:#1677FF;font-size:12px}
+.rea-xn-cmain{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.rea-xn-cmain b{font-size:13px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rea-xn-cmain em{font-style:normal;color:#8F959E;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rea-xn-cpeople{flex:none;color:#646A73;font-size:12px}
 `;
 
   /* 小红书运营三页的补充样式（2026-11-23）：在 REA_XN_CSS 之上只加这几页要用的件——
@@ -37852,7 +38503,7 @@ draw();
     [REA_WX_VIDEO_DETAIL]: { css: REA_WX_DETAIL_CSS + REA_WX_SNAP_CSS + REA_WXV_CSS, js: function(){ return reaWxVideoDetailJs() + reaWxSnapshotDrawerJs(REA_WX_VIDEO_DETAIL); } },
     /* 视频号发布任务 · 新建（2026-11-24）：正文与样式仍是快照那一页，只在「上传视频」后
        插一行「视频封面」，所以只带封面部件的样式与脚本。 */
-    [REA_WX_VIDEO_NEW]: { css: REA_VC_CSS, js: function(){ return reaWxVideoNewJs(); } },
+    [REA_WX_VIDEO_NEW]: { css: REA_VC_CSS + REA_WXV_CSS, js: function(){ return reaWxVideoNewJs(); } },
     /* 客户唤醒 · 新建（2026-11-11）：单位下拉、执行人员、添加回复内容弹窗（固定内容／AI 两套）
        ＋ 唤醒内容行的增删改；正文与设计语言都还是快照，只补交互 */
     '客户唤醒 · 新建': { css: REA_HX_CSS, js: reaHxJs },
@@ -38481,13 +39132,13 @@ draw();
     ],
     '视频号发布任务': [
       { c: { '任务名称': '视频号新品发布', '视频文案': '秋季新品开箱视频，30 秒竖版', '视频话题': '#秋季新品 #开箱',
-             '执行人员': '王强 等 6 人', '发布时间': '2026-10-25 10:00', '创建时间': '2026-10-24 18:00',
+             '执行人员': '王强 等 6 人', '发布内容': '2 条', '发布时间': '2026-10-25 10:00', '创建时间': '2026-10-24 18:00',
              '创建人': '王强' }, d: 3, t: 6 },
       { c: { '任务名称': '门店探店视频', '视频文案': '门店探店 vlog，门店实拍', '视频话题': '#探店 #门店',
-             '执行人员': '张伟 等 4 人', '发布时间': '2026-10-18 15:00', '创建时间': '2026-10-17 20:00',
+             '执行人员': '张伟 等 4 人', '发布内容': '3 条', '发布时间': '2026-10-18 15:00', '创建时间': '2026-10-17 20:00',
              '创建人': '张伟' }, d: 4, t: 4 },
       { c: { '任务名称': '客户案例分享', '视频文案': '客户案例访谈，成片 1 分钟', '视频话题': '#客户案例',
-             '执行人员': '李娜 等 5 人', '发布时间': '2026-11-02 11:00', '创建时间': '2026-10-28 16:00',
+             '执行人员': '李娜 等 5 人', '发布内容': '1 条', '发布时间': '2026-11-02 11:00', '创建时间': '2026-10-28 16:00',
              '创建人': '李娜' }, d: 0, t: 5 }
     ],
     '客户唤醒': [
@@ -38519,6 +39170,22 @@ draw();
   function reaProgJs(curName){
    var rows = REA_TASK_PROG[curName];
    if (!rows) return '';
+   var hasContents = !!(rows.length && rows[0].c && rows[0].c['发布内容'] != null);
+   var extra = hasContents ? [
+    'var ci=-1;for(i=0;i<TH.length;i++){if(txt(TH[i])==="执行人员"){ci=i;break}}',
+    'if(ci>=0){',
+    '  var eth=document.createElement("th");eth.className="ant-table-cell";eth.setAttribute("scope","col");',
+    '  eth.textContent="发布内容";TH[ci].parentNode.insertBefore(eth,TH[ci].nextSibling);',
+    '  var ecg=document.querySelectorAll("colgroup");',
+    '  for(j=0;j<ecg.length;j++){if(ecg[j].children.length!==N0+1)continue;',
+    '    var ecol=document.createElement("col");ecol.style.width="96px";',
+    '    ecg[j].insertBefore(ecol,ecg[j].children[ci+1]||null);}',
+    '  var emr=tb.querySelector("tr.ant-table-measure-row");',
+    '  if(emr&&emr.children[ci]){var emh=document.createElement("th");emh.className="ant-table-measure-cell";',
+    '    emh.innerHTML="<div class=\\"ant-table-measure-cell-content\\">发布内容</div>";',
+    '    emr.insertBefore(emh,emr.children[ci+1]||null);}',
+    '}'
+   ].join('\n') : '';
    return [
     '(function(){',
     'var ROWS=' + reaJson(rows) + ',CHK=' + reaJson(REA_CELL.chk) + ',OPS=' + reaJson(REA_CELL.ops) + ';',
@@ -38542,6 +39209,7 @@ draw();
     '  mh.innerHTML="<div class=\\"ant-table-measure-cell-content\\">完成进度</div>";',
     '  mr.insertBefore(mh,mr.children[si+1]||null);}',
     /* 清空原有行（快照样例行／空表占位行），只留测宽行——倒序删，live 集合才不会跳元素 */
+    extra,
     'var olds=tb.querySelectorAll("tr");',
     'for(j=olds.length-1;j>=0;j--){if(olds[j].classList.contains("ant-table-measure-row"))continue;',
     '  tb.removeChild(olds[j]);}',
