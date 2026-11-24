@@ -19330,10 +19330,6 @@ render();
           <div class="_upload_box_lzm36_100"><span class="ant-input-affix-wrapper css-vgijab ant-input-outlined"><input id="xnTaskName" maxlength="21" autocomplete="off" placeholder="请输入任务名称" class="ant-input css-vgijab" type="text"><span class="ant-input-suffix"><span class="ant-input-show-count-suffix" data-xn-count-for="xnTaskName">0 / 21</span></span></span></div>
         </div>
         <div class="_form_input_lzm36_71">
-          <span class="_must_white_lzm36_76">素材来源</span>
-          <div class="_upload_box_lzm36_100"><div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small"><div class="ant-space-item"><button type="button" class="ant-btn css-vgijab ant-btn-primary ant-btn-color-primary ant-btn-variant-solid" data-xn-source="临时创建"><span>临时创建</span></button></div><div class="ant-space-item"><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-source="AI生成"><span>AI生成</span></button></div></div></div>
-        </div>
-        <div class="_form_input_lzm36_71">
           <span class="_must_white_lzm36_76">发布类型</span>
           <div class="_upload_box_lzm36_100"><div class="ant-radio-group ant-radio-group-outline css-vgijab" data-xn-type>
             <label class="ant-radio-wrapper ant-radio-wrapper-checked css-vgijab"><span class="ant-radio ant-wave-target ant-radio-checked"><input name="xnType" class="ant-radio-input" type="radio" value="发图文" checked><span class="ant-radio-inner"></span></span><span class="ant-radio-label">发图文</span></label>
@@ -25588,7 +25584,7 @@ function pad(n){return (n<10?'0':'')+n}
 function ymd(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
 function hm(d){return pad(d.getHours())+':'+pad(d.getMinutes())}
 function stamp(){var d=new Date();return ymd(d)+' '+hm(d)}
-var TYPE='发图文',SOURCE='临时创建',M=2;
+var TYPE='发图文',M=2;
 var nameInput=$('#xnTaskName');
 function syncCount(){
   $$('[data-xn-count-for]').forEach(function(sp){
@@ -25637,17 +25633,6 @@ function applyType(){
   var a=$('[data-xn-section="image"]'),b=$('[data-xn-section="video"]'),d=$('[data-xn-section="copyimage"]');
   if(a)a.hidden=isVideo||isCopy;if(b)b.hidden=!isVideo;if(d)d.hidden=!isCopy;
 }
-function setSource(src){
-  SOURCE=src;
-  $$('[data-xn-source]').forEach(function(b){
-    var on=b.getAttribute('data-xn-source')===src;
-    b.classList.toggle('ant-btn-primary',on);b.classList.toggle('ant-btn-color-primary',on);b.classList.toggle('ant-btn-variant-solid',on);
-    b.classList.toggle('ant-btn-default',!on);b.classList.toggle('ant-btn-color-default',!on);b.classList.toggle('ant-btn-variant-outlined',!on);
-  });
-}
-$$('[data-xn-source]').forEach(function(b){b.addEventListener('click',function(){
-  setSource(b.getAttribute('data-xn-source'));
-})});
 $$('[data-xn-type] input').forEach(function(r){r.addEventListener('change',function(){if(r.checked){TYPE=r.value;applyType()}})});
 var typeGroup=$('[data-xn-type]');
 if(typeGroup)typeGroup.addEventListener('click',function(){
@@ -25660,7 +25645,7 @@ $('[data-xn-addimg]').addEventListener('click',function(){IMG.pickVideos()});
 $('[data-xn-addtxtimg]').addEventListener('click',function(){IMG2.addRow()});
 $('[data-xn-addvid]').addEventListener('click',function(){VID.pickVideos()});
 $('[data-xn-addcover]').addEventListener('click',function(){VID.pickCovers()});
-applyType();setSource('临时创建');
+applyType();
 /* 添加文案弹窗：对当前发布类型的素材表生效 */
 var ADDMODAL=$('[data-dy-addmodal]');
 function addModalHasCopy(b){
@@ -31895,14 +31880,12 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
         ]},
         {title:'发布内容',variants:[
           {type:'发图文',rows:[
-            {label:'素材来源',value:'临时创建'},
             {label:'发布类型',value:'发图文'},
             {label:'共 2 条',value:'2 条'},
             {label:'内容 1',value:'门店新品 1.jpg 等 3 张 · 秋季新品到店'},
             {label:'内容 2',value:'门店新品 4.jpg 等 2 张 · 秋季新品到店（第二条）'}
           ]},
           {type:'发视频',rows:[
-            {label:'素材来源',value:'临时创建'},
             {label:'发布类型',value:'发视频'},
             {label:'共 2 条',value:'2 条'},
             {label:'内容 1',value:'门店探店 vlog.mp4 · 门店探店 vlog'},
@@ -31910,11 +31893,10 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
             {label:'视频封面',preview:true}
           ]},
           {type:'发文案配图',rows:[
-            {label:'素材来源',value:'临时创建'},
             {label:'发布类型',value:'发文案配图'},
             {label:'共 2 条',value:'2 条'},
-            {label:'内容 1',value:'门店新品 1.jpg 等 3 张 · 秋季新品到店'},
-            {label:'内容 2',value:'门店新品 4.jpg 等 2 张 · 秋季新品到店（第二条）'}
+            {label:'内容 1',value:'秋季新品上新 · 秋季新品到店 · #秋季新品'},
+            {label:'内容 2',value:'秋季新品第二弹 · 到店试戴有礼 · #秋季新品'}
           ]}
         ]},
         {title:'分配结果',rows:[
