@@ -20130,7 +20130,7 @@ render();
         <div class="_form_input_lzm36_71 rea-dy-row--wide">
           <span class="_must_white_lzm36_76">发布内容</span>
           <div class="_upload_box_lzm36_100">
-            <div class="rea-dy-bulkbar"><span class="rea-dy-bulkcnt" data-dy-cnt>0 条内容 / 0 位执行人员</span><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-addfile><span>+ 添加视频</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-addcover><span>+ 添加封面</span></button></div>
+            <div class="rea-dy-bulkbar"><span class="rea-dy-bulkcnt" data-dy-cnt>0 条内容 / 0 位执行人员</span><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-addfile><span>+ 添加视频</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-addcover><span>+ 添加封面</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-importshortcut><span>导入文案</span></button></div>
             <div data-dy-bulk></div>
             <p class="rea-dy-adminerr" data-dy-err="video" hidden>请添加视频</p>
           </div>
@@ -37582,8 +37582,22 @@ if(PAGE==="new"){
     }
   });
   /* 文案类型那排是抓存页的 AntD 分段控件，切它等于切共用件的文案模式 */
+  function selectCopyMode(mode){
+    $$("[data-dy-modes] input").forEach(function(r){
+      r.checked = r.value===mode;
+      var bw=r.closest(".ant-radio-button-wrapper");if(bw)bw.classList.toggle("ant-radio-button-wrapper-checked",r.checked);
+      var ba=r.closest(".ant-radio-button");if(ba)ba.classList.toggle("ant-radio-button-checked",r.checked);
+    });
+    BULK.setMode(mode);
+  }
   $$("[data-dy-modes] input").forEach(function(r){
-    r.addEventListener("change",function(){ if(r.checked)BULK.setMode(r.value); });
+    r.addEventListener("change",function(){ if(r.checked)selectCopyMode(r.value); });
+  });
+  var importShortcut=$("[data-dy-importshortcut]");
+  if(importShortcut)importShortcut.addEventListener("click",function(){
+    if(!BULK.getState().videos.length){toast("先添加视频");return}
+    selectCopyMode("import");
+    setTimeout(function(){if(IMPROW&&IMPROW.scrollIntoView)IMPROW.scrollIntoView({block:"center"})},60);
   });
   var impBtn=$("[data-dy-importbtn]");if(impBtn)impBtn.addEventListener("click",function(){BULK.pickImport()});
   var tplBtn=$("[data-dy-template]");if(tplBtn)tplBtn.addEventListener("click",function(e){e.preventDefault();toast("模板已下载")});
