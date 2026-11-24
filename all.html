@@ -20153,10 +20153,7 @@ render();
             </div>
           </div>
         </div>
-        <div class="_form_input_lzm36_71 rea-dy-row--wide" data-dy-copyrow style="display:none;align-items:flex-start">
-          <span class="_must_white1_lzm36_76">文案</span>
-          <div class="_upload_box_lzm36_100"><div data-dy-copy></div></div>
-        </div>
+        <div data-dy-copy hidden></div>
         <div class="_form_input_lzm36_71">
           <span class="_must_white_lzm36_76">推广类型</span>
           <div class="_upload_box_lzm36_100">
@@ -37282,11 +37279,17 @@ syncTip();drawRows();
       }
       tr.appendChild(tdC);
       var pair=pairFor(i);
-      var tdT=el('td','rea-bulk-cell'); setCell(tdT,pair.title); tr.appendChild(tdT);
-      var tdTopic=el('td','rea-bulk-cell'); setCell(tdTopic,pair.topic); tr.appendChild(tdTopic);
-      var tdCopy=el('td','rea-bulk-cell');
-      var disp=pair.copy ? (pair.groups>1 ? short(pair.copy,18)+' · '+pair.groups+' 组' : short(pair.copy,18)) : '';
-      tdCopy.textContent=disp||'—'; tdCopy.title=pair.copy||''; tdCopy.classList.toggle('is-empty',!pair.copy); tr.appendChild(tdCopy);
+      if(opts.inlineCopy){
+        var tdT=el('td','rea-bulk-cell'); var ti=el('input','rea-bulk-tinput'); ti.type='text'; ti.maxLength=20; ti.value=pair.title; ti.placeholder=labels.title||'标题'; ti.setAttribute('data-bulk-inline','title'); ti.setAttribute('data-row',String(i)); ti.setAttribute('aria-label',ti.placeholder); tdT.appendChild(ti); tr.appendChild(tdT);
+        var tdTopic=el('td','rea-bulk-cell'); var tpi=el('input','rea-bulk-tinput'); tpi.type='text'; tpi.value=pair.topic; tpi.placeholder=labels.topic||'话题'; tpi.setAttribute('data-bulk-inline','topic'); tpi.setAttribute('data-row',String(i)); tpi.setAttribute('aria-label',tpi.placeholder); tdTopic.appendChild(tpi); tr.appendChild(tdTopic);
+        var tdCopy=el('td','rea-bulk-cell'); var cpa=el('textarea','rea-bulk-tarea'); cpa.value=pair.copy; cpa.maxLength=1000; cpa.placeholder=labels.copy||'文案'; cpa.setAttribute('data-bulk-inline','copy'); cpa.setAttribute('data-row',String(i)); cpa.setAttribute('aria-label',cpa.placeholder); tdCopy.appendChild(cpa); tr.appendChild(tdCopy);
+      } else {
+        var tdT=el('td','rea-bulk-cell'); setCell(tdT,pair.title); tr.appendChild(tdT);
+        var tdTopic=el('td','rea-bulk-cell'); setCell(tdTopic,pair.topic); tr.appendChild(tdTopic);
+        var tdCopy=el('td','rea-bulk-cell');
+        var disp=pair.copy ? (pair.groups>1 ? short(pair.copy,18)+' · '+pair.groups+' 组' : short(pair.copy,18)) : '';
+        tdCopy.textContent=disp||'—'; tdCopy.title=pair.copy||''; tdCopy.classList.toggle('is-empty',!pair.copy); tr.appendChild(tdCopy);
+      }
       var tdOps=el('td'), ops=el('div','rea-bulk-ops');
       var up=el('button',null,'↑'); up.type='button'; up.setAttribute('data-bulk-upvideo',String(i)); up.setAttribute('aria-label','上移'); up.title='上移'; up.disabled=i===0; ops.appendChild(up);
       var down=el('button',null,'↓'); down.type='button'; down.setAttribute('data-bulk-downvideo',String(i)); down.setAttribute('aria-label','下移'); down.title='下移'; down.disabled=i===VIDEOS.length-1; ops.appendChild(down);
@@ -37298,6 +37301,7 @@ syncTip();drawRows();
   function renderCopies(){
     copyList.innerHTML='';
     COPIES.forEach(function(c,ci){
+      if(!c) return;
       var row=el('div','rea-bulk-crow'+(ci>=VIDEOS.length?' is-extra':''));
       row.setAttribute('data-bulk-copyrow',String(ci));
       row.appendChild(el('span','rea-bulk-cno',ci>=VIDEOS.length?'—':String(ci+1)));
@@ -37419,7 +37423,7 @@ syncTip();drawRows();
     var last=copyList.querySelector('[data-bulk-copyrow="'+(COPIES.length-1)+'"] [data-bulk-field="title"]');
     if(last) last.focus();
   }
-  function moveVideo(i,d){ var j=i+d; if(j<0||j>=VIDEOS.length)return; var a=VIDEOS[i];VIDEOS[i]=VIDEOS[j];VIDEOS[j]=a; renderTable(); renderCopies(); sync(); }
+  function moveVideo(i,d){ var j=i+d; if(j<0||j>=VIDEOS.length)return; var a=VIDEOS[i];VIDEOS[i]=VIDEOS[j];VIDEOS[j]=a; if(opts.inlineCopy){var ca=COPIES[i];COPIES[i]=COPIES[j];COPIES[j]=ca;} renderTable(); renderCopies(); sync(); }
   function moveCopy(i,d){ var j=i+d; if(j<0||j>=COPIES.length)return; var a=COPIES[i];COPIES[i]=COPIES[j];COPIES[j]=a; renderCopies(); renderTable(); sync(); }
   function onBulkClick(e){
     var t=e.target.closest?e.target.closest('button'):null; if(!t)return;
@@ -37430,7 +37434,7 @@ syncTip();drawRows();
     if(t.hasAttribute('data-bulk-cover')){ COVER_ROW=idx('data-bulk-cover'); cinput.value=''; cinput.click(); return; }
     if(t.hasAttribute('data-bulk-upvideo')){ moveVideo(idx('data-bulk-upvideo'),-1); return; }
     if(t.hasAttribute('data-bulk-downvideo')){ moveVideo(idx('data-bulk-downvideo'),1); return; }
-    if(t.hasAttribute('data-bulk-delvideo')){ var dv=idx('data-bulk-delvideo'); VIDEOS.splice(dv,1); renderTable(); renderCopies(); sync(); return; }
+    if(t.hasAttribute('data-bulk-delvideo')){ var dv=idx('data-bulk-delvideo'); VIDEOS.splice(dv,1); if(opts.inlineCopy) COPIES.splice(dv,1); renderTable(); renderCopies(); sync(); return; }
     if(t.hasAttribute('data-bulk-mode')){ MODE=t.getAttribute('data-bulk-mode'); sync(); return; }
     if(t.hasAttribute('data-bulk-addcopy')){ addCopy(); return; }
     if(t.hasAttribute('data-bulk-upcopy')){ moveCopy(idx('data-bulk-upcopy'),-1); return; }
@@ -37444,6 +37448,14 @@ syncTip();drawRows();
   }
   function onBulkInput(e){
     var t=e.target;
+    if(t.hasAttribute('data-bulk-inline')){
+      var ci0=+t.getAttribute('data-row'), f0=t.getAttribute('data-bulk-inline');
+      if(!COPIES[ci0]) COPIES[ci0]={title:'',groups:[{copy:'',topic:''}]};
+      if(!COPIES[ci0].groups[0]) COPIES[ci0].groups[0]={copy:'',topic:''};
+      if(f0==='title') COPIES[ci0].title=t.value;
+      else COPIES[ci0].groups[0][f0]=t.value;
+      return;
+    }
     if(t.hasAttribute('data-bulk-field')){
       var ci=+t.getAttribute('data-ci'), f=t.getAttribute('data-bulk-field'), c=COPIES[ci]; if(!c)return;
       if(f==='title') c.title=t.value;
@@ -37545,21 +37557,21 @@ if(PAGE==="new"){
   $("#dyTaskName").addEventListener("input",syncCounts);syncCounts();
   var DEPT_COUNT={"销售一部":6,"销售二部":8,"产品部":5,"测试环境雅楠公司":3};
   var M=0;
-  var COPYROW=$("[data-dy-copyrow]"),IMPROW=$("[data-dy-importrow]"),IMPFILE=$("[data-dy-importfile]");
+  var IMPROW=$("[data-dy-importrow]"),IMPFILE=$("[data-dy-importfile]");
   var IMPORT_OPEN=false;
   var BULK=createBulk({
     root:$("[data-dy-bulk]"),
     copyRoot:$("[data-dy-copy]"),
     hideCopyHead:true,
     toast:toast,
-    multiCopy:true,
+    multiCopy:false,
+    inlineCopy:true,
     modes:[{key:"manual",label:"手动输入"}],
     defaultMode:"manual",
-    labels:{title:"视频标题",topic:"视频话题",copy:"视频文案"},
+    labels:{title:"标题",topic:"话题",copy:"文案"},
     onChange:function(s){
       $("[data-dy-cnt]").textContent=s.videos+" 条内容 / "+s.people+" 位执行人员";
       var show=s.videos>0;
-      COPYROW.style.display=show?"flex":"none";
       IMPROW.style.display=show&&IMPORT_OPEN?"flex":"none";
       IMPFILE.textContent=s.importName||"";
       IMPFILE.hidden=!s.importName;
@@ -38734,6 +38746,7 @@ draw();
    批量素材表与文案列表仍是共用件，只在本页把观感扳到 AntD。 */
 .rea-dy-adminform .rea-dy-admin-select{width:100%;height:32px;padding:0 11px;border:1px solid #d9d9d9;border-radius:6px;background:#fff;color:rgba(0,0,0,.88);font-size:14px;outline:none;appearance:none;-webkit-appearance:none;background-image:linear-gradient(45deg,transparent 50%,#999 50%),linear-gradient(135deg,#999 50%,transparent 50%);background-position:calc(100% - 15px) 14px,calc(100% - 10px) 14px;background-size:5px 5px;background-repeat:no-repeat}
 .rea-dy-adminform .rea-dy-admin-select:focus{border-color:#1677ff;box-shadow:0 0 0 2px rgba(5,145,255,.1)}
+.rea-dy-adminform ._form_input_lzm36_71{padding-left:6%}
 .rea-dy-adminform .rea-dy-row--wide{padding-right:5%}
 .rea-dy-adminform .rea-dy-q{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;margin-left:8px;border:1px solid #d9d9d9;border-radius:50%;color:#999;font-size:12px;line-height:1;cursor:help}
 .rea-dy-adminform .rea-dy-importsteps{display:flex;flex-direction:column}
@@ -38761,6 +38774,15 @@ draw();
 .rea-dy-adminform .rea-bulk-table th{height:40px;background:#fafafa;color:rgba(0,0,0,.88);font-size:13px;font-weight:500;border-bottom:1px solid #f0f0f0}
 .rea-dy-adminform .rea-bulk-table td{padding:10px 8px;border-bottom:1px solid #f0f0f0}
 .rea-dy-adminform .rea-bulk-cell{color:rgba(0,0,0,.65);font-size:13px}
+.rea-dy-adminform .rea-bulk-table col:nth-child(2){width:18%!important}
+.rea-dy-adminform .rea-bulk-table col:nth-child(4){width:18%!important}
+.rea-dy-adminform .rea-bulk-table col:nth-child(5){width:18%!important}
+.rea-dy-adminform .rea-bulk-table col:nth-child(6){width:30%!important}
+.rea-dy-adminform .rea-bulk-table td{vertical-align:top}
+.rea-dy-adminform .rea-bulk-table td.rea-bulk-cell{padding:6px;white-space:normal;overflow:visible;text-overflow:clip}
+.rea-dy-adminform .rea-bulk-tinput{width:100%;height:32px;padding:0 8px;border:1px solid #d9d9d9;border-radius:6px;background:#fff;color:rgba(0,0,0,.88);font:inherit;font-size:14px;outline:none}
+.rea-dy-adminform .rea-bulk-tarea{width:100%;min-height:58px;padding:6px 8px;border:1px solid #d9d9d9;border-radius:6px;background:#fff;color:rgba(0,0,0,.88);font:inherit;font-size:14px;line-height:1.5;resize:vertical;outline:none}
+.rea-dy-adminform .rea-bulk-tinput:focus,.rea-dy-adminform .rea-bulk-tarea:focus{border-color:#1677ff;box-shadow:0 0 0 2px rgba(5,145,255,.1)}
 .rea-dy-adminform .rea-bulk-input,.rea-dy-adminform .rea-bulk-textarea{border-color:#d9d9d9;border-radius:6px;color:rgba(0,0,0,.88);font-size:14px}
 .rea-dy-adminform .rea-bulk-input:focus,.rea-dy-adminform .rea-bulk-textarea:focus{border-color:#1677ff;box-shadow:0 0 0 2px rgba(5,145,255,.1)}
 .rea-dy-adminform .rea-bulk-btn{border-color:#d9d9d9;border-radius:6px;background:#fff;color:rgba(0,0,0,.88);font-size:14px;box-shadow:0 2px 0 rgba(0,0,0,.02)}
