@@ -19308,174 +19308,92 @@ render();
 </div></div></div></div>
 </script>
 
-<script type="text/plain" id="srcXhsNoteNew"><div style="height: 100%"><div class="h-full overflow-auto" style="height:100%;overflow:auto"><div class="h-full"><div class="rea-xn-page" data-xn-newpage>
-  <div class="rea-xn-crumb"><a data-xn-back>笔记发布</a><span>/</span><span>新建任务</span></div>
-  <div class="rea-xn-head"><h1>新建任务</h1></div>
-  <div class="rea-xn-form">
-    <section class="rea-xn-sec">
-      <h2>基本信息</h2>
-      <div class="rea-xn-row">
-        <span class="rea-xn-label rea-xn-req">执行人员</span>
-        <div class="rea-xn-ctl">
-          <div class="rea-xn-picker">
-            <button type="button" class="rea-xn-input rea-xn-picker-btn" data-xn-orgbtn>
-              <span class="rea-xn-picktags" data-xn-orgtags></span>
-              <span class="rea-xn-ph" data-xn-orgph>请选择组织架构</span>
-              <span class="rea-xn-caret">▾</span>
-            </button>
-            <div class="rea-xn-drop" data-xn-orgdrop hidden>
-              <input class="rea-xn-input rea-xn-dropsearch" data-xn-orgsearch placeholder="搜索部门或成员">
-              <div data-xn-orglist></div>
-            </div>
-          </div>
-          <p class="rea-xn-err" data-xn-err="org" hidden>请选择执行人员</p>
+<script type="text/plain" id="srcXhsNoteNew"><div style="height: 100%"><div class="h-full overflow-auto" style="height:100%;overflow:auto"><div class="h-full"><div class="_boxadd_lzm36_126">
+  <h4 style="padding-left:10px;font-weight:normal"><nav class="ant-breadcrumb css-vgijab"><ol><li class="ant-breadcrumb-item"><a class="ant-breadcrumb-link" href="#" data-xn-back>笔记发布</a></li><li class="ant-breadcrumb-separator" aria-hidden="true">/</li><li class="ant-breadcrumb-item"><span class="ant-breadcrumb-link">新建任务</span></li></ol></nav></h4>
+  <div class="_box_lzm36_4" style="padding:10px">
+    <div class="_con_lzm36_14">
+      <h4 class="_titleBar_lzm36_26" style="margin-bottom:0">新建任务</h4>
+      <form class="rea-dy-adminform" data-xn-form novalidate>
+        <div class="_form_input_lzm36_71">
+          <span class="_must_white_lzm36_76">执行人员</span>
+          <div class="_upload_box_lzm36_100"><div class="yk-tree-select-show"><div class="yk-select-wrap"><span style="color:#1F2329">张伯阳 等 2 人</span></div><span role="img" aria-label="down" class="anticon anticon-down" style="color:#ccc;position:absolute;right:10px">▾</span></div></div>
         </div>
-      </div>
-      <div class="rea-xn-row">
-        <span class="rea-xn-label rea-xn-req">发布应用</span>
-        <div class="rea-xn-ctl"><span class="rea-xn-radios"><label class="rea-xn-radio is-on"><input type="radio" name="xnApp" checked>微小助</label></span></div>
-      </div>
-      <div class="rea-xn-row">
-        <label class="rea-xn-label rea-xn-req" for="xnName">任务名称</label>
-        <div class="rea-xn-ctl">
-          <div class="rea-xn-inputwrap"><input id="xnName" class="rea-xn-input" data-xn-name maxlength="21" placeholder="请输入任务名称"><span class="rea-xn-count" data-xn-namecount>0 / 21</span></div>
-          <p class="rea-xn-err" data-xn-err="name" hidden>请输入任务名称</p>
+        <div class="_form_input_lzm36_71">
+          <span class="_must_white_lzm36_76">发布应用</span>
+          <div class="_upload_box_lzm36_100"><div class="ant-radio-group ant-radio-group-outline css-vgijab">
+            <label class="ant-radio-wrapper ant-radio-wrapper-checked css-vgijab"><span class="ant-radio ant-wave-target ant-radio-checked"><input name="xnApp" class="ant-radio-input" type="radio" value="微小助" checked><span class="ant-radio-inner"></span></span><span class="ant-radio-label">微小助</span></label>
+            <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="xnApp" class="ant-radio-input" type="radio" value="KOS app"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">KOS app</span></label>
+          </div></div>
         </div>
-      </div>
-    </section>
-    <section class="rea-xn-sec">
-      <div class="rea-xn-sechead"><h2>发布内容</h2><div class="rea-xn-secact"><span class="rea-xn-cnt" data-xn-cnt>1 条内容 / 0 位执行人员</span><button type="button" class="rea-xn-btn" data-xn-addfile>+ 添加内容</button><button type="button" class="rea-xn-btn" data-xn-addcover hidden>+ 添加封面</button></div></div>
-      <input type="file" accept="image/*,video/*" multiple hidden data-xn-addinput>
-      <div class="rea-xn-row" data-xn-source-row>
-        <span class="rea-xn-label rea-xn-req">素材来源</span>
-        <div class="rea-xn-ctl"><div class="rea-xn-seg" data-xn-source><button type="button" class="is-on" data-v="临时创建">临时创建</button><button type="button" data-v="AI生成">AI生成</button></div></div>
-      </div>
-      <div class="rea-xn-row">
-        <span class="rea-xn-label rea-xn-req">发布类型</span>
-        <div class="rea-xn-ctl"><div class="rea-xn-radios" data-xn-type>
-          <label class="rea-xn-radio is-on"><input type="radio" name="xnType" value="发图文" checked>发图文</label>
-          <label class="rea-xn-radio"><input type="radio" name="xnType" value="发视频">发视频</label>
-          <label class="rea-xn-radio"><input type="radio" name="xnType" value="发文案配图">发文案配图</label>
-        </div></div>
-      </div>
-      <p class="rea-xn-hint" data-xn-hint>选择执行人员后显示分配结果</p>
-      <div class="rea-xn-cards" data-xn-cards>
-        <div class="rea-xn-card" data-xn-card data-open="true">
-          <div class="rea-xn-card-h">
-            <button type="button" class="rea-xn-card-toggle" data-xn-toggle aria-expanded="true">
-              <span class="rea-xn-cardno" data-xn-cardno>1</span>
-              <span class="rea-xn-cardname" data-xn-cardname>未选择图片</span>
-              <span class="rea-xn-cardsum" data-xn-cardsum></span>
-            </button>
-            <button type="button" class="rea-xn-carddel" data-xn-carddel aria-label="删除这条内容">×</button>
-          </div>
-          <div class="rea-xn-card-b">
-            <div class="rea-xn-row" data-xn-aigenrow hidden>
-              <label class="rea-xn-label">生成要求</label>
-              <div class="rea-xn-ctl">
-                <textarea class="rea-xn-textarea" data-xn-aigen placeholder="描述想发布的内容，例如产品、活动、目标人群"></textarea>
-                <div class="rea-xn-inline"><button type="button" class="rea-xn-btn" data-xn-gen>生成</button></div>
-                <p class="rea-xn-err" data-xn-err="aigen" hidden>请填写生成要求</p>
-              </div>
+        <div class="_form_input_lzm36_71">
+          <span class="_must_white_lzm36_76">任务名称</span>
+          <div class="_upload_box_lzm36_100"><span class="ant-input-affix-wrapper css-vgijab ant-input-outlined"><input id="xnTaskName" maxlength="21" autocomplete="off" placeholder="请输入任务名称" class="ant-input css-vgijab" type="text"><span class="ant-input-suffix"><span class="ant-input-show-count-suffix" data-xn-count-for="xnTaskName">0 / 21</span></span></span></div>
+        </div>
+        <div class="_form_input_lzm36_71">
+          <span class="_must_white_lzm36_76">素材来源</span>
+          <div class="_upload_box_lzm36_100"><div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small"><div class="ant-space-item"><button type="button" class="ant-btn css-vgijab ant-btn-primary ant-btn-color-primary ant-btn-variant-solid" data-xn-source="临时创建"><span>临时创建</span></button></div><div class="ant-space-item"><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-source="AI生成"><span>AI生成</span></button></div></div></div>
+        </div>
+        <div class="_form_input_lzm36_71">
+          <span class="_must_white_lzm36_76">发布类型</span>
+          <div class="_upload_box_lzm36_100"><div class="ant-radio-group ant-radio-group-outline css-vgijab" data-xn-type>
+            <label class="ant-radio-wrapper ant-radio-wrapper-checked css-vgijab"><span class="ant-radio ant-wave-target ant-radio-checked"><input name="xnType" class="ant-radio-input" type="radio" value="发图文" checked><span class="ant-radio-inner"></span></span><span class="ant-radio-label">发图文</span></label>
+            <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="xnType" class="ant-radio-input" type="radio" value="发视频"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">发视频</span></label>
+            <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="xnType" class="ant-radio-input" type="radio" value="发文案配图"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">发文案配图</span></label>
+          </div></div>
+        </div>
+        <div class="_form_input_lzm36_71 rea-dy-row--wide">
+          <span class="_must_white_lzm36_76">发布内容</span>
+          <div class="_upload_box_lzm36_100">
+            <div data-xn-section="image">
+              <div class="rea-dy-bulkbar"><span class="rea-dy-bulkcnt" data-xn-imgcnt></span><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-addimg><span>+ 添加图片</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-addcopy><span>添加文案</span></button></div>
+              <div data-xn-imgbulk></div><div data-xn-imgcopy hidden></div>
             </div>
-            <div class="rea-xn-row" data-xn-g="img">
-              <span class="rea-xn-label rea-xn-req">选择图片<span class="rea-xn-help" data-tip="最多上传 18 张；支持 png、jpg、jpeg，单张不超过 20MB；首图即封面，可拖动调整顺序。">?</span></span>
-              <div class="rea-xn-ctl">
-                <div class="rea-xn-upload" data-xn-imgs></div>
-                <input type="file" accept="image/png,image/jpeg,image/jpg" multiple hidden data-xn-imginput>
-                <p class="rea-xn-err" data-xn-err="img" hidden>请至少上传一张图片</p>
-              </div>
-            </div>
-            <div class="rea-xn-row" data-xn-g="video" hidden>
-              <span class="rea-xn-label rea-xn-req">选择视频来源</span>
-              <div class="rea-xn-ctl"><span class="rea-xn-radios"><label class="rea-xn-radio is-on"><input type="radio" name="xnVsrc" checked>手动上传</label></span></div>
-            </div>
-            <div class="rea-xn-row" data-xn-g="video" hidden>
-              <span class="rea-xn-label rea-xn-req">上传视频</span>
-              <div class="rea-xn-ctl">
-                <div class="rea-xn-filewrap"><button type="button" class="rea-xn-btn" data-xn-vbtn>上传视频文件</button><span class="rea-xn-filechip" data-xn-vfile hidden></span></div>
-                <input type="file" accept="video/*" hidden data-xn-vinput>
-                <p class="rea-xn-err" data-xn-err="video" hidden>请上传视频文件</p>
-              </div>
-            </div>
-            <div class="rea-xn-row" data-xn-g="video" hidden>
-              <span class="rea-xn-label">视频封面<span class="rea-xn-help" tabindex="0" role="img" aria-label="视频封面说明" data-tip="建议竖版 3:4（1080×1440），支持 png、jpg，单张不超过 10MB；平台按自己的封面框裁切，不上传则用平台默认封面。">?</span></span>
-              <div class="rea-xn-ctl">
-                <div class="rea-vcover" data-xn-cover></div>
-                <input type="file" accept="image/png,image/jpeg" hidden data-xn-coverinput>
-              </div>
-            </div>
-            <div class="rea-xn-row" data-xn-g="note">
-              <label class="rea-xn-label">视频文案</label>
-              <div class="rea-xn-ctl"><textarea class="rea-xn-textarea" data-xn-field="copy" maxlength="1000" placeholder="请输入视频文案"></textarea><div class="rea-xn-countline"><span class="rea-xn-count" data-xn-cc="copy">0 / 1000</span></div></div>
-            </div>
-            <div class="rea-xn-row" data-xn-g="note">
-              <label class="rea-xn-label">视频标题</label>
-              <div class="rea-xn-ctl"><div class="rea-xn-inputwrap"><input class="rea-xn-input" data-xn-field="title" maxlength="20" placeholder="请输入视频标题"><span class="rea-xn-count" data-xn-cc="title">0 / 20</span></div></div>
-            </div>
-            <div class="rea-xn-row" data-xn-g="note">
-              <label class="rea-xn-label">视频话题<span class="rea-xn-help" data-tip="多个话题使用 # 分割，话题中请勿包含其他标点符号，例如：#话题1#话题2。">?</span></label>
-              <div class="rea-xn-ctl"><input class="rea-xn-input" data-xn-field="topic" placeholder="请输入视频话题"></div>
-            </div>
-            <div class="rea-xn-row" data-xn-g="copy" hidden>
-              <label class="rea-xn-label">文案内容<span class="rea-xn-help" data-tip="若为空，则使用标题作为图片文案内容。">?</span></label>
-              <div class="rea-xn-ctl"><input class="rea-xn-input" data-xn-field="copytext" placeholder="请输入文案内容"></div>
-            </div>
-            <div class="rea-xn-row" data-xn-g="copy" hidden>
-              <label class="rea-xn-label">笔记标题</label>
-              <div class="rea-xn-ctl"><div class="rea-xn-inputwrap"><input class="rea-xn-input" data-xn-field="notetitle" maxlength="20" placeholder="请输入笔记标题"><span class="rea-xn-count" data-xn-cc="notetitle">0 / 20</span></div></div>
-            </div>
-            <div class="rea-xn-row" data-xn-g="copy" hidden>
-              <label class="rea-xn-label">正文内容</label>
-              <div class="rea-xn-ctl"><textarea class="rea-xn-textarea" data-xn-field="body" maxlength="1000" placeholder="请输入正文内容"></textarea><div class="rea-xn-countline"><span class="rea-xn-count" data-xn-cc="body">0 / 1000</span></div></div>
-            </div>
-            <div class="rea-xn-row" data-xn-g="copy" hidden>
-              <label class="rea-xn-label">话题<span class="rea-xn-help" data-tip="多个话题使用 # 分割，话题中请勿包含其他标点符号，例如：#话题1#话题2。">?</span></label>
-              <div class="rea-xn-ctl"><input class="rea-xn-input" data-xn-field="topic2" placeholder="请输入话题"></div>
+            <div data-xn-section="video" hidden>
+              <div class="rea-dy-bulkbar"><span class="rea-dy-bulkcnt" data-xn-vidcnt></span><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-addvid><span>+ 添加视频</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-addcover><span>+ 添加封面</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-addcopy><span>添加文案</span></button></div>
+              <div data-xn-vidbulk></div><div data-xn-vidcopy hidden></div>
             </div>
           </div>
         </div>
-      </div>
-      <p class="rea-xn-err" data-xn-err="video" hidden>请添加视频</p>
-      <div data-xn-bulk hidden></div>
-    </section>
-    <section class="rea-xn-sec">
-      <h2>任务设置</h2>
-      <div class="rea-xn-row">
-        <span class="rea-xn-label rea-xn-req">任务类型</span>
-        <div class="rea-xn-ctl"><div class="rea-xn-radios" data-xn-tasktype>
-          <label class="rea-xn-radio is-on"><input type="radio" name="xnTaskType" checked>单次任务</label>
-          <label class="rea-xn-radio"><input type="radio" name="xnTaskType">周循环</label>
-          <label class="rea-xn-radio"><input type="radio" name="xnTaskType">月循环</label>
-          <label class="rea-xn-radio"><input type="radio" name="xnTaskType">自定义循环</label>
-        </div></div>
-      </div>
-      <div class="rea-xn-row">
-        <span class="rea-xn-label">全局弹窗<span class="rea-xn-help" data-tip="开启后，任务提醒会在手机的所有页面中弹出；关闭则只在小红书中弹出任务提醒。">?</span></span>
-        <div class="rea-xn-ctl rea-xn-ctl--mid"><button type="button" class="rea-xn-switch" role="switch" aria-checked="false" data-xn-switch><i></i></button></div>
-      </div>
-      <div class="rea-xn-row">
-        <span class="rea-xn-label rea-xn-req">通知时间<span class="rea-xn-help" data-tip="到达通知时间会向执行人员推送提醒。">?</span></span>
-        <div class="rea-xn-ctl">
-          <div class="rea-xn-dt"><input type="date" class="rea-xn-input" data-xn-notify-date><input type="time" class="rea-xn-input" data-xn-notify-time></div>
-          <p class="rea-xn-err" data-xn-err="notify" hidden>请选择通知时间</p>
+        <div class="_form_input_lzm36_71" style="align-items:center">
+          <span class="_must_white_lzm36_76">任务类型</span>
+          <div class="ant-radio-group ant-radio-group-outline css-vgijab" data-xn-tasktype>
+            <label class="ant-radio-wrapper ant-radio-wrapper-checked css-vgijab"><span class="ant-radio ant-wave-target ant-radio-checked"><input name="xnTaskType" class="ant-radio-input" type="radio" value="单次任务" checked><span class="ant-radio-inner"></span></span><span class="ant-radio-label">单次任务</span></label>
+            <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="xnTaskType" class="ant-radio-input" type="radio" value="周循环"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">周循环</span></label>
+            <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="xnTaskType" class="ant-radio-input" type="radio" value="月循环"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">月循环</span></label>
+            <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="xnTaskType" class="ant-radio-input" type="radio" value="自定义循环"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">自定义循环</span></label>
+          </div>
+          <span class="rea-dy-q" title="单次任务只下发一次；周循环、月循环按所选周期重复下发；自定义循环按设定的周期执行。">?</span>
         </div>
-      </div>
-      <div class="rea-xn-row">
-        <span class="rea-xn-label rea-xn-req">截止时间</span>
-        <div class="rea-xn-ctl">
-          <div class="rea-xn-dt"><input type="date" class="rea-xn-input" data-xn-end-date><input type="time" class="rea-xn-input" data-xn-end-time></div>
-          <p class="rea-xn-err" data-xn-err="end" hidden>请选择截止时间</p>
+        <div class="_form_input_lzm36_71" style="align-items:flex-start">
+          <span class="_must_white1_lzm36_76">全局弹窗</span>
+          <div class="_upload_box_lzm36_100"><button type="button" role="switch" aria-checked="false" class="ant-switch css-vgijab" data-xn-global><div class="ant-switch-handle"></div><span class="ant-switch-inner"><span class="ant-switch-inner-checked"></span><span class="ant-switch-inner-unchecked"></span></span></button><p style="margin-top:8px;font-size:14px;color:rgb(170,170,170)">开启后，将在手机的所有页面中弹出任务提醒；关闭，则只在笔记中弹出任务提醒。</p></div>
         </div>
-      </div>
-    </section>
-    <div class="rea-xn-formfoot">
-      <button type="button" class="rea-xn-btn rea-xn-btn--primary" data-xn-save>保存</button>
-      <button type="button" class="rea-xn-btn" data-xn-cancel>取消</button>
+        <div class="_form_input_lzm36_71"><span class="_must_white_lzm36_76">通知时间</span><div class="_upload_box_lzm36_100"><div class="rea-dy-dt"><input type="date" data-xn-notify-date aria-label="通知日期"><input type="time" data-xn-notify-time aria-label="通知时间"></div></div></div>
+        <div class="_form_input_lzm36_71"><span class="_must_white_lzm36_76">截止时间</span><div class="_upload_box_lzm36_100"><div class="rea-dy-dt"><input type="date" data-xn-end-date aria-label="截止日期"><input type="time" data-xn-end-time aria-label="截止时间"></div></div></div>
+        <div class="_form_input_lzm36_71" style="padding-top:32px;padding-bottom:24px"><span class="_must_white1_lzm36_76"></span><div class="_upload_box_lzm36_100"><button type="submit" class="ant-btn css-vgijab ant-btn-primary ant-btn-color-primary ant-btn-variant-solid" data-xn-save><span>保存</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-cancel style="margin-left:10px"><span>取消</span></button></div></div>
+        <div class="rea-dy-addmodal" data-dy-addmodal hidden>
+          <div class="rea-dy-addmodal-box" role="dialog" aria-modal="true" aria-label="添加文案">
+            <div class="rea-dy-addmodal-h"><h3>添加文案</h3><button type="button" class="rea-dy-addmodal-x" data-dy-modalclose aria-label="关闭">×</button></div>
+            <div class="rea-dy-addtabs" role="tablist"><button type="button" class="rea-dy-addtab on" data-dy-addtab="ai" role="tab" aria-selected="true">AI生成</button><button type="button" class="rea-dy-addtab" data-dy-addtab="import" role="tab" aria-selected="false">导入文案</button></div>
+            <div class="rea-dy-addbody" data-dy-addpanel="ai">
+              <div class="rea-dy-addfield"><label for="xnAiTitle">示例标题</label><input id="xnAiTitle" class="ant-input css-vgijab ant-input-outlined" type="text" maxlength="20" placeholder="请输入示例标题" data-dy-ai-title></div>
+              <div class="rea-dy-addfield"><label for="xnAiCopy">示例文案</label><textarea id="xnAiCopy" class="rea-dy-addtextarea" maxlength="1000" placeholder="请输入示例文案" data-dy-ai-copy></textarea></div>
+              <div class="rea-dy-addfield"><label for="xnAiTopic">示例话题</label><input id="xnAiTopic" class="ant-input css-vgijab ant-input-outlined" type="text" placeholder="请输入示例话题" data-dy-ai-topic></div>
+              <p class="rea-dy-adminerr" data-dy-ai-err hidden>请填写示例标题、文案和话题</p>
+              <p class="rea-dy-addcount" data-dy-aicount>将生成 0 条文案</p>
+              <div class="rea-dy-addfoot"><button type="button" class="ant-btn css-vgijab ant-btn-primary ant-btn-color-primary ant-btn-variant-solid" data-dy-aigen><span>生成文案</span></button></div>
+            </div>
+            <div class="rea-dy-addbody" data-dy-addpanel="import" hidden>
+              <div class="rea-dy-importsteps"><div class="rea-dy-importstep"><span class="rea-dy-importstepno">1</span><div class="rea-dy-importstepbody"><button type="button" class="rea-dy-importsteplink" data-dy-modaltemplate><b>下载</b>文件模板</button></div></div><div class="rea-dy-importstep"><span class="rea-dy-importstepno">2</span><div class="rea-dy-importstepbody"><span class="rea-dy-importsteptext">从电脑上选择文件模板上传：</span><div class="rea-dy-importstepact"><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-modalimport><span class="rea-dy-upicon"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M12 3l5 5h-3v7h-4V8H7l5-5zM5 19h14v2H5z"></path></svg></span><span>上传文件</span></button></div></div></div></div>
+              <input type="file" accept=".csv,.xlsx" hidden data-dy-modalimportinput>
+            </div>
+            <div class="rea-dy-addmodal-foot"><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-modalclose><span>取消</span></button></div>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
-</div></div></div></div>
-</script>
+</div></div></div></div></script>
 
 <script type="text/plain" id="srcXhsNoteDetail"><div style="height: 100%"><div class="h-full overflow-auto" style="height:100%;overflow:auto"><div class="h-full"><div class="rea-xn-page" data-xn-detail>
   <div class="rea-xn-crumb"><a data-xn-back>笔记发布</a><span>/</span><span>任务详情</span></div>
@@ -25169,7 +25087,7 @@ render();
      新建页：发布类型切换（图文／视频／文案配图的字段组）、素材来源（临时创建／AI 生成）、
      执行人员多选、图片本地上传与拖动排序、必填校验；保存后把任务交给外壳并回列表。
      详情页：任务信息回显 ＋ 员工完成情况（筛选、导出占位、两枚「查看」的预览浮层）。 */
-  function reaXhsNoteNewJs(){
+  function reaXhsNoteNewJsLegacy(){
    return '(function(){'
     + 'var H=' + reaJson(reaCoverHtml('srcXhsNoteNew')) + ';'
     + 'var v=document.getElementById("subapp-viewport");if(!v)return;v.innerHTML=H;'
@@ -25611,6 +25529,199 @@ $('[data-xn-cancel]').addEventListener('click',back);
   var c=cards()[0];c._imgs=[];c._video=null;c._cover=null;
   drawImgs(c);drawVideo(c);drawCover(c);
   applyType();applySource();sync();
+})();
+})();`;
+  }
+
+  /* 笔记发布 · 新建（2026-11-25）：按线上页面还原表单，临时创建的发布内容用与抖音同一套
+     素材表（发图文＝图组，发视频＝视频）＋添加文案弹窗；任务设置沿用线上字段。 */
+  function reaXhsNoteNewJs(){
+    return '(function(){'
+      + 'var H=' + reaJson(reaCoverHtml('srcXhsNoteNew')) + ';'
+      + 'var v=document.getElementById("subapp-viewport");if(!v)return;v.innerHTML=H;'
+      + 'var LIST=' + reaJson(REA_XN_PAGE) + ';'
+      + reaBulkCoreSrc()
+      + String.raw`
+var $=function(s,r){return (r||document).querySelector(s)};
+function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
+var TOAST=null,TOASTT=0;
+function toast(msg){
+  if(!TOAST){TOAST=document.createElement('div');TOAST.className='rea-xn-toast';var ic=document.createElement('i');ic.className='tic';ic.textContent='✓';TOAST.appendChild(ic);TOAST.appendChild(document.createElement('span'));document.body.appendChild(TOAST)}
+  TOAST.querySelector('span').textContent=msg;TOAST.classList.add('is-on');
+  clearTimeout(TOASTT);TOASTT=setTimeout(function(){TOAST.classList.remove('is-on')},1800);
+}
+function pad(n){return (n<10?'0':'')+n}
+function ymd(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
+function hm(d){return pad(d.getHours())+':'+pad(d.getMinutes())}
+function stamp(){var d=new Date();return ymd(d)+' '+hm(d)}
+var TYPE='发图文',SOURCE='临时创建',M=2;
+var nameInput=$('#xnTaskName');
+function syncCount(){
+  $$('[data-xn-count-for]').forEach(function(sp){
+    var i=document.getElementById(sp.getAttribute('data-xn-count-for'));
+    if(i)sp.textContent=(i.value||'').length+' / '+(i.getAttribute('maxlength')||'');
+  });
+}
+(function(){
+  var now=new Date();
+  if(nameInput){nameInput.value='笔记发布任务'+now.getFullYear()+pad(now.getMonth()+1)+pad(now.getDate());nameInput.addEventListener('input',syncCount)}
+  syncCount();
+  var n1=new Date(now.getTime()+3600*1000),d2=new Date(now.getTime()+7*86400*1000);
+  $('[data-xn-notify-date]').value=ymd(n1);$('[data-xn-notify-time]').value=hm(n1);
+  $('[data-xn-end-date]').value=ymd(d2);$('[data-xn-end-time]').value=hm(d2);
+})();
+var IMG=createBulk({
+  root:$('[data-xn-imgbulk]'),copyRoot:$('[data-xn-imgcopy]'),mediaType:'image',
+  hideCopyHead:true,toast:toast,multiCopy:false,inlineCopy:true,
+  modes:[{key:'manual',label:'手动输入'}],defaultMode:'manual',
+  labels:{title:'标题',topic:'话题',copy:'文案'},
+  onChange:function(s){var c=$('[data-xn-imgcnt]');if(c)c.textContent=s.videos+' 条内容 / '+s.people+' 位执行人员'}
+});
+var VID=createBulk({
+  root:$('[data-xn-vidbulk]'),copyRoot:$('[data-xn-vidcopy]'),mediaType:'video',
+  hideCopyHead:true,toast:toast,multiCopy:false,inlineCopy:true,
+  modes:[{key:'manual',label:'手动输入'}],defaultMode:'manual',
+  labels:{title:'标题',topic:'话题',copy:'文案'},
+  onChange:function(s){var c=$('[data-xn-vidcnt]');if(c)c.textContent=s.videos+' 条内容 / '+s.people+' 位执行人员'}
+});
+IMG.setPeople(M);VID.setPeople(M);
+function activeBulk(){return TYPE==='发视频'?VID:IMG}
+function applyType(){
+  var isVideo=TYPE==='发视频';
+  var a=$('[data-xn-section="image"]'),b=$('[data-xn-section="video"]');
+  if(a)a.hidden=isVideo;if(b)b.hidden=!isVideo;
+}
+function setSource(src){
+  SOURCE=src;
+  $$('[data-xn-source]').forEach(function(b){
+    var on=b.getAttribute('data-xn-source')===src;
+    b.classList.toggle('ant-btn-primary',on);b.classList.toggle('ant-btn-color-primary',on);b.classList.toggle('ant-btn-variant-solid',on);
+    b.classList.toggle('ant-btn-default',!on);b.classList.toggle('ant-btn-color-default',!on);b.classList.toggle('ant-btn-variant-outlined',!on);
+  });
+}
+$$('[data-xn-source]').forEach(function(b){b.addEventListener('click',function(){setSource(b.getAttribute('data-xn-source'))})});
+$$('[data-xn-type] input').forEach(function(r){r.addEventListener('change',function(){if(r.checked){TYPE=r.value;applyType()}})});
+$('[data-xn-addimg]').addEventListener('click',function(){IMG.pickVideos()});
+$('[data-xn-addvid]').addEventListener('click',function(){VID.pickVideos()});
+$('[data-xn-addcover]').addEventListener('click',function(){VID.pickCovers()});
+applyType();setSource('临时创建');
+/* 添加文案弹窗：对当前发布类型的素材表生效 */
+var ADDMODAL=$('[data-dy-addmodal]');
+function addModalHasCopy(b){
+  var st=b.getState();
+  for(var i=0;i<st.copies.length;i++){
+    var c=st.copies[i];if(!c)continue;
+    var g=c.groups&&c.groups[0];
+    if((c.title||'')||(g&&((g.copy||'')||(g.topic||''))))return true;
+  }
+  return false;
+}
+function selectAddTab(tab){
+  $$('[data-dy-addtab]',ADDMODAL).forEach(function(b){
+    var on=b.getAttribute('data-dy-addtab')===tab;
+    b.classList.toggle('on',on);b.setAttribute('aria-selected',on?'true':'false');
+  });
+  $$('[data-dy-addpanel]',ADDMODAL).forEach(function(p){p.hidden=p.getAttribute('data-dy-addpanel')!==tab});
+}
+function openAddCopy(){
+  var b=activeBulk(),st=b.getState();
+  if(!st.videos.length){toast('先添加内容');return}
+  $('[data-dy-aicount]',ADDMODAL).textContent='将生成 '+st.videos.length+' 条文案';
+  $('[data-dy-ai-err]',ADDMODAL).hidden=true;
+  ADDMODAL.hidden=false;
+  selectAddTab('ai');
+  setTimeout(function(){var t=$('[data-dy-ai-title]',ADDMODAL);if(t)t.focus()},30);
+}
+function closeAddCopy(){ADDMODAL.hidden=true}
+$$('[data-dy-addcopy]').forEach(function(b){b.addEventListener('click',openAddCopy)});
+$$('[data-dy-addtab]',ADDMODAL).forEach(function(b){b.addEventListener('click',function(){selectAddTab(b.getAttribute('data-dy-addtab'))})});
+$$('[data-dy-modalclose]',ADDMODAL).forEach(function(b){b.addEventListener('click',function(e){e.preventDefault();closeAddCopy()})});
+ADDMODAL.addEventListener('click',function(e){if(e.target===ADDMODAL)closeAddCopy()});
+ADDMODAL.addEventListener('keydown',function(e){
+  if(e.key==='Enter'&&e.target&&e.target.tagName==='INPUT'){e.preventDefault();var g=$('[data-dy-aigen]',ADDMODAL);if(g)g.click()}
+});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!ADDMODAL.hidden)closeAddCopy()});
+$$('[data-dy-ai-title],[data-dy-ai-copy],[data-dy-ai-topic]',ADDMODAL).forEach(function(i){i.addEventListener('input',function(){$('[data-dy-ai-err]',ADDMODAL).hidden=true})});
+var aiGen=$('[data-dy-aigen]',ADDMODAL);
+aiGen.addEventListener('click',function(){
+  var title=($('[data-dy-ai-title]',ADDMODAL).value||'').replace(/^\s+|\s+$/g,''),
+      copy=($('[data-dy-ai-copy]',ADDMODAL).value||'').replace(/^\s+|\s+$/g,''),
+      topic=($('[data-dy-ai-topic]',ADDMODAL).value||'').replace(/^\s+|\s+$/g,''),
+      err=$('[data-dy-ai-err]',ADDMODAL);
+  if(!title||!copy||!topic){
+    err.hidden=false;
+    var first=!title?$('[data-dy-ai-title]',ADDMODAL):(!copy?$('[data-dy-ai-copy]',ADDMODAL):$('[data-dy-ai-topic]',ADDMODAL));
+    if(first)first.focus();return;
+  }
+  err.hidden=true;
+  var b=activeBulk(),n=b.getState().videos.length;
+  if(!n){toast('先添加内容');return}
+  if(addModalHasCopy(b)&&!confirm('生成会替换现有文案，继续？'))return;
+  var list=[];
+  for(var i=0;i<n;i++){
+    list.push({
+      title:(i===0?title:title+' · '+(i+1)).slice(0,20),
+      copy:(i===0?copy:copy+'\n\n（第 '+(i+1)+' 条）').slice(0,1000),
+      topic:topic
+    });
+  }
+  b.setCopies(list);closeAddCopy();toast('已生成 '+n+' 条文案');
+});
+var modalImportBtn=$('[data-dy-modalimport]',ADDMODAL),modalImportInput=$('[data-dy-modalimportinput]',ADDMODAL);
+modalImportBtn.addEventListener('click',function(){modalImportInput.value='';modalImportInput.click()});
+modalImportInput.addEventListener('change',function(){
+  var f=this.files&&this.files[0];this.value='';if(!f)return;
+  if(activeBulk().importFile(f))closeAddCopy();
+});
+$('[data-dy-modaltemplate]',ADDMODAL).addEventListener('click',function(e){e.preventDefault();toast('模板已下载')});
+function bindAntdRadios(){
+  var all=$$('.rea-dy-adminform input[type=radio]');
+  all.forEach(function(r){
+    r.addEventListener('change',function(){
+      if(!r.checked)return;
+      all.forEach(function(x){
+        if(x.name!==r.name)return;
+        var w=x.closest('.ant-radio-wrapper');if(w)w.classList.toggle('ant-radio-wrapper-checked',x.checked);
+        var a=x.closest('.ant-radio');if(a)a.classList.toggle('ant-radio-checked',x.checked);
+      });
+    });
+  });
+}
+bindAntdRadios();
+$$('.ant-switch').forEach(function(sw){
+  sw.addEventListener('click',function(){
+    var on=sw.getAttribute('aria-checked')==='true';
+    sw.setAttribute('aria-checked',on?'false':'true');
+    sw.classList.toggle('ant-switch-checked',!on);
+  });
+});
+$('[data-xn-form]').addEventListener('submit',function(e){
+  e.preventDefault();
+  if(ADDMODAL&&!ADDMODAL.hidden)return;
+  var name=(nameInput.value||'').replace(/^\s+|\s+$/g,'');
+  if(!name){toast('请输入任务名称');nameInput.focus();return}
+  var b=activeBulk(),st=b.getState();
+  if(!st.videos.length){toast('请添加内容');return}
+  var nd=$('[data-xn-notify-date]').value,nt=$('[data-xn-notify-time]').value,
+      ed=$('[data-xn-end-date]').value,et=$('[data-xn-end-time]').value;
+  if(!nd||!nt||!ed||!et){toast('请选择通知时间和截止时间');return}
+  if((ed+' '+et)<=(nd+' '+nt)){toast('截止时间需晚于通知时间');return}
+  var first=st.copies[0],copy='',topic='';
+  if(first&&first.groups&&first.groups[0]){copy=first.groups[0].copy||'';topic=first.groups[0].topic||''}
+  var task={id:'xn-'+Date.now(),name:name,type:TYPE,copy:copy,topic:topic,count:st.videos.length,
+    who:'张伯阳 等 2 人',start:nd+' '+nt,end:ed+' '+et,state:'执行中',created:stamp(),creator:'18569299465'};
+  var btn=$('[data-xn-save]');btn.disabled=true;btn.textContent='保存中…';
+  toast('任务已保存');
+  setTimeout(function(){parent.postMessage({reaPage:LIST,reaXnSave:task},'*')},700);
+});
+$$('[data-xn-cancel],[data-xn-back]').forEach(function(b){b.addEventListener('click',function(e){e.preventDefault();parent.postMessage({reaPage:LIST},'*')})});
+(function(){
+  var rows=document.querySelectorAll('.ykSideTwoColSecondaryList .ykMenuItemRow'),i;
+  for(i=0;i<rows.length;i++){
+    var sp=rows[i].querySelector('.ykMenuText'),t=sp?(sp.getAttribute('title')||sp.textContent||'').trim():'';
+    if(t==='笔记发布'){rows[i].classList.add('ykActive');rows[i].setAttribute('aria-current','page')}
+    else if(rows[i].classList.contains('ykActive')){rows[i].classList.remove('ykActive');rows[i].removeAttribute('aria-current')}
+  }
 })();
 })();`;
   }
@@ -37281,6 +37392,7 @@ syncTip();drawRows();
   var labels = opts.labels || {};
   var modes = opts.modes || [{key:'manual',label:'手动填写'}];
   var MODE = opts.defaultMode || (modes[0] && modes[0].key) || 'manual';
+  var MEDIA = opts.mediaType || 'video';
   var MAX = opts.maxVideos || 50;
   var VIDEOS = [];
   var COPIES = [];
@@ -37330,6 +37442,13 @@ syncTip();drawRows();
   var importBox=$('[data-bulk-import]'), aiBox=$('[data-bulk-ai]'), aiInput=$('[data-bulk-aiinput]'), aiErr=$('[data-bulk-aierr]');
   var importChip=$('[data-bulk-importfile]'), importInput=$('[data-bulk-importinput]');
   var vinput=$('[data-bulk-vinput]'), cinput=$('[data-bulk-cinput]');
+  if(MEDIA==='image'){
+    var emptyP=$('[data-bulk-empty] p'); if(emptyP)emptyP.textContent='还没有图片';
+    var emptyB=$('[data-bulk-empty] [data-bulk-addvideo]'); if(emptyB)emptyB.textContent='+ 添加图片';
+    var ths=$$('.rea-bulk-table thead th'); if(ths[1])ths[1].textContent='图片素材'; if(ths[2])ths[2].style.display='none';
+    var cols=$$('.rea-bulk-table colgroup col'); if(cols[2])cols[2].style.display='none';
+    vinput.accept='image/png,image/jpeg';
+  }
   /* 抖音新建页按现网表单排布：素材表留在「发布内容」行，文案列表挪到「文案类型」下面的独立行 */
   if(opts.copyRoot && opts.copyRoot.appendChild) opts.copyRoot.appendChild(copyBlock);
   if(opts.hideCopyHead && copyBlock){ var copyHead=copyBlock.querySelector('.rea-bulk-copy-h'); if(copyHead)copyHead.style.display='none'; }
@@ -37382,23 +37501,32 @@ syncTip();drawRows();
       var tr=el('tr'); tr.setAttribute('data-bulk-row',String(i));
       tr.appendChild(el('td','rea-bulk-no',String(i+1)));
       var tdV=el('td'), vc=el('div','rea-bulk-vcell');
-      var tile=el('span','rea-bulk-vtile'); tile.appendChild(el('i')); vc.appendChild(tile);
       var meta=el('div','rea-bulk-vmeta');
-      var nm=el('b','rea-bulk-vname',v.name); nm.title=v.name; meta.appendChild(nm);
-      var rp=el('button','rea-bulk-link','更换'); rp.type='button'; rp.setAttribute('data-bulk-replacevideo',String(i)); meta.appendChild(rp);
-      vc.appendChild(meta); tdV.appendChild(vc); tr.appendChild(tdV);
-      var tdC=el('td','rea-bulk-covercell');
-      if(v.cover){
-        var box=el('div','rea-bulk-coverbox');
-        var pic=el('button','rea-bulk-coverpic'); pic.type='button'; pic.setAttribute('data-bulk-cover',String(i)); pic.setAttribute('aria-label','更换封面');
-        var im=document.createElement('img'); im.src=v.cover.src; im.alt='视频封面'; pic.appendChild(im); box.appendChild(pic);
-        var delc=el('button','rea-bulk-coverdel','×'); delc.type='button'; delc.setAttribute('data-bulk-coverdel',String(i)); delc.setAttribute('aria-label','删除封面'); box.appendChild(delc);
-        tdC.appendChild(box);
+      if(MEDIA==='image'){
+        var ith=el('span','rea-bulk-ithumb'); var im0=document.createElement('img'); im0.src=(v.imgs&&v.imgs[0]?v.imgs[0].src:''); im0.alt='图片'; ith.appendChild(im0); vc.appendChild(ith);
+        var nm0=el('b','rea-bulk-vname',v.name); nm0.title=v.name; meta.appendChild(nm0);
+        meta.appendChild(el('span','rea-bulk-imgs','共 '+(v.imgs?v.imgs.length:0)+' 张'));
+        var rp0=el('button','rea-bulk-link','更换'); rp0.type='button'; rp0.setAttribute('data-bulk-replacevideo',String(i)); meta.appendChild(rp0);
       } else {
-        var addc=el('button','rea-bulk-coverempty'); addc.type='button'; addc.setAttribute('data-bulk-cover',String(i)); addc.setAttribute('aria-label','添加封面');
-        addc.appendChild(el('b',null,'+')); addc.appendChild(el('em',null,'默认')); addc.title='未设置封面，使用平台默认'; tdC.appendChild(addc);
+        var tile=el('span','rea-bulk-vtile'); tile.appendChild(el('i')); vc.appendChild(tile);
+        var nm=el('b','rea-bulk-vname',v.name); nm.title=v.name; meta.appendChild(nm);
+        var rp=el('button','rea-bulk-link','更换'); rp.type='button'; rp.setAttribute('data-bulk-replacevideo',String(i)); meta.appendChild(rp);
       }
-      tr.appendChild(tdC);
+      vc.appendChild(meta); tdV.appendChild(vc); tr.appendChild(tdV);
+      if(MEDIA!=='image'){
+        var tdC=el('td','rea-bulk-covercell');
+        if(v.cover){
+          var box=el('div','rea-bulk-coverbox');
+          var pic=el('button','rea-bulk-coverpic'); pic.type='button'; pic.setAttribute('data-bulk-cover',String(i)); pic.setAttribute('aria-label','更换封面');
+          var im=document.createElement('img'); im.src=v.cover.src; im.alt='视频封面'; pic.appendChild(im); box.appendChild(pic);
+          var delc=el('button','rea-bulk-coverdel','×'); delc.type='button'; delc.setAttribute('data-bulk-coverdel',String(i)); delc.setAttribute('aria-label','删除封面'); box.appendChild(delc);
+          tdC.appendChild(box);
+        } else {
+          var addc=el('button','rea-bulk-coverempty'); addc.type='button'; addc.setAttribute('data-bulk-cover',String(i)); addc.setAttribute('aria-label','添加封面');
+          addc.appendChild(el('b',null,'+')); addc.appendChild(el('em',null,'默认')); addc.title='未设置封面，使用平台默认'; tdC.appendChild(addc);
+        }
+        tr.appendChild(tdC);
+      }
       var pair=pairFor(i);
       if(opts.inlineCopy){
         var tdT=el('td','rea-bulk-cell'); var ti=el('input','rea-bulk-tinput'); ti.type='text'; ti.maxLength=20; ti.value=pair.title; ti.placeholder=labels.title||'标题'; ti.setAttribute('data-bulk-inline','title'); ti.setAttribute('data-row',String(i)); ti.setAttribute('aria-label',ti.placeholder); tdT.appendChild(ti); tr.appendChild(tdT);
@@ -37469,6 +37597,26 @@ syncTip();drawRows();
   }
   function pickVideos(){ REPLACE_VIDEO=-1; vinput.value=''; vinput.click(); }
   function pickCovers(){ COVER_ROW=-1; cinput.value=''; cinput.click(); }
+  function readImageGroup(files, cb){
+    var ok=[];
+    files.forEach(function(f){
+      if(!/^image\/(png|jpe?g)$/.test(f.type)){ toast('图片只支持 png、jpg'); return; }
+      if(f.size>20*1024*1024){ toast('「'+f.name+'」超过 20MB，已跳过'); return; }
+      ok.push(f);
+    });
+    if(ok.length>18){ toast('一组最多 18 张图片'); ok=ok.slice(0,18); }
+    if(!ok.length){ cb([]); return; }
+    var imgs=new Array(ok.length),done=0;
+    ok.forEach(function(f,idx){
+      var rd=new FileReader();
+      rd.onload=function(){
+        imgs[idx]={src:rd.result,name:f.name};
+        done++;
+        if(done===ok.length)cb(imgs);
+      };
+      rd.readAsDataURL(f);
+    });
+  }
   function addVideoFiles(files){
     var room=MAX-VIDEOS.length;
     if(room<=0){ toast('一个任务最多 '+MAX+' 条内容'); return; }
@@ -37596,6 +37744,20 @@ syncTip();drawRows();
   vinput.addEventListener('change',function(){
     var files=Array.prototype.slice.call(this.files||[]); this.value='';
     if(!files.length) return;
+    if(MEDIA==='image'){
+      readImageGroup(files,function(imgs){
+        if(!imgs.length)return;
+        if(REPLACE_VIDEO>=0){
+          var ri=REPLACE_VIDEO; REPLACE_VIDEO=-1;
+          if(VIDEOS[ri]){VIDEOS[ri]={name:imgs[0].name,imgs:imgs,cover:null};renderTable();renderCopies();sync();}
+          return;
+        }
+        if(MAX-VIDEOS.length<=0){toast('一个任务最多 '+MAX+' 条内容');return;}
+        VIDEOS.push({name:imgs[0].name,imgs:imgs,cover:null});
+        renderTable();renderCopies();sync();
+      });
+      return;
+    }
     if(REPLACE_VIDEO>=0){ var i=REPLACE_VIDEO; REPLACE_VIDEO=-1; if(VIDEOS[i]){VIDEOS[i]={name:files[0].name,size:files[0].size,cover:null}; renderTable(); renderCopies(); sync();} return; }
     addVideoFiles(files);
   });
@@ -38992,6 +39154,9 @@ draw();
 .rea-dy-adminform .rea-bulk-table td.rea-bulk-cell{padding:6px;white-space:normal;overflow:visible;text-overflow:clip}
 .rea-dy-adminform .rea-bulk-tinput{width:100%;height:58px;padding:0 8px;border:1px solid #d9d9d9;border-radius:6px;background:#fff;color:rgba(0,0,0,.88);font:inherit;font-size:14px;outline:none}
 .rea-dy-adminform .rea-bulk-vtile{display:none}
+.rea-dy-adminform .rea-bulk-ithumb{flex:none;width:28px;height:36px;border-radius:4px;overflow:hidden;background:#f5f5f5}
+.rea-dy-adminform .rea-bulk-ithumb img{width:100%;height:100%;object-fit:cover;display:block}
+.rea-dy-adminform .rea-bulk-imgs{font-size:12px;color:#999;line-height:1.2}
 .rea-dy-adminform .rea-bulk-ops [data-bulk-upvideo],.rea-dy-adminform .rea-bulk-ops [data-bulk-downvideo]{display:none}
 .rea-dy-adminform .rea-bulk-tinput::placeholder,.rea-dy-adminform .rea-bulk-tarea::placeholder{color:transparent}
 .rea-dy-adminform .rea-bulk-help{display:none}
@@ -39048,7 +39213,7 @@ draw();
     /* 笔记发布三页（2026-11-23）：合成页没有正文缝，覆盖脚本整段换 #subapp-viewport，
        样式共用 REA_XN_CSS；列表页的演示集与新建页保存的任务经 reaDataJs / postMessage 共用一份。 */
     [REA_XN_PAGE]: { css: REA_XN_CSS, js: reaXhsNoteListJs },
-    [REA_XN_NEW]: { css: REA_XN_CSS + REA_VC_CSS + REA_BULK_CSS, js: reaXhsNoteNewJs },
+    [REA_XN_NEW]: { css: REA_XN_CSS + REA_VC_CSS + REA_DY_ADMIN_CSS + REA_BULK_CSS, js: reaXhsNoteNewJs },
     [REA_XN_DETAIL]: { css: REA_XN_CSS + REA_WX_SNAP_CSS, js: function(){ return reaXhsNoteDetailJs() + reaWxSnapshotDrawerJs(REA_XN_DETAIL); } },
     /* 小红书运营三页（2026-11-23）：同组、同壳；样式在 REA_XN_CSS 之上补 REA_XHOP_CSS
        （选项组、话题面板、页签、弹窗、搜索框）。正文来自 srcXhsOp／srcXhsOpNew／srcXhsOpDetail。 */
