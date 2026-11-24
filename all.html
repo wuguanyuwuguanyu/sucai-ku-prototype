@@ -37704,7 +37704,7 @@ syncTip();drawRows();
       if(f.size>20*1024*1024){ toast('「'+f.name+'」超过 20MB，已跳过'); return; }
       ok.push(f);
     });
-    if(ok.length>18){ toast('一组最多 18 张图片'); ok=ok.slice(0,18); }
+    if(ok.length>18){ toast('最多上传 18 张图片'); ok=ok.slice(0,18); }
     if(!ok.length){ cb([]); return; }
     var imgs=new Array(ok.length),done=0;
     ok.forEach(function(f,idx){
