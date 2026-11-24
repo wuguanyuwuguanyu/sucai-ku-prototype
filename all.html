@@ -37505,7 +37505,7 @@ syncTip();drawRows();
   var colHtml = '<col style="width:36px">';
   if(!TEXT_ONLY) colHtml += '<col style="width:22%"><col style="width:60px">';
   FIELDS.forEach(function(f){ colHtml += '<col style="width:'+(f.width||'17%')+'">'; });
-  colHtml += '<col style="width:'+((MEDIA==='image'&&!TEXT_ONLY)?'84px':'64px')+'">';
+  colHtml += '<col style="width:64px">';
   var headHtml = '<th>#</th>';
   if(!TEXT_ONLY) headHtml += '<th>视频素材</th><th>封面<span class="rea-bulk-help" tabindex="0" role="img" aria-label="视频封面说明" title="建议竖版 3:4（1080×1440），支持 png、jpg，单张不超过 10MB；不上传则用平台默认封面">?</span></th>';
   FIELDS.forEach(function(f){ headHtml += '<th>'+f.label+'</th>'; });
@@ -37709,8 +37709,9 @@ syncTip();drawRows();
       var tr=el('tr'); tr.setAttribute('data-bulk-row',String(i));
       tr.appendChild(el('td','rea-bulk-no',String(i+1)));
       if(!TEXT_ONLY){
-        var tdV=el('td'), vc=el('div','rea-bulk-vcell');
-        var meta=el('div','rea-bulk-vmeta');
+        var tdV=el('td'), vc=el(MEDIA==='image'?'button':'div','rea-bulk-vcell'+(MEDIA==='image'?' rea-bulk-vcell--btn':''));
+        if(MEDIA==='image'){vc.type='button';vc.setAttribute('data-bulk-imgmgr',String(i));vc.setAttribute('aria-label','查看和调整这一行的图片');}
+        var meta=el(MEDIA==='image'?'span':'div','rea-bulk-vmeta');
         if(MEDIA==='image'){
           var ith=el('span','rea-bulk-ithumb'); var im0=document.createElement('img'); im0.src=(v.imgs&&v.imgs[0]?v.imgs[0].src:''); im0.alt='图片'; ith.appendChild(im0); vc.appendChild(ith);
           meta.appendChild(el('span','rea-bulk-imgs','共 '+(v.imgs?v.imgs.length:0)+' 张'));
@@ -37752,9 +37753,6 @@ syncTip();drawRows();
         tr.appendChild(td);
       });
       var tdOps=el('td'), ops=el('div','rea-bulk-ops');
-      if(MEDIA==='image'&&!TEXT_ONLY){
-        var mg=el('button','rea-bulk-link','图片'); mg.type='button'; mg.setAttribute('data-bulk-imgmgr',String(i)); mg.setAttribute('aria-label','管理这一行的图片'); ops.appendChild(mg);
-      }
       var up=el('button',null,'↑'); up.type='button'; up.setAttribute('data-bulk-upvideo',String(i)); up.setAttribute('aria-label','上移'); up.title='上移'; up.disabled=i===0; ops.appendChild(up);
       var down=el('button',null,'↓'); down.type='button'; down.setAttribute('data-bulk-downvideo',String(i)); down.setAttribute('aria-label','下移'); down.title='下移'; down.disabled=i===VIDEOS.length-1; ops.appendChild(down);
       var del=el('button','rea-bulk-del','×'); del.type='button'; del.setAttribute('data-bulk-delvideo',String(i)); del.setAttribute('aria-label','删除这条内容'); del.title='删除'; ops.appendChild(del);
@@ -39265,6 +39263,8 @@ draw();
 .rea-bulk-table tr:last-child td{border-bottom:0}
 .rea-bulk-no{color:#8F959E;font-size:12px}
 .rea-bulk-vcell{display:flex;align-items:center;gap:10px;min-width:0}
+.rea-bulk-vcell--btn{width:100%;border:0;background:none;padding:0;font:inherit;color:inherit;text-align:left;cursor:pointer}
+.rea-bulk-vcell--btn:hover .rea-bulk-ithumb{outline:2px solid #1677ff;outline-offset:1px}
 .rea-bulk-vtile{position:relative;flex:none;width:38px;height:50px;border-radius:4px;background:linear-gradient(135deg,#1F2329,#3A404A);display:flex;align-items:center;justify-content:center}
 .rea-bulk-vtile i{width:0;height:0;border-style:solid;border-width:6px 0 6px 10px;border-color:transparent transparent transparent #fff}
 .rea-bulk-vmeta{min-width:0;display:flex;flex-direction:column;gap:2px}
@@ -39281,8 +39281,7 @@ draw();
 .rea-bulk-coverempty em{font-style:normal}
 .rea-bulk-cell{font-size:13px;color:#646A73;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .rea-bulk-cell.is-empty{color:#C9CED6}
-.rea-bulk-ops{display:flex;align-items:center;gap:2px;justify-content:flex-end;white-space:nowrap}
-.rea-bulk-ops .rea-bulk-link{flex:none;white-space:nowrap}
+.rea-bulk-ops{display:flex;align-items:center;gap:2px;justify-content:flex-end}
 .rea-bulk-ops button{width:22px;height:22px;padding:0;border:0;border-radius:4px;background:none;color:#8F959E;font-size:14px;line-height:1;cursor:pointer}
 .rea-bulk-ops button:hover:not(:disabled){background:#E6F4FF;color:#1677FF}
 .rea-bulk-ops button:disabled{opacity:.3;cursor:default}
