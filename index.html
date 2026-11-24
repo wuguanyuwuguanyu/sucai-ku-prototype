@@ -19463,7 +19463,7 @@ render();
   <div class="rea-xn-crumb"><a data-xn-back>笔记发布</a><span>/</span><span>任务详情</span></div>
   <div class="rea-xn-head"><h1>任务详情</h1></div>
   <section class="rea-xn-sec">
-    <h2>任务信息</h2>
+    <div class="rea-xn-sechead"><h2>任务信息</h2><button type="button" class="rea-xn-btn" data-wx-snap>查看任务配置快照</button></div>
     <div class="rea-xn-info">
       <div class="rea-xn-info-item"><span>任务名称</span><b data-xn-i="name">—</b></div>
       <div class="rea-xn-info-item"><span>任务类型</span><b data-xn-i="kind">笔记发布</b></div>
@@ -20105,7 +20105,7 @@ render();
 
 <script type="text/plain" id="srcDyDetail"><div class="rea-dy-head rea-dy-head--sub"><div class="rea-dy-crumb"><a href="#" data-dy-back>发短视频</a><span>/</span><span>任务详情</span></div><h1>任务详情</h1></div>
 <section class="rea-dy-sec">
-  <div class="rea-dy-sec-h"><h2>任务信息</h2><button type="button" class="rea-dy-link" data-dy-snap>查看任务配置快照</button></div>
+  <div class="rea-dy-sec-h"><h2>任务信息</h2><button type="button" class="rea-dy-link" data-wx-snap>查看任务配置快照</button></div>
   <dl class="rea-dy-info">
     <div><dt>任务名称</dt><dd>发短视频任务20261029</dd></div>
     <div><dt>任务类型</dt><dd>发短视频</dd></div>
@@ -20131,28 +20131,6 @@ render();
   <div class="rea-dy-pager"><span class="rea-dy-total">共 1 条记录</span><span class="rea-dy-pages"><button type="button" class="on">1</button></span><span class="rea-dy-size">10 条/页</span></div>
 </section>
 <div class="rea-dy-mask" data-dy-mask hidden></div>
-<aside class="rea-dy-drawer" data-dy-drawer hidden aria-label="任务配置快照">
-  <div class="rea-dy-drawer-h"><h3>任务配置快照</h3><button type="button" class="rea-dy-x" data-dy-close aria-label="关闭">×</button></div>
-  <div class="rea-dy-drawer-b"><dl class="rea-dy-snap">
-    <div><dt>任务名称</dt><dd>发短视频任务20261029</dd></div>
-    <div><dt>执行人员</dt><dd>18569299465</dd></div>
-    <div><dt>发布应用</dt><dd>微小助</dd></div>
-    <div><dt>素材来源</dt><dd>临时创建</dd></div>
-    <div><dt>发布类型</dt><dd>发视频</dd></div>
-    <div><dt>选择视频来源</dt><dd>手动上传</dd></div>
-    <div><dt>上传视频</dt><dd>demo-video.mp4</dd></div>
-    <div><dt>视频封面</dt><dd>cover.jpg</dd></div>
-    <div><dt>文案类型</dt><dd>AI生成</dd></div>
-    <div><dt>视频文案</dt><dd>秋季新品到店，到店试戴有礼。</dd></div>
-    <div><dt>视频标题</dt><dd>秋季新品到店</dd></div>
-    <div><dt>视频话题</dt><dd>#秋季新品#到店有礼</dd></div>
-    <div><dt>推广类型</dt><dd>不添加推广</dd></div>
-    <div><dt>任务类型</dt><dd>单次任务</dd></div>
-    <div><dt>全局弹窗</dt><dd>关</dd></div>
-    <div><dt>通知时间</dt><dd>2026/10/29 11:02</dd></div>
-    <div><dt>截止时间</dt><dd>2026/11/05 11:02</dd></div>
-  </dl></div>
-</aside>
 <div class="rea-dy-modal" data-dy-modal hidden role="dialog" aria-label="发布视频">
   <div class="rea-dy-modal-box">
     <div class="rea-dy-modal-h"><h3>发布视频</h3><button type="button" class="rea-dy-x" data-dy-close-video aria-label="关闭">×</button></div>
@@ -29917,22 +29895,13 @@ dl.rea-dy-info{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12
 .rea-dy-tag{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:6px;
   background:#E6F4FF;color:#1677FF;font-size:12px}
 
-/* ---------- 抽屉 / 弹窗 / 提示 ---------- */
+/* ---------- 弹窗 / 提示 ---------- */
 .rea-dy-mask{position:fixed;inset:0;background:rgba(15,23,42,.35);z-index:1000}
-.rea-dy-drawer{position:fixed;top:0;right:0;bottom:0;width:520px;max-width:92vw;background:#fff;
-  z-index:1001;box-shadow:-8px 0 24px rgba(15,23,42,.12);display:flex;flex-direction:column}
-.rea-dy-mask[hidden],.rea-dy-drawer[hidden],.rea-dy-modal[hidden]{display:none}
-.rea-dy-drawer-h{display:flex;align-items:center;justify-content:space-between;
-  padding:20px 24px 12px;border-bottom:1px solid #E5E8EF}
-.rea-dy-drawer-h h3,.rea-dy-modal-h h3{margin:0;font-size:16px;font-weight:600}
+.rea-dy-mask[hidden],.rea-dy-modal[hidden]{display:none}
+.rea-dy-modal-h h3{margin:0;font-size:16px;font-weight:600}
 .rea-dy-x{width:28px;height:28px;border:0;border-radius:6px;background:none;color:#8F959E;
   font-size:20px;line-height:1;cursor:pointer}
 .rea-dy-x:hover{background:#F7F8FA;color:#1F2329}
-.rea-dy-drawer-b{padding:16px 24px 32px;overflow:auto}
-.rea-dy-snap{margin:0}
-.rea-dy-snap>div{display:flex;gap:16px;padding:10px 0;border-bottom:1px solid #F0F2F5}
-.rea-dy-snap dt{flex:none;width:120px;color:#8F959E;font-size:13px}
-.rea-dy-snap dd{margin:0;font-size:13px;overflow-wrap:anywhere}
 .rea-dy-modal{position:fixed;inset:0;z-index:1002;display:flex;align-items:center;justify-content:center;
   padding:24px;background:rgba(15,23,42,.45)}
 .rea-dy-modal-box{width:420px;max-width:100%;background:#fff;border-radius:12px;overflow:hidden;
@@ -31049,6 +31018,8 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
      创建页没有的系统字段收在顶部基础信息，创建页不存在的字段留在更多设置，
      编号 ①②③④ 去掉。客户唤醒创建页本来无分组，这里也连着排。
      六张页共用一份数据表与一个渲染器，避免六个静态块各写一遍。
+     2026-11-24 起，发短视频／笔记发布／视频号发布任务三张详情页也接同一套抽屉
+     与数据表，分组照各自的创建页；笔记发布的名称／状态等按当前那条任务回填。
      只动内嵌覆盖件：不动 _online-admin.js、不重跑构建。
      ============================================================ */
   /* 分组标题图标（2026-11-16）：详情页任务信息、配置快照抽屉、五张新建页共用一套。
@@ -31071,6 +31042,7 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
     '可见范围':REA_WX_SEC_SVG.eye,
     '发送范围':REA_WX_SEC_SVG.users,
     '发送内容':REA_WX_SEC_SVG.message,
+    '发布内容':REA_WX_SEC_SVG.message,
     '添加对象':REA_WX_SEC_SVG.userPlus,
     '添加设置':REA_WX_SEC_SVG.sliders,
     '唤醒对象':REA_WX_SEC_SVG.bell,
@@ -31261,6 +31233,75 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
       ],
       preview:{kind:'chat',from:'雅楠002',text:'您好，好久没联系了，最近店里到了新品，给您留了一份资料，方便的话回我一下～'}
     },
+    /* 发短视频（2026-11-24）：字段照「发短视频 · 新建」表单，按详情页的三组回放。
+       任务发布渠道是详情页才有的系统字段，与有效期、创建时间一起收在基础信息。 */
+    '发短视频 · 任务配置快照': {
+      list:'发短视频', detail:'发短视频 · 详情',
+      base:[
+        {label:'任务类型',value:'发短视频'},
+        {label:'任务状态',value:'执行完毕'},
+        {label:'有效期',value:'2026/10/29 11:02~2026/11/05 11:02'},
+        {label:'任务发布渠道',value:'抖音'},
+        {label:'创建时间',value:'2026-10-29 11:02'}
+      ],
+      sections:[
+        {title:'任务安排',rows:[
+          {label:'任务名称',value:'发短视频任务20261029'},
+          {label:'执行人员',value:'18569299465'},
+          {label:'发布应用',value:'微小助'},
+          {label:'推广类型',value:'不添加推广'},
+          {label:'循环方式',value:'单次任务'},
+          {label:'通知时间',value:'2026-10-29 11:02'},
+          {label:'截止时间',value:'2026-11-05 11:02'},
+          {label:'全局弹窗',value:'关闭'}
+        ]},
+        {title:'视频内容',rows:[
+          {label:'素材来源',value:'临时创建'},
+          {label:'发布类型',value:'发视频'},
+          {label:'选择视频来源',value:'手动上传'},
+          {label:'上传视频',value:'demo-video.mp4'},
+          {label:'视频封面',value:'cover.jpg'},
+          {label:'文案类型',value:'AI生成'},
+          {label:'视频文案',value:'秋季新品到店，到店试戴有礼。'},
+          {label:'视频标题',value:'秋季新品到店'},
+          {label:'视频话题',value:'#秋季新品#到店有礼'}
+        ]}
+      ]
+    },
+    /* 笔记发布（2026-11-24）：字段照「笔记发布 · 新建」表单（基本信息／发布内容／任务设置），
+       按详情页的三组回放。发布渠道是详情页才有的系统字段，与有效期、创建时间收在基础信息。 */
+    '笔记发布 · 任务配置快照': {
+      list:'笔记发布', detail:'笔记发布 · 详情',
+      /* 列表可点开任意一条任务，名称／状态／有效期／创建时间按详情页回显的那条同步；
+         其余配置仍是创建时冻结的演示值。 */
+      dyn:{name:'[data-xn-i="name"]',state:'[data-xn-i="state"]',valid:'[data-xn-i="valid"]',created:'[data-xn-i="created"]'},
+      base:[
+        {label:'任务类型',value:'笔记发布'},
+        {label:'任务状态',value:'执行完毕',key:'state'},
+        {label:'有效期',value:'2026/11/02 11:19 ~ 2026/11/09 11:14',key:'valid'},
+        {label:'发布渠道',value:'小红书'},
+        {label:'创建时间',value:'2026-11-02 11:14',key:'created'}
+      ],
+      sections:[
+        {title:'任务安排',rows:[
+          {label:'任务名称',value:'笔记发布任务20261102',key:'name'},
+          {label:'执行人员',value:'测试人员33'},
+          {label:'发布应用',value:'微小助'},
+          {label:'循环方式',value:'单次任务'},
+          {label:'通知时间',value:'2026-11-02 11:19'},
+          {label:'截止时间',value:'2026-11-09 11:14'},
+          {label:'全局弹窗',value:'关闭'}
+        ]},
+        {title:'发布内容',rows:[
+          {label:'素材来源',value:'临时创建'},
+          {label:'发布类型',value:'发图文'},
+          {label:'选择图片',value:'门店新品 1.jpg 等 3 张'},
+          {label:'视频文案',value:'秋季新品到店，三张图看全系列配色。'},
+          {label:'视频标题',value:'秋季新品到店'},
+          {label:'视频话题',value:'#秋季新品 #店内实拍'}
+        ]}
+      ]
+    },
     /* 视频号发布任务（2026-11-23）：字段照「视频号发布任务 · 新建」快照里的表单，
        新建页是扁平表单、没有分组，这里按详情页首屏的三组回放。
        任务发布渠道是详情页才有的系统字段，与创建时间一起收在基础信息。 */
@@ -31301,13 +31342,15 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
       .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
   function wxsRows(rows){
-    var h='',i,r,v;
+    var h='',i,r,v,attr;
     for(i=0;i<rows.length;i++){
       r=rows[i];
       if(r.preview)v='<button type="button" class="rea-wxs-link" data-wxs-view="1">查看</button>';
       else if(r.empty)v='<span class="rea-wxs-empty">'+wxsEsc(r.value)+'</span>';
       else v=wxsEsc(r.value);
-      h+='<div class="rea-wxs-row"><span>'+wxsEsc(r.label)+'</span><div>'+v+'</div></div>';
+      /* key 只给需要按当前任务回填的行（笔记发布详情可点开不同任务），其余保持静态。 */
+      attr=r.key?' data-wxs-f="'+wxsEsc(r.key)+'"':'';
+      h+='<div class="rea-wxs-row"><span>'+wxsEsc(r.label)+'</span><div'+attr+'>'+v+'</div></div>';
     }
     return h;
   }
@@ -31388,6 +31431,7 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
 var H=${reaJson(reaWxSnapshotDrawerHtml(key))};
 var B=${reaJson(body)};
 var KIND=${reaJson(d.preview?d.preview.kind:'')};
+var DYN=${reaJson(d.dyn||null)};
 var BTN=document.querySelector('[data-wx-snap]');
 if(!BTN||document.querySelector('[data-wx-snap-drawer]'))return;
 var host=document.createElement('div');
@@ -31417,7 +31461,21 @@ function close(){
   DRAWER.classList.remove('on');
   DRAWER.setAttribute('aria-hidden','true');
 }
+/* 任务名／状态等按详情页当前那条回填；页面里找不到对应项就保留静态演示值。 */
+function syncDyn(){
+  if(!DYN)return;
+  var name='',k,src,dst;
+  for(k in DYN){
+    src=document.querySelector(DYN[k]);if(!src)continue;
+    dst=DRAWER.querySelector('[data-wxs-f="'+k+'"]');if(!dst)continue;
+    dst.textContent=src.textContent;
+    if(k==='name')name=src.textContent;
+  }
+  var sub=DRAWER.querySelector('.rea-wxd-dsub');
+  if(name&&sub)sub.textContent=name+' · 只读';
+}
 function open(){
+  syncDyn();
   MASK.classList.add('on');
   DRAWER.classList.add('on');
   DRAWER.setAttribute('aria-hidden','false');
@@ -36638,13 +36696,12 @@ if(PAGE==="new"){
 }
 
 if(PAGE==="detail"){
-  var mask=$("[data-dy-mask]"),drawer=$("[data-dy-drawer]"),modal=$("[data-dy-modal]");
-  function closeAll(){mask.hidden=true;drawer.hidden=true;modal.hidden=true}
-  $("[data-dy-snap]").addEventListener("click",function(){mask.hidden=false;drawer.hidden=false});
-  $("[data-dy-close]").addEventListener("click",closeAll);
-  $("[data-dy-close-video]").addEventListener("click",closeAll);
-  mask.addEventListener("click",closeAll);
-  document.addEventListener("keydown",function(e){if(e.key==="Escape")closeAll()});
+  /* 配置快照抽屉由 reaWxSnapshotDrawerJs 挂；这里只管「发布视频」预览弹窗与它的遮罩。 */
+  var mask=$("[data-dy-mask]"),modal=$("[data-dy-modal]");
+  function closeVideo(){mask.hidden=true;modal.hidden=true}
+  $("[data-dy-close-video]").addEventListener("click",closeVideo);
+  mask.addEventListener("click",closeVideo);
+  document.addEventListener("keydown",function(e){if(e.key==="Escape")closeVideo()});
   $("[data-dy-video]").addEventListener("click",function(e){e.preventDefault();mask.hidden=false;modal.hidden=false});
   $("[data-dy-export]").addEventListener("click",function(){toast("已导出")});
   $$("[data-dy-back]").forEach(function(b){b.addEventListener("click",function(e){e.preventDefault();go(LIST)})});
@@ -37494,7 +37551,7 @@ draw();
        样式共用 REA_XN_CSS；列表页的演示集与新建页保存的任务经 reaDataJs / postMessage 共用一份。 */
     [REA_XN_PAGE]: { css: REA_XN_CSS, js: reaXhsNoteListJs },
     [REA_XN_NEW]: { css: REA_XN_CSS + REA_VC_CSS, js: reaXhsNoteNewJs },
-    [REA_XN_DETAIL]: { css: REA_XN_CSS, js: reaXhsNoteDetailJs },
+    [REA_XN_DETAIL]: { css: REA_XN_CSS + REA_WX_SNAP_CSS, js: function(){ return reaXhsNoteDetailJs() + reaWxSnapshotDrawerJs(REA_XN_DETAIL); } },
     /* 小红书运营三页（2026-11-23）：同组、同壳；样式在 REA_XN_CSS 之上补 REA_XHOP_CSS
        （选项组、话题面板、页签、弹窗、搜索框）。正文来自 srcXhsOp／srcXhsOpNew／srcXhsOpDetail。 */
     [REA_XHOP_PAGE]: { css: REA_XN_CSS + REA_XHOP_CSS + REA_OP_CSS, js: reaXhsOpListJs },
@@ -37504,7 +37561,7 @@ draw();
        这里只登记样式与交互；没有 html 载体，reaSplice 原样放过。 */
     [REA_DY_PAGE]: { css: REA_DY_CSS, js: function(){ return reaDyJs('list'); } },
     [REA_DY_NEW]: { css: REA_DY_CSS + REA_VC_CSS, js: function(){ return reaDyJs('new'); } },
-    [REA_DY_DETAIL]: { css: REA_DY_CSS, js: function(){ return reaDyJs('detail'); } },
+    [REA_DY_DETAIL]: { css: REA_DY_CSS + REA_WX_SNAP_CSS, js: function(){ return reaDyJs('detail') + reaWxSnapshotDrawerJs(REA_DY_DETAIL); } },
     /* 抖音营销 · 抖音运营三页（2026-11-23）：同上，运行时合成页；正文来自
        srcDyOpList／srcDyOpNew／srcDyOpDetail，样式在 REA_DY_CSS 之上补 REA_DY_OP_CSS。 */
     [REA_DY_OP_PAGE]: { css: REA_DY_CSS + REA_DY_OP_CSS + REA_OP_CSS, js: function(){ return reaDyOpJs('list'); } },
