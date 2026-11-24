@@ -19744,16 +19744,6 @@ render();
           <div class="rea-xh-opts" data-xh-send>
             <button type="button" class="rea-xh-opt is-on" data-v="私信消息">私信消息</button>
             <button type="button" class="rea-xh-opt" data-v="回复评论">回复评论</button>
-            <button type="button" class="rea-xh-opt" data-v="前往主页笔记评论">前往主页笔记评论</button>
-          </div>
-        </div>
-      </div>
-      <div class="rea-xn-row" data-xh-fallback hidden>
-        <span class="rea-xn-label">取不到笔记时</span>
-        <div class="rea-xn-ctl rea-xn-ctl--mid">
-          <div class="rea-xh-opts" data-xh-fallback-opts>
-            <button type="button" class="rea-xh-opt is-on" data-v="原评论区评论">原评论区评论</button>
-            <button type="button" class="rea-xh-opt" data-v="私信兜底">私信兜底</button>
           </div>
         </div>
       </div>
@@ -19912,9 +19902,9 @@ render();
       <div class="rea-xh-mbody">
         <div class="rea-xh-mtools"><button type="button" class="rea-xn-btn rea-xn-btn--primary" data-xh-export-users>导出</button></div>
         <table class="rea-xn-table">
-          <thead><tr><th>小红书昵称</th><th>小红书号</th><th>发送类型</th><th>发送内容</th><th>命中词</th><th>触达位置</th></tr></thead>
+          <thead><tr><th>小红书昵称</th><th>小红书号</th><th>发送类型</th><th>发送内容</th><th>命中词</th></tr></thead>
           <tbody>
-            <tr><td>小莉莉</td><td>609186985</td><td>主页笔记评论</td><td class="rea-xh-send">哈哈，小橘猫的反差萌太戳心啦～现实现里rua到软乎乎的毛团子，真的会被治愈到心都化掉呢！🐱</td><td>猫粮</td><td>笔记「橘猫日常」</td></tr>
+            <tr><td>小莉莉</td><td>609186985</td><td>回复评论</td><td class="rea-xh-send">哈哈，小橘猫的反差萌太戳心啦～现实现里rua到软乎乎的毛团子，真的会被治愈到心都化掉呢！🐱</td><td>猫粮</td></tr>
           </tbody>
         </table>
         <div class="rea-xn-pager"><span class="rea-xn-total">共 1 条记录</span><button type="button" class="rea-xn-page-btn is-on">1</button><span class="rea-xn-psize">10 条/页</span></div>
@@ -19968,7 +19958,6 @@ render();
         <div class="rea-op-field"><span class="rea-op-flabel">单次执行上限</span><span class="rea-op-fval" data-xh-snap-f="limit">—</span></div>
         <div class="rea-op-field"><span class="rea-op-flabel">执行频率</span><span class="rea-op-fval" data-xh-snap-f="freq">—</span></div>
         <div class="rea-op-field"><span class="rea-op-flabel">发送消息</span><span class="rea-op-fval" data-xh-snap-f="send">—</span></div>
-        <div class="rea-op-field"><span class="rea-op-flabel">取不到笔记时</span><span class="rea-op-fval" data-xh-snap-f="fallback">—</span></div>
         <div class="rea-op-field"><span class="rea-op-flabel">消息生成类型</span><span class="rea-op-fval" data-xh-snap-f="msgtype">—</span></div>
         <div class="rea-op-field"><span class="rea-op-flabel">固定话术</span><span class="rea-op-fval" data-xh-snap-f="fixed">—</span></div>
         <div class="rea-op-field"><span class="rea-op-flabel">参考文案</span><span class="rea-op-fval" data-xh-snap-f="copy">—</span></div>
@@ -20258,8 +20247,7 @@ render();
   <h2>执行设置</h2>
   <div class="rea-dy-row"><span class="rea-dy-lb"><i>*</i>单次执行上限</span><div class="rea-dy-ctl"><div class="rea-dy-opts" data-dyop-limit><button type="button" class="rea-dy-opt on" data-v="500">500</button><button type="button" class="rea-dy-opt" data-v="1000">1000</button><button type="button" class="rea-dy-opt" data-v="2000">2000</button><button type="button" class="rea-dy-opt" data-v="3000">3000</button><button type="button" class="rea-dy-opt" data-v="自定义">自定义</button></div><input class="rea-dy-mini" inputmode="numeric" placeholder="请输入上限" aria-label="自定义单次执行上限" data-dyop-limit-custom hidden></div></div>
   <div class="rea-dy-row"><span class="rea-dy-lb">执行频率</span><div class="rea-dy-ctl"><span class="rea-dy-inline">每刷一个视频，任务执行<input class="rea-dy-num" inputmode="numeric" value="1" aria-label="最少间隔分钟" data-dyop-freq-min>至<input class="rea-dy-num" inputmode="numeric" value="10" aria-label="最多间隔分钟" data-dyop-freq-max>分钟</span></div></div>
-  <div class="rea-dy-row"><span class="rea-dy-lb"><i>*</i>发送消息</span><div class="rea-dy-ctl"><div class="rea-dy-opts" data-dyop-send><button type="button" class="rea-dy-opt on" data-v="私信消息">私信消息</button><button type="button" class="rea-dy-opt" data-v="回复评论">回复评论</button><button type="button" class="rea-dy-opt" data-v="前往主页作品评论">前往主页作品评论</button></div></div></div>
-  <div class="rea-dy-row" data-dyop-fallback hidden><span class="rea-dy-lb">取不到作品时</span><div class="rea-dy-ctl"><div class="rea-dy-opts" data-dyop-fallback-opts><button type="button" class="rea-dy-opt on" data-v="原评论区评论">原评论区评论</button><button type="button" class="rea-dy-opt" data-v="私信兜底">私信兜底</button></div></div></div>
+  <div class="rea-dy-row"><span class="rea-dy-lb"><i>*</i>发送消息</span><div class="rea-dy-ctl"><div class="rea-dy-opts" data-dyop-send><button type="button" class="rea-dy-opt on" data-v="私信消息">私信消息</button><button type="button" class="rea-dy-opt" data-v="回复评论">回复评论</button></div></div></div>
   <div class="rea-dy-row"><span class="rea-dy-lb"><i>*</i>消息生成类型</span><div class="rea-dy-ctl"><div class="rea-dy-opts" data-dyop-msgtype><button type="button" class="rea-dy-opt on" data-v="固定话术">固定话术</button><button type="button" class="rea-dy-opt" data-v="AI生成">AI生成</button><button type="button" class="rea-dy-opt" data-v="AI仿写">AI仿写</button></div></div></div>
   <div class="rea-dy-row" data-dyop-panel-msg="固定话术"><label class="rea-dy-lb" for="dyOpFixed">固定话术</label><div class="rea-dy-ctl"><textarea id="dyOpFixed" maxlength="500" placeholder="请输入固定话术内容"></textarea><span class="rea-dy-count" data-dyop-count-for="dyOpFixed">0/500</span></div></div>
   <div class="rea-dy-row" data-dyop-panel-msg="AI仿写" hidden><label class="rea-dy-lb" for="dyOpCopy"><i>*</i>参考文案</label><div class="rea-dy-ctl"><textarea id="dyOpCopy" maxlength="300" placeholder="请输入参考文案，用于仿写"></textarea><span class="rea-dy-count" data-dyop-count-for="dyOpCopy">0/300</span><p class="rea-dy-err" data-dyop-err="copy" hidden>请填写参考文案</p></div></div>
@@ -20312,13 +20300,13 @@ render();
     <div class="rea-dy-modal-b">
       <div class="rea-dy-modal-tools"><button type="button" class="rea-dy-btn rea-dy-soft" data-dyop-export-users>导出</button></div>
       <table class="rea-dy-table">
-        <thead><tr><th>抖音昵称</th><th>抖音号</th><th>发送类型</th><th>发送内容</th><th>命中词</th><th>触达位置</th></tr></thead>
+        <thead><tr><th>抖音昵称</th><th>抖音号</th><th>发送类型</th><th>发送内容</th><th>命中词</th></tr></thead>
         <tbody>
-          <tr><td>希哲</td><td>aduo57471</td><td>主页作品评论</td><td class="rea-dy-send">您好呀～冬青喜湿润通风，别暴晒，土微湿就好呀😊 有问题随时私信我们哦～</td><td>浇水</td><td>作品「冬青养护」</td></tr>
-          <tr><td>静待花开</td><td>1647629517</td><td>回复评论</td><td class="rea-dy-send">感谢您的贴心提醒呀😊 北方养藤确实得用心，您可以看看我们这集鲜切花整理，有居家加湿小技巧，有问题随时私信我们哦～</td><td>黄叶</td><td>原评论区</td></tr>
-          <tr><td>樱桃🍒✨</td><td>82515382646</td><td>私信消息</td><td class="rea-dy-send">您好～相关购买渠道您可以通过私信联系我们获取哦，有任何问题随时沟通😊</td><td>施肥</td><td>私信</td></tr>
-          <tr><td>花小颜</td><td>890105199</td><td>回复评论</td><td class="rea-dy-send">哇，田园风插花肯定超治愈呀～要是有相关北京居家插花的疑问，随时私信我交流哦😊</td><td>浇水、黄叶</td><td>原评论区</td></tr>
-          <tr><td>宝</td><td>dyobvt5neqk8</td><td>回复评论</td><td class="rea-dy-send">亲，深圳收到落花可以先做醒花处理哦～有鲜花相关问题欢迎私信交流呀😊</td><td>—</td><td>原评论区</td></tr>
+          <tr><td>希哲</td><td>aduo57471</td><td>回复评论</td><td class="rea-dy-send">您好呀～冬青喜湿润通风，别暴晒，土微湿就好呀😊 有问题随时私信我们哦～</td><td>浇水</td></tr>
+          <tr><td>静待花开</td><td>1647629517</td><td>回复评论</td><td class="rea-dy-send">感谢您的贴心提醒呀😊 北方养藤确实得用心，您可以看看我们这集鲜切花整理，有居家加湿小技巧，有问题随时私信我们哦～</td><td>黄叶</td></tr>
+          <tr><td>樱桃🍒✨</td><td>82515382646</td><td>私信消息</td><td class="rea-dy-send">您好～相关购买渠道您可以通过私信联系我们获取哦，有任何问题随时沟通😊</td><td>施肥</td></tr>
+          <tr><td>花小颜</td><td>890105199</td><td>回复评论</td><td class="rea-dy-send">哇，田园风插花肯定超治愈呀～要是有相关北京居家插花的疑问，随时私信我交流哦😊</td><td>浇水、黄叶</td></tr>
+          <tr><td>宝</td><td>dyobvt5neqk8</td><td>回复评论</td><td class="rea-dy-send">亲，深圳收到落花可以先做醒花处理哦～有鲜花相关问题欢迎私信交流呀😊</td><td>—</td></tr>
         </tbody>
       </table>
       <div class="rea-dy-pager"><span class="rea-dy-total">共 5 条记录</span><span class="rea-dy-pages"><button type="button" class="on">1</button></span><span class="rea-dy-size">10 条/页</span></div>
@@ -20375,7 +20363,6 @@ render();
       <div class="rea-op-field"><span class="rea-op-flabel">单次执行上限</span><span class="rea-op-fval" data-dyop-snap-f="limit">—</span></div>
       <div class="rea-op-field"><span class="rea-op-flabel">执行频率</span><span class="rea-op-fval" data-dyop-snap-f="freq">—</span></div>
       <div class="rea-op-field"><span class="rea-op-flabel">发送消息</span><span class="rea-op-fval" data-dyop-snap-f="send">—</span></div>
-      <div class="rea-op-field"><span class="rea-op-flabel">取不到作品时</span><span class="rea-op-fval" data-dyop-snap-f="fallback">—</span></div>
       <div class="rea-op-field"><span class="rea-op-flabel">消息生成类型</span><span class="rea-op-fval" data-dyop-snap-f="msgtype">—</span></div>
       <div class="rea-op-field"><span class="rea-op-flabel">固定话术</span><span class="rea-op-fval" data-dyop-snap-f="fixed">—</span></div>
       <div class="rea-op-field"><span class="rea-op-flabel">参考文案</span><span class="rea-op-fval" data-dyop-snap-f="copy">—</span></div>
@@ -20643,8 +20630,8 @@ render();
   var reaDyOpRow = null;   // 列表点「详情」带过来的那一条任务
   /* 抖音运营的任务模板：模块内共享，只在本次会话里增删改（不落盘） */
   var reaDyOpTpls = [
-    {id:'dytpl1',name:'花卉周循环',creator:'18569299465',updated:'2026-11-23 10:20',cfg:{industry:'冬青\n鲜花养护',fwords:'浇水、黄叶',publish:'30日内',commentTime:'30日内',sex:'不限',fans:'不限',limit:'500',send:'前往主页作品评论',fallback:'原评论区评论',msgtype:'固定话术',fixed:'您好～看到你在作品里提到冬青，有问题随时私信我呀～',identity:'官方账号',style:'亲切自然',cycle:'简循环'}},
-    {id:'dytpl2',name:'汽车线索-日循环',creator:'韩涛',updated:'2026-11-22 16:05',cfg:{industry:'阿维塔\n大众',fwords:'多少钱、怎么选',publish:'15日内',commentTime:'7日内',sex:'不限',fans:'大于1000人',limit:'1000',send:'私信消息',fallback:'原评论区评论',msgtype:'AI生成',fixed:'',identity:'门店顾问',style:'专业严谨',cycle:'单次任务'}}
+    {id:'dytpl1',name:'花卉周循环',creator:'18569299465',updated:'2026-11-23 10:20',cfg:{industry:'冬青\n鲜花养护',fwords:'浇水、黄叶',publish:'30日内',commentTime:'30日内',sex:'不限',fans:'不限',limit:'500',send:'回复评论',msgtype:'固定话术',fixed:'您好～看到你在作品里提到冬青，有问题随时私信我呀～',identity:'官方账号',style:'亲切自然',cycle:'简循环'}},
+    {id:'dytpl2',name:'汽车线索-日循环',creator:'韩涛',updated:'2026-11-22 16:05',cfg:{industry:'阿维塔\n大众',fwords:'多少钱、怎么选',publish:'15日内',commentTime:'7日内',sex:'不限',fans:'大于1000人',limit:'1000',send:'私信消息',msgtype:'AI生成',fixed:'',identity:'门店顾问',style:'专业严谨',cycle:'单次任务'}}
   ];
   var reaDyOpMode = '', reaDyOpTpl = null, reaDyOpSeed = null;
   /* 微信营销任务 · 视频号发布任务 · 详情（2026-11-23）：快照里只抓到模块页与新建页，
@@ -25718,18 +25705,9 @@ function multiOpts(sel){
 }
 function val(sel){var b=$(sel+' .rea-xh-opt.is-on');return b?b.getAttribute('data-v'):''}
 ['[data-xh-strategy]','[data-xh-method]','[data-xh-publish]','[data-xh-comment]','[data-xh-sex]',
- '[data-xh-fans]','[data-xh-limit]','[data-xh-send]','[data-xh-msgtype]','[data-xh-cycle]',
- '[data-xh-fallback-opts]'].forEach(opts);
+ '[data-xh-fans]','[data-xh-limit]','[data-xh-send]','[data-xh-msgtype]','[data-xh-cycle]'].forEach(opts);
 multiOpts('[data-xh-scene]');
 function sendType(){return val('[data-xh-send]')||'私信消息'}
-function fallbackType(){return val('[data-xh-fallback-opts]')||'原评论区评论'}
-function syncSend(){
-  var third=sendType()==='前往主页笔记评论';
-  $('[data-xh-fallback]').hidden=!third;
-}
-$$('[data-xh-send] .rea-xh-opt,[data-xh-fallback-opts] .rea-xh-opt').forEach(function(b){
-  b.addEventListener('click',syncSend)});
-syncSend();
 function strategy(){return val('[data-xh-strategy]')||'词条'}
 function method(){return val('[data-xh-method]')||'手动输入'}
 function syncPanels(){
@@ -25863,14 +25841,13 @@ function applyConfig(cfg){
   pick('[data-xh-sex]',cfg.sex);pick('[data-xh-fans]',cfg.fans);
   pick('[data-xh-limit]',cfg.limit);pick('[data-xh-send]',cfg.send);
   pick('[data-xh-msgtype]',cfg.msgtype);pick('[data-xh-cycle]',cfg.cycle);
-  pick('[data-xh-fallback-opts]',cfg.fallback);
   if(cfg.ageOn!=null){var sw=$('[data-xh-age]');sw.setAttribute('aria-checked',cfg.ageOn?'true':'false');$('[data-xh-age-range]').hidden=!cfg.ageOn}
-  syncPanels();syncSend();
+  syncPanels();
 }
 function demoCfg(row){
   row=row||{};
   return {industry:row.industry||'猫粮',fwords:'猫粮、橘猫',publish:'30日内',commentTime:'30日内',
-    sex:'不限',fans:'不限',limit:'500',send:'前往主页笔记评论',fallback:'原评论区评论',
+    sex:'不限',fans:'不限',limit:'500',send:'回复评论',
     msgtype:'固定话术',fixed:'您好～看到你在笔记里提到猫粮，有问题随时私信我呀～',
     identity:'官方账号',style:'亲切自然',cycle:'单次任务'};
 }
@@ -25952,7 +25929,7 @@ $('[data-xh-save]').addEventListener('click',function(){
   if(bad){toast('请先补全必填项');return}
   var cfg={industry:industry,fwords:$('[data-xh-filterwords]').value,publish:val('[data-xh-publish]'),
     commentTime:val('[data-xh-comment]'),sex:val('[data-xh-sex]'),fans:val('[data-xh-fans]'),
-    limit:val('[data-xh-limit]'),send:sendType(),fallback:fallbackType(),
+    limit:val('[data-xh-limit]'),send:sendType(),
     msgtype:val('[data-xh-msgtype]'),fixed:$('[data-xh-fixed]').value,
     copy:$('[data-xh-copy]').value,identity:$('[data-xh-identity]').value,
     style:$('[data-xh-style]').value,cycle:val('[data-xh-cycle]')};
@@ -25968,7 +25945,7 @@ $('[data-xh-save]').addEventListener('click',function(){
   var row={name:name,industry:industry,state:'进行中',count:0,
     period:nd.replace(/-/g,'/')+'~'+ed.replace(/-/g,'/'),
     exec:PEOPLE.join(','),created:stamp(),creator:'18569299465',
-    sendType:sendType(),fallback:fallbackType(),sourceTemplate:sourceTpl};
+    sendType:sendType(),sourceTemplate:sourceTpl};
   toast('任务已保存');
   setTimeout(function(){parent.postMessage({reaPage:LIST,reaXhOpSave:row},'*')},700);
 });
@@ -26088,7 +26065,7 @@ function fillSnap(){
     exec:ROW.exec||'—',cycle:'单次任务',notify:'2026-07-28 13:56',end:'2026-08-04 13:56',global:'关闭',
     strategy:'词条',method:'手动输入',industry:ROW.industry||'猫粮',publish:'30日内',fwords:'猫粮、橘猫',
     commentTime:'30日内',area:'不限',age:'18–60 岁',sex:'不限',fans:'不限',limit:'500',
-    freq:'每刷一个笔记，1 至 10 分钟',send:'前往主页笔记评论',fallback:'原评论区评论',
+    freq:'每刷一个笔记，1 至 10 分钟',send:'回复评论',
     msgtype:'固定话术',fixed:'您好～看到你在笔记里提到猫粮，有问题随时私信我呀～',copy:'—（不涉及）',
     identity:'官方账号',style:'亲切自然'};
   $$('[data-xh-snap-f]').forEach(function(n){var k=n.getAttribute('data-xh-snap-f'),v=data[k];n.textContent=(v==null||v==='')?'—（未设置）':v});
@@ -36827,17 +36804,9 @@ if(PAGE==="new"){
     if(i)sp.textContent=i.value.length+"/"+(i.getAttribute("maxlength")||"")})}
   $$("#dyOpName,#dyOpTTitle,#dyOpFixed,#dyOpCopy").forEach(function(i){i.addEventListener("input",syncCounts)});
   syncCounts();
-  ["[data-dyop-strategy]","[data-dyop-method]","[data-dyop-publish]","[data-dyop-comment]","[data-dyop-sex]","[data-dyop-fans]","[data-dyop-limit]","[data-dyop-send]","[data-dyop-msgtype]","[data-dyop-cycle]","[data-dyop-fallback-opts]"].forEach(opts);
+  ["[data-dyop-strategy]","[data-dyop-method]","[data-dyop-publish]","[data-dyop-comment]","[data-dyop-sex]","[data-dyop-fans]","[data-dyop-limit]","[data-dyop-send]","[data-dyop-msgtype]","[data-dyop-cycle]"].forEach(opts);
   multiOpts("[data-dyop-scene]");
   function sendType(){return val("[data-dyop-send]")||"私信消息"}
-  function fallbackType(){return val("[data-dyop-fallback-opts]")||"原评论区评论"}
-  function syncSend(){
-    var third=sendType()==="前往主页作品评论";
-    $("[data-dyop-fallback]").hidden=!third;
-  }
-  $$("[data-dyop-send] .rea-dy-opt,[data-dyop-fallback-opts] .rea-dy-opt").forEach(function(b){
-    b.addEventListener("click",syncSend)});
-  syncSend();
   function strat(){return val("[data-dyop-strategy]")||"词条"}
   function method(){return val("[data-dyop-method]")||"手动输入"}
   function syncPanels(){
@@ -36862,14 +36831,13 @@ if(PAGE==="new"){
     pick("[data-dyop-sex]",cfg.sex);pick("[data-dyop-fans]",cfg.fans);
     pick("[data-dyop-limit]",cfg.limit);pick("[data-dyop-send]",cfg.send);
     pick("[data-dyop-msgtype]",cfg.msgtype);pick("[data-dyop-cycle]",cfg.cycle);
-    pick("[data-dyop-fallback-opts]",cfg.fallback);
     if(cfg.ageOn!=null){var sw=$("[data-dyop-age]");sw.setAttribute("aria-checked",cfg.ageOn?"true":"false");$("[data-dyop-age-range]").hidden=!cfg.ageOn}
-    syncPanels();syncSend();
+    syncPanels();
   }
   function demoCfg(row){
     row=row||{};
     return {industry:row.industry||"冬青",fwords:"浇水、黄叶",publish:"30日内",commentTime:"30日内",
-      sex:"不限",fans:"不限",limit:"500",send:"前往主页作品评论",fallback:"原评论区评论",
+      sex:"不限",fans:"不限",limit:"500",send:"回复评论",
       msgtype:"固定话术",fixed:"您好～看到你在作品里提到冬青，有问题随时私信我呀～",
       identity:"官方账号",style:"亲切自然",cycle:"单次任务"};
   }
@@ -36972,7 +36940,7 @@ if(PAGE==="new"){
     }
     var cfg={industry:industry,fwords:$("#dyOpFilterWords").value,publish:val("[data-dyop-publish]"),
       commentTime:val("[data-dyop-comment]"),sex:val("[data-dyop-sex]"),fans:val("[data-dyop-fans]"),
-      limit:val("[data-dyop-limit]"),send:sendType(),fallback:fallbackType(),
+      limit:val("[data-dyop-limit]"),send:sendType(),
       msgtype:val("[data-dyop-msgtype]"),fixed:$("#dyOpFixed").value,
       copy:$("#dyOpCopy").value,identity:$("#dyOpIdentity").value,style:$("#dyOpStyle").value,
       cycle:val("[data-dyop-cycle]")};
@@ -36987,7 +36955,7 @@ if(PAGE==="new"){
     var row={name:name,industry:industry,state:"进行中",count:0,
       period:nd.replace(/-/g,"/")+"~"+ed.replace(/-/g,"/"),
       exec:orgs.join(","),created:ymd(now)+" "+hm(now),creator:"18569299465",
-      sendType:sendType(),fallback:fallbackType(),sourceTemplate:sourceTpl};
+      sendType:sendType(),sourceTemplate:sourceTpl};
     toast("任务已保存");
     setTimeout(function(){parent.postMessage({reaPage:LIST,reaDyOpSave:row},"*")},600);
   });
@@ -37023,7 +36991,7 @@ if(PAGE==="detail"){
       exec:(ROW&&ROW.exec)||"—",cycle:"单次任务",notify:"2026-10-29 11:02",end:"2026-11-05 11:02",global:"关闭",
       strategy:"词条",method:"手动输入",industry:(ROW&&ROW.industry)||"花",publish:"30日内",fwords:"浇水、黄叶",
       commentTime:"30日内",area:"不限",age:"18–60 岁",sex:"不限",fans:"不限",limit:"500",
-      freq:"每刷一个视频，1 至 10 分钟",send:"前往主页作品评论",fallback:"原评论区评论",
+      freq:"每刷一个视频，1 至 10 分钟",send:"回复评论",
       msgtype:"固定话术",fixed:"您好～看到你在作品里提到冬青，有问题随时私信我呀～",copy:"—（不涉及）",
       identity:"官方账号",style:"亲切自然"};
     $$("[data-dyop-snap-f]").forEach(function(n){var k=n.getAttribute("data-dyop-snap-f"),v=d[k];n.textContent=(v==null||v==="")?"—（未设置）":v});
@@ -38369,8 +38337,8 @@ draw();
   var reaXhOpRow = null;
   /* 小红书运营的任务模板：模块内共享，只在本次会话里增删改（不落盘） */
   var reaXhOpTpls = [
-    {id:'xhtpl1',name:'母婴日常',creator:'18569299465',updated:'2026-11-23 09:40',cfg:{industry:'猫粮\n橘猫',fwords:'猫粮、橘猫',publish:'30日内',commentTime:'30日内',sex:'女',fans:'不限',limit:'500',send:'前往主页笔记评论',fallback:'原评论区评论',msgtype:'固定话术',fixed:'您好～看到你在笔记里提到猫粮，有问题随时私信我呀～',identity:'官方账号',style:'亲切自然',cycle:'简循环'}},
-    {id:'xhtpl2',name:'美妆测评',creator:'雅楠002',updated:'2026-11-21 15:10',cfg:{industry:'粉底\n护肤',fwords:'好用吗、求链接',publish:'15日内',commentTime:'7日内',sex:'女',fans:'大于500人',limit:'1000',send:'回复评论',fallback:'原评论区评论',msgtype:'AI仿写',fixed:'',copy:'参考这条笔记的语气',identity:'员工个人号',style:'幽默活泼',cycle:'单次任务'}}
+    {id:'xhtpl1',name:'母婴日常',creator:'18569299465',updated:'2026-11-23 09:40',cfg:{industry:'猫粮\n橘猫',fwords:'猫粮、橘猫',publish:'30日内',commentTime:'30日内',sex:'女',fans:'不限',limit:'500',send:'回复评论',msgtype:'固定话术',fixed:'您好～看到你在笔记里提到猫粮，有问题随时私信我呀～',identity:'官方账号',style:'亲切自然',cycle:'简循环'}},
+    {id:'xhtpl2',name:'美妆测评',creator:'雅楠002',updated:'2026-11-21 15:10',cfg:{industry:'粉底\n护肤',fwords:'好用吗、求链接',publish:'15日内',commentTime:'7日内',sex:'女',fans:'大于500人',limit:'1000',send:'回复评论',msgtype:'AI仿写',fixed:'',copy:'参考这条笔记的语气',identity:'员工个人号',style:'幽默活泼',cycle:'单次任务'}}
   ];
   var reaXhOpMode = '', reaXhOpTpl = null, reaXhOpSeed = null;
 
@@ -38545,6 +38513,34 @@ draw();
       + '}'
       + 'wire("li.ykMenuItemLi",".ykMenuText",CAT);'
       + 'wire("li.ant-menu-overflow-item",".ant-pro-base-menu-horizontal-item-text",TOP);'
+      /* 视图③外壳改动（2026-11-24，产品要求）：顶栏新开一项「数智员工」，把云小智抓到的几页
+         挪到它下面，云小智那项退回未收录项。线上没有「数智员工」这一项（现网这几页挂在云小智下），
+         见 docs/09 §5 第五条破例。新项的落点取 TOP['云小智']（＝模块第一页），不写死页名。 */
+      + '(function(){'
+        + 'var ul=document.querySelector(".ant-pro-top-nav-header-base-menu");if(!ul)return;'
+        + 'var lis=ul.querySelectorAll("li.ant-menu-overflow-item"),lz=null,i,t;'
+        + 'for(i=0;i<lis.length;i++){t=lis[i].querySelector(".ant-pro-base-menu-horizontal-item-text");'
+          + 'if(t&&t.textContent.trim()==="云小智"){lz=lis[i];break}}'
+        + 'if(!lz||ul.querySelector("li[data-rea-dse]"))return;'
+        + 'var to=TOP["云小智"];if(!to)return;'
+        + 'var on=lz.className.indexOf("ant-menu-item-selected")>=0;'
+        + 'var nl=lz.cloneNode(true);'
+        + 'nl.className=lz.className.replace(" ant-menu-item-selected","").replace(" rea-nav","")'
+          + '.replace(" rea-off","");'
+        + 'nl.setAttribute("data-rea",to);nl.setAttribute("data-rea-dse","1");'
+        + 'nl.removeAttribute("aria-hidden");'
+        + 'nl.style.opacity="1";'
+        + 'nl.style.order=(parseFloat(lz.style.order||0)+0.5);'
+        + 'var nt=nl.querySelector(".ant-pro-base-menu-horizontal-item-text");'
+        + 'if(nt){nt.textContent="数智员工";nt.setAttribute("title","数智员工");}'
+        + 'lz.parentNode.insertBefore(nl,lz.nextSibling);'
+        /* 云小智这一项：页已经挪走，不再指页；当前页在数智员工里时高亮跟着挪过去 */
+        + 'lz.removeAttribute("data-rea");'
+        + 'lz.className=lz.className.replace(" rea-nav","");'
+        + 'if(on){lz.className=lz.className.replace(" ant-menu-item-selected","");'
+          + 'nl.className+=" ant-menu-item-selected";}'
+        + 'if(lz.className.indexOf("rea-off")<0)lz.className+=" rea-off";'
+      + '})();'
       /* 面包屑：链接文字对上某个模块页就接回原型（快照里它是一条指回现网的 href） */
       + 'var CR=document.querySelectorAll("a.ant-breadcrumb-link"),ci;'
       + 'for(ci=0;ci<CR.length;ci++){'
