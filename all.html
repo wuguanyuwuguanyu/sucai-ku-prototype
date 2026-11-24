@@ -19330,16 +19330,59 @@ render();
           <div class="_upload_box_lzm36_100"><span class="ant-input-affix-wrapper css-vgijab ant-input-outlined"><input id="xnTaskName" maxlength="21" autocomplete="off" placeholder="请输入任务名称" class="ant-input css-vgijab" type="text"><span class="ant-input-suffix"><span class="ant-input-show-count-suffix" data-xn-count-for="xnTaskName">0 / 21</span></span></span></div>
         </div>
         <div class="_form_input_lzm36_71">
-          <span class="_must_white_lzm36_76">素材来源</span>
-          <div class="_upload_box_lzm36_100"><div class="ant-space css-vgijab ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small"><div class="ant-space-item"><button type="button" class="ant-btn css-vgijab ant-btn-primary ant-btn-color-primary ant-btn-variant-solid" data-xn-source="临时创建"><span>临时创建</span></button></div><div class="ant-space-item"><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-source="AI生成"><span>AI生成</span></button></div></div></div>
-        </div>
-        <div class="_form_input_lzm36_71">
           <span class="_must_white_lzm36_76">发布类型</span>
           <div class="_upload_box_lzm36_100"><div class="ant-radio-group ant-radio-group-outline css-vgijab" data-xn-type>
             <label class="ant-radio-wrapper ant-radio-wrapper-checked css-vgijab"><span class="ant-radio ant-wave-target ant-radio-checked"><input name="xnType" class="ant-radio-input" type="radio" value="发图文" checked><span class="ant-radio-inner"></span></span><span class="ant-radio-label">发图文</span></label>
             <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="xnType" class="ant-radio-input" type="radio" value="发视频"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">发视频</span></label>
             <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="xnType" class="ant-radio-input" type="radio" value="发文案配图"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">发文案配图</span></label>
           </div></div>
+        </div>
+        <div data-xn-ai hidden>
+          <div class="_form_input_lzm36_71">
+            <span class="_must_white_lzm36_76">笔记主题</span>
+            <div class="_upload_box_lzm36_100"><span class="ant-input-affix-wrapper css-vgijab ant-input-outlined"><input maxlength="20" data-xn-ai-topic placeholder="请输入笔记主题" class="ant-input css-vgijab" type="text"><span class="ant-input-suffix"><span class="ant-input-show-count-suffix" data-xn-ai-topiccount>0 / 20</span></span></span><p style="margin-top:8px;font-size:14px;color:rgb(170,170,170)">举例：去北京天安门旅游攻略</p></div>
+          </div>
+          <div class="_form_input_lzm36_71">
+            <span class="_must_white_lzm36_76">核心关键词</span>
+            <div class="_upload_box_lzm36_100"><span class="ant-input-affix-wrapper css-vgijab ant-input-outlined"><input maxlength="20" data-xn-ai-keys placeholder="请输入核心关键词" class="ant-input css-vgijab" type="text"><span class="ant-input-suffix"><span class="ant-input-show-count-suffix" data-xn-ai-keyscount>0 / 20</span></span></span><p style="margin-top:8px;font-size:14px;color:rgb(170,170,170)">多个的情况下使用中文，分割</p></div>
+          </div>
+          <div class="_form_input_lzm36_71">
+            <span class="_must_white_lzm36_76">目标人群</span>
+            <div class="_upload_box_lzm36_100"><span class="ant-input-affix-wrapper css-vgijab ant-input-outlined"><input maxlength="20" data-xn-ai-audience placeholder="请输入目标人群" class="ant-input css-vgijab" type="text"><span class="ant-input-suffix"><span class="ant-input-show-count-suffix" data-xn-ai-audiencecount>0 / 20</span></span></span><p style="margin-top:8px;font-size:14px;color:rgb(170,170,170)">多个的情况下使用中文，分割</p></div>
+          </div>
+          <div class="_form_input_lzm36_71" style="align-items:center">
+            <span class="_must_white_lzm36_76">生成技巧</span>
+            <div class="ant-radio-group ant-radio-group-outline css-vgijab" data-xn-ai-skill>
+              <label class="ant-radio-wrapper ant-radio-wrapper-checked css-vgijab"><span class="ant-radio ant-wave-target ant-radio-checked"><input name="xnAiSkill" class="ant-radio-input" type="radio" value="痛点型" checked><span class="ant-radio-inner"></span></span><span class="ant-radio-label">痛点型</span></label>
+              <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="xnAiSkill" class="ant-radio-input" type="radio" value="悬疑型"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">悬疑型</span></label>
+              <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="xnAiSkill" class="ant-radio-input" type="radio" value="对比型"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">对比型</span></label>
+              <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="xnAiSkill" class="ant-radio-input" type="radio" value="故事型"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">故事型</span></label>
+            </div>
+          </div>
+          <div class="_form_input_lzm36_71" style="align-items:flex-start">
+            <span class="_must_white_lzm36_76">生成风格</span>
+            <div class="ant-radio-group ant-radio-group-outline css-vgijab" data-xn-ai-style>
+              <label class="ant-radio-wrapper ant-radio-wrapper-checked css-vgijab"><span class="ant-radio ant-wave-target ant-radio-checked"><input name="xnAiStyle" class="ant-radio-input" type="radio" value="测评分析" checked><span class="ant-radio-inner"></span></span><span class="ant-radio-label">测评分析</span></label>
+              <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="xnAiStyle" class="ant-radio-input" type="radio" value="教程攻略"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">教程攻略</span></label>
+              <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="xnAiStyle" class="ant-radio-input" type="radio" value="知识科普"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">知识科普</span></label>
+              <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="xnAiStyle" class="ant-radio-input" type="radio" value="种草推荐"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">种草推荐</span></label>
+              <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="xnAiStyle" class="ant-radio-input" type="radio" value="避坑排雷"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">避坑排雷</span></label>
+              <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="xnAiStyle" class="ant-radio-input" type="radio" value="情绪价值"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">情绪价值</span></label>
+              <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="xnAiStyle" class="ant-radio-input" type="radio" value="行业专属"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">行业专属</span></label>
+            </div>
+          </div>
+          <div class="_form_input_lzm36_71" style="align-items:center">
+            <span class="_must_white_lzm36_76">身份角色</span>
+            <div class="ant-radio-group ant-radio-group-outline css-vgijab" data-xn-ai-role>
+              <label class="ant-radio-wrapper ant-radio-wrapper-checked css-vgijab"><span class="ant-radio ant-wave-target ant-radio-checked"><input name="xnAiRole" class="ant-radio-input" type="radio" value="售后客服" checked><span class="ant-radio-inner"></span></span><span class="ant-radio-label">售后客服</span></label>
+              <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="xnAiRole" class="ant-radio-input" type="radio" value="销售经理"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">销售经理</span></label>
+              <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="xnAiRole" class="ant-radio-input" type="radio" value="自定义"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">自定义</span></label>
+            </div>
+          </div>
+          <div class="_form_input_lzm36_71" data-xn-ai-rolemode hidden>
+            <span class="_must_white1_lzm36_76"></span>
+            <div class="_upload_box_lzm36_100"><input class="ant-input css-vgijab ant-input-outlined" type="text" data-xn-ai-roletxt placeholder="请输入身份角色"></div>
+          </div>
         </div>
         <div class="_form_input_lzm36_71 rea-dy-row--wide" data-xn-contentrow>
           <span class="_must_white_lzm36_76">发布内容</span>
@@ -25558,7 +25601,7 @@ function pad(n){return (n<10?'0':'')+n}
 function ymd(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
 function hm(d){return pad(d.getHours())+':'+pad(d.getMinutes())}
 function stamp(){var d=new Date();return ymd(d)+' '+hm(d)}
-var TYPE='发图文',SOURCE='临时创建',M=2;
+var TYPE='发图文',M=2;
 var nameInput=$('#xnTaskName');
 function syncCount(){
   $$('[data-xn-count-for]').forEach(function(sp){
@@ -25606,18 +25649,21 @@ function applyType(){
   var isVideo=TYPE==='发视频',isCopy=TYPE==='发文案配图';
   var a=$('[data-xn-section="image"]'),b=$('[data-xn-section="video"]'),d=$('[data-xn-section="copyimage"]');
   if(a)a.hidden=isVideo||isCopy;if(b)b.hidden=!isVideo;if(d)d.hidden=!isCopy;
+  var ai=$('[data-xn-ai]'); if(ai)ai.hidden=!isCopy;
 }
-function setSource(src){
-  SOURCE=src;
-  $$('[data-xn-source]').forEach(function(b){
-    var on=b.getAttribute('data-xn-source')===src;
-    b.classList.toggle('ant-btn-primary',on);b.classList.toggle('ant-btn-color-primary',on);b.classList.toggle('ant-btn-variant-solid',on);
-    b.classList.toggle('ant-btn-default',!on);b.classList.toggle('ant-btn-color-default',!on);b.classList.toggle('ant-btn-variant-outlined',!on);
+var AI_TOPIC=$('[data-xn-ai-topic]'),AI_KEYS=$('[data-xn-ai-keys]'),AI_AUDIENCE=$('[data-xn-ai-audience]'),AI_ROLE_TXT=$('[data-xn-ai-roletxt]'),AI_ROLE_MODE=$('[data-xn-ai-rolemode]');
+function syncAiCounts(){
+  if(AI_TOPIC)$('[data-xn-ai-topiccount]').textContent=(AI_TOPIC.value||'').length+' / 20';
+  if(AI_KEYS)$('[data-xn-ai-keyscount]').textContent=(AI_KEYS.value||'').length+' / 20';
+  if(AI_AUDIENCE)$('[data-xn-ai-audiencecount]').textContent=(AI_AUDIENCE.value||'').length+' / 20';
+}
+[AI_TOPIC,AI_KEYS,AI_AUDIENCE].forEach(function(i){ if(i)i.addEventListener('input',syncAiCounts); });
+syncAiCounts();
+$$('[data-xn-ai-role] input').forEach(function(r){
+  r.addEventListener('change',function(){
+    if(AI_ROLE_MODE)AI_ROLE_MODE.hidden=!(r.checked&&r.value==='自定义');
   });
-}
-$$('[data-xn-source]').forEach(function(b){b.addEventListener('click',function(){
-  setSource(b.getAttribute('data-xn-source'));
-})});
+});
 $$('[data-xn-type] input').forEach(function(r){r.addEventListener('change',function(){if(r.checked){TYPE=r.value;applyType()}})});
 var typeGroup=$('[data-xn-type]');
 if(typeGroup)typeGroup.addEventListener('click',function(){
@@ -25630,7 +25676,7 @@ $('[data-xn-addimg]').addEventListener('click',function(){IMG.pickVideos()});
 $('[data-xn-addtxtimg]').addEventListener('click',function(){IMG2.addRow()});
 $('[data-xn-addvid]').addEventListener('click',function(){VID.pickVideos()});
 $('[data-xn-addcover]').addEventListener('click',function(){VID.pickCovers()});
-applyType();setSource('临时创建');
+applyType();
 /* 添加文案弹窗：对当前发布类型的素材表生效 */
 var ADDMODAL=$('[data-dy-addmodal]');
 function addModalHasCopy(b){
@@ -25727,6 +25773,14 @@ $('[data-xn-form]').addEventListener('submit',function(e){
   if(ADDMODAL&&!ADDMODAL.hidden)return;
   var name=(nameInput.value||'').replace(/^\s+|\s+$/g,'');
   if(!name){toast('请输入任务名称');nameInput.focus();return}
+  if(TYPE==='发文案配图'){
+    var topicV=(AI_TOPIC.value||'').replace(/^\s+|\s+$/g,''),keysV=(AI_KEYS.value||'').replace(/^\s+|\s+$/g,''),audienceV=(AI_AUDIENCE.value||'').replace(/^\s+|\s+$/g,'');
+    if(!topicV){toast('请填写笔记主题');AI_TOPIC.focus();return}
+    if(!keysV){toast('请填写核心关键词');AI_KEYS.focus();return}
+    if(!audienceV){toast('请填写目标人群');AI_AUDIENCE.focus();return}
+    var roleR=$('[data-xn-ai-role] input:checked'),roleV=roleR?roleR.value:'';
+    if(roleV==='自定义'&&!(AI_ROLE_TXT.value||'').replace(/^\s+|\s+$/g,'')){toast('请输入身份角色');AI_ROLE_TXT.focus();return}
+  }
   var st=activeBulk().getState();
   if(!st.videos.length){toast('请添加内容');return}
   var nd=$('[data-xn-notify-date]').value,nt=$('[data-xn-notify-time]').value,
@@ -31811,14 +31865,12 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
         ]},
         {title:'发布内容',variants:[
           {type:'发图文',rows:[
-            {label:'素材来源',value:'临时创建'},
             {label:'发布类型',value:'发图文'},
             {label:'共 2 条',value:'2 条'},
             {label:'内容 1',value:'门店新品 1.jpg 等 3 张 · 秋季新品到店'},
             {label:'内容 2',value:'门店新品 4.jpg 等 2 张 · 秋季新品到店（第二条）'}
           ]},
           {type:'发视频',rows:[
-            {label:'素材来源',value:'临时创建'},
             {label:'发布类型',value:'发视频'},
             {label:'共 2 条',value:'2 条'},
             {label:'内容 1',value:'门店探店 vlog.mp4 · 门店探店 vlog'},
@@ -31826,11 +31878,16 @@ anchor.parentNode.insertBefore(p,anchor.nextSibling);
             {label:'视频封面',preview:true}
           ]},
           {type:'发文案配图',rows:[
-            {label:'素材来源',value:'临时创建'},
             {label:'发布类型',value:'发文案配图'},
+            {label:'笔记主题',value:'秋季新品到店'},
+            {label:'核心关键词',value:'秋季新品,到店,试戴'},
+            {label:'目标人群',value:'年轻女性,学生'},
+            {label:'生成技巧',value:'痛点型'},
+            {label:'生成风格',value:'种草推荐'},
+            {label:'身份角色',value:'售后客服'},
             {label:'共 2 条',value:'2 条'},
-            {label:'内容 1',value:'门店新品 1.jpg 等 3 张 · 秋季新品到店'},
-            {label:'内容 2',value:'门店新品 4.jpg 等 2 张 · 秋季新品到店（第二条）'}
+            {label:'内容 1',value:'秋季新品上新 · 秋季新品到店 · #秋季新品'},
+            {label:'内容 2',value:'秋季新品第二弹 · 到店试戴有礼 · #秋季新品'}
           ]}
         ]},
         {title:'分配结果',rows:[
