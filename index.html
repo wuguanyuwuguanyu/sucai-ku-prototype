@@ -38541,6 +38541,19 @@ draw();
           + 'nl.className+=" ant-menu-item-selected";}'
         + 'if(lz.className.indexOf("rea-off")<0)lz.className+=" rea-off";'
       + '})();'
+      /* 顶栏只留点得动的（2026-11-24，产品要求）：没收录的域点了没反应，连同右侧「…」和
+         它肚子里那串隐藏项一并摘掉，顶栏只剩 微小助／数智员工／营销 这几项。
+         当前所在那一项本来就不接线，照旧留着并高亮。见 docs/09 §5 第六条破例。 */
+      + '(function(){'
+        + 'var ul=document.querySelector(".ant-pro-top-nav-header-base-menu");if(!ul)return;'
+        + 'var its=ul.querySelectorAll("li.ant-menu-overflow-item"),i,it;'
+        + 'for(i=0;i<its.length;i++){'
+          + 'it=its[i];'
+          + 'if(it.getAttribute("data-rea")||it.className.indexOf("ant-menu-item-selected")>=0)continue;'
+          + 'it.parentNode.removeChild(it);'
+        + '}'
+        + 'ul.style.justifyContent="flex-start";'
+      + '})();'
       /* 面包屑：链接文字对上某个模块页就接回原型（快照里它是一条指回现网的 href） */
       + 'var CR=document.querySelectorAll("a.ant-breadcrumb-link"),ci;'
       + 'for(ci=0;ci<CR.length;ci++){'
