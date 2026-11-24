@@ -25633,6 +25633,13 @@ $$('[data-xn-source]').forEach(function(b){b.addEventListener('click',function()
   if(b.getAttribute('data-xn-source')==='AI生成'&&TYPE==='发文案配图')openAddCopy();
 })});
 $$('[data-xn-type] input').forEach(function(r){r.addEventListener('change',function(){if(r.checked){TYPE=r.value;applyType()}})});
+var typeGroup=$('[data-xn-type]');
+if(typeGroup)typeGroup.addEventListener('click',function(){
+  setTimeout(function(){
+    var c=$('[data-xn-type] input:checked');
+    if(c){TYPE=c.value;applyType()}
+  },0);
+});
 $('[data-xn-addimg]').addEventListener('click',function(){IMG.pickVideos()});
 $('[data-xn-addvid]').addEventListener('click',function(){VID.pickVideos()});
 $('[data-xn-addcover]').addEventListener('click',function(){VID.pickCovers()});
