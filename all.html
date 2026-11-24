@@ -37616,6 +37616,240 @@ draw();
       + '})();';
   }
 
+  /* 大众点评互动 · 新建（2026-11-24）：评论区之后插一段可增减的「点评页其他必填项」。
+     表单项沿用快照那套 .ant-form-item 结构，样式只补这一段的零件；载体文件不动。 */
+  var REA_DP_CSS = `
+.rea-dcc{margin:0 0 8px}
+.rea-dcc-head{display:flex;align-items:center;gap:8px;margin:8px 0 12px}
+.rea-dcc-title{flex:none;font-size:14px;line-height:22px;color:rgba(0,0,0,.88);font-weight:500}
+.rea-dcc-line{flex:1;border-top:1px solid rgba(5,5,5,.06)}
+.rea-dcc-info{flex:none;width:14px;height:14px;border:1px solid #8c8c8c;border-radius:50%;color:#8c8c8c;font-size:10px;line-height:12px;text-align:center;font-style:normal;cursor:help;user-select:none}
+.rea-dcc-info:hover,.rea-dcc-info:focus{border-color:#1677ff;color:#1677ff;outline:none}
+.rea-dcc-add{flex:none;padding:0 2px;border:0;background:none;color:#1677ff;font-size:14px;line-height:22px;cursor:pointer}
+.rea-dcc-add:hover{color:#4096ff}
+.rea-dcc-item{margin:0 0 4px}
+.rea-dcc-item .ant-form-item{margin-bottom:16px}
+.rea-dcc-err{display:none;margin:-8px 0 12px 16.6667%;font-size:12px;line-height:18px;color:#ff4d4f}
+.rea-dcc-err.on{display:block}
+.rea-dcc-opts{display:flex;align-items:flex-start;gap:12px}
+.rea-dcc-tags{display:flex;flex-wrap:wrap;align-items:center;gap:6px;flex:1;min-height:32px;padding:2px 8px;border:1px solid #d9d9d9;border-radius:6px;background:#fff;cursor:text;transition:border-color .2s,box-shadow .2s}
+.rea-dcc-tags:focus-within{border-color:#4096ff;box-shadow:0 0 0 2px rgba(5,145,255,.1)}
+.rea-dcc-tags.rea-bad,.rea-dcc-name.rea-bad{border-color:#ff4d4f}
+.rea-dcc-tag{display:inline-flex;align-items:center;gap:4px;height:24px;padding:0 6px;border-radius:4px;background:#f5f5f5;color:rgba(0,0,0,.88);font-size:12px;line-height:22px}
+.rea-dcc-tag b{font-weight:400;color:#8c8c8c;cursor:pointer}
+.rea-dcc-tag b:hover{color:#ff4d4f}
+.rea-dcc-tagin{flex:1;min-width:120px;height:24px;padding:0;border:0;outline:0;background:none;color:rgba(0,0,0,.88);font-size:14px;line-height:24px}
+.rea-dcc-tagin::placeholder{color:rgba(0,0,0,.25)}
+.rea-dcc-del{flex:none;height:32px;padding:0 2px;border:0;background:none;color:#ff4d4f;font-size:14px;cursor:pointer}
+.rea-dcc-del:hover{color:#ff7875}
+.rea-dcc-tip{position:fixed;z-index:1300;display:none;max-width:320px;padding:10px 12px;border-radius:6px;background:#fff;box-shadow:0 6px 16px rgba(0,0,0,.12);color:#1f2329;font-size:12px;line-height:18px}
+.rea-dcc-tip.on{display:block}
+.rea-dcc-toast{position:fixed;top:24px;left:50%;z-index:1400;padding:10px 16px;border-radius:8px;background:#fff;box-shadow:0 6px 16px rgba(0,0,0,.08);color:#1f2329;font-size:14px;line-height:20px;opacity:0;visibility:hidden;transform:translate(-50%,-8px);transition:opacity .18s,transform .18s,visibility .18s}
+.rea-dcc-toast.on{opacity:1;visibility:visible;transform:translate(-50%,0)}
+.rea-dcc-toast::before{content:"";display:inline-block;vertical-align:-3px;width:16px;height:16px;margin-right:8px;border-radius:50%;background:#ff4d4f}
+`;
+
+  /* 这一段是运行时造 DOM（快照里没有评论内容之后的位置）：插入点在 #commentContent 那一行之后、
+     「问大家」分隔之前。整段可留空；只有填了一半的条目在提交时拦下。 */
+  function reaDpNewJs(){
+    return String.raw`(function(){
+      var anchor = document.querySelector('#commentContent');
+      if(!anchor || document.querySelector('[data-dcc]')) return;
+      var row = anchor.closest('.ant-form-item');
+      if(!row) return;
+
+      var TIP = '大众点评发布页要求填写、这里没有内置的项；执行时员工从你给的选项里选一个。';
+      var sec = document.createElement('div');
+      sec.className = 'rea-dcc';
+      sec.setAttribute('data-dcc','1');
+      sec.innerHTML = '<div class="rea-dcc-head">'
+        + '<span class="rea-dcc-title">点评页其他必填项</span>'
+        + '<span class="rea-dcc-line"></span>'
+        + '<i class="rea-dcc-info" tabindex="0" role="img" aria-label="说明">i</i>'
+        + '<button type="button" class="rea-dcc-add">＋ 添加</button>'
+        + '</div><div class="rea-dcc-list"></div>';
+      row.parentNode.insertBefore(sec, row.nextSibling);
+
+      var list = sec.querySelector('.rea-dcc-list');
+      var tip = document.createElement('div');
+      tip.className = 'rea-dcc-tip';
+      document.body.appendChild(tip);
+      var toastEl = null;
+
+      function toast(msg){
+        if(!toastEl){ toastEl = document.createElement('div'); toastEl.className = 'rea-dcc-toast'; document.body.appendChild(toastEl); }
+        toastEl.textContent = msg;
+        toastEl.classList.add('on');
+        clearTimeout(toastEl.__t);
+        toastEl.__t = setTimeout(function(){ toastEl.classList.remove('on'); }, 2200);
+      }
+      function showTip(el){
+        tip.textContent = TIP;
+        tip.classList.add('on');
+        var r = el.getBoundingClientRect(), w = tip.offsetWidth, h = tip.offsetHeight;
+        var left = Math.min(r.left, (window.innerWidth || 1200) - w - 12);
+        var top = r.bottom + 8;
+        if(top + h > (window.innerHeight || 800) - 8) top = r.top - h - 8;
+        tip.style.left = Math.max(12, left) + 'px';
+        tip.style.top = Math.max(12, top) + 'px';
+      }
+      function hideTip(){ tip.classList.remove('on'); }
+
+      function makeItem(){
+        var item = document.createElement('div');
+        item.className = 'rea-dcc-item';
+        item.innerHTML =
+          '<div class="ant-form-item css-vgijab ant-form-item-horizontal"><div class="ant-row ant-form-item-row css-vgijab">'
+          + '<div class="ant-col ant-col-4 ant-form-item-label css-vgijab"><label>名称</label></div>'
+          + '<div class="ant-col ant-form-item-control css-vgijab"><div class="ant-form-item-control-input"><div class="ant-form-item-control-input-content">'
+          + '<input type="text" class="ant-input css-vgijab ant-input-outlined rea-dcc-name" placeholder="如：课程类型">'
+          + '</div></div></div></div></div>'
+          + '<div class="ant-form-item css-vgijab ant-form-item-horizontal"><div class="ant-row ant-form-item-row css-vgijab">'
+          + '<div class="ant-col ant-col-4 ant-form-item-label css-vgijab"><label>选项</label></div>'
+          + '<div class="ant-col ant-form-item-control css-vgijab"><div class="ant-form-item-control-input"><div class="ant-form-item-control-input-content">'
+          + '<div class="rea-dcc-opts"><div class="rea-dcc-tags"><input type="text" class="rea-dcc-tagin" placeholder="输入选项后回车"></div>'
+          + '<button type="button" class="rea-dcc-del">删除</button></div>'
+          + '</div></div></div></div></div>'
+          + '<div class="rea-dcc-err"></div>';
+        item.__opts = [];
+        list.appendChild(item);
+        return item;
+      }
+
+      function renderTags(item, keepFocus){
+        var box = item.querySelector('.rea-dcc-tags');
+        var input = item.querySelector('.rea-dcc-tagin');
+        while(box.firstChild) box.removeChild(box.firstChild);
+        for(var i=0;i<item.__opts.length;i++){
+          var tag = document.createElement('span');
+          tag.className = 'rea-dcc-tag';
+          tag.setAttribute('data-i', i);
+          var tx = document.createElement('span');
+          tx.textContent = item.__opts[i];
+          var x = document.createElement('b');
+          x.setAttribute('role','button');
+          x.setAttribute('aria-label','删除选项');
+          x.textContent = '×';
+          tag.appendChild(tx); tag.appendChild(x);
+          box.appendChild(tag);
+        }
+        box.appendChild(input);
+        if(keepFocus) input.focus();
+      }
+
+      function addTag(item, raw, quiet){
+        var v = String(raw || '').trim().replace(/[,，;；、]+$/,'').trim();
+        var input = item.querySelector('.rea-dcc-tagin');
+        if(v && item.__opts.indexOf(v) < 0) item.__opts.push(v);
+        if(input) input.value = '';
+        renderTags(item, !quiet);
+        item.querySelector('.rea-dcc-err').classList.remove('on');
+        item.querySelector('.rea-dcc-tags').classList.remove('rea-bad');
+      }
+
+      function validate(){
+        var items = [].slice.call(list.querySelectorAll('.rea-dcc-item')), firstBad = null;
+        for(var i=0;i<items.length;i++){
+          var it = items[i];
+          var nameEl = it.querySelector('.rea-dcc-name');
+          var tagsEl = it.querySelector('.rea-dcc-tags');
+          var errEl = it.querySelector('.rea-dcc-err');
+          var name = (nameEl.value || '').trim();
+          var dirty = !!name || (it.__opts || []).length > 0;
+          var ok = !dirty || (!!name && (it.__opts || []).length >= 2);
+          errEl.classList.toggle('on', !ok);
+          errEl.textContent = ok ? '' : '请填写名称，并至少添加两个选项';
+          nameEl.classList.toggle('rea-bad', !ok && !name);
+          tagsEl.classList.toggle('rea-bad', !ok && (it.__opts || []).length < 2);
+          if(!ok && !firstBad) firstBad = it;
+        }
+        if(firstBad){
+          var f = firstBad.querySelector('.rea-dcc-name');
+          if(!(f.value || '').trim()) f.focus();
+          else firstBad.querySelector('.rea-dcc-tagin').focus();
+          toast('请补全「点评页其他必填项」');
+          return false;
+        }
+        return true;
+      }
+
+      sec.querySelector('.rea-dcc-add').addEventListener('click', function(){
+        makeItem().querySelector('.rea-dcc-name').focus();
+      });
+
+      list.addEventListener('click', function(e){
+        var del = e.target.closest('.rea-dcc-del');
+        if(del){ del.closest('.rea-dcc-item').remove(); return; }
+        var x = e.target.closest('.rea-dcc-tag b');
+        if(x){
+          var item = x.closest('.rea-dcc-item');
+          var idx = parseInt(x.closest('.rea-dcc-tag').getAttribute('data-i'), 10);
+          item.__opts.splice(idx, 1);
+          renderTags(item);
+          return;
+        }
+        var tags = e.target.closest('.rea-dcc-tags');
+        if(tags) tags.querySelector('.rea-dcc-tagin').focus();
+      });
+
+      list.addEventListener('keydown', function(e){
+        if(!e.target.classList || !e.target.classList.contains('rea-dcc-tagin')) return;
+        var item = e.target.closest('.rea-dcc-item');
+        if(e.key === 'Enter' || e.key === ',' || e.key === '，'){
+          e.preventDefault();
+          addTag(item, e.target.value);
+        } else if(e.key === 'Backspace' && !e.target.value && item.__opts.length){
+          item.__opts.pop();
+          renderTags(item, true);
+        }
+      });
+
+      list.addEventListener('input', function(e){
+        var t = e.target;
+        if(t.classList && t.classList.contains('rea-dcc-tagin')){
+          if(/[,，;；、]/.test(t.value)){
+            var parts = t.value.split(/[,，;；、]+/);
+            t.value = '';
+            var item = t.closest('.rea-dcc-item');
+            for(var i=0;i<parts.length;i++) if(parts[i].trim()) addTag(item, parts[i]);
+          }
+          return;
+        }
+        if(t.classList && t.classList.contains('rea-dcc-name')){
+          var it = t.closest('.rea-dcc-item');
+          it.querySelector('.rea-dcc-err').classList.remove('on');
+          t.classList.remove('rea-bad');
+        }
+      });
+
+      list.addEventListener('focusout', function(e){
+        var t = e.target;
+        if(t.classList && t.classList.contains('rea-dcc-tagin') && t.value.trim()){
+          addTag(t.closest('.rea-dcc-item'), t.value, true);
+        }
+      });
+
+      var info = sec.querySelector('.rea-dcc-info');
+      info.addEventListener('mouseenter', function(){ showTip(info); });
+      info.addEventListener('focus', function(){ showTip(info); });
+      info.addEventListener('mouseleave', hideTip);
+      info.addEventListener('blur', hideTip);
+      window.addEventListener('scroll', hideTip, true);
+
+      document.addEventListener('click', function(e){
+        var btn = e.target.closest && e.target.closest('button.ant-btn');
+        if(!btn || btn.closest('.rea-dcc')) return;
+        var t = (btn.textContent || '').replace(/\s+/g, '');
+        if(t === '提交'){
+          if(!validate()){ e.preventDefault(); e.stopPropagation(); }
+        } else if(t === '取消'){
+          e.preventDefault(); e.stopPropagation();
+          parent.postMessage({reaPage:'大众点评互动'}, '*');
+        }
+      }, true);
+    })();`;
+  }
+
   var REA_COVER = {
     '使用总览': { html: 'srcOverview', css: docOf('srcOverviewStyle'), js: function(){ return reaOverviewDataJs()+docOf('srcOverviewScript'); } },
     '使用总览 · 使用详情': { html: 'srcOverview', css: docOf('srcOverviewStyle'), js: function(){ return 'window.__REA_USAGE_DETAIL=true;'+reaOverviewDataJs()+docOf('srcOverviewScript'); } },
@@ -37634,6 +37868,9 @@ draw();
     /* 操作频率设置（2026-11-10）：正文整段另造，五组上限＋步进/校验/统一执行状态 */
     /* 操作频率设置（2026-11-10）：正文沿用快照，只补步进/校验/不限制/toast */
     '操作频率设置': { css: REA_OPF_CSS, js: reaOpfJs },
+    /* 大众点评互动 · 新建（2026-11-24）：评论区后插一段可增减的「点评页其他必填项」，
+       正文其余部分仍是快照；取消的回程改由本页脚本接（覆盖页不归通用接线） */
+    '大众点评互动 · 新建': { css: REA_DP_CSS, js: reaDpNewJs },
     '微小助看板 · 任务列表': { html: 'srcBoardTasks', css: REA_BOARD_CSS, js: reaBoardTasksJs },
     [REA_METRIC_PAGE]: { html: 'srcBoardTasks', css: REA_BOARD_CSS, js: reaBoardTasksJs },
     '微小助看板 · 执行人明细': { html: 'srcBoardTask', css: REA_BOARD_CSS, js: reaBoardTaskJs },
