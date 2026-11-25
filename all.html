@@ -19341,15 +19341,15 @@ render();
           <span class="_must_white_lzm36_76">发布内容</span>
           <div class="_upload_box_lzm36_100">
             <div data-xn-section="image">
-              <div class="rea-dy-bulkbar"><span class="rea-dy-bulkcnt" data-xn-imgcnt></span><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-addimg><span>+ 添加图文</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-addcopy><span>添加文案</span></button></div>
+              <div class="rea-dy-bulkbar"><span class="rea-dy-bulkcnt" data-xn-imgcnt></span><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-addimg><span>+ 添加图文</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-importopen><span>导入文案</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-aiopen><span>AI 生成</span></button></div>
               <div data-xn-imgbulk></div><div data-xn-imgcopy hidden></div>
             </div>
             <div data-xn-section="video" hidden>
-              <div class="rea-dy-bulkbar"><span class="rea-dy-bulkcnt" data-xn-vidcnt></span><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-addvid><span>+ 添加视频</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-addcover><span>+ 添加封面</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-addcopy><span>添加文案</span></button></div>
+              <div class="rea-dy-bulkbar"><span class="rea-dy-bulkcnt" data-xn-vidcnt></span><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-addvid><span>+ 添加视频</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-addcover><span>+ 添加封面</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-importopen><span>导入文案</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-aiopen><span>AI 生成</span></button></div>
               <div data-xn-vidbulk></div><div data-xn-vidcopy hidden></div>
             </div>
             <div data-xn-section="copyimage" hidden>
-              <div class="rea-dy-bulkbar"><span class="rea-dy-bulkcnt" data-xn-txtcnt></span><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-addtxtimg><span>+ 添加一条</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-addcopy><span>添加文案</span></button></div>
+              <div class="rea-dy-bulkbar"><span class="rea-dy-bulkcnt" data-xn-txtcnt></span><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-addtxtimg><span>+ 添加一条</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-importopen><span>导入文案</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-aiopen><span>AI 生成</span></button></div>
               <div data-xn-txtbulk></div><div data-xn-txtcopy hidden></div>
             </div>
           </div>
@@ -19372,9 +19372,8 @@ render();
         <div class="_form_input_lzm36_71"><span class="_must_white_lzm36_76">截止时间</span><div class="_upload_box_lzm36_100"><div class="rea-dy-dt"><input type="date" data-xn-end-date aria-label="截止日期"><input type="time" data-xn-end-time aria-label="截止时间"></div></div></div>
         <div class="_form_input_lzm36_71" style="padding-top:32px;padding-bottom:24px"><span class="_must_white1_lzm36_76"></span><div class="_upload_box_lzm36_100"><button type="submit" class="ant-btn css-vgijab ant-btn-primary ant-btn-color-primary ant-btn-variant-solid" data-xn-save><span>保存</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-cancel style="margin-left:10px"><span>取消</span></button></div></div>
         <div class="rea-dy-addmodal" data-dy-addmodal hidden>
-          <div class="rea-dy-addmodal-box" role="dialog" aria-modal="true" aria-label="添加文案">
-            <div class="rea-dy-addmodal-h"><h3>添加文案</h3><button type="button" class="rea-dy-addmodal-x" data-dy-modalclose aria-label="关闭">×</button></div>
-            <div class="rea-dy-addtabs" role="tablist"><button type="button" class="rea-dy-addtab on" data-dy-addtab="ai" role="tab" aria-selected="true">AI生成</button><button type="button" class="rea-dy-addtab" data-dy-addtab="import" role="tab" aria-selected="false">导入文案</button></div>
+          <div class="rea-dy-addmodal-box" role="dialog" aria-modal="true" aria-label="AI 生成">
+            <div class="rea-dy-addmodal-h"><h3>AI 生成</h3><button type="button" class="rea-dy-addmodal-x" data-dy-modalclose aria-label="关闭">×</button></div>
             <div class="rea-dy-addbody" data-dy-addpanel="ai">
               <div data-dy-ai-generic>
                 <div class="rea-dy-addfield"><label for="xnAiTitle">示例标题</label><input id="xnAiTitle" class="ant-input css-vgijab ant-input-outlined" type="text" maxlength="20" placeholder="请输入示例标题" data-dy-ai-title></div>
@@ -19414,9 +19413,14 @@ render();
               <p class="rea-dy-addcount" data-dy-aicount>将生成 0 条文案</p>
               <div class="rea-dy-addfoot"><button type="button" class="ant-btn css-vgijab ant-btn-primary ant-btn-color-primary ant-btn-variant-solid" data-dy-aigen><span>生成文案</span></button></div>
             </div>
-            <div class="rea-dy-addbody" data-dy-addpanel="import" hidden>
-              <div class="rea-dy-importsteps"><div class="rea-dy-importstep"><span class="rea-dy-importstepno">1</span><div class="rea-dy-importstepbody"><button type="button" class="rea-dy-importsteplink" data-dy-modaltemplate><b>下载</b>文件模板</button></div></div><div class="rea-dy-importstep"><span class="rea-dy-importstepno">2</span><div class="rea-dy-importstepbody"><span class="rea-dy-importsteptext">从电脑上选择文件模板上传：</span><div class="rea-dy-importstepact"><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-modalimport><span class="rea-dy-upicon"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M12 3l5 5h-3v7h-4V8H7l5-5zM5 19h14v2H5z"></path></svg></span><span>上传文件</span></button></div></div></div></div>
-              <input type="file" accept=".csv,.xlsx" hidden data-dy-modalimportinput>
+          </div>
+        </div>
+        <div class="rea-dy-addmodal" data-xn-importmodal hidden>
+          <div class="rea-dy-addmodal-box" role="dialog" aria-modal="true" aria-label="导入文案">
+            <div class="rea-dy-addmodal-h"><h3>导入文案</h3><button type="button" class="rea-dy-addmodal-x" data-xn-importclose aria-label="关闭">×</button></div>
+            <div class="rea-dy-addbody">
+              <div class="rea-dy-importsteps"><div class="rea-dy-importstep"><span class="rea-dy-importstepno">1</span><div class="rea-dy-importstepbody"><button type="button" class="rea-dy-importsteplink" data-xn-importtpl><b>下载</b>文件模板</button></div></div><div class="rea-dy-importstep"><span class="rea-dy-importstepno">2</span><div class="rea-dy-importstepbody"><span class="rea-dy-importsteptext">从电脑上选择文件模板上传：</span><div class="rea-dy-importstepact"><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-importbtn><span class="rea-dy-upicon"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M12 3l5 5h-3v7h-4V8H7l5-5zM5 19h14v2H5z"></path></svg></span><span>上传文件</span></button></div></div></div></div>
+              <input type="file" accept=".csv,.xlsx" hidden data-xn-importinput>
             </div>
           </div>
         </div>
@@ -20078,7 +20082,7 @@ render();
         <div class="_form_input_lzm36_71 rea-dy-row--wide">
           <span class="_must_white_lzm36_76">发布内容</span>
           <div class="_upload_box_lzm36_100">
-            <div class="rea-dy-bulkbar"><span class="rea-dy-bulkcnt" data-dy-cnt>0 条内容 / 0 位执行人员</span><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-addfile><span>+ 添加视频</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-addcover><span>+ 添加封面</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-addcopy><span>添加文案</span></button></div>
+            <div class="rea-dy-bulkbar"><span class="rea-dy-bulkcnt" data-dy-cnt>0 条内容 / 0 位执行人员</span><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-addfile><span>+ 添加视频</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-addcopy><span>导入文案</span></button></div>
             <div data-dy-bulk></div>
             <p class="rea-dy-adminerr" data-dy-err="video" hidden>请添加视频</p>
           </div>
@@ -20125,18 +20129,9 @@ render();
           <div class="_upload_box_lzm36_100"><button type="submit" class="ant-btn css-vgijab ant-btn-primary ant-btn-color-primary ant-btn-variant-solid" data-dy-save><span>保存</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-cancel style="margin-left:10px"><span>取消</span></button></div>
         </div>
         <div class="rea-dy-addmodal" data-dy-addmodal hidden>
-          <div class="rea-dy-addmodal-box" role="dialog" aria-modal="true" aria-label="添加文案">
-            <div class="rea-dy-addmodal-h"><h3>添加文案</h3><button type="button" class="rea-dy-addmodal-x" data-dy-modalclose aria-label="关闭">×</button></div>
-            <div class="rea-dy-addtabs" role="tablist"><button type="button" class="rea-dy-addtab on" data-dy-addtab="ai" role="tab" aria-selected="true">AI生成</button><button type="button" class="rea-dy-addtab" data-dy-addtab="import" role="tab" aria-selected="false">导入文案</button></div>
-            <div class="rea-dy-addbody" data-dy-addpanel="ai">
-              <div class="rea-dy-addfield"><label for="dyAiTitle">示例标题</label><input id="dyAiTitle" class="ant-input css-vgijab ant-input-outlined" type="text" maxlength="20" placeholder="请输入示例标题" data-dy-ai-title></div>
-              <div class="rea-dy-addfield"><label for="dyAiCopy">示例文案</label><textarea id="dyAiCopy" class="rea-dy-addtextarea" maxlength="1000" placeholder="请输入示例文案" data-dy-ai-copy></textarea></div>
-              <div class="rea-dy-addfield"><label for="dyAiTopic">示例话题</label><input id="dyAiTopic" class="ant-input css-vgijab ant-input-outlined" type="text" placeholder="请输入示例话题" data-dy-ai-topic></div>
-              <p class="rea-dy-adminerr" data-dy-ai-err hidden>请填写示例标题、文案和话题</p>
-              <p class="rea-dy-addcount" data-dy-aicount>将生成 0 条文案</p>
-              <div class="rea-dy-addfoot"><button type="button" class="ant-btn css-vgijab ant-btn-primary ant-btn-color-primary ant-btn-variant-solid" data-dy-aigen><span>生成文案</span></button></div>
-            </div>
-            <div class="rea-dy-addbody" data-dy-addpanel="import" hidden>
+          <div class="rea-dy-addmodal-box" role="dialog" aria-modal="true" aria-label="导入文案">
+            <div class="rea-dy-addmodal-h"><h3>导入文案</h3><button type="button" class="rea-dy-addmodal-x" data-dy-modalclose aria-label="关闭">×</button></div>
+            <div class="rea-dy-addbody" data-dy-addpanel="import">
               <div class="rea-dy-importsteps">
                 <div class="rea-dy-importstep"><span class="rea-dy-importstepno">1</span><div class="rea-dy-importstepbody"><button type="button" class="rea-dy-importsteplink" data-dy-modaltemplate><b>下载</b>文件模板</button></div></div>
                 <div class="rea-dy-importstep"><span class="rea-dy-importstepno">2</span><div class="rea-dy-importstepbody"><span class="rea-dy-importsteptext">从电脑上选择文件模板上传：</span><div class="rea-dy-importstepact"><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-modalimport><span class="rea-dy-upicon"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M12 3l5 5h-3v7h-4V8H7l5-5zM5 19h14v2H5z"></path></svg></span><span>上传文件</span></button></div></div></div>
@@ -20164,6 +20159,18 @@ render();
     <div><dt>有效期</dt><dd>2026/10/29 11:02~2026/11/05 11:02</dd></div>
     <div><dt>创建时间</dt><dd>2026-10-29 11:02</dd></div>
   </dl>
+</section>
+<section class="rea-dy-sec">
+  <div class="rea-dy-sec-h"><h2>发布内容与分配</h2></div>
+  <div class="rea-dy-tablewrap"><table class="rea-dy-table">
+    <colgroup><col style="width:40%"><col style="width:44%"><col style="width:16%"></colgroup>
+    <thead><tr><th>视频文件名</th><th>分配给</th><th>视频状态</th></tr></thead>
+    <tbody>
+      <tr><td>秋季新品到店.mp4</td><td>张伟、赵一</td><td>已下发</td></tr>
+      <tr><td>秋季新品开箱.mp4</td><td>李娜、钱二</td><td>已下发</td></tr>
+      <tr><td>秋季新品上身.mp4</td><td>王强、孙三</td><td>已下发</td></tr>
+    </tbody>
+  </table></div>
 </section>
 <section class="rea-dy-sec">
   <div class="rea-dy-sec-h"><h2>员工完成情况</h2><button type="button" class="rea-dy-btn" data-dy-export>导出</button></div>
@@ -20447,6 +20454,14 @@ render();
     </div></section>
   </div></div>
 </div></div>
+<div class="_task_information_1go3x_71"><div class="_task_information_header_1go3x_80">发布内容与分配</div>
+<div style="padding:0 16px 16px"><div class="ant-table ant-table-middle css-vgijab"><div class="ant-table-container"><div class="ant-table-content"><table style="table-layout: fixed; width: 100%;"><colgroup><col style="width: 40%;"><col style="width: 44%;"><col style="width: 16%;"></colgroup><thead class="ant-table-thead"><tr><th class="ant-table-cell" scope="col">视频文件名</th><th class="ant-table-cell" scope="col">分配给</th><th class="ant-table-cell" scope="col">视频状态</th></tr></thead><tbody class="ant-table-tbody">
+<tr class="ant-table-row ant-table-row-level-0"><td class="ant-table-cell">秋季新品开箱_竖版.mp4</td><td class="ant-table-cell">张伯阳、赵雪、郑凯</td><td class="ant-table-cell">已下发</td></tr>
+<tr class="ant-table-row ant-table-row-level-0"><td class="ant-table-cell">门店探店vlog.mp4</td><td class="ant-table-cell">李佳、周雨桐、林悦</td><td class="ant-table-cell">已下发</td></tr>
+<tr class="ant-table-row ant-table-row-level-0"><td class="ant-table-cell">客户案例访谈.mp4</td><td class="ant-table-cell">王敏、孙磊</td><td class="ant-table-cell">已下发</td></tr>
+<tr class="ant-table-row ant-table-row-level-0"><td class="ant-table-cell">新品到店实拍.mp4</td><td class="ant-table-cell">陈昊、吴倩</td><td class="ant-table-cell">已下发</td></tr>
+<tr class="ant-table-row ant-table-row-level-0"><td class="ant-table-cell">会员日预告.mp4</td><td class="ant-table-cell"><span style="color:#8F959E">未分配</span></td><td class="ant-table-cell"><span style="color:#8F959E">未分配</span></td></tr>
+</tbody></table></div></div></div></div></div>
 <div class="_task_information_1go3x_71"><div class="ant-tabs ant-tabs-top css-vgijab"><div role="tablist" aria-orientation="horizontal" class="ant-tabs-nav"><div class="ant-tabs-nav-wrap"><div class="ant-tabs-nav-list" style="transform: translate(0px, 0px);"><div data-node-key="1" class="ant-tabs-tab ant-tabs-tab-active"><div role="tab" aria-selected="true" id="rea-wxv-tab" class="ant-tabs-tab-btn" tabindex="0">员工完成情况</div></div><div class="ant-tabs-ink-bar ant-tabs-ink-bar-animated" style="width: 84px; left: 42px; transform: translateX(-50%);"></div></div></div></div><div class="ant-tabs-content-holder"><div class="ant-tabs-content ant-tabs-content-top"><div role="tabpanel" tabindex="0" aria-hidden="false" class="ant-tabs-tabpane ant-tabs-tabpane-active" aria-labelledby="rea-wxv-tab">
 <div class="_detaiHeader_1go3x_120"><div><div class="ant-picker ant-picker-range ant-picker-outlined css-vgijab" style="width: 260px;"><div class="ant-picker-input"><input aria-invalid="false" autocomplete="off" size="18" placeholder="开始日期" date-range="start" value=""></div><div class="ant-picker-range-separator"><span aria-label="to" class="ant-picker-separator"><span role="img" aria-label="swap-right" class="anticon anticon-swap-right"><svg viewBox="0 0 1024 1024" focusable="false" data-icon="swap-right" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M873.1 596.2l-164-208A32 32 0 00684 376h-64.8c-6.7 0-10.4 7.7-6.3 13l144.3 183H152c-4.4 0-8 3.6-8 8v60c0 4.4 3.6 8 8 8h695.9c26.8 0 41.7-30.8 25.2-51.8z"></path></svg></span></span></div><div class="ant-picker-input"><input aria-invalid="false" autocomplete="off" size="18" placeholder="结束日期" date-range="end" value=""></div><div class="ant-picker-active-bar" style="position: absolute; width: 0px;"></div><span class="ant-picker-suffix"><span role="img" aria-label="calendar" class="anticon anticon-calendar"><svg viewBox="64 64 896 896" focusable="false" data-icon="calendar" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M880 184H712v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H384v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H144c-17.7 0-32 14.3-32 32v664c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V216c0-17.7-14.3-32-32-32zm-40 656H184V460h656v380zM184 392V256h128v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h256v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h128v136H184z"></path></svg></span></span></div><div class="ant-select ant-select-outlined css-vgijab ant-select-single ant-select-show-arrow" style="width: 140px; margin-left: 8px;"><div class="ant-select-selector"><span class="ant-select-selection-wrap"><span class="ant-select-selection-search"><input type="search" autocomplete="off" class="ant-select-selection-search-input" role="combobox" aria-expanded="false" aria-haspopup="listbox" aria-owns="rc_select_3_list" aria-autocomplete="list" aria-controls="rc_select_3_list" readonly="" unselectable="on" value="" id="rc_select_3" style="opacity: 0;"></span><span class="ant-select-selection-item" title="选择状态">选择状态</span></span></div><span class="ant-select-arrow" unselectable="on" aria-hidden="true" style="user-select: none;"><span role="img" aria-label="down" class="anticon anticon-down ant-select-suffix"><svg viewBox="64 64 896 896" focusable="false" data-icon="down" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"></path></svg></span></span></div><span class="ant-input-group-wrapper ant-input-group-wrapper-outlined css-vgijab ant-input-search" style="width: 200px; margin-left: 8px;"><span class="ant-input-wrapper ant-input-group css-vgijab"><input placeholder="请输入关键词" aria-describedby=":r47:" type="search" class="ant-input css-vgijab ant-input-outlined" value=""><span class="ant-input-group-addon"><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-input-search-button"><span class="ant-btn-icon"><span role="img" aria-label="search" class="anticon anticon-search"><svg viewBox="64 64 896 896" focusable="false" data-icon="search" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M909.6 854.5L649.9 594.8C690.2 542.7 712 479 712 412c0-80.2-31.3-155.4-87.9-212.1-56.6-56.7-132-87.9-212.1-87.9s-155.5 31.3-212.1 87.9C143.2 256.5 112 331.8 112 412c0 80.1 31.3 155.5 87.9 212.1C256.5 680.8 331.8 712 412 712c67 0 130.6-21.8 182.7-62l259.7 259.6a8.2 8.2 0 0011.6 0l43.6-43.5a8.2 8.2 0 000-11.6zM570.4 570.4C528 612.7 471.8 636 412 636s-116-23.3-158.4-65.6C211.3 528 188 471.8 188 412s23.3-116.1 65.6-158.4C296 211.3 352.2 188 412 188s116.1 23.2 158.4 65.6S636 352.2 636 412s-23.3 116.1-65.6 158.4z"></path></svg></span></span></button></span></span></span><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" style="float: right;"><span role="img" aria-label="download" class="anticon anticon-download"><svg viewBox="64 64 896 896" focusable="false" data-icon="download" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M505.7 661a8 8 0 0012.6 0l112-141.7c4.1-5.2.4-12.9-6.3-12.9h-74.1V168c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8v338.3H400c-6.7 0-10.4 7.7-6.3 12.9l112 141.8zM878 626h-60c-4.4 0-8 3.6-8 8v154H214V634c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8v198c0 17.7 14.3 32 32 32h684c17.7 0 32-14.3 32-32V634c0-4.4-3.6-8-8-8z"></path></svg></span><span>导出</span></button></div></div>
 <div><div class="ant-spin-nested-loading css-vgijab"><div class="ant-spin-container"><div class="ant-table ant-table-middle css-vgijab"><div class="ant-table-container"><div class="ant-table-content"><table style="table-layout: fixed; width: 100%;"><colgroup><col style="width: 15%;"><col style="width: 15%;"><col style="width: 22%;"><col style="width: 10%;"><col style="width: 13%;"><col style="width: 10%;"><col style="width: 15%;"></colgroup><thead class="ant-table-thead"><tr><th class="ant-table-cell ant-table-cell-ellipsis" scope="col">用户名</th><th class="ant-table-cell" scope="col">用户手机号</th><th class="ant-table-cell" scope="col">文案话题</th><th class="ant-table-cell" scope="col">发布视频</th><th class="ant-table-cell" scope="col">所属部门</th><th class="ant-table-cell" scope="col">任务状态</th><th class="ant-table-cell" scope="col">执行时间</th></tr></thead><tbody class="ant-table-tbody"><tr class="ant-table-row ant-table-row-level-0" data-row-key="1"><td class="ant-table-cell ant-table-cell-ellipsis" title="张伯阳">张伯阳</td><td class="ant-table-cell">17612256497</td><td class="ant-table-cell">秋季新品开箱 · #秋季新品</td><td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-wxv-video="张伯阳" style="padding: 0px;"><span>查看</span></button></td><td class="ant-table-cell">测试二级三部</td><td class="ant-table-cell"><span class="rea-wxd-tb done"><i></i>已执行</span></td><td class="ant-table-cell">2026/11/19 10:22</td></tr><tr class="ant-table-row ant-table-row-level-0" data-row-key="2"><td class="ant-table-cell ant-table-cell-ellipsis" title="李佳">李佳</td><td class="ant-table-cell">13800138001</td><td class="ant-table-cell">门店探店 vlog · #探店</td><td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-wxv-video="李佳" style="padding: 0px;"><span>查看</span></button></td><td class="ant-table-cell">销售一部</td><td class="ant-table-cell"><span class="rea-wxd-tb done"><i></i>已执行</span></td><td class="ant-table-cell">2026/11/19 11:05</td></tr><tr class="ant-table-row ant-table-row-level-0" data-row-key="3"><td class="ant-table-cell ant-table-cell-ellipsis" title="王敏">王敏</td><td class="ant-table-cell">13800138002</td><td class="ant-table-cell">客户案例访谈 · #客户案例</td><td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-wxv-video="王敏" style="padding: 0px;"><span>查看</span></button></td><td class="ant-table-cell">销售一部</td><td class="ant-table-cell"><span class="rea-wxd-tb done"><i></i>已执行</span></td><td class="ant-table-cell">2026/11/20 09:30</td></tr><tr class="ant-table-row ant-table-row-level-0" data-row-key="4"><td class="ant-table-cell ant-table-cell-ellipsis" title="陈昊">陈昊</td><td class="ant-table-cell">13800138003</td><td class="ant-table-cell">新品到店实拍 · #新品到店</td><td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-wxv-video="陈昊" style="padding: 0px;"><span>查看</span></button></td><td class="ant-table-cell">销售二部</td><td class="ant-table-cell"><span class="rea-wxd-tb done"><i></i>已执行</span></td><td class="ant-table-cell">2026/11/20 14:12</td></tr><tr class="ant-table-row ant-table-row-level-0" data-row-key="5"><td class="ant-table-cell ant-table-cell-ellipsis" title="赵雪">赵雪</td><td class="ant-table-cell">13800138004</td><td class="ant-table-cell">售后小课堂 · #售后</td><td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-wxv-video="赵雪" style="padding: 0px;"><span>查看</span></button></td><td class="ant-table-cell">售后部</td><td class="ant-table-cell"><span class="rea-wxd-tb done"><i></i>已执行</span></td><td class="ant-table-cell">2026/11/20 16:40</td></tr><tr class="ant-table-row ant-table-row-level-0" data-row-key="6"><td class="ant-table-cell ant-table-cell-ellipsis" title="周雨桐">周雨桐</td><td class="ant-table-cell">13800138006</td><td class="ant-table-cell">会员日活动 · #会员日</td><td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-wxv-video="周雨桐" style="padding: 0px;"><span>查看</span></button></td><td class="ant-table-cell">销售一部</td><td class="ant-table-cell"><span class="rea-wxd-tb done"><i></i>已执行</span></td><td class="ant-table-cell">2026/11/21 09:05</td></tr><tr class="ant-table-row ant-table-row-level-0" data-row-key="7"><td class="ant-table-cell ant-table-cell-ellipsis" title="孙磊">孙磊</td><td class="ant-table-cell">13800138007</td><td class="ant-table-cell">秋季穿搭指南 · #穿搭</td><td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-wxv-video="孙磊" style="padding: 0px;"><span>查看</span></button></td><td class="ant-table-cell">销售二部</td><td class="ant-table-cell"><span class="rea-wxd-tb done"><i></i>已执行</span></td><td class="ant-table-cell">2026/11/21 10:18</td></tr><tr class="ant-table-row ant-table-row-level-0" data-row-key="8"><td class="ant-table-cell ant-table-cell-ellipsis" title="吴倩">吴倩</td><td class="ant-table-cell">13800138008</td><td class="ant-table-cell">门店环境一览 · #门店</td><td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-wxv-video="吴倩" style="padding: 0px;"><span>查看</span></button></td><td class="ant-table-cell">售后部</td><td class="ant-table-cell"><span class="rea-wxd-tb done"><i></i>已执行</span></td><td class="ant-table-cell">2026/11/22 11:32</td></tr><tr class="ant-table-row ant-table-row-level-0" data-row-key="9"><td class="ant-table-cell ant-table-cell-ellipsis" title="郑凯">郑凯</td><td class="ant-table-cell">13800138009</td><td class="ant-table-cell">-</td><td class="ant-table-cell">-</td><td class="ant-table-cell">产品</td><td class="ant-table-cell"><span class="rea-wxd-tb open"><i></i>未执行</span></td><td class="ant-table-cell">-</td></tr><tr class="ant-table-row ant-table-row-level-0" data-row-key="10"><td class="ant-table-cell ant-table-cell-ellipsis" title="林悦">林悦</td><td class="ant-table-cell">13800138010</td><td class="ant-table-cell">-</td><td class="ant-table-cell">-</td><td class="ant-table-cell">销售二部</td><td class="ant-table-cell"><span class="rea-wxd-tb open"><i></i>未执行</span></td><td class="ant-table-cell">-</td></tr></tbody></table></div></div></div></div></div></div>
@@ -24466,7 +24481,8 @@ function taskScope(rs,metric,range){
     '  for(ii=0;ii<mbs.length;ii++)mbs[ii].classList.toggle("ant-radio-button-checked",ii===1);',
     '  rComment.insertAdjacentElement("afterend",mr);',
     '  /* 只回最近：克隆「评论发布时间」行（快照里本来就是四选一），改成 今天/3 天/7 天/不限；',
-    '     插在 ① 回复评论和@之后、承接条件之前。默认今天，老快照也按今天。 */',
+    '     插在 ① 回复评论和@之后、承接条件之前。默认 3 天（2026-11-25 评审改，原为今天）；',
+    '     老快照没有这一项，仍按今天。 */',
     '  if(rWindowSrc){',
     '    var winRow=rWindowSrc.cloneNode(true);',
     '    winRow.style.marginTop="";',
@@ -24482,11 +24498,11 @@ function taskScope(rs,metric,range){
     '    var wVals=["今天","3 天","7 天","不限"],wIds=["1","3","7","-1"];',
     '    for(ii=0;ii<wLabels.length&&ii<4;ii++)wLabels[ii].textContent=wVals[ii];',
     '    var wIns=winRow.querySelectorAll("input[type=radio]");',
-    '    for(ii=0;ii<wIns.length&&ii<4;ii++){wIns[ii].name="rea-reply-window";wIns[ii].value=wIds[ii];wIns[ii].checked=(ii===0);}',
+    '    for(ii=0;ii<wIns.length&&ii<4;ii++){wIns[ii].name="rea-reply-window";wIns[ii].value=wIds[ii];wIns[ii].checked=(ii===1);}',
     '    var wWs=winRow.querySelectorAll(".ant-radio-button-wrapper");',
-    '    for(ii=0;ii<wWs.length;ii++)wWs[ii].classList.toggle("ant-radio-button-wrapper-checked",ii===0);',
+    '    for(ii=0;ii<wWs.length;ii++)wWs[ii].classList.toggle("ant-radio-button-wrapper-checked",ii===1);',
     '    var wBs=winRow.querySelectorAll(".ant-radio-button");',
-    '    for(ii=0;ii<wBs.length;ii++)wBs[ii].classList.toggle("ant-radio-button-checked",ii===0);',
+    '    for(ii=0;ii<wBs.length;ii++)wBs[ii].classList.toggle("ant-radio-button-checked",ii===1);',
     '    rComment.insertAdjacentElement("afterend",winRow);',
     '  } else {',
     '    console.warn("[rea] 新小红书运营 · 新建：没找到「评论发布时间」行，只回最近未注入");',
@@ -25657,13 +25673,6 @@ function addModalHasCopy(b){
   }
   return false;
 }
-function selectAddTab(tab){
-  $$('[data-dy-addtab]',ADDMODAL).forEach(function(b){
-    var on=b.getAttribute('data-dy-addtab')===tab;
-    b.classList.toggle('on',on);b.setAttribute('aria-selected',on?'true':'false');
-  });
-  $$('[data-dy-addpanel]',ADDMODAL).forEach(function(p){p.hidden=p.getAttribute('data-dy-addpanel')!==tab});
-}
 var AI_GENERIC=$('[data-dy-ai-generic]',ADDMODAL),AI_NOTE=$('[data-dy-ai-note]',ADDMODAL);
 var AI_THEME=$('[data-dy-ai-theme]',ADDMODAL),AI_KEYS2=$('[data-dy-ai-keys]',ADDMODAL),AI_AUD2=$('[data-dy-ai-audience]',ADDMODAL),AI_ROLE2_TXT=$('[data-dy-ai-roletxt]',ADDMODAL),AI_ROLE2_MODE=$('[data-dy-ai-rolemode]',ADDMODAL);
 function syncAddAiCounts(){
@@ -25691,22 +25700,25 @@ function openAddCopy(){
   AI_GENERIC.hidden=isCopy;AI_NOTE.hidden=!isCopy;
   var b=activeBulk(),st=b.getState();
   if(!isCopy&&!st.videos.length){toast('先添加内容');return}
-  var genN=isCopy?Math.max(1,st.videos.length):st.videos.length;
+  /* 发文案配图的内容就是文案本身，按执行人员数生成；发图文／发视频要给已有素材配文案，仍按内容条数 */
+  var genN=isCopy?Math.max(1,M):st.videos.length;
   $('[data-dy-aicount]',ADDMODAL).textContent='将生成 '+genN+' 条文案';
   err.textContent=isCopy?'请填写笔记主题、核心关键词和目标人群':'请填写示例标题、文案和话题';err.hidden=true;
   ADDMODAL.hidden=false;
-  selectAddTab('ai');
   setTimeout(function(){var t=isCopy?AI_THEME:$('[data-dy-ai-title]',ADDMODAL);if(t)t.focus()},30);
 }
 function closeAddCopy(){ADDMODAL.hidden=true}
-$$('[data-dy-addcopy]').forEach(function(b){b.addEventListener('click',openAddCopy)});
-$$('[data-dy-addtab]',ADDMODAL).forEach(function(b){b.addEventListener('click',function(){selectAddTab(b.getAttribute('data-dy-addtab'))})});
+$$('[data-xn-aiopen]').forEach(function(b){b.addEventListener('click',openAddCopy)});
 $$('[data-dy-modalclose]',ADDMODAL).forEach(function(b){b.addEventListener('click',function(e){e.preventDefault();closeAddCopy()})});
 ADDMODAL.addEventListener('click',function(e){if(e.target===ADDMODAL)closeAddCopy()});
 ADDMODAL.addEventListener('keydown',function(e){
   if(e.key==='Enter'&&e.target&&e.target.tagName==='INPUT'){e.preventDefault();var g=$('[data-dy-aigen]',ADDMODAL);if(g)g.click()}
 });
-document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!ADDMODAL.hidden)closeAddCopy()});
+document.addEventListener('keydown',function(e){
+  if(e.key!=='Escape')return;
+  if(IMPMODAL&&!IMPMODAL.hidden){closeImport();return}
+  if(!ADDMODAL.hidden)closeAddCopy();
+});
 $$('[data-dy-ai-title],[data-dy-ai-copy],[data-dy-ai-topic]',ADDMODAL).forEach(function(i){i.addEventListener('input',function(){$('[data-dy-ai-err]',ADDMODAL).hidden=true})});
 var aiGen=$('[data-dy-aigen]',ADDMODAL);
 aiGen.addEventListener('click',function(){
@@ -25725,7 +25737,7 @@ aiGen.addEventListener('click',function(){
       err.textContent='请输入身份角色';err.hidden=false;AI_ROLE2_TXT.focus();return;
     }
     err.hidden=true;
-    var b2=activeBulk(),n2=Math.max(1,b2.getState().videos.length);
+    var b2=activeBulk(),n2=Math.max(1,M);
     if(addModalHasCopy(b2)&&!confirm('生成会替换现有文案，继续？'))return;
     var skillR=$('[data-dy-ai-skill] input:checked',ADDMODAL),styleR=$('[data-dy-ai-style] input:checked',ADDMODAL);
     var skillV=skillR?skillR.value:'',styleV=styleR?styleR.value:'';
@@ -25763,13 +25775,24 @@ aiGen.addEventListener('click',function(){
   }
   b.setCopies(list);closeAddCopy();toast('已生成 '+n+' 条文案');
 });
-var modalImportBtn=$('[data-dy-modalimport]',ADDMODAL),modalImportInput=$('[data-dy-modalimportinput]',ADDMODAL);
-modalImportBtn.addEventListener('click',function(){modalImportInput.value='';modalImportInput.click()});
-modalImportInput.addEventListener('change',function(){
+/* 导入文案独立入口：与 AI 生成分开（2026-11-25 评审） */
+var IMPMODAL=$('[data-xn-importmodal]');
+var importBtn=$('[data-xn-importbtn]',IMPMODAL),importInput=$('[data-xn-importinput]',IMPMODAL);
+function openImport(){
+  var st=activeBulk().getState();
+  if(!st.videos.length){toast('先添加内容');return}
+  IMPMODAL.hidden=false;
+}
+function closeImport(){IMPMODAL.hidden=true}
+$$('[data-xn-importopen]').forEach(function(b){b.addEventListener('click',openImport)});
+$('[data-xn-importclose]',IMPMODAL).addEventListener('click',closeImport);
+IMPMODAL.addEventListener('click',function(e){if(e.target===IMPMODAL)closeImport()});
+importBtn.addEventListener('click',function(){importInput.value='';importInput.click()});
+importInput.addEventListener('change',function(){
   var f=this.files&&this.files[0];this.value='';if(!f)return;
-  if(activeBulk().importFile(f))closeAddCopy();
+  if(activeBulk().importFile(f))closeImport();
 });
-$('[data-dy-modaltemplate]',ADDMODAL).addEventListener('click',function(e){e.preventDefault();toast('模板已下载')});
+$('[data-xn-importtpl]',IMPMODAL).addEventListener('click',function(e){e.preventDefault();toast('模板已下载')});
 function bindAntdRadios(){
   var all=$$('.rea-dy-adminform input[type=radio]');
   all.forEach(function(r){
@@ -32296,8 +32319,7 @@ var row=document.createElement('div');row.className='_form_input_lzm36_71 rea-dy
 row.innerHTML='<span class="_must_white_lzm36_76">发布内容</span><div class="_upload_box_lzm36_100">'
  +'<div class="rea-dy-bulkbar"><span class="rea-dy-bulkcnt" data-wxv-cnt></span>'
  +'<button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-addfile><span>+ 添加视频</span></button>'
- +'<button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-addcover><span>+ 添加封面</span></button>'
- +'<button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-addcopy><span>添加文案</span></button></div>'
+ +'<button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-addcopy><span>导入文案</span></button></div>'
  +'<div data-wxv-bulk></div><div data-dy-copy hidden></div></div>';
 PARENT.insertBefore(row,src);
 src.style.display='none';up.style.display='none';cp.style.display='none';tt.style.display='none';tp.style.display='none';
@@ -32311,89 +32333,35 @@ var BULK=createBulk({
   modes:[{key:'manual',label:'手动输入'}],
   defaultMode:'manual',
   labels:{title:'标题',topic:'话题',copy:'文案'},
-  onChange:function(s){var c=row.querySelector('[data-wxv-cnt]');if(c)c.textContent=s.videos+' 条内容 / '+s.people+' 位执行人员'}
+  hint:'一人最多发 1 条视频；执行人数少于视频数时，多出的视频不下发。最多上传 50 个视频。',
+  onChange:function(s){
+    var c=row.querySelector('[data-wxv-cnt]');if(c)c.textContent=s.videos+' 条内容 / '+s.people+' 位执行人员';
+    var ac=row.querySelector('[data-dy-addcopy]');if(ac)ac.disabled=!s.videos;
+  }
 });
 BULK.setPeople(M);
 $("[data-dy-addfile]",row).addEventListener("click",function(){BULK.pickVideos()});
-$("[data-dy-addcover]",row).addEventListener("click",function(){BULK.pickCovers()});
-/* 添加文案弹窗：AI生成／导入文案 */
+/* 导入文案弹窗：视频类的 AI 生成按 2026-11-25 评审砍掉，只留导入 */
 var ADDMODAL=document.createElement('div');ADDMODAL.className='rea-dy-addmodal';ADDMODAL.setAttribute('data-dy-addmodal','');ADDMODAL.hidden=true;
-ADDMODAL.innerHTML='<div class="rea-dy-addmodal-box" role="dialog" aria-modal="true" aria-label="添加文案">'
- +'<div class="rea-dy-addmodal-h"><h3>添加文案</h3><button type="button" class="rea-dy-addmodal-x" data-dy-modalclose aria-label="关闭">×</button></div>'
- +'<div class="rea-dy-addtabs" role="tablist"><button type="button" class="rea-dy-addtab on" data-dy-addtab="ai" role="tab" aria-selected="true">AI生成</button><button type="button" class="rea-dy-addtab" data-dy-addtab="import" role="tab" aria-selected="false">导入文案</button></div>'
- +'<div class="rea-dy-addbody" data-dy-addpanel="ai">'
- +'<div class="rea-dy-addfield"><label for="dyAiTitle">示例标题</label><input id="dyAiTitle" class="ant-input css-vgijab ant-input-outlined" type="text" maxlength="20" placeholder="请输入示例标题" data-dy-ai-title></div>'
- +'<div class="rea-dy-addfield"><label for="dyAiCopy">示例文案</label><textarea id="dyAiCopy" class="rea-dy-addtextarea" maxlength="1000" placeholder="请输入示例文案" data-dy-ai-copy></textarea></div>'
- +'<div class="rea-dy-addfield"><label for="dyAiTopic">示例话题</label><input id="dyAiTopic" class="ant-input css-vgijab ant-input-outlined" type="text" placeholder="请输入示例话题" data-dy-ai-topic></div>'
- +'<p class="rea-dy-adminerr" data-dy-ai-err hidden>请填写示例标题、文案和话题</p>'
- +'<p class="rea-dy-addcount" data-dy-aicount>将生成 0 条文案</p>'
- +'<div class="rea-dy-addfoot"><button type="button" class="ant-btn css-vgijab ant-btn-primary ant-btn-color-primary ant-btn-variant-solid" data-dy-aigen><span>生成文案</span></button></div>'
- +'</div>'
- +'<div class="rea-dy-addbody" data-dy-addpanel="import" hidden>'
+ADDMODAL.innerHTML='<div class="rea-dy-addmodal-box" role="dialog" aria-modal="true" aria-label="导入文案">'
+ +'<div class="rea-dy-addmodal-h"><h3>导入文案</h3><button type="button" class="rea-dy-addmodal-x" data-dy-modalclose aria-label="关闭">×</button></div>'
+ +'<div class="rea-dy-addbody" data-dy-addpanel="import">'
  +'<div class="rea-dy-importsteps"><div class="rea-dy-importstep"><span class="rea-dy-importstepno">1</span><div class="rea-dy-importstepbody"><button type="button" class="rea-dy-importsteplink" data-dy-modaltemplate><b>下载</b>文件模板</button></div></div>'
  +'<div class="rea-dy-importstep"><span class="rea-dy-importstepno">2</span><div class="rea-dy-importstepbody"><span class="rea-dy-importsteptext">从电脑上选择文件模板上传：</span><div class="rea-dy-importstepact"><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-modalimport><span class="rea-dy-upicon"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M12 3l5 5h-3v7h-4V8H7l5-5zM5 19h14v2H5z"></path></svg></span><span>上传文件</span></button></div></div></div></div>'
  +'<input type="file" accept=".csv,.xlsx" hidden data-dy-modalimportinput></div>'
  +'<div class="rea-dy-addmodal-foot"><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-modalclose><span>取消</span></button></div>'
  +'</div>';
 PARENT.appendChild(ADDMODAL);
-function addModalHasCopy(){
-  var st=BULK.getState();
-  for(var i=0;i<st.copies.length;i++){
-    var c=st.copies[i]; if(!c)continue;
-    var g=c.groups&&c.groups[0];
-    if((c.title||"")||(g&&((g.copy||"")||(g.topic||""))))return true;
-  }
-  return false;
-}
-function selectAddTab(tab){
-  $$("[data-dy-addtab]",ADDMODAL).forEach(function(b){
-    var on=b.getAttribute("data-dy-addtab")===tab;
-    b.classList.toggle("on",on);b.setAttribute("aria-selected",on?"true":"false");
-  });
-  $$("[data-dy-addpanel]",ADDMODAL).forEach(function(p){p.hidden=p.getAttribute("data-dy-addpanel")!==tab});
-}
 function openAddCopy(){
   var st=BULK.getState();
   if(!st.videos.length){msg("先添加视频");return}
-  $("[data-dy-aicount]",ADDMODAL).textContent="将生成 "+st.videos.length+" 条文案";
-  $("[data-dy-ai-err]",ADDMODAL).hidden=true;
   ADDMODAL.hidden=false;
-  selectAddTab("ai");
-  setTimeout(function(){var t=$("[data-dy-ai-title]",ADDMODAL);if(t)t.focus()},30);
 }
 function closeAddCopy(){ADDMODAL.hidden=true}
 $("[data-dy-addcopy]",row).addEventListener("click",openAddCopy);
-$$("[data-dy-addtab]",ADDMODAL).forEach(function(b){b.addEventListener("click",function(){selectAddTab(b.getAttribute("data-dy-addtab"))})});
 $$("[data-dy-modalclose]",ADDMODAL).forEach(function(b){b.addEventListener("click",function(e){e.preventDefault();closeAddCopy()})});
 ADDMODAL.addEventListener("click",function(e){if(e.target===ADDMODAL)closeAddCopy()});
-ADDMODAL.addEventListener("keydown",function(e){if(e.key==="Enter"&&e.target&&e.target.tagName==="INPUT"){e.preventDefault();var g=$("[data-dy-aigen]",ADDMODAL);if(g)g.click()}});
 document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!ADDMODAL.hidden)closeAddCopy()});
-$$("[data-dy-ai-title],[data-dy-ai-copy],[data-dy-ai-topic]",ADDMODAL).forEach(function(i){i.addEventListener("input",function(){$("[data-dy-ai-err]",ADDMODAL).hidden=true})});
-var aiGen=$("[data-dy-aigen]",ADDMODAL);
-aiGen.addEventListener("click",function(){
-  var title=($("[data-dy-ai-title]",ADDMODAL).value||"").replace(/^\s+|\s+$/g,""),
-      copy=($("[data-dy-ai-copy]",ADDMODAL).value||"").replace(/^\s+|\s+$/g,""),
-      topic=($("[data-dy-ai-topic]",ADDMODAL).value||"").replace(/^\s+|\s+$/g,""),
-      err=$("[data-dy-ai-err]",ADDMODAL);
-  if(!title||!copy||!topic){
-    err.hidden=false;
-    var first=!title?$("[data-dy-ai-title]",ADDMODAL):(!copy?$("[data-dy-ai-copy]",ADDMODAL):$("[data-dy-ai-topic]",ADDMODAL));
-    if(first)first.focus();return;
-  }
-  err.hidden=true;
-  var n=BULK.getState().videos.length;
-  if(!n){msg("先添加视频");return}
-  if(addModalHasCopy()&&!confirm("生成会替换现有文案，继续？"))return;
-  var list=[];
-  for(var i=0;i<n;i++){
-    list.push({
-      title:(i===0?title:title+" · "+(i+1)).slice(0,20),
-      copy:(i===0?copy:copy+"\n\n（第 "+(i+1)+" 条）").slice(0,1000),
-      topic:topic
-    });
-  }
-  BULK.setCopies(list);closeAddCopy();msg("已生成 "+n+" 条文案");
-});
 var modalImportBtn=$("[data-dy-modalimport]",ADDMODAL),modalImportInput=$("[data-dy-modalimportinput]",ADDMODAL);
 modalImportBtn.addEventListener("click",function(){modalImportInput.value="";modalImportInput.click()});
 modalImportInput.addEventListener("change",function(){
@@ -37515,6 +37483,7 @@ syncTip();drawRows();
   function $$(s,r){ return Array.prototype.slice.call((r||root).querySelectorAll(s)); }
   function short(s,n){ s=String(s||''); return s.length>n ? s.slice(0,n)+'…' : s; }
   root.innerHTML = '<div class="rea-bulk">'
+    + '<p class="rea-bulk-hint" data-bulk-hint hidden></p>'
     + '<div class="rea-bulk-empty" data-bulk-empty>'
     + '<span class="rea-bulk-empty-ic">▣</span>'
     + '<p>还没有视频</p>'
@@ -37548,6 +37517,8 @@ syncTip();drawRows();
     var b = el('button', null, m.label); b.type = 'button'; b.setAttribute('data-bulk-mode', m.key); modeBox.appendChild(b);
   });
   var empty=$('[data-bulk-empty]'), tablewrap=$('[data-bulk-tablewrap]'), rows=$('[data-bulk-rows]'), alloc=$('[data-bulk-alloc]');
+  var hintEl=$('[data-bulk-hint]');
+  if(opts.hint && hintEl){ hintEl.hidden=false; hintEl.textContent=opts.hint; }
   var copyBlock=$('[data-bulk-copy]'), copyList=$('[data-bulk-copies]'), copySt=$('[data-bulk-copy-st]');
   var importBox=$('[data-bulk-import]'), aiBox=$('[data-bulk-ai]'), aiInput=$('[data-bulk-aiinput]'), aiErr=$('[data-bulk-aierr]');
   var importChip=$('[data-bulk-importfile]'), importInput=$('[data-bulk-importinput]');
@@ -37755,7 +37726,7 @@ syncTip();drawRows();
       var tdOps=el('td'), ops=el('div','rea-bulk-ops');
       var up=el('button',null,'↑'); up.type='button'; up.setAttribute('data-bulk-upvideo',String(i)); up.setAttribute('aria-label','上移'); up.title='上移'; up.disabled=i===0; ops.appendChild(up);
       var down=el('button',null,'↓'); down.type='button'; down.setAttribute('data-bulk-downvideo',String(i)); down.setAttribute('aria-label','下移'); down.title='下移'; down.disabled=i===VIDEOS.length-1; ops.appendChild(down);
-      var del=el('button','rea-bulk-del','×'); del.type='button'; del.setAttribute('data-bulk-delvideo',String(i)); del.setAttribute('aria-label','删除这条内容'); del.title='删除'; ops.appendChild(del);
+      var del=el('button','rea-bulk-del','删除'); del.type='button'; del.setAttribute('data-bulk-delvideo',String(i)); del.setAttribute('aria-label','删除这条内容'); del.title='删除后这条内容不再保留'; ops.appendChild(del);
       tdOps.appendChild(ops); tr.appendChild(tdOps);
       rows.appendChild(tr);
     });
@@ -37878,15 +37849,61 @@ syncTip();drawRows();
       })(emptyIdx[n],ok[n]);
     }
   }
+  /* 导入文案先出预览：上传文件后不直接写表，先把逐行的标题／话题／文案摆出来，
+     用户确认才填、取消则什么都不动（2026-11-25 评审）。 */
   function doImport(f){
     importChip.hidden=false; importChip.textContent=f.name;
-    var N=VIDEOS.length;
-    COPIES=[];
-    for(var i=0;i<N;i++){
-      COPIES.push({title:'秋季新品第 '+(i+1)+' 条',groups:[{copy:'秋季新品第 '+(i+1)+' 条文案，到店试戴有礼',topic:'#秋季新品#第'+(i+1)+'条'}]});
+    var N=VIDEOS.length,list=[],i;
+    for(i=0;i<N;i++){
+      list.push({
+        title:'秋季新品第 '+(i+1)+' 条',
+        copy:'秋季新品第 '+(i+1)+' 条文案，到店试戴有礼',
+        topic:'#秋季新品#第'+(i+1)+'条'
+      });
     }
-    renderCopies(); renderTable(); sync();
-    toast('已导入 '+N+' 条文案');
+    showImportPreview(f.name,list);
+  }
+  function showImportPreview(name,list){
+    var m=el('div','rea-bulk-importview');
+    var box=el('div','rea-bulk-importbox');
+    var hd=el('div','rea-bulk-importh');
+    hd.appendChild(el('h3',null,'导入文案预览'));
+    var x=el('button','rea-bulk-imgmgr-x','×');x.type='button';x.setAttribute('aria-label','关闭');hd.appendChild(x);
+    box.appendChild(hd);
+    var body=el('div','rea-bulk-importbody');
+    var tip=el('p','rea-bulk-importn','共 '+list.length+' 条，按序号对应到列表里的内容'+(COPIES.length?'；确定后会替换现有 '+COPIES.length+' 条文案':''));
+    if(COPIES.length) tip.className='rea-bulk-importn is-warn';
+    body.appendChild(tip);
+    var tb=document.createElement('table');
+    tb.innerHTML='<colgroup><col style="width:48px"><col style="width:24%"><col style="width:22%"><col></colgroup><thead><tr><th>序号</th><th>标题</th><th>话题</th><th>文案</th></tr></thead>';
+    var tbody=document.createElement('tbody');
+    list.forEach(function(it,i){
+      var tr=document.createElement('tr');
+      tr.appendChild(el('td','rea-bulk-no',String(i+1)));
+      [it.title,it.topic,it.copy].forEach(function(v){
+        var td=el('td',null,v||'—'); if(!v)td.classList.add('is-empty'); tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+    tb.appendChild(tbody); body.appendChild(tb); box.appendChild(body);
+    var ft=el('div','rea-bulk-importfoot');
+    var cancel=el('button','rea-bulk-btn','取消');cancel.type='button';
+    var ok=el('button','rea-bulk-btn rea-bulk-btn--soft','确定导入');ok.type='button';
+    ft.appendChild(cancel); ft.appendChild(ok); box.appendChild(ft); m.appendChild(box);
+    document.body.appendChild(m);
+    function close(){ if(m.parentNode)m.parentNode.removeChild(m); }
+    function apply(){
+      COPIES=[];
+      list.forEach(function(it){
+        COPIES.push({title:it.title||'',groups:[{copy:it.copy||'',topic:it.topic||'',text:it.text||''}]});
+      });
+      renderTable(); renderCopies(); sync();
+      close(); toast('已导入 '+list.length+' 条文案');
+    }
+    cancel.addEventListener('click',close);
+    x.addEventListener('click',close);
+    ok.addEventListener('click',apply);
+    m.addEventListener('click',function(e){ if(e.target===m)close(); });
   }
   function generate(){
     var req=String(aiInput.value||'').replace(/^\s+|\s+$/g,'');
@@ -37929,7 +37946,11 @@ syncTip();drawRows();
     if(t.hasAttribute('data-bulk-cover')){ COVER_ROW=idx('data-bulk-cover'); cinput.value=''; cinput.click(); return; }
     if(t.hasAttribute('data-bulk-upvideo')){ moveVideo(idx('data-bulk-upvideo'),-1); return; }
     if(t.hasAttribute('data-bulk-downvideo')){ moveVideo(idx('data-bulk-downvideo'),1); return; }
-    if(t.hasAttribute('data-bulk-delvideo')){ var dv=idx('data-bulk-delvideo'); VIDEOS.splice(dv,1); if(opts.inlineCopy) COPIES.splice(dv,1); renderTable(); renderCopies(); sync(); return; }
+    if(t.hasAttribute('data-bulk-delvideo')){
+      var dv=idx('data-bulk-delvideo');
+      if(!confirm('删除这条内容？删除后这条内容不再保留。')) return;
+      VIDEOS.splice(dv,1); if(opts.inlineCopy) COPIES.splice(dv,1); renderTable(); renderCopies(); sync(); return;
+    }
     if(t.hasAttribute('data-bulk-mode')){ MODE=t.getAttribute('data-bulk-mode'); sync(); return; }
     if(t.hasAttribute('data-bulk-addcopy')){ addCopy(); return; }
     if(t.hasAttribute('data-bulk-upcopy')){ moveCopy(idx('data-bulk-upcopy'),-1); return; }
@@ -37995,8 +38016,7 @@ syncTip();drawRows();
   });
   importInput.addEventListener('change',function(){
     var f=this.files&&this.files[0]; this.value=''; if(!f)return;
-    if(!VIDEOS.length){ toast('先添加视频'); return; }
-    if(COPIES.length && !confirm('导入会替换现有 '+COPIES.length+' 条文案，继续？')) return;
+    if(!VIDEOS.length){ toast(TEXT_ONLY?'先添加一条内容':'先添加视频'); return; }
     doImport(f);
   });
   renderTable(); renderCopies(); sync();
@@ -38006,8 +38026,7 @@ syncTip();drawRows();
     setMode:function(m){ MODE=m; sync(); },
     pickImport:function(){ importInput.value=''; importInput.click(); },
     importFile:function(f){
-      if(!VIDEOS.length){ toast('先添加视频'); return false; }
-      if(COPIES.length && !confirm('导入会替换现有 '+COPIES.length+' 条文案，继续？')) return false;
+      if(!VIDEOS.length){ toast(TEXT_ONLY?'先添加一条内容':'先添加视频'); return false; }
       doImport(f); return true;
     },
     setCopies:function(list){
@@ -38090,75 +38109,24 @@ if(PAGE==="new"){
     modes:[{key:"manual",label:"手动输入"}],
     defaultMode:"manual",
     labels:{title:"标题",topic:"话题",copy:"文案"},
+    hint:"一人最多发 1 条视频；执行人数少于视频数时，多出的视频不下发。最多上传 50 个视频。",
     onChange:function(s){
       $("[data-dy-cnt]").textContent=s.videos+" 条内容 / "+s.people+" 位执行人员";
+      var ac=$("[data-dy-addcopy]");if(ac)ac.disabled=!s.videos;
     }
   });
-  /* 添加文案：AI生成按示例仿写，输出条数＝视频数；导入文案走两步上传 */
+  /* 导入文案弹窗：视频类的 AI 生成按 2026-11-25 评审砍掉，只留导入 */
   var ADDMODAL=$("[data-dy-addmodal]");
-  function addModalHasCopy(){
-    var st=BULK.getState();
-    for(var i=0;i<st.copies.length;i++){
-      var c=st.copies[i]; if(!c)continue;
-      var g=c.groups&&c.groups[0];
-      if((c.title||"")||(g&&((g.copy||"")||(g.topic||""))))return true;
-    }
-    return false;
-  }
-  function selectAddTab(tab){
-    $$("[data-dy-addtab]").forEach(function(b){
-      var on=b.getAttribute("data-dy-addtab")===tab;
-      b.classList.toggle("on",on);b.setAttribute("aria-selected",on?"true":"false");
-    });
-    $$("[data-dy-addpanel]").forEach(function(p){p.hidden=p.getAttribute("data-dy-addpanel")!==tab});
-  }
   function openAddCopy(){
     var st=BULK.getState();
     if(!st.videos.length){toast("先添加视频");return}
-    $("[data-dy-aicount]").textContent="将生成 "+st.videos.length+" 条文案";
-    $("[data-dy-ai-err]").hidden=true;
     ADDMODAL.hidden=false;
-    selectAddTab("ai");
-    setTimeout(function(){var t=$("[data-dy-ai-title]");if(t)t.focus()},30);
   }
   function closeAddCopy(){if(ADDMODAL)ADDMODAL.hidden=true}
   var addCopyBtn=$("[data-dy-addcopy]");if(addCopyBtn)addCopyBtn.addEventListener("click",openAddCopy);
-  $$("[data-dy-addtab]").forEach(function(b){b.addEventListener("click",function(){selectAddTab(b.getAttribute("data-dy-addtab"))})});
   $$("[data-dy-modalclose]").forEach(function(b){b.addEventListener("click",function(e){e.preventDefault();closeAddCopy()})});
   if(ADDMODAL)ADDMODAL.addEventListener("click",function(e){if(e.target===ADDMODAL)closeAddCopy()});
-  if(ADDMODAL)ADDMODAL.addEventListener("keydown",function(e){
-    if(e.key==="Enter"&&e.target&&e.target.tagName==="INPUT"){e.preventDefault();if(aiGen)aiGen.click()}
-  });
   document.addEventListener("keydown",function(e){if(e.key==="Escape"&&ADDMODAL&&!ADDMODAL.hidden)closeAddCopy()});
-  $$("[data-dy-ai-title],[data-dy-ai-copy],[data-dy-ai-topic]").forEach(function(i){i.addEventListener("input",function(){$("[data-dy-ai-err]").hidden=true})});
-  var aiGen=$("[data-dy-aigen]");
-  if(aiGen)aiGen.addEventListener("click",function(){
-    var title=($("[data-dy-ai-title]").value||"").replace(/^\s+|\s+$/g,""),
-        copy=($("[data-dy-ai-copy]").value||"").replace(/^\s+|\s+$/g,""),
-        topic=($("[data-dy-ai-topic]").value||"").replace(/^\s+|\s+$/g,""),
-        err=$("[data-dy-ai-err]");
-    if(!title||!copy||!topic){
-      err.hidden=false;
-      var first=!title?$("[data-dy-ai-title]"):(!copy?$("[data-dy-ai-copy]") : $("[data-dy-ai-topic]"));
-      if(first)first.focus();
-      return;
-    }
-    err.hidden=true;
-    var n=BULK.getState().videos.length;
-    if(!n){toast("先添加视频");return}
-    if(addModalHasCopy()&&!confirm("生成会替换现有文案，继续？"))return;
-    var list=[];
-    for(var i=0;i<n;i++){
-      list.push({
-        title:(i===0?title:title+" · "+(i+1)).slice(0,20),
-        copy:(i===0?copy:copy+"\n\n（第 "+(i+1)+" 条）").slice(0,1000),
-        topic:topic
-      });
-    }
-    BULK.setCopies(list);
-    closeAddCopy();
-    toast("已生成 "+n+" 条文案");
-  });
   var modalImportBtn=$("[data-dy-modalimport]"),modalImportInput=$("[data-dy-modalimportinput]");
   if(modalImportBtn&&modalImportInput)modalImportBtn.addEventListener("click",function(){modalImportInput.value="";modalImportInput.click()});
   if(modalImportInput)modalImportInput.addEventListener("change",function(){
@@ -38190,7 +38158,6 @@ if(PAGE==="new"){
     this.classList.toggle("ant-switch-checked",!on);
   });
   $("[data-dy-addfile]").addEventListener("click",function(){BULK.pickVideos()});
-  $("[data-dy-addcover]").addEventListener("click",function(){BULK.pickCovers()});
   var orgSel=$("#dyOrg");
   orgSel.value="销售一部";M=DEPT_COUNT[orgSel.value]||0;BULK.setPeople(M);
   orgSel.addEventListener("change",function(){M=DEPT_COUNT[this.value]||0;BULK.setPeople(M)});
@@ -39079,6 +39046,8 @@ draw();
 .rea-dcc-info:hover,.rea-dcc-info:focus{border-color:#1677ff;color:#1677ff;outline:none}
 .rea-dcc-add{flex:none;padding:0 2px;border:0;background:none;color:#1677ff;font-size:14px;line-height:22px;cursor:pointer}
 .rea-dcc-add:hover{color:#4096ff}
+.rea-dcc-warn{margin:0 0 12px;padding-left:18px;position:relative;font-size:12px;line-height:18px;color:#ff4d4f}
+.rea-dcc-warn::before{content:"!";position:absolute;left:0;top:0;width:14px;height:14px;margin-top:1px;border-radius:50%;background:#ff4d4f;color:#fff;font-size:10px;line-height:14px;text-align:center;font-weight:700}
 .rea-dcc-item{margin:0 0 4px}
 .rea-dcc-row{display:flex;align-items:center;gap:8px}
 .rea-dcc-lab{flex:none;font-size:14px;line-height:32px;color:rgba(0,0,0,.88);white-space:nowrap}
@@ -39114,7 +39083,8 @@ draw();
         + '<i class="rea-dcc-info" tabindex="0" role="img" aria-label="说明">i</i>'
         + '<span class="rea-dcc-line"></span>'
         + '<button type="button" class="rea-dcc-add">＋ 添加</button>'
-        + '</div><div class="rea-dcc-list"></div>';
+        + '</div><p class="rea-dcc-warn">名称和选项须与点评页上实际出现的一致；匹配不到的项会被跳过，评论可能因此发不出去，风险由填写人承担。</p>'
+        + '<div class="rea-dcc-list"></div>';
       row.parentNode.insertBefore(sec, row.nextSibling);
 
       var list = sec.querySelector('.rea-dcc-list');
@@ -39230,6 +39200,7 @@ draw();
 .rea-bulk{width:100%;font-size:14px;color:#1F2329}
 .rea-bulk *{box-sizing:border-box}
 .rea-bulk [hidden]{display:none!important}
+.rea-bulk-hint{margin:0 0 8px;font-size:12px;line-height:18px;color:#8F959E}
 .rea-bulk-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:30px 16px;border:1px dashed #E5E8EF;border-radius:8px;background:#fff;color:#8F959E}
 .rea-bulk-empty-ic{font-size:22px;line-height:1;color:#C9CED6}
 .rea-bulk-empty p{margin:0;font-size:13px}
@@ -39285,7 +39256,21 @@ draw();
 .rea-bulk-ops button{width:22px;height:22px;padding:0;border:0;border-radius:4px;background:none;color:#8F959E;font-size:14px;line-height:1;cursor:pointer}
 .rea-bulk-ops button:hover:not(:disabled){background:#E6F4FF;color:#1677FF}
 .rea-bulk-ops button:disabled{opacity:.3;cursor:default}
+.rea-bulk-ops .rea-bulk-del{width:auto;padding:0 6px;font-size:12px}
 .rea-bulk-ops .rea-bulk-del:hover{background:#FFF1F0;color:#FF4D4F}
+.rea-bulk-importview{position:fixed;inset:0;z-index:1300;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:24px}
+.rea-bulk-importview[hidden]{display:none!important}
+.rea-bulk-importbox{width:min(760px,100%);max-height:86vh;display:flex;flex-direction:column;background:#fff;border-radius:8px;box-shadow:0 12px 40px rgba(0,0,0,.18)}
+.rea-bulk-importh{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid #F0F2F5}
+.rea-bulk-importh h3{margin:0;font-size:16px;font-weight:600;color:#1F2329}
+.rea-bulk-importn{margin:8px 0 0;font-size:12px;line-height:18px;color:#8F959E}
+.rea-bulk-importn.is-warn{color:#D46B08}
+.rea-bulk-importbody{flex:1 1 auto;min-height:0;overflow:auto;padding:0 20px}
+.rea-bulk-importbody table{width:100%;border-collapse:collapse;table-layout:fixed}
+.rea-bulk-importbody th{position:sticky;top:0;height:36px;padding:0 8px;background:#F7F8FA;color:#646A73;font-size:12px;font-weight:500;text-align:left;border-bottom:1px solid #E5E8EF;white-space:nowrap}
+.rea-bulk-importbody td{padding:8px;border-bottom:1px solid #F0F2F5;font-size:13px;line-height:19px;vertical-align:top;word-break:break-word}
+.rea-bulk-importbody td.is-empty{color:#B7BCC4}
+.rea-bulk-importfoot{display:flex;justify-content:flex-end;gap:8px;padding:14px 20px;border-top:1px solid #F0F2F5}
 .rea-bulk-alloc{margin:10px 0 0;color:#8F959E;font-size:12px;line-height:1.5}
 .rea-bulk-copy{margin-top:20px;padding-top:16px;border-top:1px solid #E5E8EF}
 .rea-bulk-copy-h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
