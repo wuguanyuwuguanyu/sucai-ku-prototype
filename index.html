@@ -20161,18 +20161,6 @@ render();
   </dl>
 </section>
 <section class="rea-dy-sec">
-  <div class="rea-dy-sec-h"><h2>发布内容与分配</h2></div>
-  <div class="rea-dy-tablewrap"><table class="rea-dy-table">
-    <colgroup><col style="width:40%"><col style="width:44%"><col style="width:16%"></colgroup>
-    <thead><tr><th>视频文件名</th><th>分配给</th><th>视频状态</th></tr></thead>
-    <tbody>
-      <tr><td>秋季新品到店.mp4</td><td>张伟、赵一</td><td>已下发</td></tr>
-      <tr><td>秋季新品开箱.mp4</td><td>李娜、钱二</td><td>已下发</td></tr>
-      <tr><td>秋季新品上身.mp4</td><td>王强、孙三</td><td>已下发</td></tr>
-    </tbody>
-  </table></div>
-</section>
-<section class="rea-dy-sec">
   <div class="rea-dy-sec-h"><h2>员工完成情况</h2><button type="button" class="rea-dy-btn" data-dy-export>导出</button></div>
   <form class="rea-dy-filter rea-dy-filter--sm" data-dy-dfilter>
     <div class="rea-dy-f"><label>执行时间</label><span class="rea-dy-range"><input type="date" aria-label="开始日期"><b>→</b><input type="date" aria-label="结束日期"></span></div>
@@ -20194,10 +20182,20 @@ render();
 <div class="rea-dy-modal" data-dy-cmodal hidden role="dialog" aria-label="发布内容">
   <div class="rea-dy-modal-box rea-dy-cmodal">
     <div class="rea-dy-modal-h"><h3>发布内容 · 3 条</h3><button type="button" class="rea-dy-x" data-dy-close-contents aria-label="关闭">×</button></div>
-    <div class="rea-dy-clist">
-      <div class="rea-dy-crow"><span class="rea-dy-cno">1</span><span class="rea-dy-cmain"><b>秋季新品到店.mp4</b><em>秋季新品到店，到店试戴有礼。</em></span><span class="rea-dy-cpeople">2 人</span></div>
-      <div class="rea-dy-crow"><span class="rea-dy-cno">2</span><span class="rea-dy-cmain"><b>秋季新品开箱.mp4</b><em>秋季新品开箱，30 秒竖版。</em></span><span class="rea-dy-cpeople">2 人</span></div>
-      <div class="rea-dy-crow"><span class="rea-dy-cno">3</span><span class="rea-dy-cmain"><b>秋季新品上身.mp4</b><em>秋季新品上身，三种配色。</em></span><span class="rea-dy-cpeople">2 人</span></div>
+    <div style="padding:8px 20px 20px;max-height:60vh;overflow:auto">
+      <table style="width:100%;border-collapse:collapse;table-layout:fixed">
+        <colgroup><col style="width:40%"><col style="width:44%"><col style="width:16%"></colgroup>
+        <thead><tr>
+          <th style="padding:0 8px 8px;text-align:left;font-size:12px;line-height:18px;color:#646A73;font-weight:500;border-bottom:1px solid #E5E8EF;white-space:nowrap">视频文件名</th>
+          <th style="padding:0 8px 8px;text-align:left;font-size:12px;line-height:18px;color:#646A73;font-weight:500;border-bottom:1px solid #E5E8EF;white-space:nowrap">分配给</th>
+          <th style="padding:0 8px 8px;text-align:left;font-size:12px;line-height:18px;color:#646A73;font-weight:500;border-bottom:1px solid #E5E8EF;white-space:nowrap">视频状态</th>
+        </tr></thead>
+        <tbody>
+          <tr><td style="padding:10px 8px;font-size:12px;line-height:18px;color:#1F2329;border-bottom:1px solid #F0F2F5;vertical-align:top"><b style="font-weight:500">秋季新品到店.mp4</b><br><span style="color:#8F959E">秋季新品到店，到店试戴有礼。</span></td><td style="padding:10px 8px;font-size:12px;line-height:18px;color:#1F2329;border-bottom:1px solid #F0F2F5;vertical-align:top">张伟、赵一</td><td style="padding:10px 8px;font-size:12px;line-height:18px;color:#1F2329;border-bottom:1px solid #F0F2F5;vertical-align:top">已下发</td></tr>
+          <tr><td style="padding:10px 8px;font-size:12px;line-height:18px;color:#1F2329;border-bottom:1px solid #F0F2F5;vertical-align:top"><b style="font-weight:500">秋季新品开箱.mp4</b><br><span style="color:#8F959E">秋季新品开箱，30 秒竖版。</span></td><td style="padding:10px 8px;font-size:12px;line-height:18px;color:#1F2329;border-bottom:1px solid #F0F2F5;vertical-align:top">李娜、钱二</td><td style="padding:10px 8px;font-size:12px;line-height:18px;color:#1F2329;border-bottom:1px solid #F0F2F5;vertical-align:top">已下发</td></tr>
+          <tr><td style="padding:10px 8px;font-size:12px;line-height:18px;color:#1F2329;border-bottom:1px solid #F0F2F5;vertical-align:top"><b style="font-weight:500">秋季新品上身.mp4</b><br><span style="color:#8F959E">秋季新品上身，三种配色。</span></td><td style="padding:10px 8px;font-size:12px;line-height:18px;color:#1F2329;border-bottom:1px solid #F0F2F5;vertical-align:top">王强、孙三</td><td style="padding:10px 8px;font-size:12px;line-height:18px;color:#1F2329;border-bottom:1px solid #F0F2F5;vertical-align:top">已下发</td></tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
@@ -20454,14 +20452,6 @@ render();
     </div></section>
   </div></div>
 </div></div>
-<div class="_task_information_1go3x_71"><div class="_task_information_header_1go3x_80">发布内容与分配</div>
-<div style="padding:0 16px 16px"><div class="ant-table ant-table-middle css-vgijab"><div class="ant-table-container"><div class="ant-table-content"><table style="table-layout: fixed; width: 100%;"><colgroup><col style="width: 40%;"><col style="width: 44%;"><col style="width: 16%;"></colgroup><thead class="ant-table-thead"><tr><th class="ant-table-cell" scope="col">视频文件名</th><th class="ant-table-cell" scope="col">分配给</th><th class="ant-table-cell" scope="col">视频状态</th></tr></thead><tbody class="ant-table-tbody">
-<tr class="ant-table-row ant-table-row-level-0"><td class="ant-table-cell">秋季新品开箱_竖版.mp4</td><td class="ant-table-cell">张伯阳、赵雪、郑凯</td><td class="ant-table-cell">已下发</td></tr>
-<tr class="ant-table-row ant-table-row-level-0"><td class="ant-table-cell">门店探店vlog.mp4</td><td class="ant-table-cell">李佳、周雨桐、林悦</td><td class="ant-table-cell">已下发</td></tr>
-<tr class="ant-table-row ant-table-row-level-0"><td class="ant-table-cell">客户案例访谈.mp4</td><td class="ant-table-cell">王敏、孙磊</td><td class="ant-table-cell">已下发</td></tr>
-<tr class="ant-table-row ant-table-row-level-0"><td class="ant-table-cell">新品到店实拍.mp4</td><td class="ant-table-cell">陈昊、吴倩</td><td class="ant-table-cell">已下发</td></tr>
-<tr class="ant-table-row ant-table-row-level-0"><td class="ant-table-cell">会员日预告.mp4</td><td class="ant-table-cell"><span style="color:#8F959E">未分配</span></td><td class="ant-table-cell"><span style="color:#8F959E">未分配</span></td></tr>
-</tbody></table></div></div></div></div></div>
 <div class="_task_information_1go3x_71"><div class="ant-tabs ant-tabs-top css-vgijab"><div role="tablist" aria-orientation="horizontal" class="ant-tabs-nav"><div class="ant-tabs-nav-wrap"><div class="ant-tabs-nav-list" style="transform: translate(0px, 0px);"><div data-node-key="1" class="ant-tabs-tab ant-tabs-tab-active"><div role="tab" aria-selected="true" id="rea-wxv-tab" class="ant-tabs-tab-btn" tabindex="0">员工完成情况</div></div><div class="ant-tabs-ink-bar ant-tabs-ink-bar-animated" style="width: 84px; left: 42px; transform: translateX(-50%);"></div></div></div></div><div class="ant-tabs-content-holder"><div class="ant-tabs-content ant-tabs-content-top"><div role="tabpanel" tabindex="0" aria-hidden="false" class="ant-tabs-tabpane ant-tabs-tabpane-active" aria-labelledby="rea-wxv-tab">
 <div class="_detaiHeader_1go3x_120"><div><div class="ant-picker ant-picker-range ant-picker-outlined css-vgijab" style="width: 260px;"><div class="ant-picker-input"><input aria-invalid="false" autocomplete="off" size="18" placeholder="开始日期" date-range="start" value=""></div><div class="ant-picker-range-separator"><span aria-label="to" class="ant-picker-separator"><span role="img" aria-label="swap-right" class="anticon anticon-swap-right"><svg viewBox="0 0 1024 1024" focusable="false" data-icon="swap-right" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M873.1 596.2l-164-208A32 32 0 00684 376h-64.8c-6.7 0-10.4 7.7-6.3 13l144.3 183H152c-4.4 0-8 3.6-8 8v60c0 4.4 3.6 8 8 8h695.9c26.8 0 41.7-30.8 25.2-51.8z"></path></svg></span></span></div><div class="ant-picker-input"><input aria-invalid="false" autocomplete="off" size="18" placeholder="结束日期" date-range="end" value=""></div><div class="ant-picker-active-bar" style="position: absolute; width: 0px;"></div><span class="ant-picker-suffix"><span role="img" aria-label="calendar" class="anticon anticon-calendar"><svg viewBox="64 64 896 896" focusable="false" data-icon="calendar" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M880 184H712v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H384v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H144c-17.7 0-32 14.3-32 32v664c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V216c0-17.7-14.3-32-32-32zm-40 656H184V460h656v380zM184 392V256h128v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h256v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h128v136H184z"></path></svg></span></span></div><div class="ant-select ant-select-outlined css-vgijab ant-select-single ant-select-show-arrow" style="width: 140px; margin-left: 8px;"><div class="ant-select-selector"><span class="ant-select-selection-wrap"><span class="ant-select-selection-search"><input type="search" autocomplete="off" class="ant-select-selection-search-input" role="combobox" aria-expanded="false" aria-haspopup="listbox" aria-owns="rc_select_3_list" aria-autocomplete="list" aria-controls="rc_select_3_list" readonly="" unselectable="on" value="" id="rc_select_3" style="opacity: 0;"></span><span class="ant-select-selection-item" title="选择状态">选择状态</span></span></div><span class="ant-select-arrow" unselectable="on" aria-hidden="true" style="user-select: none;"><span role="img" aria-label="down" class="anticon anticon-down ant-select-suffix"><svg viewBox="64 64 896 896" focusable="false" data-icon="down" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"></path></svg></span></span></div><span class="ant-input-group-wrapper ant-input-group-wrapper-outlined css-vgijab ant-input-search" style="width: 200px; margin-left: 8px;"><span class="ant-input-wrapper ant-input-group css-vgijab"><input placeholder="请输入关键词" aria-describedby=":r47:" type="search" class="ant-input css-vgijab ant-input-outlined" value=""><span class="ant-input-group-addon"><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-input-search-button"><span class="ant-btn-icon"><span role="img" aria-label="search" class="anticon anticon-search"><svg viewBox="64 64 896 896" focusable="false" data-icon="search" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M909.6 854.5L649.9 594.8C690.2 542.7 712 479 712 412c0-80.2-31.3-155.4-87.9-212.1-56.6-56.7-132-87.9-212.1-87.9s-155.5 31.3-212.1 87.9C143.2 256.5 112 331.8 112 412c0 80.1 31.3 155.5 87.9 212.1C256.5 680.8 331.8 712 412 712c67 0 130.6-21.8 182.7-62l259.7 259.6a8.2 8.2 0 0011.6 0l43.6-43.5a8.2 8.2 0 000-11.6zM570.4 570.4C528 612.7 471.8 636 412 636s-116-23.3-158.4-65.6C211.3 528 188 471.8 188 412s23.3-116.1 65.6-158.4C296 211.3 352.2 188 412 188s116.1 23.2 158.4 65.6S636 352.2 636 412s-23.3 116.1-65.6 158.4z"></path></svg></span></span></button></span></span></span><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" style="float: right;"><span role="img" aria-label="download" class="anticon anticon-download"><svg viewBox="64 64 896 896" focusable="false" data-icon="download" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M505.7 661a8 8 0 0012.6 0l112-141.7c4.1-5.2.4-12.9-6.3-12.9h-74.1V168c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8v338.3H400c-6.7 0-10.4 7.7-6.3 12.9l112 141.8zM878 626h-60c-4.4 0-8 3.6-8 8v154H214V634c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8v198c0 17.7 14.3 32 32 32h684c17.7 0 32-14.3 32-32V634c0-4.4-3.6-8-8-8z"></path></svg></span><span>导出</span></button></div></div>
 <div><div class="ant-spin-nested-loading css-vgijab"><div class="ant-spin-container"><div class="ant-table ant-table-middle css-vgijab"><div class="ant-table-container"><div class="ant-table-content"><table style="table-layout: fixed; width: 100%;"><colgroup><col style="width: 15%;"><col style="width: 15%;"><col style="width: 22%;"><col style="width: 10%;"><col style="width: 13%;"><col style="width: 10%;"><col style="width: 15%;"></colgroup><thead class="ant-table-thead"><tr><th class="ant-table-cell ant-table-cell-ellipsis" scope="col">用户名</th><th class="ant-table-cell" scope="col">用户手机号</th><th class="ant-table-cell" scope="col">文案话题</th><th class="ant-table-cell" scope="col">发布视频</th><th class="ant-table-cell" scope="col">所属部门</th><th class="ant-table-cell" scope="col">任务状态</th><th class="ant-table-cell" scope="col">执行时间</th></tr></thead><tbody class="ant-table-tbody"><tr class="ant-table-row ant-table-row-level-0" data-row-key="1"><td class="ant-table-cell ant-table-cell-ellipsis" title="张伯阳">张伯阳</td><td class="ant-table-cell">17612256497</td><td class="ant-table-cell">秋季新品开箱 · #秋季新品</td><td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-wxv-video="张伯阳" style="padding: 0px;"><span>查看</span></button></td><td class="ant-table-cell">测试二级三部</td><td class="ant-table-cell"><span class="rea-wxd-tb done"><i></i>已执行</span></td><td class="ant-table-cell">2026/11/19 10:22</td></tr><tr class="ant-table-row ant-table-row-level-0" data-row-key="2"><td class="ant-table-cell ant-table-cell-ellipsis" title="李佳">李佳</td><td class="ant-table-cell">13800138001</td><td class="ant-table-cell">门店探店 vlog · #探店</td><td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-wxv-video="李佳" style="padding: 0px;"><span>查看</span></button></td><td class="ant-table-cell">销售一部</td><td class="ant-table-cell"><span class="rea-wxd-tb done"><i></i>已执行</span></td><td class="ant-table-cell">2026/11/19 11:05</td></tr><tr class="ant-table-row ant-table-row-level-0" data-row-key="3"><td class="ant-table-cell ant-table-cell-ellipsis" title="王敏">王敏</td><td class="ant-table-cell">13800138002</td><td class="ant-table-cell">客户案例访谈 · #客户案例</td><td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-wxv-video="王敏" style="padding: 0px;"><span>查看</span></button></td><td class="ant-table-cell">销售一部</td><td class="ant-table-cell"><span class="rea-wxd-tb done"><i></i>已执行</span></td><td class="ant-table-cell">2026/11/20 09:30</td></tr><tr class="ant-table-row ant-table-row-level-0" data-row-key="4"><td class="ant-table-cell ant-table-cell-ellipsis" title="陈昊">陈昊</td><td class="ant-table-cell">13800138003</td><td class="ant-table-cell">新品到店实拍 · #新品到店</td><td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-wxv-video="陈昊" style="padding: 0px;"><span>查看</span></button></td><td class="ant-table-cell">销售二部</td><td class="ant-table-cell"><span class="rea-wxd-tb done"><i></i>已执行</span></td><td class="ant-table-cell">2026/11/20 14:12</td></tr><tr class="ant-table-row ant-table-row-level-0" data-row-key="5"><td class="ant-table-cell ant-table-cell-ellipsis" title="赵雪">赵雪</td><td class="ant-table-cell">13800138004</td><td class="ant-table-cell">售后小课堂 · #售后</td><td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-wxv-video="赵雪" style="padding: 0px;"><span>查看</span></button></td><td class="ant-table-cell">售后部</td><td class="ant-table-cell"><span class="rea-wxd-tb done"><i></i>已执行</span></td><td class="ant-table-cell">2026/11/20 16:40</td></tr><tr class="ant-table-row ant-table-row-level-0" data-row-key="6"><td class="ant-table-cell ant-table-cell-ellipsis" title="周雨桐">周雨桐</td><td class="ant-table-cell">13800138006</td><td class="ant-table-cell">会员日活动 · #会员日</td><td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-wxv-video="周雨桐" style="padding: 0px;"><span>查看</span></button></td><td class="ant-table-cell">销售一部</td><td class="ant-table-cell"><span class="rea-wxd-tb done"><i></i>已执行</span></td><td class="ant-table-cell">2026/11/21 09:05</td></tr><tr class="ant-table-row ant-table-row-level-0" data-row-key="7"><td class="ant-table-cell ant-table-cell-ellipsis" title="孙磊">孙磊</td><td class="ant-table-cell">13800138007</td><td class="ant-table-cell">秋季穿搭指南 · #穿搭</td><td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-wxv-video="孙磊" style="padding: 0px;"><span>查看</span></button></td><td class="ant-table-cell">销售二部</td><td class="ant-table-cell"><span class="rea-wxd-tb done"><i></i>已执行</span></td><td class="ant-table-cell">2026/11/21 10:18</td></tr><tr class="ant-table-row ant-table-row-level-0" data-row-key="8"><td class="ant-table-cell ant-table-cell-ellipsis" title="吴倩">吴倩</td><td class="ant-table-cell">13800138008</td><td class="ant-table-cell">门店环境一览 · #门店</td><td class="ant-table-cell"><button type="button" class="ant-btn css-vgijab ant-btn-link ant-btn-color-link ant-btn-variant-link" data-wxv-video="吴倩" style="padding: 0px;"><span>查看</span></button></td><td class="ant-table-cell">售后部</td><td class="ant-table-cell"><span class="rea-wxd-tb done"><i></i>已执行</span></td><td class="ant-table-cell">2026/11/22 11:32</td></tr><tr class="ant-table-row ant-table-row-level-0" data-row-key="9"><td class="ant-table-cell ant-table-cell-ellipsis" title="郑凯">郑凯</td><td class="ant-table-cell">13800138009</td><td class="ant-table-cell">-</td><td class="ant-table-cell">-</td><td class="ant-table-cell">产品</td><td class="ant-table-cell"><span class="rea-wxd-tb open"><i></i>未执行</span></td><td class="ant-table-cell">-</td></tr><tr class="ant-table-row ant-table-row-level-0" data-row-key="10"><td class="ant-table-cell ant-table-cell-ellipsis" title="林悦">林悦</td><td class="ant-table-cell">13800138010</td><td class="ant-table-cell">-</td><td class="ant-table-cell">-</td><td class="ant-table-cell">销售二部</td><td class="ant-table-cell"><span class="rea-wxd-tb open"><i></i>未执行</span></td><td class="ant-table-cell">-</td></tr></tbody></table></div></div></div></div></div></div>
@@ -32253,18 +32243,24 @@ function closeContents(){
 function onContentsKey(e){if(e.key==='Escape'||e.keyCode===27)closeContents()}
 function openContents(){
   closeContents();
-  var rows=[{no:1,name:'秋季新品开箱.mp4',copy:'秋季新品开箱 · #秋季新品',n:5},
-            {no:2,name:'秋季新品上身.mp4',copy:'秋季新品上身 · #秋季新品 #穿搭',n:5}];
-  var body='';
+  var rows=[{name:'秋季新品开箱.mp4',copy:'秋季新品开箱 · #秋季新品',to:'张伯阳、赵雪、郑凯、孙磊、吴倩',st:'已下发'},
+            {name:'秋季新品上身.mp4',copy:'秋季新品上身 · #秋季新品 #穿搭',to:'李佳、周雨桐、林悦、陈昊、王敏',st:'已下发'}];
+  var th='padding:0 8px 8px;text-align:left;font-size:12px;line-height:18px;color:#646A73;font-weight:500;border-bottom:1px solid #E5E8EF;white-space:nowrap';
+  var td='padding:10px 8px;font-size:12px;line-height:18px;color:#1F2329;border-bottom:1px solid #F0F2F5;vertical-align:top';
+  var body='<table style="width:100%;border-collapse:collapse;table-layout:fixed">'
+    +'<colgroup><col style="width:40%"><col style="width:44%"><col style="width:16%"></colgroup>'
+    +'<thead><tr><th style="'+th+'">视频文件名</th><th style="'+th+'">分配给</th><th style="'+th+'">视频状态</th></tr></thead><tbody>';
   for(var k=0;k<rows.length;k++){var r=rows[k];
-    body+='<div class="rea-wxv-crow"><span class="rea-wxv-cno">'+r.no+'</span><span class="rea-wxv-cmain"><b>'+r.name+'</b><em>'+r.copy+'</em></span><span class="rea-wxv-cnum">'+r.n+' 人</span></div>';
+    body+='<tr><td style="'+td+'"><b style="font-weight:500">'+r.name+'</b><br><span style="color:#8F959E">'+r.copy+'</span></td>'
+      +'<td style="'+td+'">'+r.to+'</td><td style="'+td+'">'+r.st+'</td></tr>';
   }
+  body+='</tbody></table>';
   var w=document.createElement('div');w.className='ant-modal-root css-vgijab';w.setAttribute('data-wxv-cmodal','1');
   w.innerHTML='<div class="ant-modal-mask"></div><div class="ant-modal-wrap ant-modal-centered">'
-    +'<div class="ant-modal css-vgijab rea-wxv-modal" role="dialog" aria-modal="true" aria-label="发布内容" style="width:520px">'
+    +'<div class="ant-modal css-vgijab rea-wxv-modal" role="dialog" aria-modal="true" aria-label="发布内容" style="width:760px">'
     +'<div class="ant-modal-content"><button type="button" class="ant-modal-close" aria-label="关闭"><span class="ant-modal-close-x">×</span></button>'
     +'<div class="ant-modal-header"><div class="ant-modal-title">发布内容 · '+CNT+' 条</div></div>'
-    +'<div class="ant-modal-body"><div class="rea-wxv-clist">'+body+'</div></div>'
+    +'<div class="ant-modal-body">'+body+'</div>'
     +'<div class="ant-modal-footer"><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined"><span>关 闭</span></button></div>'
     +'</div></div></div>';
   document.body.appendChild(w);
@@ -39040,8 +39036,6 @@ draw();
 .rea-dcc-head{display:flex;align-items:center;gap:8px;margin:8px 0 12px}
 .rea-dcc-title{flex:none;font-size:14px;line-height:22px;color:rgba(0,0,0,.88);font-weight:500}
 .rea-dcc-line{flex:1;border-top:1px solid rgba(5,5,5,.06)}
-.rea-dcc-info{flex:none;width:14px;height:14px;border:1px solid #8c8c8c;border-radius:50%;color:#8c8c8c;font-size:10px;line-height:12px;text-align:center;font-style:normal;cursor:help;user-select:none}
-.rea-dcc-info:hover,.rea-dcc-info:focus{border-color:#1677ff;color:#1677ff;outline:none}
 .rea-dcc-add{flex:none;padding:0 2px;border:0;background:none;color:#1677ff;font-size:14px;line-height:22px;cursor:pointer}
 .rea-dcc-add:hover{color:#4096ff}
 .rea-dcc-warn{margin:0 0 12px;padding-left:18px;position:relative;font-size:12px;line-height:18px;color:#ff4d4f}
@@ -39056,8 +39050,6 @@ draw();
 .rea-dcc-name.rea-bad,.rea-dcc-val.rea-bad{border-color:#ff4d4f}
 .rea-dcc-del{flex:none;height:32px;padding:0 2px;border:0;background:none;color:#ff4d4f;font-size:14px;cursor:pointer}
 .rea-dcc-del:hover{color:#ff7875}
-.rea-dcc-tip{position:fixed;z-index:1300;display:none;max-width:320px;padding:10px 12px;border-radius:6px;background:#fff;box-shadow:0 6px 16px rgba(0,0,0,.12);color:#1f2329;font-size:12px;line-height:18px}
-.rea-dcc-tip.on{display:block}
 .rea-dcc-toast{position:fixed;top:24px;left:50%;z-index:1400;padding:10px 16px;border-radius:8px;background:#fff;box-shadow:0 6px 16px rgba(0,0,0,.08);color:#1f2329;font-size:14px;line-height:20px;opacity:0;visibility:hidden;transform:translate(-50%,-8px);transition:opacity .18s,transform .18s,visibility .18s}
 .rea-dcc-toast.on{opacity:1;visibility:visible;transform:translate(-50%,0)}
 .rea-dcc-toast::before{content:"";display:inline-block;vertical-align:-3px;width:16px;height:16px;margin-right:8px;border-radius:50%;background:#ff4d4f}
@@ -39072,23 +39064,18 @@ draw();
       var row = anchor.closest('.ant-form-item');
       if(!row) return;
 
-      var TIP = '执行时脚本按名称找到大众点评页上的这一项，点你填的那个选项。';
       var sec = document.createElement('div');
       sec.className = 'rea-dcc';
       sec.setAttribute('data-dcc','1');
       sec.innerHTML = '<div class="rea-dcc-head">'
         + '<span class="rea-dcc-title">点评页其他必填项</span>'
-        + '<i class="rea-dcc-info" tabindex="0" role="img" aria-label="说明">i</i>'
         + '<span class="rea-dcc-line"></span>'
         + '<button type="button" class="rea-dcc-add">＋ 添加</button>'
-        + '</div><p class="rea-dcc-warn">名称和选项须与点评页上实际出现的一致；匹配不到的项会被跳过，评论可能因此发不出去，风险由填写人承担。</p>'
+        + '</div><p class="rea-dcc-warn">名称和选项须与点评页上实际出现的一致；匹配不到的项会被跳过。</p>'
         + '<div class="rea-dcc-list"></div>';
       row.parentNode.insertBefore(sec, row.nextSibling);
 
       var list = sec.querySelector('.rea-dcc-list');
-      var tip = document.createElement('div');
-      tip.className = 'rea-dcc-tip';
-      document.body.appendChild(tip);
       var toastEl = null;
 
       function toast(msg){
@@ -39098,18 +39085,6 @@ draw();
         clearTimeout(toastEl.__t);
         toastEl.__t = setTimeout(function(){ toastEl.classList.remove('on'); }, 2200);
       }
-      function showTip(el){
-        tip.textContent = TIP;
-        tip.classList.add('on');
-        var r = el.getBoundingClientRect(), w = tip.offsetWidth, h = tip.offsetHeight;
-        var left = Math.min(r.left, (window.innerWidth || 1200) - w - 12);
-        var top = r.bottom + 8;
-        if(top + h > (window.innerHeight || 800) - 8) top = r.top - h - 8;
-        tip.style.left = Math.max(12, left) + 'px';
-        tip.style.top = Math.max(12, top) + 'px';
-      }
-      function hideTip(){ tip.classList.remove('on'); }
-
       function makeItem(){
         var item = document.createElement('div');
         item.className = 'rea-dcc-item';
@@ -39169,13 +39144,6 @@ draw();
           t.classList.remove('rea-bad');
         }
       });
-
-      var info = sec.querySelector('.rea-dcc-info');
-      info.addEventListener('mouseenter', function(){ showTip(info); });
-      info.addEventListener('focus', function(){ showTip(info); });
-      info.addEventListener('mouseleave', hideTip);
-      info.addEventListener('blur', hideTip);
-      window.addEventListener('scroll', hideTip, true);
 
       document.addEventListener('click', function(e){
         var btn = e.target.closest && e.target.closest('button.ant-btn');
