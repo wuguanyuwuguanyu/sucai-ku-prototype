@@ -20082,7 +20082,7 @@ render();
         <div class="_form_input_lzm36_71 rea-dy-row--wide">
           <span class="_must_white_lzm36_76">发布内容</span>
           <div class="_upload_box_lzm36_100">
-            <div class="rea-dy-bulkbar"><span class="rea-dy-bulkcnt" data-dy-cnt>0 条内容 / 0 位执行人员</span><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-addfile><span>+ 添加视频</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-addcopy><span>导入文案</span></button></div>
+            <div class="rea-dy-bulkbar" style="justify-content:flex-end"><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-addfile><span>+ 添加视频</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-addcopy><span>导入文案</span></button></div>
             <div data-dy-bulk></div>
             <p class="rea-dy-adminerr" data-dy-err="video" hidden>请添加视频</p>
           </div>
@@ -32317,7 +32317,7 @@ var M=2;
 /* 发布内容：与抖音同一套素材表直编＋添加文案弹窗；页面原有的任务设置字段不动 */
 var row=document.createElement('div');row.className='_form_input_lzm36_71 rea-dy-row--wide';
 row.innerHTML='<span class="_must_white_lzm36_76">发布内容</span><div class="_upload_box_lzm36_100">'
- +'<div class="rea-dy-bulkbar"><span class="rea-dy-bulkcnt" data-wxv-cnt></span>'
+ +'<div class="rea-dy-bulkbar" style="justify-content:flex-end">'
  +'<button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-addfile><span>+ 添加视频</span></button>'
  +'<button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-dy-addcopy><span>导入文案</span></button></div>'
  +'<div data-wxv-bulk></div><div data-dy-copy hidden></div></div>';
@@ -32335,7 +32335,6 @@ var BULK=createBulk({
   labels:{title:'标题',topic:'话题',copy:'文案'},
   hint:'一人最多发 1 条视频；执行人数少于视频数时，多出的视频不下发。最多上传 50 个视频。',
   onChange:function(s){
-    var c=row.querySelector('[data-wxv-cnt]');if(c)c.textContent=s.videos+' 条内容 / '+s.people+' 位执行人员';
     var ac=row.querySelector('[data-dy-addcopy]');if(ac)ac.disabled=!s.videos;
   }
 });
@@ -38111,7 +38110,6 @@ if(PAGE==="new"){
     labels:{title:"标题",topic:"话题",copy:"文案"},
     hint:"一人最多发 1 条视频；执行人数少于视频数时，多出的视频不下发。最多上传 50 个视频。",
     onChange:function(s){
-      $("[data-dy-cnt]").textContent=s.videos+" 条内容 / "+s.people+" 位执行人员";
       var ac=$("[data-dy-addcopy]");if(ac)ac.disabled=!s.videos;
     }
   });
