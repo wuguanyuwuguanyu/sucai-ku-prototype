@@ -19330,6 +19330,13 @@ render();
           <div class="_upload_box_lzm36_100"><span class="ant-input-affix-wrapper css-vgijab ant-input-outlined"><input id="xnTaskName" maxlength="21" autocomplete="off" placeholder="请输入任务名称" class="ant-input css-vgijab" type="text"><span class="ant-input-suffix"><span class="ant-input-show-count-suffix" data-xn-count-for="xnTaskName">0 / 21</span></span></span></div>
         </div>
         <div class="_form_input_lzm36_71">
+          <span class="_must_white_lzm36_76">素材来源</span>
+          <div class="_upload_box_lzm36_100"><div class="rea-xn-src" data-xn-source>
+            <button type="button" class="rea-xn-srcbtn on" data-v="临时创建">临时创建</button>
+            <button type="button" class="rea-xn-srcbtn" data-v="AI生成">AI生成</button>
+          </div></div>
+        </div>
+        <div class="_form_input_lzm36_71">
           <span class="_must_white_lzm36_76">发布类型</span>
           <div class="_upload_box_lzm36_100"><div class="ant-radio-group ant-radio-group-outline css-vgijab" data-xn-type>
             <label class="ant-radio-wrapper ant-radio-wrapper-checked css-vgijab"><span class="ant-radio ant-wave-target ant-radio-checked"><input name="xnType" class="ant-radio-input" type="radio" value="发图文" checked><span class="ant-radio-inner"></span></span><span class="ant-radio-label">发图文</span></label>
@@ -19337,19 +19344,69 @@ render();
             <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="xnType" class="ant-radio-input" type="radio" value="发文案配图"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">发文案配图</span></label>
           </div></div>
         </div>
+        <div data-xn-aiform hidden>
+          <div class="_form_input_lzm36_71">
+            <span class="_must_white_lzm36_76">笔记主题</span>
+            <div class="_upload_box_lzm36_100"><span class="ant-input-affix-wrapper css-vgijab ant-input-outlined"><input id="xnAiTheme" maxlength="20" autocomplete="off" placeholder="请输入笔记主题" class="ant-input css-vgijab" type="text" data-dy-ai-theme><span class="ant-input-suffix"><span class="ant-input-show-count-suffix" data-dy-ai-themecount>0 / 20</span></span></span><p style="margin-top:8px;font-size:14px;color:rgb(170,170,170)">举例：去北京天安门旅游攻略</p></div>
+          </div>
+          <div class="_form_input_lzm36_71">
+            <span class="_must_white_lzm36_76">核心关键词</span>
+            <div class="_upload_box_lzm36_100"><span class="ant-input-affix-wrapper css-vgijab ant-input-outlined"><input id="xnAiKeys" maxlength="20" autocomplete="off" placeholder="请输入核心关键词" class="ant-input css-vgijab" type="text" data-dy-ai-keys><span class="ant-input-suffix"><span class="ant-input-show-count-suffix" data-dy-ai-keyscount>0 / 20</span></span></span><p style="margin-top:8px;font-size:14px;color:rgb(170,170,170)">多个的情况下使用中文，分割</p></div>
+          </div>
+          <div class="_form_input_lzm36_71">
+            <span class="_must_white_lzm36_76">目标人群</span>
+            <div class="_upload_box_lzm36_100"><span class="ant-input-affix-wrapper css-vgijab ant-input-outlined"><input id="xnAiAudience" maxlength="20" autocomplete="off" placeholder="请输入目标人群" class="ant-input css-vgijab" type="text" data-dy-ai-audience><span class="ant-input-suffix"><span class="ant-input-show-count-suffix" data-dy-ai-audiencecount>0 / 20</span></span></span><p style="margin-top:8px;font-size:14px;color:rgb(170,170,170)">多个的情况下使用中文，分割</p></div>
+          </div>
+          <div class="_form_input_lzm36_71" style="align-items:center">
+            <span class="_must_white_lzm36_76">生成技巧</span>
+            <div class="ant-radio-group ant-radio-group-outline css-vgijab" data-dy-ai-skill>
+              <label class="ant-radio-wrapper ant-radio-wrapper-checked css-vgijab"><span class="ant-radio ant-wave-target ant-radio-checked"><input name="xnAiSkill" class="ant-radio-input" type="radio" value="痛点型" checked><span class="ant-radio-inner"></span></span><span class="ant-radio-label">痛点型</span></label>
+              <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="xnAiSkill" class="ant-radio-input" type="radio" value="悬疑型"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">悬疑型</span></label>
+              <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="xnAiSkill" class="ant-radio-input" type="radio" value="对比型"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">对比型</span></label>
+              <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="xnAiSkill" class="ant-radio-input" type="radio" value="故事型"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">故事型</span></label>
+            </div>
+          </div>
+          <div class="_form_input_lzm36_71" style="align-items:center">
+            <span class="_must_white_lzm36_76">生成风格</span>
+            <div class="ant-radio-group ant-radio-group-outline css-vgijab" data-dy-ai-style>
+              <label class="ant-radio-wrapper ant-radio-wrapper-checked css-vgijab"><span class="ant-radio ant-wave-target ant-radio-checked"><input name="xnAiStyle" class="ant-radio-input" type="radio" value="测评分析" checked><span class="ant-radio-inner"></span></span><span class="ant-radio-label">测评分析</span></label>
+              <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="xnAiStyle" class="ant-radio-input" type="radio" value="教程攻略"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">教程攻略</span></label>
+              <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="xnAiStyle" class="ant-radio-input" type="radio" value="知识科普"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">知识科普</span></label>
+              <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="xnAiStyle" class="ant-radio-input" type="radio" value="种草推荐"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">种草推荐</span></label>
+              <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="xnAiStyle" class="ant-radio-input" type="radio" value="避坑排雷"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">避坑排雷</span></label>
+              <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="xnAiStyle" class="ant-radio-input" type="radio" value="情绪价值"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">情绪价值</span></label>
+              <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="xnAiStyle" class="ant-radio-input" type="radio" value="行业专属"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">行业专属</span></label>
+            </div>
+          </div>
+          <div class="_form_input_lzm36_71">
+            <span class="_must_white_lzm36_76">身份角色</span>
+            <div class="_upload_box_lzm36_100">
+              <div class="ant-radio-group ant-radio-group-outline css-vgijab" data-dy-ai-role>
+                <label class="ant-radio-wrapper ant-radio-wrapper-checked css-vgijab"><span class="ant-radio ant-wave-target ant-radio-checked"><input name="xnAiRole" class="ant-radio-input" type="radio" value="售后客服" checked><span class="ant-radio-inner"></span></span><span class="ant-radio-label">售后客服</span></label>
+                <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="xnAiRole" class="ant-radio-input" type="radio" value="销售经理"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">销售经理</span></label>
+                <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="xnAiRole" class="ant-radio-input" type="radio" value="自定义"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">自定义</span></label>
+              </div>
+              <div style="margin-top:8px" data-dy-ai-rolemode hidden><input class="ant-input css-vgijab ant-input-outlined" type="text" placeholder="请输入身份角色" data-dy-ai-roletxt></div>
+            </div>
+          </div>
+          <div class="_form_input_lzm36_71" style="padding-top:8px">
+            <span class="_must_white1_lzm36_76"></span>
+            <div class="_upload_box_lzm36_100"><button type="button" class="ant-btn css-vgijab ant-btn-primary ant-btn-color-primary ant-btn-variant-solid" data-xn-aigen><span>生成文案</span></button></div>
+          </div>
+        </div>
         <div class="_form_input_lzm36_71 rea-dy-row--wide" data-xn-contentrow>
           <span class="_must_white_lzm36_76">发布内容</span>
           <div class="_upload_box_lzm36_100">
             <div data-xn-section="image">
-              <div class="rea-dy-bulkbar"><span class="rea-dy-bulkcnt" data-xn-imgcnt></span><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-addimg><span>+ 添加图文</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-importopen><span>导入文案</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-aiopen><span>AI 生成</span></button></div>
+              <div class="rea-dy-bulkbar"><span class="rea-dy-bulkcnt" data-xn-imgcnt></span><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-addimg><span>+ 添加图文</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-importopen><span>导入文案</span></button></div>
               <div data-xn-imgbulk></div><div data-xn-imgcopy hidden></div>
             </div>
             <div data-xn-section="video" hidden>
-              <div class="rea-dy-bulkbar"><span class="rea-dy-bulkcnt" data-xn-vidcnt></span><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-addvid><span>+ 添加视频</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-addcover><span>+ 添加封面</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-importopen><span>导入文案</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-aiopen><span>AI 生成</span></button></div>
+              <div class="rea-dy-bulkbar"><span class="rea-dy-bulkcnt" data-xn-vidcnt></span><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-addvid><span>+ 添加视频</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-addcover><span>+ 添加封面</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-importopen><span>导入文案</span></button></div>
               <div data-xn-vidbulk></div><div data-xn-vidcopy hidden></div>
             </div>
             <div data-xn-section="copyimage" hidden>
-              <div class="rea-dy-bulkbar"><span class="rea-dy-bulkcnt" data-xn-txtcnt></span><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-addtxtimg><span>+ 添加一条</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-importopen><span>导入文案</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-aiopen><span>AI 生成</span></button></div>
+              <div class="rea-dy-bulkbar"><span class="rea-dy-bulkcnt" data-xn-txtcnt></span><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-addtxtimg><span>+ 添加一条</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-importopen><span>导入文案</span></button></div>
               <div data-xn-txtbulk></div><div data-xn-txtcopy hidden></div>
             </div>
           </div>
@@ -19371,50 +19428,6 @@ render();
         <div class="_form_input_lzm36_71"><span class="_must_white_lzm36_76">通知时间</span><div class="_upload_box_lzm36_100"><div class="rea-dy-dt"><input type="date" data-xn-notify-date aria-label="通知日期"><input type="time" data-xn-notify-time aria-label="通知时间"></div></div></div>
         <div class="_form_input_lzm36_71"><span class="_must_white_lzm36_76">截止时间</span><div class="_upload_box_lzm36_100"><div class="rea-dy-dt"><input type="date" data-xn-end-date aria-label="截止日期"><input type="time" data-xn-end-time aria-label="截止时间"></div></div></div>
         <div class="_form_input_lzm36_71" style="padding-top:32px;padding-bottom:24px"><span class="_must_white1_lzm36_76"></span><div class="_upload_box_lzm36_100"><button type="submit" class="ant-btn css-vgijab ant-btn-primary ant-btn-color-primary ant-btn-variant-solid" data-xn-save><span>保存</span></button><button type="button" class="ant-btn css-vgijab ant-btn-default ant-btn-color-default ant-btn-variant-outlined" data-xn-cancel style="margin-left:10px"><span>取消</span></button></div></div>
-        <div class="rea-dy-addmodal" data-dy-addmodal hidden>
-          <div class="rea-dy-addmodal-box" role="dialog" aria-modal="true" aria-label="AI 生成">
-            <div class="rea-dy-addmodal-h"><h3>AI 生成</h3><button type="button" class="rea-dy-addmodal-x" data-dy-modalclose aria-label="关闭">×</button></div>
-            <div class="rea-dy-addbody" data-dy-addpanel="ai">
-              <div data-dy-ai-generic>
-                <div class="rea-dy-addfield"><label for="xnAiTitle">示例标题</label><input id="xnAiTitle" class="ant-input css-vgijab ant-input-outlined" type="text" maxlength="20" placeholder="请输入示例标题" data-dy-ai-title></div>
-                <div class="rea-dy-addfield"><label for="xnAiCopy">示例文案</label><textarea id="xnAiCopy" class="rea-dy-addtextarea" maxlength="1000" placeholder="请输入示例文案" data-dy-ai-copy></textarea></div>
-                <div class="rea-dy-addfield"><label for="xnAiTopic">示例话题</label><input id="xnAiTopic" class="ant-input css-vgijab ant-input-outlined" type="text" placeholder="请输入示例话题" data-dy-ai-topic></div>
-              </div>
-              <div data-dy-ai-note hidden>
-                <div class="rea-dy-addfield"><label for="dyAiTheme">笔记主题</label><div class="rea-dy-aifld"><input id="dyAiTheme" class="ant-input css-vgijab ant-input-outlined" type="text" maxlength="20" placeholder="请输入笔记主题" data-dy-ai-theme><span class="rea-dy-aifldcount" data-dy-ai-themecount>0 / 20</span></div></div>
-                <p class="rea-dy-aihint">举例：去北京天安门旅游攻略</p>
-                <div class="rea-dy-addfield"><label for="dyAiKeys">核心关键词</label><div class="rea-dy-aifld"><input id="dyAiKeys" class="ant-input css-vgijab ant-input-outlined" type="text" maxlength="20" placeholder="请输入核心关键词" data-dy-ai-keys><span class="rea-dy-aifldcount" data-dy-ai-keyscount>0 / 20</span></div></div>
-                <p class="rea-dy-aihint">多个的情况下使用中文，分割</p>
-                <div class="rea-dy-addfield"><label for="dyAiAudience">目标人群</label><div class="rea-dy-aifld"><input id="dyAiAudience" class="ant-input css-vgijab ant-input-outlined" type="text" maxlength="20" placeholder="请输入目标人群" data-dy-ai-audience><span class="rea-dy-aifldcount" data-dy-ai-audiencecount>0 / 20</span></div></div>
-                <p class="rea-dy-aihint">多个的情况下使用中文，分割</p>
-                <div class="rea-dy-addfield"><label>生成技巧</label><div class="ant-radio-group ant-radio-group-outline css-vgijab rea-dy-airadios" data-dy-ai-skill>
-                  <label class="ant-radio-wrapper ant-radio-wrapper-checked css-vgijab"><span class="ant-radio ant-wave-target ant-radio-checked"><input name="dyAiSkill" class="ant-radio-input" type="radio" value="痛点型" checked><span class="ant-radio-inner"></span></span><span class="ant-radio-label">痛点型</span></label>
-                  <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="dyAiSkill" class="ant-radio-input" type="radio" value="悬疑型"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">悬疑型</span></label>
-                  <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="dyAiSkill" class="ant-radio-input" type="radio" value="对比型"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">对比型</span></label>
-                  <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="dyAiSkill" class="ant-radio-input" type="radio" value="故事型"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">故事型</span></label>
-                </div></div>
-                <div class="rea-dy-addfield"><label>生成风格</label><div class="ant-radio-group ant-radio-group-outline css-vgijab rea-dy-airadios" data-dy-ai-style>
-                  <label class="ant-radio-wrapper ant-radio-wrapper-checked css-vgijab"><span class="ant-radio ant-wave-target ant-radio-checked"><input name="dyAiStyle" class="ant-radio-input" type="radio" value="测评分析" checked><span class="ant-radio-inner"></span></span><span class="ant-radio-label">测评分析</span></label>
-                  <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="dyAiStyle" class="ant-radio-input" type="radio" value="教程攻略"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">教程攻略</span></label>
-                  <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="dyAiStyle" class="ant-radio-input" type="radio" value="知识科普"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">知识科普</span></label>
-                  <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="dyAiStyle" class="ant-radio-input" type="radio" value="种草推荐"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">种草推荐</span></label>
-                  <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="dyAiStyle" class="ant-radio-input" type="radio" value="避坑排雷"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">避坑排雷</span></label>
-                  <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="dyAiStyle" class="ant-radio-input" type="radio" value="情绪价值"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">情绪价值</span></label>
-                  <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="dyAiStyle" class="ant-radio-input" type="radio" value="行业专属"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">行业专属</span></label>
-                </div></div>
-                <div class="rea-dy-addfield"><label>身份角色</label><div class="ant-radio-group ant-radio-group-outline css-vgijab rea-dy-airadios" data-dy-ai-role>
-                  <label class="ant-radio-wrapper ant-radio-wrapper-checked css-vgijab"><span class="ant-radio ant-wave-target ant-radio-checked"><input name="dyAiRole" class="ant-radio-input" type="radio" value="售后客服" checked><span class="ant-radio-inner"></span></span><span class="ant-radio-label">售后客服</span></label>
-                  <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="dyAiRole" class="ant-radio-input" type="radio" value="销售经理"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">销售经理</span></label>
-                  <label class="ant-radio-wrapper css-vgijab"><span class="ant-radio ant-wave-target"><input name="dyAiRole" class="ant-radio-input" type="radio" value="自定义"><span class="ant-radio-inner"></span></span><span class="ant-radio-label">自定义</span></label>
-                </div></div>
-                <div class="rea-dy-addfield" data-dy-ai-rolemode hidden><label></label><input class="ant-input css-vgijab ant-input-outlined" type="text" placeholder="请输入身份角色" data-dy-ai-roletxt></div>
-              </div>
-              <p class="rea-dy-adminerr" data-dy-ai-err hidden>请填写示例标题、文案和话题</p>
-              <p class="rea-dy-addcount" data-dy-aicount>将生成 0 条文案</p>
-              <div class="rea-dy-addfoot"><button type="button" class="ant-btn css-vgijab ant-btn-primary ant-btn-color-primary ant-btn-variant-solid" data-dy-aigen><span>生成文案</span></button></div>
-            </div>
-          </div>
-        </div>
         <div class="rea-dy-addmodal" data-xn-importmodal hidden>
           <div class="rea-dy-addmodal-box" role="dialog" aria-modal="true" aria-label="导入文案">
             <div class="rea-dy-addmodal-h"><h3>导入文案</h3><button type="button" class="rea-dy-addmodal-x" data-xn-importclose aria-label="关闭">×</button></div>
@@ -25652,8 +25665,8 @@ $('[data-xn-addtxtimg]').addEventListener('click',function(){IMG2.addRow()});
 $('[data-xn-addvid]').addEventListener('click',function(){VID.pickVideos()});
 $('[data-xn-addcover]').addEventListener('click',function(){VID.pickCovers()});
 applyType();
-/* 添加文案弹窗：对当前发布类型的素材表生效 */
-var ADDMODAL=$('[data-dy-addmodal]');
+/* 素材来源：临时创建走素材表与导入；AI生成换成六项设置，按执行人员数生成文案（2026-11-25 评审） */
+var SOURCE='临时创建';
 function addModalHasCopy(b){
   var st=b.getState();
   for(var i=0;i<st.copies.length;i++){
@@ -25663,108 +25676,68 @@ function addModalHasCopy(b){
   }
   return false;
 }
-var AI_GENERIC=$('[data-dy-ai-generic]',ADDMODAL),AI_NOTE=$('[data-dy-ai-note]',ADDMODAL);
-var AI_THEME=$('[data-dy-ai-theme]',ADDMODAL),AI_KEYS2=$('[data-dy-ai-keys]',ADDMODAL),AI_AUD2=$('[data-dy-ai-audience]',ADDMODAL),AI_ROLE2_TXT=$('[data-dy-ai-roletxt]',ADDMODAL),AI_ROLE2_MODE=$('[data-dy-ai-rolemode]',ADDMODAL);
+var AI_THEME=$('[data-dy-ai-theme]'),AI_KEYS2=$('[data-dy-ai-keys]'),AI_AUD2=$('[data-dy-ai-audience]'),AI_ROLE2_TXT=$('[data-dy-ai-roletxt]'),AI_ROLE2_MODE=$('[data-dy-ai-rolemode]');
 function syncAddAiCounts(){
-  if(AI_THEME)$('[data-dy-ai-themecount]',ADDMODAL).textContent=(AI_THEME.value||'').length+' / 20';
-  if(AI_KEYS2)$('[data-dy-ai-keyscount]',ADDMODAL).textContent=(AI_KEYS2.value||'').length+' / 20';
-  if(AI_AUD2)$('[data-dy-ai-audiencecount]',ADDMODAL).textContent=(AI_AUD2.value||'').length+' / 20';
+  if(AI_THEME)$('[data-dy-ai-themecount]').textContent=(AI_THEME.value||'').length+' / 20';
+  if(AI_KEYS2)$('[data-dy-ai-keyscount]').textContent=(AI_KEYS2.value||'').length+' / 20';
+  if(AI_AUD2)$('[data-dy-ai-audiencecount]').textContent=(AI_AUD2.value||'').length+' / 20';
 }
-[AI_THEME,AI_KEYS2,AI_AUD2].forEach(function(i){
-  if(!i)return;
-  i.addEventListener('input',function(){
-    syncAddAiCounts();
-    $('[data-dy-ai-err]',ADDMODAL).hidden=true;
-  });
-});
+[AI_THEME,AI_KEYS2,AI_AUD2].forEach(function(i){ if(i)i.addEventListener('input',syncAddAiCounts); });
 syncAddAiCounts();
-if(AI_ROLE2_TXT)AI_ROLE2_TXT.addEventListener('input',function(){$('[data-dy-ai-err]',ADDMODAL).hidden=true});
-$$('[data-dy-ai-role] input',ADDMODAL).forEach(function(r){
+if(AI_ROLE2_TXT)AI_ROLE2_TXT.addEventListener('input',function(){});
+$$('[data-dy-ai-role] input').forEach(function(r){
   r.addEventListener('change',function(){
     if(AI_ROLE2_MODE)AI_ROLE2_MODE.hidden=!(r.checked&&r.value==='自定义');
   });
 });
-function openAddCopy(){
-  var isCopy=TYPE==='发文案配图';
-  var err=$('[data-dy-ai-err]',ADDMODAL);
-  AI_GENERIC.hidden=isCopy;AI_NOTE.hidden=!isCopy;
-  var b=activeBulk(),st=b.getState();
-  if(!isCopy&&!st.videos.length){toast('先添加内容');return}
-  /* 发文案配图的内容就是文案本身，按执行人员数生成；发图文／发视频要给已有素材配文案，仍按内容条数 */
-  var genN=isCopy?Math.max(1,M):st.videos.length;
-  $('[data-dy-aicount]',ADDMODAL).textContent='将生成 '+genN+' 条文案';
-  err.textContent=isCopy?'请填写笔记主题、核心关键词和目标人群':'请填写示例标题、文案和话题';err.hidden=true;
-  ADDMODAL.hidden=false;
-  setTimeout(function(){var t=isCopy?AI_THEME:$('[data-dy-ai-title]',ADDMODAL);if(t)t.focus()},30);
+$$('[data-xn-source] .rea-xn-srcbtn').forEach(function(b){
+  b.addEventListener('click',function(){
+    SOURCE=b.getAttribute('data-v');
+    $$('[data-xn-source] .rea-xn-srcbtn').forEach(function(x){x.classList.toggle('on',x===b)});
+    applySource();
+  });
+});
+function applySource(){
+  var ai=SOURCE==='AI生成';
+  $('[data-xn-aiform]').hidden=!ai;
+  $('[data-xn-contentrow]').hidden=ai;
+  var rs=$('[data-xn-type]').querySelectorAll('input');
+  for(var i=0;i<rs.length;i++){
+    var r=rs[i],isCopy=r.value==='发文案配图';
+    r.disabled=ai&&!isCopy;
+    var w=r.closest('.ant-radio-wrapper'); if(w)w.style.opacity=(ai&&!isCopy)?'.4':'';
+    if(ai&&isCopy&&!r.checked){r.checked=true;r.dispatchEvent(new Event('change',{bubbles:true}))}
+  }
 }
-function closeAddCopy(){ADDMODAL.hidden=true}
-$$('[data-xn-aiopen]').forEach(function(b){b.addEventListener('click',openAddCopy)});
-$$('[data-dy-modalclose]',ADDMODAL).forEach(function(b){b.addEventListener('click',function(e){e.preventDefault();closeAddCopy()})});
-ADDMODAL.addEventListener('click',function(e){if(e.target===ADDMODAL)closeAddCopy()});
-ADDMODAL.addEventListener('keydown',function(e){
-  if(e.key==='Enter'&&e.target&&e.target.tagName==='INPUT'){e.preventDefault();var g=$('[data-dy-aigen]',ADDMODAL);if(g)g.click()}
-});
-document.addEventListener('keydown',function(e){
-  if(e.key!=='Escape')return;
-  if(IMPMODAL&&!IMPMODAL.hidden){closeImport();return}
-  if(!ADDMODAL.hidden)closeAddCopy();
-});
-$$('[data-dy-ai-title],[data-dy-ai-copy],[data-dy-ai-topic]',ADDMODAL).forEach(function(i){i.addEventListener('input',function(){$('[data-dy-ai-err]',ADDMODAL).hidden=true})});
-var aiGen=$('[data-dy-aigen]',ADDMODAL);
-aiGen.addEventListener('click',function(){
-  var title=($('[data-dy-ai-title]',ADDMODAL).value||'').replace(/^\s+|\s+$/g,''),
-      copy=($('[data-dy-ai-copy]',ADDMODAL).value||'').replace(/^\s+|\s+$/g,''),
-      topic=($('[data-dy-ai-topic]',ADDMODAL).value||'').replace(/^\s+|\s+$/g,''),
-      err=$('[data-dy-ai-err]',ADDMODAL);
-  if(TYPE==='发文案配图'){
-    var theme=(AI_THEME.value||'').replace(/^\s+|\s+$/g,''),keys=(AI_KEYS2.value||'').replace(/^\s+|\s+$/g,''),audience=(AI_AUD2.value||'').replace(/^\s+|\s+$/g,'');
-    var roleR=$('[data-dy-ai-role] input:checked',ADDMODAL),roleV=roleR?roleR.value:'';
-    if(!theme||!keys||!audience){
-      err.textContent='请填写笔记主题、核心关键词和目标人群';err.hidden=false;
-      var f1=!theme?AI_THEME:(!keys?AI_KEYS2:AI_AUD2);if(f1)f1.focus();return;
-    }
-    if(roleV==='自定义'&&!(AI_ROLE2_TXT.value||'').replace(/^\s+|\s+$/g,'')){
-      err.textContent='请输入身份角色';err.hidden=false;AI_ROLE2_TXT.focus();return;
-    }
-    err.hidden=true;
-    var b2=activeBulk(),n2=Math.max(1,M);
-    if(addModalHasCopy(b2)&&!confirm('生成会替换现有文案，继续？'))return;
-    var skillR=$('[data-dy-ai-skill] input:checked',ADDMODAL),styleR=$('[data-dy-ai-style] input:checked',ADDMODAL);
-    var skillV=skillR?skillR.value:'',styleV=styleR?styleR.value:'';
-    var roleText=roleV==='自定义'?(AI_ROLE2_TXT.value||'').replace(/^\s+|\s+$/g,''):roleV;
-    var kw=(keys.split(/[，,、]/)[0]||'').replace(/^\s+|\s+$/g,'');
-    var list2=[];
-    for(var j=0;j<n2;j++){
-      var suffix=j===0?'':' · '+(j+1);
-      list2.push({
-        text:(theme+suffix).slice(0,50),
-        title:(theme+suffix).slice(0,20),
-        copy:(theme+'｜'+keys+'。面向'+audience+'，用'+styleV+'的写法，以'+roleText+'的口吻，按'+skillV+'切入。第 '+(j+1)+' 条').slice(0,1000),
-        topic:kw?'#'+kw:''
-      });
-    }
-    b2.setCopies(list2);closeAddCopy();toast('已生成 '+n2+' 条文案');
-    return;
+applySource();
+function generateAI(){
+  var theme=(AI_THEME.value||'').replace(/^\s+|\s+$/g,''),keys=(AI_KEYS2.value||'').replace(/^\s+|\s+$/g,''),audience=(AI_AUD2.value||'').replace(/^\s+|\s+$/g,'');
+  var roleR=$('[data-dy-ai-role] input:checked'),roleV=roleR?roleR.value:'';
+  if(!theme||!keys||!audience){
+    toast('请填写笔记主题、核心关键词和目标人群');
+    (!theme?AI_THEME:(!keys?AI_KEYS2:AI_AUD2)).focus();return false;
   }
-  if(!title||!copy||!topic){
-    err.hidden=false;
-    var first=!title?$('[data-dy-ai-title]',ADDMODAL):(!copy?$('[data-dy-ai-copy]',ADDMODAL):$('[data-dy-ai-topic]',ADDMODAL));
-    if(first)first.focus();return;
+  if(roleV==='自定义'&&!(AI_ROLE2_TXT.value||'').replace(/^\s+|\s+$/g,'')){
+    toast('请输入身份角色');AI_ROLE2_TXT.focus();return false;
   }
-  err.hidden=true;
-  var b=activeBulk(),n=b.getState().videos.length;
-  if(!n){toast('先添加内容');return}
-  if(addModalHasCopy(b)&&!confirm('生成会替换现有文案，继续？'))return;
-  var list=[];
-  for(var i=0;i<n;i++){
-    list.push({
-      title:(i===0?title:title+' · '+(i+1)).slice(0,20),
-      copy:(i===0?copy:copy+'\n\n（第 '+(i+1)+' 条）').slice(0,1000),
-      topic:topic
+  var skillR=$('[data-dy-ai-skill] input:checked'),styleR=$('[data-dy-ai-style] input:checked');
+  var skillV=skillR?skillR.value:'',styleV=styleR?styleR.value:'';
+  var roleText=roleV==='自定义'?(AI_ROLE2_TXT.value||'').replace(/^\s+|\s+$/g,''):roleV;
+  var kw=(keys.split(/[，,、]/)[0]||'').replace(/^\s+|\s+$/g,'');
+  var b2=activeBulk(),n2=Math.max(1,M),list2=[];
+  if(addModalHasCopy(b2)&&!confirm('生成会替换现有文案，继续？'))return false;
+  for(var j=0;j<n2;j++){
+    var suffix=j===0?'':' · '+(j+1);
+    list2.push({
+      text:(theme+suffix).slice(0,50),
+      title:(theme+suffix).slice(0,20),
+      copy:(theme+'｜'+keys+'。面向'+audience+'，用'+styleV+'的写法，以'+roleText+'的口吻，按'+skillV+'切入。第 '+(j+1)+' 条').slice(0,1000),
+      topic:kw?'#'+kw:''
     });
   }
-  b.setCopies(list);closeAddCopy();toast('已生成 '+n+' 条文案');
-});
+  b2.setCopies(list2);toast('已生成 '+n2+' 条文案');return true;
+}
+$('[data-xn-aigen]').addEventListener('click',generateAI);
 /* 导入文案独立入口：与 AI 生成分开（2026-11-25 评审） */
 var IMPMODAL=$('[data-xn-importmodal]');
 var importBtn=$('[data-xn-importbtn]',IMPMODAL),importInput=$('[data-xn-importinput]',IMPMODAL);
@@ -25806,9 +25779,9 @@ $$('.ant-switch').forEach(function(sw){
 });
 $('[data-xn-form]').addEventListener('submit',function(e){
   e.preventDefault();
-  if(ADDMODAL&&!ADDMODAL.hidden)return;
   var name=(nameInput.value||'').replace(/^\s+|\s+$/g,'');
   if(!name){toast('请输入任务名称');nameInput.focus();return}
+  if(SOURCE==='AI生成'&&!generateAI())return;
   var st=activeBulk().getState();
   if(!st.videos.length){toast('请添加内容');return}
   var nd=$('[data-xn-notify-date]').value,nt=$('[data-xn-notify-time]').value,
@@ -38579,6 +38552,10 @@ if(PAGE==="detail"){
 .rea-xn-page *{box-sizing:border-box}
 .rea-xn-page [hidden]{display:none!important}
 .rea-xn-page :focus-visible{outline:2px solid rgba(22,119,255,.45);outline-offset:2px;border-radius:4px}
+.rea-xn-src{display:flex;gap:8px}
+.rea-xn-srcbtn{height:32px;padding:0 16px;border:1px solid #E5E8EF;border-radius:8px;background:#fff;color:#1F2329;font:inherit;font-size:14px;cursor:pointer}
+.rea-xn-srcbtn:hover{border-color:#1677FF;color:#1677FF}
+.rea-xn-srcbtn.on{border-color:#1677FF;background:#1677FF;color:#fff;font-weight:500}
 .rea-xn-head{display:flex;align-items:center;gap:12px;margin:0 0 20px}
 .rea-xn-head h1{margin:0;color:#1F2329;font-size:20px;line-height:28px;font-weight:600}
 .rea-xn-headact{margin-left:auto;display:flex;align-items:center;gap:8px}
