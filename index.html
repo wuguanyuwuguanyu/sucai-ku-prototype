@@ -2130,13 +2130,17 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 /* ---------------- 清单排法 · banner 翻页（2026-11-26 加；设置页「清单排法」三档切） ----------------
    一页 2 列 × 3 行共 6 条，横向／纵向只差滚动轴，整页吸附（不是自由滚，停在哪页就是哪页）。
-   卡高不再固定 192：轨道给足 3 行（49.4×3＋13×2＝174.2），页指示再占一行，卡自然撑到约 253。
-   网格那套不动，仍是 192（第三行照稿被卡底裁掉）。
+   卡高不再固定 192：轨道给足 3 行（49.4×3＋13×2＝174.2）；网格那套不动，仍是 192
+   （第三行照稿被卡底裁掉）。
    ★ 页指示只在一页装不下（>6 条）时出现：单页没有可翻的页，摆一排圆点等于答一个没问的问题。
-     圆点标位置，右侧「当前/总页数」给出页数读法；圆点可点，直接翻到那一页。
+     圆点标位置、可点跳页；不另给「1/2」页码——两页时圆点本身已经答得清第几页。
+   ★ 圆点的方向跟着滚动轴走：横向的在卡底排成一行；纵向的立到轨道右侧成一列，卡底不再留那一行，
+     所以纵向卡比横向矮 35。那列圆点落在卡片自身的 17 右留白里（绝对定位按 padding box 算），
+     不占轨道的宽度——条卡宽度与横向那套一样，名字不会被挤到省略号。
    ★ 横向轨道左右离屏幕缘还有卡片自身 17 的留白，条卡不贴边滑——贴边会和 Android 侧滑返回抢手势。
    ★ 纵向轨道与外层整屏滚动同向：不设 overscroll-behavior，翻到最后一页余量交给整页（同上面那条）。 */
 .hva-doing.banner{height:auto}
+.hva-doing.banner.y{position:relative}
 .hva-doing-track{flex:none;height:175px;margin-top:9px;display:flex;scrollbar-width:none}
 .hva-doing-track::-webkit-scrollbar{display:none}
 .hva-doing-track.x{overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory}
@@ -2145,12 +2149,15 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
   grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:49.4px;gap:13px 10px;align-content:start}
 .hva-doing-pager{flex:none;display:flex;align-items:center;justify-content:center;gap:2px;
   height:18px;margin:7px 0 10px}
+/* 纵向：圆点列站在轨道右侧、跟轨道等高并竖向居中。top 43 ＝ 卡顶 12＋卡头 22＋轨道上留 9。 */
+.hva-doing.banner.y .hva-doing-pager{position:absolute;right:0;top:43px;width:16px;height:175px;
+  margin:0;flex-direction:column;justify-content:center;gap:4px}
 .hva-pdot{position:relative;width:20px;height:18px;padding:0;border:0;background:none;cursor:pointer}
 .hva-pdot::before{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-  width:5px;height:5px;border-radius:3px;background:#C9D4E8;transition:width .2s,background .2s}
+  width:5px;height:5px;border-radius:3px;background:#C9D4E8;transition:width .2s,height .2s,background .2s}
 .hva-pdot.on::before{width:14px;background:#5B6FDB}
-.hva-pnum{margin-left:4px;font-size:11px;line-height:1;font-weight:600;color:#7C8AA6;
-  font-variant-numeric:tabular-nums}
+.hva-doing.banner.y .hva-pdot{width:16px;height:16px}
+.hva-doing.banner.y .hva-pdot.on::before{width:5px;height:13px}
 /* 空态：居中的空插图＋一枚居中入口。稿子上插图是一摞浅蓝纸，这里用几条浅蓝块近似（ADR-0042 不嵌位图）。 */
 .hva-doing-empty{display:flex;flex-direction:column;align-items:center;padding:14px 0 2px}
 .hva-doing-empty .art{display:block;margin-bottom:8px}
@@ -8913,7 +8920,7 @@ function hvaDoingBannerHtml(){
     h+='<div class="hva-doing-pager">';
     for(p=0;p<n;p++)h+='<button class="hva-pdot'+(p?'':' on')+'" onclick="hvaDoingGoPage('+p+')"'
       +' aria-label="第 '+(p+1)+' 页"></button>';
-    h+='<span class="hva-pnum">1/'+n+'</span></div>';
+    h+='</div>';
   }
   return h;
 }
@@ -8922,21 +8929,20 @@ function hvaDoingBannerHtml(){
 function hvaDoingScroll(el){
   var n=el.querySelectorAll('.hva-doing-page').length;
   var i=HVA_DOING_LAY==='x'?el.scrollLeft/(el.clientWidth||1):el.scrollTop/(el.clientHeight||1);
-  hvaDoingPageMark(Math.max(0,Math.min(n-1,Math.round(i))),n);
+  hvaDoingPageMark(Math.max(0,Math.min(n-1,Math.round(i))));
 }
-function hvaDoingPageMark(i,n){
+function hvaDoingPageMark(i){
   var pg=document.querySelector('.hva-doing-pager');
   if(!pg)return;
-  var ds=pg.querySelectorAll('.hva-pdot'),num=pg.querySelector('.hva-pnum'),k;
+  var ds=pg.querySelectorAll('.hva-pdot'),k;
   for(k=0;k<ds.length;k++)ds[k].classList.toggle('on',k===i);
-  if(num)num.textContent=(i+1)+'/'+n;
 }
 function hvaDoingGoPage(i){
   var el=document.querySelector('.hva-doing-track');
   if(!el)return;
   if(HVA_DOING_LAY==='x')el.scrollTo({left:i*el.clientWidth,behavior:'smooth'});
   else el.scrollTo({top:i*el.clientHeight,behavior:'smooth'});
-  hvaDoingPageMark(i,el.querySelectorAll('.hva-doing-page').length);
+  hvaDoingPageMark(i);
 }
 /* 空态那张插画（稿子 2385:3726 是一摞浅蓝纸）。ADR-0042 不嵌位图，用几块浅蓝近似，
    远看是一摞纸就行——它不是信息，只是把空卡撑出个样子。 */
@@ -8964,7 +8970,7 @@ function hvaDoingCardHtml(){
     +'</div>';
   }
   var banner=HVA_DOING_LAY!=='grid';
-  return '<div class="hva-doing'+(banner?' banner':'')+'">'+hd
+  return '<div class="hva-doing'+(banner?' banner '+HVA_DOING_LAY:'')+'">'+hd
     +(banner?hvaDoingBannerHtml():'<div class="hva-doing-scroll">'+hvaDoingCardsHtml()+'</div>')
   +'</div>';
 }
