@@ -39147,7 +39147,7 @@ draw();
      搜索发送：旧流程原样，仅旧版 B站 App 可用（新版 App 节点大概率取不到）。
      两条提示都走 info ＋ tooltip；链接格式只在提交时拦。
      页面右上角另挂一枚**原型对比**药丸（ADR-0109 的对比开关口径）：方案 A＝上面这套发送方式二选一；
-     方案 B＝不要发送方式，视频链接直接必填，账号相关字段全部收起。定稿后删掉药丸与分支。
+     方案 B＝不要发送方式，视频链接、平台账号名称、第几条帖子三行同时展示且都必填。定稿后删掉药丸与分支。
      正文其余部分仍是快照；本页没有正文缝，两行只能运行时造。覆盖页不归通用接线，
      所以「取消」回列表由本页脚本接（面包屑那枚仍由通用接线兜住）。 */
   var REA_BILI_CSS = `
@@ -39231,6 +39231,29 @@ draw();
       var err = linkRow.querySelector('.rea-bili-err');
       var mode = 'link';
 
+      /* 方案 B 里平台账号名称与第几条帖子也必填：各挂一条行内错误，样式复用 .rea-bili-err */
+      function attachErr(id, msg){
+        var el = document.querySelector('#' + id);
+        var box = el && el.closest('.ant-form-item-control-input-content');
+        if(!box) return null;
+        var d = document.createElement('div');
+        d.className = 'rea-bili-err';
+        d.textContent = msg;
+        box.appendChild(d);
+        el.addEventListener('input', function(){
+          el.classList.remove('rea-bili-bad');
+          d.classList.remove('on');
+        });
+        return { el: el, err: d };
+      }
+      var subjectErr = attachErr('subjectContent', '请输入平台账号名称');
+      var postErr = attachErr('postIndex', '请填写第几条帖子');
+      var postLabel = (function(){
+        var el = document.querySelector('#postIndex');
+        var fi = el && el.closest('.ant-form-item');
+        return fi && fi.querySelector('label');
+      })();
+
       function paintRadios(){
         for(var j = 0; j < inputs.length; j++){
           var on = inputs[j].value === mode;
@@ -39247,7 +39270,8 @@ draw();
         if(!link){ url.classList.remove('rea-bili-bad'); err.classList.remove('on'); }
       }
 
-      /* 原型对比件（同 ADR-0109 的对比开关）：A＝发送方式二选一；B＝不要发送方式、视频链接直接必填。
+      /* 原型对比件（同 ADR-0109 的对比开关）：A＝发送方式二选一；B＝不要发送方式，
+         视频链接、平台账号名称、第几条帖子三行同时展示且都必填。
          选择存 localStorage，换页回来仍是上次那套；定稿后删掉药丸与这两段分支。 */
       var scheme = 'a';
       try { if(localStorage.getItem('yxzBiliSendScheme') === 'b') scheme = 'b'; } catch(e0){}
@@ -39255,18 +39279,27 @@ draw();
       pill.className = 'rea-bili-ab';
       pill.innerHTML = '<span class="rea-bili-ab-lab">原型对比</span>'
         + '<button type="button" data-ab="a">方案 A · 发送方式</button>'
-        + '<button type="button" data-ab="b">方案 B · 仅链接</button>';
+        + '<button type="button" data-ab="b">方案 B · 三项必填</button>';
       document.body.appendChild(pill);
 
+      function clearFieldErrs(){
+        url.classList.remove('rea-bili-bad'); err.classList.remove('on');
+        [subjectErr, postErr].forEach(function(x){
+          if(x){ x.el.classList.remove('rea-bili-bad'); x.err.classList.remove('on'); }
+        });
+      }
       function applyScheme(){
         var b = scheme === 'b';
         sendRow.style.display = b ? 'none' : '';
         if(b){
-          for(var i = 0; i < searchRows.length; i++) searchRows[i].style.display = 'none';
+          /* 方案 B：三行同时展示，都必填；第几条帖子补上必填星号 */
+          for(var i = 0; i < searchRows.length; i++) searchRows[i].style.display = '';
           linkRow.style.display = '';
         } else {
           applyMode();
         }
+        if(postLabel) postLabel.classList.toggle('ant-form-item-required', b);
+        clearFieldErrs();
         var bs = pill.querySelectorAll('button');
         for(var j = 0; j < bs.length; j++) bs[j].classList.toggle('on', bs[j].getAttribute('data-ab') === scheme);
       }
@@ -39304,12 +39337,29 @@ draw();
         if(t !== '提交') return;
         var linkMode = scheme === 'b' || mode === 'link';
         var v = (url.value || '').trim();
+        var bad = false;
         if(linkMode && !/bilibili\.com\/video\//.test(v)){
-          e.preventDefault(); e.stopPropagation();
-          url.classList.add('rea-bili-bad'); err.classList.add('on');
+          url.classList.add('rea-bili-bad'); err.classList.add('on'); bad = true;
         } else {
           url.classList.remove('rea-bili-bad'); err.classList.remove('on');
         }
+        if(scheme === 'b'){
+          if(subjectErr){
+            if(!(subjectErr.el.value || '').trim()){
+              subjectErr.el.classList.add('rea-bili-bad'); subjectErr.err.classList.add('on'); bad = true;
+            } else {
+              subjectErr.el.classList.remove('rea-bili-bad'); subjectErr.err.classList.remove('on');
+            }
+          }
+          if(postErr){
+            if(!(postErr.el.value || '').trim()){
+              postErr.el.classList.add('rea-bili-bad'); postErr.err.classList.add('on'); bad = true;
+            } else {
+              postErr.el.classList.remove('rea-bili-bad'); postErr.err.classList.remove('on');
+            }
+          }
+        }
+        if(bad){ e.preventDefault(); e.stopPropagation(); }
       }, true);
     })();`;
   }
