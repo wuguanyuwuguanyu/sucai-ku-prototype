@@ -2128,6 +2128,29 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
   display:flex;align-items:center;justify-content:center;color:#fff}
 .hva-doing-nm{min-width:0;font-size:14px;font-weight:500;line-height:1.25;color:#2D528E;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* ---------------- 清单排法 · banner 翻页（2026-11-26 加；设置页「清单排法」三档切） ----------------
+   一页 2 列 × 3 行共 6 条，横向／纵向只差滚动轴，整页吸附（不是自由滚，停在哪页就是哪页）。
+   卡高不再固定 192：轨道给足 3 行（49.4×3＋13×2＝174.2），页指示再占一行，卡自然撑到约 253。
+   网格那套不动，仍是 192（第三行照稿被卡底裁掉）。
+   ★ 页指示只在一页装不下（>6 条）时出现：单页没有可翻的页，摆一排圆点等于答一个没问的问题。
+     圆点标位置，右侧「当前/总页数」给出页数读法；圆点可点，直接翻到那一页。
+   ★ 横向轨道左右离屏幕缘还有卡片自身 17 的留白，条卡不贴边滑——贴边会和 Android 侧滑返回抢手势。
+   ★ 纵向轨道与外层整屏滚动同向：不设 overscroll-behavior，翻到最后一页余量交给整页（同上面那条）。 */
+.hva-doing.banner{height:auto}
+.hva-doing-track{flex:none;height:175px;margin-top:9px;display:flex;scrollbar-width:none}
+.hva-doing-track::-webkit-scrollbar{display:none}
+.hva-doing-track.x{overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory}
+.hva-doing-track.y{overflow-y:auto;overflow-x:hidden;scroll-snap-type:y mandatory;flex-direction:column}
+.hva-doing-page{flex:0 0 100%;scroll-snap-align:start;display:grid;overflow:hidden;
+  grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:49.4px;gap:13px 10px;align-content:start}
+.hva-doing-pager{flex:none;display:flex;align-items:center;justify-content:center;gap:2px;
+  height:18px;margin:7px 0 10px}
+.hva-pdot{position:relative;width:20px;height:18px;padding:0;border:0;background:none;cursor:pointer}
+.hva-pdot::before{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:5px;height:5px;border-radius:3px;background:#C9D4E8;transition:width .2s,background .2s}
+.hva-pdot.on::before{width:14px;background:#5B6FDB}
+.hva-pnum{margin-left:4px;font-size:11px;line-height:1;font-weight:600;color:#7C8AA6;
+  font-variant-numeric:tabular-nums}
 /* 空态：居中的空插图＋一枚居中入口。稿子上插图是一摞浅蓝纸，这里用几条浅蓝块近似（ADR-0042 不嵌位图）。 */
 .hva-doing-empty{display:flex;flex-direction:column;align-items:center;padding:14px 0 2px}
 .hva-doing-empty .art{display:block;margin-bottom:8px}
@@ -8340,6 +8363,10 @@ var HVA_ON=false;              /* 托管总开关。默认关：先让人看清�
    卡头右侧「调整范围 →」是唯一入口，能力卡在卡内自己滚。定稿后删掉对比开关、只留一套。 */
 var HVA_DOING_MODE='b';
 var HVA_DOING_EMPTY_DEMO=false;  /* 原型对比用：只在主页演示空态，不动 HVA_SCOPE／HVA_MINE */
+/* 清单排法（2026-11-26 加，原型对比用）：grid＝两列平铺（现状）；x＝横向 banner、y＝纵向 banner，
+   都是每页 6 条（两列三行）整页吸附。只改主页那张卡怎么摆，不改取数；空态三种排法共用。
+   定稿后连同设置页那一行对比控件一起删，只留选定的一种。 */
+var HVA_DOING_LAY='grid';
 /* HVA_VIEW／HVA_SCHEME／HVA_SCHEMES／HVA_SUBS 四格 2026-10-16 一并删（见 ADR-0065）：
    前两格驱动的是「托管清单｜工作日志」的分栏与那套甲／乙排法演示，后两格是清单的两个来源与
    「我的」页那张临时的「演示」卡。托管清单那一屏整块撤掉之后，这一屏只剩工作日志一栏——
@@ -8849,18 +8876,66 @@ function hvaDoingItems(){
   }
   return o;
 }
+/* 一条能力卡。三种排法共用它：名字与图标配色只有这一处，排法只管怎么摆。 */
+function hvaDoingItemHtml(t){
+  var pa=HT_PAL[t.pal]||HT_PAL.creature;
+  return '<div class="hva-doing-item">'
+    +'<span class="hva-doing-ic" style="background:linear-gradient(142deg,'+pa[0]+','+pa[1]+');'
+      +'box-shadow:0 6px 12px -8px '+pa[1]+'">'+I(t.ic,17,2.1)+'</span>'
+    +'<span class="hva-doing-nm">'+esc(t.n)+'</span></div>';
+}
 function hvaDoingCardsHtml(){
-  var its=hvaDoingItems(),i,t,pa,h;
+  var its=hvaDoingItems(),i,h;
   if(hvaDoingEmpty())return '';
   h='<div class="hva-doing-grid">';
-  for(i=0;i<its.length;i++){
-    t=its[i];pa=HT_PAL[t.pal]||HT_PAL.creature;
-    h+='<div class="hva-doing-item">'
-      +'<span class="hva-doing-ic" style="background:linear-gradient(142deg,'+pa[0]+','+pa[1]+');'
-        +'box-shadow:0 6px 12px -8px '+pa[1]+'">'+I(t.ic,17,2.1)+'</span>'
-      +'<span class="hva-doing-nm">'+esc(t.n)+'</span></div>';
-  }
+  for(i=0;i<its.length;i++)h+=hvaDoingItemHtml(its[i]);
   return h+'</div>';
+}
+/* banner 排法：同一串条卡切成每页 6 条（2 列 × 3 行），页与页之间吸附。
+   帧率之外的两件事都放在这里，别散到渲染里：
+   · 页指示只在多于 1 页时画（单页没有可翻的页，不摆圆点也不挂 onscroll）；
+   · 页码靠 hvaDoingScroll 读 scrollLeft／scrollTop 折算，点圆点走 hvaDoingGoPage 对向翻。
+   只有主页那张卡吃这套；A／C 的「托管会做什么」浮层仍用网格——浮层不限定高度，
+   没有“一页装不下”这件事，翻页在那一层只是多一道手势。 */
+function hvaDoingBannerHtml(){
+  var its=hvaDoingItems(),per=6,pages=[],i,n,h,p,j;
+  for(i=0;i<its.length;i+=per)pages.push(its.slice(i,i+per));
+  n=pages.length;
+  h='<div class="hva-doing-track '+HVA_DOING_LAY+'"'+(n>1?' onscroll="hvaDoingScroll(this)"':'')+'>';
+  for(p=0;p<n;p++){
+    h+='<div class="hva-doing-page">';
+    for(j=0;j<pages[p].length;j++)h+=hvaDoingItemHtml(pages[p][j]);
+    h+='</div>';
+  }
+  h+='</div>';
+  if(n>1){
+    h+='<div class="hva-doing-pager">';
+    for(p=0;p<n;p++)h+='<button class="hva-pdot'+(p?'':' on')+'" onclick="hvaDoingGoPage('+p+')"'
+      +' aria-label="第 '+(p+1)+' 页"></button>';
+    h+='<span class="hva-pnum">1/'+n+'</span></div>';
+  }
+  return h;
+}
+/* 滚到哪页就亮哪一个圆点。用 round 折算：吸附停稳时偏移就是整页宽的倍数，
+   手指拖到一半时取最近的一页，页指示不会在两张之间来回闪。 */
+function hvaDoingScroll(el){
+  var n=el.querySelectorAll('.hva-doing-page').length;
+  var i=HVA_DOING_LAY==='x'?el.scrollLeft/(el.clientWidth||1):el.scrollTop/(el.clientHeight||1);
+  hvaDoingPageMark(Math.max(0,Math.min(n-1,Math.round(i))),n);
+}
+function hvaDoingPageMark(i,n){
+  var pg=document.querySelector('.hva-doing-pager');
+  if(!pg)return;
+  var ds=pg.querySelectorAll('.hva-pdot'),num=pg.querySelector('.hva-pnum'),k;
+  for(k=0;k<ds.length;k++)ds[k].classList.toggle('on',k===i);
+  if(num)num.textContent=(i+1)+'/'+n;
+}
+function hvaDoingGoPage(i){
+  var el=document.querySelector('.hva-doing-track');
+  if(!el)return;
+  if(HVA_DOING_LAY==='x')el.scrollTo({left:i*el.clientWidth,behavior:'smooth'});
+  else el.scrollTo({top:i*el.clientHeight,behavior:'smooth'});
+  hvaDoingPageMark(i,el.querySelectorAll('.hva-doing-page').length);
 }
 /* 空态那张插画（稿子 2385:3726 是一摞浅蓝纸）。ADR-0042 不嵌位图，用几块浅蓝近似，
    远看是一摞纸就行——它不是信息，只是把空卡撑出个样子。 */
@@ -8887,8 +8962,9 @@ function hvaDoingCardHtml(){
       +'</div>'
     +'</div>';
   }
-  return '<div class="hva-doing">'+hd
-    +'<div class="hva-doing-scroll">'+hvaDoingCardsHtml()+'</div>'
+  var banner=HVA_DOING_LAY!=='grid';
+  return '<div class="hva-doing'+(banner?' banner':'')+'">'+hd
+    +(banner?hvaDoingBannerHtml():'<div class="hva-doing-scroll">'+hvaDoingCardsHtml()+'</div>')
   +'</div>';
 }
 /* 三种摆法：A 只在头卡留一枚「?」，主页不摆卡；C 只在日志卡头留一枚入口，正常态也不摆卡；
@@ -8911,6 +8987,13 @@ function hvaDoingDemo(v){
   HVA_DOING_EMPTY_DEMO=v;
   REND['host-ai']();REND['host-ai-set']();
   toast(v?'主页正在演示空范围（不改设置里的真实范围）':'主页已回到真实范围');
+}
+/* 切换清单排法只重画主页与设置页；切之前已翻到的页码不保留——重画后回到第一页，
+   对比时起点一致，不会出现「刚在纵向第 2 页，切成横向还停在第 2 页」的错位。 */
+function hvaDoingLay(v){
+  HVA_DOING_LAY=v;
+  REND['host-ai']();REND['host-ai-set']();
+  toast('清单排法已切到'+(v==='grid'?'两列平铺':v==='x'?'横向 banner':'纵向 banner'));
 }
 /* 「调整范围」的落点：切到设置页，滚到范围卡并闪一下。转场 320ms，等它走完再滚。 */
 function hvaDoingGoSet(){
@@ -9410,6 +9493,15 @@ REND['host-ai-set']=function(){
     +'<div class="hva-segpad"><div class="hva-layseg">'
     +'<button class="'+(HVA_DOING_EMPTY_DEMO?'':'on')+'" onclick="hvaDoingDemo(false)"><b>正常范围</b><small>按真实设置</small></button>'
     +'<button class="'+(HVA_DOING_EMPTY_DEMO?'on':'')+'" onclick="hvaDoingDemo(true)"><b>模拟空范围</b><small>只看主页空态</small></button>'
+    +'</div></div></div>';
+  /* 清单排法（2026-11-26，原型对比用）：与「托管回显」分开一张卡——那一行答的是“在哪儿展示”，
+     这一行答的是“清单怎么摆”，两件事各占一行，别把五档挤进同一行。
+     只影响回显为 B（主页那张卡）时的排法；A／C 的浮层仍用网格（理由见 hvaDoingBannerHtml）。 */
+  h+='<div class="hva-form"><div class="hva-form-h">清单排法</div>'
+    +'<div class="hva-segpad"><div class="hva-layseg">'
+    +'<button class="'+(HVA_DOING_LAY==='grid'?'on':'')+'" onclick="hvaDoingLay(\'grid\')"><b>网格</b><small>两列平铺</small></button>'
+    +'<button class="'+(HVA_DOING_LAY==='x'?'on':'')+'" onclick="hvaDoingLay(\'x\')"><b>横向 banner</b><small>整页横翻</small></button>'
+    +'<button class="'+(HVA_DOING_LAY==='y'?'on':'')+'" onclick="hvaDoingLay(\'y\')"><b>纵向 banner</b><small>整页纵翻</small></button>'
     +'</div></div></div>';
   /* AI智能回复锁定时**仍可下钻**：这一行是导航不是控件，员工还得看得见谁回、在哪回、多久看一次；
      只把行尾的 › 换成锁，下钻那一屏同样是只读（见 REND['host-ai-act']）。 */
