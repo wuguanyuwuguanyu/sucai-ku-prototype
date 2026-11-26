@@ -18909,7 +18909,7 @@ render();
             <span class="n"><span class="sortc" role="button" tabindex="0" data-mb-esort="m">素材条数 <i>↕</i></span></span>
           </div>
           <div class="rea-mb-list" id="rea-mb-emp-list"></div>
-          <div class="rea-mb-foot"><span id="rea-mb-emp-foot"></span></div>
+          <div class="rea-mb-foot"><span id="rea-mb-emp-foot"></span><span class="rea-bd-links"><a href="#" id="rea-mb-emp-all">查看全部<span class="rea-bd-chev" aria-hidden="true">›</span></a></span></div>
         </div>
       </div>
     </div>
@@ -18919,6 +18919,24 @@ render();
   <div class="rea-mb-toast" id="rea-mb-toast" role="status" hidden></div>
 
   <div class="rea-bd-bad" id="rea-mb-bad" hidden></div>
+
+  <!-- 全部员工（2026-11-26）：员工页卡内只露前 10 人、不滚动，其余进这里。
+       与「谁用过」同一个抽屉外壳；列名用卡片的两列口径，行序跟卡片当前排序走。 -->
+  <div class="rea-mb-dw-mask" id="rea-mb-alw-mask" hidden></div>
+  <aside class="rea-mb-dw" id="rea-mb-alw" aria-hidden="true" aria-label="全部员工">
+    <div class="rea-mb-dw-h">
+      <h6>全部员工</h6>
+      <button type="button" class="rea-mb-dw-x" id="rea-mb-alw-close" aria-label="关闭">×</button>
+    </div>
+    <div class="rea-mb-dw-b">
+      <table class="rea-mb-tbl">
+        <colgroup><col><col style="width:110px"><col style="width:84px"><col style="width:84px"></colgroup>
+        <thead><tr><th>员工</th><th>部门</th><th class="num">取用次数</th><th class="num">素材条数</th></tr></thead>
+        <tbody id="rea-mb-alw-body"></tbody>
+      </table>
+    </div>
+    <div class="rea-mb-pg" id="rea-mb-alw-foot"></div>
+  </aside>
 </div>
 </div></div>
 </script>
@@ -21523,6 +21541,11 @@ body .subapp{background:#F6F8FB!important}
 
 /* ---------- 分组与部门 ---------- */
 .rea-mb-list{flex:1 1 auto;overflow-y:auto;overflow-x:hidden;max-height:336px;scrollbar-width:thin;scrollbar-color:#D6DDE8 transparent}
+/* 部门与员工 · 员工页（2026-11-26）：卡内只露前 10 人，不滚动，其余进「全部员工」抽屉；
+   同一行的分组使用跟着放到 10 行，两张卡等高。 */
+#rea-mb-emp-list{max-height:none;overflow:visible}
+#rea-mb-grp-list{max-height:420px}
+#rea-mb-alw-foot{justify-content:flex-start}
 /* 部门与员工 · 两个页签各一张表，切页签不动时间范围。 */
 .rea-mb-org-body{display:flex;flex:1 1 auto;flex-direction:column;min-height:0}
 .rea-mb-org-pane{display:flex;flex:1 1 auto;flex-direction:column;min-height:0}
@@ -34450,19 +34473,47 @@ function empRows(w){
   });
   return out;
 }
+var EMPCAP=10;
 function renderEmps(w){
   var box=document.getElementById("rea-mb-emp-list"),ef=document.getElementById("rea-mb-emp-foot");
   var es=empRows(w),h="",k,r,zero=0,maxN=0,maxM=0;
-  for(k=0;k<es.length;k++){maxN=Math.max(maxN,es[k].n);maxM=Math.max(maxM,es[k].m);}
-  for(k=0;k<es.length;k++){
-    r=es[k];if(!r.n)zero++;
+  for(k=0;k<es.length;k++){maxN=Math.max(maxN,es[k].n);maxM=Math.max(maxM,es[k].m);if(!es[k].n)zero++;}
+  for(k=0;k<es.length&&k<EMPCAP;k++){
+    r=es[k];
     h+='<div class="rea-mb-emp-row">'
       +'<span class="nm">'+esc(r.o)+'<em>'+esc(r.dept)+'</em></span>'
       +metricCells(r,ESK,maxN,maxM,"m")+'</div>';
   }
   if(box)box.innerHTML=h||'<div class="rea-mb-empty">这个部门的名册里没有员工</div>';
   if(ef)ef.textContent="共 "+es.length+" 人 · "+zero+" 人这段时间零取用";
+  var all=document.getElementById("rea-mb-emp-all");
+  if(all&&all.parentNode)all.parentNode.style.display=es.length>EMPCAP?"":"none";
   syncSort("[data-mb-esort]","data-mb-esort",ESK,ESD,{m:"素材条数"});
+}
+/* 全部员工抽屉：卡片只露前 10 人，其余在这里看全。行序跟卡片当前排序走；
+   员工行仍然不跳转，这里只给排行和数字（PRD §2.5）。 */
+function renderAllEmps(w){
+  var body=document.getElementById("rea-mb-alw-body"),foot=document.getElementById("rea-mb-alw-foot");
+  if(!body)return;
+  var es=empRows(w),h="",k,r,zero=0;
+  for(k=0;k<es.length;k++){
+    r=es[k];if(!r.n)zero++;
+    h+='<tr><td>'+esc(r.o)+'</td><td>'+esc(r.dept)+'</td><td class="num">'+r.n+'</td><td class="num">'+r.m+'</td></tr>';
+  }
+  body.innerHTML=h||'<tr><td colspan="4">这个部门的名册里没有员工</td></tr>';
+  if(foot)foot.textContent="共 "+es.length+" 人 · "+zero+" 人这段时间零取用";
+}
+function openAlw(){
+  renderAllEmps(CURW);
+  var dw=document.getElementById("rea-mb-alw"),mk=document.getElementById("rea-mb-alw-mask");
+  if(mk)mk.hidden=false;
+  if(dw){dw.classList.add("is-on");dw.setAttribute("aria-hidden","false");}
+  var c=document.getElementById("rea-mb-alw-close");if(c)c.focus();
+}
+function closeAlw(){
+  var dw=document.getElementById("rea-mb-alw"),mk=document.getElementById("rea-mb-alw-mask");
+  if(dw){dw.classList.remove("is-on");dw.setAttribute("aria-hidden","true");}
+  if(mk)mk.hidden=true;
 }
 
 /* ================= 群发好友回复 ================= */
@@ -34591,6 +34642,8 @@ function renderAll(){
   renderUse(w);
   renderGroups(w);renderDepts(w);renderEmps(w);
   renderQf(w);
+  var alw=document.getElementById("rea-mb-alw");
+  if(alw&&alw.classList.contains("is-on"))renderAllEmps(w);
   selfCheck(w);
 }
 function applyWin(w){
@@ -34714,6 +34767,14 @@ for(i=0;i<etabs.length;i++)etabs[i].addEventListener("click",function(e){
   if(dp)dp.hidden=key!=="dep";
   if(ep)ep.hidden=key!=="emp";
 });
+/* 员工页卡底「查看全部」：开「全部员工」抽屉；遮罩、×、Esc 关闭。 */
+var eall=document.getElementById("rea-mb-emp-all");
+if(eall)eall.addEventListener("click",function(e){e.preventDefault();openAlw();});
+var alwc=document.getElementById("rea-mb-alw-close");
+if(alwc)alwc.addEventListener("click",closeAlw);
+var alwm=document.getElementById("rea-mb-alw-mask");
+if(alwm)alwm.addEventListener("click",closeAlw);
+document.addEventListener("keydown",function(e){if(e.key==="Escape")closeAlw();});
 /* 群发好友回复：列名翻方向；行 → 素材明细，按标题搜。
    卡片正文是每次渲染重画的，监听挂在容器上，不走逐节点绑定。 */
 var qfw=document.getElementById("rea-mb-qf");
