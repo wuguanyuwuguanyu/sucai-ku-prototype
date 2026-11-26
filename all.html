@@ -39141,10 +39141,11 @@ draw();
     })();`;
   }
 
-  /* 哔哩哔哩互动 · 新建（2026-11-26）：新增「发送方式」。
-     链接发送（默认）：脚本按视频链接直达视频，账号名称／平台账号名称／第几条帖子整行收起，改填「视频链接」；
+  /* 哔哩哔哩互动 · 新建（2026-11-26）：新增「发送方式」，并拿掉「账号名称」那一行
+     （快照里只有一个「账号」选项，没有信息量）。
+     链接发送（默认）：脚本按视频链接直达视频，平台账号名称／第几条帖子整行收起，改填「视频链接」；
      搜索发送：旧流程原样，仅旧版 B站 App 可用（新版 App 节点大概率取不到）。
-     两条提示都走 .rea-bd-help 的 info ＋ tooltip；链接格式只在提交时拦。
+     两条提示都走 info ＋ tooltip；链接格式只在提交时拦。
      正文其余部分仍是快照；本页没有正文缝，两行只能运行时造。覆盖页不归通用接线，
      所以「取消」回列表由本页脚本接（面包屑那枚仍由通用接线兜住）。 */
   var REA_BILI_CSS = `
@@ -39160,10 +39161,15 @@ draw();
   function reaBiliNewJs(){
     return String.raw`(function(){
       if(document.querySelector('[data-rea-bili]')) return;
-      /* 插在「找目标」那组字段的头上：账号名称那一行之前（执行人员的输入没有 id，不能拿它当锚） */
-      var anchor = document.querySelector('#subjectType') || document.querySelector('label[for="doMansElement"]');
+      /* 插在「找目标」那组字段的头上：平台账号名称那一行之前（执行人员的输入没有 id，不能拿它当锚） */
+      var anchor = document.querySelector('#subjectContent') || document.querySelector('label[for="doMansElement"]');
       var row = anchor && anchor.closest('.ant-form-item');
       if(!row) return;
+      /* 账号名称整行拿掉：快照里它只有一个「账号」选项 */
+      var subjectRow = (function(){
+        var el = document.querySelector('#subjectType') || document.querySelector('label[for="subjectType"]');
+        return el && el.closest('.ant-form-item');
+      })();
 
       function formItem(inner){
         return '<div class="ant-form-item css-vgijab ant-form-item-horizontal" data-rea-bili="1">'
@@ -39204,9 +39210,10 @@ draw();
 
       row.parentNode.insertBefore(sendRow, row);
       row.parentNode.insertBefore(linkRow, row);
+      if(subjectRow && subjectRow.parentNode) subjectRow.parentNode.removeChild(subjectRow);
 
       var searchRows = [];
-      ['subjectType', 'subjectContent', 'postIndex'].forEach(function(id){
+      ['subjectContent', 'postIndex'].forEach(function(id){
         var el = document.querySelector('#' + id);
         var fi = el && el.closest('.ant-form-item');
         if(fi) searchRows.push(fi);
@@ -39514,7 +39521,7 @@ draw();
        正文其余部分仍是快照；取消的回程改由本页脚本接（覆盖页不归通用接线） */
     '大众点评互动 · 新建': { css: REA_DP_CSS, js: reaDpNewJs },
     /* 哔哩哔哩互动 · 新建（2026-11-26）：新增「发送方式」（链接发送／搜索发送）与视频链接输入，
-       正文其余部分仍是快照；取消的回程由本页脚本接（覆盖页不归通用接线） */
+       并拿掉「账号名称」那一行；正文其余部分仍是快照；取消的回程由本页脚本接（覆盖页不归通用接线） */
     '哔哩哔哩互动 · 新建': { css: REA_BILI_CSS, js: reaBiliNewJs },
     '微小助看板 · 任务列表': { html: 'srcBoardTasks', css: REA_BOARD_CSS, js: reaBoardTasksJs },
     [REA_METRIC_PAGE]: { html: 'srcBoardTasks', css: REA_BOARD_CSS, js: reaBoardTasksJs },
