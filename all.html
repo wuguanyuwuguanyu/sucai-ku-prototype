@@ -18690,7 +18690,8 @@ render();
     <span class="rea-bd-custom" aria-disabled="true" title="演示数据未接入">自定义区间</span>
   </div>
 
-  <!-- 卡片网格（PRD §2）：第 1 行 4／8，第 2 行通栏，第 3 行 8／4。 -->
+  <!-- 卡片网格（PRD §2）：第 1 行 4／8（使用覆盖 ｜ 取用趋势），第 2 行通栏，
+       第 3 行 6／6（分组使用 ｜ 部门与员工）。 -->
   <div class="rea-bd-grid" id="rea-mb-grid">
 
     <!-- 使用覆盖 · 家底里多少条被用过（素材条数）。
@@ -18725,15 +18726,19 @@ render();
     </div>
 
     <!-- 群发好友回复 · 第 1 行右格（PRD §2.6）。本页唯一的客户侧信号：
-         引用素材的群发好友任务回了多少，再逐条列出被引用的素材；发圈与群发群组没有客户回传。 -->
+         引用素材的群发好友任务回了多少，再逐条列出被引用的素材；发圈与群发群组没有客户回传。
+         2026-11-26 按产品要求先从看板隐藏（卡与渲染逻辑都留着）：恢复时把下面整块放回网格，
+         再把取用趋势的跨度改回 12 即可。 -->
+    <!--
     <div class="rea-bd-card rea-bd-card--w8" id="rea-mb-qf-card">
       <div class="rea-bd-ch"><h6>群发好友回复</h6><span class="rea-mb-sub">引用素材的群发好友任务</span></div>
       <div id="rea-mb-qf"></div>
     </div>
+    -->
 
-    <!-- 取用趋势 · 通栏（PRD §2.3）。用了几次、是发送了还是只复制保存。
+    <!-- 取用趋势 · 第 1 行右格（PRD §2.3，span 8）。用了几次、是发送了还是只复制保存。
          柱是两条线之和（合计），两条线压在上面看构成；粒度跟跨度自动定，31 天以内按日，更长按周。 -->
-    <div class="rea-bd-card rea-bd-card--w12">
+    <div class="rea-bd-card rea-bd-card--w8">
       <div class="rea-bd-ch">
         <h6>取用趋势</h6>
         <span class="rea-mb-sub">发送：一键发送＋一键发圈 · 复制保存：复制＋保存</span>
@@ -39136,6 +39141,125 @@ draw();
     })();`;
   }
 
+  /* 哔哩哔哩互动 · 新建（2026-11-26）：新增「发送方式」。
+     链接发送（默认）：脚本按视频链接直达视频，账号名称／平台账号名称／第几条帖子整行收起，改填「视频链接」；
+     搜索发送：旧流程原样，仅旧版 B站 App 可用（新版 App 节点大概率取不到）。
+     两条提示都走 .rea-bd-help 的 info ＋ tooltip；链接格式只在提交时拦。
+     正文其余部分仍是快照；本页没有正文缝，两行只能运行时造。覆盖页不归通用接线，
+     所以「取消」回列表由本页脚本接（面包屑那枚仍由通用接线兜住）。 */
+  var REA_BILI_CSS = `
+.rea-bili-help{position:relative;display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;flex:0 0 15px;margin-left:6px;border:1px solid #C9CED6;border-radius:50%;color:#8F959E;font-size:10px;line-height:1;font-weight:600;font-style:normal;cursor:help;vertical-align:-2px;-webkit-user-select:none;user-select:none}
+.rea-bili-help:hover,.rea-bili-help:focus-visible{border-color:#1677FF;color:#1677FF}
+.rea-bili-help::after{content:attr(data-tip);position:absolute;left:0;top:calc(100% + 9px);z-index:40;width:max-content;max-width:268px;padding:9px 11px;border-radius:8px;background:#1F2329;color:#fff;font-size:12px;line-height:1.65;font-weight:400;letter-spacing:0;text-align:left;white-space:normal;box-shadow:0 6px 18px rgba(15,29,51,.18);opacity:0;visibility:hidden;transform:translateY(-2px);transition:opacity .12s ease-out,transform .12s ease-out;pointer-events:none}
+.rea-bili-help:hover::after,.rea-bili-help:focus-visible::after{opacity:1;visibility:visible;transform:none}
+.rea-bili-err{display:none;margin:6px 0 0;font-size:12px;line-height:18px;color:#ff4d4f}
+.rea-bili-err.on{display:block}
+.rea-bili-bad{border-color:#ff4d4f!important}
+`;
+
+  function reaBiliNewJs(){
+    return String.raw`(function(){
+      if(document.querySelector('[data-rea-bili]')) return;
+      /* 插在「找目标」那组字段的头上：账号名称那一行之前（执行人员的输入没有 id，不能拿它当锚） */
+      var anchor = document.querySelector('#subjectType') || document.querySelector('label[for="doMansElement"]');
+      var row = anchor && anchor.closest('.ant-form-item');
+      if(!row) return;
+
+      function formItem(inner){
+        return '<div class="ant-form-item css-vgijab ant-form-item-horizontal" data-rea-bili="1">'
+          + '<div class="ant-row ant-form-item-row css-vgijab">' + inner + '</div></div>';
+      }
+      function labelCell(text, required, tip){
+        /* overflow:visible——AntD 的 .ant-form-item-label 与它里面的 label 默认 overflow:hidden，会把 tooltip 裁掉 */
+        return '<div class="ant-col ant-col-4 ant-form-item-label css-vgijab" style="overflow:visible">'
+          + '<label' + (required ? ' class="ant-form-item-required"' : '') + ' style="overflow:visible" title="' + text + '">' + text
+          + '<span class="rea-bili-help" tabindex="0" role="img" aria-label="' + tip + '" data-tip="' + tip + '">?</span>'
+          + '</label></div>';
+      }
+      function controlCell(inner){
+        return '<div class="ant-col ant-form-item-control css-vgijab">'
+          + '<div class="ant-form-item-control-input"><div class="ant-form-item-control-input-content">'
+          + inner + '</div></div></div>';
+      }
+      function radio(value, text, on){
+        return '<label class="ant-radio-button-wrapper' + (on ? ' ant-radio-button-wrapper-checked' : '')
+          + ' ant-radio-button-wrapper-in-form-item css-vgijab">'
+          + '<span class="ant-radio-button' + (on ? ' ant-radio-button-checked' : '') + '">'
+          + '<input name="sendType" class="ant-radio-button-input" type="radio" value="' + value + '"'
+          + (on ? ' checked=""' : '') + '><span class="ant-radio-button-inner"></span></span>'
+          + '<span class="ant-radio-button-label">' + text + '</span></label>';
+      }
+
+      var sendRow = document.createElement('div');
+      sendRow.innerHTML = formItem(
+        labelCell('发送方式', false, '搜索发送：仅旧版 B站 App 可用，新版 App 大概率无法执行脚本。链接发送：按视频链接直接进入视频。')
+        + controlCell('<div class="ant-radio-group ant-radio-group-solid css-vgijab" id="sendType">'
+            + radio('link', '链接发送', true) + radio('search', '搜索发送', false) + '</div>'));
+
+      var linkRow = document.createElement('div');
+      linkRow.innerHTML = formItem(
+        labelCell('视频链接', true, 'B站视频链接 7 天内有效，过期可能失效，需要重新复制。')
+        + controlCell('<input id="videoUrl" class="ant-input css-vgijab ant-input-outlined" placeholder="粘贴 B站视频链接">'
+            + '<div class="rea-bili-err">请输入有效的 B站视频链接</div>'));
+
+      row.parentNode.insertBefore(sendRow, row);
+      row.parentNode.insertBefore(linkRow, row);
+
+      var searchRows = [];
+      ['subjectType', 'subjectContent', 'postIndex'].forEach(function(id){
+        var el = document.querySelector('#' + id);
+        var fi = el && el.closest('.ant-form-item');
+        if(fi) searchRows.push(fi);
+      });
+      var group = sendRow.querySelector('#sendType');
+      var inputs = group.querySelectorAll('input');
+      var url = linkRow.querySelector('#videoUrl');
+      var err = linkRow.querySelector('.rea-bili-err');
+
+      function apply(mode){
+        var link = mode === 'link';
+        for(var i = 0; i < searchRows.length; i++) searchRows[i].style.display = link ? 'none' : '';
+        linkRow.style.display = link ? '' : 'none';
+        for(var j = 0; j < inputs.length; j++){
+          var on = inputs[j].value === mode;
+          inputs[j].checked = on;
+          inputs[j].closest('label').classList.toggle('ant-radio-button-wrapper-checked', on);
+          inputs[j].parentNode.classList.toggle('ant-radio-button-checked', on);
+        }
+        if(!link){ url.classList.remove('rea-bili-bad'); err.classList.remove('on'); }
+      }
+      group.addEventListener('click', function(e){
+        var lab = e.target.closest && e.target.closest('label.ant-radio-button-wrapper');
+        if(!lab || !group.contains(lab)) return;
+        e.preventDefault();
+        apply(lab.querySelector('input').value);
+      });
+      /* 键盘换选项时原生 change 会走这一条（程序里改 checked 不触发 change，不会绕回来） */
+      group.addEventListener('change', function(e){
+        if(e.target && e.target.name === 'sendType') apply(e.target.value);
+      });
+      apply('link');
+
+      url.addEventListener('input', function(){ url.classList.remove('rea-bili-bad'); err.classList.remove('on'); });
+
+      document.addEventListener('click', function(e){
+        var btn = e.target.closest && e.target.closest('button.ant-btn');
+        if(!btn || btn.closest('.ant-modal')) return;
+        var t = (btn.textContent || '').replace(/\s+/g, '');
+        if(t === '取消'){ e.preventDefault(); parent.postMessage({reaPage:'哔哩哔哩互动'}, '*'); return; }
+        if(t !== '提交') return;
+        var linkMode = group.querySelector('input[value="link"]').checked;
+        var v = (url.value || '').trim();
+        if(linkMode && !/bilibili\.com\/video\//.test(v)){
+          e.preventDefault(); e.stopPropagation();
+          url.classList.add('rea-bili-bad'); err.classList.add('on');
+        } else {
+          url.classList.remove('rea-bili-bad'); err.classList.remove('on');
+        }
+      }, true);
+    })();`;
+  }
+
   /* 发布任务新建页的批量素材表＋独立文案列表（2026-11-24），三张新建页共用。
      取值表见 web-admin-prototype §1.2：白底、少框线、表头 #F7F8FA、行高大于 48。 */
   var REA_BULK_CSS = `
@@ -39389,6 +39513,9 @@ draw();
     /* 大众点评互动 · 新建（2026-11-24）：评论区后插一段可增减的「点评页其他必填项」，
        正文其余部分仍是快照；取消的回程改由本页脚本接（覆盖页不归通用接线） */
     '大众点评互动 · 新建': { css: REA_DP_CSS, js: reaDpNewJs },
+    /* 哔哩哔哩互动 · 新建（2026-11-26）：新增「发送方式」（链接发送／搜索发送）与视频链接输入，
+       正文其余部分仍是快照；取消的回程由本页脚本接（覆盖页不归通用接线） */
+    '哔哩哔哩互动 · 新建': { css: REA_BILI_CSS, js: reaBiliNewJs },
     '微小助看板 · 任务列表': { html: 'srcBoardTasks', css: REA_BOARD_CSS, js: reaBoardTasksJs },
     [REA_METRIC_PAGE]: { html: 'srcBoardTasks', css: REA_BOARD_CSS, js: reaBoardTasksJs },
     '微小助看板 · 执行人明细': { html: 'srcBoardTask', css: REA_BOARD_CSS, js: reaBoardTaskJs },
