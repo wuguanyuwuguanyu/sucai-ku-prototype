@@ -39267,6 +39267,43 @@ draw();
     })();`;
   }
 
+  /* 哔哩哔哩互动 · 详情（2026-11-26）：「任务信息」补四格——发送方式、视频链接、平台账号名称、第几条帖子。
+     演示任务按链接发送写：视频链接有值，另两项写「—（链接发送不涉及）」；正文其余部分仍是快照。
+     四格按快照那套 <p> 直接追加，靠它自己的 flex:33% 三列排；视频链接占两格（66%）免得被省略号截掉。 */
+  function reaBiliDetailJs(){
+    return String.raw`(function(){
+      var ps = document.querySelectorAll('p'), anchor = null, i;
+      for(i = 0; i < ps.length; i++){
+        if((ps[i].textContent || '').indexOf('任务名称：') === 0){ anchor = ps[i]; break; }
+      }
+      if(!anchor || !anchor.parentNode) return;
+      var body = anchor.parentNode;
+      if(body.querySelector('[data-rea-bili-detail]')) return;
+
+      function cell(label, value, flex){
+        var p = document.createElement('p');
+        p.setAttribute('data-rea-bili-detail', '1');
+        if(flex) p.style.flex = flex;
+        var a = document.createElement('span');
+        a.textContent = label + '：';
+        var b = document.createElement('span');
+        b.textContent = value;
+        b.title = value;
+        p.appendChild(a);
+        p.appendChild(b);
+        return p;
+      }
+
+      body.appendChild(cell('发送方式', '链接发送'));
+      body.appendChild(cell('视频链接', 'https://www.bilibili.com/video/BV1xx411c7mD', '67%'));
+      body.appendChild(cell('平台账号名称', '—（链接发送不涉及）'));
+      body.appendChild(cell('第几条帖子', '—（链接发送不涉及）'));
+      var blank = document.createElement('p');
+      blank.setAttribute('data-rea-bili-detail', '1');
+      body.appendChild(blank);
+    })();`;
+  }
+
   /* 发布任务新建页的批量素材表＋独立文案列表（2026-11-24），三张新建页共用。
      取值表见 web-admin-prototype §1.2：白底、少框线、表头 #F7F8FA、行高大于 48。 */
   var REA_BULK_CSS = `
@@ -39523,6 +39560,9 @@ draw();
     /* 哔哩哔哩互动 · 新建（2026-11-26）：新增「发送方式」（链接发送／搜索发送）与视频链接输入，
        并拿掉「账号名称」那一行；正文其余部分仍是快照；取消的回程由本页脚本接（覆盖页不归通用接线） */
     '哔哩哔哩互动 · 新建': { css: REA_BILI_CSS, js: reaBiliNewJs },
+    /* 哔哩哔哩互动 · 详情（2026-11-26）：任务信息补发送方式／视频链接／平台账号名称／第几条帖子，
+       正文其余部分仍是快照 */
+    '哔哩哔哩互动 · 详情': { js: reaBiliDetailJs },
     '微小助看板 · 任务列表': { html: 'srcBoardTasks', css: REA_BOARD_CSS, js: reaBoardTasksJs },
     [REA_METRIC_PAGE]: { html: 'srcBoardTasks', css: REA_BOARD_CSS, js: reaBoardTasksJs },
     '微小助看板 · 执行人明细': { html: 'srcBoardTask', css: REA_BOARD_CSS, js: reaBoardTaskJs },
