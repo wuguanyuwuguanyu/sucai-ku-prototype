@@ -1933,7 +1933,7 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
    再叫 hva-act* 会让「日志条目里那排动作标签」和「卡片上这排圆钮」在样式表里撞成一条规则。 */
 /* 头部（2026-10-23 照 Figma「AI托管（已托管）」节点 1438:1327 重排）：
    标题「AI托管」在左上，右上只有一颗齿轮；下面一张 688×250 的浅蓝紫渐变卡，卡里四件——
-   状态点＋状态词、工作时段、闲置条件、白胶囊「停止/开始托管＋开关」；形象从卡右侧探出。
+   状态点＋状态词、工作时段、闲置条件、白胶囊「停止/开启托管＋开关」；形象从卡右侧探出。
    坐标仍是「设计px × 0.5493，y 再减掉 34 状态栏」：标题 36,103、齿轮心 695,121、卡 29,181（高 246）、
    形象 455,172、日历 467,332。卡高 135.4 ＝ 246×0.5493；头卡舞台 214（卡底 200.6 ＋ 13.4 缝到日志卡）。
    ★ 这一版一开始把「减 34」漏了，整段头卡比稿子低 16px；2026-10-23 用像素比对重新量了一遍才对上——
@@ -2029,7 +2029,7 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
 .hva-robot .zzz i:nth-child(2){font-size:14px;opacity:.85;margin-bottom:8px}
 .hva-robot .zzz i:nth-child(3){font-size:18px;margin-bottom:16px}
 /* CTA（2026-10-23 照 1438:1327）：白胶囊＋蓝→紫渐变字＋右端一枚开关。
-   白芯在左＝关态（文案「开始托管」）；开态把开关填成主色渐变、白芯滑到右，文案变「停止托管」——
+   白芯在左＝关态（文案「开启托管」）；开态把开关填成主色渐变、白芯滑到右，文案变「停止托管」——
    状态只从这两处读，胶囊底色不跟着变。尺寸按稿子 190×58 折算成 104.4×31.9，开关 70×40 → 38.5×22。
    渐变字是**文字**不是按钮填充，不在 M3 禁止清单上（同 .hw-add 的先例）。 */
 .hva-cta{position:absolute;left:16.5px;top:94.5px;width:104.4px;height:31.9px;z-index:2;border:0;
@@ -2087,63 +2087,55 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
 /* 就地重画（挂完一枚能力之后，见 hvaMine 的 quiet）：只免掉动画（面板上滑＋遮罩淡入），其余一样。
    遮罩也得免：它跟面板同一次 innerHTML 重建，只留面板不动的话，点一下遮罩会闪一下。 */
 .hva-sheet.quiet,.hva-mask.quiet{animation:none}
-/* ---------------- AI托管主页 · 「托管会做什么」回显（2026-10-27 定稿：动作卡片） ----------------
-   它回答的不是「设置里填了什么」，是「托管开启后，这台手机会替我做哪些事」。
-   正文是**平铺的动作卡**：每张一枚彩色图标＋一个名字，**只这两样**（产品 2026-10-27 点名删掉卡片上的
-   说明文字）。**不再分「后台派来的任务」与「我挂的能力」**——员工只关心手机会做哪几件事，
-   不关心这件事是谁派的；名字仍是那两个来源（HVA_GRPS 的四组后台类型、HVA_MINE 已挂的能力），
-   只是并成一串。精确的 9 类名单仍在设置页的托管范围卡里，主页不再抄一份。
-   三种摆法（A 问号浮层／B 卡可折／C 日志卡头入口）共用这份卡片；空态卡只在 B／C 出现（A 不摆卡），
-   差别只在主页的摆放与入口（见 hvaDoingTopHtml）。
+/* ---------------- AI托管主页 · 「托管清单」回显卡（2026-11-26 照 Figma 节点 2385:3397 重做） ----------------
+   这张卡回答「托管开启后，手机会替我做哪些事」，只做回显、不逐条列任务（任务住在任务页）。
+   正文是两列平铺的能力卡（图标＋名字），**不分后台任务与我挂的能力**：员工只关心手机会做哪几件事，
+   名字仍是那两个来源（HVA_GRPS 的四组后台类型、HVA_MINE 已挂能力），并成一串。
+   版式照稿：卡头一行「托管清单 ✦」＋右侧「调整范围 →」；下面一段**定高滚动区**，
+   露出两行多的能力卡、再往下要滚——稿子上第三行就是被卡底裁掉的（只看到半行）。
+   ★ 定高有据：卡 350 设计px × 0.5493 ≈ 192px；卡头约 44px，余下约 148px 给滚动区。
+   ★ 滚动区自己滚，但**不设 overscroll-behavior:contain**：外层 #hvaPane 是整屏唯一滚动层，
+     内层只接住自己这 148px，滑到底自然把余量甩给整页，不做成截手势的套娃。
+   ★ 空态另有稿（2385:3726）：卡头照旧是「托管清单 ✦」，下面是居中的空插图＋一句
+     「目前暂无托管，去设置任务 →」；没有网格、也没有卡头右侧那枚「调整范围」。
    ★ 空态**别用 .hva-attn**：冒烟钉着「关着时不再挂琥珀提醒卡」那条；这里用 .hva-doing.empty。 */
-.hva-doing{margin:0 0 10px;border-radius:18.7px;padding:13px 16px 12px;
-  background:linear-gradient(180deg,rgba(246,249,255,.98),rgba(255,255,255,.98));
-  box-shadow:0 12px 26px -26px rgba(40,70,150,.9),inset 0 0 0 1px rgba(208,222,255,.62)}
-.hva-doing.empty{background:linear-gradient(180deg,#FFF8EA,#FFFCF6);
-  box-shadow:0 12px 26px -26px rgba(150,100,20,.6),inset 0 0 0 1px rgba(235,178,80,.5)}
-.hva-doing-hd{display:flex;align-items:flex-start;gap:8px;min-height:20px}
-.hva-doing-ttl{display:flex;align-items:center;gap:5px;flex:1;min-width:0;padding-top:1px}
-.hva-doing-ttl b{font-size:15px;font-weight:700;line-height:1.35;color:#213A63;letter-spacing:.01em}
-.hva-doing.empty .hva-doing-ttl b{color:#8A5A12}
-.hva-doing-ttl svg{flex:none;margin-top:2px}
-.hva-doing.empty .hva-doing-ttl svg{color:#D98B1C}
-.hva-doing-tools{display:flex;align-items:center;gap:6px;flex:none;padding-top:1px}
-.hva-doing-set{display:flex;align-items:center;gap:1px;border:0;background:none;
-  padding:2px 3px;font:inherit;font-size:12.5px;font-weight:600;color:#2E6BFF;cursor:pointer;border-radius:8px}
-.hva-doing-set:active{background:rgba(46,107,255,.08)}
-.hva-doing-set i{font-style:normal;font-size:14px;line-height:1;margin-top:-1px}
-/* 标题行收折：整条标题（含箭头）是一个按钮；负外边距把热区撑到 ~32px 高，文字位置不动。 */
-.hva-doing-tg{margin:-6px 0;padding:6px 0 5px;border:0;background:none;font:inherit;
-  text-align:left;cursor:pointer;border-radius:8px;-webkit-tap-highlight-color:transparent}
-.hva-doing-tg:active{background:rgba(46,107,255,.06)}
-.hva-doing-tg .tg-chev{flex:none;display:flex;margin-left:auto;color:#8FA0BC}
-.hva-doing-tg .tg-chev svg{margin-top:0;transform:rotate(-90deg);transition:transform .28s cubic-bezier(.2,0,0,1)}
-.hva-doing.closed .hva-doing-tg .tg-chev svg{transform:rotate(90deg)}
-.hva-doing.empty .hva-doing-set{color:#B8791C}
-/* 动作卡：两列、白卡、图标＋名字。图标块与工具页 .ht-sq 同一套配色（HT_PAL），
+.hva-doing{margin:0 0 10px;border-radius:18.7px;padding:12px 17px 0;height:192px;
+  display:flex;flex-direction:column;overflow:hidden;
+  background:linear-gradient(180deg,rgba(248,246,255,.97),rgba(253,252,255,.97));
+  box-shadow:0 12px 26px -26px rgba(40,70,150,.9),inset 0 0 0 1px rgba(226,224,248,.72)}
+.hva-doing.empty{height:auto;padding-bottom:18px}
+.hva-doing-hd{flex:none;display:flex;align-items:center;gap:8px;min-height:22px}
+.hva-doing-ttl{display:flex;align-items:center;gap:5px;flex:1;min-width:0}
+.hva-doing-ttl b{font-size:17px;font-weight:600;line-height:1.2;letter-spacing:.01em;
+  background-image:linear-gradient(90deg,#245BB9,#102953 80%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.hva-doing-ttl svg{flex:none;margin-top:1px}
+/* 卡头右侧「调整范围 →」。稿子上它是安静的一枚文字入口（#466DAD），不是主色按钮——
+   整屏只有底栏那枚主操作，这里退到次级。 */
+.hva-doing-set{display:flex;align-items:center;gap:2px;flex:none;border:0;background:none;
+  padding:3px 2px;font:inherit;font-size:12.6px;font-weight:500;color:#466DAD;cursor:pointer;border-radius:8px}
+.hva-doing-set:active{background:rgba(70,109,173,.1)}
+.hva-doing-set svg{flex:none;margin-top:1px}
+.hva-doing-scroll{flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;margin-top:9px}
+.hva-doing-scroll::-webkit-scrollbar{display:none}
+/* 能力卡：两列、白卡、图标＋名字。图标块与工具页 .ht-sq 同一套配色（HT_PAL），
    同一条能力在工具页与这里长得一样，人不用重新认。 */
-.hva-doing-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
-.hva-doing-item{display:flex;align-items:center;gap:8px;min-width:0;padding:8px 10px 8px 8px;border-radius:13px;
-  background:#fff;box-shadow:0 6px 14px -14px rgba(40,70,150,.8),inset 0 0 0 1px rgba(214,225,247,.85)}
-.hva-doing-ic{flex:none;width:30px;height:30px;border-radius:10px;
+.hva-doing-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px 10px;padding-bottom:12px}
+.hva-doing-item{display:flex;align-items:center;gap:9px;height:49.4px;min-width:0;padding:0 8px 0 11px;
+  border-radius:13px;background:#fff;
+  box-shadow:0 6px 14px -14px rgba(40,70,150,.8),inset 0 0 0 1px rgba(214,225,247,.85)}
+.hva-doing-ic{flex:none;width:26px;height:26px;border-radius:9px;
   display:flex;align-items:center;justify-content:center;color:#fff}
-.hva-doing-nm{min-width:0;font-size:13px;font-weight:600;line-height:1.3;color:#25395B;
+.hva-doing-nm{min-width:0;font-size:14px;font-weight:500;line-height:1.25;color:#2D528E;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-/* 方案 B 收起：同一张卡，正文收成 0 高，卡头露出「· 第一件 等 N 项」预览。
-   正文用 grid-template-rows 收合（1fr → 0fr），未知高度也能平滑过渡。 */
-.hva-doing-pv{flex:0 1 auto;min-width:0;margin-left:5px;font-size:12.5px;font-weight:400;color:#7C8DA8;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:0;
-  transition:opacity .2s cubic-bezier(.2,0,0,1)}
-.hva-doing.closed .hva-doing-pv{opacity:1}
-.hva-doing-body{display:grid;grid-template-rows:1fr;
-  transition:grid-template-rows .28s cubic-bezier(.2,0,0,1),opacity .2s cubic-bezier(.2,0,0,1)}
-.hva-doing-bodyin{min-height:0;overflow:hidden}
-.hva-doing.closed .hva-doing-body{grid-template-rows:0fr;opacity:0}
-.hva-doing-foot{display:flex;justify-content:flex-end;margin-top:10px}
-/* 系统开了「减少动态效果」时不做高度/旋转过渡，展开态直接显形。 */
-@media (prefers-reduced-motion:reduce){
-  .hva-doing-body,.hva-doing-pv,.hva-doing-tg .tg-chev svg{transition:none}
-}
+/* 空态：居中的空插图＋一枚居中入口。稿子上插图是一摞浅蓝纸，这里用几条浅蓝块近似（ADR-0042 不嵌位图）。 */
+.hva-doing-empty{display:flex;flex-direction:column;align-items:center;padding:14px 0 2px}
+.hva-doing-empty .art{display:block;margin-bottom:8px}
+.hva-doing-empty .go{display:inline-flex;align-items:center;gap:3px;border:0;background:none;
+  padding:4px 6px;font:inherit;font-size:13px;font-weight:500;cursor:pointer;border-radius:8px}
+.hva-doing-empty .go .gt{background-image:linear-gradient(90deg,#1677FE,#9452FF);
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.hva-doing-empty .go svg{flex:none;color:#7A63F0}
 .hva-doing-adot{flex:none;width:7px;height:7px;border-radius:50%;background:#E8A63C;
   box-shadow:0 0 0 2px rgba(232,166,60,.16)}
 /* 方案 C：工作日志卡头右侧那枚文字入口。.hva-lhd 吃渐变字（-webkit-text-fill-color:transparent），
@@ -2164,10 +2156,6 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
 .hva-quick.has-help .hva-qk.help .hva-qkcir{color:#5B7099}
 .hva-quick .hva-qk .hva-doing-adot{position:absolute;right:2px;top:2px;width:7px;height:7px;
   box-shadow:0 0 0 2px rgba(255,255,255,.92)}
-/* 浮层里的卡片比卡上松一点（它在整屏浮层里，不是嵌在日志上方的一条摘要）。 */
-.hva-sheet .hva-doing-grid{margin-top:2px;gap:10px}
-.hva-sheet .hva-doing-item{padding:11px 12px 11px 10px}
-.hva-sheet .hva-doing-nm{font-size:13.5px}
 /* 从主页「调整范围」跳到设置页时，范围卡闪一下，告诉人落在哪。 */
 .hva-scope-hit{animation:hvaScopeHit 1.8s ease}
 @keyframes hvaScopeHit{
@@ -2191,19 +2179,23 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
   background-image:linear-gradient(90deg,#245BB9,#102953 80%);
   -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
 .hva-lhd svg{flex:none;margin-top:4.4px}
-/* 日期带：日大月小居中对齐，两侧细线 flex 平分。线在徽的 05月 那一行高度上（稿子 y=641），
-   不是正中——`translateY(4px)` 就是把线从徽心挪到那行。 */
-.hva-day{display:flex;align-items:center;margin:0 2px 3px}
-.hva-day .ln{flex:1;height:1px;background:#E0E1FF;transform:translateY(4px)}
-.hva-day .b{position:relative;flex:none;padding:0 16px 0 15px;text-align:center}
-/* 徽底那团青蓝晕（稿子 1336:6514：椭圆 ＋ 19px 高斯模糊、28% 不透明）。它只是衬底，不参与命中 */
-.hva-day .b::before{content:"";position:absolute;left:0;right:0;top:2px;bottom:-2px;z-index:0;
-  background:radial-gradient(58% 64% at 50% 55%,rgba(23,255,171,.2),rgba(0,106,255,.18) 60%,rgba(0,106,255,0) 78%);
-  filter:blur(5px);pointer-events:none}
-.hva-day .dd,.hva-day .mm{position:relative;z-index:1;display:block;color:#333}
-.hva-day .dd{font-size:18.7px;font-weight:600;line-height:20.9px}
-.hva-day .mm{margin-top:.5px;font-size:11px;line-height:12.1px}
-.hva-day .mm b{font-weight:600}   /* 「05」比「月」重一档（稿子：数字 SemiBold、月 Regular） */
+/* 日期行（2026-11-26 照 Figma 节点 2385:3397）：左边一枚小台历，右边一行「M月D日」。
+   稿子上不再是原先居中的日子徽＋两侧细线——那版是 1438:1327 的事，这一版把日期靠左、
+   和下面的时间线同一条起跑线，读起来是「日志从哪一天开始」而不是一枚装饰徽。 */
+.hva-day{display:flex;align-items:center;gap:9px;margin:0 0 8px}
+/* 小台历：白页＋蓝紫顶栏＋两枚环，右下角一枚勾。盒 40×36 设计px × 0.5493 ≈ 22×20。 */
+.hva-daycal{position:relative;flex:none;width:22px;height:20px;border-radius:5px;overflow:hidden;
+  background:linear-gradient(160deg,#F4FAFF 0%,#DCEAFF 100%);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.9),0 2px 6px -3px rgba(78,110,200,.7)}
+.hva-daycal::before{content:"";position:absolute;left:0;right:0;top:0;height:5.5px;
+  background:linear-gradient(90deg,#6FA0FF,#7E86FF)}
+.hva-daycal i{position:absolute;top:2.5px;width:2px;height:4px;border-radius:1px;background:#9FC0FF}
+.hva-daycal i:nth-child(1){left:4.5px}
+.hva-daycal i:nth-child(2){right:4.5px}
+.hva-daycal b{position:absolute;left:0;right:0;top:7px;bottom:0;display:flex;align-items:center;
+  justify-content:center;color:#5E86E8}
+.hva-day .dt{font-size:18px;font-weight:600;line-height:1;color:#333}
+.hva-day .dt small{font-size:14.5px;font-weight:600;margin:0 1px}
 .hva-entries + .hva-day{margin-top:14px}
 .hva-entry{position:relative;padding:0 0 8px 26.9px}
 /* 虚线轴：稿子是一条 1.1px、1.87 实／1.87 空的竖向虚线，顶紫底蓝。用重复遮罩切，比 border-style:dashed 好控节奏 */
@@ -8342,13 +8334,12 @@ REND['host-task']=function(){
 var HVA_ON=false;              /* 托管总开关。默认关：先让人看清「开着之后它会替我做什么」，再看怎么开 */
 /* 头卡布局固定为方案一（2026-10-27 产品定稿）：形象居中打底、标题左上、CTA 压底。
    方案二／方案三连同那枚对比开关一并下线，别再按旧注释去找分支。 */
-/* 托管回显（2026-10-27 起是动作卡片）：主页用哪种方式讲
-   「托管开启后手机会做什么」。a＝问号浮层、b＝卡可折、c＝日志卡头入口；三版共用卡片与空态。
-   A（卡可关）2026-10-27 产品删掉：同一张卡既能折又能关是两套退场方式，留一套就够。
-   默认 c，且首屏直接展开——产品要看卡片本体；收起后仍是一行。定稿后删掉对比开关、只留一套。 */
+/* 托管回显：主页用哪种方式讲「托管开启后手机会做什么」。
+   a＝问号浮层、b＝主页一张卡、c＝日志卡头入口；三版共用同一份能力卡与空态。
+   B 2026-11-26 随 Figma 2385:3397 改成**常显的定高滚动卡**（不再收起）：
+   卡头右侧「调整范围 →」是唯一入口，能力卡在卡内自己滚。定稿后删掉对比开关、只留一套。 */
 var HVA_DOING_MODE='b';
 var HVA_DOING_EMPTY_DEMO=false;  /* 原型对比用：只在主页演示空态，不动 HVA_SCOPE／HVA_MINE */
-var HVA_DOING_B_OPEN=null;       /* B 的展开态；null＝首屏展开（空态同样展开） */
 /* HVA_VIEW／HVA_SCHEME／HVA_SCHEMES／HVA_SUBS 四格 2026-10-16 一并删（见 ADR-0065）：
    前两格驱动的是「托管清单｜工作日志」的分栏与那套甲／乙排法演示，后两格是清单的两个来源与
    「我的」页那张临时的「演示」卡。托管清单那一屏整块撤掉之后，这一屏只剩工作日志一栏——
@@ -8660,8 +8651,7 @@ function hvaActList(){
 }
 /* 工作日志＝托管真做过的事，按日倒序。日期钉在任务页那一天（TK_TODAY＝2026-10-04）：
    宿主两屏说的是同一天，来回切才不会一会儿 10 月 4 日、一会儿别的日子。
-   日期拆成 d（日子）／m（月份数字）两段：稿子把它排成居中的日子徽（日大、月小），
-   一行「8月25日」的写法拆不开——渲染见 hvaLogHtml 那条日期带。
+   日期拆成 d（日子）／m（月份数字）两段，渲染时拼成「M月D日」一行（见 hvaLogHtml 那条日期行）。
    正文里的 [[…]] 是要强调的词，渲染时才换成渐变强调字（见 hvaMark）——不让数据里直接写 HTML，
    那样改一个字都得担心标签配不配得平。 */
 var HVA_LOG=[
@@ -8796,7 +8786,7 @@ function hvaGearHex(){
    动作卡**：每张只有图标与名字，**不分「后台派来的任务」与「我挂的能力」**——那两族的名字仍各自来自
    HVA_TYPES（9 类后台任务按 HVA_GRPS 归并、取组内第一条在范围内的类型名）与 HVA_MINE（我挂的能力），
    只是并成一串、不再分行。精确的类型名单仍在设置页的托管范围卡里，不在主页再抄一份。
-   三种摆法（A 问号浮层／B 卡可折／C 日志卡头入口）共用这份卡片；空态卡只在 B／C 出现（A 不摆卡），
+   三种摆法（A 问号浮层／B 主页卡片／C 日志卡头入口）共用这份卡片；空态卡只在 B／C 出现（A 不摆卡），
    差别只在 hvaDoingTopHtml 的摆放与入口。 */
 var HVA_DOING_GRP_META={
   /* 4 组后台任务的卡片脸。键是内部组名（见 HVA_GRPS），不是卡上标题——标题取类型名；
@@ -8859,12 +8849,6 @@ function hvaDoingItems(){
   }
   return o;
 }
-/* 收起那行右侧的预览。从前是把三行正文缩成一句「发朋友圈、加好友…」——太长，且读着像设置摘要；
-   现在只报「第一件事 ＋ 共几项」，点到卡里看全。 */
-function hvaDoingPreview(){
-  var a=hvaDoingItems();
-  return a.length?(a[0].n+(a.length>1?' 等 '+a.length+' 项':'')):'';
-}
 function hvaDoingCardsHtml(){
   var its=hvaDoingItems(),i,t,pa,h;
   if(hvaDoingEmpty())return '';
@@ -8878,38 +8862,38 @@ function hvaDoingCardsHtml(){
   }
   return h+'</div>';
 }
-function hvaDoingTitle(){
-  if(hvaDoingEmpty())return '托管还不会执行任务';
-  return '托管清单';
+/* 空态那张插画（稿子 2385:3726 是一摞浅蓝纸）。ADR-0042 不嵌位图，用几块浅蓝近似，
+   远看是一摞纸就行——它不是信息，只是把空卡撑出个样子。 */
+function hvaEmptyArt(){
+  return '<svg class="art" width="52" height="46" viewBox="0 0 52 46" aria-hidden="true">'
+    +'<rect x="6" y="14" width="34" height="25" rx="5" fill="#DCE7FF"/>'
+    +'<rect x="12" y="9" width="33" height="25" rx="5" fill="#C6D8FF"/>'
+    +'<path d="M15 5h20l6 6v22a3 3 0 0 1-3 3H15a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3z" fill="#EDF3FF" stroke="#AFC6F2" stroke-width="1.4"/>'
+    +'<path d="M35 5v6h6" fill="none" stroke="#AFC6F2" stroke-width="1.4" stroke-linejoin="round"/>'
+    +'<path d="M19 19h14M19 24h14M19 29h9" stroke="#9FB9F0" stroke-width="1.7" stroke-linecap="round"/>'
+  +'</svg>';
 }
+/* 主页那张「托管清单」卡（2026-11-26 照 2385:3397）：卡头固定，能力卡在卡内定高滚动，不再收起。
+   卡头固定是「托管清单 ✦」——空态也一样（稿子 2385:3726），空态换成居中插画＋一句入口。 */
 function hvaDoingCardHtml(){
-  var empty=hvaDoingEmpty(),tg=HVA_DOING_MODE==='b'&&!empty,open=HVA_DOING_B_OPEN!==false;
-  var face=(empty?I('alert',14,2):hvaLogSpk(13))+'<b>'+hvaDoingTitle()+'</b>';
-  /* 收折挂在**标题行**上（方案 B）：标题连同前面那枚图标整条可点，箭头只是提示。
-     收起与展开是**同一张卡**：正文（网格＋底部「调整范围」）收成 0 高，卡头露出
-     「· 第一件 等 N 项」预览；收起态卡头只剩标题与箭头，不再有第二个操作。 */
-  var hd=tg
-    ?'<button class="hva-doing-ttl hva-doing-tg" onclick="hvaDoingBToggle()" aria-expanded="'+(open?'true':'false')+'" title="'+(open?'收起':'展开')+'" aria-label="'+(open?'收起':'展开')+'托管清单">'
-      +face+'<span class="hva-doing-pv" aria-hidden="true">· '+esc(hvaDoingPreview())+'</span>'
-      +'<span class="tg-chev">'+I('chev',14,2.4)+'</span></button>'
-    :'<div class="hva-doing-ttl">'+face+'</div>';
-  var body=tg
-    ?'<div class="hva-doing-body"><div class="hva-doing-bodyin">'+hvaDoingCardsHtml()
-      +'<div class="hva-doing-foot"><button class="hva-doing-set" onclick="hvaDoingGoSet()">调整范围<i>›</i></button></div>'
-    +'</div></div>'
-    :hvaDoingCardsHtml();
-  return '<div class="hva-doing'+(empty?' empty':'')+((tg&&!open)?' closed':'')+'">'
-    +'<div class="hva-doing-hd">'+hd
-      +'<div class="hva-doing-tools">'
-        +(empty?'<button class="hva-doing-set" onclick="hvaDoingGoSet()">去设置<i>›</i></button>':'')
+  var empty=hvaDoingEmpty();
+  var hd='<div class="hva-doing-hd"><div class="hva-doing-ttl">'+hvaLogSpk(14)+'<b>托管清单</b></div>'
+    +(empty?'':'<button class="hva-doing-set" onclick="hvaDoingGoSet()">调整范围'+I('chev',12,2.4)+'</button>')
+    +'</div>';
+  if(empty){
+    return '<div class="hva-doing empty">'+hd
+      +'<div class="hva-doing-empty">'+hvaEmptyArt()
+        +'<button class="go" onclick="hvaDoingGoSet()"><span class="gt">目前暂无托管，去设置任务</span>'+I('chev',12,2.6)+'</button>'
       +'</div>'
-    +'</div>'
-    +body
+    +'</div>';
+  }
+  return '<div class="hva-doing">'+hd
+    +'<div class="hva-doing-scroll">'+hvaDoingCardsHtml()+'</div>'
   +'</div>';
 }
 /* 三种摆法：A 只在头卡留一枚「?」，主页不摆卡；C 只在日志卡头留一枚入口，正常态也不摆卡；
-   B 是主页那张卡，展开／收起都由卡头本身切换（同一张卡，收起只把正文收成 0 高）。
-   空态是例外：B／C 都摆一张**静态**琥珀卡——不折、不收，C 同时收起日志入口
+   B 是主页那张**常显的定高滚动卡**（不再收起）。
+   空态是例外：B／C 都摆一张**静态**卡——不滚、不收，C 同时收起日志入口
    （卡就在上方，同一件事不必两个入口）。A 不摆卡，提醒只留在「?」那枚琥珀点上。 */
 function hvaDoingTopHtml(){
   if(HVA_DOING_MODE==='a')return '';
@@ -8918,29 +8902,16 @@ function hvaDoingTopHtml(){
 }
 /* 对比开关的两个入口（只在设置页出现；定稿后连同那张卡一起删）。 */
 function hvaDoingMode(v){
-  HVA_DOING_MODE=v;HVA_DOING_B_OPEN=null;
+  HVA_DOING_MODE=v;
   hvaDoingSheet(false);
   REND['host-ai']();REND['host-ai-set']();
   toast('主页回显已切到方案 '+v.toUpperCase());
 }
 function hvaDoingDemo(v){
-  HVA_DOING_EMPTY_DEMO=v;HVA_DOING_B_OPEN=null;
+  HVA_DOING_EMPTY_DEMO=v;
   REND['host-ai']();REND['host-ai-set']();
   toast(v?'主页正在演示空范围（不改设置里的真实范围）':'主页已回到真实范围');
 }
-/* 收起／展开只动这张卡本身：正文用 grid-template-rows 从 1fr 收到 0fr（0.28s，M3 emphasized），
-   卡头预览与箭头同步转；**不重绘整屏**——重绘会打断过渡。 */
-function hvaDoingBOpen(open){
-  HVA_DOING_B_OPEN=!!open;
-  var c=document.querySelector('#hvaPane .hva-doing');
-  if(!c){REND['host-ai']();return;}
-  c.classList.toggle('closed',!open);
-  var b=c.querySelector('.hva-doing-tg');
-  if(b){b.setAttribute('aria-expanded',open?'true':'false');
-    b.setAttribute('aria-label',(open?'收起':'展开')+'托管清单');
-    b.setAttribute('title',open?'收起':'展开');}
-}
-function hvaDoingBToggle(){ hvaDoingBOpen(HVA_DOING_B_OPEN===false); }
 /* 「调整范围」的落点：切到设置页，滚到范围卡并闪一下。转场 320ms，等它走完再滚。 */
 function hvaDoingGoSet(){
   hvaDoingSheet(false);
@@ -9004,7 +8975,7 @@ function hvaCalArt(){
 /* 页头（2026-10-23 照 Figma「AI托管（已托管）」节点 1438:1327 重排；2026-10-27 定稿只留这一套）：
    左上标题「AI托管」，右上齿轮，下面一张状态卡（状态点＋状态词／工作时间／闲置条件／
    「停止托管」白胶囊＋开关），形象从卡右侧探出，恒带一台台历。
-   ★ 状态词与 CTA 是同一件事的两面：开＝正在托管中／停止托管，关＝托管已暂停／开始托管。
+   ★ 状态词与 CTA 是同一件事的两面：开＝正在托管中／停止托管，关＝托管关闭中／开启托管。
    ★ 卡上那两行是**托管条件的现值**（HVA_WORK／HVA_IDLE），不是装饰文案；改条件时它会跟着重画
      （hvaIdle 等入口会调 REND['host-ai']）。
    ★ 「托管由哪位数智员工执行」不再摆在页头上（稿子上没有名字）：只留在读屏里（.hva-kicker），
@@ -9012,11 +8983,11 @@ function hvaCalArt(){
 function hvaHeroHtml(){
   return '<div class="hva-hero">'
     +'<div class="hva-card-a'+(HVA_ON?'':' off')+'">'
-      +'<div class="hva-st"><i></i><b>'+(HVA_ON?'正在托管中':'托管已暂停')+'</b></div>'
+      +'<div class="hva-st"><i></i><b>'+(HVA_ON?'正在托管中':'托管关闭中')+'</b></div>'
       +'<div class="hva-cond c1"><span class="ic">'+I('clock',12.9,1.9)+'</span><span>工作时间'+HVA_WORK+'</span></div>'
       +'<div class="hva-cond c2"><span class="ic">'+I('send',12.9,1.9)+'</span><span>闲置'+HVA_IDLE+'分钟后自动执行</span></div>'
       +'<button class="hva-cta'+(HVA_ON?' on':'')+'" onclick="hvaToggle()" role="switch" aria-checked="'+(HVA_ON?'true':'false')+'">'
-        +'<span class="tx">'+(HVA_ON?'停止托管':'开始托管')+'</span>'
+        +'<span class="tx">'+(HVA_ON?'停止托管':'开启托管')+'</span>'
         +'<span class="hva-sw" aria-hidden="true"><i></i></span>'
       +'</button>'
     +'</div>'
@@ -9048,11 +9019,11 @@ function hvaHeroHtml(){
    设置页那张范围卡走的是另一条路（直接列 HVA_SCOPE，见 REND['host-ai-set']），不经过它。 */
 function hvaInScope(ty){ return HVA_SCOPE.indexOf(ty)>=0; }
 /* 工作日志（稿子 1336:6328「列表」段）：**整段一张白卡**，卡头一行「工作日志 ✦」，
-   下面按日倒序：一天一条日期带（日子大、月份小，两侧细线），再接一条时间轴——
-   左侧虚线竖轨，每个时间点一枚渐变底＋白色时针的小圆钟，再往右是正文与各种块。
+   下面按日倒序：一天一条日期行（2026-11-26 照 2385:3397 改成靠左的小台历＋「M月D日」），
+   再接一条时间轴——左侧虚线竖轨，每个时间点一枚渐变底＋白色时针的小圆钟，再往右是正文与各种块。
    条目上的状态标签（已完成／进行中）随新稿撤掉：稿子只留时间，状态那件事改由正文说。
    块有三种：quote（原帖引用）、acts（四枚互动动作）、box（AI仿写／固定话术两行）。
-   日期不再是一行「8月25日」的字，而是 {d:日子, m:月份} 两段（见 HVA_LOG 上头那段）。 */
+   日期在数据里还是 {d:日子, m:月份} 两段（见 HVA_LOG 上头那段），渲染时拼成「M月D日」一行。 */
 function hvaLogHtml(){
   var h='',i,j,k,m;
   h='<div class="hva-logcard"><div class="hva-lhd">工作日志'+hvaLogSpk(15)
@@ -9060,8 +9031,8 @@ function hvaLogHtml(){
     +'</div>';
   for(i=0;i<HVA_LOG.length;i++){
     var d=HVA_LOG[i];
-    h+='<div class="hva-day"><i class="ln"></i><span class="b"><span class="dd">'+d.d+'</span>'
-      +'<span class="mm"><b>'+d.m+'</b>月</span></span><i class="ln"></i></div>'
+    h+='<div class="hva-day"><span class="hva-daycal" aria-hidden="true"><i></i><i></i><b>'+I('check',9,2.2)+'</b></span>'
+      +'<span class="dt">'+String(+d.m)+'<small>月</small>'+String(+d.d)+'<small>日</small></span></div>'
       +'<div class="hva-entries">';
     for(j=0;j<d.es.length;j++){
       var e=d.es[j],b='';
@@ -9433,7 +9404,7 @@ REND['host-ai-set']=function(){
     +'<div class="hva-txt">原型对比用：主页用哪种方式告诉员工「托管开启后手机会做什么」；只影响主页表达，不改托管设置</div>'
     +'<div class="hva-segpad"><div class="hva-layseg">'
     +'<button class="'+(HVA_DOING_MODE==='a'?'on':'')+'" onclick="hvaDoingMode(\'a\')"><b>方案 A</b><small>问号·浮层</small></button>'
-    +'<button class="'+(HVA_DOING_MODE==='b'?'on':'')+'" onclick="hvaDoingMode(\'b\')"><b>方案 B</b><small>卡片·可折</small></button>'
+    +'<button class="'+(HVA_DOING_MODE==='b'?'on':'')+'" onclick="hvaDoingMode(\'b\')"><b>方案 B</b><small>卡片·可滚</small></button>'
     +'<button class="'+(HVA_DOING_MODE==='c'?'on':'')+'" onclick="hvaDoingMode(\'c\')"><b>方案 C</b><small>日志·入口</small></button>'
     +'</div></div>'
     +'<div class="hva-segpad"><div class="hva-layseg">'
