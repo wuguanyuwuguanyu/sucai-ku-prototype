@@ -2199,17 +2199,16 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
        时间字样也从浅蓝改成 #333；
      · 一天一张卡改成**整段一张卡**（稿子的「模块」只画了一张，标题也在卡里）。
    卡内左边距 17.6（标题与日期带起跑线），条目再缩进 26.9：让出 13.2 的圆钟与 1.1 的虚线轴。 */
-.hva-logcard{border-radius:18.7px;padding:9.3px 21.4px 22px 17.6px;
-  background:linear-gradient(180deg,rgba(248,246,255,.96),rgba(255,255,255,.96));
+.hva-logcard{border-radius:18.7px;padding:12px 21.4px 22px 17.6px;
+  background:linear-gradient(180deg,rgba(248,246,255,.97),rgba(253,252,255,.97));
   box-shadow:0 12px 26px -24px rgba(70,60,150,.45),inset 0 0 0 1px rgba(222,221,246,.95)}
-/* 卡头：17.6 的渐变字＋右边一枚双星（稿子 1336:6412 的「ai」，图形见 hvaLogSpk）。
-   2026-10-23 照 1438:1327 把字改成**蓝→藏青**（与标题同一支），星仍是蓝→紫。
-   星比字低一点点（稿子星心在 x 基线上），所以 gap 之后还要往下推 2.2。 */
-.hva-lhd{display:flex;align-items:center;gap:4px;height:19.8px;margin:0 0 9.3px;
-  font-size:17.6px;font-weight:600;line-height:19.8px;letter-spacing:.01em;
+/* 卡头（2026-11-26 与「托管清单」卡对齐）：左边一枚双星、右边标题，字走蓝→藏青渐变。
+   星图形见 hvaLogSpk（稿子 1336:6412 的「ai」）；上距随卡顶 padding 12，与托管清单卡同一条起跑线。 */
+.hva-lhd{display:flex;align-items:center;gap:5px;height:22px;margin:0 0 9.3px;
+  font-size:17px;font-weight:600;line-height:1.2;letter-spacing:.01em;
   background-image:linear-gradient(90deg,#245BB9,#102953 80%);
   -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
-.hva-lhd svg{flex:none;margin-top:4.4px}
+.hva-lhd svg{flex:none;margin-top:1px}
 /* 日期行（2026-11-26 照 Figma 节点 2385:3397）：左边一枚小台历，右边一行「M月D日」。
    稿子上不再是原先居中的日子徽＋两侧细线——那版是 1438:1327 的事，这一版把日期靠左、
    和下面的时间线同一条起跑线，读起来是「日志从哪一天开始」而不是一枚装饰徽。 */
@@ -9116,7 +9115,7 @@ function hvaInScope(ty){ return HVA_SCOPE.indexOf(ty)>=0; }
    日期在数据里还是 {d:日子, m:月份} 两段（见 HVA_LOG 上头那段），渲染时拼成「M月D日」一行。 */
 function hvaLogHtml(){
   var h='',i,j,k,m;
-  h='<div class="hva-logcard"><div class="hva-lhd">工作日志'+hvaLogSpk(15)
+  h='<div class="hva-logcard"><div class="hva-lhd">'+hvaLogSpk(15)+'工作日志'
     +(HVA_DOING_MODE==='c'&&!hvaDoingEmpty()?'<button class="hva-doing-loglink" onclick="hvaDoingSheet(true)">托管会做什么'+I('chev',13,2.4)+'</button>':'')
     +'</div>';
   for(i=0;i<HVA_LOG.length;i++){
