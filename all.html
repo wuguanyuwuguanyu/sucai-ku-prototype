@@ -2129,10 +2129,10 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
 .hva-doing-nm{min-width:0;font-size:14px;font-weight:500;line-height:1.25;color:#2D528E;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 /* ---------------- 清单排法 · banner 翻页（2026-11-26 加；设置页「清单排法」三档切） ----------------
-   一页 2 列 × 3 行共 6 条，横向／纵向只差滚动轴，整页吸附（不是自由滚，停在哪页就是哪页）。
-   卡高不再固定 192：轨道给足 3 行（49.4×3＋13×2＝174.2）；网格那套不动，仍是 192
+   一页 2 列 × 2 行共 4 条，横向／纵向只差滚动轴，整页吸附（不是自由滚，停在哪页就是哪页）。
+   卡高不再固定 192：轨道给足 2 行（49.4×2＋13＝111.8）；网格那套不动，仍是 192
    （第三行照稿被卡底裁掉）。
-   ★ 页指示只在一页装不下（>6 条）时出现：单页没有可翻的页，摆一排圆点等于答一个没问的问题。
+   ★ 页指示只在一页装不下（>4 条）时出现：单页没有可翻的页，摆一排圆点等于答一个没问的问题。
      圆点标位置、可点跳页；不另给「1/2」页码——两页时圆点本身已经答得清第几页。
    ★ 圆点的方向跟着滚动轴走：横向的在卡底排成一行；纵向的立到轨道右侧成一列，卡底不再留那一行，
      所以纵向卡比横向矮 35。那列圆点落在卡片自身的 17 右留白里（绝对定位按 padding box 算），
@@ -2141,7 +2141,7 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
    ★ 纵向轨道与外层整屏滚动同向：不设 overscroll-behavior，翻到最后一页余量交给整页（同上面那条）。 */
 .hva-doing.banner{height:auto}
 .hva-doing.banner.y{position:relative}
-.hva-doing-track{flex:none;height:175px;margin-top:9px;display:flex;scrollbar-width:none}
+.hva-doing-track{flex:none;height:112px;margin-top:9px;display:flex;scrollbar-width:none}
 .hva-doing-track::-webkit-scrollbar{display:none}
 .hva-doing-track.x{overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory}
 .hva-doing-track.y{overflow-y:auto;overflow-x:hidden;scroll-snap-type:y mandatory;flex-direction:column}
@@ -2150,7 +2150,7 @@ body.cw-dragging #cwContentFoot{opacity:.35;pointer-events:none;transition:opaci
 .hva-doing-pager{flex:none;display:flex;align-items:center;justify-content:center;gap:2px;
   height:18px;margin:7px 0 10px}
 /* 纵向：圆点列站在轨道右侧、跟轨道等高并竖向居中。top 43 ＝ 卡顶 12＋卡头 22＋轨道上留 9。 */
-.hva-doing.banner.y .hva-doing-pager{position:absolute;right:0;top:43px;width:16px;height:175px;
+.hva-doing.banner.y .hva-doing-pager{position:absolute;right:0;top:43px;width:16px;height:112px;
   margin:0;flex-direction:column;justify-content:center;gap:4px}
 .hva-pdot{position:relative;width:20px;height:18px;padding:0;border:0;background:none;cursor:pointer}
 .hva-pdot::before{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
@@ -8905,7 +8905,7 @@ function hvaDoingCardsHtml(){
    只有主页那张卡吃这套；A／C 的「托管会做什么」浮层仍用网格——浮层不限定高度，
    没有“一页装不下”这件事，翻页在那一层只是多一道手势。 */
 function hvaDoingBannerHtml(){
-  var its=hvaDoingItems(),per=6,pages=[],i,n,h,p,j;
+  var its=hvaDoingItems(),per=4,pages=[],i,n,h,p,j;
   for(i=0;i<its.length;i+=per)pages.push(its.slice(i,i+per));
   n=pages.length;
   h='<div class="hva-doing-track '+HVA_DOING_LAY+'"'+(n>1?' onscroll="hvaDoingScroll(this)"':'')+'>';
