@@ -18866,10 +18866,11 @@ render();
       <div class="rea-mb-foot"><span id="rea-mb-grp-foot"></span></div>
     </div>
 
-    <!-- 部门与员工 · 第 4 行右格（PRD §2.5）。一张卡两个页签，各自记排序：
-         部门页看哪个部门在横向用、哪个一条没碰；员工页看谁在用、谁一条没碰。
-         两页都是「名字 · 一根满宽横条 · 两个数字」，条只画当前选中那一列。
-         员工行不进明细——个人明细在素材明细的「谁用过」抽屉里，这一页只给数。 -->
+    <!-- 部门与员工 · 第 4 行右格（PRD §2.5，ADR-0121）。一张卡两个页签，各自记排序：
+         部门页只列当前范围的**直接下级**，一行 ＝ 该部门及其全部下级；
+         员工页看这个范围里谁在用、谁一条没碰。两页都是「名字 · 一根满宽横条 · 两个数字」。
+         点部门行 → 部门 · 员工使用明细；点员工行 → 员工 · 素材使用明细。
+         范围落到叶子部门时页签收起、固定员工页。 -->
     <div class="rea-bd-card rea-bd-card--w6" id="rea-mb-orgcard">
       <div class="rea-bd-ch">
         <h6>部门与员工</h6>
@@ -18949,8 +18950,9 @@ render();
     <a class="rea-bd-back" href="#" data-mb-back>← 返回看板</a>
   </div>
 
-  <!-- 搜索 ＋ 五轴筛选（PRD §2.7）：分组 / 类型 / 使用状态 / 状态 / 部门。
-       从看板各入口进来时带着当前时间范围与部门，并按入口预筛。 -->
+  <!-- 搜索 ＋ 四轴筛选（PRD §2.7）：分组 / 类型 / 使用状态 / 状态。
+       部门不在这条栏里——范围跟左侧部门树走（ADR-0121），页内再放一个部门下拉
+       就会和树打架，同一条素材也会出现两套数。 -->
   <div class="rea-bd-fbar rea-mb-filters">
     <input class="rea-mb-search" id="rea-mb-q" type="search" placeholder="搜索素材标题" aria-label="搜索素材标题">
     <select class="rea-bd-sel" id="rea-mb-f-group" aria-label="分组"></select>
@@ -18971,7 +18973,6 @@ render();
       <option value="已发布">已发布</option>
       <option value="已过期">已过期</option>
     </select>
-    <select class="rea-bd-sel" id="rea-mb-f-dept" aria-label="部门"></select>
     <span class="rea-bd-count" id="rea-mb-count"></span>
   </div>
 
@@ -19078,6 +19079,96 @@ render();
 
 </div>
 <div class="rea-mb-toast" id="rea-md-toast" hidden></div>
+</div></div>
+</script>
+
+<!-- 部门 · 员工使用明细（二级页，2026-11-27 · ADR-0121）：从部门与员工卡的部门行进来。
+     只回答「这个部门（含下级）谁在用、谁一条没碰」；点人再进员工 · 素材使用明细。
+     列与卡片员工页同一套口径，卡片只有 10 行、这里给全量并可按姓名搜。 -->
+<script type="text/plain" id="srcMbDept"><div class="ant-spin-nested-loading css-vgijab rea-bd-page"><div class="ant-spin-container">
+<div class="_board_gf4go_1 rea-bd-sec rea-bd-shell">
+
+  <div class="rea-bd-hero">
+    <h1 id="rea-dept-title">员工使用明细</h1>
+    <a class="rea-bd-back" href="#" id="rea-dept-back">← 返回素材看板</a>
+    <span class="rea-bd-upd">数据更新于 <span id="rea-dept-now"></span></span>
+  </div>
+
+  <div class="rea-md-scope" id="rea-dept-scope"></div>
+
+  <div class="rea-bd-fbar rea-mb-filters">
+    <input class="rea-mb-search" id="rea-dept-q" type="search" placeholder="搜索员工姓名" aria-label="搜索员工姓名">
+    <span class="rea-bd-count" id="rea-dept-count"></span>
+    <span class="rea-mb-fbar-end"><a href="#" id="rea-dept-mats" class="rea-mb-link">看这个部门用过的素材 <span class="rea-bd-chev" aria-hidden="true">›</span></a></span>
+  </div>
+
+  <div class="rea-bd-card rea-bd-card--w12">
+    <div class="rea-mb-scroll">
+      <table class="rea-mb-tbl">
+        <colgroup><col><col style="width:160px"><col style="width:110px"><col style="width:110px"></colgroup>
+        <thead><tr>
+          <th>员工</th>
+          <th>部门</th>
+          <th class="num"><span class="sortc on" role="button" tabindex="0" data-dept-sort="count">取用次数 <i>↓</i></span></th>
+          <th class="num"><span class="sortc" role="button" tabindex="0" data-dept-sort="m">素材条数 <i>↕</i></span></th>
+        </tr></thead>
+        <tbody id="rea-dept-body"></tbody>
+      </table>
+    </div>
+    <div class="rea-mb-foot"><span id="rea-dept-foot"></span></div>
+  </div>
+
+</div>
+</div></div>
+</script>
+
+<!-- 员工 · 素材使用明细（三级页，2026-11-27 · ADR-0121）：从部门明细、卡片的员工行、
+     全部员工抽屉或素材使用详情的「谁用过」进来。是素材使用详情的镜像——那条从素材看人，
+     这条从人看素材；口径同源。不导出（ADR-0084）。 -->
+<script type="text/plain" id="srcMbEmp"><div class="ant-spin-nested-loading css-vgijab rea-bd-page"><div class="ant-spin-container">
+<div class="_board_gf4go_1 rea-bd-sec rea-bd-shell">
+
+  <div class="rea-bd-hero">
+    <h1 id="rea-emp-title">员工 · 素材使用明细</h1>
+    <a class="rea-bd-back" href="#" id="rea-emp-back">← 返回素材看板</a>
+    <span class="rea-bd-upd">数据更新于 <span id="rea-emp-now"></span></span>
+  </div>
+
+  <div class="rea-md-scope" id="rea-emp-scope"></div>
+
+  <div class="rea-bd-grid">
+    <div class="rea-bd-card rea-bd-card--w12 rea-md-sums">
+      <div class="rea-md-tiles rea-md-tiles--4" id="rea-emp-tiles"></div>
+    </div>
+
+    <div class="rea-bd-card rea-bd-card--w12">
+      <div class="rea-bd-ch"><h6>取用趋势</h6><span class="rea-mb-sub" id="rea-emp-gran"></span></div>
+      <div class="rea-mb-legend"><span class="lg"><i class="b"></i>合计</span><span class="lg"><i></i>发送</span><span class="lg"><i class="g"></i>复制保存</span></div>
+      <div class="rea-mb-chart" id="rea-emp-chart"></div>
+    </div>
+
+    <div class="rea-bd-card rea-bd-card--w12 rea-md-zero" id="rea-emp-zero" hidden></div>
+
+    <div class="rea-bd-card rea-bd-card--w12" id="rea-emp-acts-card">
+      <div class="rea-bd-ch"><h6>动作构成</h6></div>
+      <div class="rea-md-bars" id="rea-emp-acts"></div>
+    </div>
+
+    <div class="rea-bd-card rea-bd-card--w12" id="rea-emp-mats-card">
+      <div class="rea-bd-ch"><h6>用过的素材</h6></div>
+      <div class="rea-mb-scroll">
+        <table class="rea-mb-tbl">
+          <colgroup><col><col style="width:200px"><col style="width:100px"><col style="width:100px"><col style="width:120px"></colgroup>
+          <thead><tr><th>素材标题</th><th>分组</th><th class="num">取用次数</th><th class="num">其中发送</th><th>最近一次</th></tr></thead>
+          <tbody id="rea-emp-mat-body"></tbody>
+        </table>
+      </div>
+      <div class="rea-mb-pg" id="rea-emp-mat-pg"></div>
+    </div>
+  </div>
+
+</div>
+<div class="rea-mb-toast" id="rea-emp-toast" hidden></div>
 </div></div>
 </script>
 
@@ -20815,11 +20906,18 @@ render();
   /* 三级页「素材使用详情」：从看板的「素材使用」、明细的行尾或素材库列表的「使用情况」进来，
      同样是克隆看板外壳合成，正文来自载体块 srcBoardMatDetail。 */
   var REA_MB_MAT_DETAIL = '企业微信看板 · 素材使用详情';
+  /* 2026-11-27 人维度下钻（ADR-0121）：部门页签的行 → 部门 · 员工使用明细（二级页）；
+     员工行 → 员工 · 素材使用明细（三级页）。两页都克隆素材看板的壳，
+     正文来自载体块 srcMbDept／srcMbEmp，行数据随 postMessage 带过来。 */
+  var REA_MB_DEPT = '企业微信看板 · 部门明细';
+  var REA_MB_EMP = '企业微信看板 · 员工明细';
   /* 这些子页的正文数据是上一页经 postMessage 带过来的（reaRows / reaMat），刷新后外壳手里没有
      那份数据，单凭页名重建出来是一张空表。刷新落在这类页时退回它的来源页。 */
   var REA_NEEDS_DATA = {};
   REA_NEEDS_DATA[REA_MB_DETAIL] = REA_MB_PAGE;
   REA_NEEDS_DATA[REA_MB_MAT_DETAIL] = REA_MB_PAGE;
+  REA_NEEDS_DATA[REA_MB_DEPT] = REA_MB_PAGE;
+  REA_NEEDS_DATA[REA_MB_EMP] = REA_MB_PAGE;
   REA_NEEDS_DATA[REA_TASKS_PAGE] = REA_BOARD_PAGE;
   REA_NEEDS_DATA[REA_METRIC_PAGE] = REA_BOARD_PAGE;
   REA_NEEDS_DATA[REA_DETAIL_TASK] = REA_BOARD_PAGE;
@@ -21563,7 +21661,8 @@ body .subapp{background:#F6F8FB!important}
 .rea-mb-grp-row,.rea-mb-dep-row,.rea-mb-emp-row{display:flex;align-items:center;gap:14px;min-height:42px;padding:4px 8px;margin:0 -8px;border-radius:6px;border-top:1px solid #F4F6FA;cursor:pointer;transition:background .12s linear}
 .rea-mb-grp-row:first-child,.rea-mb-dep-row:first-child,.rea-mb-emp-row:first-child{border-top:0}
 .rea-mb-grp-row:hover,.rea-mb-dep-row:hover{background:#F7F9FC}
-.rea-mb-emp-row{cursor:default;transition:none}
+.rea-mb-emp-row{cursor:pointer}
+.rea-mb-emp-row:hover,.rea-mb-alw-row:hover{background:#F5F8FD}
 .rea-mb-grp-row:hover .nm,.rea-mb-dep-row:hover .nm{color:#1677FF}
 .rea-mb-grp-row .nm,.rea-mb-dep-row .nm,.rea-mb-emp-row .nm{flex:0 0 120px;color:#1F2329;font-size:13px;line-height:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rea-mb-grp-row .nm em,.rea-mb-emp-row .nm em{display:block;font-style:normal;font-size:11px;color:#8F959E;line-height:14px;margin-top:1px}
@@ -21631,6 +21730,12 @@ body .subapp{background:#F6F8FB!important}
 .rea-md-prev:hover{background:#F0F6FF}
 .rea-md-sums{padding:0}
 .rea-md-tiles{display:grid;grid-template-columns:repeat(5,minmax(0,1fr))}
+/* 员工 · 素材使用明细只有四格（次数／其中发送／素材条数／最近一次）。 */
+.rea-md-tiles--4{grid-template-columns:repeat(4,minmax(0,1fr))}
+/* 部门明细的筛选栏右端放「看这个部门用过的素材」。 */
+.rea-mb-fbar-end{margin-left:auto}
+.rea-mb-tbl tbody tr[data-emp]{cursor:pointer}
+.rea-mb-tbl tbody tr[data-emp]:hover{background:#F5F8FD}
 .rea-md-tile{position:relative;min-width:0;padding:16px 20px 18px}
 .rea-md-tile+.rea-md-tile{border-left:1px solid #F0F2F5}
 .rea-md-tile .lb{display:block;color:#8F959E;font-size:12px;line-height:18px}
@@ -33811,12 +33916,96 @@ function openHx(opt){
      数字全部从一份素材台账 ＋ 取用流水算出来：数据在脚本里按天偏移生成，
      页面不写死任何日期，换时间范围就是换一份聚合。
      ============================================================ */
+  /* ============================================================
+     素材看板的组织树（ADR-0121）
+     部门轴只有一个来源：左侧那棵部门树。选中一个部门＝该部门及其全部下级。
+     树只描述层级；「哪个部门的员工用过哪条素材」仍从取用流水按名册现属部门算。
+     下面这段注入各页脚本，供看板、素材明细、部门明细、员工明细与素材使用详情共用。
+     ============================================================ */
+  var REA_MB_ORG = {
+    "全公司": ["销售部", "市场部", "客户成功部", "运营部", "设计部"],
+    "销售部": ["销售一部", "销售二部"]
+  };
+  function reaMbOrgJs(){
+    return `
+var MB_ORG=${reaJson(REA_MB_ORG)};
+var MB_TOPS=MB_ORG["全公司"]||[],MB_DESC={};
+(function(){
+  function walk(d){
+    var kk=MB_ORG[d],o={},i,x;
+    if(!kk){o[d]=1;MB_DESC[d]=o;return o}
+    for(i=0;i<kk.length;i++){var s=walk(kk[i]);for(x in s)o[x]=1}
+    MB_DESC[d]=o;return o;
+  }
+  walk("全公司");
+  for(var q=0;q<MB_TOPS.length;q++)if(!MB_DESC[MB_TOPS[q]])walk(MB_TOPS[q]);
+})();
+/* 当前范围的直接下级；叶子部门返回空数组。 */
+function MB_KIDS(scope){return MB_ORG[(scope==="all"?"全公司":scope)]||[]}
+/* dept 是否落在 scope 这棵子树里（scope==="all" 即全公司）。 */
+function MB_IN(dept,scope){return scope==="all"||!!(MB_DESC[scope]&&MB_DESC[scope][dept])}
+/* 范围的文字：全公司／有下级的部门写「X 及下级部门」／叶子部门只写自己。 */
+function MB_LABEL(scope){
+  if(scope==="all")return "全公司";
+  return MB_KIDS(scope).length?scope+" 及下级部门":scope;
+}
+function mbEsc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+var MB_CARET='<span role="img" aria-label="caret-down" class="anticon anticon-caret-down ant-tree-switcher-icon"><svg viewBox="0 0 1024 1024" focusable="false" data-icon="caret-down" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M840.4 300H183.6c-19.7 0-30.7 20.8-18.5 35l328.4 380.8c9.4 10.9 27.5 10.9 37 0L858.9 335c12.2-14.2 1.2-35-18.5-35z"></path></svg></span>';
+/* 重画左侧部门树，并把 sel 那个节点点亮（sel==="all" 即全公司）。 */
+function MB_PAINT(sel){
+  var box=document.querySelector(".yk-lefttree .ant-tree-list-holder-inner");
+  if(!box)return;
+  var h="";
+  function node(name,val,depth,open){
+    var on=(val===sel),ind="",q;
+    for(q=0;q<depth;q++){
+      ind+='<span class="ant-tree-indent-unit'+(q===0?" ant-tree-indent-unit-start":"")+(q===depth-1?" ant-tree-indent-unit-end":"")+'"></span>';
+    }
+    h+='<div role="treeitem" aria-expanded="'+(open?"true":"false")+'" class="ant-tree-treenode '
+      +(open?"ant-tree-treenode-switcher-open":"ant-tree-treenode-leaf-last")
+      +(on?" ant-tree-treenode-selected":"")+'" draggable="false">'
+      +'<span aria-hidden="true" class="ant-tree-indent">'+ind+'</span>'
+      +'<span class="ant-tree-switcher '+(open?"ant-tree-switcher_open":"ant-tree-switcher-noop")+'">'+(open?MB_CARET:"")+'</span>'
+      +'<span title="'+mbEsc(name)+'" class="ant-tree-node-content-wrapper '+(open?"ant-tree-node-content-wrapper-open":"")+(on?" ant-tree-node-selected":"")+'" data-org="'+mbEsc(val)+'"><span class="ant-tree-title"><span>'+mbEsc(name)+'</span></span></span>'
+      +'</div>';
+  }
+  node("全公司","all",0,true);
+  for(var i=0;i<MB_TOPS.length;i++){
+    var t=MB_TOPS[i],kids=MB_KIDS(t);
+    node(t,t,1,!!kids.length);
+    for(var j=0;j<kids.length;j++)node(kids[j],kids[j],2,false);
+  }
+  box.innerHTML=h;
+}
+/* 点树：交给页面自己的 onScope。捕获阶段拦下，免得被通用树选中逻辑再改一次。 */
+function MB_BIND(onScope){
+  var wrap=document.querySelector(".yk-lefttree");
+  if(!wrap||wrap.getAttribute("data-mb-org")==="1")return;
+  wrap.setAttribute("data-mb-org","1");
+  wrap.addEventListener("click",function(e){
+    var n=e.target;
+    while(n&&n!==wrap&&n.nodeType===1){
+      if(n.getAttribute&&n.getAttribute("data-org")!==null){
+        e.preventDefault();e.stopPropagation();
+        onScope(n.getAttribute("data-org"));
+        return;
+      }
+      n=n.parentNode;
+    }
+  },true);
+}
+`;
+  }
+
   function reaBoardMatJs(){
    var forOverview=arguments[0]===true;
    return `
 (function(){
 var DETAIL=${reaJson(REA_MB_DETAIL)};
 var MATDETAIL=${reaJson(REA_MB_MAT_DETAIL)};
+var DEPTPAGE=${reaJson(REA_MB_DEPT)};
+var EMPPAGE=${reaJson(REA_MB_EMP)};
+${reaMbOrgJs()}
 var PAD=function(n){return (n<10?"0":"")+n};
 /* 日期一律相对真钟写：快照与演示集都不许出现写死日期，过一天就腐坏。 */
 function when(d,t){
@@ -33990,15 +34179,16 @@ var MRM=!!(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce
 function inWin(day,w){var r=WIN[w]||WIN[DEFW];return day>=r[0]&&day<=r[1]}
 function endOff(w){return (WIN[w]||WIN[DEFW])[1]}
 function statusOf(m,end){return m.exp>=end?"已发布":"已过期"}
-/* 一次扫描：窗口内、指定使用部门（all＝全部）的事件，按素材与按天归拢。
-   部门这一层用**员工所属部门**——事件落在员工身上，调岗后历史不迁移。 */
+/* 一次扫描：窗口内、指定使用范围（all＝全部）的事件，按素材与按天归拢。
+   部门这一层用**员工所属部门**：范围含它的全部下级；员工归属取名册现属部门
+   （ADR-0121 修订 ADR-0084：事件不再存「当时所属部门」）。 */
 function scan(w,dept){
   var s={n:0,send:0,copy:0,total:0,used:{},mat:{},byDept:{},matUse:{}},k,e,id,mm;
   s.total=MATS.length;
   for(k=0;k<EVENTS.length;k++){
     e=EVENTS[k];
     if(!inWin(e[2],w))continue;
-    if(dept!=="all"&&DEPT_OF[e[1]]!==dept)continue;
+    if(dept!=="all"&&!MB_IN(DEPT_OF[e[1]],dept))continue;
     id=e[0];s.n++;
     if(isSend(e[3]))s.send++;else s.copy++;
     mm=s.mat[id]||(s.mat[id]={c:0,s:0,cp:0,last:-999,users:{}});
@@ -34033,7 +34223,7 @@ function matRow(m,s,dept,end){
     users.push({n:nm,o:DEPT_OF[nm],c:u.c,s:u.s,cp:u.cp,last:u.last});
   }
   for(k=0;k<users.length;k++){
-    if(dept!=="all"&&users[k].o!==dept)continue;
+    if(dept!=="all"&&!MB_IN(users[k].o,dept))continue;
     people++;c+=users[k].c;se+=users[k].s;cp+=users[k].cp;
     if(users[k].last>last)last=users[k].last;
   }
@@ -34221,6 +34411,8 @@ function trendData(w,gran){
   for(k=0;k<bs.length;k++){map[bs[k].key]={send:0,copy:0};bs[k].send=0;bs[k].copy=0;}
   for(k=0;k<EVENTS.length;k++){
     row=EVENTS[k];if(!inWin(row[2],w))continue;
+    /* 取用趋势跟左侧范围走（ADR-0121）：选销售部就把一部、二部一起算进来。 */
+    if(CURD!=="all"&&!MB_IN(DEPT_OF[row[1]],CURD))continue;
     var key=bucketOf(row[2],w,gran),b=map[key];
     if(!b)continue;
     if(isSend(row[3]))b.send++;else b.copy++;
@@ -34362,7 +34554,8 @@ function groupRows(w,dept){
   var s=scan(w,dept),map={},k,m,a,mm,nm,out=[];
   for(k=0;k<MATS.length;k++){
     m=MATS[k];
-    if(dept!=="all"&&m.dept!==dept)continue;
+    /* 分组归素材所有：范围是父部门时，带上它下级各部门的分组。全公司素材不进任何部门范围。 */
+    if(dept!=="all"&&!MB_IN(m.dept,dept))continue;
     a=map[m.dept+"|"+m.group]||(map[m.dept+"|"+m.group]={dept:m.dept,group:m.group,k:0,m:0,n:0,people:{}});
     a.k++;                                   /* 组内素材条数：自检要它加回全部素材 */
     mm=s.mat[m.id];
@@ -34380,21 +34573,25 @@ function groupRows(w,dept){
   });
   return out;
 }
+/* 部门页只列**当前范围的直接下级**，一行 ＝ 这个部门及其全部下级（ADR-0121）。
+   顶层部门正好把范围分完，各行相加仍等于范围内的全部取用次数。 */
 function deptRows(w){
-  var s=scan(w,"all"),map={},k,e,out=[];
-  for(k=0;k<DEPTS.length;k++)map[DEPTS[k]]={o:DEPTS[k],n:0,people:{}};
+  var kids=MB_KIDS(CURD),map={},k,e,o,d,out=[];
+  for(k=0;k<kids.length;k++)map[kids[k]]={o:kids[k],n:0,people:{}};
   for(k=0;k<EVENTS.length;k++){
     e=EVENTS[k];if(!inWin(e[2],w))continue;
-    var d=DEPT_OF[e[1]],a=map[d];if(!a)continue;
-    a.n++;a.people[e[1]]=1;
+    d=DEPT_OF[e[1]];
+    for(o in map){
+      if(d===o||(MB_DESC[o]&&MB_DESC[o][d])){map[o].n++;map[o].people[e[1]]=1;break}
+    }
   }
-  for(k=0;k<DEPTS.length;k++){
-    var a2=map[DEPTS[k]],pc=0;for(var nm in a2.people)pc++;
+  for(k=0;k<kids.length;k++){
+    var a2=map[kids[k]],pc=0;for(var nm in a2.people)pc++;
     out.push({o:a2.o,n:a2.n,people:pc});
   }
   out.sort(function(x,y){
     var c=sortCmp(x,y,DSK,DSD);if(c)return c;
-    return DEPTS.indexOf(x.o)-DEPTS.indexOf(y.o);
+    return kids.indexOf(x.o)-kids.indexOf(y.o);
   });
   return out;
 }
@@ -34450,9 +34647,27 @@ function renderDepts(w){
    素材条数是这个人用过多少条不同素材（按素材去重），与部门页的「使用人数」是一对镜像。
    名单跟左侧栏的部门范围走（与素材使用、分组使用同一个范围）；部门页不跟，它要横向比部门。 */
 var ESK="count",ESD=-1;
+/* 部门／员工两个页签：记住用户选的哪一个。范围落到叶子部门时没有下一级部门，
+   页签收起、固定员工页（与任务看板「叶子部门固定员工面」同一套处理）。 */
+var ETAB="dep";
+function applyOrgTabs(){
+  var kids=MB_KIDS(CURD),key=kids.length?ETAB:"emp",
+      tabs=document.getElementById("rea-mb-orgtabs"),
+      dp=document.getElementById("rea-mb-dep-pane"),ep=document.getElementById("rea-mb-emp-pane"),
+      etabs=document.querySelectorAll("[data-mb-etab]"),j,l,on,ab,inp;
+  if(tabs)tabs.style.display=kids.length?"":"none";
+  for(j=0;j<etabs.length;j++){
+    l=etabs[j];on=l.getAttribute("data-mb-etab")===key;
+    l.className="ant-radio-button-wrapper css-vgijab"+(on?" ant-radio-button-wrapper-checked":"");
+    ab=l.querySelector(".ant-radio-button");if(ab)ab.className="ant-radio-button"+(on?" ant-radio-button-checked":"");
+    inp=l.querySelector("input");if(inp)inp.checked=on;
+  }
+  if(dp)dp.hidden=key!=="dep";
+  if(ep)ep.hidden=key!=="emp";
+}
 function empRows(w){
   var map={},k,e,a,out=[],nm,ros=[];
-  for(k=0;k<ROSTER.length;k++)if(CURD==="all"||ROSTER[k][1]===CURD)ros.push(ROSTER[k]);
+  for(k=0;k<ROSTER.length;k++)if(CURD==="all"||MB_IN(ROSTER[k][1],CURD))ros.push(ROSTER[k]);
   for(k=0;k<ros.length;k++)map[ros[k][0]]={o:ros[k][0],dept:ros[k][1],n:0,mats:{}};
   for(k=0;k<EVENTS.length;k++){
     e=EVENTS[k];if(!inWin(e[2],w))continue;
@@ -34480,7 +34695,7 @@ function renderEmps(w){
   for(k=0;k<es.length;k++){maxN=Math.max(maxN,es[k].n);maxM=Math.max(maxM,es[k].m);if(!es[k].n)zero++;}
   for(k=0;k<es.length&&k<EMPCAP;k++){
     r=es[k];
-    h+='<div class="rea-mb-emp-row">'
+    h+='<div class="rea-mb-emp-row" role="button" tabindex="0" data-mb-emp="'+esc(r.o)+'">'
       +'<span class="nm">'+esc(r.o)+'<em>'+esc(r.dept)+'</em></span>'
       +metricCells(r,ESK,maxN,maxM,"m")+'</div>';
   }
@@ -34498,7 +34713,7 @@ function renderAllEmps(w){
   var es=empRows(w),h="",k,r,zero=0;
   for(k=0;k<es.length;k++){
     r=es[k];if(!r.n)zero++;
-    h+='<tr><td>'+esc(r.o)+'</td><td>'+esc(r.dept)+'</td><td class="num">'+r.n+'</td><td class="num">'+r.m+'</td></tr>';
+    h+='<tr class="rea-mb-alw-row" data-mb-emp="'+esc(r.o)+'" tabindex="0"><td>'+esc(r.o)+'</td><td>'+esc(r.dept)+'</td><td class="num">'+r.n+'</td><td class="num">'+r.m+'</td></tr>';
   }
   body.innerHTML=h||'<tr><td colspan="4">这个部门的名册里没有员工</td></tr>';
   if(foot)foot.textContent="共 "+es.length+" 人 · "+zero+" 人这段时间零取用";
@@ -34581,7 +34796,8 @@ function toast(msg){
 var BAD=[];
 function bad(s){BAD.push(s)}
 function selfCheck(w){
-  var o=cover(w),s=scan(w,"all"),gs=groupRows(w,"all"),ds=deptRows(w),k,kk=0,km=0,dn=0;
+  /* 部门页只覆盖当前范围，和 scan(w,CURD) 对账；环与分组仍是全公司口径。 */
+  var o=cover(w),s=scan(w,CURD),gs=groupRows(w,"all"),ds=deptRows(w),k,kk=0,km=0,dn=0;
   if(o.used+o.pub+o.exp!==o.all)bad("环上三段之和 "+ (o.used+o.pub+o.exp) +" ≠ 全部素材 "+o.all);
   for(k=0;k<gs.length;k++){kk+=gs[k].k;km+=gs[k].m;}
   if(kk!==o.all)bad("分组页素材数之和 "+kk+" ≠ 全部素材 "+o.all);
@@ -34613,13 +34829,28 @@ function dumpRows(w){
     r.qf=mm?{sent:mm.sent,replied:mm.replied}:null;
     r.ev=evMap[r.id]||[];
   }
-  return {rows:out,win:w,matEnd:end,depts:DEPTS};
+  /* 名册与组织树一起带过去：部门明细要列零取用的人，员工明细要按人重算动作与趋势。 */
+  return {rows:out,win:w,matEnd:end,depts:DEPTS,roster:ROSTER,org:MB_ORG,desc:MB_DESC};
 }
+/* 素材明细：时间范围沿用看板，部门范围由左侧树带过去；boardScope 是回去时要还原的看板范围。 */
 function goDetail(preset){
   preset=preset||{};
-  if(!('dept' in preset))preset.dept=(CURD==="all"?"all":CURD);
+  if(!('scope' in preset))preset.scope=CURD;
+  preset.boardScope=CURD;
   var payload=dumpRows(CURW);
   parent.postMessage({reaPage:DETAIL,reaMat:payload,reaPreset:preset},"*")
+}
+/* 部门行 → 部门 · 员工使用明细（ADR-0121）。 */
+function goDept(dept){
+  var payload=dumpRows(CURW);
+  parent.postMessage({reaPage:DEPTPAGE,reaMat:payload,
+    reaPreset:{dept:dept,win:CURW,boardScope:CURD,from:"企业微信看板"}},"*");
+}
+/* 员工行 → 员工 · 素材使用明细（ADR-0121）。 */
+function goEmp(name,from){
+  var payload=dumpRows(CURW);
+  parent.postMessage({reaPage:EMPPAGE,reaMat:payload,
+    reaPreset:{emp:name,win:CURW,scope:CURD,boardScope:CURD,from:from||"企业微信看板"}},"*");
 }
 /* 素材使用 → 素材使用详情：行数据仍走同一份 dumpRows，另把排序与滚动位置交给外壳，
    返回时原样落回去。 */
@@ -34628,7 +34859,7 @@ function goMatDetail(id){
       box=document.querySelector(".rea-mb-use-scroll");
   parent.postMessage({
     reaPage:MATDETAIL,reaMat:payload,
-    reaPreset:{matId:id,source:"board",from:"企业微信看板",dept:CURD,win:CURW},
+    reaPreset:{matId:id,source:"board",from:"企业微信看板",dept:CURD,win:CURW,boardScope:CURD},
     reaMbWin:CURW,
     reaMbState:{sortK:SORTK,sortD:SORTD,
       scrollTop:box?box.scrollTop:0,scrollLeft:box?box.scrollLeft:0,
@@ -34640,6 +34871,7 @@ function renderAll(){
   paintDonut(w);
   paintTrend(w);
   renderUse(w);
+  applyOrgTabs();
   renderGroups(w);renderDepts(w);renderEmps(w);
   renderQf(w);
   var alw=document.getElementById("rea-mb-alw");
@@ -34718,9 +34950,10 @@ if(cv)cv.addEventListener("click",function(e){
     var seg=n.getAttribute&&n.getAttribute("data-mb-seg");
     if(seg){
       e.preventDefault();
-      if(seg==="used")goDetail({usage:"used",status:"all",group:"",type:"",dept:"all"});
-      else if(seg==="pub")goDetail({usage:"cold",status:"pub",group:"",type:"",dept:"all"});
-      else goDetail({usage:"cold",status:"exp",group:"",type:"",dept:"all"});
+      /* 使用覆盖是家底总量，进明细时把范围落到全公司，和卡上的数对得上。 */
+      if(seg==="used")goDetail({usage:"used",status:"all",group:"",type:"",scope:"all"});
+      else if(seg==="pub")goDetail({usage:"cold",status:"pub",group:"",type:"",scope:"all"});
+      else goDetail({usage:"cold",status:"exp",group:"",type:"",scope:"all"});
       return;
     }
     n=n.parentNode;
@@ -34756,16 +34989,8 @@ for(i=0;i<echips.length;i++)echips[i].addEventListener("click",function(e){
 var etabs=document.querySelectorAll("[data-mb-etab]");
 for(i=0;i<etabs.length;i++)etabs[i].addEventListener("click",function(e){
   e.preventDefault();
-  var key=this.getAttribute("data-mb-etab"),j,l,on,ab,inp;
-  for(j=0;j<etabs.length;j++){
-    l=etabs[j];on=l.getAttribute("data-mb-etab")===key;
-    l.className="ant-radio-button-wrapper css-vgijab"+(on?" ant-radio-button-wrapper-checked":"");
-    ab=l.querySelector(".ant-radio-button");if(ab)ab.className="ant-radio-button"+(on?" ant-radio-button-checked":"");
-    inp=l.querySelector("input");if(inp)inp.checked=on;
-  }
-  var dp=document.getElementById("rea-mb-dep-pane"),ep=document.getElementById("rea-mb-emp-pane");
-  if(dp)dp.hidden=key!=="dep";
-  if(ep)ep.hidden=key!=="emp";
+  ETAB=this.getAttribute("data-mb-etab");
+  applyOrgTabs();
 });
 /* 员工页卡底「查看全部」：开「全部员工」抽屉；遮罩、×、Esc 关闭。 */
 var eall=document.getElementById("rea-mb-emp-all");
@@ -34791,13 +35016,13 @@ if(qfw)qfw.addEventListener("click",function(e){
     }
     mt=n.getAttribute&&n.getAttribute("data-mb-qfmat");
     if(mt){
-      goDetail({q:mt,usage:"all",status:"all",group:"",type:"",dept:"all"});
+      goDetail({q:mt,usage:"all",status:"all",group:"",type:"",scope:"all"});
       return;
     }
     if(n.getAttribute&&n.getAttribute("data-mb-qfall")){
       e.preventDefault();
       /* 全量：明细按「群发好友回复」降序打开，没被引用的排在下面 */
-      goDetail({q:"",usage:"all",status:"all",group:"",type:"",dept:"all",sort:"reply"});
+      goDetail({q:"",usage:"all",status:"all",group:"",type:"",scope:"all",sort:"reply"});
       return;
     }
     n=n.parentNode;
@@ -34809,7 +35034,7 @@ if(gl)gl.addEventListener("click",function(e){
   var n=e.target;
   while(n&&n!==gl&&n.nodeType===1){
     if(n.getAttribute&&n.getAttribute("data-mb-group")){
-      goDetail({group:n.getAttribute("data-mb-group"),usage:"all",status:"all",type:"",dept:"all"});
+      goDetail({group:n.getAttribute("data-mb-group"),usage:"all",status:"all",type:""});
       return;
     }
     n=n.parentNode;
@@ -34820,27 +35045,59 @@ if(dl)dl.addEventListener("click",function(e){
   var n=e.target;
   while(n&&n!==dl&&n.nodeType===1){
     if(n.getAttribute&&n.getAttribute("data-mb-dept")){
-      goDetail({dept:n.getAttribute("data-mb-dept"),usage:"all",status:"all",group:"",type:""});
+      goDept(n.getAttribute("data-mb-dept"));
       return;
     }
     n=n.parentNode;
   }
 });
+/* 员工行 → 员工 · 素材使用明细（卡内与「全部员工」抽屉同一处入口）。 */
+function bindEmpLinks(box){
+  if(!box)return;
+  box.addEventListener("click",function(e){
+    var n=e.target;
+    while(n&&n!==box&&n.nodeType===1){
+      if(n.getAttribute&&n.getAttribute("data-mb-emp")!==null){
+        goEmp(n.getAttribute("data-mb-emp"),"企业微信看板");
+        return;
+      }
+      n=n.parentNode;
+    }
+  });
+}
+bindEmpLinks(document.getElementById("rea-mb-emp-list"));
+bindEmpLinks(document.getElementById("rea-mb-alw-body"));
 /* 键盘：行与列头是 role=button，Enter / 空格等同点击。 */
 document.addEventListener("keydown",function(e){
   if(e.key!=="Enter"&&e.key!==" ")return;
   var n=e.target;
   if(!n||!n.getAttribute)return;
-  if(n.getAttribute("data-mb-sort")||n.getAttribute("data-mb-gsort")||n.getAttribute("data-mb-dsort")||n.getAttribute("data-mb-qfsort")||n.getAttribute("data-mb-qfmat")||n.getAttribute("data-mb-qfall")||n.getAttribute("data-mb-esort")||n.getAttribute("data-mb-etab")||n.getAttribute("data-mb-mat")||n.getAttribute("data-mb-md")||n.getAttribute("data-mb-group")||n.getAttribute("data-mb-dept")||n.getAttribute("data-mb-seg")||n.getAttribute("data-mb-win")){
+  if(n.getAttribute("data-mb-sort")||n.getAttribute("data-mb-gsort")||n.getAttribute("data-mb-dsort")||n.getAttribute("data-mb-qfsort")||n.getAttribute("data-mb-qfmat")||n.getAttribute("data-mb-qfall")||n.getAttribute("data-mb-esort")||n.getAttribute("data-mb-etab")||n.getAttribute("data-mb-mat")||n.getAttribute("data-mb-md")||n.getAttribute("data-mb-group")||n.getAttribute("data-mb-dept")||n.getAttribute("data-mb-emp")||n.getAttribute("data-mb-seg")||n.getAttribute("data-mb-win")){
     e.preventDefault();n.click();
   }
 });
 
 /* --- 开跑 --- */
 stamp();
+/* 部门范围从左侧树来（ADR-0121）：从子页返回时还原离开前那个范围。 */
+var startScope=window.__REA_MB_SCOPE;
+if(!(startScope==="all"||(startScope&&MB_DESC[startScope])))startScope="all";
+CURD=startScope;
 var overviewWin=window.__REA_OVERVIEW_NAV?({day:"today",week:"w7",month:"m1",quarter:"m3"}[window.__REA_OVERVIEW_NAV.period]):"";
 var startWin=overviewWin||((window.__REA_MB_WIN&&WIN[window.__REA_MB_WIN])?window.__REA_MB_WIN:DEFW);
 applyWin(startWin);
+/* 左侧部门树：重画成台账里这套部门层级，点一个节点就换范围（含它的全部下级）。 */
+MB_PAINT(CURD);
+MB_BIND(function(v){
+  if(v===CURD)return;
+  CURD=v;
+  renderAll();
+  MB_PAINT(CURD);
+  ["rea-mb-grp-list","rea-mb-dep-list","rea-mb-emp-list"].forEach(function(id){
+    var b=document.getElementById(id);if(b)b.scrollTop=0;
+  });
+  window.scrollTo(0,0);
+});
 /* 从素材使用详情返回：把离开时的排序列与滚动位置落回去，行还是那一批。 */
 var MBS=window.__REA_MB_STATE;
 if(MBS){
@@ -34871,6 +35128,9 @@ if(BAD.length){
 var BACK=${reaJson(REA_MB_PAGE)};
 var SELF=${reaJson(REA_MB_DETAIL)};
 var MATDETAIL=${reaJson(REA_MB_MAT_DETAIL)};
+var DEPTPAGE=${reaJson(REA_MB_DEPT)};
+var EMPPAGE=${reaJson(REA_MB_EMP)};
+${reaMbOrgJs()}
 function pad2(n){return (n<10?"0":"")+n}
 function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
 function fmtDate(off){
@@ -34882,11 +35142,12 @@ var DATA=(window.__REA_MAT||{rows:[],win:"w7",matEnd:0});
 var ROWS=DATA.rows||[],DEPTS=DATA.depts||[];
 var PRE=window.__REA_MB_PRESET||{};
 
-/* 当前筛选。部门这一轴按**使用部门**（员工所属部门）算，与看板的部门筛选同一把尺子；
-   选了部门就只列这个部门用过（或零取用不成立）的素材，剩下几轴先筛再算数。 */
+/* 当前筛选：四轴。部门不在页内选，范围跟左侧部门树走（ADR-0121）；
+   一次取用算进哪个部门，按员工名册的现属部门判，范围含它的全部下级。 */
 var F={q:PRE.q||"",group:PRE.group||"",type:PRE.type||"",
   usage:(PRE.usage==="used"||PRE.usage==="cold"?PRE.usage:""),
-  status:(PRE.status==="pub"?"已发布":(PRE.status==="exp"?"已过期":"")),dept:PRE.dept||"all"};
+  status:(PRE.status==="pub"?"已发布":(PRE.status==="exp"?"已过期":""))};
+var SCOPE=(PRE.scope&&(PRE.scope==="all"||MB_DESC[PRE.scope]))?PRE.scope:"all";
 /* 「群发好友回复」列也能排（从看板的卡片点「查看全部」进来时直接按回复率降序）。
    没被群发好友任务引用过的素材没有比率，不分升降序都沉到最后。 */
 var SORTK=(PRE.sortK||(PRE.sort==="reply"?"reply":"count")),SORTD=(PRE.sortD===1?1:-1),
@@ -34896,7 +35157,7 @@ function scope(r){
   var c=0,s=0,cp=0,last=-999,people=0,k,u;
   for(k=0;k<r.users.length;k++){
     u=r.users[k];
-    if(F.dept!=="all"&&u.o!==F.dept)continue;
+    if(!MB_IN(u.o,SCOPE))continue;
     people++;c+=u.c;s+=u.s;cp+=u.cp;
     if(u.last>last)last=u.last;
   }
@@ -34960,7 +35221,9 @@ function filtered(){
     if(F.q&&r.title.toLowerCase().indexOf(F.q.toLowerCase())<0)continue;
     if(F.group&&(r.dept+"|"+r.group)!==F.group)continue;
     if(F.type&&r.type!==F.type)continue;
-    if(F.dept!=="all"&&!sc.count)continue;
+    /* 范围收窄到某个部门时，只列这个部门（含下级）用过的素材；看「没用过」时反过来列零取用的。
+       全公司范围不受这条影响——那是整库清单，零取用的素材也在库里（ADR-0121）。 */
+    if(SCOPE!=="all"&&F.usage!=="cold"&&!sc.count)continue;
     if(F.usage==="used"&&!sc.count)continue;
     if(F.usage==="cold"&&sc.count)continue;
     if(F.status&&r.status!==F.status)continue;
@@ -34991,12 +35254,6 @@ function fillSelects(){
   if(u){u.value=F.usage||"";}
   var st=document.getElementById("rea-mb-f-status");
   if(st){st.value=F.status||"";}
-  var d=document.getElementById("rea-mb-f-dept");
-  if(d){
-    var dh='<option value="all">部门：全部</option>',k2;
-    for(k2=0;k2<DEPTS.length;k2++)dh+='<option value="'+esc(DEPTS[k2])+'">'+esc(DEPTS[k2])+'</option>';
-    d.innerHTML=dh;d.value=F.dept||"all";
-  }
   var q=document.getElementById("rea-mb-q");if(q)q.value=F.q||"";
 }
 
@@ -35076,7 +35333,7 @@ function renderDrawer(){
   var users=[],k,u;
   for(k=0;k<r.users.length;k++){
     u=r.users[k];
-    if(F.dept!=="all"&&u.o!==F.dept)continue;
+    if(!MB_IN(u.o,SCOPE))continue;
     if(DW.q&&u.n.indexOf(DW.q)<0)continue;
     users.push(u);
   }
@@ -35086,7 +35343,7 @@ function renderDrawer(){
   start=(DW.page-1)*DW.size;end=Math.min(start+DW.size,users.length);
   for(k=start;k<end;k++){
     u=users[k];
-    h+='<tr><td>'+esc(u.n)+'</td><td>'+esc(u.o)+'</td><td class="num">'+u.c+'</td><td class="num">'+u.s+'</td><td>'+(u.last>-999?fmtDate(u.last):"—")+'</td></tr>';
+    h+='<tr data-emp="'+esc(u.n)+'" tabindex="0"><td>'+esc(u.n)+'</td><td>'+esc(u.o)+'</td><td class="num">'+u.c+'</td><td class="num">'+u.s+'</td><td>'+(u.last>-999?fmtDate(u.last):"—")+'</td></tr>';
   }
   if(!users.length)h='<tr><td colspan="5" class="empty">没有符合条件的员工</td></tr>';
   if(body)body.innerHTML=h;
@@ -35130,7 +35387,8 @@ if(body)body.addEventListener("click",function(e){
       var mdid=+n.getAttribute("data-mb-md"),db=document.querySelector(".rea-mb-dscroll");
       /* 把当前的筛选、排序、页码与滚动位置一并交给外壳：返回明细时原样落回去。 */
       parent.postMessage({reaPage:MATDETAIL,reaMat:DATA,reaPreset:{
-        matId:mdid,source:"detail",from:SELF,dept:F.dept,win:DATA.win,
+        matId:mdid,source:"detail",from:SELF,dept:SCOPE,win:DATA.win,
+        boardScope:PRE.boardScope,
         q:F.q,group:F.group,type:F.type,usage:F.usage,
         status:(F.status==="已发布"?"pub":(F.status==="已过期"?"exp":"")),
         sortK:SORTK,sortD:SORTD,page:PAGE,
@@ -35156,7 +35414,6 @@ bindSel("rea-mb-f-group","group");
 bindSel("rea-mb-f-type","type");
 bindSel("rea-mb-f-usage","usage");
 bindSel("rea-mb-f-status","status");
-bindSel("rea-mb-f-dept","dept");
 var dwq=document.getElementById("rea-mb-dw-q");
 if(dwq)dwq.addEventListener("input",function(){DW.q=dwq.value.trim();DW.page=1;renderDrawer()});
 var dwc=document.getElementById("rea-mb-dw-close");
@@ -35169,10 +35426,53 @@ document.addEventListener("keydown",function(e){
   var n=e.target;
   if(n&&n.getAttribute&&(n.getAttribute("data-mb-sort")||n.getAttribute("data-mb-user"))){e.preventDefault();n.click();}
 });
+/* 谁用过抽屉 → 员工 · 素材使用明细。返回时原样带回这一页的筛选、排序与页码。 */
+function dwBackPreset(){
+  return {q:F.q,group:F.group,type:F.type,usage:F.usage,
+    status:(F.status==="已发布"?"pub":(F.status==="已过期"?"exp":"")),
+    sortK:SORTK,sortD:SORTD,page:PAGE,scope:SCOPE,boardScope:PRE.boardScope,from:BACK};
+}
+var dwb=document.getElementById("rea-mb-dw-body");
+if(dwb)dwb.addEventListener("click",function(e){
+  var n=e.target;
+  while(n&&n!==dwb&&n.nodeType===1){
+    if(n.getAttribute&&n.getAttribute("data-emp")!==null){
+      parent.postMessage({reaPage:EMPPAGE,reaMat:DATA,reaPreset:{
+        emp:n.getAttribute("data-emp"),scope:SCOPE,win:DATA.win,
+        boardScope:PRE.boardScope,from:SELF,backPreset:dwBackPreset()}},"*");
+      return;
+    }
+    n=n.parentNode;
+  }
+});
+document.addEventListener("keydown",function(e){
+  if(e.key!=="Enter"&&e.key!==" ")return;
+  var n=e.target;
+  if(n&&n.getAttribute&&n.getAttribute("data-emp")!==null){e.preventDefault();n.click();}
+});
+
+/* 返回：从部门明细进来看素材的，回部门明细；其余回看板并带上离开前的范围。 */
 var back=document.querySelectorAll("[data-mb-back]");
 for(var bi=0;bi<back.length;bi++)back[bi].addEventListener("click",function(e){
   e.preventDefault();
-  parent.postMessage({reaPage:BACK,reaMbWin:DATA.win},"*");
+  if(PRE.from===DEPTPAGE){
+    parent.postMessage({reaPage:DEPTPAGE,reaMat:DATA,reaPreset:{
+      dept:PRE.dept,win:DATA.win,boardScope:PRE.boardScope,from:BACK}},"*");
+  }else{
+    parent.postMessage({reaPage:BACK,reaMbWin:DATA.win,reaMbScope:PRE.boardScope||SCOPE},"*");
+  }
+});
+if(PRE.from===DEPTPAGE){
+  for(var bj=0;bj<back.length;bj++)back[bj].textContent="← 返回员工使用明细";
+}
+/* 左侧部门树：换一个节点就地把这一页的范围换掉重算。 */
+MB_PAINT(SCOPE);
+MB_BIND(function(v){
+  if(v===SCOPE)return;
+  SCOPE=v;PAGE=1;
+  renderTable();
+  if(DW.id)renderDrawer();
+  MB_PAINT(SCOPE);
 });
 
 fillSelects();
@@ -35183,6 +35483,397 @@ if(PRE.scroll){
   if(dbox2&&PRE.scroll.left)dbox2.scrollLeft=PRE.scroll.left;
   if(PRE.scroll.win)window.scrollTo(0,PRE.scroll.win);
 }
+})();
+`;
+  }
+
+  /* ============================================================
+     素材看板 · 部门明细（二级页，ADR-0121）
+     部门页签的一行 → 这个部门（含全部下级）的员工使用明细。
+     数从看板带过来的行里现算：行里带名册、组织树与逐条取用流水，不另编一份。
+     ============================================================ */
+  function reaMbDeptJs(){
+   return `
+(function(){
+${reaMbOrgJs()}
+var BACK=${reaJson(REA_MB_PAGE)};
+var SELF=${reaJson(REA_MB_DEPT)};
+var EMPPAGE=${reaJson(REA_MB_EMP)};
+var DETAIL=${reaJson(REA_MB_DETAIL)};
+var WIN={today:[0,0],w7:[-6,0],m1:[-29,0],m3:[-89,0]};
+var LAB={today:"今日",w7:"近一周",m1:"近一月",m3:"近三月"};
+var DATA=window.__REA_MAT||{rows:[],win:"w7",roster:[]};
+var PRE=window.__REA_MB_PRESET||{};
+var ROWS=DATA.rows||[],ROSTER=DATA.roster||[];
+var win=WIN[DATA.win]?DATA.win:"w7",RANGE=WIN[win];
+var SCOPE=(PRE.dept&&(PRE.dept==="all"||MB_DESC[PRE.dept]))?PRE.dept:"all";
+function pad2(n){return (n<10?"0":"")+n}
+function fmtDate(off){
+  var d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()+off);
+  return d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate());
+}
+var SK="count",SD=-1;
+
+/* 名册全员占行：一次没用过的也列，零取用沉底。数与卡片员工页同源（逐条取用流水）。 */
+function empList(){
+  var map={},out=[],k,i,q,row,ev,nm,dp;
+  for(k=0;k<ROSTER.length;k++){
+    nm=ROSTER[k][0];dp=ROSTER[k][1];
+    if(!MB_IN(dp,SCOPE))continue;
+    map[nm]={o:nm,dept:dp,n:0,mats:{},last:-999};
+    out.push(map[nm]);
+  }
+  for(k=0;k<ROWS.length;k++){
+    row=ROWS[k];ev=row.ev||[];
+    for(i=0;i<ev.length;i++){
+      q=ev[i];
+      if(q[0]<RANGE[0]||q[0]>RANGE[1])continue;
+      var a=map[q[1]];if(!a)continue;
+      a.n++;a.mats[row.id]=1;
+      if(q[0]>a.last)a.last=q[0];
+    }
+  }
+  for(k=0;k<out.length;k++){
+    var mc=0;for(var x in out[k].mats)mc++;
+    out[k].m=mc;
+  }
+  return out;
+}
+function paintHead(){
+  var t=document.getElementById("rea-dept-title");
+  if(t)t.textContent=(SCOPE==="all"?"全公司":SCOPE)+" · 员工使用明细";
+  var sc=document.getElementById("rea-dept-scope");
+  if(sc){
+    sc.innerHTML='<span><b>'+LAB[win]+'</b></span><span class="dot">·</span><span>'
+      +mbEsc(MB_LABEL(SCOPE))+'</span>'
+      +'<span class="dot">·</span><span>取用＝复制／保存／一键发送／一键发圈，不含任务执行</span>';
+  }
+}
+function paintSort(){
+  var hs=document.querySelectorAll("[data-dept-sort]"),i,on,ic;
+  for(i=0;i<hs.length;i++){
+    on=hs[i].getAttribute("data-dept-sort")===SK;
+    hs[i].className="sortc"+(on?" on":"");
+    ic=hs[i].querySelector("i");
+    if(ic)ic.textContent=on?(SD<0?"↓":"↑"):"↕";
+  }
+}
+function render(){
+  var q=document.getElementById("rea-dept-q"),kw=q?q.value.trim():"";
+  var list=empList(),k,h="";
+  if(kw)list=list.filter(function(r){return r.o.indexOf(kw)>=0});
+  list.sort(function(a,b){
+    var az=a.n?0:1,bz=b.n?0:1;                 /* 零取用的不管升降序都沉底 */
+    if(az!==bz)return az-bz;
+    var av=SK==="count"?a.n:a.m,bv=SK==="count"?b.n:b.m;
+    if(av!==bv)return (av-bv)*SD;
+    var a2=SK==="count"?a.m:a.n,b2=SK==="count"?b.m:b.n;
+    if(a2!==b2)return (a2-b2)*SD;
+    return a.o<b.o?-1:1;
+  });
+  for(k=0;k<list.length;k++){
+    h+='<tr data-emp="'+mbEsc(list[k].o)+'" tabindex="0"><td>'+mbEsc(list[k].o)+'</td><td>'+mbEsc(list[k].dept)+'</td>'
+      +'<td class="num">'+list[k].n+'</td><td class="num">'+list[k].m+'</td></tr>';
+  }
+  if(!list.length)h='<tr><td colspan="4" class="empty">'+(kw?"没有匹配的员工":"这个部门的名册里没有员工")+'</td></tr>';
+  var body=document.getElementById("rea-dept-body");if(body)body.innerHTML=h;
+  var cnt=document.getElementById("rea-dept-count");if(cnt)cnt.textContent="共 "+list.length+" 人";
+  var zero=0;for(k=0;k<list.length;k++)if(!list[k].n)zero++;
+  var foot=document.getElementById("rea-dept-foot");
+  if(foot)foot.textContent="共 "+list.length+" 人 · "+zero+" 人这段时间零取用";
+  paintSort();
+}
+function goEmp(name){
+  parent.postMessage({reaPage:EMPPAGE,reaMat:DATA,reaPreset:{
+    emp:name,scope:SCOPE,win:win,boardScope:PRE.boardScope,from:SELF}},"*");
+}
+
+var back=document.getElementById("rea-dept-back");
+if(back)back.addEventListener("click",function(e){
+  e.preventDefault();
+  parent.postMessage({reaPage:BACK,reaMbWin:win,reaMbScope:PRE.boardScope||"all"},"*");
+});
+var mats=document.getElementById("rea-dept-mats");
+if(mats)mats.addEventListener("click",function(e){
+  e.preventDefault();
+  parent.postMessage({reaPage:DETAIL,reaMat:DATA,reaPreset:{
+    scope:SCOPE,dept:SCOPE,win:win,boardScope:PRE.boardScope,from:SELF,source:"dept"}},"*");
+});
+var q=document.getElementById("rea-dept-q");
+if(q)q.addEventListener("input",render);
+var hs=document.querySelectorAll("[data-dept-sort]"),hi;
+for(hi=0;hi<hs.length;hi++)hs[hi].addEventListener("click",function(e){
+  e.preventDefault();
+  var kk=this.getAttribute("data-dept-sort");
+  if(kk===SK)SD=-SD;else{SK=kk;SD=-1;}
+  render();
+});
+var body=document.getElementById("rea-dept-body");
+if(body)body.addEventListener("click",function(e){
+  var n=e.target;
+  while(n&&n!==body&&n.nodeType===1){
+    if(n.getAttribute&&n.getAttribute("data-emp")!==null){goEmp(n.getAttribute("data-emp"));return}
+    n=n.parentNode;
+  }
+});
+document.addEventListener("keydown",function(e){
+  if(e.key!=="Enter"&&e.key!==" ")return;
+  var n=e.target;
+  if(n&&n.getAttribute&&(n.getAttribute("data-dept-sort")||n.getAttribute("data-emp")!==null)){e.preventDefault();n.click();}
+});
+(function(){
+  var d=new Date(),el=document.getElementById("rea-dept-now");
+  if(el)el.textContent=pad2(d.getHours())+":"+pad2(d.getMinutes());
+})();
+/* 左侧部门树：点一个节点就把这一页换到那个部门（含下级）重算。 */
+MB_PAINT(SCOPE);
+MB_BIND(function(v){
+  if(v===SCOPE)return;
+  SCOPE=v;
+  paintHead();render();MB_PAINT(SCOPE);
+});
+paintHead();
+render();
+})();
+`;
+  }
+
+  /* ============================================================
+     素材看板 · 员工明细（三级页，ADR-0121）
+     从部门明细、卡片的员工行、全部员工抽屉或素材使用详情的「谁用过」进来。
+     是素材使用详情的镜像：那条从素材看人，这条从人看素材；口径同源。不导出。
+     ============================================================ */
+  function reaMbEmpJs(){
+   return `
+(function(){
+${reaMbOrgJs()}
+var BACK=${reaJson(REA_MB_PAGE)};
+var DEPTPAGE=${reaJson(REA_MB_DEPT)};
+var FROM_MAT=${reaJson(REA_MB_MAT_DETAIL)};
+var WIN={today:[0,0],w7:[-6,0],m1:[-29,0],m3:[-89,0]};
+var LAB={today:"今日",w7:"近一周",m1:"近一月",m3:"近三月"};
+var DATA=window.__REA_MAT||{rows:[],win:"w7"};
+var PRE=window.__REA_MB_PRESET||{};
+var ROWS=DATA.rows||[];
+var NAME=PRE.emp||"";
+var win=WIN[DATA.win]?DATA.win:"w7",RANGE=WIN[win];
+var SCOPE=PRE.scope||"all";
+function pad2(n){return (n<10?"0":"")+n}
+function fmtDate(off){
+  var d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()+off);
+  return d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate());
+}
+function fmtMD(off){
+  var d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()+off);
+  return (d.getMonth()+1)+"/"+d.getDate();
+}
+function pct(m,n){return n?(Math.round(m/n*1000)/10)+"%":"—"}
+function weekStartOff(off){
+  var d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()+off);
+  return off-((d.getDay()+6)%7);
+}
+
+/* 这个人在窗口内的取用：逐条从流水里挑，聚合列一概不抄。 */
+var EV=[],MATS=[],k,i,q,row,ev,total=0,send=0,copy=0,last=-999,lastAll=-999,
+    AM={"一键发送":0,"一键发圈":0,"复制":0,"保存":0};
+for(k=0;k<ROWS.length;k++){
+  row=ROWS[k];ev=row.ev||[];
+  var c=0,s=0,cp=0,l=-999;
+  for(i=0;i<ev.length;i++){
+    q=ev[i];
+    if(q[1]!==NAME)continue;
+    if(q[0]>lastAll)lastAll=q[0];
+    if(q[0]<RANGE[0]||q[0]>RANGE[1])continue;
+    EV.push([q[0],q[2]]);
+    c++;
+    if(q[2]==="一键发送"||q[2]==="一键发圈")s++;else cp++;
+    if(AM[q[2]]!=null)AM[q[2]]++;
+    if(q[0]>l)l=q[0];
+  }
+  if(c){
+    MATS.push({id:row.id,title:row.title,dept:row.dept,group:row.group,
+      c:c,s:s,cp:cp,last:l});
+    total+=c;send+=s;copy+=cp;
+    if(l>last)last=l;
+  }
+}
+MATS.sort(function(a,b){return b.c-a.c||(a.title<b.title?-1:1)});
+
+/* 页头：谁、哪个范围、什么时间。 */
+var title=document.getElementById("rea-emp-title");
+if(title)title.textContent=(NAME||"员工")+" · 素材使用明细";
+var sc=document.getElementById("rea-emp-scope");
+if(sc){
+  sc.innerHTML='<span><b>'+LAB[win]+'</b></span><span class="dot">·</span><span>'
+    +mbEsc(MB_LABEL(SCOPE))+'</span>'
+    +'<span class="dot">·</span><span>取用＝复制／保存／一键发送／一键发圈，不含任务执行</span>';
+}
+(function(){
+  var d=new Date(),el=document.getElementById("rea-emp-now");
+  if(el)el.textContent=pad2(d.getHours())+":"+pad2(d.getMinutes());
+})();
+
+/* 四格：次数／其中发送／素材条数／最近一次。 */
+var tiles=document.getElementById("rea-emp-tiles");
+if(tiles){
+  var TT=[
+    {lb:"取用次数",v:total,u:"次",sub:"所选时间段内"},
+    {lb:"其中发送",v:send,u:"次",sub:"一键发送＋一键发圈"},
+    {lb:"素材条数",v:MATS.length,u:"条",sub:"按素材去重"},
+    {lb:"最近一次",v:(last>-999?fmtDate(last):"—"),u:"",sub:"所选时间段内"}
+  ],th="";
+  for(k=0;k<TT.length;k++)th+='<div class="rea-md-tile"><span class="lb">'+TT[k].lb+'</span><b>'+TT[k].v+(TT[k].u?'<small>'+TT[k].u+'</small>':'')+'</b><span class="sub">'+TT[k].sub+'</span></div>';
+  tiles.innerHTML=th;
+}
+
+/* 零取用：四格写 0、趋势贴 0，动作与素材表收起，给「截至今天最后一次取用」。 */
+var zero=document.getElementById("rea-emp-zero");
+if(!total){
+  if(zero){
+    zero.hidden=false;
+    zero.innerHTML='<div class="lead">所选时间段内没有取用</div>'
+      +'<div class="sub">'+mbEsc(NAME)+' 在 '+LAB[win]+' 没有产生复制、保存、发送或发圈。</div>'
+      +'<div class="last">截至今天最后一次取用：'+(lastAll>-999?fmtDate(lastAll)+"（"+(-lastAll)+" 天前）":"没有取用记录")+'</div>';
+  }
+  ["rea-emp-acts-card","rea-emp-mats-card"].forEach(function(id){
+    var el=document.getElementById(id);if(el)el.hidden=true;
+  });
+}
+
+/* 动作构成 */
+var acts=document.getElementById("rea-emp-acts");
+if(acts&&total){
+  var AK=["一键发送","一键发圈","复制","保存"],maxA=0,ah="";
+  for(k=0;k<AK.length;k++)if(AM[AK[k]]>maxA)maxA=AM[AK[k]];
+  for(k=0;k<AK.length;k++){
+    ah+='<div class="rea-md-brow"><span class="nm">'+AK[k]+'</span>'
+      +'<span class="track"><i style="width:'+(maxA?Math.round(AM[AK[k]]/maxA*100):0)+'%"></i></span>'
+      +'<span class="n">'+AM[AK[k]]+'</span><span class="pct">'+pct(AM[AK[k]],total)+'</span></div>';
+  }
+  acts.innerHTML=ah;
+}
+
+/* 取用趋势：与素材使用详情同一套画法，粒度跟窗口跨度走。 */
+function niceMax(v,steps){
+  steps=steps||4;
+  var pow=1,i2,step;
+  if(!(v>0))return steps;
+  while(true){
+    for(i2=0;i2<3;i2++){step=[1,2,5][i2]*pow;if(step*steps>=v)return step*steps}
+    pow*=10;
+  }
+}
+(function paintChart(){
+  var box=document.getElementById("rea-emp-chart");if(!box)return;
+  var span=RANGE[1]-RANGE[0],gran=span>31?"week":"day",
+      gl=document.getElementById("rea-emp-gran");
+  if(gl)gl.textContent=(gran==="week"?"按周":"按日")+" · "+(gran==="week"?"同一周的事件落在同一格":"每天一格");
+  var bs=[],bm={},off,b,kk;
+  if(gran==="week"){
+    for(off=weekStartOff(RANGE[0]);off<=RANGE[1];off+=7){b={off:off,label:fmtMD(off),send:0,copy:0};bs.push(b);bm[off]=b;}
+  }else{
+    for(off=RANGE[0];off<=RANGE[1];off++){b={off:off,label:fmtMD(off),send:0,copy:0};bs.push(b);bm[off]=b;}
+  }
+  for(k=0;k<EV.length;k++){
+    var key=gran==="week"?weekStartOff(EV[k][0]):EV[k][0],bb=bm[key];
+    if(!bb)continue;
+    if(EV[k][1]==="一键发送"||EV[k][1]==="一键发圈")bb.send++;else bb.copy++;
+  }
+  var W=box.clientWidth||600,H=214,L=44,R=16,T=14,B=30,
+      pw=Math.max(60,W-L-R),ph=H-T-B;
+  var max=0;
+  for(k=0;k<bs.length;k++)max=Math.max(max,bs[k].send+bs[k].copy);
+  var top=niceMax(max,4);
+  function x(i3){return bs.length>1?L+pw*i3/(bs.length-1):L+pw/2}
+  function y(v){return T+ph-(top?Math.min(v,top)/top:0)*ph}
+  var h='<svg width="'+W+'" height="'+H+'" role="img" aria-label="取用趋势：合计柱与发送、复制保存两条线">';
+  for(kk=0;kk<=4;kk++){
+    var gy=T+ph-ph*kk/4;
+    h+='<line x1="'+L+'" y1="'+gy+'" x2="'+(W-R)+'" y2="'+gy+'" stroke="'+(kk===0?"#E5E8EF":"#F0F2F5")+'" stroke-width="1"/>';
+    h+='<text x="'+(L-8)+'" y="'+(gy+4)+'" text-anchor="end" fill="#8F959E" font-size="11">'+Math.round(top*kk/4)+'</text>';
+  }
+  var gap=bs.length>1?pw/(bs.length-1):pw,bw=Math.max(4,Math.min(40,gap*0.5));
+  if(bs.length){
+    var hw=bs.length>1?gap:bw+16,lx=x(bs.length-1);
+    h+='<rect x="'+(lx-hw/2).toFixed(1)+'" y="'+T+'" width="'+hw.toFixed(1)+'" height="'+ph+'" fill="#F7F9FC"/>';
+  }
+  for(k=0;k<bs.length;k++){
+    var tot=bs[k].send+bs[k].copy,by=y(tot);
+    if(tot>0)h+='<rect class="mb-bar" x="'+(x(k)-bw/2).toFixed(1)+'" y="'+by.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+(ph-(by-T)).toFixed(1)+'" rx="3" fill="#E8F1FF"/>';
+  }
+  function line(key,color,cls){
+    var pts=[],d2,i4;
+    for(i4=0;i4<bs.length;i4++)pts.push(x(i4).toFixed(1)+","+y(bs[i4][key]).toFixed(1));
+    h+='<polyline class="mb-line '+cls+'" fill="none" stroke="'+color+'" stroke-width="1.5" points="'+pts.join(" ")+'"/>';
+  }
+  if(bs.length){
+    line("send","#1677FF","l1");
+    line("copy","#8F959E","l2");
+  }
+  for(k=0;k<bs.length;k++){
+    if(bs.length>31&&k%5!==0&&k!==bs.length-1)continue;
+    h+='<text x="'+x(k).toFixed(1)+'" y="'+(T+ph+18)+'" text-anchor="middle" fill="#8F959E" font-size="11">'+bs[k].label+'</text>';
+  }
+  h+='</svg>';
+  box.innerHTML=h;
+})();
+
+/* 用过的素材：按次数降序，分页 20。 */
+var PAGE=1,SIZE=20;
+function matTable(){
+  var tb=document.getElementById("rea-emp-mat-body"),pg=document.getElementById("rea-emp-mat-pg"),
+      maxp=Math.max(1,Math.ceil(MATS.length/SIZE)),start,end,mh="";
+  if(PAGE>maxp)PAGE=maxp;
+  start=(PAGE-1)*SIZE;end=Math.min(start+SIZE,MATS.length);
+  for(k=start;k<end;k++){
+    var r=MATS[k];
+    mh+='<tr><td title="'+mbEsc(r.title)+'">'+mbEsc(r.title)+'</td>'
+      +'<td>'+mbEsc(r.group)+' <span class="sep">|</span> '+mbEsc(r.dept)+'</td>'
+      +'<td class="num">'+r.c+'</td><td class="num">'+r.s+'</td>'
+      +'<td>'+(r.last>-999?fmtDate(r.last):"—")+'</td></tr>';
+  }
+  if(!MATS.length)mh='<tr><td colspan="5" class="empty">所选时间段内没有取用</td></tr>';
+  if(tb)tb.innerHTML=mh;
+  if(pg){
+    pg.innerHTML='<span class="tot">共 '+MATS.length+' 条</span>'
+      +'<button type="button" class="rea-mb-pgbtn" data-emp-pg="prev"'+(PAGE<=1?" disabled":"")+'>上一页</button>'
+      +'<span class="cur">'+PAGE+' / '+maxp+'</span>'
+      +'<button type="button" class="rea-mb-pgbtn" data-emp-pg="next"'+(PAGE>=maxp?" disabled":"")+'>下一页</button>';
+    var bs2=pg.querySelectorAll("[data-emp-pg]"),i5;
+    for(i5=0;i5<bs2.length;i5++)bs2[i5].addEventListener("click",function(){
+      var kk=this.getAttribute("data-emp-pg");
+      if(kk==="prev"&&PAGE>1)PAGE--;
+      if(kk==="next"&&PAGE<maxp)PAGE++;
+      matTable();
+    });
+  }
+}
+matTable();
+
+/* 返回：按来源写，部门来的回部门明细，素材来的回原页，看板来的回看板。 */
+var back=document.getElementById("rea-emp-back");
+if(back){
+  var FROM=PRE.from||BACK;
+  back.textContent=FROM===DEPTPAGE?"← 返回员工使用明细"
+    :(FROM===FROM_MAT?"← 返回素材使用详情"
+    :(FROM===BACK?"← 返回素材看板":"← 返回素材明细"));
+  back.addEventListener("click",function(e){
+    e.preventDefault();
+    if(FROM===DEPTPAGE){
+      parent.postMessage({reaPage:DEPTPAGE,reaMat:DATA,reaPreset:{
+        dept:PRE.scope,win:DATA.win,boardScope:PRE.boardScope,from:BACK}},"*");
+    }else if(FROM===BACK||!PRE.from){
+      parent.postMessage({reaPage:BACK,reaMbWin:DATA.win,reaMbScope:PRE.boardScope||"all"},"*");
+    }else{
+      parent.postMessage({reaPage:FROM,reaMat:DATA,reaPreset:PRE.backPreset||{}},"*");
+    }
+  });
+}
+/* 左侧部门树：这一页是一个人，换部门意味着回看板；点节点就带这个范围回去。 */
+MB_PAINT(SCOPE);
+MB_BIND(function(v){
+  parent.postMessage({reaPage:BACK,reaMbWin:win,reaMbScope:v},"*");
+});
 })();
 `;
   }
@@ -35201,6 +35892,10 @@ var LAB={today:"今日",w7:"近一周",m1:"近一月",m3:"近三月"};
 var DATA=window.__REA_MAT||{rows:[],win:"w7",depts:[]};
 var PRE=window.__REA_MB_PRESET||{};
 var ROWS=DATA.rows||[],DEPTS=DATA.depts||[];
+var EMPPAGE=${reaJson(REA_MB_EMP)};
+var BACKPAGE=${reaJson(REA_MB_PAGE)};
+var SELF=${reaJson(REA_MB_MAT_DETAIL)};
+${reaMbOrgJs()}
 var ROW=null,k;
 for(k=0;k<ROWS.length;k++)if(ROWS[k].id===PRE.matId){ROW=ROWS[k];break}
 function pad2(n){return (n<10?"0":"")+n}
@@ -35226,7 +35921,8 @@ function toast(msg){
 }
 
 var win=WIN[DATA.win]?DATA.win:"w7",RANGE=WIN[win];
-var dept=(PRE.dept&&PRE.dept!=="all")?PRE.dept:"all";
+/* 部门范围可以是父部门：一律按「该部门及其全部下级」算（ADR-0121）。 */
+var dept=(PRE.dept&&(PRE.dept==="all"||MB_DESC[PRE.dept]))?PRE.dept:"all";
 var DEPT_OF={};
 if(ROW&&ROW.users)for(k=0;k<ROW.users.length;k++)DEPT_OF[ROW.users[k].n]=ROW.users[k].o;
 
@@ -35238,7 +35934,7 @@ if(back){
   back.addEventListener("click",function(e){
     e.preventDefault();
     if(FROM==="素材库")parent.postMessage({reaPage:"素材库"},"*");
-    else parent.postMessage({reaPage:FROM,reaMbWin:DATA.win},"*");
+    else parent.postMessage({reaPage:FROM,reaMbWin:DATA.win,reaMbScope:PRE.boardScope||dept},"*");
   });
 }
 (function(){
@@ -35257,14 +35953,14 @@ var EV=[],e;
 if(ROW.ev)for(k=0;k<ROW.ev.length;k++){
   e=ROW.ev[k];
   if(e[0]<RANGE[0]||e[0]>RANGE[1])continue;
-  if(dept!=="all"&&DEPT_OF[e[1]]!==dept)continue;
+  if(dept!=="all"&&!MB_IN(DEPT_OF[e[1]],dept))continue;
   EV.push(e);
 }
 /* 不限窗口的最近一次：只在零取用时用来回答「这条是不是已经死了」。 */
 var lastAll=-999;
 if(ROW.ev)for(k=0;k<ROW.ev.length;k++){
   e=ROW.ev[k];
-  if(dept!=="all"&&DEPT_OF[e[1]]!==dept)continue;
+  if(dept!=="all"&&!MB_IN(DEPT_OF[e[1]],dept))continue;
   if(e[0]>lastAll)lastAll=e[0];
 }
 
@@ -35288,7 +35984,7 @@ for(k=0;k<UK.length;k++){
 /* 页头口径（Q5）：时间范围跟来源，部门也跟来源，使用口径写清。 */
 var scope=document.getElementById("rea-md-scope");
 if(scope){
-  var sh='<span><b>'+LAB[win]+'</b></span><span class="dot">·</span><span>'+(dept==="all"?"全公司":esc(dept))+'</span>'
+  var sh='<span><b>'+LAB[win]+'</b></span><span class="dot">·</span><span>'+esc(MB_LABEL(dept))+'</span>'
     +'<span class="dot">·</span><span>使用＝复制／保存／一键发送／一键发圈，不含任务执行</span>';
   if(PRE.source==="matlib")sh+='<span class="dot">·</span><span>从素材库进入，时间范围默认近一周</span>';
   scope.innerHTML=sh;
@@ -35376,7 +36072,7 @@ if(depts&&total){
       +'<span class="track"><i style="width:'+(maxD?Math.round(DK[k].c/maxD*100):0)+'%"></i></span>'
       +'<span class="n">'+DK[k].c+'</span><span class="pct">'+pct(DK[k].c,total)+'</span></div>';
   }
-  if(dept!=="all")h3+='<div class="rea-md-note">当前范围只有 1 个部门（'+esc(dept)+'），其余部门不在这个数字里。</div>';
+  if(dept!=="all")h3+='<div class="rea-md-note">当前范围是 '+esc(MB_LABEL(dept))+'，其余部门不在这个数字里。</div>';
   depts.innerHTML=h3;
 }
 
@@ -35385,7 +36081,7 @@ var ub=document.getElementById("rea-md-users");
 if(ub){
   var hu="";
   for(k=0;k<UK.length;k++){
-    hu+='<tr><td>'+esc(UK[k].n)+'</td><td>'+esc(UK[k].o||"—")+'</td>'
+    hu+='<tr data-emp="'+esc(UK[k].n)+'" tabindex="0"><td>'+esc(UK[k].n)+'</td><td>'+esc(UK[k].o||"—")+'</td>'
       +'<td class="num">'+UK[k].c+'</td><td class="num">'+UK[k].s+'</td>'
       +'<td>'+(UK[k].last>-999?fmtDate(UK[k].last):"—")+'</td></tr>';
   }
@@ -35499,6 +36195,31 @@ function paintChart(){
 }
 paintChart();
 window.addEventListener("resize",paintChart);
+
+/* 谁用过的一行 → 员工 · 素材使用明细（ADR-0121）。返回时回到这一页，来源状态原样带回。 */
+var ubx=document.getElementById("rea-md-users");
+if(ubx)ubx.addEventListener("click",function(e){
+  var n=e.target;
+  while(n&&n!==ubx&&n.nodeType===1){
+    if(n.getAttribute&&n.getAttribute("data-emp")!==null){
+      parent.postMessage({reaPage:EMPPAGE,reaMat:DATA,reaPreset:{
+        emp:n.getAttribute("data-emp"),scope:dept,win:DATA.win,
+        boardScope:PRE.boardScope,from:SELF,backPreset:PRE}},"*");
+      return;
+    }
+    n=n.parentNode;
+  }
+});
+document.addEventListener("keydown",function(e){
+  if(e.key!=="Enter"&&e.key!==" ")return;
+  var n=e.target;
+  if(n&&n.getAttribute&&n.getAttribute("data-emp")!==null){e.preventDefault();n.click();}
+});
+/* 左侧部门树：这一页只看一条素材，换部门意味着回看板。 */
+MB_PAINT(dept);
+MB_BIND(function(v){
+  parent.postMessage({reaPage:BACKPAGE,reaMbWin:DATA.win,reaMbScope:v},"*");
+});
 })();
 `;
   }
@@ -39774,6 +40495,9 @@ draw();
     '企业微信看板 · 素材明细': { html: 'srcMatDetail', css: REA_BOARD_CSS + REA_MB_CSS, js: reaMatDetailJs },
     /* 素材使用详情（三级页）：正文 srcBoardMatDetail，数从看板／明细带过来的行里现算 */
     [REA_MB_MAT_DETAIL]: { html: 'srcBoardMatDetail', css: REA_BOARD_CSS + REA_MB_CSS, js: reaMatUsageJs },
+    /* 人维度下钻（2026-11-27 · ADR-0121）：部门 → 员工使用明细 → 员工 → 素材使用明细 */
+    [REA_MB_DEPT]: { html: 'srcMbDept', css: REA_BOARD_CSS + REA_MB_CSS, js: reaMbDeptJs },
+    [REA_MB_EMP]: { html: 'srcMbEmp', css: REA_BOARD_CSS + REA_MB_CSS, js: reaMbEmpJs },
     /* 素材库列表只补一列「使用情况」，正文仍是快照（不带 html） */
     '素材库': { css: REA_MLUSE_CSS, js: reaMatListUseJs },
     /* 智能回复（2026-11-10）：关键词应答方案页签 ＋ 新建/编辑方案抽屉 */
@@ -39988,6 +40712,19 @@ draw();
         contentStart: mbd.contentStart,
         contentEnd: mbd.contentEnd
       });
+      /* 部门 · 员工使用明细（二级页）与 员工 · 素材使用明细（三级页）：同一张壳 */
+      P.pages.push({
+        name: REA_MB_DEPT,
+        rest: mbd.rest,
+        contentStart: mbd.contentStart,
+        contentEnd: mbd.contentEnd
+      });
+      P.pages.push({
+        name: REA_MB_EMP,
+        rest: mbd.rest,
+        contentStart: mbd.contentStart,
+        contentEnd: mbd.contentEnd
+      });
     } else {
       reaWarn('「素材明细」页合成失败：快照里找不到「' + REA_MB_PAGE + '」页');
     }
@@ -40066,13 +40803,14 @@ draw();
      用 reaJson 转义尖括号——拼进 srcdoc 的 script 里不能出现字面闭标签。 */
   function reaDataJs(name){
     /* 素材看板：二级页、三级页与从明细返回时的那一次开窗都走这里 */
-    if (name === REA_MB_DETAIL || name === REA_MB_MAT_DETAIL){
+    if (name === REA_MB_DETAIL || name === REA_MB_MAT_DETAIL || name === REA_MB_DEPT || name === REA_MB_EMP){
       return 'window.__REA_MAT=' + reaJson(reaMatPayload || { rows: [], win: 'w7', matEnd: 0, depts: [] }) + ';'
         + 'window.__REA_MB_PRESET=' + reaJson(reaMatPreset || {}) + ';';
     }
     if (name === REA_MB_PAGE){
       var mb = '';
       if (reaMbWin) mb += 'window.__REA_MB_WIN=' + reaJson(reaMbWin) + ';';
+      if (reaMbScope) mb += 'window.__REA_MB_SCOPE=' + reaJson(reaMbScope) + ';';
       if (reaMbState) mb += 'window.__REA_MB_STATE=' + reaJson(reaMbState) + ';';
       if (mb) return mb;
     }
@@ -40692,6 +41430,7 @@ draw();
   var reaMatPreset = {};    // 同上：入口带来的预筛（搜索词／分组／使用状态／状态／部门）
   var reaOverviewNav = null, reaOverviewTarget = '';
   var reaMbWin = '';        // 从素材明细返回看板时要恢复的时间范围
+  var reaMbScope = '';      // 看板左侧部门树的当前范围（子页返回时还原；空＝全公司）
   var reaMbState = null;    // 从素材使用详情返回看板时要恢复的排序与滚动位置
   var reaMatLibState = null;// 从素材使用详情返回素材库列表时要恢复的滚动位置
   var reaTreeClosed = false; // 微小助模块左侧「部门选择」面板收起了没有（面板是每页的 rest 各带一份，状态得存在外壳上）
@@ -41346,6 +42085,7 @@ document.addEventListener('click',function(event){
        从明细点「返回看板」时只带窗口，让看板回到离开时的那一档。 */
     if (d.reaMat){ reaMatPayload = d.reaMat; reaMatPreset = d.reaPreset || {}; }
     if (d.reaMbWin){ reaMbWin = d.reaMbWin; }
+    if (d.reaMbScope){ reaMbScope = d.reaMbScope; }
     if (d.reaMbState){ reaMbState = d.reaMbState; }
     if (d.reaMatLibScroll){ reaMatLibState = d.reaMatLibScroll; }
     var name = d.reaPage;
@@ -41356,6 +42096,7 @@ document.addEventListener('click',function(event){
     }
     /* 离开素材看板去别的页时清掉旧状态，免得下次从侧栏进来还套着上次的排序与滚动 */
     if (name && name !== REA_MB_PAGE && name !== REA_MB_MAT_DETAIL) reaMbState = null;
+    if (name && name !== REA_MB_PAGE) reaMbScope = '';
     if(d.reaOverview){
       reaOverviewNav=d.reaOverview;reaOverviewTarget=name;
       if(name===REA_BOARD_PAGE&&d.reaOverview.period){
